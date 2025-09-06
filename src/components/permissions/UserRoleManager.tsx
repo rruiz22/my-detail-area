@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { RoleAssignmentModal } from './RoleAssignmentModal';
 import { PermissionGuard } from './PermissionGuard';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 interface User {
   id: string;
@@ -41,6 +42,7 @@ export const UserRoleManager: React.FC = () => {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchUsersWithRoles();
@@ -170,10 +172,10 @@ export const UserRoleManager: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            User Role Management
+            {t('user_management.title')}
           </CardTitle>
           <CardDescription>
-            Manage user roles and permissions across the system
+            {t('user_management.manage_description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -182,7 +184,7 @@ export const UserRoleManager: React.FC = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search users..."
+                placeholder={t('user_management.search_users')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -193,9 +195,9 @@ export const UserRoleManager: React.FC = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Users</SelectItem>
-                <SelectItem value="dealer">Dealer Users</SelectItem>
-                <SelectItem value="detail">Detail Users</SelectItem>
+                <SelectItem value="all">{t('user_management.all_users')}</SelectItem>
+                <SelectItem value="dealer">{t('user_management.dealer_users')}</SelectItem>
+                <SelectItem value="detail">{t('user_management.detail_users')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -205,10 +207,10 @@ export const UserRoleManager: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Roles</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>{t('user_management.user')}</TableHead>
+                  <TableHead>{t('user_management.type')}</TableHead>
+                  <TableHead>{t('user_management.roles')}</TableHead>
+                  <TableHead>{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -235,7 +237,7 @@ export const UserRoleManager: React.FC = () => {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {user.roles.length === 0 ? (
-                          <span className="text-sm text-muted-foreground">No roles</span>
+                          <span className="text-sm text-muted-foreground">{t('user_management.no_roles')}</span>
                         ) : (
                           user.roles.map((role, index) => (
                             <Badge key={index} variant="outline" className="text-xs">
@@ -253,7 +255,7 @@ export const UserRoleManager: React.FC = () => {
                           onClick={() => handleManageRoles(user)}
                         >
                           <Settings className="h-4 w-4 mr-1" />
-                          Manage
+                          {t('user_management.manage')}
                         </Button>
                       </PermissionGuard>
                     </TableCell>
@@ -264,8 +266,8 @@ export const UserRoleManager: React.FC = () => {
                     <TableCell colSpan={4} className="text-center py-8">
                       <div className="text-muted-foreground">
                         {searchQuery || userTypeFilter !== 'all' 
-                          ? 'No users found matching your filters'
-                          : 'No users found'
+                          ? t('user_management.no_users_matching_filters')
+                          : t('user_management.no_users_found')
                         }
                       </div>
                     </TableCell>

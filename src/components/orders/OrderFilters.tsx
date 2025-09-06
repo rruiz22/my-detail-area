@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, X, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface FilterProps {
   filters: any;
@@ -15,6 +16,7 @@ interface FilterProps {
 
 export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const { t } = useTranslation();
 
   const handleFilterChange = (key: string, value: any) => {
     onFiltersChange({ ...filters, [key]: value });
@@ -32,7 +34,7 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Search className="w-5 h-5" />
-                Filtros Globales
+                {t('filters.global_filters')}
               </CardTitle>
               <div className="flex items-center gap-2">
                 <Button 
@@ -43,7 +45,7 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
                     handleClearFilters();
                   }}
                 >
-                  Limpiar
+                  {t('filters.clear')}
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -66,10 +68,10 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Search */}
               <div className="space-y-2">
-                <Label htmlFor="search">Búsqueda General</Label>
+                <Label htmlFor="search">{t('filters.general_search')}</Label>
                 <Input
                   id="search"
-                  placeholder="ID, Stock, VIN, Vehículo..."
+                  placeholder={t('filters.search_placeholder')}
                   value={filters.search || ''}
                   onChange={(e) => handleFilterChange('search', e.target.value)}
                 />
@@ -77,36 +79,36 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
 
               {/* Status */}
               <div className="space-y-2">
-                <Label>Estado</Label>
+                <Label>{t('filters.status')}</Label>
                 <Select 
                   value={filters.status || ''} 
                   onValueChange={(value) => handleFilterChange('status', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos los estados" />
+                    <SelectValue placeholder={t('filters.all_statuses')} />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
-                    <SelectItem value="">Todos los estados</SelectItem>
-                    <SelectItem value="pending">Pendiente</SelectItem>
-                    <SelectItem value="in_progress">En Proceso</SelectItem>
-                    <SelectItem value="completed">Completado</SelectItem>
-                    <SelectItem value="cancelled">Cancelado</SelectItem>
+                    <SelectItem value="">{t('filters.all_statuses')}</SelectItem>
+                    <SelectItem value="pending">{t('filters.pending')}</SelectItem>
+                    <SelectItem value="in_progress">{t('filters.in_progress')}</SelectItem>
+                    <SelectItem value="completed">{t('filters.completed')}</SelectItem>
+                    <SelectItem value="cancelled">{t('filters.cancelled')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Client */}
               <div className="space-y-2">
-                <Label>Cliente</Label>
+                <Label>{t('filters.client')}</Label>
                 <Select 
                   value={filters.client || ''} 
                   onValueChange={(value) => handleFilterChange('client', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos los clientes" />
+                    <SelectValue placeholder={t('filters.all_clients')} />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
-                    <SelectItem value="">Todos los clientes</SelectItem>
+                    <SelectItem value="">{t('filters.all_clients')}</SelectItem>
                     <SelectItem value="client1">Cliente 1</SelectItem>
                     <SelectItem value="client2">Cliente 2</SelectItem>
                   </SelectContent>
@@ -115,19 +117,19 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
 
               {/* Service */}
               <div className="space-y-2">
-                <Label>Servicio</Label>
+                <Label>{t('filters.service')}</Label>
                 <Select 
                   value={filters.service || ''} 
                   onValueChange={(value) => handleFilterChange('service', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos los servicios" />
+                    <SelectValue placeholder={t('filters.all_services')} />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
-                    <SelectItem value="">Todos los servicios</SelectItem>
-                    <SelectItem value="detail">Detail</SelectItem>
-                    <SelectItem value="wash">Wash</SelectItem>
-                    <SelectItem value="recon">Recon</SelectItem>
+                    <SelectItem value="">{t('filters.all_services')}</SelectItem>
+                    <SelectItem value="detail">{t('filters.detail')}</SelectItem>
+                    <SelectItem value="wash">{t('filters.wash')}</SelectItem>
+                    <SelectItem value="recon">{t('filters.recon')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -136,7 +138,7 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Date From */}
               <div className="space-y-2">
-                <Label htmlFor="dateFrom">Fecha Desde</Label>
+                <Label htmlFor="dateFrom">{t('filters.date_from')}</Label>
                 <Input
                   id="dateFrom"
                   type="date"
@@ -147,7 +149,7 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
 
               {/* Date To */}
               <div className="space-y-2">
-                <Label htmlFor="dateTo">Fecha Hasta</Label>
+                <Label htmlFor="dateTo">{t('filters.date_to')}</Label>
                 <Input
                   id="dateTo"
                   type="date"
@@ -158,16 +160,16 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
 
               {/* Make */}
               <div className="space-y-2">
-                <Label>Marca</Label>
+                <Label>{t('filters.make')}</Label>
                 <Select 
                   value={filters.make || ''} 
                   onValueChange={(value) => handleFilterChange('make', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todas las marcas" />
+                    <SelectValue placeholder={t('filters.all_makes')} />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
-                    <SelectItem value="">Todas las marcas</SelectItem>
+                    <SelectItem value="">{t('filters.all_makes')}</SelectItem>
                     <SelectItem value="honda">Honda</SelectItem>
                     <SelectItem value="toyota">Toyota</SelectItem>
                     <SelectItem value="ford">Ford</SelectItem>
@@ -178,16 +180,16 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
 
               {/* Model */}
               <div className="space-y-2">
-                <Label>Modelo</Label>
+                <Label>{t('filters.model')}</Label>
                 <Select 
                   value={filters.model || ''} 
                   onValueChange={(value) => handleFilterChange('model', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos los modelos" />
+                    <SelectValue placeholder={t('filters.all_models')} />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border-border">
-                    <SelectItem value="">Todos los modelos</SelectItem>
+                    <SelectItem value="">{t('filters.all_models')}</SelectItem>
                     <SelectItem value="accord">Accord</SelectItem>
                     <SelectItem value="camry">Camry</SelectItem>
                     <SelectItem value="f150">F-150</SelectItem>
@@ -199,14 +201,14 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
             {/* Actions */}
             <div className="flex justify-between items-center pt-4 border-t">
               <div className="text-sm text-muted-foreground">
-                Los filtros se aplican a todas las pestañas
+                {t('filters.filters_apply_all_tabs')}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={handleClearFilters}>
-                  Limpiar Filtros
+                  {t('filters.clear_filters')}
                 </Button>
                 <Button onClick={onClose}>
-                  Aplicar Filtros
+                  {t('filters.apply_filters')}
                 </Button>
               </div>
             </div>

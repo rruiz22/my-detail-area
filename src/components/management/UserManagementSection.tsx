@@ -19,7 +19,7 @@ export const UserManagementSection = () => {
             {t('management.user_management')}
           </CardTitle>
           <CardDescription>
-            Gestiona usuarios del sistema, roles y permisos en todos los concesionarios
+            {t('user_management.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -30,11 +30,11 @@ export const UserManagementSection = () => {
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Upload className="h-4 w-4" />
-              Importar Usuarios
+              {t('user_management.import_users')}
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Download className="h-4 w-4" />
-              Exportar Reporte
+              {t('user_management.export_report')}
             </Button>
           </div>
         </CardContent>
