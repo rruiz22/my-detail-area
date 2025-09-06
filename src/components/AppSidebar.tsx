@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,6 +35,10 @@ const secondaryNavItems = [{
   title: "Dealerships",
   url: "/dealerships",
   icon: Building2
+}, {
+  title: "Contacts", 
+  url: "/contacts",
+  icon: Users2
 }, {
   title: "Users",
   url: "/users",

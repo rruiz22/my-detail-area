@@ -186,7 +186,7 @@ export function Dealerships() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{t('dealerships.title')}</h1>
             <p className="text-muted-foreground">
-              Manage dealerships, their contacts and users
+              {t('dealerships.manage_description', 'Manage dealerships, their contacts and users')}
             </p>
           </div>
           <Button onClick={handleAdd} className="gap-2">
@@ -200,7 +200,7 @@ export function Dealerships() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Filter className="h-5 w-5" />
-              Filters
+              {t('common.filter')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -219,7 +219,7 @@ export function Dealerships() {
                   <SelectValue placeholder={t('dealerships.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="all">{t('dealerships.all_statuses', 'All Status')}</SelectItem>
                   <SelectItem value="active">{t('dealerships.active')}</SelectItem>
                   <SelectItem value="inactive">{t('dealerships.inactive')}</SelectItem>
                   <SelectItem value="suspended">{t('dealerships.suspended')}</SelectItem>
@@ -230,7 +230,7 @@ export function Dealerships() {
                   <SelectValue placeholder={t('dealerships.subscription_plan')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Plans</SelectItem>
+                  <SelectItem value="all">{t('dealerships.all_plans', 'All Plans')}</SelectItem>
                   <SelectItem value="basic">{t('dealerships.basic_plan')}</SelectItem>
                   <SelectItem value="premium">{t('dealerships.premium_plan')}</SelectItem>
                   <SelectItem value="enterprise">{t('dealerships.enterprise_plan')}</SelectItem>
@@ -248,7 +248,7 @@ export function Dealerships() {
                 <TableRow>
                   <TableHead className="w-12"></TableHead>
                   <TableHead>{t('dealerships.name')}</TableHead>
-                  <TableHead>Location</TableHead>
+                  <TableHead>{t('dealerships.location', 'Location')}</TableHead>
                   <TableHead className="text-center">{t('dealerships.contacts_count')}</TableHead>
                   <TableHead className="text-center">{t('dealerships.users_count')}</TableHead>
                   <TableHead>{t('dealerships.subscription_plan')}</TableHead>

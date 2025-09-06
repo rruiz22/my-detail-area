@@ -59,7 +59,11 @@
     "address_info": "Información de Dirección",
     "branding": "Imagen de Marca",
     "manage_contacts": "Gestionar Contactos",
-    "manage_users": "Gestionar Usuarios"
+    "manage_users": "Gestionar Usuarios",
+    "manage_description": "Gestionar concesionarios, sus contactos y usuarios",
+    "location": "Ubicación",
+    "all_statuses": "Todos los Estados",
+    "all_plans": "Todos los Planes"
   },
   "contacts": {
     "title": "Contactos",
@@ -67,6 +71,7 @@
     "edit": "Editar Contacto",
     "first_name": "Nombre",
     "last_name": "Apellido",
+    "name": "Nombre",
     "position": "Cargo",
     "department": "Departamento",
     "is_primary": "Contacto Principal",
@@ -78,7 +83,18 @@
     "personal_info": "Información Personal",
     "work_info": "Información Laboral",
     "preferences": "Preferencias",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "contact_info": "Info de Contacto",
+    "manage_description": "Gestionar contactos de todos los concesionarios",
+    "all_departments": "Todos los Departamentos",
+    "all_dealerships": "Todos los Concesionarios",
+    "sales": "Ventas",
+    "service": "Servicio",
+    "management": "Gerencia",
+    "finance": "Finanzas",
+    "parts": "Repuestos",
+    "other": "Otro",
+    "primary": "Principal"
   },
   "users": {
     "title": "Usuarios de Detallado",

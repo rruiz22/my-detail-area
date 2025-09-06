@@ -59,7 +59,11 @@
     "address_info": "Address Information",
     "branding": "Branding",
     "manage_contacts": "Manage Contacts",
-    "manage_users": "Manage Users"
+    "manage_users": "Manage Users",
+    "manage_description": "Manage dealerships, their contacts and users",
+    "location": "Location",
+    "all_statuses": "All Status",
+    "all_plans": "All Plans"
   },
   "contacts": {
     "title": "Contacts",
@@ -67,6 +71,7 @@
     "edit": "Edit Contact",
     "first_name": "First Name",
     "last_name": "Last Name",
+    "name": "Name",
     "position": "Position",
     "department": "Department",
     "is_primary": "Primary Contact",
@@ -78,7 +83,18 @@
     "personal_info": "Personal Information",
     "work_info": "Work Information",
     "preferences": "Preferences",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "contact_info": "Contact Info",
+    "manage_description": "Manage contacts across all dealerships",
+    "all_departments": "All Departments",
+    "all_dealerships": "All Dealerships",
+    "sales": "Sales",
+    "service": "Service",
+    "management": "Management", 
+    "finance": "Finance",
+    "parts": "Parts",
+    "other": "Other",
+    "primary": "Primary"
   },
   "users": {
     "title": "Detail Users",
