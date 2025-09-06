@@ -325,10 +325,7 @@ export type Database = {
       }
     }
     Functions: {
-      is_system_admin: {
-        Args: { check_user_id: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       contact_department: "sales" | "service" | "parts" | "management" | "other"
