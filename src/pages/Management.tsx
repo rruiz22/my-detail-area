@@ -14,6 +14,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { UserManagementSection } from '@/components/management/UserManagementSection';
 import { DealershipManagementSection } from '@/components/management/DealershipManagementSection';
@@ -21,46 +22,49 @@ import { ManagementOverview } from '@/components/management/ManagementOverview';
 
 const Management = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
-    <DashboardLayout title="System Management">
+    <DashboardLayout title={t('management.title')}>
       <div className="space-y-6">
+        {/* Header */}
         <div className="border-b pb-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                System Management
+                {t('management.title')}
               </h1>
               <p className="text-muted-foreground mt-2">
-                Centro de control integral para usuarios, concesionarios y administración del sistema
+                {t('management.description')}
               </p>
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="outline" className="px-3 py-1">
                 <Shield className="h-3 w-3 mr-1" />
-                Acceso Admin
+                {t('management.admin_access')}
               </Badge>
             </div>
           </div>
         </div>
 
+        {/* Management Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
-              Resumen
+              {t('management.overview')}
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Usuarios
+              {t('management.users')}
             </TabsTrigger>
             <TabsTrigger value="dealerships" className="flex items-center gap-2">
               <Building2 className="h-4 w-4" />
-              Concesionarios
+              {t('management.dealerships')}
             </TabsTrigger>
             <TabsTrigger value="permissions" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              Permisos
+              {t('management.permissions')}
             </TabsTrigger>
           </TabsList>
 
@@ -86,10 +90,10 @@ const Management = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Shield className="h-5 w-5" />
-                    Gestión de Permisos
+                    {t('management.permission_management')}
                   </CardTitle>
                   <CardDescription>
-                    Configuración avanzada de roles y permisos
+                    Configuración avanzada de roles y permisos del sistema
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -97,9 +101,9 @@ const Management = () => {
                     <Card className="border-dashed">
                       <CardContent className="p-6 text-center">
                         <Settings className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="font-semibold mb-2">Configuración de Roles</h3>
+                        <h3 className="font-semibold mb-2">{t('management.role_configuration')}</h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                          Configura roles del sistema y sus permisos
+                          Configura roles del sistema y sus permisos asociados
                         </p>
                         <Button variant="outline" size="sm">
                           Configurar Roles
@@ -110,7 +114,7 @@ const Management = () => {
                     <Card className="border-dashed">
                       <CardContent className="p-6 text-center">
                         <UserPlus className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="font-semibold mb-2">Operaciones Masivas</h3>
+                        <h3 className="font-semibold mb-2">{t('management.bulk_operations')}</h3>
                         <p className="text-sm text-muted-foreground mb-4">
                           Realizar operaciones masivas de usuarios y permisos
                         </p>

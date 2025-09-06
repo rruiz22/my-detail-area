@@ -5,6 +5,26 @@
     "dashboard": "Panel de Control",
     "logout": "Cerrar Sesión"
   },
+  "management": {
+    "title": "Gestión del Sistema",
+    "overview": "Resumen",
+    "users": "Usuarios", 
+    "dealerships": "Concesionarios",
+    "permissions": "Permisos",
+    "description": "Centro de control integral para usuarios, concesionarios y administración del sistema",
+    "admin_access": "Acceso Admin",
+    "total_users": "Total de Usuarios",
+    "active_users": "usuarios activos",
+    "system_health": "Estado del Sistema",
+    "role_assignments": "Asignaciones de Roles",
+    "recent_activity": "Actividad Reciente",
+    "system_status": "Estado del Sistema",
+    "permission_management": "Gestión de Permisos",
+    "role_configuration": "Configuración de Roles",
+    "bulk_operations": "Operaciones Masivas",
+    "user_management": "Gestión de Usuarios",
+    "dealership_management": "Gestión de Concesionarios"
+  },
   "dealerships": {
     "title": "Concesionarios",
     "add_new": "Agregar Nuevo Concesionario",
