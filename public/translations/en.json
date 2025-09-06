@@ -5,6 +5,26 @@
     "dashboard": "Dashboard",
     "logout": "Logout"
   },
+  "management": {
+    "title": "System Management",
+    "overview": "Overview",
+    "users": "Users",
+    "dealerships": "Dealerships", 
+    "permissions": "Permissions",
+    "description": "Comprehensive control center for users, dealerships, and system administration",
+    "admin_access": "Admin Access",
+    "total_users": "Total Users",
+    "active_users": "active users",
+    "system_health": "System Health",
+    "role_assignments": "Role Assignments",
+    "recent_activity": "Recent Activity",
+    "system_status": "System Status",
+    "permission_management": "Permission Management",
+    "role_configuration": "Role Configuration",
+    "bulk_operations": "Bulk Operations",
+    "user_management": "User Management",
+    "dealership_management": "Dealership Management"
+  },
   "dealerships": {
     "title": "Dealerships",
     "add_new": "Add New Dealership",
