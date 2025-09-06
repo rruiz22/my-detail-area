@@ -154,7 +154,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[100vw] h-[100vh] max-w-none max-h-none overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" />
