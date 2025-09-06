@@ -268,6 +268,7 @@ export type Database = {
           last_name: string | null
           role: string | null
           updated_at: string | null
+          user_type: Database["public"]["Enums"]["user_type"] | null
         }
         Insert: {
           created_at?: string | null
@@ -278,6 +279,7 @@ export type Database = {
           last_name?: string | null
           role?: string | null
           updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Update: {
           created_at?: string | null
@@ -288,6 +290,7 @@ export type Database = {
           last_name?: string | null
           role?: string | null
           updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Relationships: [
           {
@@ -299,20 +302,211 @@ export type Database = {
           },
         ]
       }
+      role_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          module: Database["public"]["Enums"]["app_module"]
+          permission_level: Database["public"]["Enums"]["permission_level"]
+          role_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          module: Database["public"]["Enums"]["app_module"]
+          permission_level?: Database["public"]["Enums"]["permission_level"]
+          role_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          module?: Database["public"]["Enums"]["app_module"]
+          permission_level?: Database["public"]["Enums"]["permission_level"]
+          role_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string
+          dealer_role: Database["public"]["Enums"]["dealer_role"] | null
+          description: string | null
+          detail_role: Database["public"]["Enums"]["detail_role"] | null
+          display_name: string
+          id: string
+          is_active: boolean
+          is_system_role: boolean
+          name: string
+          updated_at: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Insert: {
+          created_at?: string
+          dealer_role?: Database["public"]["Enums"]["dealer_role"] | null
+          description?: string | null
+          detail_role?: Database["public"]["Enums"]["detail_role"] | null
+          display_name: string
+          id?: string
+          is_active?: boolean
+          is_system_role?: boolean
+          name: string
+          updated_at?: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Update: {
+          created_at?: string
+          dealer_role?: Database["public"]["Enums"]["dealer_role"] | null
+          description?: string | null
+          detail_role?: Database["public"]["Enums"]["detail_role"] | null
+          display_name?: string
+          id?: string
+          is_active?: boolean
+          is_system_role?: boolean
+          name?: string
+          updated_at?: string
+          user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
+      user_role_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          role_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          role_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          role_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_role_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_role_assignments_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_role_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      assign_role: {
+        Args: { expires_at?: string; role_name: string; target_user_id: string }
+        Returns: boolean
+      }
+      get_user_permissions: {
+        Args: { user_uuid: string }
+        Returns: {
+          module: Database["public"]["Enums"]["app_module"]
+          permission_level: Database["public"]["Enums"]["permission_level"]
+        }[]
+      }
+      get_user_roles: {
+        Args: { user_uuid: string }
+        Returns: {
+          dealer_role: Database["public"]["Enums"]["dealer_role"]
+          detail_role: Database["public"]["Enums"]["detail_role"]
+          display_name: string
+          expires_at: string
+          role_id: string
+          role_name: string
+          user_type: Database["public"]["Enums"]["user_type"]
+        }[]
+      }
+      has_permission: {
+        Args: {
+          check_module: Database["public"]["Enums"]["app_module"]
+          required_level: Database["public"]["Enums"]["permission_level"]
+          user_uuid: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_module:
+        | "dashboard"
+        | "sales_orders"
+        | "service_orders"
+        | "recon_orders"
+        | "car_wash"
+        | "reports"
+        | "settings"
+        | "dealerships"
+        | "users"
       contact_department: "sales" | "service" | "parts" | "management" | "other"
+      dealer_role:
+        | "salesperson"
+        | "service_advisor"
+        | "lot_guy"
+        | "sales_manager"
+        | "service_manager"
+        | "dispatcher"
+        | "receptionist"
       dealership_status: "active" | "inactive" | "suspended"
+      detail_role:
+        | "super_manager"
+        | "detail_manager"
+        | "detail_staff"
+        | "quality_inspector"
+        | "mobile_technician"
       language_code: "en" | "es" | "pt-BR"
+      permission_level: "none" | "read" | "write" | "delete" | "admin"
       subscription_plan: "basic" | "premium" | "enterprise"
       user_department: "detailing" | "wash" | "service"
       user_role: "admin" | "manager" | "technician" | "viewer"
+      user_type: "dealer" | "detail"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -440,12 +634,41 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_module: [
+        "dashboard",
+        "sales_orders",
+        "service_orders",
+        "recon_orders",
+        "car_wash",
+        "reports",
+        "settings",
+        "dealerships",
+        "users",
+      ],
       contact_department: ["sales", "service", "parts", "management", "other"],
+      dealer_role: [
+        "salesperson",
+        "service_advisor",
+        "lot_guy",
+        "sales_manager",
+        "service_manager",
+        "dispatcher",
+        "receptionist",
+      ],
       dealership_status: ["active", "inactive", "suspended"],
+      detail_role: [
+        "super_manager",
+        "detail_manager",
+        "detail_staff",
+        "quality_inspector",
+        "mobile_technician",
+      ],
       language_code: ["en", "es", "pt-BR"],
+      permission_level: ["none", "read", "write", "delete", "admin"],
       subscription_plan: ["basic", "premium", "enterprise"],
       user_department: ["detailing", "wash", "service"],
       user_role: ["admin", "manager", "technician", "viewer"],
+      user_type: ["dealer", "detail"],
     },
   },
 } as const
