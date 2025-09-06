@@ -303,66 +303,44 @@ export type Database = {
     Views: {
       user_profiles_safe: {
         Row: {
-          avatar_url: string | null
           created_at: string | null
-          department: Database["public"]["Enums"]["user_department"] | null
+          dealership_id: number | null
           email: string | null
-          employee_id: string | null
           first_name: string | null
-          hire_date: string | null
-          id: number | null
-          is_active: boolean | null
-          language_preference:
-            | Database["public"]["Enums"]["language_code"]
-            | null
-          last_login_at: string | null
+          id: string | null
           last_name: string | null
-          phone: string | null
-          role: Database["public"]["Enums"]["user_role"] | null
-          timezone: string | null
+          role: string | null
           updated_at: string | null
         }
         Insert: {
-          avatar_url?: string | null
           created_at?: string | null
-          department?: Database["public"]["Enums"]["user_department"] | null
+          dealership_id?: number | null
           email?: string | null
-          employee_id?: string | null
           first_name?: string | null
-          hire_date?: string | null
-          id?: number | null
-          is_active?: boolean | null
-          language_preference?:
-            | Database["public"]["Enums"]["language_code"]
-            | null
-          last_login_at?: string | null
+          id?: string | null
           last_name?: string | null
-          phone?: string | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-          timezone?: string | null
+          role?: string | null
           updated_at?: string | null
         }
         Update: {
-          avatar_url?: string | null
           created_at?: string | null
-          department?: Database["public"]["Enums"]["user_department"] | null
+          dealership_id?: number | null
           email?: string | null
-          employee_id?: string | null
           first_name?: string | null
-          hire_date?: string | null
-          id?: number | null
-          is_active?: boolean | null
-          language_preference?:
-            | Database["public"]["Enums"]["language_code"]
-            | null
-          last_login_at?: string | null
+          id?: string | null
           last_name?: string | null
-          phone?: string | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-          timezone?: string | null
+          role?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
