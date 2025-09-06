@@ -38,7 +38,6 @@ const mainNavItems = [
 
 const secondaryNavItems = [
   { title: "Reports", url: "/reports", icon: FileText },
-  { title: "Order Management", url: "/orders", icon: ClipboardList },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
