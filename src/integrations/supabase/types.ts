@@ -260,10 +260,75 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          department: Database["public"]["Enums"]["user_department"] | null
+          email: string | null
+          employee_id: string | null
+          first_name: string | null
+          hire_date: string | null
+          id: number | null
+          is_active: boolean | null
+          language_preference:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          last_login_at: string | null
+          last_name: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          timezone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["user_department"] | null
+          email?: string | null
+          employee_id?: string | null
+          first_name?: string | null
+          hire_date?: string | null
+          id?: number | null
+          is_active?: boolean | null
+          language_preference?:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          last_login_at?: string | null
+          last_name?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["user_department"] | null
+          email?: string | null
+          employee_id?: string | null
+          first_name?: string | null
+          hire_date?: string | null
+          id?: number | null
+          is_active?: boolean | null
+          language_preference?:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          last_login_at?: string | null
+          last_name?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      is_system_admin: {
+        Args: { check_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       contact_department: "sales" | "service" | "parts" | "management" | "other"
