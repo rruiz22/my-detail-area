@@ -25,7 +25,6 @@ const Management = () => {
   return (
     <DashboardLayout title="System Management">
       <div className="space-y-6">
-        {/* Header */}
         <div className="border-b pb-6">
           <div className="flex items-center justify-between">
             <div>
@@ -33,36 +32,35 @@ const Management = () => {
                 System Management
               </h1>
               <p className="text-muted-foreground mt-2">
-                Comprehensive control center for users, dealerships, and system administration
+                Centro de control integral para usuarios, concesionarios y administración del sistema
               </p>
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="outline" className="px-3 py-1">
                 <Shield className="h-3 w-3 mr-1" />
-                Admin Access
+                Acceso Admin
               </Badge>
             </div>
           </div>
         </div>
 
-        {/* Management Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
-              Overview
+              Resumen
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Users
+              Usuarios
             </TabsTrigger>
             <TabsTrigger value="dealerships" className="flex items-center gap-2">
               <Building2 className="h-4 w-4" />
-              Dealerships
+              Concesionarios
             </TabsTrigger>
             <TabsTrigger value="permissions" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              Permissions
+              Permisos
             </TabsTrigger>
           </TabsList>
 
@@ -88,10 +86,10 @@ const Management = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Shield className="h-5 w-5" />
-                    Permission Management
+                    Gestión de Permisos
                   </CardTitle>
                   <CardDescription>
-                    Advanced role and permission configuration
+                    Configuración avanzada de roles y permisos
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -99,12 +97,12 @@ const Management = () => {
                     <Card className="border-dashed">
                       <CardContent className="p-6 text-center">
                         <Settings className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="font-semibold mb-2">Role Configuration</h3>
+                        <h3 className="font-semibold mb-2">Configuración de Roles</h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                          Configure system roles and their permissions
+                          Configura roles del sistema y sus permisos
                         </p>
                         <Button variant="outline" size="sm">
-                          Configure Roles
+                          Configurar Roles
                         </Button>
                       </CardContent>
                     </Card>
@@ -112,12 +110,12 @@ const Management = () => {
                     <Card className="border-dashed">
                       <CardContent className="p-6 text-center">
                         <UserPlus className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="font-semibold mb-2">Bulk Operations</h3>
+                        <h3 className="font-semibold mb-2">Operaciones Masivas</h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                          Perform bulk user and permission operations
+                          Realizar operaciones masivas de usuarios y permisos
                         </p>
                         <Button variant="outline" size="sm">
-                          Bulk Actions
+                          Acciones Masivas
                         </Button>
                       </CardContent>
                     </Card>

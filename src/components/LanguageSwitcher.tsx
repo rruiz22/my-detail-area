@@ -26,16 +26,17 @@ export function LanguageSwitcher() {
           <span className="text-lg">{currentLanguage.flag}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="z-50 bg-popover border border-border shadow-md">
+      <DropdownMenuContent align="end" className="z-50 bg-background border border-border shadow-lg rounded-md min-w-[120px]">
         {supportedLanguages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
-            className="justify-center p-2"
+            className="flex items-center gap-2 p-3 cursor-pointer hover:bg-muted transition-colors"
           >
             <span className="text-lg">{language.flag}</span>
+            <span className="text-sm">{language.name}</span>
             {i18n.language === language.code && (
-              <span className="ml-2 text-primary">✓</span>
+              <span className="ml-auto text-primary text-xs">✓</span>
             )}
           </DropdownMenuItem>
         ))}
