@@ -10,7 +10,8 @@ import {
   Bell,
   User,
   ClipboardList,
-  Building2
+  Building2,
+  LogOut
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -28,6 +29,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
@@ -45,9 +48,14 @@ const secondaryNavItems = [
 
 export function AppSidebar() {
   const { open } = useSidebar();
+  const { user, signOut } = useAuth();
   const location = useLocation();
   const currentPath = location.pathname;
   const collapsed = !open;
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -123,16 +131,35 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src="/placeholder.svg" />
-            <AvatarFallback>JD</AvatarFallback>
-          </Avatar>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src="/placeholder.svg" />
+              <AvatarFallback>
+                {user?.email?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">
+                  {user?.email?.split('@')[0] || 'User'}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.email || ''}
+                </p>
+              </div>
+            )}
+          </div>
           {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">John Dealer</p>
-              <p className="text-xs text-muted-foreground truncate">Manager</p>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSignOut}
+              className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
           )}
         </div>
       </SidebarFooter>
