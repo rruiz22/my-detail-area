@@ -3,21 +3,40 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Plus, Filter, RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Plus, Filter, RefreshCw, Calendar, Clock, AlertCircle, BarChart3 } from 'lucide-react';
 import { OrderFilters } from '@/components/orders/OrderFilters';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderModal } from '@/components/orders/OrderModal';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const TABS = [
   { id: 'dashboard', label: 'Dashboard', count: 0 },
-  { id: 'today', label: 'Today', count: 0 },
-  { id: 'tomorrow', label: 'Tomorrow', count: 0 },
-  { id: 'pending', label: 'Pending', count: 0 },
-  { id: 'week', label: 'Week', count: 0 },
-  { id: 'all', label: 'All', count: 0 },
+  { id: 'today', label: "Today's Orders", count: 0 },
+  { id: 'tomorrow', label: "Tomorrow's Orders", count: 0 },
+  { id: 'pending', label: 'Pending Orders', count: 0 },
+  { id: 'week', label: 'Week View', count: 0 },
+  { id: 'all', label: 'All Orders', count: 0 },
   { id: 'services', label: 'Services', count: 0 },
-  { id: 'deleted', label: 'Deleted', count: 0 },
+  { id: 'deleted', label: 'Deleted Orders', count: 0 },
+];
+
+// Mock data for charts
+const trendData = [
+  { name: 'Mon', orders: 0 },
+  { name: 'Tue', orders: 0 },
+  { name: 'Wed', orders: 0 },
+  { name: 'Thu', orders: 0 },
+  { name: 'Fri', orders: 0 },
+  { name: 'Sat', orders: 0 },
+  { name: 'Sun', orders: 0 },
+];
+
+const statusData = [
+  { name: 'Pending', value: 0, color: 'hsl(var(--pending))' },
+  { name: 'Processing', value: 0, color: 'hsl(var(--warning))' },
+  { name: 'Completed', value: 0, color: 'hsl(var(--success))' },
 ];
 
 export default function SalesOrders() {
@@ -142,7 +161,149 @@ export default function SalesOrders() {
             ))}
           </TabsList>
 
-          {tabsWithCounts.map((tab) => (
+          {/* Dashboard Tab Content */}
+          <TabsContent value="dashboard" className="mt-6">
+            <div className="space-y-6">
+              {/* Order Summary Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card className="border-border shadow-sm">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Today's Orders</CardTitle>
+                    <Calendar className="h-4 w-4 text-success" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-foreground">{tabCounts.today || 0}</div>
+                    <p className="text-xs text-muted-foreground">Sep 6, 2025</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border shadow-sm">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Tomorrow's Orders</CardTitle>
+                    <Clock className="h-4 w-4 text-primary" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-foreground">{tabCounts.tomorrow || 0}</div>
+                    <p className="text-xs text-muted-foreground">Sep 7, 2025</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border shadow-sm">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Pending Orders</CardTitle>
+                    <AlertCircle className="h-4 w-4 text-warning" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-foreground">{tabCounts.pending || 0}</div>
+                    <p className="text-xs text-warning">Require Attention</p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border shadow-sm">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Week Orders</CardTitle>
+                    <BarChart3 className="h-4 w-4 text-accent" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-foreground">{tabCounts.week || 0}</div>
+                    <p className="text-xs text-muted-foreground">Sep 1 - Sep 7</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-border shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="text-base font-medium text-foreground">Orders Trend Analysis</CardTitle>
+                    <p className="text-sm text-muted-foreground">Track order performance over time</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={trendData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="hsl(var(--muted-foreground))"
+                            fontSize={12}
+                          />
+                          <YAxis 
+                            stroke="hsl(var(--muted-foreground))"
+                            fontSize={12}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: 'hsl(var(--card))',
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px',
+                            }}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="orders"
+                            stroke="hsl(var(--primary))"
+                            strokeWidth={2}
+                            dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="text-base font-medium text-foreground">Status Distribution</CardTitle>
+                    <p className="text-sm text-muted-foreground">Current order status breakdown</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={statusData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={100}
+                            paddingAngle={5}
+                            dataKey="value"
+                          >
+                            {statusData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: 'hsl(var(--card))',
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px',
+                            }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                      <div className="flex justify-center space-x-6 mt-4">
+                        {statusData.map((item, index) => (
+                          <div key={index} className="flex items-center space-x-2">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ backgroundColor: item.color }}
+                            ></div>
+                            <span className="text-sm text-muted-foreground">{item.name}</span>
+                            <span className="text-sm font-medium text-foreground">{item.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Other Tab Contents */}
+          {tabsWithCounts.filter(tab => tab.id !== 'dashboard').map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="mt-6">
               <OrderDataTable
                 orders={orders}
