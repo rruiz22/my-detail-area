@@ -9,6 +9,7 @@ import {
   Settings,
   Bell,
   User,
+  Users,
   ClipboardList,
   Building2,
   LogOut
@@ -42,6 +43,7 @@ const mainNavItems = [
 
 const secondaryNavItems = [
   { title: "Dealerships", url: "/dealerships", icon: Building2 },
+  { title: "Users", url: "/users", icon: Users },
   { title: "Reports", url: "/reports", icon: FileText },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
