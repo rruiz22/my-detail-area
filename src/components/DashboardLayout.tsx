@@ -5,6 +5,7 @@ import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -35,6 +36,8 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
                   className="pl-10 w-full"
                 />
               </div>
+              
+              <LanguageSwitcher />
               
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="w-4 h-4" />
