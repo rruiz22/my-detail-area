@@ -11,6 +11,7 @@ import ReconOrders from "./pages/ReconOrders";
 import CarWash from "./pages/CarWash";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import OrderManagement from "./pages/OrderManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/carwash" element={<CarWash />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/orders" element={<OrderManagement />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
