@@ -154,7 +154,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[100vw] h-[100vh] max-w-none max-h-none overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" />
@@ -162,7 +162,8 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-6">
+        <div className="max-w-3xl mx-auto">
+          <form onSubmit={onSubmit} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-6">
@@ -171,7 +172,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.business_info')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="name">{t('dealerships.name')} *</Label>
+                    <Label htmlFor="name" className="block mb-3">{t('dealerships.name')} *</Label>
                     <Input
                       id="name"
                       value={formData.name}
@@ -182,7 +183,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                   </div>
 
                   <div>
-                    <Label htmlFor="tax_number">{t('dealerships.tax_number')}</Label>
+                    <Label htmlFor="tax_number" className="block mb-3">{t('dealerships.tax_number')}</Label>
                     <Input
                       id="tax_number"
                       value={formData.tax_number}
@@ -192,7 +193,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                   </div>
 
                   <div>
-                    <Label htmlFor="website">{t('dealerships.website')}</Label>
+                    <Label htmlFor="website" className="block mb-3">{t('dealerships.website')}</Label>
                     <Input
                       id="website"
                       value={formData.website}
@@ -211,7 +212,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.contact_info')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="email">{t('dealerships.email')} *</Label>
+                    <Label htmlFor="email" className="block mb-3">{t('dealerships.email')} *</Label>
                     <Input
                       id="email"
                       value={formData.email}
@@ -223,7 +224,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                   </div>
 
                   <div>
-                    <Label htmlFor="phone">{t('dealerships.phone')}</Label>
+                    <Label htmlFor="phone" className="block mb-3">{t('dealerships.phone')}</Label>
                     <Input
                       id="phone"
                       value={formData.phone}
@@ -241,7 +242,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.subscription_settings')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="subscription_plan">{t('dealerships.subscription_plan')}</Label>
+                    <Label htmlFor="subscription_plan" className="block mb-3">{t('dealerships.subscription_plan')}</Label>
                     <Select value={formData.subscription_plan} onValueChange={handlePlanChange}>
                       <SelectTrigger>
                         <SelectValue />
@@ -255,7 +256,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                   </div>
 
                   <div>
-                    <Label htmlFor="max_users">{t('dealerships.max_users')}</Label>
+                    <Label htmlFor="max_users" className="block mb-3">{t('dealerships.max_users')}</Label>
                     <Input
                       id="max_users"
                       value={formData.max_users}
@@ -266,7 +267,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                   </div>
 
                   <div>
-                    <Label htmlFor="status">{t('dealerships.status')}</Label>
+                    <Label htmlFor="status" className="block mb-3">{t('dealerships.status')}</Label>
                     <Select value={formData.status} onValueChange={(value: DealershipStatus) => handleInputChange('status', value)}>
                       <SelectTrigger>
                         <SelectValue />
@@ -289,7 +290,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.address_info')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="address">{t('dealerships.address')}</Label>
+                    <Label htmlFor="address" className="block mb-3">{t('dealerships.address')}</Label>
                     <Input
                       id="address"
                       value={formData.address}
@@ -300,7 +301,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="city">{t('dealerships.city')}</Label>
+                      <Label htmlFor="city" className="block mb-3">{t('dealerships.city')}</Label>
                       <Input
                         id="city"
                         value={formData.city}
@@ -310,7 +311,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                     </div>
 
                     <div>
-                      <Label htmlFor="state">{t('dealerships.state')}</Label>
+                      <Label htmlFor="state" className="block mb-3">{t('dealerships.state')}</Label>
                       <Input
                         id="state"
                         value={formData.state}
@@ -322,7 +323,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="zip_code">{t('dealerships.zip')}</Label>
+                      <Label htmlFor="zip_code" className="block mb-3">{t('dealerships.zip')}</Label>
                       <Input
                         id="zip_code"
                         value={formData.zip_code}
@@ -332,7 +333,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                     </div>
 
                     <div>
-                      <Label htmlFor="country">{t('dealerships.country')}</Label>
+                      <Label htmlFor="country" className="block mb-3">{t('dealerships.country')}</Label>
                       <Select value={formData.country} onValueChange={(value) => handleInputChange('country', value)}>
                         <SelectTrigger>
                           <SelectValue />
@@ -357,7 +358,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.branding')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="logo_url">{t('dealerships.logo')}</Label>
+                    <Label htmlFor="logo_url" className="block mb-3">{t('dealerships.logo')}</Label>
                     <Input
                       id="logo_url"
                       value={formData.logo_url}
@@ -368,7 +369,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                   </div>
 
                   <div>
-                    <Label htmlFor="primary_color" className="flex items-center gap-2">
+                    <Label htmlFor="primary_color" className="flex items-center gap-2 mb-3">
                       <Palette className="h-4 w-4" />
                       {t('dealerships.primary_color')}
                     </Label>
@@ -394,7 +395,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
 
               {/* Notes */}
               <div>
-                <Label htmlFor="notes">{t('dealerships.notes')}</Label>
+                <Label htmlFor="notes" className="block mb-3">{t('dealerships.notes')}</Label>
                 <Textarea
                   id="notes"
                   value={formData.notes}
@@ -414,7 +415,8 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
               {loading ? t('common.loading') : t('common.save')}
             </Button>
           </div>
-        </form>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
