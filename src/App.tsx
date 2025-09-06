@@ -9,6 +9,7 @@ import SalesOrders from "./pages/SalesOrders";
 import ServiceOrders from "./pages/ServiceOrders";
 import ReconOrders from "./pages/ReconOrders";
 import CarWash from "./pages/CarWash";
+import { Dealerships } from "./pages/Dealerships";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";

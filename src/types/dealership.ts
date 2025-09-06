@@ -1,0 +1,136 @@
+export type DealershipStatus = 'active' | 'inactive' | 'suspended';
+export type SubscriptionPlan = 'basic' | 'premium' | 'enterprise';
+export type UserRole = 'admin' | 'manager' | 'technician' | 'viewer';
+export type UserDepartment = 'detailing' | 'wash' | 'service';
+export type ContactDepartment = 'sales' | 'service' | 'parts' | 'management' | 'other';
+export type LanguageCode = 'en' | 'es' | 'pt-BR';
+
+export interface Dealership {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
+  country?: string;
+  website?: string;
+  tax_number?: string;
+  logo_url?: string;
+  primary_color: string;
+  status: DealershipStatus;
+  subscription_plan: SubscriptionPlan;
+  max_users: number;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  // Computed fields
+  contacts_count?: number;
+  users_count?: number;
+}
+
+export interface DealershipContact {
+  id: number;
+  dealership_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  mobile_phone?: string;
+  position?: string;
+  department: ContactDepartment;
+  is_primary: boolean;
+  can_receive_notifications: boolean;
+  preferred_language: LanguageCode;
+  notes?: string;
+  avatar_url?: string;
+  status: DealershipStatus;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+}
+
+export interface DetailUser {
+  id: number;
+  dealership_id?: number;
+  email: string;
+  password_hash?: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  role: UserRole;
+  department: UserDepartment;
+  employee_id?: string;
+  hire_date?: string;
+  avatar_url?: string;
+  language_preference: LanguageCode;
+  timezone: string;
+  is_active: boolean;
+  can_access_all_dealerships: boolean;
+  assigned_dealerships: number[];
+  permissions: Record<string, any>;
+  last_login_at?: string;
+  email_verified_at?: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  // Relations
+  dealership?: Dealership;
+}
+
+export interface DealershipFormData {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  country: string;
+  website: string;
+  tax_number: string;
+  logo_url: string;
+  primary_color: string;
+  status: DealershipStatus;
+  subscription_plan: SubscriptionPlan;
+  max_users: number;
+  notes: string;
+}
+
+export interface ContactFormData {
+  dealership_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  mobile_phone?: string;
+  position?: string;
+  department: ContactDepartment;
+  is_primary: boolean;
+  can_receive_notifications: boolean;
+  preferred_language: LanguageCode;
+  notes?: string;
+  avatar_url?: string;
+  status: DealershipStatus;
+}
+
+export interface UserFormData {
+  dealership_id?: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  role: UserRole;
+  department: UserDepartment;
+  employee_id?: string;
+  hire_date?: string;
+  avatar_url?: string;
+  language_preference: LanguageCode;
+  timezone: string;
+  is_active: boolean;
+  can_access_all_dealerships: boolean;
+  assigned_dealerships: number[];
+  permissions: Record<string, any>;
+}

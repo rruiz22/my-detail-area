@@ -9,7 +9,8 @@ import {
   Settings,
   Bell,
   User,
-  ClipboardList
+  ClipboardList,
+  Building2
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -37,6 +38,7 @@ const mainNavItems = [
 ];
 
 const secondaryNavItems = [
+  { title: "Dealerships", url: "/dealerships", icon: Building2 },
   { title: "Reports", url: "/reports", icon: FileText },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
