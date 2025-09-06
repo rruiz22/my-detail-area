@@ -260,7 +260,7 @@ export type Database = {
       }
     }
     Views: {
-      user_profiles: {
+      user_profiles_safe: {
         Row: {
           avatar_url: string | null
           created_at: string | null
