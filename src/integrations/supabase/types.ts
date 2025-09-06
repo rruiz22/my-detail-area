@@ -14,7 +14,250 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      dealership_contacts: {
+        Row: {
+          avatar_url: string | null
+          can_receive_notifications: boolean | null
+          created_at: string | null
+          dealership_id: number
+          deleted_at: string | null
+          department: Database["public"]["Enums"]["contact_department"] | null
+          email: string
+          first_name: string
+          id: number
+          is_primary: boolean | null
+          last_name: string
+          mobile_phone: string | null
+          notes: string | null
+          phone: string | null
+          position: string | null
+          preferred_language:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          status: Database["public"]["Enums"]["dealership_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          can_receive_notifications?: boolean | null
+          created_at?: string | null
+          dealership_id: number
+          deleted_at?: string | null
+          department?: Database["public"]["Enums"]["contact_department"] | null
+          email: string
+          first_name: string
+          id?: number
+          is_primary?: boolean | null
+          last_name: string
+          mobile_phone?: string | null
+          notes?: string | null
+          phone?: string | null
+          position?: string | null
+          preferred_language?:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          status?: Database["public"]["Enums"]["dealership_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          can_receive_notifications?: boolean | null
+          created_at?: string | null
+          dealership_id?: number
+          deleted_at?: string | null
+          department?: Database["public"]["Enums"]["contact_department"] | null
+          email?: string
+          first_name?: string
+          id?: number
+          is_primary?: boolean | null
+          last_name?: string
+          mobile_phone?: string | null
+          notes?: string | null
+          phone?: string | null
+          position?: string | null
+          preferred_language?:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          status?: Database["public"]["Enums"]["dealership_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealership_contacts_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealerships: {
+        Row: {
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          deleted_at: string | null
+          email: string
+          id: number
+          logo_url: string | null
+          max_users: number | null
+          name: string
+          notes: string | null
+          phone: string | null
+          primary_color: string | null
+          state: string | null
+          status: Database["public"]["Enums"]["dealership_status"] | null
+          subscription_plan:
+            | Database["public"]["Enums"]["subscription_plan"]
+            | null
+          tax_number: string | null
+          updated_at: string | null
+          website: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email: string
+          id?: number
+          logo_url?: string | null
+          max_users?: number | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["dealership_status"] | null
+          subscription_plan?:
+            | Database["public"]["Enums"]["subscription_plan"]
+            | null
+          tax_number?: string | null
+          updated_at?: string | null
+          website?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string
+          id?: number
+          logo_url?: string | null
+          max_users?: number | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["dealership_status"] | null
+          subscription_plan?:
+            | Database["public"]["Enums"]["subscription_plan"]
+            | null
+          tax_number?: string | null
+          updated_at?: string | null
+          website?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
+      detail_users: {
+        Row: {
+          assigned_dealerships: Json | null
+          avatar_url: string | null
+          can_access_all_dealerships: boolean | null
+          created_at: string | null
+          dealership_id: number | null
+          deleted_at: string | null
+          department: Database["public"]["Enums"]["user_department"] | null
+          email: string
+          email_verified_at: string | null
+          employee_id: string | null
+          first_name: string
+          hire_date: string | null
+          id: number
+          is_active: boolean | null
+          language_preference:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          last_login_at: string | null
+          last_name: string
+          password_hash: string | null
+          permissions: Json | null
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          timezone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_dealerships?: Json | null
+          avatar_url?: string | null
+          can_access_all_dealerships?: boolean | null
+          created_at?: string | null
+          dealership_id?: number | null
+          deleted_at?: string | null
+          department?: Database["public"]["Enums"]["user_department"] | null
+          email: string
+          email_verified_at?: string | null
+          employee_id?: string | null
+          first_name: string
+          hire_date?: string | null
+          id?: number
+          is_active?: boolean | null
+          language_preference?:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          last_login_at?: string | null
+          last_name: string
+          password_hash?: string | null
+          permissions?: Json | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_dealerships?: Json | null
+          avatar_url?: string | null
+          can_access_all_dealerships?: boolean | null
+          created_at?: string | null
+          dealership_id?: number | null
+          deleted_at?: string | null
+          department?: Database["public"]["Enums"]["user_department"] | null
+          email?: string
+          email_verified_at?: string | null
+          employee_id?: string | null
+          first_name?: string
+          hire_date?: string | null
+          id?: number
+          is_active?: boolean | null
+          language_preference?:
+            | Database["public"]["Enums"]["language_code"]
+            | null
+          last_login_at?: string | null
+          last_name?: string
+          password_hash?: string | null
+          permissions?: Json | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_users_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +266,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      contact_department: "sales" | "service" | "parts" | "management" | "other"
+      dealership_status: "active" | "inactive" | "suspended"
+      language_code: "en" | "es" | "pt-BR"
+      subscription_plan: "basic" | "premium" | "enterprise"
+      user_department: "detailing" | "wash" | "service"
+      user_role: "admin" | "manager" | "technician" | "viewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +398,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      contact_department: ["sales", "service", "parts", "management", "other"],
+      dealership_status: ["active", "inactive", "suspended"],
+      language_code: ["en", "es", "pt-BR"],
+      subscription_plan: ["basic", "premium", "enterprise"],
+      user_department: ["detailing", "wash", "service"],
+      user_role: ["admin", "manager", "technician", "viewer"],
+    },
   },
 } as const
