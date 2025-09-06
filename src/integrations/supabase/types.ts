@@ -325,7 +325,10 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      get_user_role_secure: {
+        Args: { user_email: string }
+        Returns: string
+      }
     }
     Enums: {
       contact_department: "sales" | "service" | "parts" | "management" | "other"
