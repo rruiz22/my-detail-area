@@ -39,7 +39,30 @@
     "email_required": "E-mail é obrigatório",
     "password_required": "Senha é obrigatória",
     "invalid_email": "Por favor digite um e-mail válido",
-    "passwords_dont_match": "As senhas não coincidem"
+    "passwords_dont_match": "As senhas não coincidem",
+    "create_account": "Criar Conta",
+    "welcome_back": "Bem-vindo de Volta",
+    "enter_details_create": "Digite seus dados para criar uma nova conta",
+    "enter_credentials": "Digite suas credenciais para acessar sua conta",
+    "admin_test_notice": "Para testes de administrador:",
+    "admin_test_instructions": "Use: admin@company.com com qualquer senha para obter permissões completas de administrador automaticamente.",
+    "dealership_operations_hub": "Centro de Operações da Concessionária",
+    "processing": "Processando...",
+    "password_strength": "Força da Senha",
+    "at_least_8_chars": "Pelo menos 8 caracteres",
+    "one_uppercase": "Uma letra maiúscula",
+    "one_lowercase": "Uma letra minúscula",
+    "one_number": "Um número", 
+    "one_special_char": "Um caractere especial",
+    "invalid_email_message": "Por favor digite um endereço de e-mail válido",
+    "invalid_email_title": "E-mail Inválido",
+    "weak_password_title": "Senha Fraca",
+    "weak_password_message": "A senha deve atender aos requisitos de segurança.",
+    "authentication_error": "Erro de Autenticação",
+    "account_created_title": "Conta Criada",
+    "check_email_verify": "Por favor verifique seu e-mail para verificar sua conta.",
+    "error_title": "Erro",
+    "unexpected_error": "Ocorreu um erro inesperado. Por favor tente novamente."
   },
   "dashboard": {
     "title": "Painel de Controle",
@@ -213,14 +236,23 @@
   "settings": {
     "title": "Configurações",
     "general": "Configurações Gerais",
+    "general_settings": "Configurações Gerais",
+    "dealership_name": "Nome da Concessionária",
+    "location": "Localização",
+    "address": "Endereço",
     "account": "Configurações da Conta",
     "security": "Segurança",
     "notifications": "Notificações",
+    "notification_settings": "Configurações de Notificação",
     "appearance": "Aparência",
     "language": "Idioma",
     "timezone": "Fuso Horário",
     "email_notifications": "Notificações por E-mail",
+    "email_alerts_description": "Receber alertas por e-mail para mudanças de status de pedidos",
     "sms_notifications": "Notificações SMS",
+    "sms_description": "Enviar SMS quando pedidos forem concluídos (requer integração com Twilio)",
+    "in_app_alerts": "Alertas no Aplicativo",
+    "toast_description": "Mostrar notificações toast no aplicativo",
     "push_notifications": "Notificações Push",
     "dark_mode": "Modo Escuro",
     "light_mode": "Modo Claro",
@@ -235,7 +267,16 @@
     "confirm_new_password": "Confirmar Nova Senha",
     "two_factor_auth": "Autenticação de Dois Fatores",
     "enable_2fa": "Habilitar 2FA",
-    "disable_2fa": "Desabilitar 2FA"
+    "disable_2fa": "Desabilitar 2FA",
+    "integrations": "Integrações",
+    "database_backend": "Banco de Dados e Backend",
+    "connect_supabase": "Conectar Supabase",
+    "supabase_description": "Conectar ao Supabase para funcionalidade completa de banco de dados, autenticação de usuário e recursos avançados como notificações SMS e armazenamento de arquivos.",
+    "vin_decoding_api": "API de Decodificação VIN",
+    "configure": "Configurar",
+    "vin_api_description": "Integração da API MarketCheck para decodificação automática de VIN",
+    "photo_management": "Gestão de Fotos",
+    "photo_description": "Configurar armazenamento e configurações de gestão de fotos"
   },
   "common": {
     "save": "Salvar",
@@ -366,8 +407,11 @@
     },
     "tabs": {
       "overview": "Visão Geral",
+      "overview_short": "Visão Geral",
       "groups": "Grupos",
-      "users": "Usuários",
+      "groups_short": "Grupos",
+      "users": "Usuários", 
+      "users_short": "Usuários",
       "services": "Serviços"
     },
     "overview": {
@@ -463,6 +507,9 @@
         "last_name_placeholder": "Silva",
         "groups": "Grupos Iniciais"
       }
+    },
+    "tabs": {
+      "services": "Serviços"
     }
   },
   "services": {
@@ -596,5 +643,110 @@
     "enter_dealership_name": "Digite o nome da concessionária",
     "enter_location": "Digite a localização",
     "enter_full_address": "Digite o endereço completo"
+  },
+  "dashboard_hero": {
+    "welcome": "Bem-vindo à Minha Área de Detalhamento",
+    "subtitle": "Seu centro de comando de operações da concessionária",
+    "create_order": "Criar Pedido",
+    "view_reports": "Ver Relatórios",
+    "total_orders": "Total de Pedidos",
+    "from_last_month": "+12% do mês passado",
+    "active_orders": "Pedidos Ativos",
+    "completed_orders": "Pedidos Concluídos",
+    "pending_approval": "Pendentes de Aprovação",
+    "order_completion_rate": "Taxa de Conclusão de Pedidos",
+    "service_quality": "Qualidade do Serviço",
+    "rating": "avaliação",
+    "revenue_growth": "Crescimento da Receita",
+    "vs_last_month": "vs mês passado",
+    "no_recent_orders": "Nenhum pedido recente para exibir",
+    "recent_orders": "Pedidos Recentes",
+    "view_all": "Ver Tudo",
+    "order": "Pedido",
+    "customer": "Cliente",
+    "service": "Serviço",
+    "status": "Status",
+    "amount": "Valor"
+  },
+  "not_found": {
+    "title": "Página Não Encontrada",
+    "message": "A página que você está procurando não existe ou foi movida.",
+    "go_back": "Voltar",
+    "back_to_dashboard": "Voltar ao Painel"
+  },
+  "sales_orders": {
+    "tabs": {
+      "dashboard": "Painel",
+      "today": "Pedidos de Hoje",
+      "tomorrow": "Pedidos de Amanhã",
+      "pending": "Pedidos Pendentes",
+      "week": "Visão Semanal",
+      "all": "Todos os Pedidos",
+      "services": "Serviços",
+      "deleted": "Pedidos Excluídos"
+    },
+    "charts": {
+      "trend_analysis": "Análise de Tendências de Pedidos",
+      "track_performance": "Acompanhar o desempenho dos pedidos ao longo do tempo",
+      "status_distribution": "Distribuição de Status",
+      "current_status_breakdown": "Detalhamento do status atual dos pedidos",
+      "require_attention": "Requerem Atenção",
+      "last_update": "Última atualização"
+    },
+    "actions": {
+      "refresh": "Atualizar",
+      "filters": "Filtros",
+      "new_order": "Novo Pedido"
+    },
+    "days": {
+      "mon": "Seg",
+      "tue": "Ter",
+      "wed": "Qua",
+      "thu": "Qui",
+      "fri": "Sex",
+      "sat": "Sáb",
+      "sun": "Dom"
+    },
+    "status_types": {
+      "pending": "Pendente",
+      "processing": "Processando",
+      "completed": "Concluído"
+    }
+  },
+  "car_wash_orders": {
+    "title": "Ordens de Lavagem",
+    "description": "Gerenciar serviços e ordens de lavagem de carros"
+  },
+  "service_orders": {
+    "title": "Ordens de Serviço",
+    "description": "Gerenciar ordens de serviço automotivo"
+  },
+  "recon_orders": {
+    "title": "Ordens de Recondicionamento",
+    "description": "Gerenciar ordens de recondicionamento de veículos"
+  },
+  "table": {
+    "order_id": "ID do Pedido",
+    "vehicle": "Veículo",
+    "customer": "Cliente",
+    "service": "Serviço",
+    "advisor": "Consultor",
+    "price": "Preço",
+    "status": "Status",
+    "actions": "Ações",
+    "stock": "Estoque",
+    "vin": "VIN",
+    "view": "Visualizar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "no_results": "Nenhum resultado encontrado",
+    "loading": "Carregando...",
+    "empty_state": "Nenhum dado disponível"
+  },
+  "landing": {
+    "welcome": "Bem-vindo ao Sistema de Gestão",
+    "description": "Faça login para acessar revendedores, contatos e mais funcionalidades",
+    "sign_in": "Entrar",
+    "register": "Cadastrar"
   }
 }

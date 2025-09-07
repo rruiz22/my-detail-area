@@ -39,7 +39,30 @@
     "email_required": "Email is required",
     "password_required": "Password is required",
     "invalid_email": "Please enter a valid email address",
-    "passwords_dont_match": "Passwords don't match"
+    "passwords_dont_match": "Passwords don't match",
+    "create_account": "Create Account",
+    "welcome_back": "Welcome Back",
+    "enter_details_create": "Enter your details to create a new account",
+    "enter_credentials": "Enter your credentials to access your account",
+    "admin_test_notice": "For admin testing:",
+    "admin_test_instructions": "Use: admin@company.com with any password to get full admin permissions automatically.",
+    "dealership_operations_hub": "Dealership Operations Hub",
+    "processing": "Processing...",
+    "password_strength": "Password Strength",
+    "at_least_8_chars": "At least 8 characters",
+    "one_uppercase": "One uppercase letter",
+    "one_lowercase": "One lowercase letter", 
+    "one_number": "One number",
+    "one_special_char": "One special character",
+    "invalid_email_message": "Please enter a valid email address",
+    "invalid_email_title": "Invalid Email",
+    "weak_password_title": "Weak Password",
+    "weak_password_message": "Password must meet security requirements.",
+    "authentication_error": "Authentication Error",
+    "account_created_title": "Account Created",
+    "check_email_verify": "Please check your email to verify your account.",
+    "error_title": "Error",
+    "unexpected_error": "An unexpected error occurred. Please try again."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -213,14 +236,23 @@
   "settings": {
     "title": "Settings",
     "general": "General Settings",
+    "general_settings": "General Settings", 
+    "dealership_name": "Dealership Name",
+    "location": "Location",
+    "address": "Address",
     "account": "Account Settings",
     "security": "Security",
     "notifications": "Notifications",
+    "notification_settings": "Notification Settings",
     "appearance": "Appearance",
     "language": "Language",
     "timezone": "Timezone", 
     "email_notifications": "Email Notifications",
+    "email_alerts_description": "Receive email alerts for order status changes",
     "sms_notifications": "SMS Notifications",
+    "sms_description": "Send SMS when orders are completed (requires Twilio integration)",
+    "in_app_alerts": "In-App Alerts",
+    "toast_description": "Show toast notifications in the application",
     "push_notifications": "Push Notifications",
     "dark_mode": "Dark Mode",
     "light_mode": "Light Mode",
@@ -235,7 +267,16 @@
     "confirm_new_password": "Confirm New Password",
     "two_factor_auth": "Two-Factor Authentication",
     "enable_2fa": "Enable 2FA",
-    "disable_2fa": "Disable 2FA"
+    "disable_2fa": "Disable 2FA",
+    "integrations": "Integrations",
+    "database_backend": "Database & Backend",
+    "connect_supabase": "Connect Supabase",
+    "supabase_description": "Connect to Supabase for full database functionality, user authentication, and advanced features like SMS notifications and file storage.",
+    "vin_decoding_api": "VIN Decoding API",
+    "configure": "Configure",
+    "vin_api_description": "MarketCheck API integration for automatic VIN decoding",
+    "photo_management": "Photo Management",
+    "photo_description": "Configure photo storage and management settings"
   },
   "common": {
     "save": "Save",
@@ -366,8 +407,11 @@
     },
     "tabs": {
       "overview": "Overview",
-      "groups": "Groups",
+      "overview_short": "Overview",
+      "groups": "Groups", 
+      "groups_short": "Groups",
       "users": "Users",
+      "users_short": "Users",
       "services": "Services"
     },
     "overview": {
@@ -463,6 +507,9 @@
         "last_name_placeholder": "Doe",
         "groups": "Initial Groups"
       }
+    },
+    "tabs": {
+      "services": "Services"
     }
   },
   "services": {
@@ -596,5 +643,110 @@
     "enter_dealership_name": "Enter dealership name",
     "enter_location": "Enter location",
     "enter_full_address": "Enter full address"
+  },
+  "dashboard_hero": {
+    "welcome": "Welcome to My Detail Area",
+    "subtitle": "Your dealership operations command center",
+    "create_order": "Create Order",
+    "view_reports": "View Reports",
+    "total_orders": "Total Orders",
+    "from_last_month": "+12% from last month",
+    "active_orders": "Active Orders",
+    "completed_orders": "Completed Orders",
+    "pending_approval": "Pending Approval",
+    "order_completion_rate": "Order Completion Rate",
+    "service_quality": "Service Quality",
+    "rating": "rating",
+    "revenue_growth": "Revenue Growth",
+    "vs_last_month": "vs last month",
+    "no_recent_orders": "No recent orders to display",
+    "recent_orders": "Recent Orders",
+    "view_all": "View All",
+    "order": "Order",
+    "customer": "Customer",
+    "service": "Service",
+    "status": "Status",
+    "amount": "Amount"
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "go_back": "Go Back",
+    "back_to_dashboard": "Back to Dashboard"
+  },
+  "sales_orders": {
+    "tabs": {
+      "dashboard": "Dashboard",
+      "today": "Today's Orders",
+      "tomorrow": "Tomorrow's Orders", 
+      "pending": "Pending Orders",
+      "week": "Week View",
+      "all": "All Orders",
+      "services": "Services",
+      "deleted": "Deleted Orders"
+    },
+    "charts": {
+      "trend_analysis": "Orders Trend Analysis",
+      "track_performance": "Track order performance over time",
+      "status_distribution": "Status Distribution", 
+      "current_status_breakdown": "Current order status breakdown",
+      "require_attention": "Require Attention",
+      "last_update": "Last update"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "filters": "Filters",
+      "new_order": "New Order"
+    },
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue", 
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "status_types": {
+      "pending": "Pending",
+      "processing": "Processing", 
+      "completed": "Completed"
+    }
+  },
+  "car_wash_orders": {
+    "title": "Car Wash Orders",
+    "description": "Manage car wash services and orders"
+  },
+  "service_orders": {
+    "title": "Service Orders", 
+    "description": "Manage automotive service orders"
+  },
+  "recon_orders": {
+    "title": "Recon Orders",
+    "description": "Manage vehicle reconditioning orders"
+  },
+  "table": {
+    "order_id": "Order ID",
+    "vehicle": "Vehicle",
+    "customer": "Customer",
+    "service": "Service",
+    "advisor": "Advisor",
+    "price": "Price",
+    "status": "Status",
+    "actions": "Actions",
+    "stock": "Stock",
+    "vin": "VIN",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "no_results": "No results found",
+    "loading": "Loading...",
+    "empty_state": "No data available"
+  },
+  "landing": {
+    "welcome": "Welcome to the Management System",
+    "description": "Sign in to access dealers, contacts and more features",
+    "sign_in": "Sign In", 
+    "register": "Register"
   }
 }
