@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -22,7 +23,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           {/* Header */}
           <header className="h-16 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 flex items-center justify-between px-6">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="lg:hidden" />
+              <SidebarTrigger />
               {title && (
                 <h1 className="text-xl font-semibold">{title}</h1>
               )}
@@ -38,6 +39,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
               </div>
               
               <LanguageSwitcher />
+              <ThemeToggle />
               
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="w-4 h-4" />

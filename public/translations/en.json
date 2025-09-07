@@ -198,5 +198,8 @@
     "manage": "Manage",
     "no_users_found": "No users found",
     "no_users_matching_filters": "No users found matching your filters"
+  },
+  "common": {
+    "toggle_theme": "Toggle theme"
   }
 }
