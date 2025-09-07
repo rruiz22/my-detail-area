@@ -136,22 +136,7 @@ const DealerView = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="services" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Wrench className="h-5 w-5" />
-                  <span>{t('services.title')}</span>
-                </CardTitle>
-                <CardDescription>
-                  {t('services.subtitle')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <DealerServices dealerId={id} />
-              </CardContent>
-            </Card>
-          </TabsContent>
+          
         </Tabs>
       </div>
     </DashboardLayout>;
