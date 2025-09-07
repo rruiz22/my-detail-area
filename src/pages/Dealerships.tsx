@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +47,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 
 export function Dealerships() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [dealerships, setDealerships] = useState<Dealership[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -178,6 +180,10 @@ export function Dealerships() {
     handleModalClose();
   };
 
+  const handleViewDealer = (dealership: Dealership) => {
+    navigate(`/dealers/${dealership.id}`);
+  };
+
   return (
     <DashboardLayout title={t('dealerships.title')}>
       <div className="space-y-6">
@@ -271,7 +277,11 @@ export function Dealerships() {
                   </TableRow>
                 ) : (
                   dealerships.map((dealership) => (
-                    <TableRow key={dealership.id}>
+                    <TableRow 
+                      key={dealership.id} 
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleViewDealer(dealership)}
+                    >
                       <TableCell>
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={dealership.logo_url} alt={dealership.name} />
@@ -319,16 +329,33 @@ export function Dealerships() {
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(dealership)}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDealer(dealership);
+                            }}>
+                              <Eye className="mr-2 h-4 w-4" />
+                              {t('common.view')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(dealership);
+                            }}>
                               <Edit className="mr-2 h-4 w-4" />
                               {t('common.edit')}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDelete(dealership)}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(dealership);
+                            }}>
                               <Trash2 className="mr-2 h-4 w-4" />
                               {t('common.delete')}
                             </DropdownMenuItem>

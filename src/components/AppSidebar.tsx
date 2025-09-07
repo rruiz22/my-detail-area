@@ -32,18 +32,6 @@ const secondaryNavItems = [{
   url: "/management",
   icon: Shield
 }, {
-  title: "Dealerships",
-  url: "/dealerships",
-  icon: Building2
-}, {
-  title: "Contacts", 
-  url: "/contacts",
-  icon: Users2
-}, {
-  title: "Users",
-  url: "/users",
-  icon: Users
-}, {
   title: "Reports",
   url: "/reports",
   icon: FileText
