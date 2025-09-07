@@ -4,14 +4,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Building2, 
-  BarChart3, 
-  Shield, 
-  Users,
-  ArrowLeft,
-  Wrench
-} from 'lucide-react';
+import { Building2, BarChart3, Shield, Users, ArrowLeft, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { DealerOverview } from '@/components/dealer/DealerOverview';
@@ -19,14 +12,17 @@ import { DealerGroups } from '@/components/dealer/DealerGroups';
 import { DealerUsers } from '@/components/dealer/DealerUsers';
 import { DealerServices } from '@/components/dealer/DealerServices';
 import { Link } from 'react-router-dom';
-
 const DealerView = () => {
-  const { id } = useParams<{ id: string }>();
-  const { t } = useTranslation();
-
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
+  const {
+    t
+  } = useTranslation();
   if (!id) {
-    return (
-      <DashboardLayout title={t('dealer.view.not_found')}>
+    return <DashboardLayout title={t('dealer.view.not_found')}>
         <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
           <Building2 className="h-12 w-12 text-muted-foreground" />
           <h1 className="text-2xl font-bold">{t('dealer.view.not_found')}</h1>
@@ -38,12 +34,9 @@ const DealerView = () => {
             </Link>
           </Button>
         </div>
-      </DashboardLayout>
-    );
+      </DashboardLayout>;
   }
-
-  return (
-    <DashboardLayout>
+  return <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -60,7 +53,9 @@ const DealerView = () => {
                 <span>{t('dealer.view.title')}</span>
               </h1>
               <p className="text-muted-foreground">
-                {t('dealer.view.subtitle', { id })}
+                {t('dealer.view.subtitle', {
+                id
+              })}
               </p>
             </div>
           </div>
@@ -115,13 +110,8 @@ const DealerView = () => {
           <TabsContent value="groups" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Shield className="h-5 w-5" />
-                  <span>{t('dealer.view.groups.title')}</span>
-                </CardTitle>
-                <CardDescription>
-                  {t('dealer.view.groups.description')}
-                </CardDescription>
+                
+                
               </CardHeader>
               <CardContent>
                 <DealerGroups dealerId={id} />
@@ -164,8 +154,6 @@ const DealerView = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayout>
-  );
+    </DashboardLayout>;
 };
-
 export default DealerView;
