@@ -81,7 +81,7 @@ export default function SalesOrders() {
   };
 
   const handleDeleteOrder = async (orderId: string) => {
-    if (confirm('¿Estás seguro de que quieres eliminar esta orden?')) {
+    if (confirm(t('messages.confirm_delete_order'))) {
       await deleteOrder(orderId);
     }
   };
@@ -121,16 +121,16 @@ export default function SalesOrders() {
               className={showFilters ? 'bg-accent text-accent-foreground' : ''}
             >
               <Filter className="w-4 h-4 mr-2" />
-              Filtros
+              {t('common.filters')}
             </Button>
             <Button variant="outline" onClick={refreshData} disabled={loading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Actualizar
+              {t('common.refresh')}
             </Button>
           </div>
           
           <div className="text-sm text-muted-foreground">
-            Última actualización: {lastRefresh.toLocaleTimeString()}
+            {t('orders.last_update')}: {lastRefresh.toLocaleTimeString()}
           </div>
         </div>
 
@@ -170,7 +170,7 @@ export default function SalesOrders() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card className="border-border shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Today's Orders</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t('orders.today_orders')}</CardTitle>
                     <Calendar className="h-4 w-4 text-success" />
                   </CardHeader>
                   <CardContent>
@@ -181,7 +181,7 @@ export default function SalesOrders() {
 
                 <Card className="border-border shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Tomorrow's Orders</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t('orders.tomorrow_orders')}</CardTitle>
                     <Clock className="h-4 w-4 text-primary" />
                   </CardHeader>
                   <CardContent>
@@ -192,18 +192,18 @@ export default function SalesOrders() {
 
                 <Card className="border-border shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Pending Orders</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t('orders.pending_orders')}</CardTitle>
                     <AlertCircle className="h-4 w-4 text-warning" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold text-foreground">{tabCounts.pending || 0}</div>
-                    <p className="text-xs text-warning">Require Attention</p>
+                    <p className="text-xs text-warning">{t('orders.require_attention')}</p>
                   </CardContent>
                 </Card>
 
                 <Card className="border-border shadow-sm">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">Week Orders</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t('orders.week_orders')}</CardTitle>
                     <BarChart3 className="h-4 w-4 text-accent" />
                   </CardHeader>
                   <CardContent>
@@ -217,8 +217,8 @@ export default function SalesOrders() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="border-border shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-base font-medium text-foreground">Orders Trend Analysis</CardTitle>
-                    <p className="text-sm text-muted-foreground">Track order performance over time</p>
+                    <CardTitle className="text-base font-medium text-foreground">{t('orders.orders_trend_analysis')}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{t('orders.track_order_performance')}</p>
                   </CardHeader>
                   <CardContent>
                     <div className="h-[300px]">
@@ -256,8 +256,8 @@ export default function SalesOrders() {
 
                 <Card className="border-border shadow-sm">
                   <CardHeader>
-                    <CardTitle className="text-base font-medium text-foreground">Status Distribution</CardTitle>
-                    <p className="text-sm text-muted-foreground">Current order status breakdown</p>
+                    <CardTitle className="text-base font-medium text-foreground">{t('orders.status_distribution')}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{t('orders.current_order_status')}</p>
                   </CardHeader>
                   <CardContent>
                     <div className="h-[300px]">

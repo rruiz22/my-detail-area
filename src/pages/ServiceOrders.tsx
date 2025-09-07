@@ -21,8 +21,10 @@ import {
 import { Plus, Download, Eye } from "lucide-react";
 import { mockOrders } from "@/lib/mockData";
 import { StatusBadge } from "@/components/StatusBadge";
+import { useTranslation } from 'react-i18next';
 
 export default function ServiceOrders() {
+  const { t } = useTranslation();
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -40,27 +42,27 @@ export default function ServiceOrders() {
   });
 
   return (
-    <DashboardLayout title="Service Orders">
+    <DashboardLayout title={t('pages.service_orders')}>
       <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <Input
-              placeholder="Search orders..."
+              placeholder={t('orders.search_orders')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-64"
             />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={t('orders.filter_by_status')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="In Progress">In Progress</SelectItem>
-                <SelectItem value="Complete">Complete</SelectItem>
-                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                <SelectItem value="all">{t('orders.all_status')}</SelectItem>
+                <SelectItem value="Pending">{t('orders.pending')}</SelectItem>
+                <SelectItem value="In Progress">{t('orders.in_progress')}</SelectItem>
+                <SelectItem value="Complete">{t('orders.complete')}</SelectItem>
+                <SelectItem value="Cancelled">{t('orders.cancelled')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -68,11 +70,11 @@ export default function ServiceOrders() {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
-              Export
+              {t('orders.export')}
             </Button>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              New Order
+              {t('orders.new_order')}
             </Button>
           </div>
         </div>
@@ -80,20 +82,20 @@ export default function ServiceOrders() {
         {/* Orders Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Service Orders ({filteredOrders.length})</CardTitle>
+            <CardTitle>{t('pages.service_orders')} ({filteredOrders.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Vehicle</TableHead>
-                  <TableHead>VIN</TableHead>
-                  <TableHead>Service</TableHead>
-                  <TableHead>Advisor</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>{t('orders.order_id')}</TableHead>
+                  <TableHead>{t('orders.vehicle')}</TableHead>
+                  <TableHead>{t('orders.vin')}</TableHead>
+                  <TableHead>{t('orders.service')}</TableHead>
+                  <TableHead>{t('orders.advisor')}</TableHead>
+                  <TableHead>{t('orders.price')}</TableHead>
+                  <TableHead>{t('orders.status')}</TableHead>
+                  <TableHead>{t('orders.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
