@@ -9,13 +9,15 @@ import {
   BarChart3, 
   Shield, 
   Users,
-  ArrowLeft
+  ArrowLeft,
+  Wrench
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { DealerOverview } from '@/components/dealer/DealerOverview';
 import { DealerGroups } from '@/components/dealer/DealerGroups';
 import { DealerUsers } from '@/components/dealer/DealerUsers';
+import { DealerServices } from '@/components/dealer/DealerServices';
 import { Link } from 'react-router-dom';
 
 const DealerView = () => {
@@ -70,7 +72,7 @@ const DealerView = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.overview')}</span>
@@ -85,6 +87,11 @@ const DealerView = () => {
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.users')}</span>
               <span className="sm:hidden">{t('dealer.view.tabs.users_short')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center space-x-2">
+              <Wrench className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('dealer.tabs.services')}</span>
+              <span className="sm:hidden">{t('dealer.tabs.services')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -135,6 +142,23 @@ const DealerView = () => {
               </CardHeader>
               <CardContent>
                 <DealerUsers dealerId={id} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="services" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Wrench className="h-5 w-5" />
+                  <span>{t('services.title')}</span>
+                </CardTitle>
+                <CardDescription>
+                  {t('services.subtitle')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <DealerServices dealerId={id} />
               </CardContent>
             </Card>
           </TabsContent>

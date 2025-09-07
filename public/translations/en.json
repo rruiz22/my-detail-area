@@ -319,11 +319,9 @@
       "active": "Active",
       "tabs": {
         "overview": "Overview",
-        "overview_short": "Overview",
         "groups": "Groups",
-        "groups_short": "Groups", 
         "users": "Users",
-        "users_short": "Users"
+        "services": "Services"
       }
     },
     "overview": {
@@ -432,6 +430,71 @@
         "groups": "Initial Groups"
       }
     }
+  },
+  "services": {
+    "title": "Services Management",
+    "subtitle": "Manage services for this dealer",
+    "add": "Add Service",
+    "edit": "Edit Service",
+    "addFirst": "Add First Service",
+    "name": "Service Name",
+    "description": "Description",
+    "price": "Price",
+    "category": "Category",
+    "duration": "Duration (minutes)",
+    "durationPlaceholder": "e.g., 30",
+    "assignGroups": "Assign to Groups",
+    "active": "Active",
+    "inactive": "Inactive",
+    "search": "Search services...",
+    "allCategories": "All Categories",
+    "assignedTo": "Assigned to",
+    "minutes": "min",
+    "noServices": "No services found",
+    "noServicesDescription": "Start by adding your first service to manage offerings for this dealer.",
+    "categories": {
+      "general": "General",
+      "wash": "Wash",
+      "detail": "Detail",
+      "protection": "Protection",
+      "repair": "Repair",
+      "maintenance": "Maintenance",
+      "custom": "Custom"
+    },
+    "success": "Success",
+    "error": "Error",
+    "created": "Service created successfully",
+    "updated": "Service updated successfully",
+    "deleted": "Service deleted successfully",
+    "fetchError": "Failed to fetch services",
+    "saveError": "Failed to save service",
+    "deleteError": "Failed to delete service",
+    "confirmDelete": "Are you sure you want to delete this service?"
+  },
+  "orders": {
+    "create": "Create Order",
+    "edit": "Edit Order",
+    "clientInfo": "Client Information",
+    "vehicleInfo": "Vehicle Information",
+    "servicesAndNotes": "Services & Notes",
+    "client": "Client",
+    "selectClient": "Select client...",
+    "customerName": "Customer Name",
+    "customerEmail": "Customer Email",
+    "customerPhone": "Customer Phone",
+    "vin": "VIN",
+    "year": "Year",
+    "make": "Make",
+    "model": "Model",
+    "priority": "Priority",
+    "lowPriority": "Low",
+    "normalPriority": "Normal",
+    "highPriority": "High",
+    "urgentPriority": "Urgent",
+    "services": "Services",
+    "total": "Total",
+    "notes": "Notes",
+    "notesPlaceholder": "Special instructions, observations, etc."
   },
   "contacts": {
     "view": {

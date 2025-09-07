@@ -1,409 +1,371 @@
-import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Save, X, User, Car, Calendar, Settings } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { supabase } from '@/integrations/supabase/client';
+import { usePermissionContext } from '@/contexts/PermissionContext';
+import { canViewPricing } from '@/utils/permissions';
 
 interface OrderModalProps {
   order?: any;
   open: boolean;
   onClose: () => void;
   onSave: (orderData: any) => void;
+  dealerId?: string;
 }
 
-export function OrderModal({ order, open, onClose, onSave }: OrderModalProps) {
+export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, onSave, dealerId }) => {
+  const { t } = useTranslation();
+  const { roles } = usePermissionContext();
+
+  // Form state
   const [formData, setFormData] = useState({
-    client: '',
-    contact: '',
-    stockNumber: '',
-    vin: '',
-    year: '',
-    make: '',
-    model: '',
-    color: '',
-    dueDate: '',
-    dueTime: '',
+    orderNumber: '',
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
+    vehicleMake: '',
+    vehicleModel: '',
+    vehicleYear: '',
+    vehicleVin: '',
+    orderType: '',
+    priority: 'normal',
     status: 'pending',
-    internalNotes: '',
-    services: [] as string[],
+    notes: ''
   });
 
-  const [clients] = useState([
-    { id: '1', name: 'Cliente A' },
-    { id: '2', name: 'Cliente B' },
-    { id: '3', name: 'Cliente C' },
-  ]);
-
+  const [selectedClient, setSelectedClient] = useState('');
   const [contacts, setContacts] = useState([]);
   const [services, setServices] = useState([]);
-  const [loadingContacts, setLoadingContacts] = useState(false);
-  const [loadingServices, setLoadingServices] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const availableServices = [
-    { id: 'detail', name: 'Detail Completo', price: 299.99 },
-    { id: 'wash', name: 'Lavado Express', price: 29.99 },
-    { id: 'wax', name: 'Encerado Premium', price: 149.99 },
-    { id: 'interior', name: 'Limpieza Interior', price: 79.99 },
-    { id: 'engine', name: 'Limpieza Motor', price: 99.99 },
-  ];
+  const canViewPrices = canViewPricing(roles);
 
   useEffect(() => {
     if (order) {
       setFormData({
-        client: order.client || '',
-        contact: order.contact || '',
-        stockNumber: order.stock || '',
-        vin: order.vin || '',
-        year: order.year?.toString() || '',
-        make: order.make || '',
-        model: order.model || '',
-        color: order.color || '',
-        dueDate: order.dueDate || '',
-        dueTime: order.dueTime || '',
+        orderNumber: order.orderNumber || '',
+        customerName: order.customerName || '',
+        customerEmail: order.customerEmail || '',
+        customerPhone: order.customerPhone || '',
+        vehicleMake: order.vehicleMake || '',
+        vehicleModel: order.vehicleModel || '',
+        vehicleYear: order.vehicleYear || '',
+        vehicleVin: order.vehicleVin || '',
+        orderType: order.orderType || '',
+        priority: order.priority || 'normal',
         status: order.status || 'pending',
-        internalNotes: order.internalNotes || '',
-        services: order.services || [],
+        notes: order.notes || ''
       });
+      setSelectedServices(order.services || []);
     } else {
-      // Reset form for new order
       setFormData({
-        client: '',
-        contact: '',
-        stockNumber: '',
-        vin: '',
-        year: '',
-        make: '',
-        model: '',
-        color: '',
-        dueDate: '',
-        dueTime: '',
+        orderNumber: '',
+        customerName: '',
+        customerEmail: '',
+        customerPhone: '',
+        vehicleMake: '',
+        vehicleModel: '',
+        vehicleYear: '',
+        vehicleVin: '',
+        orderType: '',
+        priority: 'normal',
         status: 'pending',
-        internalNotes: '',
-        services: [],
+        notes: ''
       });
+      setSelectedServices([]);
     }
-  }, [order]);
+    
+    if (dealerId) {
+      fetchDealerData();
+    }
+  }, [order, dealerId]);
 
-  const handleClientChange = async (clientId: string) => {
-    setFormData({ ...formData, client: clientId, contact: '', services: [] });
+  const fetchDealerData = async () => {
+    if (!dealerId) return;
     
-    // Simulate API calls for contacts and services
-    setLoadingContacts(true);
-    setLoadingServices(true);
-    
+    setLoading(true);
     try {
-      // Simulate contacts API call
-      setTimeout(() => {
-        const mockContacts = [
-          { id: '1', first_name: 'Juan', last_name: 'Pérez', email: 'juan@email.com', phone: '555-0123' },
-          { id: '2', first_name: 'María', last_name: 'García', email: 'maria@email.com', phone: '555-0456' },
-        ];
-        setContacts(mockContacts);
-        setLoadingContacts(false);
-      }, 500);
+      const [contactsResult, servicesResult] = await Promise.all([
+        supabase
+          .from('dealership_contacts')
+          .select('id, first_name, last_name, email, phone')
+          .eq('dealership_id', parseInt(dealerId))
+          .eq('status', 'active'),
+        supabase
+          .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealerId) })
+      ]);
 
-      // Simulate services API call
-      setTimeout(() => {
-        setServices(availableServices);
-        setLoadingServices(false);
-      }, 600);
+      if (contactsResult.data) {
+        setContacts(contactsResult.data.map(contact => ({
+          id: contact.id,
+          name: `${contact.first_name} ${contact.last_name}`,
+          email: contact.email,
+          phone: contact.phone
+        })));
+      }
+
+      if (servicesResult.data) {
+        setServices(servicesResult.data);
+      }
     } catch (error) {
-      console.error('Error loading client data:', error);
-      setLoadingContacts(false);
-      setLoadingServices(false);
+      console.error('Error fetching dealer data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClientChange = (clientId: string) => {
+    setSelectedClient(clientId);
+    // Find selected contact and populate form
+    const selectedContact = contacts.find((c: any) => c.id === clientId);
+    if (selectedContact) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: selectedContact.name,
+        customerEmail: selectedContact.email,
+        customerPhone: selectedContact.phone
+      }));
     }
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData({ ...formData, [field]: value });
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleServiceToggle = (serviceId: string) => {
-    const updatedServices = formData.services.includes(serviceId)
-      ? formData.services.filter(id => id !== serviceId)
-      : [...formData.services, serviceId];
-    
-    setFormData({ ...formData, services: updatedServices });
+  const handleServiceToggle = (serviceId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedServices(prev => [...prev, serviceId]);
+    } else {
+      setSelectedServices(prev => prev.filter(id => id !== serviceId));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({
+      ...formData,
+      services: selectedServices
+    });
   };
 
-  const selectedServicesTotal = formData.services.reduce((total, serviceId) => {
-    const service = availableServices.find(s => s.id === serviceId);
+  const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
+    const service = services.find((s: any) => s.id === serviceId);
     return total + (service?.price || 0);
-  }, 0);
+  }, 0) : 0;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] p-0">
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle className="text-xl font-semibold">
-            {order ? 'Editar Orden' : 'Nueva Orden'}
+      <DialogContent className="max-w-6xl max-h-[90vh]">
+        <DialogHeader>
+          <DialogTitle>
+            {order ? t('orders.edit') : t('orders.create')}
           </DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(90vh-120px)]">
-          <form onSubmit={handleSubmit} className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6 p-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
-              {/* Column 1: Client Information */}
+              {/* Client Information */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    Información del Cliente
-                  </CardTitle>
+                  <CardTitle>{t('orders.clientInfo')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="client">Cliente *</Label>
-                    <Select 
-                      value={formData.client} 
-                      onValueChange={handleClientChange}
-                    >
+                  <div>
+                    <Label htmlFor="client">{t('orders.client')}</Label>
+                    <Select value={selectedClient} onValueChange={handleClientChange} disabled={loading}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar cliente..." />
+                        <SelectValue placeholder={loading ? t('common.loading') : t('orders.selectClient')} />
                       </SelectTrigger>
-                      <SelectContent className="bg-popover border-border">
-                        {clients.map((client) => (
-                          <SelectItem key={client.id} value={client.id}>
-                            {client.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="contact">Contacto</Label>
-                    <Select 
-                      value={formData.contact} 
-                      onValueChange={(value) => handleInputChange('contact', value)}
-                      disabled={!formData.client || loadingContacts}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={
-                          loadingContacts ? "Cargando contactos..." : 
-                          !formData.client ? "Seleccione un cliente primero" :
-                          "Seleccionar contacto..."
-                        } />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border-border">
+                      <SelectContent>
                         {contacts.map((contact: any) => (
                           <SelectItem key={contact.id} value={contact.id}>
-                            {contact.first_name} {contact.last_name} - {contact.email}
+                            {contact.name} - {contact.email}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <Label htmlFor="stockNumber">Número de Stock</Label>
+                  <div>
+                    <Label htmlFor="customerName">{t('orders.customerName')}</Label>
                     <Input
-                      id="stockNumber"
-                      value={formData.stockNumber}
-                      onChange={(e) => handleInputChange('stockNumber', e.target.value)}
-                      placeholder="Ej: A2024001"
+                      id="customerName"
+                      value={formData.customerName}
+                      onChange={(e) => handleInputChange('customerName', e.target.value)}
+                      required
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="vin">VIN *</Label>
+                  <div>
+                    <Label htmlFor="customerEmail">{t('orders.customerEmail')}</Label>
                     <Input
-                      id="vin"
-                      value={formData.vin}
-                      onChange={(e) => handleInputChange('vin', e.target.value)}
-                      placeholder="Ej: 1HGCM82633A123456"
-                      required
+                      id="customerEmail"
+                      type="email"
+                      value={formData.customerEmail}
+                      onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="customerPhone">{t('orders.customerPhone')}</Label>
+                    <Input
+                      id="customerPhone"
+                      value={formData.customerPhone}
+                      onChange={(e) => handleInputChange('customerPhone', e.target.value)}
                     />
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Column 2: Vehicle Information */}
+              {/* Vehicle Information */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Car className="w-5 h-5" />
-                    Información del Vehículo
-                  </CardTitle>
+                  <CardTitle>{t('orders.vehicleInfo')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="vehicleVin">{t('orders.vin')}</Label>
+                    <Input
+                      id="vehicleVin"
+                      value={formData.vehicleVin}
+                      onChange={(e) => handleInputChange('vehicleVin', e.target.value)}
+                      required
+                    />
+                  </div>
+
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="year">Año *</Label>
+                    <div>
+                      <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
                       <Input
-                        id="year"
+                        id="vehicleYear"
                         type="number"
-                        value={formData.year}
-                        onChange={(e) => handleInputChange('year', e.target.value)}
-                        placeholder="2024"
-                        min="1900"
-                        max="2030"
-                        required
+                        value={formData.vehicleYear}
+                        onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="color">Color</Label>
+                    <div>
+                      <Label htmlFor="vehicleMake">{t('orders.make')}</Label>
                       <Input
-                        id="color"
-                        value={formData.color}
-                        onChange={(e) => handleInputChange('color', e.target.value)}
-                        placeholder="Blanco"
+                        id="vehicleMake"
+                        value={formData.vehicleMake}
+                        onChange={(e) => handleInputChange('vehicleMake', e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="make">Marca *</Label>
+                  <div>
+                    <Label htmlFor="vehicleModel">{t('orders.model')}</Label>
                     <Input
-                      id="make"
-                      value={formData.make}
-                      onChange={(e) => handleInputChange('make', e.target.value)}
-                      placeholder="Honda"
-                      required
+                      id="vehicleModel"
+                      value={formData.vehicleModel}
+                      onChange={(e) => handleInputChange('vehicleModel', e.target.value)}
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="model">Modelo *</Label>
-                    <Input
-                      id="model"
-                      value={formData.model}
-                      onChange={(e) => handleInputChange('model', e.target.value)}
-                      placeholder="Accord"
-                      required
-                    />
-                  </div>
-
-                  <Separator />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="dueDate">Fecha de Entrega *</Label>
-                      <Input
-                        id="dueDate"
-                        type="date"
-                        value={formData.dueDate}
-                        onChange={(e) => handleInputChange('dueDate', e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="dueTime">Hora de Entrega</Label>
-                      <Input
-                        id="dueTime"
-                        type="time"
-                        value={formData.dueTime}
-                        onChange={(e) => handleInputChange('dueTime', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Estado</Label>
-                    <Select 
-                      value={formData.status} 
-                      onValueChange={(value) => handleInputChange('status', value)}
-                    >
+                  <div>
+                    <Label htmlFor="priority">{t('orders.priority')}</Label>
+                    <Select value={formData.priority} onValueChange={(value) => handleInputChange('priority', value)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-popover border-border">
-                        <SelectItem value="pending">Pendiente</SelectItem>
-                        <SelectItem value="in_progress">En Proceso</SelectItem>
-                        <SelectItem value="completed">Completado</SelectItem>
-                        <SelectItem value="cancelled">Cancelado</SelectItem>
+                      <SelectContent>
+                        <SelectItem value="low">{t('orders.lowPriority')}</SelectItem>
+                        <SelectItem value="normal">{t('orders.normalPriority')}</SelectItem>
+                        <SelectItem value="high">{t('orders.highPriority')}</SelectItem>
+                        <SelectItem value="urgent">{t('orders.urgentPriority')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Column 3: Services & Notes */}
+              {/* Services & Notes */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-5 h-5" />
-                    Servicios y Notas
-                  </CardTitle>
+                  <CardTitle>{t('orders.servicesAndNotes')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Servicios</Label>
-                    <div className="space-y-3 max-h-48 overflow-y-auto border rounded p-3">
-                      {availableServices.map((service) => (
-                        <div key={service.id} className="flex items-center space-x-3">
-                          <Checkbox
-                            id={service.id}
-                            checked={formData.services.includes(service.id)}
-                            onCheckedChange={() => handleServiceToggle(service.id)}
-                          />
-                          <Label 
-                            htmlFor={service.id} 
-                            className="flex-1 cursor-pointer text-sm"
-                          >
-                            <div className="flex justify-between items-center">
-                              <span>{service.name}</span>
-                              <span className="text-muted-foreground">
-                                ${service.price.toFixed(2)}
-                              </span>
+                  <div>
+                    <Label>{t('orders.services')}</Label>
+                    <ScrollArea className="h-48 border rounded p-3">
+                      <div className="space-y-3">
+                        {services.map((service: any) => (
+                          <div key={service.id} className="flex items-center justify-between p-3 border rounded">
+                            <div className="flex items-center space-x-3">
+                              <Checkbox
+                                id={service.id}
+                                checked={selectedServices.includes(service.id)}
+                                onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                              />
+                              <div className="flex-1">
+                                <Label htmlFor={service.id} className="font-medium">{service.name}</Label>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <span>{t(`services.categories.${service.category}`)}</span>
+                                  {service.duration && (
+                                    <span>• {service.duration} {t('services.minutes')}</span>
+                                  )}
+                                </div>
+                                {service.description && (
+                                  <p className="text-xs text-muted-foreground mt-1">{service.description}</p>
+                                )}
+                              </div>
                             </div>
-                          </Label>
-                        </div>
-                      ))}
-                      {loadingServices && (
-                        <div className="text-center text-sm text-muted-foreground py-4">
-                          Cargando servicios...
-                        </div>
-                      )}
-                    </div>
-                    
-                    {formData.services.length > 0 && (
-                      <div className="text-right font-medium">
-                        Total: ${selectedServicesTotal.toFixed(2)}
+                            {canViewPrices && service.price && (
+                              <div className="text-right">
+                                <span className="font-semibold">${service.price.toFixed(2)}</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
-                    )}
+                    </ScrollArea>
                   </div>
+
+                  {canViewPrices && (
+                    <div className="mt-4 p-3 bg-muted rounded">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold">{t('orders.total')}</span>
+                        <span className="font-bold text-lg">${totalPrice.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  )}
 
                   <Separator />
 
-                  <div className="space-y-2">
-                    <Label htmlFor="internalNotes">Notas Internas</Label>
+                  <div>
+                    <Label htmlFor="notes">{t('orders.notes')}</Label>
                     <Textarea
-                      id="internalNotes"
-                      value={formData.internalNotes}
-                      onChange={(e) => handleInputChange('internalNotes', e.target.value)}
-                      placeholder="Instrucciones especiales, observaciones, etc."
-                      rows={6}
+                      id="notes"
+                      value={formData.notes}
+                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                      rows={4}
+                      placeholder={t('orders.notesPlaceholder')}
                     />
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Footer Actions */}
-            <div className="flex justify-end gap-4 mt-8 pt-6 border-t">
+            <Separator />
+
+            <div className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={onClose}>
-                <X className="w-4 h-4 mr-2" />
-                Cancelar
+                {t('common.cancel')}
               </Button>
-              <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <Save className="w-4 h-4 mr-2" />
-                {order ? 'Actualizar' : 'Crear'} Orden
+              <Button type="submit">
+                {order ? t('common.update') : t('common.create')}
               </Button>
             </div>
           </form>
@@ -411,4 +373,4 @@ export function OrderModal({ order, open, onClose, onSave }: OrderModalProps) {
       </DialogContent>
     </Dialog>
   );
-}
+};

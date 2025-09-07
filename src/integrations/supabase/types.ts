@@ -142,6 +142,81 @@ export type Database = {
           },
         ]
       }
+      dealer_service_groups: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          service_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          service_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          service_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_service_groups_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_service_groups_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_services: {
+        Row: {
+          category: string | null
+          created_at: string
+          dealer_id: number
+          description: string | null
+          duration: number | null
+          id: string
+          is_active: boolean
+          name: string
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          dealer_id: number
+          description?: string | null
+          duration?: number | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          dealer_id?: number
+          description?: string | null
+          duration?: number | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       dealership_contacts: {
         Row: {
           avatar_url: string | null
@@ -659,6 +734,22 @@ export type Database = {
           pending_orders: number
           sla_compliance_rate: number
           total_orders: number
+        }[]
+      }
+      get_dealer_services_for_user: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          assigned_groups: string[]
+          category: string
+          created_at: string
+          dealer_id: number
+          description: string
+          duration: number
+          id: string
+          is_active: boolean
+          name: string
+          price: number
+          updated_at: string
         }[]
       }
       get_user_permissions: {
