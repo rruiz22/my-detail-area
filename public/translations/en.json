@@ -480,6 +480,8 @@
     "service_orders": "Service Orders", 
     "recon_orders": "Recon Orders",
     "car_wash": "Car Wash",
+    "dealerships": "Dealerships",
+    "contacts": "Contacts", 
     "management": "Management",
     "reports": "Reports",
     "settings": "Settings",

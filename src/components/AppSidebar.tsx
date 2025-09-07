@@ -36,6 +36,14 @@ export function AppSidebar() {
   }];
 
   const secondaryNavItems = [{
+    title: t('dealerships.title'),
+    url: "/dealerships",
+    icon: Building2
+  }, {
+    title: t('contacts.title'),
+    url: "/contacts",
+    icon: Users2
+  }, {
     title: t('navigation.management'),
     url: "/management",
     icon: Shield
