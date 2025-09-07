@@ -10,6 +10,7 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderModal } from '@/components/orders/OrderModal';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 const TABS = [
   { id: 'dashboard', label: 'Dashboard', count: 0 },
