@@ -355,7 +355,7 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
 
       {/* Create/Edit Group Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-full max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingGroup ? t('dealer.groups.edit_group') : t('dealer.groups.create_group')}
@@ -365,8 +365,8 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4 px-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="name">{t('dealer.groups.form.name')}</Label>
                 <Input
@@ -394,27 +394,32 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 placeholder={t('dealer.groups.form.description_placeholder')}
+                className="min-h-[80px]"
               />
             </div>
 
             <div>
               <Label>{t('dealer.groups.form.permissions')}</Label>
-              <div className="mt-2 space-y-4">
+              <div className="mt-2 space-y-3">
                 {Object.entries(groupPermissionsByCategory()).map(([category, permissions]) => (
-                  <Card key={category}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">{category}</CardTitle>
+                  <Card key={category} className="border-border/50">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium">{category}</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {permissions.map((permission) => (
-                          <div key={permission.key} className="flex items-center space-x-2">
+                          <div key={permission.key} className="flex items-start space-x-2">
                             <Checkbox
                               id={permission.key}
                               checked={formData.permissions.includes(permission.key)}
                               onCheckedChange={() => handlePermissionToggle(permission.key)}
+                              className="mt-0.5"
                             />
-                            <Label htmlFor={permission.key} className="text-sm">
+                            <Label 
+                              htmlFor={permission.key} 
+                              className="text-sm leading-relaxed cursor-pointer flex-1"
+                            >
                               {permission.label}
                             </Label>
                           </div>
@@ -427,11 +432,11 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowModal(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setShowModal(false)} className="w-full sm:w-auto">
               {t('common.cancel')}
             </Button>
-            <Button onClick={handleSaveGroup}>
+            <Button onClick={handleSaveGroup} className="w-full sm:w-auto">
               {editingGroup ? t('common.save') : t('common.create')}
             </Button>
           </DialogFooter>
