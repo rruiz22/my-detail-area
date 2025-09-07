@@ -44,6 +44,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/DashboardLayout';
+import { ContactModal } from '@/components/contacts/ContactModal';
+import { ContactDepartment, DealershipStatus, LanguageCode } from '@/types/dealership';
 
 interface Contact {
   id: number;
@@ -53,12 +55,12 @@ interface Contact {
   phone?: string;
   mobile_phone?: string;
   position?: string;
-  department: 'other' | 'sales' | 'service' | 'parts' | 'management';
+  department: ContactDepartment;
   is_primary: boolean;
-  status: 'active' | 'inactive' | 'suspended';
+  status: DealershipStatus;
   dealership_id: number;
   avatar_url?: string;
-  preferred_language: string;
+  preferred_language: LanguageCode;
   can_receive_notifications: boolean;
   dealership?: {
     name: string;
@@ -73,6 +75,8 @@ export default function Contacts() {
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
   const [dealershipFilter, setDealershipFilter] = useState<string>('all');
   const [dealerships, setDealerships] = useState<{ id: number; name: string }[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingContact, setEditingContact] = useState<Contact | null>(null);
 
   const fetchContacts = async () => {
     try {
@@ -153,6 +157,26 @@ export default function Contacts() {
     }
   };
 
+  const handleEdit = (contact: Contact) => {
+    setEditingContact(contact);
+    setIsModalOpen(true);
+  };
+
+  const handleAdd = () => {
+    setEditingContact(null);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingContact(null);
+  };
+
+  const handleModalSuccess = () => {
+    fetchContacts();
+    handleModalClose();
+  };
+
   const getDisplayName = (contact: Contact) => {
     return `${contact.first_name} ${contact.last_name}`.trim();
   };
@@ -182,7 +206,7 @@ export default function Contacts() {
               {t('contacts.manage_description', 'Manage contacts across all dealerships')}
             </p>
           </div>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={handleAdd}>
             <Plus className="h-4 w-4" />
             {t('contacts.add_new')}
           </Button>
@@ -283,7 +307,7 @@ export default function Contacts() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEdit(contact)}>
                             <Edit className="mr-2 h-4 w-4" />
                             {t('common.edit')}
                           </DropdownMenuItem>
@@ -425,7 +449,7 @@ export default function Contacts() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEdit(contact)}>
                               <Edit className="mr-2 h-4 w-4" />
                               {t('common.edit')}
                             </DropdownMenuItem>
@@ -455,6 +479,14 @@ export default function Contacts() {
           </CardContent>
         </Card>
       </div>
+
+      <ContactModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSuccess={handleModalSuccess}
+        contact={editingContact}
+        dealerships={dealerships}
+      />
     </DashboardLayout>
   );
 }
