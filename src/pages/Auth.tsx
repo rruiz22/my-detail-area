@@ -113,6 +113,10 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+          <div className="mb-4">
+            <h1 className="text-3xl font-bold text-primary mb-2">My Detail Area</h1>
+            <p className="text-muted-foreground text-sm">Dealership Operations Hub</p>
+          </div>
           <CardTitle className="text-2xl font-bold">
             {isSignUp ? 'Create Account' : 'Welcome Back'}
           </CardTitle>
@@ -122,6 +126,14 @@ export default function Auth() {
               : 'Enter your credentials to access your account'
             }
           </CardDescription>
+          {isSignUp && (
+            <Alert className="mt-4 text-left">
+              <AlertDescription>
+                <strong>Para pruebas de administrador:</strong><br/>
+                Use: <code>admin@company.com</code> con cualquier contraseña para obtener permisos completos de administrador automáticamente.
+              </AlertDescription>
+            </Alert>
+          )}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
