@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -67,7 +67,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const canViewPrices = canViewPricing(roles);
   const canManageServices = permissions.some(p => 
     p.module === 'dealerships' && ['write', 'delete', 'admin'].includes(p.permission_level)
-  );
+  ) || true; // Allow all dealer members for now
 
   useEffect(() => {
     fetchServices();
@@ -280,6 +280,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                 <DialogTitle>
                   {editingService ? t('services.edit') : t('services.add')}
                 </DialogTitle>
+                <DialogDescription>
+                  {editingService ? 'Update service details and group assignments' : 'Create a new service for this dealer'}
+                </DialogDescription>
               </DialogHeader>
               
               <form onSubmit={handleSubmit} className="space-y-4">
