@@ -14,6 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
+      dealer_groups: {
+        Row: {
+          created_at: string
+          dealer_id: number
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          permissions: Json
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dealer_id: number
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          permissions?: Json
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          permissions?: Json
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_groups_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_membership_groups: {
+        Row: {
+          assigned_at: string
+          created_at: string
+          group_id: string
+          id: string
+          membership_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          created_at?: string
+          group_id: string
+          id?: string
+          membership_id: string
+        }
+        Update: {
+          assigned_at?: string
+          created_at?: string
+          group_id?: string
+          id?: string
+          membership_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_membership_groups_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_membership_groups_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_memberships: {
+        Row: {
+          created_at: string
+          dealer_id: number
+          id: string
+          is_active: boolean
+          joined_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dealer_id: number
+          id?: string
+          is_active?: boolean
+          joined_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number
+          id?: string
+          is_active?: boolean
+          joined_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_memberships_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_memberships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealership_contacts: {
         Row: {
           avatar_url: string | null
@@ -252,6 +380,80 @@ export type Database = {
           {
             foreignKeyName: "detail_users_dealership_id_fkey"
             columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string | null
+          dealer_id: number
+          id: string
+          order_number: string
+          order_type: string
+          priority: string | null
+          services: Json | null
+          sla_deadline: string | null
+          status: string
+          total_amount: number | null
+          updated_at: string
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_vin: string | null
+          vehicle_year: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          dealer_id: number
+          id?: string
+          order_number: string
+          order_type: string
+          priority?: string | null
+          services?: Json | null
+          sla_deadline?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_vin?: string | null
+          vehicle_year?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          dealer_id?: number
+          id?: string
+          order_number?: string
+          order_type?: string
+          priority?: string | null
+          services?: Json | null
+          sla_deadline?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_vin?: string | null
+          vehicle_year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_dealer_id_fkey"
+            columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
             referencedColumns: ["id"]
