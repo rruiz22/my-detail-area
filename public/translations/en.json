@@ -200,6 +200,108 @@
     "no_users_matching_filters": "No users found matching your filters"
   },
   "common": {
-    "toggle_theme": "Toggle theme"
+    "toggle_theme": "Toggle theme",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "active": "Active",
+    "inactive": "Inactive",
+    "unnamed": "Unnamed",
+    "info": "Info"
+  },
+  "dealer": {
+    "view": {
+      "title": "Dealer Dashboard",
+      "subtitle": "Dealer ID: {{id}}",
+      "not_found": "Dealer Not Found",
+      "back": "Back",
+      "active": "Active",
+      "tabs": {
+        "overview": "Overview",
+        "groups": "Groups", 
+        "users": "Users"
+      }
+    },
+    "overview": {
+      "total_orders": "Total Orders",
+      "orders_today": "Orders Today",
+      "avg_sla_hours": "Avg SLA (Hours)",
+      "sla_compliance": "SLA Compliance",
+      "pending_orders": "Pending Orders",
+      "in_progress_orders": "In Progress",
+      "completed_orders": "Completed Orders",
+      "cancelled_orders": "Cancelled Orders",
+      "orders_by_module": "Orders by Module",
+      "top_services": "Top Services",
+      "sales": "Sales",
+      "service": "Service", 
+      "recon": "Recon",
+      "carwash": "Car Wash",
+      "no_services_data": "No service data available",
+      "error_loading_kpis": "Error loading performance data"
+    },
+    "groups": {
+      "title": "Groups",
+      "description": "Manage roles and permissions",
+      "create_group": "Create Group",
+      "edit_group": "Edit Group",
+      "no_groups": "No groups found",
+      "group_created": "Group created successfully",
+      "group_updated": "Group updated successfully", 
+      "group_deleted": "Group deleted successfully",
+      "error_creating_group": "Error creating group",
+      "error_updating_group": "Error updating group",
+      "error_deleting_group": "Error deleting group",
+      "error_loading_groups": "Error loading groups",
+      "confirm_delete": "Are you sure you want to delete this group?",
+      "table": {
+        "name": "Name",
+        "slug": "Slug", 
+        "description": "Description",
+        "permissions": "Permissions"
+      },
+      "form": {
+        "name": "Group Name",
+        "name_placeholder": "Enter group name",
+        "slug": "Slug",
+        "description": "Description",
+        "permissions": "Permissions"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "description": "Manage staff and user access",
+      "invite_user": "Invite User",
+      "manage_groups": "Manage Groups", 
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "no_users": "No users found",
+      "user_activated": "User activated successfully",
+      "user_deactivated": "User deactivated successfully",
+      "groups_updated": "User groups updated successfully",
+      "error_loading_users": "Error loading users",
+      "error_updating_status": "Error updating user status",
+      "error_updating_groups": "Error updating user groups",
+      "invite_feature_coming_soon": "User invitation feature coming soon",
+      "send_invitation": "Send Invitation",
+      "table": {
+        "user": "User",
+        "email": "Email",
+        "status": "Status", 
+        "groups": "Groups",
+        "joined": "Joined"
+      },
+      "form": {
+        "email": "Email Address",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "initial_groups": "Initial Groups"
+      }
+    }
   }
 }

@@ -648,6 +648,19 @@ export type Database = {
         Args: { expires_at?: string; role_name: string; target_user_id: string }
         Returns: boolean
       }
+      get_dealer_kpis: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          avg_sla_hours: number
+          cancelled_orders: number
+          completed_orders: number
+          in_progress_orders: number
+          orders_today: number
+          pending_orders: number
+          sla_compliance_rate: number
+          total_orders: number
+        }[]
+      }
       get_user_permissions: {
         Args: { user_uuid: string }
         Returns: {
@@ -673,6 +686,10 @@ export type Database = {
           required_level: Database["public"]["Enums"]["permission_level"]
           user_uuid: string
         }
+        Returns: boolean
+      }
+      set_membership_groups: {
+        Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
       }
     }
