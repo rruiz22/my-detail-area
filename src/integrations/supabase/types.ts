@@ -692,6 +692,18 @@ export type Database = {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
       }
+      user_has_dealer_membership: {
+        Args: { target_dealer_id: number; user_uuid: string }
+        Returns: boolean
+      }
+      user_has_group_permission: {
+        Args: {
+          permission_name: string
+          target_dealer_id: number
+          user_uuid: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       app_module:

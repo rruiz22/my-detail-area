@@ -4,8 +4,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { CheckCircle, XCircle, Shield } from 'lucide-react';
+
+// Security utility functions
+const sanitizeInput = (input: string) => {
+  return input.trim().replace(/[<>]/g, '');
+};
+
+const validateEmail = (email: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePassword = (password: string) => {
+  const checks = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  };
+  
+  const score = Object.values(checks).filter(Boolean).length;
+  return { checks, score, isValid: score >= 4 };
+};
 
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -14,6 +39,7 @@ export default function Auth() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passwordValidation, setPasswordValidation] = useState(validatePassword(''));
   const { user, signIn, signUp } = useAuth();
   const { toast } = useToast();
 
@@ -22,14 +48,43 @@ export default function Auth() {
     return <Navigate to="/" replace />;
   }
 
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordValidation(validatePassword(value));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate inputs before submission
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedFirstName = sanitizeInput(firstName);
+    const sanitizedLastName = sanitizeInput(lastName);
+    
+    if (!validateEmail(sanitizedEmail)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (isSignUp && !passwordValidation.isValid) {
+      toast({
+        title: "Weak Password",
+        description: "Password must meet security requirements.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
       const { error } = isSignUp 
-        ? await signUp(email, password, firstName, lastName)
-        : await signIn(email, password);
+        ? await signUp(sanitizedEmail, password, sanitizedFirstName, sanitizedLastName)
+        : await signIn(sanitizedEmail, password);
 
       if (error) {
         toast({
@@ -78,7 +133,8 @@ export default function Auth() {
                     id="firstName"
                     type="text"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(sanitizeInput(e.target.value))}
+                    maxLength={50}
                     required
                   />
                 </div>
@@ -88,7 +144,8 @@ export default function Auth() {
                     id="lastName"
                     type="text"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => setLastName(sanitizeInput(e.target.value))}
+                    maxLength={50}
                     required
                   />
                 </div>
@@ -101,9 +158,16 @@ export default function Auth() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(sanitizeInput(e.target.value))}
+                maxLength={100}
                 required
               />
+              {email && !validateEmail(email) && (
+                <Alert variant="destructive">
+                  <XCircle className="h-4 w-4" />
+                  <AlertDescription>Please enter a valid email address</AlertDescription>
+                </Alert>
+              )}
             </div>
             
             <div className="space-y-2">
@@ -112,10 +176,40 @@ export default function Auth() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handlePasswordChange(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
               />
+              {isSignUp && password && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
+                    <span className="text-sm font-medium">Password Strength</span>
+                  </div>
+                  <div className="space-y-1 text-sm">
+                    <div className={`flex items-center gap-2 ${passwordValidation.checks.length ? 'text-green-600' : 'text-red-600'}`}>
+                      {passwordValidation.checks.length ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                      At least 8 characters
+                    </div>
+                    <div className={`flex items-center gap-2 ${passwordValidation.checks.uppercase ? 'text-green-600' : 'text-red-600'}`}>
+                      {passwordValidation.checks.uppercase ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                      One uppercase letter
+                    </div>
+                    <div className={`flex items-center gap-2 ${passwordValidation.checks.lowercase ? 'text-green-600' : 'text-red-600'}`}>
+                      {passwordValidation.checks.lowercase ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                      One lowercase letter
+                    </div>
+                    <div className={`flex items-center gap-2 ${passwordValidation.checks.number ? 'text-green-600' : 'text-red-600'}`}>
+                      {passwordValidation.checks.number ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                      One number
+                    </div>
+                    <div className={`flex items-center gap-2 ${passwordValidation.checks.special ? 'text-green-600' : 'text-red-600'}`}>
+                      {passwordValidation.checks.special ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                      One special character
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             
             <Button type="submit" className="w-full" disabled={loading}>

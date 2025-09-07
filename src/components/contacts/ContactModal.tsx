@@ -18,10 +18,26 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { ContactFormData, ContactDepartment, DealershipStatus, LanguageCode } from '@/types/dealership';
 import { toast } from 'sonner';
-import { User, Building2 } from 'lucide-react';
+import { User, Building2, XCircle } from 'lucide-react';
+
+// Security utility functions
+const sanitizeInput = (input: string) => {
+  return input.trim().replace(/[<>]/g, '');
+};
+
+const validateEmail = (email: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePhone = (phone: string) => {
+  const phoneRegex = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
+  return phoneRegex.test(phone);
+};
 
 interface Contact {
   id: number;
@@ -52,6 +68,7 @@ interface ContactModalProps {
 export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships }: ContactModalProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const isEditing = !!contact;
 
   const [formData, setFormData] = useState<ContactFormData>({
@@ -107,28 +124,86 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
         status: 'active',
       });
     }
+    setValidationErrors([]);
   }, [contact, dealerships]);
 
   const handleInputChange = (field: keyof ContactFormData, value: any) => {
+    // Sanitize string inputs
+    if (typeof value === 'string' && ['first_name', 'last_name', 'email', 'phone', 'mobile_phone', 'position', 'notes'].includes(field)) {
+      value = sanitizeInput(value);
+    }
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Clear validation errors when user starts typing
+    if (validationErrors.length > 0) {
+      setValidationErrors([]);
+    }
+  };
+
+  const validateForm = () => {
+    const errors: string[] = [];
+    
+    if (!formData.first_name.trim()) {
+      errors.push('First name is required');
+    }
+    
+    if (!formData.last_name.trim()) {
+      errors.push('Last name is required');
+    }
+    
+    if (!formData.email.trim()) {
+      errors.push('Email is required');
+    } else if (!validateEmail(formData.email)) {
+      errors.push('Please enter a valid email address');
+    }
+    
+    if (formData.phone && !validatePhone(formData.phone)) {
+      errors.push('Please enter a valid phone number');
+    }
+    
+    if (formData.mobile_phone && !validatePhone(formData.mobile_phone)) {
+      errors.push('Please enter a valid mobile phone number');
+    }
+    
+    return errors;
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!formData.first_name.trim() || !formData.last_name.trim() || !formData.email.trim()) {
-      toast.error(t('messages.required_field'));
+    // Validate form
+    const errors = validateForm();
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      toast.error('Please fix the validation errors');
       return;
     }
 
     try {
       setLoading(true);
 
+      // Prepare sanitized data for submission
+      const sanitizedData = {
+        dealership_id: formData.dealership_id,
+        first_name: sanitizeInput(formData.first_name),
+        last_name: sanitizeInput(formData.last_name),
+        email: sanitizeInput(formData.email),
+        phone: formData.phone ? sanitizeInput(formData.phone) : null,
+        mobile_phone: formData.mobile_phone ? sanitizeInput(formData.mobile_phone) : null,
+        position: formData.position ? sanitizeInput(formData.position) : null,
+        department: formData.department,
+        is_primary: formData.is_primary,
+        can_receive_notifications: formData.can_receive_notifications,
+        preferred_language: formData.preferred_language,
+        notes: formData.notes ? sanitizeInput(formData.notes) : null,
+        avatar_url: formData.avatar_url ? sanitizeInput(formData.avatar_url) : null,
+        status: formData.status,
+      };
+
       if (isEditing && contact) {
         const { error } = await supabase
           .from('dealership_contacts')
-          .update(formData)
+          .update(sanitizedData)
           .eq('id', contact.id);
 
         if (error) throw error;
@@ -136,7 +211,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
       } else {
         const { error } = await supabase
           .from('dealership_contacts')
-          .insert(formData);
+          .insert(sanitizedData);
 
         if (error) throw error;
         toast.success(t('contacts.contact_created'));
@@ -160,6 +235,19 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
             {isEditing ? t('contacts.edit_contact') : t('contacts.add_new')}
           </DialogTitle>
         </DialogHeader>
+
+        {validationErrors.length > 0 && (
+          <Alert variant="destructive">
+            <XCircle className="h-4 w-4" />
+            <AlertDescription>
+              <ul className="list-disc list-inside">
+                {validationErrors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <form onSubmit={onSubmit} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -195,6 +283,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                     value={formData.first_name}
                     onChange={(e) => handleInputChange('first_name', e.target.value)}
                     placeholder={t('contacts.first_name_placeholder', 'John')}
+                    maxLength={50}
                     required
                   />
                 </div>
@@ -205,6 +294,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                     value={formData.last_name}
                     onChange={(e) => handleInputChange('last_name', e.target.value)}
                     placeholder={t('contacts.last_name_placeholder', 'Doe')}
+                    maxLength={50}
                     required
                   />
                 </div>
@@ -218,6 +308,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="john.doe@example.com"
+                  maxLength={100}
                   required
                 />
               </div>
@@ -230,6 +321,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     placeholder="+1 (555) 123-4567"
+                    maxLength={20}
                   />
                 </div>
                 <div>
@@ -239,6 +331,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                     value={formData.mobile_phone}
                     onChange={(e) => handleInputChange('mobile_phone', e.target.value)}
                     placeholder="+1 (555) 987-6543"
+                    maxLength={20}
                   />
                 </div>
               </div>
@@ -250,6 +343,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                   value={formData.position}
                   onChange={(e) => handleInputChange('position', e.target.value)}
                   placeholder={t('contacts.position_placeholder', 'Sales Manager')}
+                  maxLength={100}
                 />
               </div>
             </div>
@@ -335,6 +429,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                   value={formData.avatar_url}
                   onChange={(e) => handleInputChange('avatar_url', e.target.value)}
                   placeholder="https://example.com/avatar.jpg"
+                  maxLength={500}
                 />
               </div>
 
@@ -346,6 +441,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                   onChange={(e) => handleInputChange('notes', e.target.value)}
                   placeholder={t('contacts.notes_placeholder', 'Additional notes about this contact')}
                   className="min-h-[80px]"
+                  maxLength={1000}
                 />
               </div>
             </div>
