@@ -200,6 +200,66 @@
     "no_users_matching_filters": "No se encontraron usuarios que coincidan con los filtros"
   },
   "common": {
-    "toggle_theme": "Cambiar tema"
+    "toggle_theme": "Cambiar tema",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "create": "Crear",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "unnamed": "Sin nombre",
+    "info": "Información",
+    "new_order": "Nueva Orden",
+    "view": "Ver",
+    "client": "Cliente",
+    "select_client": "Seleccionar cliente...",
+    "order_id": "ID de Orden",
+    "vin": "VIN",
+    "year": "Año",
+    "color": "Color",
+    "make": "Marca",
+    "model": "Modelo",
+    "instructions": "Instrucciones",
+    "special_instructions": "Instrucciones especiales, observaciones, etc."
+  },
+  "navigation": {
+    "dashboard": "Tablero",
+    "sales_orders": "Órdenes de Venta",
+    "service_orders": "Órdenes de Servicio", 
+    "recon_orders": "Órdenes de Recon",
+    "car_wash": "Lavado de Autos",
+    "management": "Administración",
+    "reports": "Reportes",
+    "settings": "Configuración",
+    "operations": "Operaciones",
+    "sign_out": "Cerrar Sesión"
+  },
+  "layout": {
+    "search_placeholder": "Buscar órdenes...",
+    "app_name": "MDA",
+    "app_full_name": "Mi Área de Detalle"
+  },
+  "pages": {
+    "car_wash_orders": "Órdenes de Lavado",
+    "recon_orders": "Órdenes de Reacondicionamiento", 
+    "service_orders": "Órdenes de Servicio",
+    "sales_orders": "Órdenes de Venta",
+    "reports": "Reportes",
+    "settings": "Configuración",
+    "user_management": "Gestión de Usuarios",
+    "user_management_desc": "Administra usuarios, roles y permisos en tu organización"
+  },
+  "placeholders": {
+    "search_orders": "Buscar órdenes...",
+    "filter_by_status": "Filtrar por estado",
+    "select_time_period": "Seleccionar período",
+    "select_department": "Seleccionar departamento",
+    "enter_dealership_name": "Ingrese nombre del concesionario",
+    "enter_location": "Ingrese ubicación",
+    "enter_full_address": "Ingrese dirección completa"
   }
 }

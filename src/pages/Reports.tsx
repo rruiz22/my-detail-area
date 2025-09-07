@@ -9,16 +9,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Download, FileText, TrendingUp, Calendar } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export default function Reports() {
+  const { t } = useTranslation();
+  
   return (
-    <DashboardLayout title="Reports">
+    <DashboardLayout title={t('pages.reports')}>
       <div className="space-y-6">
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4">
           <Select defaultValue="30days">
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="Select time period" />
+              <SelectValue placeholder={t('placeholders.select_time_period')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="7days">Last 7 Days</SelectItem>
@@ -30,7 +33,7 @@ export default function Reports() {
           
           <Select defaultValue="all">
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="Select department" />
+              <SelectValue placeholder={t('placeholders.select_department')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Departments</SelectItem>

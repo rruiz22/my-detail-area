@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
+import { useTranslation } from "react-i18next";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -14,6 +15,8 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
+  const { t } = useTranslation();
+  
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -33,7 +36,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
               <div className="relative max-w-sm">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input 
-                  placeholder="Search orders..." 
+                  placeholder={t('layout.search_placeholder')} 
                   className="pl-10 w-full"
                 />
               </div>

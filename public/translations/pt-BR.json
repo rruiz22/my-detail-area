@@ -201,5 +201,67 @@
   },
   "common": {
     "toggle_theme": "Alternar tema"
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "sales_orders": "Pedidos de Venda",
+    "service_orders": "Ordens de Serviço", 
+    "recon_orders": "Ordens de Recondicionamento",
+    "car_wash": "Lavagem de Carros",
+    "management": "Administração",
+    "reports": "Relatórios",
+    "settings": "Configurações",
+    "operations": "Operações",
+    "sign_out": "Sair"
+  },
+  "layout": {
+    "search_placeholder": "Buscar pedidos...",
+    "app_name": "MDA",
+    "app_full_name": "Minha Área de Detalhamento"
+  },
+  "pages": {
+    "car_wash_orders": "Ordens de Lavagem",
+    "recon_orders": "Ordens de Recondicionamento", 
+    "service_orders": "Ordens de Serviço",
+    "sales_orders": "Pedidos de Venda",
+    "reports": "Relatórios",
+    "settings": "Configurações",
+    "user_management": "Gestão de Usuários",
+    "user_management_desc": "Gerencie usuários, funções e permissões em sua organização"
+  },
+  "placeholders": {
+    "search_orders": "Buscar pedidos...",
+    "filter_by_status": "Filtrar por status",
+    "select_time_period": "Selecionar período",
+    "select_department": "Selecionar departamento",
+    "enter_dealership_name": "Digite o nome da concessionária",
+    "enter_location": "Digite a localização",
+    "enter_full_address": "Digite o endereço completo"
+  },
+  "common": {
+    "toggle_theme": "Alternar tema",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "create": "Criar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "unnamed": "Sem nome",
+    "info": "Informação",
+    "new_order": "Novo Pedido",
+    "view": "Visualizar",
+    "client": "Cliente",
+    "select_client": "Selecionar cliente...",
+    "order_id": "ID do Pedido",
+    "vin": "VIN",
+    "year": "Ano",
+    "color": "Cor",
+    "make": "Marca",
+    "model": "Modelo", 
+    "instructions": "Instruções",
+    "special_instructions": "Instruções especiais, observações, etc."
   }
-}

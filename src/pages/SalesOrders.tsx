@@ -40,6 +40,7 @@ const statusData = [
 ];
 
 export default function SalesOrders() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -104,14 +105,14 @@ export default function SalesOrders() {
   }));
 
   return (
-    <DashboardLayout title="Sales Orders">
+    <DashboardLayout title={t('pages.sales_orders')}>
       <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <Button onClick={handleCreateOrder} className="bg-primary text-primary-foreground hover:bg-primary/90">
               <Plus className="w-4 h-4 mr-2" />
-              Nueva Orden
+              {t('common.new_order')}
             </Button>
             <Button 
               variant="outline" 

@@ -1,54 +1,53 @@
 import { useState } from "react";
 import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-const mainNavItems = [{
-  title: "Dashboard",
-  url: "/",
-  icon: LayoutDashboard
-}, {
-  title: "Sales Orders",
-  url: "/sales",
-  icon: ShoppingCart
-}, {
-  title: "Service Orders",
-  url: "/service",
-  icon: Wrench
-}, {
-  title: "Recon Orders",
-  url: "/recon",
-  icon: RefreshCw
-}, {
-  title: "Car Wash",
-  url: "/carwash",
-  icon: Car
-}];
-const secondaryNavItems = [{
-  title: "Management",
-  url: "/management",
-  icon: Shield
-}, {
-  title: "Reports",
-  url: "/reports",
-  icon: FileText
-}, {
-  title: "Settings",
-  url: "/settings",
-  icon: Settings
-}];
 export function AppSidebar() {
-  const {
-    open
-  } = useSidebar();
-  const {
-    user,
-    signOut
-  } = useAuth();
+  const { open } = useSidebar();
+  const { user, signOut } = useAuth();
+  const { t } = useTranslation();
   const location = useLocation();
+
+  const mainNavItems = [{
+    title: t('navigation.dashboard'),
+    url: "/",
+    icon: LayoutDashboard
+  }, {
+    title: t('navigation.sales_orders'),
+    url: "/sales",
+    icon: ShoppingCart
+  }, {
+    title: t('navigation.service_orders'),
+    url: "/service",
+    icon: Wrench
+  }, {
+    title: t('navigation.recon_orders'),
+    url: "/recon",
+    icon: RefreshCw
+  }, {
+    title: t('navigation.car_wash'),
+    url: "/carwash",
+    icon: Car
+  }];
+
+  const secondaryNavItems = [{
+    title: t('navigation.management'),
+    url: "/management",
+    icon: Shield
+  }, {
+    title: t('navigation.reports'),
+    url: "/reports",
+    icon: FileText
+  }, {
+    title: t('navigation.settings'),
+    url: "/settings",
+    icon: Settings
+  }];
   const currentPath = location.pathname;
   const collapsed = !open;
   const handleSignOut = async () => {
@@ -71,15 +70,15 @@ export function AppSidebar() {
             <Car className="w-5 h-5 text-white" />
           </div>
           {!collapsed && <div>
-              <h1 className="font-bold text-lg">MDA</h1>
-              <p className="text-xs text-muted-foreground">My Detail Area</p>
+              <h1 className="font-bold text-lg">{t('layout.app_name')}</h1>
+              <p className="text-xs text-muted-foreground">{t('layout.app_full_name')}</p>
             </div>}
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Operations</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('navigation.operations')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNavItems.map(item => <SidebarMenuItem key={item.title}>
@@ -87,7 +86,7 @@ export function AppSidebar() {
                     <NavLink to={item.url} className={getNavClasses(item.url)}>
                       <item.icon className="w-4 h-4" />
                       {!collapsed && <span>{item.title}</span>}
-                      {!collapsed && item.title === "Sales Orders" && <Badge variant="secondary" className="ml-auto">
+                      {!collapsed && item.title === t('navigation.sales_orders') && <Badge variant="secondary" className="ml-auto">
                           12
                         </Badge>}
                     </NavLink>
@@ -98,7 +97,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('navigation.management')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {secondaryNavItems.map(item => <SidebarMenuItem key={item.title}>
@@ -134,7 +133,7 @@ export function AppSidebar() {
           </div>
           {!collapsed && <Button variant="ghost" size="sm" onClick={handleSignOut} className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground">
               <LogOut className="w-4 h-4" />
-              Sign Out
+              {t('navigation.sign_out')}
             </Button>}
         </div>
       </SidebarFooter>

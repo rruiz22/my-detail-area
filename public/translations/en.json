@@ -200,6 +200,7 @@
     "no_users_matching_filters": "No users found matching your filters"
   },
   "common": {
+    "view": "View",
     "toggle_theme": "Toggle theme",
     "loading": "Loading...",
     "error": "Error",
@@ -212,7 +213,18 @@
     "active": "Active",
     "inactive": "Inactive",
     "unnamed": "Unnamed",
-    "info": "Info"
+    "info": "Info",
+    "new_order": "New Order",
+    "client": "Client",
+    "select_client": "Select client...",
+    "order_id": "Order ID",
+    "vin": "VIN",
+    "year": "Year",
+    "color": "Color",
+    "make": "Make",
+    "model": "Model",
+    "instructions": "Instructions",
+    "special_instructions": "Special instructions, observations, etc."
   },
   "dealer": {
     "view": {
@@ -303,5 +315,41 @@
         "initial_groups": "Initial Groups"
       }
     }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "sales_orders": "Sales Orders",
+    "service_orders": "Service Orders", 
+    "recon_orders": "Recon Orders",
+    "car_wash": "Car Wash",
+    "management": "Management",
+    "reports": "Reports",
+    "settings": "Settings",
+    "operations": "Operations",
+    "sign_out": "Sign Out"
+  },
+  "layout": {
+    "search_placeholder": "Search orders...",
+    "app_name": "MDA",
+    "app_full_name": "My Detail Area"
+  },
+  "pages": {
+    "car_wash_orders": "Car Wash Orders",
+    "recon_orders": "Recon Orders", 
+    "service_orders": "Service Orders",
+    "sales_orders": "Sales Orders",
+    "reports": "Reports",
+    "settings": "Settings",
+    "user_management": "User Management",
+    "user_management_desc": "Manage users, roles, and permissions across your organization"
+  },
+  "placeholders": {
+    "search_orders": "Search orders...",
+    "filter_by_status": "Filter by status",
+    "select_time_period": "Select time period",
+    "select_department": "Select department",
+    "enter_dealership_name": "Enter dealership name",
+    "enter_location": "Enter location",
+    "enter_full_address": "Enter full address"
   }
 }

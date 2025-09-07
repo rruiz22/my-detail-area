@@ -6,10 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Save, Database, Mail, MessageSquare } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export default function Settings() {
+  const { t } = useTranslation();
+  
   return (
-    <DashboardLayout title="Settings">
+    <DashboardLayout title={t('pages.settings')}>
       <div className="space-y-6 max-w-4xl">
         {/* General Settings */}
         <Card>
@@ -20,16 +23,16 @@ export default function Settings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="dealership">Dealership Name</Label>
-                <Input id="dealership" placeholder="Enter dealership name" defaultValue="Premium Auto Group" />
+                <Input id="dealership" placeholder={t('placeholders.enter_dealership_name')} defaultValue="Premium Auto Group" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
-                <Input id="location" placeholder="Enter location" defaultValue="Miami, FL" />
+                <Input id="location" placeholder={t('placeholders.enter_location')} defaultValue="Miami, FL" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Input id="address" placeholder="Enter full address" defaultValue="123 Auto Plaza Blvd, Miami, FL 33101" />
+              <Input id="address" placeholder={t('placeholders.enter_full_address')} defaultValue="123 Auto Plaza Blvd, Miami, FL 33101" />
             </div>
           </CardContent>
         </Card>

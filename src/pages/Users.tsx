@@ -1,15 +1,18 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { UserRoleManager } from '@/components/permissions/UserRoleManager';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
+import { useTranslation } from 'react-i18next';
 
 const Users = () => {
+  const { t } = useTranslation();
+  
   return (
-    <DashboardLayout title="User Management">
+    <DashboardLayout title={t('pages.user_management')}>
       <div className="space-y-6">
         <div className="border-b pb-4">
-          <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('pages.user_management')}</h1>
           <p className="text-muted-foreground">
-            Manage users, roles, and permissions across your organization
+            {t('pages.user_management_desc')}
           </p>
         </div>
 

@@ -8,14 +8,16 @@ import { getDashboardMetrics, mockOrders } from "@/lib/mockData";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useNotifications } from "@/components/NotificationProvider";
 import dealershipHero from "@/assets/dealership-hero.jpg";
+import { useTranslation } from 'react-i18next';
 export default function Dashboard() {
+  const { t } = useTranslation();
   const metrics = getDashboardMetrics();
   const recentOrders = mockOrders.slice(0, 5);
   const notifications = useNotifications();
   const handleQuickAction = (action: string) => {
     notifications.showSuccess(`${action} initiated successfully!`, "Action Started");
   };
-  return <DashboardLayout title="Dashboard">
+  return <DashboardLayout title={t('navigation.dashboard')}>
       {/* Hero Section */}
       <div className="mb-8 relative overflow-hidden rounded-xl bg-gradient-primary p-8 text-white">
         <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{
