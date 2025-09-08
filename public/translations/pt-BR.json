@@ -179,6 +179,8 @@
     "confirm_delete_order": "Tem certeza de que deseja excluir este pedido de serviço?",
     "select_services": "Selecionar Serviços",
     "service_notes": "Notas de Serviço",
+    "select_dealership_first": "Por favor, selecione uma concessionária primeiro",
+    "service_details": "Detalhes do Serviço",
     "today_orders": "Pedidos de Hoje",
     "tomorrow_orders": "Pedidos de Amanhã",
     "pending_orders": "Pedidos Pendentes",
