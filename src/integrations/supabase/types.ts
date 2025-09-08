@@ -498,7 +498,7 @@ export type Database = {
           customer_email?: string | null
           customer_name: string
           customer_phone?: string | null
-          dealer_id: number
+          dealer_id?: number
           due_date?: string | null
           id?: string
           order_number: string

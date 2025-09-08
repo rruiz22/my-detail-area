@@ -25,14 +25,27 @@ export function DueDateTimePicker({
 }: DueDateTimePickerProps) {
   const { t } = useTranslation();
 
-  // Generate time slots from 8 AM to 6 PM
+  // Generate time slots based on business hours
   const generateTimeSlots = (selectedDate?: Date) => {
     const slots = [];
     const now = new Date();
     const isSelectedToday = selectedDate && isToday(selectedDate);
     const currentHour = now.getHours();
     
-    for (let hour = 8; hour < 18; hour++) {
+    if (!selectedDate) return slots;
+    
+    const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    
+    // Business hours based on day of week
+    let endHour = 18; // Default Monday-Friday until 6 PM
+    
+    if (dayOfWeek === 0) { // Sunday - Closed
+      return slots;
+    } else if (dayOfWeek === 6) { // Saturday - Until 5 PM
+      endHour = 17;
+    }
+    
+    for (let hour = 8; hour < endHour; hour++) {
       // If it's today, only show times that are at least 1 hour from now
       if (isSelectedToday && hour <= currentHour) {
         continue;
@@ -91,11 +104,22 @@ export function DueDateTimePicker({
   const timeSlots = generateTimeSlots(value);
   const selectedHour = value ? value.getHours().toString() : undefined;
 
-  // Disable past dates
+  // Disable past dates and Sundays
   const isDateDisabled = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return date < today;
+    
+    // Disable past dates
+    if (date < today) {
+      return true;
+    }
+    
+    // Disable Sundays (day 0)
+    if (date.getDay() === 0) {
+      return true;
+    }
+    
+    return false;
   };
 
   return (
@@ -138,10 +162,13 @@ export function DueDateTimePicker({
             <ClockIcon className="mr-2 h-4 w-4" />
             <SelectValue placeholder={t('due_date.time_placeholder')} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-popover border border-border z-50">
             {timeSlots.length === 0 ? (
               <SelectItem value="no-slots" disabled>
-                {t('due_date.validation.no_slots_available')}
+                {value?.getDay() === 0 
+                  ? "Cerrado los domingos" 
+                  : t('due_date.validation.no_slots_available')
+                }
               </SelectItem>
             ) : (
               timeSlots.map((slot) => (

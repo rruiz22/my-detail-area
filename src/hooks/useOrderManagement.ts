@@ -229,25 +229,6 @@ export const useOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
-      // First get the user's group ID
-      const { data: membershipData, error: membershipError } = await supabase
-        .from('dealer_memberships')
-        .select(`
-          id,
-          dealer_membership_groups(group_id)
-        `)
-        .eq('user_id', user.id)
-        .eq('dealer_id', 5)
-        .eq('is_active', true)
-        .single();
-
-      if (membershipError || !membershipData?.dealer_membership_groups?.[0]?.group_id) {
-        console.error('Error getting user group:', membershipError);
-        throw new Error('No se encontró grupo de usuario válido');
-      }
-
-      const userGroupId = membershipData.dealer_membership_groups[0].group_id;
-
       const newOrder = {
         order_number: `ORD-${Date.now()}`,
         customer_name: orderData.customerName,
@@ -264,8 +245,7 @@ export const useOrderManagement = (activeTab: string) => {
         services: orderData.services || [],
         total_amount: orderData.totalAmount || 0,
         sla_deadline: orderData.dueDate,
-        dealer_id: 5, // Default dealer for now
-        created_by_group_id: userGroupId,
+        dealer_id: 5, // Default dealer - will use table default
       };
 
       const { data, error } = await supabase
