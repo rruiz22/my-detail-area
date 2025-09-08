@@ -19,19 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
-
-interface Order {
-  id: string;
-  customerName?: string;
-  vehicleInfo?: string;
-  vin?: string;
-  stockNumber?: string;
-  status: string;
-  priority?: string;
-  dueDate?: string;
-  createdAt: string;
-  totalAmount?: number;
-}
+import { Order } from '@/hooks/useOrderManagement';
 
 interface OrderKanbanBoardProps {
   orders: Order[];

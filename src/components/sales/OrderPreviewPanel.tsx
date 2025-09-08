@@ -19,29 +19,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
-
-interface Order {
-  id: string;
-  customerName?: string;
-  customerEmail?: string;
-  customerPhone?: string;
-  vehicleInfo?: string;
-  vehicleYear?: string;
-  vehicleMake?: string;
-  vehicleModel?: string;
-  vin?: string;
-  stockNumber?: string;
-  status: string;
-  priority?: string;
-  dueDate?: string;
-  createdAt: string;
-  updatedAt?: string;
-  totalAmount?: number;
-  services?: any[];
-  notes?: string;
-  assignedTo?: string;
-  orderType?: string;
-}
+import { Order } from '@/hooks/useOrderManagement';
 
 interface OrderPreviewPanelProps {
   order: Order | null;

@@ -1,225 +1,340 @@
-import { useState, useEffect, useCallback } from 'react';
-import { mockOrders } from '@/lib/mockData';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import type { Database } from '@/integrations/supabase/types';
 
-export function useOrderManagement(activeTab: string) {
-  const [orders, setOrders] = useState(mockOrders);
-  const [tabCounts, setTabCounts] = useState<Record<string, number>>({});
-  const [filters, setFilters] = useState<Record<string, any>>({});
+// Use Supabase types but create a unified interface for components
+type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
+
+// Unified Order type for components
+export interface Order {
+  id: string;
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  vehicleYear?: number;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleInfo?: string;
+  vin?: string;
+  stockNumber?: string;
+  status: string;
+  priority?: string;
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+  totalAmount?: number;
+  services?: any[];
+  orderType?: string;
+  assignedTo?: string;
+  notes?: string;
+}
+
+// Transform Supabase order to component order
+const transformOrder = (supabaseOrder: SupabaseOrder): Order => ({
+  id: supabaseOrder.id,
+  customerName: supabaseOrder.customer_name,
+  customerEmail: supabaseOrder.customer_email || undefined,
+  customerPhone: supabaseOrder.customer_phone || undefined,
+  vehicleYear: supabaseOrder.vehicle_year || undefined,
+  vehicleMake: supabaseOrder.vehicle_make || undefined,
+  vehicleModel: supabaseOrder.vehicle_model || undefined,
+  vehicleInfo: supabaseOrder.vehicle_info || undefined,
+  vin: supabaseOrder.vehicle_vin || undefined,
+  stockNumber: supabaseOrder.stock_number || undefined,
+  status: supabaseOrder.status,
+  priority: supabaseOrder.priority || undefined,
+  dueDate: supabaseOrder.sla_deadline || undefined,
+  createdAt: supabaseOrder.created_at,
+  updatedAt: supabaseOrder.updated_at,
+  totalAmount: supabaseOrder.total_amount || undefined,
+  services: supabaseOrder.services as any[] || [],
+  orderType: supabaseOrder.order_type || undefined,
+  assignedTo: undefined, // Not in Supabase schema yet
+  notes: undefined, // Not in Supabase schema yet
+});
+
+export const useOrderManagement = (activeTab: string) => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [tabCounts, setTabCounts] = useState({
+    today: 0,
+    tomorrow: 0,
+    pending: 0,
+    in_process: 0,
+    complete: 0,
+    cancelled: 0,
+    week: 0,
+    services: 0,
+  });
+  const [filters, setFilters] = useState({
+    search: '',
+    status: '',
+    make: '',
+    model: '',
+    dateRange: { from: null, to: null },
+  });
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
-  const calculateTabCounts = useCallback((allOrders: any[]) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-    const weekEnd = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const calculateTabCounts = useMemo(() => (allOrders: Order[]) => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
 
     return {
-      dashboard: allOrders.length,
       today: allOrders.filter(order => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= today && orderDate < tomorrow;
+        const orderDate = new Date(order.dueDate || order.createdAt);
+        return orderDate.toDateString() === today.toDateString();
       }).length,
       tomorrow: allOrders.filter(order => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= tomorrow && orderDate < new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000);
+        const orderDate = new Date(order.dueDate || order.createdAt);
+        return orderDate.toDateString() === tomorrow.toDateString();
       }).length,
-      pending: allOrders.filter(order => order.status === 'Pending').length,
-      in_process: allOrders.filter(order => order.status === 'In Process').length,
+      pending: allOrders.filter(order => order.status === 'pending').length,
+      in_process: allOrders.filter(order => order.status === 'in_process').length,
+      complete: allOrders.filter(order => order.status === 'completed').length,
+      cancelled: allOrders.filter(order => order.status === 'cancelled').length,
       week: allOrders.filter(order => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= today && orderDate < weekEnd;
+        const orderDate = new Date(order.dueDate || order.createdAt);
+        return orderDate >= today && orderDate <= nextWeek;
       }).length,
-      all: allOrders.length,
-      services: allOrders.filter(order => order.department === 'Service').length,
-      deleted: 0, // Mock deleted orders
+      services: allOrders.filter(order => order.orderType === 'service').length,
     };
   }, []);
 
-  const filterOrders = useCallback((allOrders: any[], tab: string, currentFilters: any) => {
+  const filterOrders = useMemo(() => (allOrders: Order[], tab: string, currentFilters: any) => {
     let filtered = [...allOrders];
 
-    // Apply tab-specific filters
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-    const weekEnd = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    // Apply tab-specific filtering
+    if (tab !== 'dashboard' && tab !== 'all') {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const nextWeek = new Date(today);
+      nextWeek.setDate(nextWeek.getDate() + 7);
 
-    switch (tab) {
-      case 'today':
-        filtered = filtered.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          return orderDate >= today && orderDate < tomorrow;
-        });
-        break;
-      case 'tomorrow':
-        filtered = filtered.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          return orderDate >= tomorrow && orderDate < new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000);
-        });
-        break;
-      case 'pending':
-        filtered = filtered.filter(order => order.status === 'Pending');
-        break;
-      case 'in_process':
-        filtered = filtered.filter(order => order.status === 'In Process');
-        break;
-      case 'week':
-        filtered = filtered.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          return orderDate >= today && orderDate < weekEnd;
-        });
-        break;
-      case 'services':
-        filtered = filtered.filter(order => order.department === 'Service');
-        break;
-      case 'deleted':
-        filtered = []; // No deleted orders in mock data
-        break;
-      default:
-        // 'dashboard' and 'all' show all orders
-        break;
+      switch (tab) {
+        case 'today':
+          filtered = filtered.filter(order => {
+            const orderDate = new Date(order.dueDate || order.createdAt);
+            return orderDate.toDateString() === today.toDateString();
+          });
+          break;
+        case 'tomorrow':
+          filtered = filtered.filter(order => {
+            const orderDate = new Date(order.dueDate || order.createdAt);
+            return orderDate.toDateString() === tomorrow.toDateString();
+          });
+          break;
+        case 'pending':
+          filtered = filtered.filter(order => order.status === 'pending');
+          break;
+        case 'in_process':
+          filtered = filtered.filter(order => order.status === 'in_process');
+          break;
+        case 'complete':
+          filtered = filtered.filter(order => order.status === 'completed');
+          break;
+        case 'cancelled':
+          filtered = filtered.filter(order => order.status === 'cancelled');
+          break;
+        case 'week':
+          filtered = filtered.filter(order => {
+            const orderDate = new Date(order.dueDate || order.createdAt);
+            return orderDate >= today && orderDate <= nextWeek;
+          });
+          break;
+        case 'services':
+          filtered = filtered.filter(order => order.orderType === 'service');
+          break;
+      }
     }
 
     // Apply global filters
     if (currentFilters.search) {
-      const searchTerm = currentFilters.search.toLowerCase();
-      filtered = filtered.filter(order => 
-        order.id.toLowerCase().includes(searchTerm) ||
-        order.vin.toLowerCase().includes(searchTerm) ||
-        order.stock?.toLowerCase().includes(searchTerm) ||
-        `${order.year} ${order.make} ${order.model}`.toLowerCase().includes(searchTerm)
+      const searchLower = currentFilters.search.toLowerCase();
+      filtered = filtered.filter(order =>
+        order.id?.toLowerCase().includes(searchLower) ||
+        order.vin?.toLowerCase().includes(searchLower) ||
+        order.stockNumber?.toLowerCase().includes(searchLower) ||
+        order.customerName?.toLowerCase().includes(searchLower) ||
+        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
       );
     }
 
     if (currentFilters.status) {
-      filtered = filtered.filter(order => 
-        order.status.toLowerCase() === currentFilters.status.toLowerCase()
-      );
+      filtered = filtered.filter(order => order.status === currentFilters.status);
     }
 
     if (currentFilters.make) {
-      filtered = filtered.filter(order => 
-        order.make.toLowerCase() === currentFilters.make.toLowerCase()
-      );
+      filtered = filtered.filter(order => order.vehicleMake === currentFilters.make);
     }
 
     if (currentFilters.model) {
-      filtered = filtered.filter(order => 
-        order.model.toLowerCase() === currentFilters.model.toLowerCase()
-      );
+      filtered = filtered.filter(order => order.vehicleModel === currentFilters.model);
     }
 
-    if (currentFilters.dateFrom) {
-      const fromDate = new Date(currentFilters.dateFrom);
-      filtered = filtered.filter(order => 
-        new Date(order.createdAt) >= fromDate
-      );
+    if (currentFilters.dateRange?.from) {
+      const fromDate = new Date(currentFilters.dateRange.from);
+      filtered = filtered.filter(order => new Date(order.createdAt) >= fromDate);
     }
 
-    if (currentFilters.dateTo) {
-      const toDate = new Date(currentFilters.dateTo);
-      toDate.setHours(23, 59, 59, 999); // End of day
-      filtered = filtered.filter(order => 
-        new Date(order.createdAt) <= toDate
-      );
+    if (currentFilters.dateRange?.to) {
+      const toDate = new Date(currentFilters.dateRange.to);
+      toDate.setHours(23, 59, 59, 999);
+      filtered = filtered.filter(order => new Date(order.createdAt) <= toDate);
     }
 
     return filtered;
   }, []);
 
   const refreshData = useCallback(async () => {
+    if (!user) return;
+    
     setLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // In real implementation, this would fetch from API
-    const allOrders = mockOrders;
-    const filtered = filterOrders(allOrders, activeTab, filters);
-    
-    setOrders(filtered);
-    setTabCounts(calculateTabCounts(allOrders));
-    setLoading(false);
-  }, [activeTab, filters, filterOrders, calculateTabCounts]);
+    try {
+      // Fetch orders from Supabase for the current user's dealer
+      const { data: orders, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching orders:', error);
+        return;
+      }
+
+      const allOrders = (orders || []).map(transformOrder);
+      const filtered = filterOrders(allOrders, activeTab, filters);
+      
+      setOrders(filtered);
+      setTabCounts(calculateTabCounts(allOrders));
+    } catch (error) {
+      console.error('Error in refreshData:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [activeTab, filters, filterOrders, calculateTabCounts, user]);
 
   const updateFilters = useCallback((newFilters: any) => {
     setFilters(newFilters);
   }, []);
 
   const createOrder = useCallback(async (orderData: any) => {
+    if (!user) return;
+    
     setLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const newOrder = {
-      id: `ORD-${Date.now()}`,
-      vin: orderData.vin,
-      stock: orderData.stockNumber,
-      year: parseInt(orderData.year),
-      make: orderData.make,
-      model: orderData.model,
-      service: orderData.services.join(', '),
-      description: orderData.internalNotes || 'Nueva orden',
-      price: 0, // Calculate based on services
-      status: orderData.status === 'pending' ? 'Pending' : 
-              orderData.status === 'in_progress' ? 'In Progress' :
-              orderData.status === 'completed' ? 'Complete' : 'Cancelled',
-      advisor: 'Usuario Actual',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      department: 'Sales',
-    };
-    
-    // In real implementation, this would create via API
-    console.log('Creating order:', newOrder);
-    
-    setLoading(false);
-  }, []);
+    try {
+      const newOrder = {
+        order_number: `ORD-${Date.now()}`,
+        customer_name: orderData.customerName,
+        customer_email: orderData.customerEmail,
+        customer_phone: orderData.customerPhone,
+        vehicle_year: parseInt(orderData.year) || null,
+        vehicle_make: orderData.make,
+        vehicle_model: orderData.model,
+        vehicle_vin: orderData.vin,
+        stock_number: orderData.stockNumber,
+        order_type: 'sales',
+        status: 'pending',
+        priority: orderData.priority || 'normal',
+        services: orderData.services || [],
+        total_amount: orderData.totalAmount || 0,
+        sla_deadline: orderData.dueDate,
+        dealer_id: 5, // Default dealer for now
+      };
 
-   const updateOrder = useCallback(async (orderId: string, orderData: any) => {
-     setLoading(true);
-     
-     // Simulate API call
-     await new Promise(resolve => setTimeout(resolve, 500));
-     
-     // Update local state immediately for better UX
-     setOrders(prevOrders => 
-       prevOrders.map(order => 
-         order.id === orderId 
-           ? { ...order, ...orderData, updatedAt: new Date().toISOString() }
-           : order
-       )
-     );
-     
-     // In real implementation, this would update via API
-     console.log('Updating order:', orderId, orderData);
-     
-     setLoading(false);
-   }, []);
+      const { data, error } = await supabase
+        .from('orders')
+        .insert(newOrder)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating order:', error);
+        throw error;
+      }
+
+      console.log('Order created successfully:', data);
+      await refreshData();
+    } catch (error) {
+      console.error('Error in createOrder:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [user, refreshData]);
+
+  const updateOrder = useCallback(async (orderId: string, orderData: any) => {
+    if (!user) return;
+    
+    setLoading(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .update(orderData)
+        .eq('id', orderId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating order:', error);
+        throw error;
+      }
+
+      // Update local state immediately for better UX
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId 
+            ? { ...order, ...orderData, updatedAt: new Date().toISOString() }
+            : order
+        )
+      );
+      
+      console.log('Order updated successfully:', data);
+    } catch (error) {
+      console.error('Error in updateOrder:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
+    if (!user) return;
+    
     setLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // In real implementation, this would soft delete via API
-    console.log('Deleting order:', orderId);
-    
-    setLoading(false);
-  }, []);
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId);
 
-  // Refresh data when tab or filters change
+      if (error) {
+        console.error('Error deleting order:', error);
+        throw error;
+      }
+
+      console.log('Order deleted successfully');
+      await refreshData();
+    } catch (error) {
+      console.error('Error in deleteOrder:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [user, refreshData]);
+
+  // Initialize data on mount and when dependencies change
   useEffect(() => {
     refreshData();
   }, [refreshData]);
-
-  // Initial load
-  useEffect(() => {
-    const allOrders = mockOrders;
-    setTabCounts(calculateTabCounts(allOrders));
-  }, [calculateTabCounts]);
 
   return {
     orders,
@@ -232,4 +347,4 @@ export function useOrderManagement(activeTab: string) {
     updateOrder,
     deleteOrder,
   };
-}
+};
