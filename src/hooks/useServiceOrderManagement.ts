@@ -282,7 +282,7 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
           ro: orderData.ro,
           tag: orderData.tag,
           order_type: 'service',
-          order_number: `SV-${Date.now()}`, // Generate unique order number
+          order_number: `SV-${Math.floor(Math.random() * 90000) + 10000}`, // Generate 5-digit number like SV-12345
           status: orderData.status,
           priority: orderData.priority || 'normal',
           services: orderData.services || [],
@@ -291,7 +291,7 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
           internal_notes: orderData.internalNotes,
           due_date: orderData.dueDate,
           dealer_id: dealerIdNumber,
-          assigned_contact_id: orderData.assignedContactId || null
+          assigned_contact_id: orderData.assignedContactId && orderData.assignedContactId !== "1" && orderData.assignedContactId !== 1 ? orderData.assignedContactId : null
         })
         .select()
         .single();
