@@ -461,6 +461,51 @@ export type Database = {
           },
         ]
       }
+      order_attachments: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_name: string
+          file_path: string
+          file_size: number
+          id: string
+          is_public: boolean | null
+          mime_type: string
+          order_id: string
+          updated_at: string
+          upload_context: string | null
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_path: string
+          file_size: number
+          id?: string
+          is_public?: boolean | null
+          mime_type: string
+          order_id: string
+          updated_at?: string
+          upload_context?: string | null
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          id?: string
+          is_public?: boolean | null
+          mime_type?: string
+          order_id?: string
+          updated_at?: string
+          upload_context?: string | null
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
       order_comments: {
         Row: {
           comment_text: string
