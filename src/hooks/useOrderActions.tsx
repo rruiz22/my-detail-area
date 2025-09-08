@@ -4,7 +4,17 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
 interface OrderActionsResult {
-  generateQR: (orderId: string, orderNumber: string, dealerId: number) => Promise<{ qrCodeUrl?: string; shortLink?: string }>;
+  generateQR: (orderId: string, orderNumber: string, dealerId: number, regenerate?: boolean) => Promise<{ 
+    qrCodeUrl?: string; 
+    shortLink?: string;
+    linkId?: string;
+    slug?: string;
+    analytics?: {
+      totalClicks: number;
+      uniqueClicks: number;
+      lastClickedAt: string | null;
+    };
+  }>;
   sendSMS: (to: string, message: string, orderNumber: string) => Promise<boolean>;
   sendEmail: (to: string, subject: string, orderNumber: string, customerName: string, orderDetails: any) => Promise<boolean>;
   loading: boolean;
@@ -14,18 +24,28 @@ export function useOrderActions(): OrderActionsResult {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  const generateQR = async (orderId: string, orderNumber: string, dealerId: number) => {
+  const generateQR = async (orderId: string, orderNumber: string, dealerId: number, regenerate = false) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-qr-shortlink', {
-        body: { orderId, orderNumber, dealerId },
+        body: { orderId, orderNumber, dealerId, regenerate },
       });
 
       if (error) throw error;
 
-      if (data.success) {
-        toast.success(t('orders.qr_generated_successfully'));
-        return { qrCodeUrl: data.qrCodeUrl, shortLink: data.shortLink };
+      if (data?.success) {
+        const message = regenerate 
+          ? t('orders.qr_regenerated_successfully') 
+          : t('orders.qr_generated_successfully');
+        toast.success(message);
+        
+        return {
+          qrCodeUrl: data.qrCodeUrl,
+          shortLink: data.shortLink,
+          linkId: data.linkId,
+          slug: data.slug,
+          analytics: data.analytics
+        };
       } else {
         throw new Error(data.error || 'Failed to generate QR code');
       }

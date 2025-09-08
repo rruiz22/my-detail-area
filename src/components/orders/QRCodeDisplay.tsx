@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { QrCode, Copy, Download, Share2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { QrCode, Copy, Download, Share2, RefreshCw, BarChart3, Eye, MousePointer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useOrderActions } from '@/hooks/useOrderActions';
+import { supabase } from '@/integrations/supabase/client';
 
 interface QRCodeDisplayProps {
   orderId: string;
@@ -13,6 +15,14 @@ interface QRCodeDisplayProps {
   qrCodeUrl?: string;
   shortLink?: string;
   onUpdate?: (qrCodeUrl: string, shortLink: string) => void;
+}
+
+interface LinkAnalytics {
+  linkId: string;
+  slug: string;
+  totalClicks: number;
+  uniqueClicks: number;
+  lastClickedAt: string | null;
 }
 
 export function QRCodeDisplay({ 
@@ -27,12 +37,56 @@ export function QRCodeDisplay({
   const { generateQR, loading } = useOrderActions();
   const [currentQRUrl, setCurrentQRUrl] = useState(qrCodeUrl);
   const [currentShortLink, setCurrentShortLink] = useState(shortLink);
+  const [analytics, setAnalytics] = useState<LinkAnalytics | null>(null);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
-  const handleGenerateQR = async () => {
-    const result = await generateQR(orderId, orderNumber, dealerId);
+  // Load analytics on mount
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      if (!orderId) return;
+
+      try {
+        const { data } = await supabase
+          .from('sales_order_links')
+          .select('id, slug, total_clicks, unique_clicks, last_clicked_at')
+          .eq('order_id', orderId)
+          .eq('is_active', true)
+          .single();
+
+        if (data) {
+          setAnalytics({
+            linkId: data.id,
+            slug: data.slug,
+            totalClicks: data.total_clicks,
+            uniqueClicks: data.unique_clicks,
+            lastClickedAt: data.last_clicked_at,
+          });
+        }
+      } catch (error) {
+        console.log('No analytics data found or error loading:', error);
+      }
+    };
+
+    loadAnalytics();
+  }, [orderId]);
+
+  const handleGenerateQR = async (regenerate = false) => {
+    const result = await generateQR(orderId, orderNumber, dealerId, regenerate);
     if (result.qrCodeUrl && result.shortLink) {
       setCurrentQRUrl(result.qrCodeUrl);
       setCurrentShortLink(result.shortLink);
+      
+      // Update analytics if returned
+      if (result.analytics) {
+        setAnalytics({
+          linkId: result.linkId || '',
+          slug: result.slug || '',
+          totalClicks: result.analytics.totalClicks,
+          uniqueClicks: result.analytics.uniqueClicks,
+          lastClickedAt: result.analytics.lastClickedAt,
+        });
+      }
+      
       onUpdate?.(result.qrCodeUrl, result.shortLink);
     }
   };
@@ -76,10 +130,56 @@ export function QRCodeDisplay({
   return (
     <Card className="p-4">
       <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <QrCode className="w-5 h-5" />
-          <h3 className="font-semibold">{t('orders.qr_code')}</h3>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <QrCode className="w-5 h-5" />
+            <h3 className="font-semibold">{t('orders.qr_code')}</h3>
+          </div>
+          
+          {analytics && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowAnalytics(!showAnalytics)}
+            >
+              <BarChart3 className="w-4 h-4" />
+            </Button>
+          )}
         </div>
+
+        {/* Analytics Panel */}
+        {showAnalytics && analytics && (
+          <div className="p-3 bg-muted/50 rounded-lg border">
+            <h4 className="font-medium text-sm mb-2 flex items-center gap-1">
+              <BarChart3 className="w-3 h-3" />
+              {t('orders.analytics')}
+            </h4>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="flex items-center gap-1">
+                <MousePointer className="w-3 h-3 text-blue-500" />
+                <span className="text-muted-foreground">{t('orders.total_clicks')}:</span>
+                <Badge variant="secondary" className="text-xs">
+                  {analytics.totalClicks}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1">
+                <Eye className="w-3 h-3 text-green-500" />
+                <span className="text-muted-foreground">{t('orders.unique_clicks')}:</span>
+                <Badge variant="secondary" className="text-xs">
+                  {analytics.uniqueClicks}
+                </Badge>
+              </div>
+            </div>
+            {analytics.lastClickedAt && (
+              <p className="text-xs text-muted-foreground mt-2">
+                {t('orders.last_clicked')}: {new Date(analytics.lastClickedAt).toLocaleString()}
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              {t('orders.short_code')}: <code className="font-mono">{analytics.slug}</code>
+            </p>
+          </div>
+        )}
 
         {currentQRUrl ? (
           <div className="space-y-3">
@@ -114,12 +214,11 @@ export function QRCodeDisplay({
             )}
 
             {/* Action Buttons */}
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <Button
                 size="sm"
                 variant="outline"
                 onClick={downloadQR}
-                className="flex-1"
               >
                 <Download className="w-3 h-3 mr-1" />
                 {t('common.download')}
@@ -128,12 +227,23 @@ export function QRCodeDisplay({
                 size="sm"
                 variant="outline"
                 onClick={shareQR}
-                className="flex-1"
               >
                 <Share2 className="w-3 h-3 mr-1" />
                 {t('common.share')}
               </Button>
             </div>
+
+            {/* Regenerate Button */}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleGenerateQR(true)}
+              disabled={loading}
+              className="w-full"
+            >
+              <RefreshCw className="w-3 h-3 mr-1" />
+              {loading ? t('common.regenerating') : t('orders.regenerate_qr')}
+            </Button>
           </div>
         ) : (
           <div className="text-center space-y-3">
@@ -144,7 +254,7 @@ export function QRCodeDisplay({
               </p>
             </div>
             <Button
-              onClick={handleGenerateQR}
+              onClick={() => handleGenerateQR(false)}
               disabled={loading}
               className="w-full"
             >

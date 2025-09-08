@@ -19,6 +19,7 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import Management from "./pages/Management";
+import QRRedirect from "./pages/QRRedirect";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +36,10 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/auth" element={<Auth />} />
+                
+                {/* QR Code redirect route - no auth required */}
+                <Route path="/s/:slug" element={<QRRedirect />} />
+                
                 <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/sales" element={<ProtectedRoute><SalesOrders /></ProtectedRoute>} />
                 <Route path="/service" element={<ProtectedRoute><ServiceOrders /></ProtectedRoute>} />
