@@ -21,6 +21,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Order } from '@/hooks/useOrderManagement';
 import { safeFormatDateOnly, calculateDaysFromNow } from '@/utils/dateUtils';
+import { getStatusRowColor, getStatusBorder } from '@/utils/statusUtils';
 
 interface OrderKanbanBoardProps {
   orders: Order[];
@@ -194,7 +195,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                     draggable={true}
                     onDragStart={(e) => handleDragStart(e, order)}
                     onDragEnd={() => setDraggedOrder(null)}
-                    className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 ${getPriorityColor(order.priority)} group ${
+                    className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 ${getStatusBorder(order.status)} ${getStatusRowColor(order.status)} group ${
                       draggedOrder?.id === order.id ? 'opacity-50 scale-95' : ''
                     }`}
                   >
