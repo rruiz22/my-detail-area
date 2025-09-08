@@ -18,7 +18,7 @@ interface Dealership {
   subscription_plan: string;
 }
 
-type AppModule = 'dashboard' | 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'reports' | 'management' | 'settings' | 'users' | 'dealerships';
+type AppModule = 'dashboard' | 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'chat' | 'reports' | 'management' | 'settings' | 'users' | 'dealerships';
 
 interface UseAccessibleDealershipsReturn {
   dealerships: Dealership[];
