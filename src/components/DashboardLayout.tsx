@@ -27,9 +27,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           <header className="h-16 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 flex items-center justify-between px-6">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
-              {title && (
-                <h1 className="text-xl font-semibold">{title}</h1>
-              )}
             </div>
             
             <div className="flex items-center gap-4">

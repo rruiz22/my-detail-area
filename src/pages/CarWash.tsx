@@ -42,41 +42,42 @@ export default function CarWash() {
   });
 
   return (
-    <DashboardLayout title={t('pages.car_wash')}>
+    <DashboardLayout>
       <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
-            <Input
-              placeholder={t('orders.search_orders')}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64"
-            />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder={t('orders.filter_by_status')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('orders.all_status')}</SelectItem>
-                <SelectItem value="Pending">{t('orders.pending')}</SelectItem>
-                <SelectItem value="In Progress">{t('orders.in_progress')}</SelectItem>
-                <SelectItem value="Complete">{t('orders.complete')}</SelectItem>
-                <SelectItem value="Cancelled">{t('orders.cancelled')}</SelectItem>
-              </SelectContent>
-            </Select>
+            <h1 className="text-2xl font-bold">{t('pages.car_wash')}</h1>
           </div>
           
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              {t('orders.export')}
-            </Button>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              {t('orders.new_order')}
+              {t('common.new_order')}
             </Button>
           </div>
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Input
+            placeholder={t('orders.search_orders')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-64"
+          />
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder={t('orders.filter_by_status')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('orders.all_status')}</SelectItem>
+              <SelectItem value="Pending">{t('orders.pending')}</SelectItem>
+              <SelectItem value="In Progress">{t('orders.in_progress')}</SelectItem>
+              <SelectItem value="Complete">{t('orders.complete')}</SelectItem>
+              <SelectItem value="Cancelled">{t('orders.cancelled')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Orders Table */}

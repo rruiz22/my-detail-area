@@ -162,23 +162,28 @@ export default function ReconOrders() {
   });
 
   return (
-    <DashboardLayout title={t('pages.recon_orders')}>
+    <DashboardLayout>
       <div className="space-y-6">
-        {/* Header Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+        {/* Header Actions */}  
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
-            <Button onClick={handleCreateOrder} className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Plus className="w-4 h-4 mr-2" />
-              {t('recon.new_recon_order')}
-            </Button>
-            <Button variant="outline" onClick={refreshData} disabled={loading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              {t('common.refresh')}
-            </Button>
+            <h1 className="text-2xl font-bold">{t('pages.recon_orders')}</h1>
           </div>
           
-          <div className="text-sm text-muted-foreground">
-            {t('orders.last_update')}: {lastRefresh.toLocaleTimeString()}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refreshData}
+              disabled={loading}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              {t('common.refresh')}
+            </Button>
+            <Button size="sm" onClick={handleCreateOrder}>
+              <Plus className="h-4 w-4 mr-2" />
+              {t('recon.new_recon_order')}
+            </Button>
           </div>
         </div>
 
