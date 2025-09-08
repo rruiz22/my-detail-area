@@ -21,7 +21,8 @@ import Users from "./pages/Users";
 import Management from "./pages/Management";
 import QRRedirect from "./pages/QRRedirect";
 import Auth from "./pages/Auth";
-import InvitationAccept from "./pages/InvitationAccept";
+import { InvitationAccept } from "./pages/InvitationAccept";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
