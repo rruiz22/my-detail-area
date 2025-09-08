@@ -58,6 +58,53 @@ export type Database = {
           },
         ]
       }
+      dealer_invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          dealer_id: number
+          email: string
+          expires_at: string
+          id: string
+          invitation_token: string
+          inviter_id: string
+          role_name: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          dealer_id: number
+          email: string
+          expires_at?: string
+          id?: string
+          invitation_token: string
+          inviter_id: string
+          role_name: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          dealer_id?: number
+          email?: string
+          expires_at?: string
+          id?: string
+          invitation_token?: string
+          inviter_id?: string
+          role_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_invitations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_membership_groups: {
         Row: {
           assigned_at: string
@@ -969,9 +1016,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_dealer_invitation: {
+        Args: { p_invitation_token: string }
+        Returns: boolean
+      }
       assign_role: {
         Args: { expires_at?: string; role_name: string; target_user_id: string }
         Returns: boolean
+      }
+      create_dealer_invitation: {
+        Args: { p_dealer_id: number; p_email: string; p_role_name: string }
+        Returns: string
       }
       generate_custom_order_number: {
         Args: Record<PropertyKey, never>
@@ -1008,6 +1063,16 @@ export type Database = {
           name: string
           price: number
           updated_at: string
+        }[]
+      }
+      get_dealership_stats: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          active_users: number
+          orders_this_month: number
+          pending_invitations: number
+          total_orders: number
+          total_users: number
         }[]
       }
       get_user_accessible_dealers: {

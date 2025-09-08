@@ -37,11 +37,15 @@ import {
   UserPlus, 
   Edit, 
   Trash2,
-  Eye 
+  Eye,
+  Mail,
+  BarChart3
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Dealership, DealershipStatus, SubscriptionPlan } from '@/types/dealership';
 import { DealershipModal } from '@/components/dealerships/DealershipModal';
+import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
+import { DealershipStatsCard } from '@/components/dealerships/DealershipStatsCard';
 import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/DashboardLayout';
 
@@ -55,6 +59,9 @@ export function Dealerships() {
   const [planFilter, setPlanFilter] = useState<SubscriptionPlan | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDealership, setEditingDealership] = useState<Dealership | null>(null);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [selectedDealershipForInvite, setSelectedDealershipForInvite] = useState<number | null>(null);
+  const [showStats, setShowStats] = useState(false);
 
   const fetchDealerships = async () => {
     try {
@@ -184,6 +191,25 @@ export function Dealerships() {
     navigate(`/dealers/${dealership.id}`);
   };
 
+  const handleInviteUser = (dealership: Dealership) => {
+    setSelectedDealershipForInvite(dealership.id);
+    setIsInviteModalOpen(true);
+  };
+
+  const handleInvitationSent = () => {
+    toast.success('Invitación enviada exitosamente');
+    fetchDealerships(); // Refresh data to show updated stats
+  };
+
+  const handleCloseInviteModal = () => {
+    setIsInviteModalOpen(false);
+    setSelectedDealershipForInvite(null);
+  };
+
+  const toggleStats = () => {
+    setShowStats(!showStats);
+  };
+
   return (
     <DashboardLayout title={t('dealerships.title')}>
       <div className="space-y-6">
@@ -195,11 +221,36 @@ export function Dealerships() {
               {t('dealerships.manage_description', 'Manage dealerships, their contacts and users')}
             </p>
           </div>
-          <Button onClick={handleAdd} className="gap-2">
-            <Plus className="h-4 w-4" />
-            {t('dealerships.add_new')}
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={toggleStats}
+              className="gap-2"
+            >
+              <BarChart3 className="h-4 w-4" />
+              {showStats ? 'Ocultar' : 'Mostrar'} Estadísticas
+            </Button>
+            <Button onClick={handleAdd} className="gap-2">
+              <Plus className="h-4 w-4" />
+              {t('dealerships.add_new')}
+            </Button>
+          </div>
         </div>
+
+        {/* Statistics Cards */}
+        {showStats && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {dealerships
+              .filter(d => d.status === 'active')
+              .slice(0, 6)
+              .map((dealership) => (
+                <DealershipStatsCard
+                  key={dealership.id}
+                  dealerId={dealership.id}
+                />
+              ))}
+          </div>
+        )}
 
         {/* Filters */}
         <Card>
@@ -347,6 +398,13 @@ export function Dealerships() {
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={(e) => {
                               e.stopPropagation();
+                              handleInviteUser(dealership);
+                            }}>
+                              <Mail className="mr-2 h-4 w-4" />
+                              Invitar Usuario
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
                               handleEdit(dealership);
                             }}>
                               <Edit className="mr-2 h-4 w-4" />
@@ -377,6 +435,15 @@ export function Dealerships() {
         onSuccess={handleModalSuccess}
         dealership={editingDealership}
       />
+
+      {selectedDealershipForInvite && (
+        <DealerInvitationModal
+          isOpen={isInviteModalOpen}
+          onClose={handleCloseInviteModal}
+          dealerId={selectedDealershipForInvite}
+          onInvitationSent={handleInvitationSent}
+        />
+      )}
     </DashboardLayout>
   );
 }

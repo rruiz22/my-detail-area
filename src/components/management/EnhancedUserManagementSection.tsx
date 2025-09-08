@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
+import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { RoleAssignmentModal } from '@/components/permissions/RoleAssignmentModal';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -328,6 +329,13 @@ export const EnhancedUserManagementSection: React.FC = () => {
       </Card>
 
       {/* Role Assignment Modal */}
+      <DealerInvitationModal
+        isOpen={isInvitationModalOpen}
+        onClose={() => setIsInvitationModalOpen(false)}
+        dealerId={selectedDealership || dealerships[0]?.id || 1}
+        onInvitationSent={handleInvitationSent}
+      />
+
       {selectedUser && (
         <RoleAssignmentModal
           isOpen={isRoleModalOpen}

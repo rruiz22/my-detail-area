@@ -21,7 +21,7 @@ import Users from "./pages/Users";
 import Management from "./pages/Management";
 import QRRedirect from "./pages/QRRedirect";
 import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
+import InvitationAccept from "./pages/InvitationAccept";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +52,10 @@ const App = () => (
             <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
                 <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
                 <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
+                
+                {/* Public invitation acceptance route */}
+                <Route path="/invitation/:token" element={<InvitationAccept />} />
+                
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
