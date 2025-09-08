@@ -33,9 +33,7 @@ export interface ReconOrder {
   createdByGroupId?: string;
   assignedGroupId?: string;
   // Recon-specific fields
-  tradeInValue?: number;
   acquisitionCost?: number;
-  estimatedRetailValue?: number;
   reconCost?: number;
   acquisitionSource?: string; // trade-in, auction, dealer-swap, etc.
   conditionGrade?: string; // excellent, good, fair, poor
@@ -96,9 +94,7 @@ const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
   createdByGroupId: supabaseOrder.created_by_group_id,
   assignedGroupId: supabaseOrder.assigned_group_id,
   // Extract recon-specific data from services/metadata if available
-  tradeInValue: supabaseOrder.services?.find((s: any) => s.type === 'trade_value')?.value,
   acquisitionCost: supabaseOrder.services?.find((s: any) => s.type === 'acquisition_cost')?.value,
-  estimatedRetailValue: supabaseOrder.services?.find((s: any) => s.type === 'estimated_retail')?.value,
   reconCost: supabaseOrder.services?.find((s: any) => s.type === 'recon_cost')?.value,
   acquisitionSource: supabaseOrder.services?.find((s: any) => s.type === 'acquisition_source')?.value || 'trade-in',
   conditionGrade: supabaseOrder.services?.find((s: any) => s.type === 'condition_grade')?.value || 'good',

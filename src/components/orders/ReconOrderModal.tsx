@@ -50,9 +50,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     internalNotes: '',
     dueDate: '',
     // Recon-specific fields
-    tradeInValue: '',
     acquisitionCost: '',
-    estimatedRetailValue: '',
     reconCost: '',
     acquisitionSource: 'trade-in',
     conditionGrade: 'good',
@@ -80,9 +78,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           notes: order.notes || '',
           internalNotes: order.internalNotes || '',
           dueDate: order.dueDate || '',
-          tradeInValue: order.tradeInValue?.toString() || '',
           acquisitionCost: order.acquisitionCost?.toString() || '',
-          estimatedRetailValue: order.estimatedRetailValue?.toString() || '',
           reconCost: order.reconCost?.toString() || '',
           acquisitionSource: order.acquisitionSource || 'trade-in',
           conditionGrade: order.conditionGrade || 'good',
@@ -103,9 +99,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           notes: '',
           internalNotes: '',
           dueDate: '',
-          tradeInValue: '',
           acquisitionCost: '',
-          estimatedRetailValue: '',
           reconCost: '',
           acquisitionSource: 'trade-in',
           conditionGrade: 'good',
@@ -212,9 +206,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
         ...formData,
         vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
         totalAmount: formData.reconCost ? parseFloat(formData.reconCost) : undefined,
-        tradeInValue: formData.tradeInValue ? parseFloat(formData.tradeInValue) : undefined,
         acquisitionCost: formData.acquisitionCost ? parseFloat(formData.acquisitionCost) : undefined,
-        estimatedRetailValue: formData.estimatedRetailValue ? parseFloat(formData.estimatedRetailValue) : undefined,
         reconCost: formData.reconCost ? parseFloat(formData.reconCost) : undefined,
       };
 
@@ -401,18 +393,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label htmlFor="tradeInValue">{t('recon.trade_in_value')}</Label>
-                    <Input
-                      id="tradeInValue"
-                      value={formData.tradeInValue}
-                      onChange={(e) => handleInputChange('tradeInValue', e.target.value)}
-                      placeholder="0.00"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                    />
-                  </div>
-                  <div>
                     <Label htmlFor="acquisitionCost">{t('recon.acquisition_cost')}</Label>
                     <Input
                       id="acquisitionCost"
@@ -428,9 +408,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                       <p className="text-sm text-destructive mt-1">{errors.acquisitionCost}</p>
                     )}
                   </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label htmlFor="reconCost">{t('recon.estimated_recon_cost')}</Label>
                     <Input
@@ -446,18 +423,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                     {errors.reconCost && (
                       <p className="text-sm text-destructive mt-1">{errors.reconCost}</p>
                     )}
-                  </div>
-                  <div>
-                    <Label htmlFor="estimatedRetailValue">{t('recon.estimated_retail_value')}</Label>
-                    <Input
-                      id="estimatedRetailValue"
-                      value={formData.estimatedRetailValue}
-                      onChange={(e) => handleInputChange('estimatedRetailValue', e.target.value)}
-                      placeholder="0.00"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                    />
                   </div>
                 </div>
               </CardContent>
