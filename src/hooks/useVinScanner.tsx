@@ -36,6 +36,8 @@ export function useVinScanner(): UseVinScannerReturn {
 
       if (uniqueVins.length === 0) {
         setError('No se encontró un VIN válido en la imagen');
+      } else {
+        console.log('VINs detectados:', uniqueVins);
       }
 
       return uniqueVins;
