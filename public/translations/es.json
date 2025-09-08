@@ -210,6 +210,7 @@
     "new_recon_order": "Nueva Orden de Recon",
     "stock_number": "Número de Stock",
     "stock_number_required": "El número de stock es requerido",
+    "dealer_required": "El concesionario es requerido",
     "enter_stock_number": "Ingrese número de stock",
     "needs_approval": "Requiere Aprobación",
     "ready_for_sale": "Listo para Venta",

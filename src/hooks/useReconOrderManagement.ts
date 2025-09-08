@@ -302,9 +302,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       // Prepare services array with recon-specific data
       const services = [
         ...(orderData.services || []),
-        { type: 'trade_value', value: orderData.tradeInValue },
         { type: 'acquisition_cost', value: orderData.acquisitionCost },
-        { type: 'estimated_retail', value: orderData.estimatedRetailValue },
         { type: 'recon_cost', value: orderData.reconCost },
         { type: 'acquisition_source', value: orderData.acquisitionSource },
         { type: 'condition_grade', value: orderData.conditionGrade },
@@ -381,9 +379,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       // Prepare services array with recon-specific data
       const services = [
         ...(orderData.services || []),
-        { type: 'trade_value', value: orderData.tradeInValue },
         { type: 'acquisition_cost', value: orderData.acquisitionCost },
-        { type: 'estimated_retail', value: orderData.estimatedRetailValue },
         { type: 'recon_cost', value: orderData.reconCost },
         { type: 'acquisition_source', value: orderData.acquisitionSource },
         { type: 'condition_grade', value: orderData.conditionGrade },

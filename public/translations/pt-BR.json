@@ -763,7 +763,7 @@
     "confirmDelete": "Tem certeza de que deseja excluir este serviço?"
   },
   "orders": {
-    "vehicle": "Veículo"
+    "vehicle": "Veículo",
     "create": "Criar Pedido",
     "edit": "Editar Pedido",
     "clientInfo": "Informações do Cliente",
@@ -774,6 +774,9 @@
     "customerName": "Nome do Cliente",
     "customerEmail": "E-mail do Cliente",
     "customerPhone": "Telefone do Cliente",
+    "dealership": "Concessionária",
+    "select_dealership": "Selecionar concessionária",
+    "dealer_required": "A concessionária é obrigatória",
     "vin": "VIN",
     "year": "Ano",
     "make": "Marca",

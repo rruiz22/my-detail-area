@@ -210,6 +210,7 @@
     "new_recon_order": "New Recon Order",
     "stock_number": "Stock Number",
     "stock_number_required": "Stock number is required",
+    "dealer_required": "Dealership is required",
     "enter_stock_number": "Enter stock number",
     "recon_details": "Recon Details",
     "acquisition_source": "Acquisition Source",

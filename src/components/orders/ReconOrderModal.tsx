@@ -46,7 +46,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     notes: '',
     dueDate: '',
     assignedContactId: '',
-    dealerId: 5 // TODO: Get from user profile
+    dealerId: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -68,7 +68,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           notes: order.notes || '',
           dueDate: order.dueDate || '',
           assignedContactId: order.assignedContactId || '',
-          dealerId: order.dealerId || 5
+          dealerId: order.dealerId?.toString() || ''
         });
       } else {
         setFormData({
@@ -83,7 +83,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           notes: '',
           dueDate: '',
           assignedContactId: '',
-          dealerId: 5
+          dealerId: ''
         });
       }
       setErrors({});
@@ -151,6 +151,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
 
     if (!formData.vehicleModel.trim()) {
       newErrors.vehicleModel = t('orders.model_required');
+    }
+
+    if (!formData.dealerId) {
+      newErrors.dealerId = t('orders.dealer_required');
     }
 
     setErrors(newErrors);
@@ -358,6 +362,24 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                     onChange={(e) => handleInputChange('dueDate', e.target.value)}
                     placeholder={t('orders.select_due_date')}
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="dealerId">{t('orders.dealership')} *</Label>
+                  <Select
+                    value={formData.dealerId.toString()}
+                    onValueChange={(value) => handleInputChange('dealerId', value)}
+                  >
+                    <SelectTrigger className={errors.dealerId ? 'border-destructive' : ''}>
+                      <SelectValue placeholder={t('orders.select_dealership')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">Main Dealership</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.dealerId && (
+                    <p className="text-sm text-destructive mt-1">{errors.dealerId}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
