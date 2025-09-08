@@ -172,6 +172,26 @@ export const usePermissions = () => {
     }
   }, []);
 
+  const checkDealershipModuleAccess = useCallback(async (dealerId: number, module: AppModule): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .rpc('dealership_has_module_access', {
+          p_dealer_id: dealerId,
+          p_module: module
+        });
+
+      if (error) {
+        console.error('Error checking dealership module access:', error);
+        return false;
+      }
+
+      return data || false;
+    } catch (error) {
+      console.error('Error in checkDealershipModuleAccess:', error);
+      return false;
+    }
+  }, []);
+
   const refreshPermissions = useCallback(() => {
     fetchUserPermissions();
   }, [fetchUserPermissions]);
@@ -182,6 +202,7 @@ export const usePermissions = () => {
     loading,
     hasPermission,
     checkPermission,
+    checkDealershipModuleAccess,
     assignRole,
     removeRole,
     refreshPermissions

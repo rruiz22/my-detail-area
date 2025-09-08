@@ -341,6 +341,50 @@ export type Database = {
           },
         ]
       }
+      dealership_modules: {
+        Row: {
+          created_at: string
+          dealer_id: number
+          disabled_at: string | null
+          enabled_at: string
+          enabled_by: string | null
+          id: string
+          is_enabled: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dealer_id: number
+          disabled_at?: string | null
+          enabled_at?: string
+          enabled_by?: string | null
+          id?: string
+          is_enabled?: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number
+          disabled_at?: string | null
+          enabled_at?: string
+          enabled_by?: string | null
+          id?: string
+          is_enabled?: boolean
+          module?: Database["public"]["Enums"]["app_module"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealership_modules_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealerships: {
         Row: {
           address: string | null
@@ -1150,6 +1194,13 @@ export type Database = {
         Args: { p_dealer_id: number; p_email: string; p_role_name: string }
         Returns: string
       }
+      dealership_has_module_access: {
+        Args: {
+          p_dealer_id: number
+          p_module: Database["public"]["Enums"]["app_module"]
+        }
+        Returns: boolean
+      }
       generate_custom_order_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -1193,6 +1244,15 @@ export type Database = {
           name: string
           price: number
           updated_at: string
+        }[]
+      }
+      get_dealership_modules: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          enabled_at: string
+          enabled_by: string
+          is_enabled: boolean
+          module: Database["public"]["Enums"]["app_module"]
         }[]
       }
       get_dealership_performance_stats: {
@@ -1321,12 +1381,24 @@ export type Database = {
         }
         Returns: boolean
       }
+      initialize_dealership_modules: {
+        Args: { p_dealer_id: number }
+        Returns: boolean
+      }
       is_admin: {
         Args: { user_id?: string }
         Returns: boolean
       }
       set_membership_groups: {
         Args: { p_group_ids: string[]; p_membership_id: string }
+        Returns: boolean
+      }
+      update_dealership_module: {
+        Args: {
+          p_dealer_id: number
+          p_is_enabled: boolean
+          p_module: Database["public"]["Enums"]["app_module"]
+        }
         Returns: boolean
       }
       user_can_update_order_status: {

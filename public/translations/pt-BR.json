@@ -720,6 +720,33 @@
     },
     "tabs": {
       "services": "Serviços"
+    },
+    "modules": {
+      "title": "Módulos",
+      "description": "Gerenciar quais módulos esta concessionária pode acessar",
+      "fetch_error": "Falha ao carregar módulos",
+      "update_error": "Falha ao atualizar acesso do módulo",
+      "module_enabled": "Módulo {{module}} foi habilitado",
+      "module_disabled": "Módulo {{module}} foi desabilitado",
+      "enabled_on": "Habilitado em {{date}}",
+      "categories": {
+        "core": "Funcionalidades Principais",
+        "orders": "Gestão de Pedidos",
+        "analytics": "Análise e Relatórios",
+        "administration": "Administração"
+      },
+      "descriptions": {
+        "main_dashboard": "Painel principal e visão geral",
+        "manage_sales_orders": "Gerenciar pedidos de venda e entrega",
+        "manage_service_orders": "Processar pedidos do departamento de serviço",
+        "manage_recon_orders": "Gerenciar fluxo de recondicionamento",
+        "manage_car_wash_orders": "Gerenciar serviços de lavagem expressa",
+        "access_reports_analytics": "Visualizar relatórios e análises",
+        "system_configuration": "Configuração do sistema",
+        "manage_multiple_dealerships": "Gestão multi-concessionária",
+        "user_management": "Funções e permissões de usuários",
+        "advanced_management_tools": "Ferramentas avançadas de gestão"
+      }
     }
   },
   "services": {

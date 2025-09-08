@@ -10,7 +10,8 @@ import {
   Shield, 
   Users,
   ArrowLeft,
-  Wrench
+  Wrench,
+  Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,8 @@ import { DealerOverview } from '@/components/dealer/DealerOverview';
 import { DealerGroups } from '@/components/dealer/DealerGroups';
 import { DealerUsers } from '@/components/dealer/DealerUsers';
 import { DealerServices } from '@/components/dealer/DealerServices';
+import { DealerModules } from '@/components/dealer/DealerModules';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { Link } from 'react-router-dom';
 
 const DealerView = () => {
@@ -72,7 +75,7 @@ const DealerView = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.overview')}</span>
@@ -93,6 +96,13 @@ const DealerView = () => {
               <span className="hidden sm:inline">{t('dealer.tabs.services')}</span>
               <span className="sm:hidden">{t('dealer.tabs.services')}</span>
             </TabsTrigger>
+            <PermissionGuard module="management" permission="admin">
+              <TabsTrigger value="modules" className="flex items-center space-x-2">
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('dealer.modules.title')}</span>
+                <span className="sm:hidden">{t('dealer.modules.title')}</span>
+              </TabsTrigger>
+            </PermissionGuard>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -161,6 +171,10 @@ const DealerView = () => {
                 <DealerServices dealerId={id} />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="modules" className="space-y-6">
+            <DealerModules dealerId={id} />
           </TabsContent>
         </Tabs>
       </div>

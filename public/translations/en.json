@@ -807,6 +807,33 @@
     },
     "tabs": {
       "services": "Services"
+    },
+    "modules": {
+      "title": "Modules",
+      "description": "Manage which modules this dealership can access",
+      "fetch_error": "Failed to load modules",
+      "update_error": "Failed to update module access",
+      "module_enabled": "Module {{module}} has been enabled",
+      "module_disabled": "Module {{module}} has been disabled",
+      "enabled_on": "Enabled on {{date}}",
+      "categories": {
+        "core": "Core Features",
+        "orders": "Order Management",
+        "analytics": "Analytics & Reports",
+        "administration": "Administration"
+      },
+      "descriptions": {
+        "main_dashboard": "Main dashboard and overview",
+        "manage_sales_orders": "Handle sales and delivery orders",
+        "manage_service_orders": "Process service department orders",
+        "manage_recon_orders": "Manage reconditioning workflow",
+        "manage_car_wash_orders": "Handle express wash services",
+        "access_reports_analytics": "View reports and analytics",
+        "system_configuration": "System settings and configuration",
+        "manage_multiple_dealerships": "Multi-dealership management",
+        "user_management": "User roles and permissions",
+        "advanced_management_tools": "Advanced management features"
+      }
     }
   },
   "services": {

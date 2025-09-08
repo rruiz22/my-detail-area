@@ -742,6 +742,33 @@
     },
     "tabs": {
       "services": "Servicios"
+    },
+    "modules": {
+      "title": "Módulos",
+      "description": "Administrar a qué módulos puede acceder este concesionario",
+      "fetch_error": "Error al cargar módulos",
+      "update_error": "Error al actualizar acceso al módulo",
+      "module_enabled": "El módulo {{module}} ha sido habilitado",
+      "module_disabled": "El módulo {{module}} ha sido deshabilitado",
+      "enabled_on": "Habilitado el {{date}}",
+      "categories": {
+        "core": "Funciones Principales",
+        "orders": "Gestión de Órdenes",
+        "analytics": "Análisis y Reportes",
+        "administration": "Administración"
+      },
+      "descriptions": {
+        "main_dashboard": "Panel principal y resumen general",
+        "manage_sales_orders": "Gestionar órdenes de venta y entrega",
+        "manage_service_orders": "Procesar órdenes del departamento de servicio",
+        "manage_recon_orders": "Gestionar flujo de reacondicionamiento",
+        "manage_car_wash_orders": "Manejar servicios de lavado express",
+        "access_reports_analytics": "Ver reportes y análisis",
+        "system_configuration": "Configuración del sistema",
+        "manage_multiple_dealerships": "Gestión multi-concesionario",
+        "user_management": "Roles y permisos de usuarios",
+        "advanced_management_tools": "Funciones avanzadas de gestión"
+      }
     }
   },
   "services": {
