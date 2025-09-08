@@ -84,29 +84,36 @@ export const usePermissions = () => {
   }, [fetchUserPermissions]);
 
   const hasPermission = useCallback((module: AppModule, requiredLevel: PermissionLevel): boolean => {
-    if (!user) return false;
+    try {
+      if (!user) return false;
 
-    // Admin users have all permissions
-    if (roles.some(role => role.role_name === 'detail_super_manager')) {
-      return true;
+      // Admin users have all permissions
+      if (roles && roles.some(role => role.role_name === 'detail_super_manager')) {
+        return true;
+      }
+
+      if (!permissions || !Array.isArray(permissions)) return false;
+
+      const userPermission = permissions.find(p => p && p.module === module);
+      if (!userPermission) return false;
+
+      // Define permission hierarchy
+      const permissionHierarchy: Record<PermissionLevel, number> = {
+        none: 0,
+        read: 1,
+        write: 2,
+        delete: 3,
+        admin: 4
+      };
+
+      const userLevel = permissionHierarchy[userPermission.permission_level] ?? 0;
+      const requiredHierarchy = permissionHierarchy[requiredLevel] ?? 0;
+
+      return userLevel >= requiredHierarchy;
+    } catch (error) {
+      console.error('Error in hasPermission:', error);
+      return false;
     }
-
-    const userPermission = permissions.find(p => p.module === module);
-    if (!userPermission) return false;
-
-    // Define permission hierarchy
-    const permissionHierarchy: Record<PermissionLevel, number> = {
-      none: 0,
-      read: 1,
-      write: 2,
-      delete: 3,
-      admin: 4
-    };
-
-    const userLevel = permissionHierarchy[userPermission.permission_level];
-    const requiredHierarchy = permissionHierarchy[requiredLevel];
-
-    return userLevel >= requiredHierarchy;
   }, [user, permissions, roles]);
 
   const checkPermission = useCallback(async (module: AppModule, requiredLevel: PermissionLevel): Promise<boolean> => {

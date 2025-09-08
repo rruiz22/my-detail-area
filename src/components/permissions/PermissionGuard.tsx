@@ -24,8 +24,18 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
     );
   }
 
-  if (!hasPermission(module, permission)) {
-    return <>{fallback}</>;
+  // Ensure hasPermission returns a boolean and handle any errors
+  let hasAccess = false;
+  try {
+    const result = hasPermission(module, permission);
+    hasAccess = Boolean(result);
+  } catch (error) {
+    console.error('Error checking permission:', error);
+    hasAccess = false;
+  }
+
+  if (!hasAccess) {
+    return fallback ? <>{fallback}</> : null;
   }
 
   return <>{children}</>;

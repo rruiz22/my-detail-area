@@ -128,7 +128,7 @@ const DealerView = () => {
               <span className="hidden sm:inline">{t('dealer.tabs.categories')}</span>
               <span className="sm:hidden">{t('dealer.tabs.categories')}</span>
             </TabsTrigger>
-            <PermissionGuard module="management" permission="admin">
+            <PermissionGuard module="management" permission="admin" fallback={<span />}>
               <TabsTrigger value="modules" className="flex items-center space-x-2">
                 <Settings className="h-4 w-4" />
                 <span className="hidden sm:inline">{t('dealer.modules.title')}</span>
