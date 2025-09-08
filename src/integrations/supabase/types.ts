@@ -609,8 +609,10 @@ export type Database = {
           notes: string | null
           order_number: string
           order_type: string
+          po: string | null
           priority: string | null
           qr_code_url: string | null
+          ro: string | null
           salesperson: string | null
           scheduled_date: string | null
           scheduled_time: string | null
@@ -621,6 +623,7 @@ export type Database = {
           status_changed_at: string | null
           status_changed_by: string | null
           stock_number: string | null
+          tag: string | null
           total_amount: number | null
           updated_at: string
           vehicle_info: string | null
@@ -646,8 +649,10 @@ export type Database = {
           notes?: string | null
           order_number: string
           order_type: string
+          po?: string | null
           priority?: string | null
           qr_code_url?: string | null
+          ro?: string | null
           salesperson?: string | null
           scheduled_date?: string | null
           scheduled_time?: string | null
@@ -658,6 +663,7 @@ export type Database = {
           status_changed_at?: string | null
           status_changed_by?: string | null
           stock_number?: string | null
+          tag?: string | null
           total_amount?: number | null
           updated_at?: string
           vehicle_info?: string | null
@@ -683,8 +689,10 @@ export type Database = {
           notes?: string | null
           order_number?: string
           order_type?: string
+          po?: string | null
           priority?: string | null
           qr_code_url?: string | null
+          ro?: string | null
           salesperson?: string | null
           scheduled_date?: string | null
           scheduled_time?: string | null
@@ -695,6 +703,7 @@ export type Database = {
           status_changed_at?: string | null
           status_changed_by?: string | null
           stock_number?: string | null
+          tag?: string | null
           total_amount?: number | null
           updated_at?: string
           vehicle_info?: string | null
