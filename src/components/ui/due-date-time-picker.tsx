@@ -1,0 +1,173 @@
+import React from 'react';
+import { format, addDays, setHours, setMinutes, isToday, addHours } from 'date-fns';
+import { CalendarIcon, ClockIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+interface DueDateTimePickerProps {
+  value?: Date;
+  onChange: (date: Date | undefined) => void;
+  className?: string;
+  placeholder?: string;
+  disabled?: boolean;
+}
+
+export function DueDateTimePicker({
+  value,
+  onChange,
+  className,
+  placeholder,
+  disabled
+}: DueDateTimePickerProps) {
+  const { t } = useTranslation();
+
+  // Generate time slots from 8 AM to 6 PM
+  const generateTimeSlots = (selectedDate?: Date) => {
+    const slots = [];
+    const now = new Date();
+    const isSelectedToday = selectedDate && isToday(selectedDate);
+    const currentHour = now.getHours();
+    
+    for (let hour = 8; hour < 18; hour++) {
+      // If it's today, only show times that are at least 1 hour from now
+      if (isSelectedToday && hour <= currentHour) {
+        continue;
+      }
+      
+      const time = setMinutes(setHours(new Date(), hour), 0);
+      const timeString = format(time, 'h:mm a');
+      
+      slots.push({
+        value: hour.toString(),
+        label: timeString,
+        disabled: isSelectedToday && hour <= currentHour
+      });
+    }
+    
+    return slots;
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (!date) {
+      onChange(undefined);
+      return;
+    }
+
+    if (value) {
+      // Keep existing time if available
+      const newDate = new Date(date);
+      newDate.setHours(value.getHours());
+      newDate.setMinutes(value.getMinutes());
+      onChange(newDate);
+    } else {
+      // Set default time to 8 AM, or next available slot if today
+      const now = new Date();
+      const defaultHour = isToday(date) && now.getHours() >= 8 
+        ? Math.max(8, now.getHours() + 1) 
+        : 8;
+      
+      if (defaultHour >= 18) {
+        // If no slots available today, move to tomorrow 8 AM
+        const tomorrow = addDays(date, 1);
+        onChange(setMinutes(setHours(tomorrow, 8), 0));
+      } else {
+        onChange(setMinutes(setHours(date, defaultHour), 0));
+      }
+    }
+  };
+
+  const handleTimeChange = (hourString: string) => {
+    if (!value) return;
+    
+    const hour = parseInt(hourString);
+    const newDate = setMinutes(setHours(new Date(value), hour), 0);
+    onChange(newDate);
+  };
+
+  const timeSlots = generateTimeSlots(value);
+  const selectedHour = value ? value.getHours().toString() : undefined;
+
+  // Disable past dates
+  const isDateDisabled = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  return (
+    <div className={cn("grid gap-2", className)}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {/* Date Picker */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "justify-start text-left font-normal",
+                !value && "text-muted-foreground"
+              )}
+              disabled={disabled}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {value ? format(value, "PPP") : t('due_date.date_placeholder')}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={value}
+              onSelect={handleDateChange}
+              disabled={isDateDisabled}
+              initialFocus
+              className="p-3 pointer-events-auto"
+            />
+          </PopoverContent>
+        </Popover>
+
+        {/* Time Picker */}
+        <Select
+          value={selectedHour}
+          onValueChange={handleTimeChange}
+          disabled={disabled || !value}
+        >
+          <SelectTrigger>
+            <ClockIcon className="mr-2 h-4 w-4" />
+            <SelectValue placeholder={t('due_date.time_placeholder')} />
+          </SelectTrigger>
+          <SelectContent>
+            {timeSlots.length === 0 ? (
+              <SelectItem value="no-slots" disabled>
+                {t('due_date.validation.no_slots_available')}
+              </SelectItem>
+            ) : (
+              timeSlots.map((slot) => (
+                <SelectItem
+                  key={slot.value}
+                  value={slot.value}
+                  disabled={slot.disabled}
+                >
+                  {slot.label}
+                </SelectItem>
+              ))
+            )}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Validation Messages */}
+      {value && (
+        <div className="text-xs text-muted-foreground">
+          {isToday(value) && (
+            <p className="text-amber-600 dark:text-amber-400">
+              {t('due_date.validation.same_day_notice')}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

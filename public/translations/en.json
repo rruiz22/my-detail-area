@@ -1,4 +1,31 @@
 {
+  "due_date": {
+    "title": "Due Date & Time",
+    "date_label": "Due Date",
+    "time_label": "Due Time", 
+    "date_placeholder": "Select future date",
+    "time_placeholder": "Select time (8AM-6PM)",
+    "validation": {
+      "future_date_required": "Due date must be in the future",
+      "business_hours_only": "Time must be between 8:00 AM and 6:00 PM",
+      "minimum_advance": "Must be at least 1 hour from now",
+      "invalid_time_slot": "Selected time slot is not available",
+      "no_slots_available": "No time slots available for selected date",
+      "same_day_notice": "Same day scheduling available until 5:00 PM"
+    }
+  },
+  "sweetalert": {
+    "confirm_delete": "Are you sure?",
+    "delete_warning": "This action cannot be undone",
+    "yes_delete": "Yes, delete it!",
+    "cancel": "Cancel",
+    "deleted": "Deleted!",
+    "success": "Success!",
+    "error": "Error!",
+    "info": "Information",
+    "confirm_status": "Confirm Status Change",
+    "status_change_warning": "This will change the order status"
+  },
   "app": {
     "name": "Detailing Management System",
     "welcome": "Welcome",

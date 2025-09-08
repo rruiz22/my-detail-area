@@ -1,4 +1,31 @@
 {
+  "due_date": {
+    "title": "Data e Hora de Vencimento",
+    "date_label": "Data de Vencimento",
+    "time_label": "Hora de Vencimento",
+    "date_placeholder": "Selecionar data futura",
+    "time_placeholder": "Selecionar hora (8AM-6PM)",
+    "validation": {
+      "future_date_required": "A data de vencimento deve ser futura",
+      "business_hours_only": "A hora deve estar entre 8:00 AM e 6:00 PM",
+      "minimum_advance": "Deve ser pelo menos 1 hora a partir de agora",
+      "invalid_time_slot": "O horário selecionado não está disponível",
+      "no_slots_available": "Não há horários disponíveis para a data selecionada",
+      "same_day_notice": "Agendamento no mesmo dia disponível até 17:00"
+    }
+  },
+  "sweetalert": {
+    "confirm_delete": "Tem certeza?",
+    "delete_warning": "Esta ação não pode ser desfeita",
+    "yes_delete": "Sim, excluir!",
+    "cancel": "Cancelar",
+    "deleted": "Excluído!",
+    "success": "Sucesso!",
+    "error": "Erro!",
+    "info": "Informação",
+    "confirm_status": "Confirmar Mudança de Status",
+    "status_change_warning": "Isso mudará o status do pedido"
+  },
   "app": {
     "name": "Sistema de Gestão de Detalhamento",
     "welcome": "Bem-vindo",

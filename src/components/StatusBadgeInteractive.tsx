@@ -7,19 +7,10 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle 
-} from '@/components/ui/alert-dialog';
 import { ChevronDown, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Order } from '@/lib/mockData';
+import { useSweetAlert } from '@/hooks/useSweetAlert';
 
 interface StatusBadgeInteractiveProps {
   status: Order['status'];
@@ -44,25 +35,24 @@ export function StatusBadgeInteractive({
   onStatusChange 
 }: StatusBadgeInteractiveProps) {
   const { t } = useTranslation();
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [newStatus, setNewStatus] = useState('');
+  const { confirmStatusChange } = useSweetAlert();
 
   const currentStatusConfig = STATUS_OPTIONS.find(option => option.value === status.toLowerCase()) || STATUS_OPTIONS[0];
 
-  const handleStatusSelect = (selectedStatus: string) => {
+  const handleStatusSelect = async (selectedStatus: string) => {
     // Show confirmation for critical status changes
     if (selectedStatus === 'completed' || selectedStatus === 'cancelled') {
-      setNewStatus(selectedStatus);
-      setShowConfirmDialog(true);
+      const confirmed = await confirmStatusChange(
+        t(STATUS_OPTIONS.find(s => s.value === selectedStatus)?.label || ''),
+        t('sweetalert.confirm_status')
+      );
+      
+      if (confirmed) {
+        onStatusChange(orderId, selectedStatus);
+      }
     } else {
       onStatusChange(orderId, selectedStatus);
     }
-  };
-
-  const handleConfirmStatusChange = () => {
-    onStatusChange(orderId, newStatus);
-    setShowConfirmDialog(false);
-    setNewStatus('');
   };
 
   if (!canUpdateStatus) {
@@ -109,30 +99,6 @@ export function StatusBadgeInteractive({
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent className="bg-card border border-border">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('status.confirm_status_change')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('status.status_will_change_to', { 
-                status: t(STATUS_OPTIONS.find(s => s.value === newStatus)?.label || '')
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="border-border hover:bg-accent hover:text-accent-foreground">
-              {t('common.cancel')}
-            </AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleConfirmStatusChange}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              {t('common.confirm')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

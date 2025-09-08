@@ -471,6 +471,7 @@ export type Database = {
           customer_name: string
           customer_phone: string | null
           dealer_id: number
+          due_date: string | null
           id: string
           order_number: string
           order_type: string
@@ -498,6 +499,7 @@ export type Database = {
           customer_name: string
           customer_phone?: string | null
           dealer_id: number
+          due_date?: string | null
           id?: string
           order_number: string
           order_type: string
@@ -525,6 +527,7 @@ export type Database = {
           customer_name?: string
           customer_phone?: string | null
           dealer_id?: number
+          due_date?: string | null
           id?: string
           order_number?: string
           order_type?: string
@@ -877,6 +880,10 @@ export type Database = {
           target_dealer_id: number
           user_uuid: string
         }
+        Returns: boolean
+      }
+      validate_order_due_date: {
+        Args: { due_date_param: string }
         Returns: boolean
       }
     }

@@ -16,6 +16,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { canViewPricing } from '@/utils/permissions';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 
 interface OrderModalProps {
   order?: any;
@@ -44,7 +45,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     orderType: 'sales',
     priority: 'normal',
     status: 'pending',
-    notes: ''
+    notes: '',
+    dueDate: undefined as Date | undefined
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
@@ -77,7 +79,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           orderType: order.orderType || 'sales',
           priority: order.priority || 'normal',
           status: order.status || 'pending',
-          notes: order.notes || ''
+          notes: order.notes || '',
+          dueDate: order.dueDate ? new Date(order.dueDate) : undefined
         });
         setSelectedServices(order.services || []);
         setSelectedDealership(order.dealerId?.toString() || '');
@@ -97,7 +100,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           orderType: 'sales',
           priority: 'normal',
           status: 'pending',
-          notes: ''
+          notes: '',
+          dueDate: undefined
         });
         setSelectedServices([]);
         setSelectedDealership('');
@@ -449,6 +453,23 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         <SelectItem value="urgent">{t('orders.urgentPriority')}</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  <Separator />
+
+                  {/* Due Date & Time Section */}
+                  <div>
+                    <Label className="text-base font-medium">{t('due_date.title')}</Label>
+                    <div className="mt-2">
+                      <DueDateTimePicker
+                        value={formData.dueDate}
+                        onChange={(date) => handleInputChange('dueDate', date)}
+                        placeholder={t('due_date.date_placeholder')}
+                      />
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {t('due_date.validation.business_hours_only')}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

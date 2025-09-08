@@ -1,4 +1,31 @@
 {
+  "due_date": {
+    "title": "Fecha y Hora de Vencimiento",
+    "date_label": "Fecha de Vencimiento",
+    "time_label": "Hora de Vencimiento",
+    "date_placeholder": "Seleccionar fecha futura",
+    "time_placeholder": "Seleccionar hora (8AM-6PM)",
+    "validation": {
+      "future_date_required": "La fecha de vencimiento debe ser futura",
+      "business_hours_only": "La hora debe estar entre 8:00 AM y 6:00 PM",
+      "minimum_advance": "Debe ser al menos 1 hora desde ahora",
+      "invalid_time_slot": "El horario seleccionado no está disponible",
+      "no_slots_available": "No hay horarios disponibles para la fecha seleccionada",
+      "same_day_notice": "Programación el mismo día disponible hasta las 5:00 PM"
+    }
+  },
+  "sweetalert": {
+    "confirm_delete": "¿Estás seguro?",
+    "delete_warning": "Esta acción no se puede deshacer",
+    "yes_delete": "¡Sí, eliminar!",
+    "cancel": "Cancelar",
+    "deleted": "¡Eliminado!",
+    "success": "¡Éxito!",
+    "error": "¡Error!",
+    "info": "Información",
+    "confirm_status": "Confirmar Cambio de Estado",
+    "status_change_warning": "Esto cambiará el estado de la orden"
+  },
   "app": {
     "name": "Sistema de Gestión de Detallado",
     "welcome": "Bienvenido",
