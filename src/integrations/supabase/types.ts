@@ -443,6 +443,7 @@ export type Database = {
           role: Database["public"]["Enums"]["user_role"] | null
           timezone: string | null
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           assigned_dealerships?: Json | null
@@ -470,6 +471,7 @@ export type Database = {
           role?: Database["public"]["Enums"]["user_role"] | null
           timezone?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           assigned_dealerships?: Json | null
@@ -497,6 +499,7 @@ export type Database = {
           role?: Database["public"]["Enums"]["user_role"] | null
           timezone?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
