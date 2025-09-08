@@ -52,6 +52,324 @@ export type Database = {
           },
         ]
       }
+      chat_conversations: {
+        Row: {
+          allow_external_users: boolean | null
+          auto_delete_after_days: number | null
+          avatar_url: string | null
+          conversation_type: Database["public"]["Enums"]["chat_conversation_type"]
+          created_at: string
+          created_by: string | null
+          dealer_id: number
+          description: string | null
+          id: string
+          is_archived: boolean
+          is_muted: boolean
+          is_private: boolean
+          last_message_at: string | null
+          max_participants: number | null
+          metadata: Json | null
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          allow_external_users?: boolean | null
+          auto_delete_after_days?: number | null
+          avatar_url?: string | null
+          conversation_type?: Database["public"]["Enums"]["chat_conversation_type"]
+          created_at?: string
+          created_by?: string | null
+          dealer_id: number
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          is_muted?: boolean
+          is_private?: boolean
+          last_message_at?: string | null
+          max_participants?: number | null
+          metadata?: Json | null
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          allow_external_users?: boolean | null
+          auto_delete_after_days?: number | null
+          avatar_url?: string | null
+          conversation_type?: Database["public"]["Enums"]["chat_conversation_type"]
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          is_muted?: boolean
+          is_private?: boolean
+          last_message_at?: string | null
+          max_participants?: number | null
+          metadata?: Json | null
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_conversations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_messages: {
+        Row: {
+          content: string | null
+          conversation_id: string
+          created_at: string
+          deleted_at: string | null
+          edited_at: string | null
+          file_name: string | null
+          file_size: number | null
+          file_type: string | null
+          file_url: string | null
+          id: string
+          is_deleted: boolean | null
+          is_edited: boolean | null
+          is_system_message: boolean | null
+          mentions: Json | null
+          message_type: Database["public"]["Enums"]["chat_message_type"]
+          metadata: Json | null
+          parent_message_id: string | null
+          reactions: Json | null
+          search_vector: unknown | null
+          thread_count: number | null
+          updated_at: string
+          user_id: string
+          voice_duration_ms: number | null
+          voice_transcription: string | null
+        }
+        Insert: {
+          content?: string | null
+          conversation_id: string
+          created_at?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string | null
+          id?: string
+          is_deleted?: boolean | null
+          is_edited?: boolean | null
+          is_system_message?: boolean | null
+          mentions?: Json | null
+          message_type?: Database["public"]["Enums"]["chat_message_type"]
+          metadata?: Json | null
+          parent_message_id?: string | null
+          reactions?: Json | null
+          search_vector?: unknown | null
+          thread_count?: number | null
+          updated_at?: string
+          user_id: string
+          voice_duration_ms?: number | null
+          voice_transcription?: string | null
+        }
+        Update: {
+          content?: string | null
+          conversation_id?: string
+          created_at?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string | null
+          id?: string
+          is_deleted?: boolean | null
+          is_edited?: boolean | null
+          is_system_message?: boolean | null
+          mentions?: Json | null
+          message_type?: Database["public"]["Enums"]["chat_message_type"]
+          metadata?: Json | null
+          parent_message_id?: string | null
+          reactions?: Json | null
+          search_vector?: unknown | null
+          thread_count?: number | null
+          updated_at?: string
+          user_id?: string
+          voice_duration_ms?: number | null
+          voice_transcription?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_parent_message_id_fkey"
+            columns: ["parent_message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_notification_settings: {
+        Row: {
+          channel_message_notifications:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          created_at: string
+          custom_sound_url: string | null
+          dealer_id: number
+          direct_message_notifications:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          enable_desktop_notifications: boolean
+          enable_email_notifications: boolean
+          enable_mention_sounds: boolean
+          enable_message_sounds: boolean
+          enable_push_notifications: boolean
+          group_message_notifications:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          id: string
+          quiet_days: Json | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel_message_notifications?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          created_at?: string
+          custom_sound_url?: string | null
+          dealer_id: number
+          direct_message_notifications?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          enable_desktop_notifications?: boolean
+          enable_email_notifications?: boolean
+          enable_mention_sounds?: boolean
+          enable_message_sounds?: boolean
+          enable_push_notifications?: boolean
+          group_message_notifications?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          id?: string
+          quiet_days?: Json | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel_message_notifications?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          created_at?: string
+          custom_sound_url?: string | null
+          dealer_id?: number
+          direct_message_notifications?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          enable_desktop_notifications?: boolean
+          enable_email_notifications?: boolean
+          enable_mention_sounds?: boolean
+          enable_message_sounds?: boolean
+          enable_push_notifications?: boolean
+          group_message_notifications?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          id?: string
+          quiet_days?: Json | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_notification_settings_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_participants: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          custom_nickname: string | null
+          id: string
+          is_active: boolean
+          is_muted: boolean
+          is_pinned: boolean
+          joined_at: string
+          last_read_at: string | null
+          left_at: string | null
+          metadata: Json | null
+          notification_frequency:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          permission_level: Database["public"]["Enums"]["chat_permission_level"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          custom_nickname?: string | null
+          id?: string
+          is_active?: boolean
+          is_muted?: boolean
+          is_pinned?: boolean
+          joined_at?: string
+          last_read_at?: string | null
+          left_at?: string | null
+          metadata?: Json | null
+          notification_frequency?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          permission_level?: Database["public"]["Enums"]["chat_permission_level"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          custom_nickname?: string | null
+          id?: string
+          is_active?: boolean
+          is_muted?: boolean
+          is_pinned?: boolean
+          joined_at?: string
+          last_read_at?: string | null
+          left_at?: string | null
+          metadata?: Json | null
+          notification_frequency?:
+            | Database["public"]["Enums"]["notification_frequency"]
+            | null
+          permission_level?: Database["public"]["Enums"]["chat_permission_level"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_participants_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_groups: {
         Row: {
           created_at: string
@@ -1207,6 +1525,121 @@ export type Database = {
         }
         Relationships: []
       }
+      user_contact_permissions: {
+        Row: {
+          allow_channel_mentions: boolean
+          allow_direct_messages: boolean
+          allow_group_invitations: boolean
+          auto_accept_invites: boolean
+          blocked_users: Json | null
+          created_at: string
+          dealer_id: number
+          favorite_contacts: Json | null
+          id: string
+          show_last_seen: boolean
+          show_online_status: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allow_channel_mentions?: boolean
+          allow_direct_messages?: boolean
+          allow_group_invitations?: boolean
+          auto_accept_invites?: boolean
+          blocked_users?: Json | null
+          created_at?: string
+          dealer_id: number
+          favorite_contacts?: Json | null
+          id?: string
+          show_last_seen?: boolean
+          show_online_status?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allow_channel_mentions?: boolean
+          allow_direct_messages?: boolean
+          allow_group_invitations?: boolean
+          auto_accept_invites?: boolean
+          blocked_users?: Json | null
+          created_at?: string
+          dealer_id?: number
+          favorite_contacts?: Json | null
+          id?: string
+          show_last_seen?: boolean
+          show_online_status?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_contact_permissions_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_presence: {
+        Row: {
+          auto_away_minutes: number | null
+          created_at: string
+          custom_status: string | null
+          dealer_id: number
+          id: string
+          ip_address: unknown | null
+          is_mobile: boolean | null
+          last_activity_at: string | null
+          last_seen_at: string | null
+          status: Database["public"]["Enums"]["user_presence_status"]
+          status_emoji: string | null
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auto_away_minutes?: number | null
+          created_at?: string
+          custom_status?: string | null
+          dealer_id: number
+          id?: string
+          ip_address?: unknown | null
+          is_mobile?: boolean | null
+          last_activity_at?: string | null
+          last_seen_at?: string | null
+          status?: Database["public"]["Enums"]["user_presence_status"]
+          status_emoji?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auto_away_minutes?: number | null
+          created_at?: string
+          custom_status?: string | null
+          dealer_id?: number
+          id?: string
+          ip_address?: unknown | null
+          is_mobile?: boolean | null
+          last_activity_at?: string | null
+          last_seen_at?: string | null
+          status?: Database["public"]["Enums"]["user_presence_status"]
+          status_emoji?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_presence_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_role_assignments: {
         Row: {
           assigned_at: string
@@ -1566,6 +1999,9 @@ export type Database = {
         | "dealerships"
         | "users"
         | "management"
+      chat_conversation_type: "direct" | "group" | "channel" | "announcement"
+      chat_message_type: "text" | "voice" | "file" | "image" | "system"
+      chat_permission_level: "read" | "write" | "moderate" | "admin"
       contact_department: "sales" | "service" | "parts" | "management" | "other"
       dealer_role:
         | "salesperson"
@@ -1583,9 +2019,11 @@ export type Database = {
         | "quality_inspector"
         | "mobile_technician"
       language_code: "en" | "es" | "pt-BR"
+      notification_frequency: "all" | "mentions" | "none" | "scheduled"
       permission_level: "none" | "read" | "write" | "delete" | "admin"
       subscription_plan: "basic" | "premium" | "enterprise"
       user_department: "detailing" | "wash" | "service"
+      user_presence_status: "online" | "away" | "busy" | "offline" | "invisible"
       user_role: "admin" | "manager" | "technician" | "viewer"
       user_type: "dealer" | "detail"
     }
@@ -1727,6 +2165,9 @@ export const Constants = {
         "users",
         "management",
       ],
+      chat_conversation_type: ["direct", "group", "channel", "announcement"],
+      chat_message_type: ["text", "voice", "file", "image", "system"],
+      chat_permission_level: ["read", "write", "moderate", "admin"],
       contact_department: ["sales", "service", "parts", "management", "other"],
       dealer_role: [
         "salesperson",
@@ -1746,9 +2187,11 @@ export const Constants = {
         "mobile_technician",
       ],
       language_code: ["en", "es", "pt-BR"],
+      notification_frequency: ["all", "mentions", "none", "scheduled"],
       permission_level: ["none", "read", "write", "delete", "admin"],
       subscription_plan: ["basic", "premium", "enterprise"],
       user_department: ["detailing", "wash", "service"],
+      user_presence_status: ["online", "away", "busy", "offline", "invisible"],
       user_role: ["admin", "manager", "technician", "viewer"],
       user_type: ["dealer", "detail"],
     },
