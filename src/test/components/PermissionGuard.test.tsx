@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '../utils/test-utils';
-import { screen } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { usePermissions } from '@/hooks/usePermissions';
 
