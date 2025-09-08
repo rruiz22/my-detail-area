@@ -463,8 +463,10 @@ export type Database = {
       }
       orders: {
         Row: {
+          assigned_group_id: string | null
           completed_at: string | null
           created_at: string
+          created_by_group_id: string | null
           customer_email: string | null
           customer_name: string
           customer_phone: string | null
@@ -476,16 +478,22 @@ export type Database = {
           services: Json | null
           sla_deadline: string | null
           status: string
+          status_changed_at: string | null
+          status_changed_by: string | null
+          stock_number: string | null
           total_amount: number | null
           updated_at: string
+          vehicle_info: string | null
           vehicle_make: string | null
           vehicle_model: string | null
           vehicle_vin: string | null
           vehicle_year: number | null
         }
         Insert: {
+          assigned_group_id?: string | null
           completed_at?: string | null
           created_at?: string
+          created_by_group_id?: string | null
           customer_email?: string | null
           customer_name: string
           customer_phone?: string | null
@@ -497,16 +505,22 @@ export type Database = {
           services?: Json | null
           sla_deadline?: string | null
           status?: string
+          status_changed_at?: string | null
+          status_changed_by?: string | null
+          stock_number?: string | null
           total_amount?: number | null
           updated_at?: string
+          vehicle_info?: string | null
           vehicle_make?: string | null
           vehicle_model?: string | null
           vehicle_vin?: string | null
           vehicle_year?: number | null
         }
         Update: {
+          assigned_group_id?: string | null
           completed_at?: string | null
           created_at?: string
+          created_by_group_id?: string | null
           customer_email?: string | null
           customer_name?: string
           customer_phone?: string | null
@@ -518,8 +532,12 @@ export type Database = {
           services?: Json | null
           sla_deadline?: string | null
           status?: string
+          status_changed_at?: string | null
+          status_changed_by?: string | null
+          stock_number?: string | null
           total_amount?: number | null
           updated_at?: string
+          vehicle_info?: string | null
           vehicle_make?: string | null
           vehicle_model?: string | null
           vehicle_vin?: string | null
@@ -752,6 +770,55 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_user_accessible_dealers: {
+        Args: { user_uuid: string }
+        Returns: {
+          address: string
+          city: string
+          country: string
+          email: string
+          id: number
+          name: string
+          phone: string
+          state: string
+          status: string
+          subscription_plan: string
+          website: string
+          zip_code: string
+        }[]
+      }
+      get_user_accessible_orders: {
+        Args: {
+          scope_filter?: string
+          target_dealer_id: number
+          user_uuid: string
+        }
+        Returns: {
+          assigned_group_id: string
+          completed_at: string
+          created_at: string
+          created_by_group_id: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          dealer_id: number
+          id: string
+          order_number: string
+          order_type: string
+          priority: string
+          services: Json
+          sla_deadline: string
+          status: string
+          stock_number: string
+          total_amount: number
+          updated_at: string
+          vehicle_info: string
+          vehicle_make: string
+          vehicle_model: string
+          vehicle_vin: string
+          vehicle_year: number
+        }[]
+      }
       get_user_permissions: {
         Args: { user_uuid: string }
         Returns: {
@@ -783,6 +850,15 @@ export type Database = {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
       }
+      user_can_update_order_status: {
+        Args: {
+          current_status: string
+          new_status: string
+          target_dealer_id: number
+          user_uuid: string
+        }
+        Returns: boolean
+      }
       user_has_dealer_membership: {
         Args: { target_dealer_id: number; user_uuid: string }
         Returns: boolean
@@ -790,6 +866,14 @@ export type Database = {
       user_has_group_permission: {
         Args: {
           permission_name: string
+          target_dealer_id: number
+          user_uuid: string
+        }
+        Returns: boolean
+      }
+      user_has_module_access: {
+        Args: {
+          module_name: string
           target_dealer_id: number
           user_uuid: string
         }
