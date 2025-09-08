@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -24,10 +24,35 @@ import { DealerCategories } from '@/components/dealer/DealerCategories';
 import { DealerModules } from '@/components/dealer/DealerModules';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 const DealerView = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
+  const [dealerName, setDealerName] = useState<string>('');
+
+  useEffect(() => {
+    const fetchDealerInfo = async () => {
+      if (!id) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('dealerships')
+          .select('name')
+          .eq('id', parseInt(id))
+          .single();
+        
+        if (error) throw error;
+        if (data) {
+          setDealerName(data.name);
+        }
+      } catch (error) {
+        console.error('Error fetching dealer info:', error);
+      }
+    };
+
+    fetchDealerInfo();
+  }, [id]);
 
   if (!id) {
     return (
@@ -62,7 +87,7 @@ const DealerView = () => {
             <div>
               <h1 className="text-3xl font-bold tracking-tight flex items-center space-x-2">
                 <Building2 className="h-8 w-8 text-primary" />
-                <span>{t('dealer.view.title')}</span>
+                <span>{dealerName || t('dealer.view.title')}</span>
               </h1>
               <p className="text-muted-foreground">
                 {t('dealer.view.subtitle', { id })}
