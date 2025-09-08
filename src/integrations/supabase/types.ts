@@ -2041,6 +2041,7 @@ export type Database = {
         | "dealerships"
         | "users"
         | "management"
+        | "chat"
       chat_conversation_type: "direct" | "group" | "channel" | "announcement"
       chat_message_type: "text" | "voice" | "file" | "image" | "system"
       chat_permission_level: "read" | "write" | "moderate" | "admin"
@@ -2206,6 +2207,7 @@ export const Constants = {
         "dealerships",
         "users",
         "management",
+        "chat",
       ],
       chat_conversation_type: ["direct", "group", "channel", "announcement"],
       chat_message_type: ["text", "voice", "file", "image", "system"],
