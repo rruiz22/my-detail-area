@@ -1185,7 +1185,26 @@
   },
   "car_wash_orders": {
     "title": "Car Wash Orders",
-    "description": "Manage car wash services and orders"
+    "description": "Manage car wash services and orders",
+    "quick_car_wash_order": "Quick Car Wash Order",
+    "quick_order": "Quick Order",
+    "edit_order": "Edit Car Wash Order",
+    "dealership": "Dealership",
+    "select_dealership": "Select dealership",
+    "vehicle_display": "Vehicle",
+    "stock_number": "Stock Number",
+    "tag": "Tag",
+    "service_description": "Service",
+    "service_placeholder": "Describe the wash service (e.g., Full Detail, Express Wash, Interior Only...)",
+    "waiter_priority": "Customer Waiting",
+    "waiter": "Waiter",
+    "waiting": "Waiting",
+    "waiter_description": "This order will be marked as urgent priority - customer is waiting for their vehicle.",
+    "notes_placeholder": "Additional notes or special instructions...",
+    "decoded": "Decoded",
+    "auto_populated": "Auto-populated from VIN decoding",
+    "scan_vin_to_continue": "Scan or enter VIN to continue",
+    "waiter_orders_first": "Waiter orders have priority and will be shown first"
   },
   "service_orders": {
     "title": "Service Orders", 

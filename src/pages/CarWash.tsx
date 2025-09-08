@@ -1,45 +1,112 @@
-import { useState } from "react";
-import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Plus, Download, Eye } from "lucide-react";
-import { mockOrders } from "@/lib/mockData";
-import { StatusBadge } from "@/components/StatusBadge";
+import { useState, useEffect } from 'react';
+import { DashboardLayout } from '@/components/DashboardLayout';
+import { Button } from '@/components/ui/button';
+import { Plus, RefreshCw, Clock } from 'lucide-react';
+import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { CarWashOrderModal } from '@/components/orders/CarWashOrderModal';
+import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
 import { useTranslation } from 'react-i18next';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
+import { Badge } from '@/components/ui/badge';
 
 export default function CarWash() {
   const { t } = useTranslation();
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState('today');
+  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('table');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [previewOrder, setPreviewOrder] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const carWashOrders = mockOrders.filter(order => order.department === 'Car Wash');
-  
-  const filteredOrders = carWashOrders.filter(order => {
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-    const matchesSearch = 
-      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.vin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.make.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.model.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    return matchesStatus && matchesSearch;
-  });
+  const {
+    orders,
+    tabCounts,
+    filters,
+    loading,
+    updateFilters,
+    refreshData,
+    createOrder,
+    updateOrder,
+    deleteOrder,
+  } = useCarWashOrderManagement(activeFilter);
+
+  // Auto-refresh every 30 seconds for fast-paced car wash environment
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshData();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refreshData]);
+
+  const handleCreateOrder = () => {
+    setSelectedOrder(null);
+    setShowModal(true);
+  };
+
+  const handleEditOrder = (order: any) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+    setPreviewOrder(null); // Close preview if open
+  };
+
+  const handleViewOrder = (order: any) => {
+    setPreviewOrder(order);
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    if (confirm(t('messages.confirm_delete_order'))) {
+      await deleteOrder(orderId);
+    }
+  };
+
+  const handleSaveOrder = async (orderData: any) => {
+    try {
+      if (selectedOrder) {
+        await updateOrder(selectedOrder.id, orderData);
+      } else {
+        await createOrder(orderData);
+      }
+      setShowModal(false);
+      refreshData();
+    } catch (error) {
+      console.error('Error saving car wash order:', error);
+    }
+  };
+
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    await updateOrder(orderId, { status: newStatus });
+  };
+
+  // Custom filter options for CarWash
+  const carWashTabCounts = {
+    ...tabCounts,
+    dashboard: tabCounts.all,
+    all: tabCounts.all,
+  };
+
+  // Filter orders based on search term and show waiter priority
+  const filteredOrders = orders.filter((order: any) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      order.id.toLowerCase().includes(searchLower) ||
+      order.vehicleVin?.toLowerCase().includes(searchLower) ||
+      order.stockNumber?.toLowerCase().includes(searchLower) ||
+      order.tag?.toLowerCase().includes(searchLower) ||
+      `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
+    );
+  }).map((order: any) => ({
+    ...order,
+    // Add waiter badge to display
+    waiterBadge: order.isWaiter ? (
+      <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
+        <Clock className="w-3 h-3 mr-1" />
+        {t('car_wash_orders.waiter')}
+      </Badge>
+    ) : null
+  }));
 
   return (
     <DashboardLayout>
@@ -48,88 +115,73 @@ export default function CarWash() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold">{t('pages.car_wash')}</h1>
+            {tabCounts.waiter > 0 && (
+              <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
+                <Clock className="w-3 h-3 mr-1" />
+                {tabCounts.waiter} {t('car_wash_orders.waiting')}
+              </Badge>
+            )}
           </div>
           
           <div className="flex items-center gap-2">
-            <Button size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refreshData}
+              disabled={loading}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              {t('common.refresh')}
+            </Button>
+            <Button size="sm" onClick={handleCreateOrder}>
               <Plus className="h-4 w-4 mr-2" />
-              {t('common.new_order')}
+              {t('car_wash_orders.quick_order')}
             </Button>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Input
-            placeholder={t('orders.search_orders')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-64"
+        {/* Quick Filter Bar - Car Wash specific filters */}
+        <QuickFilterBar
+          activeFilter={activeFilter}
+          tabCounts={carWashTabCounts}
+          onFilterChange={setActiveFilter}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+        />
+
+        {/* Main Content - Orders Table */}
+        <div className="space-y-6">
+          <OrderDataTable
+            orders={filteredOrders}
+            loading={loading}
+            onEdit={handleEditOrder}
+            onDelete={handleDeleteOrder}
+            onView={handleViewOrder}
+            tabType={activeFilter}
           />
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder={t('orders.filter_by_status')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t('orders.all_status')}</SelectItem>
-              <SelectItem value="Pending">{t('orders.pending')}</SelectItem>
-              <SelectItem value="In Progress">{t('orders.in_progress')}</SelectItem>
-              <SelectItem value="Complete">{t('orders.complete')}</SelectItem>
-              <SelectItem value="Cancelled">{t('orders.cancelled')}</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
-        {/* Orders Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('pages.car_wash')} ({filteredOrders.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('orders.order_id')}</TableHead>
-                  <TableHead>{t('orders.vehicle')}</TableHead>
-                  <TableHead>{t('orders.vin')}</TableHead>
-                  <TableHead>{t('orders.service')}</TableHead>
-                  <TableHead>{t('orders.advisor')}</TableHead>
-                  <TableHead>{t('orders.price')}</TableHead>
-                  <TableHead>{t('orders.status')}</TableHead>
-                  <TableHead>{t('orders.actions')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{order.year} {order.make} {order.model}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <code className="text-xs bg-muted px-2 py-1 rounded">
-                        {order.vin}
-                      </code>
-                    </TableCell>
-                    <TableCell>{order.service}</TableCell>
-                    <TableCell>{order.advisor}</TableCell>
-                    <TableCell className="font-medium">${order.price}</TableCell>
-                    <TableCell>
-                      <StatusBadge status={order.status} />
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        {/* Modals */}
+        {showModal && (
+          <CarWashOrderModal
+            order={selectedOrder}
+            open={showModal}
+            onClose={() => setShowModal(false)}
+            onSave={handleSaveOrder}
+          />
+        )}
+
+        {/* Detail Modal - Enhanced Full Screen */}
+        <EnhancedOrderDetailModal
+          order={previewOrder}
+          open={!!previewOrder}
+          onClose={() => setPreviewOrder(null)}
+          onEdit={handleEditOrder}
+          onDelete={handleDeleteOrder}
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </DashboardLayout>
   );

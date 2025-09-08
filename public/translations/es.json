@@ -1078,7 +1078,26 @@
   },
   "car_wash_orders": {
     "title": "Órdenes de Lavado",
-    "description": "Gestionar servicios y órdenes de lavado de autos"
+    "description": "Gestionar servicios y órdenes de lavado de autos",
+    "quick_car_wash_order": "Orden Rápida de Lavado",
+    "quick_order": "Orden Rápida",
+    "edit_order": "Editar Orden de Lavado",
+    "dealership": "Concesionario",
+    "select_dealership": "Seleccionar concesionario",
+    "vehicle_display": "Vehículo",
+    "stock_number": "Número de Stock",
+    "tag": "Etiqueta",
+    "service_description": "Servicio",
+    "service_placeholder": "Describe el servicio de lavado (ej: Detallado Completo, Lavado Express, Solo Interior...)",
+    "waiter_priority": "Cliente Esperando",
+    "waiter": "Espera",
+    "waiting": "Esperando",
+    "waiter_description": "Esta orden será marcada como prioridad urgente - el cliente está esperando su vehículo.",
+    "notes_placeholder": "Notas adicionales o instrucciones especiales...",
+    "decoded": "Decodificado",
+    "auto_populated": "Auto-completado desde decodificación VIN",
+    "scan_vin_to_continue": "Escanea o ingresa VIN para continuar",
+    "waiter_orders_first": "Las órdenes de espera tienen prioridad y se mostrarán primero"
   },
   "service_orders": {
     "title": "Órdenes de Servicio",
