@@ -75,7 +75,7 @@ interface UseChatPermissionsReturn {
 
 export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn => {
   const { user } = useAuth();
-  const { currentDealership } = useAccessibleDealerships();
+  const { dealerships } = useAccessibleDealerships();
   
   const [permissions, setPermissions] = useState<ChatPermissions>({
     canCreateDirectChats: false,
@@ -102,7 +102,7 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const activeDealerId = dealerId || currentDealership?.id;
+  const activeDealerId = dealerId || dealerships[0]?.id;
 
   // Fetch user permissions based on roles and group memberships
   const fetchPermissions = useCallback(async () => {
@@ -206,18 +206,37 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
           auto_accept_invites: false
         };
 
-        const { data: newPermissions, error: createError } = await supabase
+        const newPermissions = {
+          ...defaultPermissions,
+          user_id: user.id,
+          dealer_id: activeDealerId,
+          blocked_users: [],
+          favorite_contacts: []
+        };
+
+        const { data: newPermissionsData, error: createError } = await supabase
           .from('user_contact_permissions')
-          .insert(defaultPermissions)
+          .insert(newPermissions)
           .select()
           .single();
 
         if (createError) throw createError;
-        setContactPermissions(newPermissions);
+        const typedNewPermissions = {
+          ...newPermissionsData,
+          blocked_users: (newPermissionsData.blocked_users as string[]) || [],
+          favorite_contacts: (newPermissionsData.favorite_contacts as string[]) || []
+        };
+        setContactPermissions(typedNewPermissions);
       } else if (fetchError) {
         throw fetchError;
       } else {
-        setContactPermissions(data);
+        // Cast JSON fields to proper types
+        const typedPermissions = {
+          ...data,
+          blocked_users: (data.blocked_users as string[]) || [],
+          favorite_contacts: (data.favorite_contacts as string[]) || []
+        };
+        setContactPermissions(typedPermissions);
       }
     } catch (err) {
       console.error('Error fetching contact permissions:', err);
@@ -249,11 +268,11 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
       if (!targetPermissions?.allow_direct_messages) return false;
 
       // Check if current user is blocked by target
-      const blockedUsers = targetPermissions.blocked_users || [];
+      const blockedUsers = (targetPermissions.blocked_users as string[]) || [];
       if (blockedUsers.includes(user.id)) return false;
 
       // Check if current user has blocked the target
-      const currentUserBlockedUsers = contactPermissions?.blocked_users || [];
+      const currentUserBlockedUsers = (contactPermissions?.blocked_users as string[]) || [];
       if (currentUserBlockedUsers.includes(targetUserId)) return false;
 
       return true;
@@ -282,10 +301,10 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
       if (!targetPermissions?.allow_group_invitations) return false;
 
       // Check blocking status
-      const blockedUsers = targetPermissions.blocked_users || [];
+      const blockedUsers = (targetPermissions.blocked_users as string[]) || [];
       if (blockedUsers.includes(user.id)) return false;
 
-      const currentUserBlockedUsers = contactPermissions?.blocked_users || [];
+      const currentUserBlockedUsers = (contactPermissions?.blocked_users as string[]) || [];
       if (currentUserBlockedUsers.includes(targetUserId)) return false;
 
       return true;
@@ -311,7 +330,7 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
       if (!targetPermissions?.allow_channel_mentions) return false;
 
       // Check blocking status
-      const blockedUsers = targetPermissions.blocked_users || [];
+      const blockedUsers = (targetPermissions.blocked_users as string[]) || [];
       if (blockedUsers.includes(user.id)) return false;
 
       return true;

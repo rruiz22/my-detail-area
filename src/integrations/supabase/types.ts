@@ -370,6 +370,41 @@ export type Database = {
           },
         ]
       }
+      chat_typing_indicators: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          is_typing: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          is_typing?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          is_typing?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_typing_indicators_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_groups: {
         Row: {
           created_at: string
@@ -1839,6 +1874,13 @@ export type Database = {
           total_dealerships: number
           total_orders: number
           total_users: number
+        }[]
+      }
+      get_unread_message_counts: {
+        Args: { conversation_ids: string[]; user_id: string }
+        Returns: {
+          conversation_id: string
+          unread_count: number
         }[]
       }
       get_user_accessible_dealers: {

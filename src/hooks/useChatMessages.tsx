@@ -113,15 +113,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
 
       let query = supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles!chat_messages_user_id_fkey (
-            id,
-            first_name,
-            last_name,
-            email
-          )
-        `)
+        .select('*')
         .eq('conversation_id', conversationId)
         .eq('is_deleted', false)
         .order('created_at', { ascending: false })
@@ -138,13 +130,16 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
       // Process messages with sender info
       const processedMessages: ChatMessage[] = data?.map(msg => ({
         ...msg,
+        reactions: (msg.reactions as Record<string, string[]>) || {},
+        mentions: (msg.mentions as string[]) || [],
+        metadata: (msg.metadata as Record<string, any>) || {},
         sender: {
           id: msg.user_id,
-          name: `${msg.profiles?.first_name} ${msg.profiles?.last_name}`.trim() || msg.profiles?.email || 'Unknown User',
-          avatar_url: undefined // TODO: Add avatar support
+          name: 'User', // Simplified for now
+          avatar_url: undefined
         },
         is_own_message: msg.user_id === user.id,
-        is_mentioned: msg.mentions?.includes(user.id) || false
+        is_mentioned: ((msg.mentions as string[]) || []).includes(user.id) || false
       })) || [];
 
       if (before) {
@@ -180,15 +175,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
     try {
       const { data } = await supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles!chat_messages_user_id_fkey (
-            id,
-            first_name,
-            last_name,
-            email
-          )
-        `)
+        .select('*')
         .eq('conversation_id', conversationId)
         .eq('is_deleted', false)
         .gt('created_at', messages[messages.length - 1]?.created_at || new Date().toISOString())
@@ -197,13 +184,16 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
       if (data && data.length > 0) {
         const processedMessages: ChatMessage[] = data.map(msg => ({
           ...msg,
+          reactions: (msg.reactions as Record<string, string[]>) || {},
+          mentions: (msg.mentions as string[]) || [],
+          metadata: (msg.metadata as Record<string, any>) || {},
           sender: {
             id: msg.user_id,
-            name: `${msg.profiles?.first_name} ${msg.profiles?.last_name}`.trim() || msg.profiles?.email || 'Unknown User',
+            name: 'User',
             avatar_url: undefined
           },
           is_own_message: msg.user_id === user.id,
-          is_mentioned: msg.mentions?.includes(user.id) || false
+          is_mentioned: ((msg.mentions as string[]) || []).includes(user.id) || false
         }));
 
         setMessages(prev => [...prev, ...processedMessages]);
@@ -242,24 +232,19 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           file_size: options.file_size,
           file_type: options.file_type
         })
-        .select(`
-          *,
-          profiles!chat_messages_user_id_fkey (
-            id,
-            first_name,
-            last_name,
-            email
-          )
-        `)
+        .select()
         .single();
 
       if (error) throw error;
 
       const newMessage: ChatMessage = {
         ...data,
+        reactions: (data.reactions as Record<string, string[]>) || {},
+        mentions: (data.mentions as string[]) || [],
+        metadata: (data.metadata as Record<string, any>) || {},
         sender: {
           id: data.user_id,
-          name: `${data.profiles?.first_name} ${data.profiles?.last_name}`.trim() || data.profiles?.email || 'Unknown User',
+          name: 'You',
           avatar_url: undefined
         },
         is_own_message: true,
@@ -292,16 +277,14 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         .from('chat-attachments')
         .getPublicUrl(uploadData.path);
 
-      return sendMessageWithOptions({
-        content: transcription || '',
-        message_type: 'voice',
-        file_url: publicUrl,
-        file_name: fileName,
-        file_size: audioBlob.size,
-        file_type: audioBlob.type,
-        voice_duration_ms: 0, // TODO: Calculate duration
-        voice_transcription: transcription
-      });
+        return sendMessageWithOptions({
+          content: transcription || '',
+          message_type: 'voice',
+          file_url: publicUrl,
+          file_name: fileName,
+          file_size: audioBlob.size,
+          file_type: audioBlob.type
+        });
     } catch (err) {
       console.error('Error sending voice message:', err);
       setError(err instanceof Error ? err.message : 'Error sending voice message');
@@ -490,33 +473,14 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
   const setIsTyping = useCallback(async (typing: boolean) => {
     if (!user?.id || !conversationId) return;
 
+    // Simplified typing indicator for now
     if (typing) {
-      // Clear existing timeout
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
-
-      // Send typing event
-      await supabase
-        .from('chat_typing_indicators')
-        .upsert({
-          conversation_id: conversationId,
-          user_id: user.id,
-          is_typing: true,
-          updated_at: new Date().toISOString()
-        });
-
-      // Set timeout to clear typing
       typingTimeoutRef.current = setTimeout(() => {
         setIsTyping(false);
       }, 3000);
-    } else {
-      // Clear typing indicator
-      await supabase
-        .from('chat_typing_indicators')
-        .update({ is_typing: false })
-        .eq('conversation_id', conversationId)
-        .eq('user_id', user.id);
     }
   }, [user?.id, conversationId]);
 

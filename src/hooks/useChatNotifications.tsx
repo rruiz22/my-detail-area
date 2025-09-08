@@ -77,7 +77,7 @@ interface UseChatNotificationsReturn {
 
 export const useChatNotifications = (dealerId?: number): UseChatNotificationsReturn => {
   const { user } = useAuth();
-  const { currentDealership } = useAccessibleDealerships();
+  const { dealerships } = useAccessibleDealerships();
   
   const [settings, setSettings] = useState<ChatNotificationSettings | null>(null);
   const [notifications, setNotifications] = useState<ChatNotification[]>([]);
@@ -87,7 +87,7 @@ export const useChatNotifications = (dealerId?: number): UseChatNotificationsRet
   const audioRef = useRef<HTMLAudioElement>();
   const mentionAudioRef = useRef<HTMLAudioElement>();
   
-  const activeDealerId = dealerId || currentDealership?.id;
+  const activeDealerId = dealerId || dealerships[0]?.id;
 
   // Initialize notification settings
   const initializeSettings = useCallback(async () => {
@@ -131,11 +131,20 @@ export const useChatNotifications = (dealerId?: number): UseChatNotificationsRet
           .single();
 
         if (createError) throw createError;
-        setSettings(newSettings);
+        const typedNewSettings = {
+          ...newSettings,
+          quiet_days: (newSettings.quiet_days as number[]) || []
+        };
+        setSettings(typedNewSettings);
       } else if (fetchError) {
         throw fetchError;
       } else {
-        setSettings(existingSettings);
+        // Cast JSON fields to proper types
+        const typedSettings = {
+          ...existingSettings,
+          quiet_days: (existingSettings.quiet_days as number[]) || []
+        };
+        setSettings(typedSettings);
       }
     } catch (err) {
       console.error('Error initializing notification settings:', err);

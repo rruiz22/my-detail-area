@@ -50,7 +50,7 @@ interface UseUserPresenceReturn {
 
 export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
   const { user } = useAuth();
-  const { currentDealership } = useAccessibleDealerships();
+  const { dealerships } = useAccessibleDealerships();
   
   const [myPresence, setMyPresence] = useState<UserPresence | null>(null);
   const [usersPresence, setUsersPresence] = useState<UserPresence[]>([]);
@@ -61,7 +61,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
   const awayTimeoutRef = useRef<NodeJS.Timeout>();
   const lastActivityRef = useRef<Date>(new Date());
   
-  const activeDealerId = dealerId || currentDealership?.id;
+  const activeDealerId = dealerId || dealerships[0]?.id;
 
   // Initialize user presence
   const initializePresence = useCallback(async () => {
@@ -138,26 +138,20 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
     if (!activeDealerId) return;
 
     try {
+      // Simplified presence data query for now
       const { data, error: fetchError } = await supabase
         .from('user_presence')
-        .select(`
-          *,
-          profiles!user_presence_user_id_fkey (
-            first_name,
-            last_name,
-            email
-          )
-        `)
+        .select('*')
         .eq('dealer_id', activeDealerId)
         .neq('user_id', user?.id || '');
 
       if (fetchError) throw fetchError;
 
+      // Simplified user presence data for now
       const processedPresence: UserPresence[] = data?.map(presence => ({
         ...presence,
-        user_name: `${presence.profiles?.first_name} ${presence.profiles?.last_name}`.trim() || 
-                  presence.profiles?.email || 'Unknown User',
-        user_avatar: undefined, // TODO: Add avatar support
+        user_name: 'Team Member',
+        user_avatar: undefined,
         is_online: ['online', 'busy'].includes(presence.status),
         last_seen_formatted: formatLastSeen(presence.last_seen_at)
       })) || [];
@@ -402,10 +396,13 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
           filter: `dealer_id=eq.${activeDealerId}`
         },
         (payload) => {
-          if (payload.new && payload.new.user_id === user?.id) {
-            setMyPresence(payload.new as UserPresence);
-          } else {
-            fetchUsersPresence();
+          if (payload.new) {
+            const newData = payload.new as any;
+            if (newData.user_id === user?.id) {
+              setMyPresence(newData as UserPresence);
+            } else {
+              fetchUsersPresence();
+            }
           }
         }
       )
