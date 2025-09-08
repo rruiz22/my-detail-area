@@ -318,13 +318,24 @@ export const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, ope
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="service">{t('car_wash_orders.service_description')}</Label>
-                  <Textarea
-                    id="service"
-                    value={formData.service}
-                    onChange={(e) => handleInputChange('service', e.target.value)}
-                    className="border-input bg-background min-h-[100px]"
-                    placeholder={t('car_wash_orders.service_placeholder')}
-                  />
+                  <Select 
+                    value={formData.service} 
+                    onValueChange={(value) => handleInputChange('service', value)}
+                  >
+                    <SelectTrigger className="border-input bg-background">
+                      <SelectValue placeholder={t('car_wash_orders.service_placeholder')} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border-border">
+                      {services.map(service => (
+                        <SelectItem key={service.id} value={service.name} className="hover:bg-accent">
+                          <div className="flex justify-between items-center w-full">
+                            <span>{service.name}</span>
+                            <span className="text-muted-foreground ml-2">${service.price}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="flex items-center space-x-2 p-4 border border-border rounded-lg bg-background">
