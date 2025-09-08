@@ -11,6 +11,7 @@ import {
   Users,
   ArrowLeft,
   Wrench,
+  Tag,
   Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ import { DealerOverview } from '@/components/dealer/DealerOverview';
 import { DealerGroups } from '@/components/dealer/DealerGroups';
 import { DealerUsers } from '@/components/dealer/DealerUsers';
 import { DealerServices } from '@/components/dealer/DealerServices';
+import { DealerCategories } from '@/components/dealer/DealerCategories';
 import { DealerModules } from '@/components/dealer/DealerModules';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { Link } from 'react-router-dom';
@@ -75,7 +77,7 @@ const DealerView = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.overview')}</span>
@@ -95,6 +97,11 @@ const DealerView = () => {
               <Wrench className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.tabs.services')}</span>
               <span className="sm:hidden">{t('dealer.tabs.services')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="categories" className="flex items-center space-x-2">
+              <Tag className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('dealer.tabs.categories')}</span>
+              <span className="sm:hidden">{t('dealer.tabs.categories')}</span>
             </TabsTrigger>
             <PermissionGuard module="management" permission="admin">
               <TabsTrigger value="modules" className="flex items-center space-x-2">
@@ -169,6 +176,23 @@ const DealerView = () => {
               </CardHeader>
               <CardContent>
                 <DealerServices dealerId={id} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="categories" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Tag className="h-5 w-5" />
+                  <span>{t('categories.title')}</span>
+                </CardTitle>
+                <CardDescription>
+                  {t('categories.subtitle')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <DealerCategories dealerId={id} />
               </CardContent>
             </Card>
           </TabsContent>
