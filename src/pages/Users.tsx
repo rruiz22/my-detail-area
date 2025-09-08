@@ -1,5 +1,5 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
-import { UserRoleManager } from '@/components/permissions/UserRoleManager';
+import { UnifiedUserManagement } from '@/components/users/UnifiedUserManagement';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +17,7 @@ const Users = () => {
         </div>
 
         <PermissionGuard module="users" permission="read">
-          <UserRoleManager />
+          <UnifiedUserManagement />
         </PermissionGuard>
       </div>
     </DashboardLayout>

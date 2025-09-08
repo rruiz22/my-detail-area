@@ -12,8 +12,7 @@ import { DealerInvitationModal } from '@/components/dealerships/DealerInvitation
 import { RoleAssignmentModal } from '@/components/permissions/RoleAssignmentModal';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { Search, UserPlus, Settings, Activity } from 'lucide-react';
+import { Search, UserPlus, Settings, Activity, Building2 } from 'lucide-react';
 
 interface User {
   id: string;
@@ -37,29 +36,36 @@ interface DealershipInfo {
   name: string;
 }
 
-export const EnhancedUserManagementSection: React.FC = () => {
+export const UnifiedUserManagement: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { user } = useAuth();
+  
+  // State management
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [dealerships, setDealerships] = useState<DealershipInfo[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [userTypeFilter, setUserTypeFilter] = useState<string>('all');
   const [selectedDealership, setSelectedDealership] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isInvitationModalOpen, setIsInvitationModalOpen] = useState(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
+  // Data fetching functions
   const fetchUsersWithRoles = async () => {
     try {
       setIsLoading(true);
 
-      // Fetch users from profiles
+      // Fetch users with their dealer memberships
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
-        .select('*')
+        .select(`
+          *,
+          dealer_memberships!inner (
+            dealer_id,
+            is_active
+          )
+        `)
         .order('email');
 
       if (profilesError) throw profilesError;
@@ -70,14 +76,25 @@ export const EnhancedUserManagementSection: React.FC = () => {
           const { data: rolesData } = await supabase
             .rpc('get_user_roles', { user_uuid: profile.id });
 
+          // Get the dealership_id from the first active membership
+          const activeMembership = profile.dealer_memberships?.find((m: any) => m.is_active);
+          
           return {
-            ...profile,
+            id: profile.id,
+            email: profile.email,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+            user_type: profile.user_type,
+            dealership_id: activeMembership?.dealer_id,
             roles: rolesData || [],
           };
         })
       );
 
-      setUsers(usersWithRoles);
+      // Filter to only show dealer users (Phase 1 cleanup)
+      const dealerUsers = usersWithRoles.filter(user => user.user_type === 'dealer');
+
+      setUsers(dealerUsers);
     } catch (error: any) {
       console.error('Error fetching users:', error);
       toast({
@@ -96,6 +113,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
         .from('dealerships')
         .select('id, name')
         .eq('status', 'active')
+        .is('deleted_at', null)
         .order('name');
 
       if (error) throw error;
@@ -105,6 +123,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
     }
   };
 
+  // Effects
   useEffect(() => {
     fetchUsersWithRoles();
     fetchDealerships();
@@ -112,20 +131,17 @@ export const EnhancedUserManagementSection: React.FC = () => {
 
   useEffect(() => {
     filterUsers();
-  }, [users, searchQuery, userTypeFilter, selectedDealership]);
+  }, [users, searchQuery, selectedDealership]);
 
+  // Filter function
   const filterUsers = () => {
     let filtered = users;
 
     if (searchQuery) {
       filtered = filtered.filter(user =>
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.toLowerCase())
+        getDisplayName(user).toLowerCase().includes(searchQuery.toLowerCase())
       );
-    }
-
-    if (userTypeFilter !== 'all') {
-      filtered = filtered.filter(user => user.user_type === userTypeFilter);
     }
 
     if (selectedDealership) {
@@ -135,6 +151,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
     setFilteredUsers(filtered);
   };
 
+  // Helper functions
   const getDisplayName = (user: User) => {
     if (user.first_name || user.last_name) {
       return `${user.first_name || ''} ${user.last_name || ''}`.trim();
@@ -153,6 +170,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
     return dealership?.name || `Dealership ${dealershipId}`;
   };
 
+  // Event handlers
   const handleManageRoles = (user: User) => {
     setSelectedUser(user);
     setIsRoleModalOpen(true);
@@ -170,18 +188,16 @@ export const EnhancedUserManagementSection: React.FC = () => {
 
   const handleInvitationSent = () => {
     fetchUsersWithRoles();
+    setIsInvitationModalOpen(false);
   };
 
+  // Loading state
   if (isLoading) {
     return (
       <Card>
         <CardContent className="p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-muted rounded w-1/4"></div>
-            <div className="space-y-2">
-              <div className="h-4 bg-muted rounded"></div>
-              <div className="h-4 bg-muted rounded w-3/4"></div>
-            </div>
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         </CardContent>
       </Card>
@@ -194,7 +210,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
-            Gestión de Usuarios
+            {t('user_management.title')}
           </CardTitle>
           <PermissionGuard module="users" permission="write">
             <Button
@@ -202,7 +218,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
               className="flex items-center gap-2"
             >
               <UserPlus className="h-4 w-4" />
-              Invitar Usuario
+              {t('users.invite_user')}
             </Button>
           </PermissionGuard>
         </CardHeader>
@@ -213,30 +229,21 @@ export const EnhancedUserManagementSection: React.FC = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar usuarios..."
+                placeholder={t('user_management.search_users')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Select value={userTypeFilter} onValueChange={setUserTypeFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Tipo de usuario" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="dealer">Dealer</SelectItem>
-              </SelectContent>
-            </Select>
             <Select 
               value={selectedDealership?.toString() || 'all'} 
               onValueChange={(value) => setSelectedDealership(value === 'all' ? null : parseInt(value))}
             >
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Dealership" />
+                <SelectValue placeholder={t('dealerships.select_dealership')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="all">{t('common.all')}</SelectItem>
                 {dealerships.map((dealership) => (
                   <SelectItem key={dealership.id} value={dealership.id.toString()}>
                     {dealership.name}
@@ -251,19 +258,23 @@ export const EnhancedUserManagementSection: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Usuario</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Dealership</TableHead>
-                  <TableHead>Roles</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
+                  <TableHead>{t('user_management.user')}</TableHead>
+                  <TableHead>{t('dealerships.dealership')}</TableHead>
+                  <TableHead>{t('user_management.roles')}</TableHead>
+                  <TableHead>{t('common.status')}</TableHead>
+                  <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
-                      No se encontraron usuarios
+                    <TableCell colSpan={5} className="text-center py-8">
+                      <div className="text-muted-foreground">
+                        {searchQuery || selectedDealership 
+                          ? t('user_management.no_users_matching_filters')
+                          : t('user_management.no_users_found')
+                        }
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -283,11 +294,11 @@ export const EnhancedUserManagementSection: React.FC = () => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="default">
-                          Dealer
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Building2 className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{getDealershipName(user.dealership_id)}</span>
+                        </div>
                       </TableCell>
-                      <TableCell>{getDealershipName(user.dealership_id)}</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {user.roles.length > 0 ? (
@@ -297,14 +308,16 @@ export const EnhancedUserManagementSection: React.FC = () => {
                               </Badge>
                             ))
                           ) : (
-                            <span className="text-sm text-muted-foreground">Sin roles</span>
+                            <span className="text-sm text-muted-foreground">{t('user_management.no_roles')}</span>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Activity className="h-4 w-4 text-green-500" />
-                          <span className="text-sm">Activo</span>
+                          <Badge variant="default" className="text-xs">
+                            {t('common.active')}
+                          </Badge>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
@@ -313,8 +326,10 @@ export const EnhancedUserManagementSection: React.FC = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handleManageRoles(user)}
+                            className="flex items-center gap-2"
                           >
-                            Gestionar
+                            <Settings className="h-4 w-4" />
+                            {t('user_management.manage')}
                           </Button>
                         </PermissionGuard>
                       </TableCell>
@@ -324,10 +339,15 @@ export const EnhancedUserManagementSection: React.FC = () => {
               </TableBody>
             </Table>
           </div>
+
+          {/* Summary */}
+          <div className="text-sm text-muted-foreground">
+            {t('common.showing')} {filteredUsers.length} {t('common.of')} {users.length} {t('user_management.users').toLowerCase()}
+          </div>
         </CardContent>
       </Card>
 
-      {/* Role Assignment Modal */}
+      {/* Modals */}
       <DealerInvitationModal
         isOpen={isInvitationModalOpen}
         onClose={() => setIsInvitationModalOpen(false)}

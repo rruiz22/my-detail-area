@@ -197,7 +197,6 @@ export const UserRoleManager: React.FC = () => {
               <SelectContent>
                 <SelectItem value="all">{t('user_management.all_users')}</SelectItem>
                 <SelectItem value="dealer">{t('user_management.dealer_users')}</SelectItem>
-                <SelectItem value="detail">{t('user_management.detail_users')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

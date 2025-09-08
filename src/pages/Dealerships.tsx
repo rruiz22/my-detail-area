@@ -72,8 +72,7 @@ export function Dealerships() {
         .from('dealerships')
         .select(`
           *,
-          dealership_contacts!inner(count),
-          detail_users!inner(count)
+          dealership_contacts!inner(count)
         `)
         .is('deleted_at', null);
 
@@ -103,10 +102,10 @@ export function Dealerships() {
               .eq('dealership_id', dealership.id)
               .is('deleted_at', null),
             supabase
-              .from('detail_users')
+              .from('dealer_memberships')
               .select('id', { count: 'exact' })
-              .eq('dealership_id', dealership.id)
-              .is('deleted_at', null)
+              .eq('dealer_id', dealership.id)
+              .eq('is_active', true)
           ]);
 
           return {
