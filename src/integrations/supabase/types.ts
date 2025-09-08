@@ -461,8 +461,47 @@ export type Database = {
           },
         ]
       }
+      order_comments: {
+        Row: {
+          comment_text: string
+          comment_type: string
+          created_at: string
+          id: string
+          order_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment_text: string
+          comment_type?: string
+          created_at?: string
+          id?: string
+          order_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment_text?: string
+          comment_type?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_order_comments_order_id"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
+          assigned_contact_id: string | null
           assigned_group_id: string | null
           completed_at: string | null
           created_at: string
@@ -474,10 +513,17 @@ export type Database = {
           dealer_id: number
           due_date: string | null
           id: string
+          internal_notes: string | null
+          notes: string | null
           order_number: string
           order_type: string
           priority: string | null
+          qr_code_url: string | null
+          salesperson: string | null
+          scheduled_date: string | null
+          scheduled_time: string | null
           services: Json | null
+          short_link: string | null
           sla_deadline: string | null
           status: string
           status_changed_at: string | null
@@ -492,6 +538,7 @@ export type Database = {
           vehicle_year: number | null
         }
         Insert: {
+          assigned_contact_id?: string | null
           assigned_group_id?: string | null
           completed_at?: string | null
           created_at?: string
@@ -503,10 +550,17 @@ export type Database = {
           dealer_id?: number
           due_date?: string | null
           id?: string
+          internal_notes?: string | null
+          notes?: string | null
           order_number: string
           order_type: string
           priority?: string | null
+          qr_code_url?: string | null
+          salesperson?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           services?: Json | null
+          short_link?: string | null
           sla_deadline?: string | null
           status?: string
           status_changed_at?: string | null
@@ -521,6 +575,7 @@ export type Database = {
           vehicle_year?: number | null
         }
         Update: {
+          assigned_contact_id?: string | null
           assigned_group_id?: string | null
           completed_at?: string | null
           created_at?: string
@@ -532,10 +587,17 @@ export type Database = {
           dealer_id?: number
           due_date?: string | null
           id?: string
+          internal_notes?: string | null
+          notes?: string | null
           order_number?: string
           order_type?: string
           priority?: string | null
+          qr_code_url?: string | null
+          salesperson?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           services?: Json | null
+          short_link?: string | null
           sla_deadline?: string | null
           status?: string
           status_changed_at?: string | null
