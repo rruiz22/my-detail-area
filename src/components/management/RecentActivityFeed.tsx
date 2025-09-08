@@ -97,13 +97,13 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ classNam
   const getActivityBadge = (activityType: string) => {
     switch (activityType) {
       case 'dealership_created':
-        return { label: 'Nuevo', variant: 'secondary' as const };
+        return { label: t('common.new'), variant: 'secondary' as const };
       case 'invitation_sent':
-        return { label: 'Invitación', variant: 'outline' as const };
+        return { label: t('invitations.title'), variant: 'outline' as const };
       case 'user_joined':
-        return { label: 'Usuario', variant: 'default' as const };
+        return { label: t('users.title'), variant: 'default' as const };
       default:
-        return { label: 'Actividad', variant: 'secondary' as const };
+        return { label: t('common.activity'), variant: 'secondary' as const };
     }
   };
 
@@ -150,10 +150,10 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ classNam
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
             <AlertCircle className="h-8 w-8 mx-auto mb-2 text-destructive" />
-            <p>Error al cargar actividad</p>
+            <p>{t('messages.error')}</p>
             <Button variant="outline" size="sm" onClick={fetchRecentActivity} className="mt-2">
               <RefreshCw className="h-4 w-4 mr-2" />
-              Reintentar
+              {t('common.retry')}
             </Button>
           </div>
         </CardContent>
@@ -171,7 +171,7 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ classNam
               {t('management.recent_activity')}
             </CardTitle>
             <CardDescription>
-              Últimas actividades del sistema (7 días)
+              {t('management.recent_activity')} (7 {t('invitations.accept.days')})
             </CardDescription>
           </div>
           <Button 
@@ -188,7 +188,7 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ classNam
         {activities.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>{t('dashboard.no_recent_activity')}</p>
+            <p>{t('management.no_activity')}</p>
           </div>
         ) : (
           <div className="space-y-4">

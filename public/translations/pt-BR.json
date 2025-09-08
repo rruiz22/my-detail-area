@@ -125,7 +125,20 @@
     "role_configuration": "Configuração de Funções",
     "bulk_operations": "Operações em Massa",
     "user_management": "Gestão de Usuários",
-    "dealership_management": "Gestão de Concessionárias"
+    "dealership_management": "Gestão de Concessionárias",
+    "system_configuration": "Configuração Sistema",
+    "system_configuration_desc": "Configuração avançada do sistema",
+    "quick_actions": "Ações Rápidas",
+    "system_overview": "Estado geral do sistema e métricas principais",
+    "weekly_activity": "Atividade Esta Semana",
+    "orders_processed": "pedidos processados",
+    "no_activity": "Nenhuma atividade recente para mostrar",
+    "performance_metrics": "Métricas de Desempenho",
+    "dealership_performance": "Desempenho de Concessionárias",
+    "performance_desc": "Métricas detalhadas de desempenho por concessionária",
+    "last_activity": "Última Atividade",
+    "user_growth": "Crescimento de Usuários",
+    "orders_per_user": "Pedidos por Usuário"
   },
   "dealerships": {
     "title": "Concessionárias",
@@ -429,7 +442,12 @@
     "previous": "Anterior",
     "finish": "Finalizar",
     "continue": "Continuar",
-    "retry": "Tentar Novamente"
+    "retry": "Tentar Novamente",
+    "new": "Novo",
+    "activity": "Atividade", 
+    "excellent": "Excelente",
+    "good": "Bom",
+    "low": "Baixo"
   },
   "messages": {
     "success": "Operação concluída com sucesso",

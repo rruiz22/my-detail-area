@@ -29,7 +29,8 @@ import {
   Activity,
   Eye,
   RefreshCw,
-  AlertCircle
+  AlertCircle,
+  BarChart3
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
@@ -94,11 +95,11 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
 
   const getPerformanceIndicator = (rate: number) => {
     if (rate >= 80) {
-      return { icon: TrendingUp, color: 'text-green-600', label: 'Excelente' };
+      return { icon: TrendingUp, color: 'text-green-600', label: t('common.excellent') };
     } else if (rate >= 60) {
-      return { icon: TrendingUp, color: 'text-yellow-600', label: 'Bueno' };
+      return { icon: TrendingUp, color: 'text-yellow-600', label: t('common.good') };
     } else {
-      return { icon: TrendingDown, color: 'text-red-600', label: 'Bajo' };
+      return { icon: TrendingDown, color: 'text-red-600', label: t('common.low') };
     }
   };
 
@@ -143,10 +144,10 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
             <AlertCircle className="h-8 w-8 mx-auto mb-2 text-destructive" />
-            <p>Error al cargar estadísticas de rendimiento</p>
+            <p>{t('messages.error')}</p>
             <Button variant="outline" size="sm" onClick={fetchPerformanceStats} className="mt-2">
               <RefreshCw className="h-4 w-4 mr-2" />
-              Reintentar
+              {t('common.retry')}
             </Button>
           </div>
         </CardContent>
@@ -160,9 +161,12 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5" />
-              Rendimiento de Concesionarios
+              <BarChart3 className="h-5 w-5" />
+              {t('management.dealership_performance')}
             </CardTitle>
+            <CardDescription>
+              {t('management.performance_desc')}
+            </CardDescription>
             <CardDescription>
               Análisis de actividad y métricas de rendimiento por concesionario
             </CardDescription>
@@ -181,19 +185,19 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
         {performance.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Building2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>No hay datos de rendimiento disponibles</p>
+            <p>{t('common.no_data')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Concesionario</TableHead>
-                  <TableHead className="text-center">Usuarios</TableHead>
-                  <TableHead className="text-center">Órdenes</TableHead>
-                  <TableHead className="text-center">Rendimiento</TableHead>
-                  <TableHead className="text-center">Actividad</TableHead>
-                  <TableHead className="text-center">Estado</TableHead>
+                  <TableHead>{t('dealerships.name')}</TableHead>
+                  <TableHead className="text-center">{t('users.title')}</TableHead>
+                  <TableHead className="text-center">{t('dealerships.total_orders')}</TableHead>
+                  <TableHead className="text-center">{t('management.performance_metrics')}</TableHead>
+                  <TableHead className="text-center">{t('management.last_activity')}</TableHead>
+                  <TableHead className="text-center">{t('common.status')}</TableHead>
                   <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -231,7 +235,7 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
                             <span className="font-medium">{dealership.total_users}</span>
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {dealership.active_users} activos
+                            {dealership.active_users} {t('dealerships.active_users')}
                           </div>
                         </div>
                       </TableCell>
@@ -243,7 +247,7 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
                             <span className="font-medium">{dealership.total_orders}</span>
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {dealership.orders_this_month} este mes
+                            {dealership.orders_this_month} {t('dealerships.orders_this_month')}
                           </div>
                         </div>
                       </TableCell>
@@ -258,7 +262,7 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
                             {performanceIndicator.label}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {dealership.avg_orders_per_user.toFixed(1)} órd/usuario
+                            {dealership.avg_orders_per_user.toFixed(1)} {t('management.orders_per_user').toLowerCase()}
                           </div>
                         </div>
                       </TableCell>

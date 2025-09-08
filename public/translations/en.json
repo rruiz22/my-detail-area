@@ -125,7 +125,20 @@
     "role_configuration": "Role Configuration",
     "bulk_operations": "Bulk Operations",
     "user_management": "User Management",
-    "dealership_management": "Dealership Management"
+    "dealership_management": "Dealership Management",
+    "system_configuration": "System Configuration",
+    "system_configuration_desc": "Advanced system configuration",
+    "quick_actions": "Quick Actions",
+    "system_overview": "Overall system status and key metrics",
+    "weekly_activity": "Weekly Activity",
+    "orders_processed": "orders processed",
+    "no_activity": "No recent activity to display",
+    "performance_metrics": "Performance Metrics",
+    "dealership_performance": "Dealership Performance",
+    "performance_desc": "Detailed performance metrics by dealership",
+    "last_activity": "Last Activity",
+    "user_growth": "User Growth",
+    "orders_per_user": "Orders per User"
   },
   "dealerships": {
     "title": "Dealerships",
@@ -446,7 +459,12 @@
     "previous": "Previous",
     "finish": "Finish",
     "continue": "Continue",
-    "retry": "Retry"
+    "retry": "Retry",
+    "new": "New",
+    "activity": "Activity",
+    "excellent": "Excellent", 
+    "good": "Good",
+    "low": "Low"
   },
   "messages": {
     "success": "Operation completed successfully",

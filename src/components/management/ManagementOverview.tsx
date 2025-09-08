@@ -34,21 +34,21 @@ export const ManagementOverview: React.FC = () => {
     {
       icon: Building2,
       label: t('management.dealership_management'),
-      description: 'Gestionar concesionarios y configuraciones',
+      description: t('dealerships.manage_description'),
       action: () => navigate('/dealerships'),
       color: 'text-green-600 bg-green-100'
     },
     {
       icon: Shield,
       label: t('management.permission_management'),
-      description: 'Configurar roles y permisos del sistema',
+      description: t('management.role_configuration'),
       action: () => navigate('/management'),
       color: 'text-purple-600 bg-purple-100'
     },
     {
       icon: Database,
-      label: 'Configuración Sistema',
-      description: 'Configuración avanzada del sistema',
+      label: t('management.system_configuration'),
+      description: t('management.system_configuration_desc'),
       action: () => navigate('/settings'),
       color: 'text-orange-600 bg-orange-100'
     }
@@ -74,7 +74,7 @@ export const ManagementOverview: React.FC = () => {
           </Badge>
           <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
             <Settings className="h-4 w-4 mr-2" />
-            Configuración
+            {t('settings.title')}
           </Button>
         </div>
       </div>
@@ -84,7 +84,7 @@ export const ManagementOverview: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            Acciones Rápidas
+            {t('management.quick_actions')}
           </CardTitle>
         </CardHeader>
         <CardContent>

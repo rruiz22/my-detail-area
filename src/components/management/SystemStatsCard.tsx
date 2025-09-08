@@ -154,7 +154,7 @@ export const SystemStatsCard: React.FC<SystemStatsCardProps> = ({ className }) =
           {t('management.system_status')}
         </CardTitle>
         <CardDescription>
-          Estado general del sistema y métricas clave
+          {t('management.system_overview')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -229,9 +229,9 @@ export const SystemStatsCard: React.FC<SystemStatsCardProps> = ({ className }) =
           <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-primary">Actividad Esta Semana</p>
+                <p className="font-medium text-primary">{t('management.weekly_activity')}</p>
                 <p className="text-sm text-muted-foreground">
-                  {stats.orders_this_week} órdenes procesadas
+                  {stats.orders_this_week} {t('management.orders_processed')}
                 </p>
               </div>
               <div className="flex items-center gap-1 text-primary">
