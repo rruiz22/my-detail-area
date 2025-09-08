@@ -99,6 +99,14 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Failed to generate short link: ${shortLinkResponse.statusText}`);
     }
 
+    // Check if response is JSON
+    const contentType = shortLinkResponse.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const errorText = await shortLinkResponse.text();
+      console.error("MDA API returned non-JSON response:", errorText);
+      throw new Error(`MDA API returned invalid response format`);
+    }
+
     const shortLinkData = await shortLinkResponse.json();
     const shortLink = shortLinkData.shortUrl || redirectUrl;
 
@@ -122,6 +130,14 @@ const handler = async (req: Request): Promise<Response> => {
       const errorText = await qrResponse.text();
       console.error("QR API Error:", errorText);
       throw new Error(`Failed to generate QR code: ${qrResponse.statusText}`);
+    }
+
+    // Check if QR response is JSON
+    const qrContentType = qrResponse.headers.get("content-type");
+    if (!qrContentType || !qrContentType.includes("application/json")) {
+      const errorText = await qrResponse.text();
+      console.error("QR API returned non-JSON response:", errorText);
+      throw new Error(`QR API returned invalid response format`);
     }
 
     const qrData = await qrResponse.json();

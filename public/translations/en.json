@@ -159,6 +159,7 @@
     "vehicle_make": "Vehicle Make",
     "vehicle_model": "Vehicle Model",
     "order_details": "Order Details",
+    "order_details_description": "Detailed view of order for {{customer}} - {{vehicle}}",
     "po_number": "PO Number",
     "purchase_order": "Purchase Order",
     "ro_number": "RO Number",
@@ -852,6 +853,7 @@
     "no_notes": "No notes added",
     "no_internal_notes": "No internal notes added",
     "qr_code": "QR Code",
+    "qr_code_desktop_only": "QR Code available on desktop",
     "short_link": "Short Link",
     "no_qr_code": "No QR code generated",
     "communication": {
