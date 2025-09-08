@@ -204,7 +204,32 @@
     "order_created_successfully": "Service order created successfully",
     "order_updated_successfully": "Service order updated successfully",
     "order_deleted_successfully": "Service order deleted successfully"
-  },
+    "activity": {
+      "recent_activity": "Recent Activity",
+      "system": "System",
+      "error_loading": "Failed to load activity",
+      "no_activity": "No recent activity",
+      "order_created": "Order created",
+      "status_changed": "Status changed", 
+      "priority_changed": "Priority changed",
+      "assignment_changed": "Assignment changed",
+      "due_date_changed": "Due date changed",
+      "customer_updated": "Customer updated",
+      "services_updated": "Services updated",
+      "amount_updated": "Amount updated",
+      "notes_updated": "Notes updated",
+      "types": {
+        "order_created": "Created",
+        "status_changed": "Status",
+        "priority_changed": "Priority", 
+        "assignment_changed": "Assignment",
+        "due_date_changed": "Due Date",
+        "customer_updated": "Customer",
+        "services_updated": "Services",
+        "amount_updated": "Amount",
+        "notes_updated": "Notes"
+      }
+    },
   "dealerships": {
     "title": "Dealerships",
     "add_new": "Add New Dealership",

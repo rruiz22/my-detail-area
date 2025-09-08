@@ -204,7 +204,32 @@
     "order_created_successfully": "Orden de servicio creada exitosamente",
     "order_updated_successfully": "Orden de servicio actualizada exitosamente",
     "order_deleted_successfully": "Orden de servicio eliminada exitosamente"
-  },
+    "activity": {
+      "recent_activity": "Actividad Reciente",
+      "system": "Sistema",
+      "error_loading": "Error al cargar actividad",
+      "no_activity": "Sin actividad reciente",
+      "order_created": "Orden creada",
+      "status_changed": "Estado cambiado",
+      "priority_changed": "Prioridad cambiada",
+      "assignment_changed": "Asignación cambiada",
+      "due_date_changed": "Fecha límite cambiada",
+      "customer_updated": "Cliente actualizado",
+      "services_updated": "Servicios actualizados",
+      "amount_updated": "Monto actualizado",
+      "notes_updated": "Notas actualizadas",
+      "types": {
+        "order_created": "Creada",
+        "status_changed": "Estado",
+        "priority_changed": "Prioridad",
+        "assignment_changed": "Asignación",
+        "due_date_changed": "Fecha Límite",
+        "customer_updated": "Cliente",
+        "services_updated": "Servicios",
+        "amount_updated": "Monto",
+        "notes_updated": "Notas"
+      }
+    },
   "dealerships": {
     "title": "Concesionarios",
     "add_new": "Agregar Nuevo Concesionario",

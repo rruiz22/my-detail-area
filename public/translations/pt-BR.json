@@ -204,7 +204,32 @@
     "order_created_successfully": "Pedido de serviço criado com sucesso",
     "order_updated_successfully": "Pedido de serviço atualizado com sucesso",
     "order_deleted_successfully": "Pedido de serviço excluído com sucesso"
-  },
+    "activity": {
+      "recent_activity": "Atividade Recente",
+      "system": "Sistema",
+      "error_loading": "Erro ao carregar atividade",
+      "no_activity": "Nenhuma atividade recente",
+      "order_created": "Ordem criada",
+      "status_changed": "Status alterado",
+      "priority_changed": "Prioridade alterada", 
+      "assignment_changed": "Atribuição alterada",
+      "due_date_changed": "Data limite alterada",
+      "customer_updated": "Cliente atualizado",
+      "services_updated": "Serviços atualizados",
+      "amount_updated": "Valor atualizado",
+      "notes_updated": "Notas atualizadas",
+      "types": {
+        "order_created": "Criada",
+        "status_changed": "Status",
+        "priority_changed": "Prioridade",
+        "assignment_changed": "Atribuição", 
+        "due_date_changed": "Data Limite",
+        "customer_updated": "Cliente",
+        "services_updated": "Serviços",
+        "amount_updated": "Valor",
+        "notes_updated": "Notas"
+      }
+    },
   "dealerships": {
     "title": "Concessionárias",
     "add_new": "Adicionar Nova Concessionária",

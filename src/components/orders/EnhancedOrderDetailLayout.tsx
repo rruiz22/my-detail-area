@@ -25,6 +25,7 @@ import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { QRCodeDisplay } from './QRCodeDisplay';
 import { CommunicationActions } from './CommunicationActions';
 import { AttachmentUploader } from './AttachmentUploader';
+import { RecentActivity } from './RecentActivity';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
 
@@ -298,17 +299,9 @@ export function EnhancedOrderDetailLayout({
                 </div>
               </div>
 
-              {/* Attachments - Hidden on mobile */}
+              {/* Recent Activity */}
               <div className="flex-1 p-2 lg:p-4 hidden lg:block">
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-sm flex items-center gap-2">
-                    <FileText className="w-4 h-4" />
-                    {t('orders.attachments')}
-                  </h3>
-                  <div className="text-sm text-muted-foreground">
-                    {t('attachments.coming_soon')}
-                  </div>
-                </div>
+                <RecentActivity orderId={order.id} />
               </div>
             </div>
           </div>
