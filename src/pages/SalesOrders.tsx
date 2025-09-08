@@ -13,7 +13,7 @@ import { SmartDashboard } from '@/components/sales/SmartDashboard';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderPreviewPanel } from '@/components/sales/OrderPreviewPanel';
-import { EnhancedOrderDetailModal } from './EnhancedOrderDetailModal';
+import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
 
 // Removed TABS - now using QuickFilterBar instead
 
