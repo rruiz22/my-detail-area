@@ -1065,12 +1065,52 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_dealership_performance_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          active_users: number
+          avg_orders_per_user: number
+          dealership_id: number
+          dealership_name: string
+          last_activity: string
+          orders_this_month: number
+          status: string
+          total_orders: number
+          total_users: number
+          user_growth_rate: number
+        }[]
+      }
       get_dealership_stats: {
         Args: { p_dealer_id: number }
         Returns: {
           active_users: number
           orders_this_month: number
           pending_invitations: number
+          total_orders: number
+          total_users: number
+        }[]
+      }
+      get_recent_system_activity: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          activity_description: string
+          activity_type: string
+          created_at: string
+          entity_id: string
+          entity_type: string
+          user_email: string
+        }[]
+      }
+      get_system_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          active_dealerships: number
+          active_users: number
+          orders_this_month: number
+          orders_this_week: number
+          pending_invitations: number
+          system_health_score: number
+          total_dealerships: number
           total_orders: number
           total_users: number
         }[]

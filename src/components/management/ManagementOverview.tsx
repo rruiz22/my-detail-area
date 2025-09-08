@@ -1,266 +1,132 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { 
+  BarChart3, 
   Users, 
   Building2, 
-  Shield, 
-  TrendingUp, 
+  Settings,
+  TrendingUp,
   Activity,
-  ArrowRight,
-  UserCheck,
-  AlertTriangle,
-  Globe
+  Shield,
+  Database,
+  ArrowRight
 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { SystemStatsCard } from './SystemStatsCard';
+import { RecentActivityFeed } from './RecentActivityFeed';
+import { DealershipPerformanceTable } from './DealershipPerformanceTable';
 
-interface OverviewStats {
-  totalUsers: number;
-  activeUsers: number;
-  totalDealerships: number;
-  activeDealerships: number;
-  rolesAssigned: number;
-  systemHealth: number;
-}
-
-export const ManagementOverview = () => {
-  const [stats, setStats] = useState<OverviewStats>({
-    totalUsers: 0,
-    activeUsers: 0,
-    totalDealerships: 0,
-    activeDealerships: 0,
-    rolesAssigned: 0,
-    systemHealth: 95
-  });
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+export const ManagementOverview: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchOverviewStats();
-  }, []);
-
-  const fetchOverviewStats = async () => {
-    try {
-      setLoading(true);
-
-      // Fetch user statistics
-      const { data: users, error: usersError } = await supabase
-        .from('profiles')
-        .select('id, user_type');
-
-      if (usersError) throw usersError;
-
-      // Fetch dealership statistics
-      const { data: dealerships, error: dealershipsError } = await supabase
-        .from('dealerships')
-        .select('id, status')
-        .is('deleted_at', null);
-
-      if (dealershipsError) throw dealershipsError;
-
-      // Fetch role assignments
-      const { data: roleAssignments, error: rolesError } = await supabase
-        .from('user_role_assignments')
-        .select('id')
-        .eq('is_active', true);
-
-      if (rolesError) throw rolesError;
-
-      setStats({
-        totalUsers: users?.length || 0,
-        activeUsers: users?.length || 0, // Assuming all users are active for now
-        totalDealerships: dealerships?.length || 0,
-        activeDealerships: dealerships?.filter(d => d.status === 'active').length || 0,
-        rolesAssigned: roleAssignments?.length || 0,
-        systemHealth: 95 // Mock system health percentage
-      });
-    } catch (error) {
-      console.error('Error fetching overview stats:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch overview statistics',
-        variant: 'destructive'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const statCards = [
+  const quickActions = [
     {
-      title: 'Total Users',
-      value: stats.totalUsers,
-      subtitle: `${stats.activeUsers} active`,
       icon: Users,
-      trend: '+12%',
-      color: 'text-primary',
-      action: () => navigate('/users')
+      label: t('management.user_management'),
+      description: t('user_management.description'),
+      action: () => navigate('/users'),
+      color: 'text-blue-600 bg-blue-100'
     },
     {
-      title: 'Dealerships',
-      value: stats.totalDealerships,
-      subtitle: `${stats.activeDealerships} active`,
       icon: Building2,
-      trend: '+8%',
-      color: 'text-accent',
-      action: () => navigate('/dealerships')
+      label: t('management.dealership_management'),
+      description: 'Gestionar concesionarios y configuraciones',
+      action: () => navigate('/dealerships'),
+      color: 'text-green-600 bg-green-100'
     },
     {
-      title: 'Role Assignments',
-      value: stats.rolesAssigned,
-      subtitle: 'Total assignments',
       icon: Shield,
-      trend: '+15%',
-      color: 'text-success',
-      action: () => {}
+      label: t('management.permission_management'),
+      description: 'Configurar roles y permisos del sistema',
+      action: () => navigate('/management'),
+      color: 'text-purple-600 bg-purple-100'
     },
     {
-      title: 'System Health',
-      value: `${stats.systemHealth}%`,
-      subtitle: 'Overall status',
-      icon: Activity,
-      trend: 'Excellent',
-      color: 'text-success',
-      action: () => {}
+      icon: Database,
+      label: 'Configuración Sistema',
+      description: 'Configuración avanzada del sistema',
+      action: () => navigate('/settings'),
+      color: 'text-orange-600 bg-orange-100'
     }
   ];
 
-  if (loading) {
-    return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-16 bg-muted rounded" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((card, index) => (
-          <Card 
-            key={index} 
-            className="cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
-            onClick={card.action}
-          >
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {card.title}
-                  </p>
-                  <p className="text-2xl font-bold">{card.value}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {card.subtitle}
-                  </p>
-                </div>
-                <div className={`${card.color}`}>
-                  <card.icon className="h-8 w-8" />
-                </div>
-              </div>
-              <div className="mt-4 flex items-center text-xs">
-                <TrendingUp className="h-3 w-3 mr-1 text-success" />
-                <span className="text-success">{card.trend}</span>
-                <span className="text-muted-foreground ml-1">from last month</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <BarChart3 className="h-8 w-8" />
+            {t('management.title')}
+          </h1>
+          <p className="text-muted-foreground">
+            {t('management.description')}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="gap-1">
+            <Activity className="h-3 w-3" />
+            {t('management.admin_access')}
+          </Badge>
+          <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
+            <Settings className="h-4 w-4 mr-2" />
+            Configuración
+          </Button>
+        </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserCheck className="h-5 w-5" />
-              Recent Activity
-            </CardTitle>
-            <CardDescription>
-              Latest user and system activities
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full" />
-                  <span className="text-sm">New user registered: john@example.com</span>
-                </div>
-                <span className="text-xs text-muted-foreground">2m ago</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-accent rounded-full" />
-                  <span className="text-sm">Dealership updated: AutoMax Inc</span>
-                </div>
-                <span className="text-xs text-muted-foreground">5m ago</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-success rounded-full" />
-                  <span className="text-sm">Role assigned: Manager to Sarah</span>
-                </div>
-                <span className="text-xs text-muted-foreground">12m ago</span>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" className="w-full">
-              View All Activities
-              <ArrowRight className="h-3 w-3 ml-1" />
-            </Button>
-          </CardContent>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Acciones Rápidas
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {quickActions.map((action, index) => {
+              const Icon = action.icon;
+              return (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="h-auto p-4 flex flex-col items-center gap-3 hover:shadow-md transition-shadow"
+                  onClick={action.action}
+                >
+                  <div className={`p-3 rounded-full ${action.color}`}>
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium">{action.label}</p>
+                    <p className="text-xs text-muted-foreground">{action.description}</p>
+                  </div>
+                  <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                </Button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5" />
-              System Status
-            </CardTitle>
-            <CardDescription>
-              Monitor system health and performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Database Performance</span>
-                  <span className="text-success">Excellent</span>
-                </div>
-                <Progress value={95} className="h-2" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>API Response Time</span>
-                  <span className="text-success">Good</span>
-                </div>
-                <Progress value={88} className="h-2" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>User Authentication</span>
-                  <span className="text-success">Stable</span>
-                </div>
-                <Progress value={100} className="h-2" />
-              </div>
-            </div>
-            <Button variant="outline" size="sm" className="w-full">
-              View Detailed Metrics
-              <ArrowRight className="h-3 w-3 ml-1" />
-            </Button>
-          </CardContent>
-        </Card>
+      {/* System Stats */}
+      <SystemStatsCard />
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Activity - Takes 1 column */}
+        <div className="lg:col-span-1">
+          <RecentActivityFeed />
+        </div>
+        
+        {/* Performance Table - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          <DealershipPerformanceTable />
+        </div>
       </div>
     </div>
   );
