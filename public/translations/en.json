@@ -11,7 +11,7 @@
       "minimum_advance": "Must be at least 1 hour from now",
       "invalid_time_slot": "Selected time slot is not available",
       "no_slots_available": "No time slots available for selected date",
-      "same_day_notice": "Same day scheduling available until 5:00 PM"
+      "same_day_notice": "Same day scheduling available until 6:00 PM"
     }
   },
   "sweetalert": {

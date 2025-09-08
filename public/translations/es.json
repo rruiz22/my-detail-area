@@ -11,7 +11,7 @@
       "minimum_advance": "Debe ser al menos 1 hora desde ahora",
       "invalid_time_slot": "El horario seleccionado no está disponible",
       "no_slots_available": "No hay horarios disponibles para la fecha seleccionada",
-      "same_day_notice": "Programación el mismo día disponible hasta las 5:00 PM"
+      "same_day_notice": "Programación el mismo día disponible hasta las 6:00 PM"
     }
   },
   "sweetalert": {

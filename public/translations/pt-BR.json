@@ -11,7 +11,7 @@
       "minimum_advance": "Deve ser pelo menos 1 hora a partir de agora",
       "invalid_time_slot": "O horário selecionado não está disponível",
       "no_slots_available": "Não há horários disponíveis para a data selecionada",
-      "same_day_notice": "Agendamento no mesmo dia disponível até 17:00"
+      "same_day_notice": "Agendamento no mesmo dia disponível até 18:00"
     }
   },
   "sweetalert": {

@@ -46,7 +46,7 @@ export function DueDateTimePicker({
       endHour = 17;
     }
     
-    for (let hour = 8; hour < endHour; hour++) {
+    for (let hour = 8; hour <= endHour; hour++) {
       // If it's today, only show times that are at least 1 hour from now
       if (isSelectedToday && hour <= currentHour) {
         continue;
@@ -196,7 +196,10 @@ export function DueDateTimePicker({
 
       {/* Validation Messages */}
       {value && (
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground space-y-1">
+          <p>
+            {t('due_date.validation.business_hours_only')}
+          </p>
           {isToday(value) && (
             <p className="text-amber-600 dark:text-amber-400">
               {t('due_date.validation.same_day_notice')}
