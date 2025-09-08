@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Plus } from "lucide-react";
@@ -7,17 +7,27 @@ import { useServiceOrderManagement } from "@/hooks/useServiceOrderManagement";
 import { OrderDataTable } from "@/components/orders/OrderDataTable";
 import ServiceOrderModal from "@/components/orders/ServiceOrderModal";
 import { EnhancedOrderDetailModal } from "@/components/orders/EnhancedOrderDetailModal";
+import { SmartDashboard } from "@/components/sales/SmartDashboard";
+import { OrderKanbanBoard } from "@/components/sales/OrderKanbanBoard";
+import { QuickFilterBar } from "@/components/sales/QuickFilterBar";
+import { OrderPreviewPanel } from "@/components/sales/OrderPreviewPanel";
+import { OrderFilters } from "@/components/orders/OrderFilters";
 
 export default function ServiceOrders() {
   const { t } = useTranslation();
   
   // State management
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('dashboard');
+  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('table');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [lastRefresh, setLastRefresh] = useState(Date.now());
+  const [showFilters, setShowFilters] = useState(false);
+  const [previewOrder, setPreviewOrder] = useState<any>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [lastStatusChange, setLastStatusChange] = useState(0);
 
   // Service order management hook
   const {
@@ -31,6 +41,19 @@ export default function ServiceOrders() {
     updateOrder,
     deleteOrder
   } = useServiceOrderManagement(activeFilter);
+
+  // Auto-refresh mechanism
+  useEffect(() => {
+    const shouldPause = Date.now() - lastStatusChange < 5000; // Pause for 5s after status changes
+    if (shouldPause) return;
+
+    const interval = setInterval(() => {
+      refreshData();
+      setLastRefresh(Date.now());
+    }, 60000); // Refresh every 60 seconds
+
+    return () => clearInterval(interval);
+  }, [refreshData, lastStatusChange]);
 
   // Event handlers
   const handleCreateOrder = () => {
@@ -46,6 +69,11 @@ export default function ServiceOrders() {
   const handleViewOrder = (order: any) => {
     setSelectedOrder(order);
     setIsDetailModalOpen(true);
+  };
+
+  const handlePreviewOrder = (order: any) => {
+    setPreviewOrder(order);
+    setIsPreviewOpen(true);
   };
 
   const handleDeleteOrder = async (orderId: string) => {
@@ -75,7 +103,14 @@ export default function ServiceOrders() {
     if (order) {
       await updateOrder(orderId, { ...order, status: newStatus });
       setLastRefresh(Date.now());
+      setLastStatusChange(Date.now()); // Track status changes for auto-refresh pause
     }
+  };
+
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    setPreviewOrder(null);
+    setIsPreviewOpen(false);
   };
 
   // Filter orders based on search term
@@ -133,15 +168,82 @@ export default function ServiceOrders() {
           </div>
         </div>
 
-        {/* Service Orders Table */}
-        <OrderDataTable
-          orders={transformedOrders}
-          onEdit={handleEditOrder}
-          onView={handleViewOrder}
-          onDelete={handleDeleteOrder}
-          loading={loading}
-          tabType="service"
+        {/* Filter Bar */}
+        <QuickFilterBar
+          activeFilter={activeFilter}
+          tabCounts={tabCounts as unknown as Record<string, number>}
+          onFilterChange={handleFilterChange}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
         />
+
+        {/* Advanced Filters */}
+        {showFilters && (
+          <OrderFilters 
+            filters={filters}
+            onFiltersChange={updateFilters}
+            onClose={() => setShowFilters(false)}
+          />
+        )}
+
+        {/* Main Content Area */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className={`${isPreviewOpen ? 'xl:col-span-2' : 'xl:col-span-3'}`}>
+            {/* Smart Dashboard */}
+            {activeFilter === 'dashboard' && (
+              <SmartDashboard
+                tabCounts={tabCounts as unknown as Record<string, number>}
+                onCardClick={handleFilterChange}
+              />
+            )}
+
+            {/* Kanban Board */}
+            {activeFilter !== 'dashboard' && viewMode === 'kanban' && (
+              <OrderKanbanBoard
+                orders={transformedOrders}
+                onEdit={handleEditOrder}
+                onView={handleViewOrder}
+                onDelete={handleDeleteOrder}
+                onStatusChange={handleStatusChange}
+              />
+            )}
+
+            {/* Table View */}
+            {activeFilter !== 'dashboard' && viewMode === 'table' && (
+              <OrderDataTable
+                orders={transformedOrders}
+                onEdit={handleEditOrder}
+                onView={handleViewOrder}
+                onDelete={handleDeleteOrder}
+                loading={loading}
+                tabType="service"
+              />
+            )}
+          </div>
+
+          {/* Preview Panel */}
+          {isPreviewOpen && (
+            <div className="xl:col-span-1">
+              <OrderPreviewPanel
+                order={previewOrder}
+                open={isPreviewOpen}
+                onClose={() => {
+                  setIsPreviewOpen(false);
+                  setPreviewOrder(null);
+                }}
+                onEdit={(order) => {
+                  setIsPreviewOpen(false);
+                  handleEditOrder(order);
+                }}
+                onStatusChange={handleStatusChange}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Service Order Modal */}
         <ServiceOrderModal

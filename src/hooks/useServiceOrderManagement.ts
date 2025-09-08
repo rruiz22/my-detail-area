@@ -278,8 +278,8 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
           notes: orderData.notes,
           internal_notes: orderData.internalNotes,
           due_date: orderData.dueDate,
-          dealer_id: orderData.dealerId,
-          assigned_contact_id: orderData.assignedContactId
+          dealer_id: parseInt(orderData.dealerId) || 5,
+          assigned_contact_id: orderData.assignedContactId || null
         })
         .select()
         .single();
