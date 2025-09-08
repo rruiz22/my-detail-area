@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Calendar, Clock, AlertCircle, BarChart3, TrendingUp, DollarSign } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { safeFormatDateOnly } from '@/utils/dateUtils';
 
 interface SmartDashboardProps {
   tabCounts: Record<string, number>;
@@ -21,7 +22,7 @@ export function SmartDashboard({ tabCounts, onCardClick }: SmartDashboardProps) 
       color: 'text-success',
       bgColor: 'bg-success/10',
       trend: '+12%',
-      subtitle: new Date().toLocaleDateString(),
+      subtitle: safeFormatDateOnly(new Date().toISOString()),
       urgent: 0
     },
     {
@@ -32,7 +33,7 @@ export function SmartDashboard({ tabCounts, onCardClick }: SmartDashboardProps) 
       color: 'text-primary',
       bgColor: 'bg-primary/10',
       trend: '+8%',
-      subtitle: new Date(Date.now() + 86400000).toLocaleDateString(),
+      subtitle: safeFormatDateOnly(new Date(Date.now() + 86400000).toISOString()),
       urgent: 0
     },
     {

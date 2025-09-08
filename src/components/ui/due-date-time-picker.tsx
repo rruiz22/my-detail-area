@@ -2,6 +2,7 @@ import React from 'react';
 import { format, addDays, setHours, setMinutes, isToday, addHours } from 'date-fns';
 import { CalendarIcon, ClockIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { safeParseDate } from '@/utils/dateUtils';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -72,10 +73,15 @@ export function DueDateTimePicker({
 
     if (value) {
       // Keep existing time if available
-      const newDate = new Date(date);
-      newDate.setHours(value.getHours());
-      newDate.setMinutes(value.getMinutes());
-      onChange(newDate);
+      const safeExistingDate = safeParseDate(value.toISOString());
+      if (safeExistingDate) {
+        const newDate = new Date(date);
+        newDate.setHours(safeExistingDate.getHours());
+        newDate.setMinutes(safeExistingDate.getMinutes());
+        onChange(newDate);
+      } else {
+        onChange(setMinutes(setHours(date, 8), 0));
+      }
     } else {
       // Set default time to 8 AM, or next available slot if today
       const now = new Date();
@@ -94,15 +100,18 @@ export function DueDateTimePicker({
   };
 
   const handleTimeChange = (hourString: string) => {
-    if (!value) return;
+    if (!value || !hourString) return;
     
     const hour = parseInt(hourString);
-    const newDate = setMinutes(setHours(new Date(value), hour), 0);
+    const safeDate = safeParseDate(value.toISOString());
+    if (!safeDate) return;
+    
+    const newDate = setMinutes(setHours(safeDate, hour), 0);
     onChange(newDate);
   };
 
   const timeSlots = generateTimeSlots(value);
-  const selectedHour = value ? value.getHours().toString() : undefined;
+  const selectedHour = value ? value.getHours().toString() : "";
 
   // Disable past dates and Sundays
   const isDateDisabled = (date: Date) => {
