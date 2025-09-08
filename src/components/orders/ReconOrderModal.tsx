@@ -11,7 +11,9 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { Car, Calendar, FileText, Package } from 'lucide-react';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { formatVehicleDisplay, createVehicleDisplay } from '@/utils/vehicleUtils';
+import { Car, Calendar, FileText, Package, Building2 } from 'lucide-react';
 import type { ReconOrder } from '@/hooks/useReconOrderManagement';
 
 interface ReconOrderModalProps {
@@ -33,6 +35,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
   const { toast } = useToast();
   const { user } = useAuth();
   const { decodeVin, loading: isDecodingVin } = useVinDecoding();
+  const { dealerships, loading: loadingDealerships, filterByModule } = useAccessibleDealerships();
 
   const [formData, setFormData] = useState({
     stockNumber: '',
@@ -44,13 +47,13 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     status: 'pending',
     priority: 'normal',
     notes: '',
-    dueDate: '',
     assignedContactId: '',
     dealerId: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reconDealerships, setReconDealerships] = useState<any[]>([]);
 
   // Reset form when modal opens
   useEffect(() => {
@@ -66,7 +69,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           status: order.status || 'pending',
           priority: order.priority || 'normal',
           notes: order.notes || '',
-          dueDate: order.dueDate || '',
           assignedContactId: order.assignedContactId || '',
           dealerId: order.dealerId?.toString() || ''
         });
@@ -81,7 +83,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           status: 'pending',
           priority: 'normal',
           notes: '',
-          dueDate: '',
           assignedContactId: '',
           dealerId: ''
         });
@@ -89,6 +90,23 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
       setErrors({});
     }
   }, [isOpen, mode, order]);
+
+  // Load recon-enabled dealerships
+  useEffect(() => {
+    const loadReconDealerships = async () => {
+      if (!loadingDealerships && dealerships.length > 0) {
+        const filtered = await filterByModule('recon_orders');
+        setReconDealerships(filtered);
+        
+        // Auto-select if only one dealership available
+        if (filtered.length === 1 && !formData.dealerId) {
+          setFormData(prev => ({ ...prev, dealerId: filtered[0].id.toString() }));
+        }
+      }
+    };
+    
+    loadReconDealerships();
+  }, [dealerships, loadingDealerships, filterByModule]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -104,17 +122,14 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
       try {
         const decodedData = await decodeVin(vin);
         if (decodedData) {
+          // Auto-populate vehicle info field with decoded data including trim
+          const trimInfo = decodedData.trim ? ` (${decodedData.trim})` : '';
+          const vehicleDesc = `${decodedData.year || ''} ${decodedData.make || ''} ${decodedData.model || ''}${trimInfo}`.trim();
+          
           handleInputChange('vehicleYear', decodedData.year || '');
           handleInputChange('vehicleMake', decodedData.make || '');
           handleInputChange('vehicleModel', decodedData.model || '');
-          
-          const vehicleInfo = [
-            decodedData.vehicleType,
-            decodedData.bodyClass,
-            decodedData.trim
-          ].filter(Boolean).join(' • ');
-          
-          handleInputChange('vehicleInfo', vehicleInfo);
+          handleInputChange('vehicleInfo', vehicleDesc);
 
           toast({
             title: t('common.success'),
@@ -154,7 +169,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     }
 
     if (!formData.dealerId) {
-      newErrors.dealerId = t('orders.dealer_required');
+      newErrors.dealerId = t('recon.dealer_required');
     }
 
     setErrors(newErrors);
@@ -243,16 +258,17 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
+                  <Label htmlFor="vehicleDisplay">{t('recon.vehicle_display')}</Label>
                   <Input
-                    id="vehicleYear"
-                    value={formData.vehicleYear}
-                    onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
-                    placeholder={t('orders.year')}
-                    type="number"
-                    min="1900"
-                    max={new Date().getFullYear() + 1}
+                    id="vehicleDisplay"
+                    value={createVehicleDisplay(formData)}
+                    readOnly
+                    placeholder={t('recon.auto_generated_vehicle_info')}
+                    className="bg-muted"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('recon.updates_automatically')}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -295,6 +311,19 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                 </div>
 
                 <div>
+                  <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
+                  <Input
+                    id="vehicleYear"
+                    value={formData.vehicleYear}
+                    onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
+                    placeholder={t('orders.year')}
+                    type="number"
+                    min="1900"
+                    max={new Date().getFullYear() + 1}
+                  />
+                </div>
+
+                <div>
                   <Label htmlFor="vehicleInfo">{t('orders.additional_vehicle_info')}</Label>
                   <Input
                     id="vehicleInfo"
@@ -310,11 +339,46 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
+                  <Building2 className="h-4 w-4" />
                   {t('orders.order_management')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="dealerId">{t('orders.dealership')} *</Label>
+                  <Select
+                    value={formData.dealerId.toString()}
+                    onValueChange={(value) => handleInputChange('dealerId', value)}
+                    disabled={loadingDealerships}
+                  >
+                    <SelectTrigger className={errors.dealerId ? 'border-destructive' : ''}>
+                      <SelectValue placeholder={
+                        loadingDealerships 
+                          ? t('recon.loading_dealerships') 
+                          : reconDealerships.length === 0 
+                            ? t('recon.no_dealerships_with_recon_access')
+                            : t('orders.select_dealership')
+                      } />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {reconDealerships.map(dealer => (
+                        <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                          {dealer.name} - {dealer.city}, {dealer.state}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {loadingDealerships && (
+                    <p className="text-sm text-muted-foreground mt-1">{t('recon.loading_dealerships')}</p>
+                  )}
+                  {!loadingDealerships && reconDealerships.length === 0 && (
+                    <p className="text-sm text-muted-foreground mt-1">{t('recon.no_dealerships_with_recon_access')}</p>
+                  )}
+                  {errors.dealerId && (
+                    <p className="text-sm text-destructive mt-1">{errors.dealerId}</p>
+                  )}
+                </div>
+
                 <div>
                   <Label htmlFor="status">{t('orders.status')}</Label>
                   <Select
@@ -351,35 +415,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                       <SelectItem value="urgent">{t('orders.urgent')}</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="dueDate">{t('orders.due_date')}</Label>
-                  <Input
-                    id="dueDate"
-                    type="datetime-local"
-                    value={formData.dueDate}
-                    onChange={(e) => handleInputChange('dueDate', e.target.value)}
-                    placeholder={t('orders.select_due_date')}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="dealerId">{t('orders.dealership')} *</Label>
-                  <Select
-                    value={formData.dealerId.toString()}
-                    onValueChange={(value) => handleInputChange('dealerId', value)}
-                  >
-                    <SelectTrigger className={errors.dealerId ? 'border-destructive' : ''}>
-                      <SelectValue placeholder={t('orders.select_dealership')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">Main Dealership</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.dealerId && (
-                    <p className="text-sm text-destructive mt-1">{errors.dealerId}</p>
-                  )}
                 </div>
               </CardContent>
             </Card>

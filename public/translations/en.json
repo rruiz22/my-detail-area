@@ -253,7 +253,12 @@
     "error_submitting_order": "Error submitting recon order",
     "order_created_successfully": "Recon order created successfully",
     "order_updated_successfully": "Recon order updated successfully",
-    "order_deleted_successfully": "Recon order deleted successfully"
+    "order_deleted_successfully": "Recon order deleted successfully",
+    "vehicle_display": "Vehicle Display",
+    "auto_generated_vehicle_info": "Auto-generated from VIN decode",
+    "updates_automatically": "Updates automatically when vehicle details change",
+    "loading_dealerships": "Loading dealerships...",
+    "no_dealerships_with_recon_access": "No dealerships have access to recon orders module"
   },
       "recent_activity": "Recent Activity",
       "system": "System",
@@ -284,6 +289,7 @@
     "title": "Dealerships",
     "add_new": "Add New Dealership",
     "edit": "Edit Dealership",
+    "error_fetching_dealerships": "Error fetching dealerships",
     "name": "Dealership Name",
     "email": "Email",
     "phone": "Phone",

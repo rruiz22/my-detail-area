@@ -327,7 +327,6 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
           total_amount: orderData.totalAmount || orderData.reconCost,
           notes: orderData.notes,
           internal_notes: orderData.internalNotes,
-          due_date: orderData.dueDate,
           dealer_id: dealerIdNumber,
           assigned_contact_id: orderData.assignedContactId && orderData.assignedContactId !== "1" && orderData.assignedContactId !== 1 ? orderData.assignedContactId : null
         })
@@ -402,7 +401,6 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
           total_amount: orderData.totalAmount || orderData.reconCost,
           notes: orderData.notes,
           internal_notes: orderData.internalNotes,
-          due_date: orderData.dueDate,
           assigned_contact_id: orderData.assignedContactId
         })
         .eq('id', orderId)

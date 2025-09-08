@@ -225,7 +225,12 @@
     "error_submitting_order": "Error al enviar orden de recon",
     "order_created_successfully": "Orden de recon creada exitosamente",
     "order_updated_successfully": "Orden de recon actualizada exitosamente",
-    "order_deleted_successfully": "Orden de recon eliminada exitosamente"
+    "order_deleted_successfully": "Orden de recon eliminada exitosamente",
+    "vehicle_display": "Información del Vehículo",
+    "auto_generated_vehicle_info": "Generado automáticamente desde decodificación VIN",
+    "updates_automatically": "Se actualiza automáticamente cuando cambian los detalles del vehículo",
+    "loading_dealerships": "Cargando concesionarios...",
+    "no_dealerships_with_recon_access": "Ningún concesionario tiene acceso al módulo de órdenes de recon"
   },
       "recent_activity": "Actividad Reciente",
       "system": "Sistema",
