@@ -6,15 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
-import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { Car, DollarSign, Calendar, FileText, Package, AlertCircle } from 'lucide-react';
+import { Car, Calendar, FileText, Package } from 'lucide-react';
 import type { ReconOrder } from '@/hooks/useReconOrderManagement';
 
 interface ReconOrderModalProps {
@@ -47,14 +44,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     status: 'pending',
     priority: 'normal',
     notes: '',
-    internalNotes: '',
     dueDate: '',
-    // Recon-specific fields
-    acquisitionCost: '',
-    reconCost: '',
-    acquisitionSource: 'trade-in',
-    conditionGrade: 'good',
-    reconCategory: 'full-recon',
     assignedContactId: '',
     dealerId: 5 // TODO: Get from user profile
   });
@@ -76,13 +66,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           status: order.status || 'pending',
           priority: order.priority || 'normal',
           notes: order.notes || '',
-          internalNotes: order.internalNotes || '',
           dueDate: order.dueDate || '',
-          acquisitionCost: order.acquisitionCost?.toString() || '',
-          reconCost: order.reconCost?.toString() || '',
-          acquisitionSource: order.acquisitionSource || 'trade-in',
-          conditionGrade: order.conditionGrade || 'good',
-          reconCategory: order.reconCategory || 'full-recon',
           assignedContactId: order.assignedContactId || '',
           dealerId: order.dealerId || 5
         });
@@ -97,13 +81,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
           status: 'pending',
           priority: 'normal',
           notes: '',
-          internalNotes: '',
           dueDate: '',
-          acquisitionCost: '',
-          reconCost: '',
-          acquisitionSource: 'trade-in',
-          conditionGrade: 'good',
-          reconCategory: 'full-recon',
           assignedContactId: '',
           dealerId: 5
         });
@@ -175,14 +153,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
       newErrors.vehicleModel = t('orders.model_required');
     }
 
-    if (formData.acquisitionCost && isNaN(parseFloat(formData.acquisitionCost))) {
-      newErrors.acquisitionCost = t('recon.invalid_amount');
-    }
-
-    if (formData.reconCost && isNaN(parseFloat(formData.reconCost))) {
-      newErrors.reconCost = t('recon.invalid_amount');
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -205,9 +175,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
       const submitData = {
         ...formData,
         vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
-        totalAmount: formData.reconCost ? parseFloat(formData.reconCost) : undefined,
-        acquisitionCost: formData.acquisitionCost ? parseFloat(formData.acquisitionCost) : undefined,
-        reconCost: formData.reconCost ? parseFloat(formData.reconCost) : undefined,
       };
 
       await onSubmit(submitData);
@@ -221,7 +188,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
@@ -230,8 +197,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column - Vehicle Information */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Column 1 - Vehicle Identification */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -271,45 +238,56 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                   )}
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
-                  <div>
-                    <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
-                    <Input
-                      id="vehicleYear"
-                      value={formData.vehicleYear}
-                      onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
-                      placeholder={t('orders.year')}
-                      type="number"
-                      min="1900"
-                      max={new Date().getFullYear() + 1}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="vehicleMake">{t('orders.make')} *</Label>
-                    <Input
-                      id="vehicleMake"
-                      value={formData.vehicleMake}
-                      onChange={(e) => handleInputChange('vehicleMake', e.target.value)}
-                      placeholder={t('orders.make')}
-                      className={errors.vehicleMake ? 'border-destructive' : ''}
-                    />
-                    {errors.vehicleMake && (
-                      <p className="text-sm text-destructive mt-1">{errors.vehicleMake}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="vehicleModel">{t('orders.model')} *</Label>
-                    <Input
-                      id="vehicleModel"
-                      value={formData.vehicleModel}
-                      onChange={(e) => handleInputChange('vehicleModel', e.target.value)}
-                      placeholder={t('orders.model')}
-                      className={errors.vehicleModel ? 'border-destructive' : ''}
-                    />
-                    {errors.vehicleModel && (
-                      <p className="text-sm text-destructive mt-1">{errors.vehicleModel}</p>
-                    )}
-                  </div>
+                <div>
+                  <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
+                  <Input
+                    id="vehicleYear"
+                    value={formData.vehicleYear}
+                    onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
+                    placeholder={t('orders.year')}
+                    type="number"
+                    min="1900"
+                    max={new Date().getFullYear() + 1}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Column 2 - Vehicle Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Car className="h-4 w-4" />
+                  {t('orders.vehicle_details')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="vehicleMake">{t('orders.make')} *</Label>
+                  <Input
+                    id="vehicleMake"
+                    value={formData.vehicleMake}
+                    onChange={(e) => handleInputChange('vehicleMake', e.target.value)}
+                    placeholder={t('orders.make')}
+                    className={errors.vehicleMake ? 'border-destructive' : ''}
+                  />
+                  {errors.vehicleMake && (
+                    <p className="text-sm text-destructive mt-1">{errors.vehicleMake}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="vehicleModel">{t('orders.model')} *</Label>
+                  <Input
+                    id="vehicleModel"
+                    value={formData.vehicleModel}
+                    onChange={(e) => handleInputChange('vehicleModel', e.target.value)}
+                    placeholder={t('orders.model')}
+                    className={errors.vehicleModel ? 'border-destructive' : ''}
+                  />
+                  {errors.vehicleModel && (
+                    <p className="text-sm text-destructive mt-1">{errors.vehicleModel}</p>
+                  )}
                 </div>
 
                 <div>
@@ -324,121 +302,15 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
               </CardContent>
             </Card>
 
-            {/* Right Column - Recon Details */}
+            {/* Column 3 - Order Management */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  {t('recon.recon_details')}
+                  <Calendar className="h-4 w-4" />
+                  {t('orders.order_management')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <Label htmlFor="acquisitionSource">{t('recon.acquisition_source')}</Label>
-                    <Select
-                      value={formData.acquisitionSource}
-                      onValueChange={(value) => handleInputChange('acquisitionSource', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('recon.select_source')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="trade-in">{t('recon.trade_in')}</SelectItem>
-                        <SelectItem value="auction">{t('recon.auction')}</SelectItem>
-                        <SelectItem value="dealer-swap">{t('recon.dealer_swap')}</SelectItem>
-                        <SelectItem value="lease-return">{t('recon.lease_return')}</SelectItem>
-                        <SelectItem value="wholesale">{t('recon.wholesale')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="conditionGrade">{t('recon.condition_grade')}</Label>
-                    <Select
-                      value={formData.conditionGrade}
-                      onValueChange={(value) => handleInputChange('conditionGrade', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('recon.select_condition')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="excellent">{t('recon.excellent')}</SelectItem>
-                        <SelectItem value="good">{t('recon.good')}</SelectItem>
-                        <SelectItem value="fair">{t('recon.fair')}</SelectItem>
-                        <SelectItem value="poor">{t('recon.poor')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="reconCategory">{t('recon.recon_category')}</Label>
-                  <Select
-                    value={formData.reconCategory}
-                    onValueChange={(value) => handleInputChange('reconCategory', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('recon.select_category')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mechanical">{t('recon.mechanical_only')}</SelectItem>
-                      <SelectItem value="cosmetic">{t('recon.cosmetic_only')}</SelectItem>
-                      <SelectItem value="full-recon">{t('recon.full_recon')}</SelectItem>
-                      <SelectItem value="detail-only">{t('recon.detail_only')}</SelectItem>
-                      <SelectItem value="auction-ready">{t('recon.auction_ready')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <Label htmlFor="acquisitionCost">{t('recon.acquisition_cost')}</Label>
-                    <Input
-                      id="acquisitionCost"
-                      value={formData.acquisitionCost}
-                      onChange={(e) => handleInputChange('acquisitionCost', e.target.value)}
-                      placeholder="0.00"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      className={errors.acquisitionCost ? 'border-destructive' : ''}
-                    />
-                    {errors.acquisitionCost && (
-                      <p className="text-sm text-destructive mt-1">{errors.acquisitionCost}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="reconCost">{t('recon.estimated_recon_cost')}</Label>
-                    <Input
-                      id="reconCost"
-                      value={formData.reconCost}
-                      onChange={(e) => handleInputChange('reconCost', e.target.value)}
-                      placeholder="0.00"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      className={errors.reconCost ? 'border-destructive' : ''}
-                    />
-                    {errors.reconCost && (
-                      <p className="text-sm text-destructive mt-1">{errors.reconCost}</p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Full Width - Order Management */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                {t('orders.order_management')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="status">{t('orders.status')}</Label>
                   <Select
@@ -450,10 +322,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="pending">{t('orders.pending')}</SelectItem>
-                      <SelectItem value="in_progress">{t('orders.in_progress')}</SelectItem>
-                      <SelectItem value="needs_approval">{t('recon.needs_approval')}</SelectItem>
+                      <SelectItem value="in-progress">{t('orders.in_progress')}</SelectItem>
+                      <SelectItem value="needs-approval">{t('recon.needs_approval')}</SelectItem>
+                      <SelectItem value="ready-for-sale">{t('recon.ready_for_sale')}</SelectItem>
                       <SelectItem value="completed">{t('orders.completed')}</SelectItem>
-                      <SelectItem value="ready_for_sale">{t('recon.ready_for_sale')}</SelectItem>
                       <SelectItem value="cancelled">{t('orders.cancelled')}</SelectItem>
                     </SelectContent>
                   </Select>
@@ -469,27 +341,29 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                       <SelectValue placeholder={t('orders.select_priority')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">{t('orders.low_priority')}</SelectItem>
-                      <SelectItem value="normal">{t('orders.normal_priority')}</SelectItem>
-                      <SelectItem value="high">{t('orders.high_priority')}</SelectItem>
-                      <SelectItem value="urgent">{t('orders.urgent_priority')}</SelectItem>
+                      <SelectItem value="low">{t('orders.low')}</SelectItem>
+                      <SelectItem value="normal">{t('orders.normal')}</SelectItem>
+                      <SelectItem value="high">{t('orders.high')}</SelectItem>
+                      <SelectItem value="urgent">{t('orders.urgent')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
                   <Label htmlFor="dueDate">{t('orders.due_date')}</Label>
-                  <DueDateTimePicker
-                    value={formData.dueDate ? new Date(formData.dueDate) : undefined}
-                    onChange={(value) => handleInputChange('dueDate', value?.toISOString())}
+                  <Input
+                    id="dueDate"
+                    type="datetime-local"
+                    value={formData.dueDate}
+                    onChange={(e) => handleInputChange('dueDate', e.target.value)}
                     placeholder={t('orders.select_due_date')}
                   />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
 
-          {/* Full Width - Notes */}
+          {/* Notes Section - Full Width */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -497,7 +371,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                 {t('orders.notes_and_instructions')}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               <div>
                 <Label htmlFor="notes">{t('orders.public_notes')}</Label>
                 <Textarea
@@ -506,17 +380,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
                   onChange={(e) => handleInputChange('notes', e.target.value)}
                   placeholder={t('recon.recon_instructions')}
                   rows={3}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="internalNotes">{t('orders.internal_notes')}</Label>
-                <Textarea
-                  id="internalNotes"
-                  value={formData.internalNotes}
-                  onChange={(e) => handleInputChange('internalNotes', e.target.value)}
-                  placeholder={t('orders.internal_notes_placeholder')}
-                  rows={2}
                 />
               </div>
             </CardContent>
