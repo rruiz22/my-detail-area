@@ -508,6 +508,45 @@ export type Database = {
           },
         ]
       }
+      order_activity_log: {
+        Row: {
+          activity_type: string
+          created_at: string
+          description: string | null
+          field_name: string | null
+          id: string
+          metadata: Json | null
+          new_value: string | null
+          old_value: string | null
+          order_id: string
+          user_id: string | null
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          description?: string | null
+          field_name?: string | null
+          id?: string
+          metadata?: Json | null
+          new_value?: string | null
+          old_value?: string | null
+          order_id: string
+          user_id?: string | null
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          description?: string | null
+          field_name?: string | null
+          id?: string
+          metadata?: Json | null
+          new_value?: string | null
+          old_value?: string | null
+          order_id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       order_attachments: {
         Row: {
           created_at: string
