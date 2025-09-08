@@ -742,6 +742,125 @@ export type Database = {
         }
         Relationships: []
       }
+      sales_order_link_clicks: {
+        Row: {
+          browser: string | null
+          city: string | null
+          click_data: Json | null
+          clicked_at: string
+          country: string | null
+          device_type: string | null
+          id: string
+          ip_address: unknown | null
+          is_mobile: boolean | null
+          is_unique_click: boolean | null
+          link_id: string
+          os: string | null
+          referer: string | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          browser?: string | null
+          city?: string | null
+          click_data?: Json | null
+          clicked_at?: string
+          country?: string | null
+          device_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_mobile?: boolean | null
+          is_unique_click?: boolean | null
+          link_id: string
+          os?: string | null
+          referer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          browser?: string | null
+          city?: string | null
+          click_data?: Json | null
+          clicked_at?: string
+          country?: string | null
+          device_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_mobile?: boolean | null
+          is_unique_click?: boolean | null
+          link_id?: string
+          os?: string | null
+          referer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_order_link_clicks_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "sales_order_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_order_links: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dealer_id: number
+          deep_link: string
+          description: string | null
+          id: string
+          is_active: boolean
+          last_clicked_at: string | null
+          order_id: string
+          qr_code_url: string | null
+          short_url: string | null
+          slug: string
+          title: string | null
+          total_clicks: number
+          unique_clicks: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dealer_id: number
+          deep_link: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          last_clicked_at?: string | null
+          order_id: string
+          qr_code_url?: string | null
+          short_url?: string | null
+          slug: string
+          title?: string | null
+          total_clicks?: number
+          unique_clicks?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number
+          deep_link?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          last_clicked_at?: string | null
+          order_id?: string
+          qr_code_url?: string | null
+          short_url?: string | null
+          slug?: string
+          title?: string | null
+          total_clicks?: number
+          unique_clicks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_role_assignments: {
         Row: {
           assigned_at: string
@@ -810,6 +929,10 @@ export type Database = {
         Returns: boolean
       }
       generate_custom_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_unique_slug: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
