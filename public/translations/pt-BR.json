@@ -834,6 +834,25 @@
     "loading": "Carregando...",
     "empty_state": "Nenhum dado disponível"
   },
+  "attachments": {
+    "title": "Anexos",
+    "dragDropOrClick": "Arraste e solte arquivos aqui, ou clique para selecionar",
+    "dropFiles": "Solte os arquivos aqui...",
+    "supportedFormats": "Imagens, PDFs, Documentos, Arquivos de texto",
+    "maxFileSize": "Tamanho máximo: 10MB",
+    "uploading": "Enviando arquivo...",
+    "uploadSuccess": "{{fileName}} enviado com sucesso",
+    "uploadFailed": "Falha ao enviar {{fileName}}",
+    "uploadNotAllowed": "Você não tem permissão para enviar arquivos",
+    "fileTooLarge": "{{fileName}} é muito grande (máx 10MB)",
+    "unsupportedFileType": "{{fileName}} tem um tipo de arquivo não suportado",
+    "attachedFiles": "Arquivos Anexados",
+    "deleteSuccess": "Arquivo excluído com sucesso",
+    "deleteFailed": "Falha ao excluir arquivo",
+    "deleteNotAllowed": "Você não tem permissão para excluir arquivos",
+    "downloadFailed": "Falha ao baixar arquivo",
+    "loadError": "Falha ao carregar anexos"
+  },
   "landing": {
     "welcome": "Bem-vindo ao Sistema de Gestão",
     "description": "Faça login para acessar revendedores, contatos e mais funcionalidades",

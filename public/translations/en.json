@@ -871,6 +871,24 @@
     "loading": "Loading...",
     "empty_state": "No data available"
   },
+  "attachments": {
+    "title": "Attachments",
+    "dragDropOrClick": "Drag & drop files here, or click to select",
+    "dropFiles": "Drop files here...",
+    "supportedFormats": "Images, PDFs, Documents, Text files",
+    "maxFileSize": "Max file size: 10MB",
+    "uploading": "Uploading file...",
+    "uploadSuccess": "{{fileName}} uploaded successfully",
+    "uploadFailed": "Failed to upload {{fileName}}",
+    "uploadNotAllowed": "You don't have permission to upload files",
+    "fileTooLarge": "{{fileName}} is too large (max 10MB)",
+    "unsupportedFileType": "{{fileName}} has an unsupported file type",
+    "attachedFiles": "Attached Files",
+    "deleteSuccess": "File deleted successfully",
+    "deleteFailed": "Failed to delete file",
+    "deleteNotAllowed": "You don't have permission to delete files",
+    "loadError": "Failed to load attachments"
+  },
   "landing": {
     "welcome": "Welcome to the Management System",
     "description": "Sign in to access dealers, contacts and more features",

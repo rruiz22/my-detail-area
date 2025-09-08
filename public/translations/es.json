@@ -834,6 +834,25 @@
     "loading": "Cargando...",
     "empty_state": "No hay datos disponibles"
   },
+  "attachments": {
+    "title": "Archivos Adjuntos",
+    "dragDropOrClick": "Arrastra y suelta archivos aquí, o haz clic para seleccionar",
+    "dropFiles": "Suelta los archivos aquí...",
+    "supportedFormats": "Imágenes, PDFs, Documentos, Archivos de texto",
+    "maxFileSize": "Tamaño máximo: 10MB",
+    "uploading": "Subiendo archivo...",
+    "uploadSuccess": "{{fileName}} subido exitosamente",
+    "uploadFailed": "Error al subir {{fileName}}",
+    "uploadNotAllowed": "No tienes permisos para subir archivos",
+    "fileTooLarge": "{{fileName}} es demasiado grande (máx 10MB)",
+    "unsupportedFileType": "{{fileName}} tiene un tipo de archivo no soportado",
+    "attachedFiles": "Archivos Adjuntos",
+    "deleteSuccess": "Archivo eliminado exitosamente",
+    "deleteFailed": "Error al eliminar archivo",
+    "deleteNotAllowed": "No tienes permisos para eliminar archivos",
+    "downloadFailed": "Error al descargar archivo",
+    "loadError": "Error al cargar archivos adjuntos"
+  },
   "landing": {
     "welcome": "Bienvenido al Sistema de Gestión",
     "description": "Inicia sesión para acceder a dealers, contactos y más funciones",

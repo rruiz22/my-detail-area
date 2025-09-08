@@ -19,7 +19,8 @@ import {
   FileText,
   MapPin,
   Phone,
-  Mail
+  Mail,
+  Paperclip
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -29,6 +30,21 @@ import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { OrderComments } from './OrderComments';
 import { QRCodeDisplay } from './QRCodeDisplay';
 import { CommunicationActions } from './CommunicationActions';
+import { AttachmentUploader } from './AttachmentUploader';
+
+interface OrderAttachment {
+  id: string;
+  order_id: string;
+  file_name: string;
+  file_path: string;
+  file_size: number;
+  mime_type: string;
+  uploaded_by: string;
+  upload_context: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 interface EnhancedOrderDetailModalProps {
   order: any;
@@ -53,11 +69,14 @@ export function EnhancedOrderDetailModal({
   const [editingInternalNotes, setEditingInternalNotes] = useState(false);
   const [notes, setNotes] = useState(order?.notes || '');
   const [internalNotes, setInternalNotes] = useState(order?.internal_notes || '');
+  const [attachments, setAttachments] = useState<OrderAttachment[]>([]);
+  const [loadingAttachments, setLoadingAttachments] = useState(false);
 
   useEffect(() => {
     if (order) {
       setNotes(order.notes || '');
       setInternalNotes(order.internal_notes || '');
+      fetchAttachments();
     }
     checkUserType();
   }, [order]);
@@ -105,6 +124,35 @@ export function EnhancedOrderDetailModal({
       console.error('Error updating notes:', error);
       toast.error(t('messages.error_updating_notes'));
     }
+  };
+
+  const fetchAttachments = async () => {
+    if (!order?.id) return;
+    
+    setLoadingAttachments(true);
+    try {
+      const { data, error } = await supabase
+        .from('order_attachments')
+        .select('*')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAttachments(data || []);
+    } catch (error) {
+      console.error('Error fetching attachments:', error);
+      toast.error(t('attachments.loadError'));
+    } finally {
+      setLoadingAttachments(false);
+    }
+  };
+
+  const handleAttachmentUploaded = (newAttachment: OrderAttachment) => {
+    setAttachments((prev) => [newAttachment, ...prev]);
+  };
+
+  const handleAttachmentDeleted = (attachmentId: string) => {
+    setAttachments((prev) => prev.filter(att => att.id !== attachmentId));
   };
 
   const formatCurrency = (amount: number | null | undefined) => {
@@ -471,6 +519,26 @@ export function EnhancedOrderDetailModal({
                   order.short_link = shortLink;
                 }}
               />
+
+              {/* Attachments Section */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Paperclip className="w-5 h-5" />
+                    {t('attachments.title')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AttachmentUploader
+                    orderId={order.id}
+                    attachments={attachments}
+                    onAttachmentUploaded={handleAttachmentUploaded}
+                    onAttachmentDeleted={handleAttachmentDeleted}
+                    canUpload={true}
+                    canDelete={true}
+                  />
+                </CardContent>
+              </Card>
 
               {/* Communication Actions */}
               <Card className="p-4">
