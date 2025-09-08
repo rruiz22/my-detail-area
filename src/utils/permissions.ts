@@ -1,11 +1,12 @@
 import { UserRole } from '@/hooks/usePermissions';
 
 /**
- * Check if user can view pricing information
- * Only admin and manager roles can see prices
+ * Check if user can view pricing information and manage categories
+ * Only system admin and manager roles can see prices and manage categories
  */
 export const canViewPricing = (roles: UserRole[]): boolean => {
   return roles.some(role => 
+    role.role_name === 'system_admin' ||
     role.role_name === 'dealer_admin' || 
     role.role_name === 'dealer_manager' ||
     role.role_name === 'detail_super_manager' ||
