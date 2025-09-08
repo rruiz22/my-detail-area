@@ -1151,6 +1151,7 @@ export type Database = {
         | "settings"
         | "dealerships"
         | "users"
+        | "management"
       contact_department: "sales" | "service" | "parts" | "management" | "other"
       dealer_role:
         | "salesperson"
@@ -1310,6 +1311,7 @@ export const Constants = {
         "settings",
         "dealerships",
         "users",
+        "management",
       ],
       contact_department: ["sales", "service", "parts", "management", "other"],
       dealer_role: [

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '../utils/test-utils';
-import { screen } from '@testing-library/dom';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { usePermissions } from '@/hooks/usePermissions';
 
@@ -20,13 +19,14 @@ describe('PermissionGuard Component', () => {
       loading: true,
     });
 
-    render(
+    const { container } = render(
       <PermissionGuard module="dashboard" permission="read">
         <div>Protected Content</div>
       </PermissionGuard>
     );
 
-    expect(screen.getByRole('generic')).toHaveClass('animate-pulse');
+    const loadingElement = container.querySelector('.animate-pulse');
+    expect(loadingElement).toBeInTheDocument();
   });
 
   it('renders children when user has required permission', () => {
@@ -35,13 +35,13 @@ describe('PermissionGuard Component', () => {
       loading: false,
     });
 
-    render(
+    const { getByText } = render(
       <PermissionGuard module="dashboard" permission="read">
         <div>Protected Content</div>
       </PermissionGuard>
     );
 
-    expect(screen.getByText('Protected Content')).toBeInTheDocument();
+    expect(getByText('Protected Content')).toBeInTheDocument();
   });
 
   it('renders fallback when user lacks permission', () => {
@@ -50,7 +50,7 @@ describe('PermissionGuard Component', () => {
       loading: false,
     });
 
-    render(
+    const { getByText, queryByText } = render(
       <PermissionGuard 
         module="dashboard" 
         permission="admin" 
@@ -60,8 +60,8 @@ describe('PermissionGuard Component', () => {
       </PermissionGuard>
     );
 
-    expect(screen.getByText('Access Denied')).toBeInTheDocument();
-    expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
+    expect(getByText('Access Denied')).toBeInTheDocument();
+    expect(queryByText('Protected Content')).not.toBeInTheDocument();
   });
 
   it('renders nothing when no fallback and no permission', () => {
