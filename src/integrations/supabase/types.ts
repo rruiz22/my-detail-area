@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      category_module_mappings: {
+        Row: {
+          category_id: string
+          created_at: string
+          dealer_id: number | null
+          id: string
+          is_active: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          dealer_id?: number | null
+          id?: string
+          is_active?: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          dealer_id?: number | null
+          id?: string
+          is_active?: boolean
+          module?: Database["public"]["Enums"]["app_module"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_module_mappings_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_groups: {
         Row: {
           created_at: string
@@ -227,7 +265,7 @@ export type Database = {
       }
       dealer_services: {
         Row: {
-          category: string | null
+          category_id: string
           created_at: string
           dealer_id: number
           description: string | null
@@ -239,7 +277,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          category?: string | null
+          category_id: string
           created_at?: string
           dealer_id: number
           description?: string | null
@@ -251,7 +289,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          category?: string | null
+          category_id?: string
           created_at?: string
           dealer_id?: number
           description?: string | null
@@ -262,7 +300,15 @@ export type Database = {
           price?: number | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "dealer_services_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       dealership_contacts: {
         Row: {
@@ -1119,6 +1165,48 @@ export type Database = {
         }
         Relationships: []
       }
+      service_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          dealer_id: number | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          is_system_category: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_system_category?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_system_category?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_role_assignments: {
         Row: {
           assigned_at: string
@@ -1217,6 +1305,20 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_dealer_categories_for_module: {
+        Args: {
+          p_dealer_id: number
+          p_module: Database["public"]["Enums"]["app_module"]
+        }
+        Returns: {
+          color: string
+          description: string
+          icon: string
+          id: string
+          is_system_category: boolean
+          name: string
+        }[]
+      }
       get_dealer_kpis: {
         Args: { p_dealer_id: number }
         Returns: {
@@ -1234,7 +1336,8 @@ export type Database = {
         Args: { p_dealer_id: number }
         Returns: {
           assigned_groups: string[]
-          category: string
+          category_color: string
+          category_name: string
           created_at: string
           dealer_id: number
           description: string
