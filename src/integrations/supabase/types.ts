@@ -849,6 +849,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin: {
+        Args: { user_id?: string }
+        Returns: boolean
+      }
       set_membership_groups: {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
@@ -860,6 +864,10 @@ export type Database = {
           target_dealer_id: number
           user_uuid: string
         }
+        Returns: boolean
+      }
+      user_has_active_dealer_membership: {
+        Args: { target_dealer_id?: number; user_id?: string }
         Returns: boolean
       }
       user_has_dealer_membership: {
@@ -879,6 +887,14 @@ export type Database = {
           module_name: string
           target_dealer_id: number
           user_uuid: string
+        }
+        Returns: boolean
+      }
+      user_has_order_permission: {
+        Args: {
+          permission_name?: string
+          target_dealer_id?: number
+          user_id?: string
         }
         Returns: boolean
       }
