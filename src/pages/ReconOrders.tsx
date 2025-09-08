@@ -74,6 +74,8 @@ export default function ReconOrders() {
       description: t('common.feature_coming_soon'),
     });
   };
+
+  const handleSubmitOrder = async (orderData: any) => {
     try {
       if (editMode === 'create') {
         await createOrder(orderData);
