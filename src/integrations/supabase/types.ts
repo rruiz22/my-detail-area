@@ -591,6 +591,77 @@ export type Database = {
           },
         ]
       }
+      order_communications: {
+        Row: {
+          attachments: Json | null
+          content: string | null
+          created_at: string
+          edited_at: string | null
+          id: string
+          is_edited: boolean | null
+          is_internal: boolean | null
+          mentions: Json | null
+          message_type: string
+          order_id: string
+          parent_message_id: string | null
+          reactions: Json | null
+          reply_count: number | null
+          updated_at: string
+          user_id: string
+          voice_duration_ms: number | null
+          voice_file_path: string | null
+          voice_transcription: string | null
+        }
+        Insert: {
+          attachments?: Json | null
+          content?: string | null
+          created_at?: string
+          edited_at?: string | null
+          id?: string
+          is_edited?: boolean | null
+          is_internal?: boolean | null
+          mentions?: Json | null
+          message_type?: string
+          order_id: string
+          parent_message_id?: string | null
+          reactions?: Json | null
+          reply_count?: number | null
+          updated_at?: string
+          user_id: string
+          voice_duration_ms?: number | null
+          voice_file_path?: string | null
+          voice_transcription?: string | null
+        }
+        Update: {
+          attachments?: Json | null
+          content?: string | null
+          created_at?: string
+          edited_at?: string | null
+          id?: string
+          is_edited?: boolean | null
+          is_internal?: boolean | null
+          mentions?: Json | null
+          message_type?: string
+          order_id?: string
+          parent_message_id?: string | null
+          reactions?: Json | null
+          reply_count?: number | null
+          updated_at?: string
+          user_id?: string
+          voice_duration_ms?: number | null
+          voice_file_path?: string | null
+          voice_transcription?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_communications_parent_message_id_fkey"
+            columns: ["parent_message_id"]
+            isOneToOne: false
+            referencedRelation: "order_communications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           assigned_contact_id: string | null

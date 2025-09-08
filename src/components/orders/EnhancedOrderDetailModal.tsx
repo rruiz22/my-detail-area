@@ -27,7 +27,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
-import { OrderComments } from './OrderComments';
+import { CommunicationHub } from './communication/CommunicationHub';
+import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
 import { QRCodeDisplay } from './QRCodeDisplay';
 import { CommunicationActions } from './CommunicationActions';
 import { AttachmentUploader } from './AttachmentUploader';
@@ -175,53 +176,20 @@ export function EnhancedOrderDetailModal({
   if (!order) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <DialogHeader className="border-b pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <DialogTitle className="text-2xl">
-                {order.custom_order_number || order.order_number}
-              </DialogTitle>
-              <StatusBadgeInteractive
-                status={order.status}
-                orderId={order.id}
-                dealerId={order.dealer_id}
-                canUpdateStatus={true}
-                onStatusChange={handleStatusChange}
-              />
-              <Badge variant={getPriorityColor(order.priority)}>
-                {order.priority || 'normal'}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              {onEdit && (
-                <Button variant="outline" size="sm" onClick={() => onEdit(order)}>
-                  <Edit2 className="w-4 h-4 mr-1" />
-                  {t('common.edit')}
-                </Button>
-              )}
-              {onDelete && (
-                <Button 
-                  variant="destructive" 
-                  size="sm" 
-                  onClick={() => onDelete(order.id)}
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  {t('common.delete')}
-                </Button>
-              )}
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </DialogHeader>
-
-        {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
-          <div className="h-full grid grid-cols-12 gap-6 p-6">
+    <EnhancedOrderDetailLayout
+      order={order}
+      open={open}
+      onClose={onClose}
+      onEdit={onEdit}
+      onDelete={onDelete}
+      onStatusChange={onStatusChange}
+    >
+      <CommunicationHub 
+        orderId={order.id}
+        isDetailUser={isDetailUser}
+      />
+    </EnhancedOrderDetailLayout>
+  );
             {/* Left Column - Order Details */}
             <div className="col-span-5 space-y-4 overflow-y-auto">
               {/* Customer Information */}
