@@ -21,10 +21,20 @@ interface DealerService {
   name: string;
   description?: string;
   price?: number;
-  category: string;
+  category_name: string;
+  category_color: string;
   duration?: number;
   is_active: boolean;
   assigned_groups: string[];
+}
+
+interface ServiceCategory {
+  id: string;
+  name: string;
+  description?: string;
+  is_system_category: boolean;
+  color: string;
+  icon?: string;
 }
 
 interface DealerGroup {
@@ -37,9 +47,7 @@ interface DealerServicesProps {
   dealerId: string;
 }
 
-const serviceCategories = [
-  'general', 'wash', 'detail', 'protection', 'repair', 'maintenance', 'custom'
-];
+// Remove hardcoded categories - will fetch from database
 
 export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const { t } = useTranslation();
@@ -47,6 +55,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const { permissions, roles } = usePermissionContext();
   const [services, setServices] = useState<DealerService[]>([]);
   const [groups, setGroups] = useState<DealerGroup[]>([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<DealerService | null>(null);
@@ -58,7 +67,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     name: '',
     description: '',
     price: '',
-    category: 'general',
+    category_id: '',
     duration: '',
     is_active: true,
     assigned_groups: [] as string[]
@@ -72,6 +81,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   useEffect(() => {
     fetchServices();
     fetchGroups();
+    fetchCategories();
   }, [dealerId]);
 
   const fetchServices = async () => {
@@ -108,6 +118,29 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      // Fetch categories available for all modules (for services management)
+      const { data, error } = await supabase
+        .from('service_categories')
+        .select('id, name, description, is_system_category, color, icon')
+        .eq('is_active', true)
+        .or(`is_system_category.eq.true,dealer_id.eq.${dealerId}`)
+        .order('is_system_category', { ascending: false })
+        .order('name');
+
+      if (error) throw error;
+      setCategories(data || []);
+      
+      // Set default category_id to the first available category
+      if (data && data.length > 0 && !formData.category_id) {
+        setFormData(prev => ({ ...prev, category_id: data[0].id }));
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -116,7 +149,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         name: formData.name,
         description: formData.description || null,
         price: formData.price ? parseFloat(formData.price) : null,
-        category: formData.category,
+        category_id: formData.category_id,
         duration: formData.duration ? parseInt(formData.duration) : null,
         is_active: formData.is_active,
         dealer_id: parseInt(dealerId)
@@ -208,11 +241,12 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   };
 
   const resetForm = () => {
+    const defaultCategoryId = categories.length > 0 ? categories[0].id : '';
     setFormData({
       name: '',
       description: '',
       price: '',
-      category: 'general',
+      category_id: defaultCategoryId,
       duration: '',
       is_active: true,
       assigned_groups: []
@@ -222,11 +256,13 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
   const openEditModal = (service: DealerService) => {
     setEditingService(service);
+    // Find category by name to get the ID
+    const category = categories.find(cat => cat.name.toLowerCase() === service.category_name.toLowerCase());
     setFormData({
       name: service.name,
       description: service.description || '',
       price: service.price?.toString() || '',
-      category: service.category,
+      category_id: category?.id || '',
       duration: service.duration?.toString() || '',
       is_active: service.is_active,
       assigned_groups: service.assigned_groups
@@ -237,21 +273,16 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const filteredServices = services.filter(service => {
     const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          service.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
+    const matchesCategory = filterCategory === 'all' || service.category_name.toLowerCase() === filterCategory.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
-  const getCategoryBadgeColor = (category: string) => {
-    const colors: Record<string, string> = {
-      general: 'bg-secondary',
-      wash: 'bg-blue-100 text-blue-800',
-      detail: 'bg-green-100 text-green-800',
-      protection: 'bg-purple-100 text-purple-800',
-      repair: 'bg-red-100 text-red-800',
-      maintenance: 'bg-yellow-100 text-yellow-800',
-      custom: 'bg-gray-100 text-gray-800'
+  const getCategoryBadgeStyle = (color: string) => {
+    return {
+      backgroundColor: color + '20', // Add transparency
+      color: color,
+      border: `1px solid ${color}40`
     };
-    return colors[category] || colors.general;
   };
 
   if (loading) {
@@ -299,16 +330,25 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   
                   <div>
                     <Label htmlFor="category">{t('services.category')}</Label>
-                    <Select value={formData.category} onValueChange={(value) => 
-                      setFormData(prev => ({ ...prev, category: value }))
+                    <Select value={formData.category_id} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, category_id: value }))
                     }>
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue placeholder="Select category..." />
                       </SelectTrigger>
                       <SelectContent>
-                        {serviceCategories.map(category => (
-                          <SelectItem key={category} value={category}>
-                            {t(`services.categories.${category}`)}
+                        {categories.map(category => (
+                          <SelectItem key={category.id} value={category.id}>
+                            <div className="flex items-center space-x-2">
+                              <div 
+                                className="w-3 h-3 rounded-full" 
+                                style={{ backgroundColor: category.color }}
+                              />
+                              <span>{category.name}</span>
+                              {!category.is_system_category && (
+                                <Badge variant="outline" className="text-xs">Custom</Badge>
+                              )}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -423,9 +463,15 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t('services.allCategories')}</SelectItem>
-            {serviceCategories.map(category => (
-              <SelectItem key={category} value={category}>
-                {t(`services.categories.${category}`)}
+            {categories.map(category => (
+              <SelectItem key={category.name} value={category.name}>
+                <div className="flex items-center space-x-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: category.color }}
+                  />
+                  <span>{category.name}</span>
+                </div>
               </SelectItem>
             ))}
           </SelectContent>
@@ -456,8 +502,8 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                 )}
               </div>
               
-              <Badge className={getCategoryBadgeColor(service.category)}>
-                {t(`services.categories.${service.category}`)}
+              <Badge style={getCategoryBadgeStyle(service.category_color)}>
+                {service.category_name}
               </Badge>
             </CardHeader>
             
