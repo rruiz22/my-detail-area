@@ -1253,6 +1253,10 @@ export type Database = {
         Args: { due_date_param: string }
         Returns: boolean
       }
+      validate_order_due_date_v2: {
+        Args: { due_date_param: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_module:
