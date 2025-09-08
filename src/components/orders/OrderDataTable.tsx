@@ -30,6 +30,7 @@ import {
   Loader2 
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { safeParseDate } from '@/utils/dateUtils';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -132,7 +133,11 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
   };
 
   const formatDueDate = (date: string) => {
-    const orderDate = new Date(date);
+    const orderDate = safeParseDate(date);
+    if (!orderDate) {
+      return { text: 'N/A', variant: 'secondary' as const };
+    }
+    
     const today = new Date();
     const diffTime = orderDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

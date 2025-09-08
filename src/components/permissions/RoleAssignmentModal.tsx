@@ -8,6 +8,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, X } from 'lucide-react';
 import { format } from 'date-fns';
+import { safeParseDate } from '@/utils/dateUtils';
 import { supabase } from '@/integrations/supabase/client';
 import { usePermissions, UserRole } from '@/hooks/usePermissions';
 import { useToast } from '@/hooks/use-toast';
@@ -198,7 +199,7 @@ export const RoleAssignmentModal: React.FC<RoleAssignmentModalProps> = ({
                       </Badge>
                       {userRole.expires_at && (
                         <p className="text-xs text-muted-foreground">
-                          Expires: {format(new Date(userRole.expires_at), 'PPP')}
+                          Expires: {userRole.expires_at ? format(safeParseDate(userRole.expires_at) || new Date(), 'PPP') : 'Never'}
                         </p>
                       )}
                     </div>

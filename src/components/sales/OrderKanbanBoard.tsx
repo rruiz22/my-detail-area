@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
 import { Order } from '@/hooks/useOrderManagement';
+import { safeFormatDateOnly, calculateDaysFromNow } from '@/utils/dateUtils';
 
 interface OrderKanbanBoardProps {
   orders: Order[];
@@ -134,10 +135,8 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
   const formatDueDate = (dueDate?: string) => {
     if (!dueDate) return null;
     
-    const date = new Date(dueDate);
-    const now = new Date();
-    const diffTime = date.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = calculateDaysFromNow(dueDate);
+    if (diffDays === null) return null;
     
     if (diffDays < 0) {
       return { text: 'Overdue', variant: 'destructive' as const, days: Math.abs(diffDays) };
@@ -293,7 +292,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                           </AvatarFallback>
                         </Avatar>
                         <div className="text-xs text-muted-foreground ml-2">
-                          {new Date(order.createdAt).toLocaleDateString()}
+                          {safeFormatDateOnly(order.createdAt)}
                         </div>
                       </div>
                     </CardContent>

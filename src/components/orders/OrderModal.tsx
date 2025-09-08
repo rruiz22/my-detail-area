@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { safeParseDate } from '@/utils/dateUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -72,7 +73,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           orderType: order.orderType || 'sales',
           status: order.status || 'pending',
           notes: order.notes || '',
-          dueDate: order.dueDate ? new Date(order.dueDate) : undefined
+          dueDate: order.dueDate ? safeParseDate(order.dueDate) || undefined : undefined
         });
         setSelectedServices(order.services || []);
         setSelectedDealership(order.dealerId?.toString() || '');

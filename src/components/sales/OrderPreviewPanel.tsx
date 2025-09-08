@@ -20,6 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Order } from '@/hooks/useOrderManagement';
+import { safeFormatDate, calculateDaysFromNow } from '@/utils/dateUtils';
 
 interface OrderPreviewPanelProps {
   order: Order | null;
@@ -43,10 +44,8 @@ export function OrderPreviewPanel({
   const formatDueDate = (dueDate?: string) => {
     if (!dueDate) return null;
     
-    const date = new Date(dueDate);
-    const now = new Date();
-    const diffTime = date.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = calculateDaysFromNow(dueDate);
+    if (diffDays === null) return null;
     
     if (diffDays < 0) {
       return { 
@@ -213,13 +212,13 @@ export function OrderPreviewPanel({
 
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Created:</span>
-                <span className="text-sm">{new Date(order.createdAt).toLocaleString()}</span>
+                <span className="text-sm">{safeFormatDate(order.createdAt)}</span>
               </div>
 
               {order.updatedAt && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Updated:</span>
-                  <span className="text-sm">{new Date(order.updatedAt).toLocaleString()}</span>
+                  <span className="text-sm">{safeFormatDate(order.updatedAt)}</span>
                 </div>
               )}
 

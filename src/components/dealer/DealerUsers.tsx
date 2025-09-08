@@ -42,6 +42,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { safeFormatDateOnly } from '@/utils/dateUtils';
 
 interface DealerUsersProps {
   dealerId: string;
@@ -350,7 +351,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {new Date(user.joined_at).toLocaleDateString()}
+                      {safeFormatDateOnly(user.joined_at)}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
