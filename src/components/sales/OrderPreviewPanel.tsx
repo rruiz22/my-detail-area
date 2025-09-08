@@ -90,7 +90,7 @@ export function OrderPreviewPanel({
         <SheetHeader className="space-y-4">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-xl font-semibold">
-              Order #{order.id}
+              Order #{order.customOrderNumber || order.id}
             </SheetTitle>
             <Button
               variant="outline"
@@ -106,7 +106,7 @@ export function OrderPreviewPanel({
           {/* Status & Due Date */}
           <div className="flex items-center gap-3">
             <StatusBadgeInteractive
-              status={order.status as "Pending" | "In Progress" | "Complete" | "Cancelled"}
+              status={order.status}
               orderId={order.id}
               dealerId="1"
               canUpdateStatus={true}

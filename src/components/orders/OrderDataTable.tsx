@@ -208,7 +208,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                   />
                 </TableCell>
                 <TableCell className="font-medium text-foreground">
-                  {order.id}
+                  {order.customOrderNumber || order.id}
                 </TableCell>
                 <TableCell className="text-foreground">
                   {order.stock || 'N/A'}

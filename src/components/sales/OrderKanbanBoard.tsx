@@ -47,7 +47,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
     {
       id: 'pending',
       title: 'Pending',
-      status: ['pending', 'Pending'],
+      status: ['pending'],
       color: 'text-warning',
       bgColor: 'bg-warning/10',
       icon: AlertTriangle
@@ -55,7 +55,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
     {
       id: 'in_process',
       title: 'In Process',
-      status: ['in_process', 'In Process', 'in_progress', 'In Progress'],
+      status: ['in_progress'],
       color: 'text-primary',
       bgColor: 'bg-primary/10',
       icon: Clock
@@ -63,7 +63,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
     {
       id: 'complete',
       title: 'Complete',
-      status: ['complete', 'Complete', 'completed', 'Completed'],
+      status: ['completed'],
       color: 'text-success',
       bgColor: 'bg-success/10',
       icon: Calendar
@@ -71,7 +71,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
     {
       id: 'cancelled',
       title: 'Cancelled',
-      status: ['cancelled', 'Cancelled'],
+      status: ['cancelled'],
       color: 'text-destructive',
       bgColor: 'bg-destructive/10',
       icon: AlertTriangle
@@ -99,20 +99,20 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
   const handleDrop = (e: React.DragEvent, targetColumnId: string) => {
     e.preventDefault();
     if (draggedOrder && onStatusChange) {
-      // Map column IDs to actual status values
+      // Map column IDs to actual status values that match database constraint
       let newStatus = targetColumnId;
       switch (targetColumnId) {
         case 'pending':
-          newStatus = 'Pending';
+          newStatus = 'pending';
           break;
         case 'in_process':
-          newStatus = 'In Process';
+          newStatus = 'in_progress';
           break;
         case 'complete':
-          newStatus = 'Complete';
+          newStatus = 'completed';
           break;
         case 'cancelled':
-          newStatus = 'Cancelled';
+          newStatus = 'cancelled';
           break;
         default:
           newStatus = targetColumnId;
@@ -202,9 +202,9 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                       {/* Order Header */}
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <div className="font-medium text-sm text-foreground">
-                            #{order.id}
-                          </div>
+                           <div className="font-medium text-sm text-foreground">
+                             #{order.customOrderNumber || order.id}
+                           </div>
                           <div className="text-xs text-muted-foreground">
                             {order.stockNumber && `Stock: ${order.stockNumber}`}
                           </div>

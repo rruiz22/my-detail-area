@@ -18,7 +18,7 @@ export interface Order {
   vehicleInfo?: string;
   vin?: string;
   stockNumber?: string;
-  status: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   priority?: string;
   dueDate?: string;
   createdAt: string;
@@ -28,6 +28,7 @@ export interface Order {
   orderType?: string;
   assignedTo?: string;
   notes?: string;
+  customOrderNumber?: string;
 }
 
 // Transform Supabase order to component order
@@ -42,7 +43,7 @@ const transformOrder = (supabaseOrder: SupabaseOrder): Order => ({
   vehicleInfo: supabaseOrder.vehicle_info || undefined,
   vin: supabaseOrder.vehicle_vin || undefined,
   stockNumber: supabaseOrder.stock_number || undefined,
-  status: supabaseOrder.status,
+  status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
   priority: supabaseOrder.priority || undefined,
   dueDate: supabaseOrder.sla_deadline || undefined,
   createdAt: supabaseOrder.created_at,
@@ -52,6 +53,7 @@ const transformOrder = (supabaseOrder: SupabaseOrder): Order => ({
   orderType: supabaseOrder.order_type || undefined,
   assignedTo: undefined, // Not in Supabase schema yet
   notes: undefined, // Not in Supabase schema yet
+  customOrderNumber: supabaseOrder.custom_order_number || undefined,
 });
 
 export const useOrderManagement = (activeTab: string) => {
@@ -93,7 +95,7 @@ export const useOrderManagement = (activeTab: string) => {
         return orderDate.toDateString() === tomorrow.toDateString();
       }).length,
       pending: allOrders.filter(order => order.status === 'pending').length,
-      in_process: allOrders.filter(order => order.status === 'in_process').length,
+      in_process: allOrders.filter(order => order.status === 'in_progress').length,
       complete: allOrders.filter(order => order.status === 'completed').length,
       cancelled: allOrders.filter(order => order.status === 'cancelled').length,
       week: allOrders.filter(order => {
@@ -132,7 +134,7 @@ export const useOrderManagement = (activeTab: string) => {
           filtered = filtered.filter(order => order.status === 'pending');
           break;
         case 'in_process':
-          filtered = filtered.filter(order => order.status === 'in_process');
+          filtered = filtered.filter(order => order.status === 'in_progress');
           break;
         case 'complete':
           filtered = filtered.filter(order => order.status === 'completed');
@@ -230,7 +232,7 @@ export const useOrderManagement = (activeTab: string) => {
     
     try {
       const newOrder = {
-        order_number: `ORD-${Date.now()}`,
+        order_number: `ORD-${Date.now()}`, // Keep for compatibility
         customer_name: orderData.customerName,
         customer_email: orderData.customerEmail,
         customer_phone: orderData.customerPhone,

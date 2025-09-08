@@ -467,6 +467,7 @@ export type Database = {
           completed_at: string | null
           created_at: string
           created_by_group_id: string | null
+          custom_order_number: string | null
           customer_email: string | null
           customer_name: string
           customer_phone: string | null
@@ -495,6 +496,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           created_by_group_id?: string | null
+          custom_order_number?: string | null
           customer_email?: string | null
           customer_name: string
           customer_phone?: string | null
@@ -523,6 +525,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           created_by_group_id?: string | null
+          custom_order_number?: string | null
           customer_email?: string | null
           customer_name?: string
           customer_phone?: string | null
@@ -743,6 +746,10 @@ export type Database = {
       assign_role: {
         Args: { expires_at?: string; role_name: string; target_user_id: string }
         Returns: boolean
+      }
+      generate_custom_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_dealer_kpis: {
         Args: { p_dealer_id: number }

@@ -13,7 +13,7 @@ import { Order } from '@/lib/mockData';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
 
 interface StatusBadgeInteractiveProps {
-  status: Order['status'];
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   orderId: string;
   dealerId: string;
   canUpdateStatus: boolean;
