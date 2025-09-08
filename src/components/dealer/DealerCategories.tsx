@@ -295,8 +295,8 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
         {canManageCategories && (
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
-              <Button onClick={resetForm}>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button onClick={resetForm} size="lg" className="bg-primary hover:bg-primary/90">
+                <Plus className="h-5 w-5 mr-2" />
                 {t('categories.add_category')}
               </Button>
             </DialogTrigger>
@@ -418,43 +418,62 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
         />
       </div>
 
-      {/* Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredCategories.map((category) => {
+      {/* Categories Grid or Empty State */}
+      {filteredCategories.length === 0 ? (
+        <div className="text-center py-12">
+          <Tag className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold mb-2">{t('categories.no_categories_found')}</h3>
+          <p className="text-muted-foreground mb-6">{t('categories.no_categories_description')}</p>
+          {canManageCategories && (
+            <Button onClick={() => { resetForm(); setIsModalOpen(true); }}>
+              <Plus className="h-4 w-4 mr-2" />
+              {t('categories.add_category')}
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredCategories.map((category) => {
           const categoryModules = getCategoryModules(category.id);
           
           return (
-            <Card key={category.id} className="relative">
+            <Card key={category.id} className="relative hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <div 
-                      className="w-4 h-4 rounded-full" 
+                      className="w-5 h-5 rounded-full border-2 border-white shadow-sm" 
                       style={{ backgroundColor: category.color }}
                     />
-                    <CardTitle className="text-lg">{category.name}</CardTitle>
-                    {category.is_system_category && (
-                      <Badge variant="secondary" className="text-xs">
-                        {t('categories.system')}
-                      </Badge>
-                    )}
+                    <div>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        {category.name}
+                        {category.is_system_category && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Settings className="h-3 w-3 mr-1" />
+                            {t('categories.system')}
+                          </Badge>
+                        )}
+                      </CardTitle>
+                    </div>
                   </div>
                   {canManageCategories && !category.is_system_category && (
-                    <div className="flex space-x-1">
+                    <div className="flex space-x-1 opacity-70 hover:opacity-100 transition-opacity">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => openEditModal(category)}
+                        className="h-8 w-8 p-0 hover:bg-primary/10"
                       >
-                        <Edit2 className="h-4 w-4" />
+                        <Edit2 className="h-4 w-4 text-primary" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDelete(category.id)}
-                        className="text-destructive hover:text-destructive"
+                        className="h-8 w-8 p-0 hover:bg-destructive/10"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
                   )}
@@ -494,8 +513,9 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
               </CardContent>
             </Card>
           );
-        })}
-      </div>
+          })}
+        </div>
+      )}
 
       {filteredCategories.length === 0 && (
         <div className="text-center py-8 space-y-4">
