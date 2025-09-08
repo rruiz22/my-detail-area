@@ -199,7 +199,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                 <TableCell>
                   <Checkbox
                     checked={selectedOrders.includes(order.id)}
-                    onCheckedChange={(checked) => handleSelectOrder(order.id, checked)}
+                    onCheckedChange={(checked) => handleSelectOrder(order.id, !!checked)}
                   />
                 </TableCell>
                 <TableCell className="font-medium text-foreground">
