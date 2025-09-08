@@ -79,7 +79,7 @@ export function InvitationAccept() {
       if (invitationError) throw invitationError;
 
       if (!invitationData) {
-        throw new Error('Invitación no encontrada');
+        throw new Error(t('invitations.accept.not_found'));
       }
 
       // Check if invitation is expired
@@ -87,7 +87,7 @@ export function InvitationAccept() {
       const now = new Date();
       
       if (expiresAt < now) {
-        throw new Error('Esta invitación ha expirado');
+        throw new Error(t('invitations.accept.expired'));
       }
 
       // Fetch dealership details
@@ -120,8 +120,8 @@ export function InvitationAccept() {
   const handleAcceptInvitation = async () => {
     if (!user) {
       toast({
-        title: 'Autenticación requerida',
-        description: 'Debes iniciar sesión para aceptar esta invitación',
+        title: t('invitations.accept.auth_required'),
+        description: t('invitations.accept.auth_required_desc'),
         variant: 'destructive',
       });
       navigate('/auth');
@@ -133,8 +133,8 @@ export function InvitationAccept() {
     // Verify email matches
     if (invitation.email !== user.email) {
       toast({
-        title: 'Email no coincide',
-        description: 'Esta invitación fue enviada a otra dirección de email',
+        title: t('invitations.accept.email_not_match'),
+        description: t('invitations.accept.email_not_match_desc'),
         variant: 'destructive',
       });
       return;
@@ -151,8 +151,8 @@ export function InvitationAccept() {
       if (error) throw error;
 
       toast({
-        title: '¡Invitación aceptada!',
-        description: `Te has unido exitosamente a ${invitation.dealership_name}`,
+        title: t('common.success'),
+        description: t('invitations.accept.success_message', { dealership: invitation.dealership_name }),
       });
 
       // Redirect to dealership dashboard
@@ -160,8 +160,8 @@ export function InvitationAccept() {
     } catch (err: any) {
       console.error('Error accepting invitation:', err);
       toast({
-        title: 'Error',
-        description: err.message || 'Error al aceptar la invitación',
+        title: t('common.error'),
+        description: err.message || t('messages.error'),
         variant: 'destructive',
       });
     } finally {

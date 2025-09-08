@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Card,
@@ -36,6 +37,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
   dealerId,
   className,
 }) => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<DealershipStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +73,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
-            Estadísticas del Concesionario
+            {t('dealerships.statistics')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -91,7 +93,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
             <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>Error al cargar estadísticas</p>
+            <p>{t('messages.error')}</p>
             <p className="text-xs">{error}</p>
           </div>
         </CardContent>
@@ -105,7 +107,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
             <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>No hay estadísticas disponibles</p>
+            <p>{t('common.no_data')}</p>
           </div>
         </CardContent>
       </Card>
@@ -115,31 +117,31 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
   const statsItems = [
     {
       icon: Users,
-      label: 'Total de Usuarios',
+      label: t('dealerships.total_users'),
       value: stats.total_users,
       color: 'blue',
-      subtext: `${stats.active_users} activos`
+      subtext: `${stats.active_users} ${t('dealerships.users_active')}`
     },
     {
       icon: UserCheck,
-      label: 'Usuarios Activos',
+      label: t('dealerships.active_users'),
       value: stats.active_users,
       color: 'green',
       percentage: stats.total_users > 0 ? Math.round((stats.active_users / stats.total_users) * 100) : 0
     },
     {
       icon: Mail,
-      label: 'Invitaciones Pendientes',
+      label: t('dealerships.pending_invitations'),
       value: stats.pending_invitations,
       color: 'orange',
-      badge: stats.pending_invitations > 0 ? 'Acción Requerida' : 'Al día'
+      badge: stats.pending_invitations > 0 ? t('dealerships.action_required') : t('dealerships.up_to_date')
     },
     {
       icon: ClipboardList,
-      label: 'Órdenes Totales',
+      label: t('dealerships.total_orders'),
       value: stats.total_orders,
       color: 'purple',
-      subtext: `${stats.orders_this_month} este mes`
+      subtext: `${stats.orders_this_month} ${t('dealerships.orders_this_month')}`
     },
   ];
 
@@ -152,10 +154,10 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Activity className="h-5 w-5" />
-          Estadísticas del Concesionario
+          {t('dealerships.statistics')}
         </CardTitle>
         <CardDescription>
-          Resumen de actividad y métricas clave
+          {t('dealerships.activity_summary')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -171,7 +173,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
                   <Icon className={`h-5 w-5 text-${item.color}-500`} />
                   {item.badge && (
                     <Badge 
-                      variant={item.badge === 'Acción Requerida' ? 'destructive' : 'secondary'}
+                      variant={item.badge === t('dealerships.action_required') ? 'destructive' : 'secondary'}
                       className="text-xs"
                     >
                       {item.badge}
@@ -199,7 +201,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
                         <ArrowDownRight className="h-3 w-3 text-orange-500" />
                       )}
                       <span className={item.percentage > 80 ? 'text-green-600' : 'text-orange-600'}>
-                        {item.percentage}% activos
+                        {item.percentage}% {t('dealerships.users_active')}
                       </span>
                     </div>
                   )}
@@ -214,9 +216,9 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
           <div className="mt-4 p-3 bg-muted/50 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium">Órdenes Este Mes</p>
+                <p className="text-sm font-medium">{t('dealerships.orders_growth')}</p>
                 <p className="text-xs text-muted-foreground">
-                  {stats.orders_this_month} de {stats.total_orders} totales
+                  {stats.orders_this_month} {t('dealerships.of_total', { total: stats.total_orders })}
                 </p>
               </div>
               <div className="flex items-center gap-1">

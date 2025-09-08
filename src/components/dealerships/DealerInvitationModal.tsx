@@ -33,37 +33,37 @@ interface DealerInvitationModalProps {
 const DEALER_ROLES = [
   { 
     value: 'dealer_user', 
-    label: 'Usuario Básico', 
+    key: 'dealer_user',
     description: 'Acceso de lectura a módulos básicos' 
   },
   { 
     value: 'dealer_salesperson', 
-    label: 'Vendedor', 
+    key: 'dealer_salesperson',
     description: 'Gestión de órdenes de venta' 
   },
   { 
     value: 'dealer_service_advisor', 
-    label: 'Asesor de Servicio', 
+    key: 'dealer_service_advisor',
     description: 'Gestión de órdenes de servicio' 
   },
   { 
     value: 'dealer_sales_manager', 
-    label: 'Gerente de Ventas', 
+    key: 'dealer_sales_manager',
     description: 'Administración completa de ventas' 
   },
   { 
     value: 'dealer_service_manager', 
-    label: 'Gerente de Servicio', 
+    key: 'dealer_service_manager',
     description: 'Administración completa de servicio' 
   },
   { 
     value: 'dealer_manager', 
-    label: 'Gerente General', 
+    key: 'dealer_manager',
     description: 'Administración general del concesionario' 
   },
   { 
     value: 'dealer_admin', 
-    label: 'Administrador', 
+    key: 'dealer_admin',
     description: 'Acceso completo al concesionario' 
   },
 ];
@@ -87,8 +87,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
     
     if (!email || !selectedRole) {
       toast({
-        title: 'Error',
-        description: 'Por favor completa todos los campos requeridos',
+        title: t('common.error'),
+        description: t('messages.required_field'),
         variant: 'destructive',
       });
       return;
@@ -96,8 +96,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
 
     if (!user) {
       toast({
-        title: 'Error',
-        description: 'Usuario no autenticado',
+        title: t('common.error'),
+        description: t('invitations.accept.auth_required_desc'),
         variant: 'destructive',
       });
       return;
@@ -122,8 +122,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       console.log('Invitation created:', invitationLink);
 
       toast({
-        title: '¡Invitación enviada!',
-        description: `Se ha enviado una invitación a ${email}`,
+        title: t('common.success'),
+        description: t('invitations.invitation_sent'),
       });
 
       // Reset form
@@ -134,8 +134,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
     } catch (error: any) {
       console.error('Error sending invitation:', error);
       toast({
-        title: 'Error',
-        description: error.message || 'Error al enviar la invitación',
+        title: t('common.error'),
+        description: error.message || t('messages.error'),
         variant: 'destructive',
       });
     } finally {
@@ -159,22 +159,22 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" />
-            Invitar Usuario al Concesionario
+            {t('invitations.send_invitation')}
           </DialogTitle>
           <DialogDescription>
-            Envía una invitación para que un usuario se una a este concesionario con el rol específico.
+            {t('invitations.invite_user_to', { dealership: `Dealership #${dealerId}` })}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Dirección de Email *</Label>
+            <Label htmlFor="email">{t('invitations.email')} *</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
-                placeholder="usuario@ejemplo.com"
+                placeholder={t('invitations.email_placeholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
@@ -188,16 +188,16 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="role">Rol Asignado *</Label>
+            <Label htmlFor="role">{t('invitations.role')} *</Label>
             <Select value={selectedRole} onValueChange={setSelectedRole} disabled={loading}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona un rol para el usuario" />
+                <SelectValue placeholder={t('invitations.select_role')} />
               </SelectTrigger>
               <SelectContent>
                 {DEALER_ROLES.map((role) => (
                   <SelectItem key={role.value} value={role.value}>
                     <div className="flex flex-col">
-                      <span className="font-medium">{role.label}</span>
+                      <span className="font-medium">{t(`invitations.${role.key}`)}</span>
                       <span className="text-xs text-muted-foreground">
                         {role.description}
                       </span>
@@ -209,7 +209,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
             {selectedRoleInfo && (
               <div className="p-3 bg-muted/50 rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  <strong>{selectedRoleInfo.label}:</strong> {selectedRoleInfo.description}
+                  <strong>{t(`invitations.${selectedRoleInfo.key}`)}:</strong> {selectedRoleInfo.description}
                 </p>
               </div>
             )}
@@ -222,18 +222,18 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
               onClick={handleClose}
               disabled={loading}
             >
-              Cancelar
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={loading || !email || !selectedRole}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enviando...
+                  {t('invitations.sending')}
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Enviar Invitación
+                  {t('invitations.send')}
                 </>
               )}
             </Button>
