@@ -68,6 +68,13 @@ export function QuickFilterBar({
       color: 'bg-warning/10 text-warning border-warning/20'
     },
     {
+      id: 'in_process',
+      label: 'In Process',
+      count: tabCounts.in_process || 0,
+      icon: Clock,
+      color: 'bg-primary/10 text-primary border-primary/20'
+    },
+    {
       id: 'week',
       label: 'Week',
       count: tabCounts.week || 0,

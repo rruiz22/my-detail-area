@@ -24,6 +24,7 @@ export function useOrderManagement(activeTab: string) {
         return orderDate >= tomorrow && orderDate < new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000);
       }).length,
       pending: allOrders.filter(order => order.status === 'Pending').length,
+      in_process: allOrders.filter(order => order.status === 'In Process').length,
       week: allOrders.filter(order => {
         const orderDate = new Date(order.createdAt);
         return orderDate >= today && orderDate < weekEnd;
@@ -58,6 +59,9 @@ export function useOrderManagement(activeTab: string) {
         break;
       case 'pending':
         filtered = filtered.filter(order => order.status === 'Pending');
+        break;
+      case 'in_process':
+        filtered = filtered.filter(order => order.status === 'In Process');
         break;
       case 'week':
         filtered = filtered.filter(order => {

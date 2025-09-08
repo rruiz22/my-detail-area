@@ -64,28 +64,28 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
       icon: AlertTriangle
     },
     {
-      id: 'in_progress',
-      title: 'In Progress',
-      status: ['in_progress', 'In Progress'],
+      id: 'in_process',
+      title: 'In Process',
+      status: ['in_process', 'In Process', 'in_progress', 'In Progress'],
       color: 'text-primary',
       bgColor: 'bg-primary/10',
       icon: Clock
     },
     {
-      id: 'review',
-      title: 'Review',
-      status: ['review', 'Review'],
-      color: 'text-accent',
-      bgColor: 'bg-accent/10',
-      icon: Eye
-    },
-    {
-      id: 'completed',
-      title: 'Completed',
-      status: ['completed', 'Complete', 'Completed'],
+      id: 'complete',
+      title: 'Complete',
+      status: ['complete', 'Complete', 'completed', 'Completed'],
       color: 'text-success',
       bgColor: 'bg-success/10',
       icon: Calendar
+    },
+    {
+      id: 'cancelled',
+      title: 'Cancelled',
+      status: ['cancelled', 'Cancelled'],
+      color: 'text-destructive',
+      bgColor: 'bg-destructive/10',
+      icon: AlertTriangle
     }
   ];
 
@@ -107,10 +107,28 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = (e: React.DragEvent, targetStatus: string) => {
+  const handleDrop = (e: React.DragEvent, targetColumnId: string) => {
     e.preventDefault();
     if (draggedOrder && onStatusChange) {
-      onStatusChange(draggedOrder.id, targetStatus);
+      // Map column IDs to actual status values
+      let newStatus = targetColumnId;
+      switch (targetColumnId) {
+        case 'pending':
+          newStatus = 'Pending';
+          break;
+        case 'in_process':
+          newStatus = 'In Process';
+          break;
+        case 'complete':
+          newStatus = 'Complete';
+          break;
+        case 'cancelled':
+          newStatus = 'Cancelled';
+          break;
+        default:
+          newStatus = targetColumnId;
+      }
+      onStatusChange(draggedOrder.id, newStatus);
     }
     setDraggedOrder(null);
   };
@@ -153,7 +171,7 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
         return (
           <div
             key={column.id}
-            className="flex flex-col"
+            className="flex flex-col min-h-0"
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, column.id)}
           >
@@ -175,16 +193,23 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
             </Card>
 
             {/* Order Cards */}
-            <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+            <div 
+              className={`flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent min-h-[200px] ${
+                draggedOrder ? 'bg-accent/5 border-2 border-dashed border-accent rounded-lg' : ''
+              }`}
+            >
               {columnOrders.map((order) => {
                 const dueInfo = formatDueDate(order.dueDate);
                 
                 return (
                   <Card
                     key={order.id}
-                    draggable
+                    draggable={true}
                     onDragStart={(e) => handleDragStart(e, order)}
-                    className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 ${getPriorityColor(order.priority)} group`}
+                    onDragEnd={() => setDraggedOrder(null)}
+                    className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 ${getPriorityColor(order.priority)} group ${
+                      draggedOrder?.id === order.id ? 'opacity-50 scale-95' : ''
+                    }`}
                   >
                     <CardContent className="p-4">
                       {/* Order Header */}
