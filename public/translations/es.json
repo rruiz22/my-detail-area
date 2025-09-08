@@ -717,6 +717,7 @@
     "highPriority": "Alta",
     "urgentPriority": "Urgente",
     "services": "Servicios",
+    "service_notes": "Notas de Servicio",
     "total": "Total",
     "notes": "Notas",
     "notesPlaceholder": "Instrucciones especiales, observaciones, etc.",

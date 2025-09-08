@@ -388,52 +388,60 @@ export default function ServiceOrderModal({
             </CardContent>
           </Card>
 
-          {/* Services & Notes */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('orders.services_notes')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {services.length > 0 && <div className="space-y-3">
-                  <Label>{t('orders.available_services')}</Label>
-                  <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto border rounded-lg p-3">
-                    {services.map(service => <div key={service.id} className="flex items-center space-x-2">
-                        <Checkbox id={service.id} checked={selectedServices.includes(service.id)} onCheckedChange={() => handleServiceToggle(service.id)} />
-                        <Label htmlFor={service.id} className="text-sm font-normal cursor-pointer flex-1">
-                          <div>
-                            <div className="font-medium">{service.name}</div>
-                            {service.description && <div className="text-xs text-muted-foreground">{service.description}</div>}
-                            {canViewPricing && service.price && <div className="text-xs font-medium">${service.price}</div>}
-                          </div>
-                        </Label>
-                      </div>)}
-                  </div>
-                  
-                  {canViewPricing && selectedServices.length > 0 && <div className="text-right font-semibold">
-                      {t('orders.total')}: ${totalPrice.toFixed(2)}
-                    </div>}
-                </div>}
+           {/* Services & Due Date */}
+           <Card>
+             <CardHeader>
+               <CardTitle>{t('orders.services')}</CardTitle>
+             </CardHeader>
+             <CardContent className="space-y-4">
+               {services.length > 0 && <div className="space-y-3">
+                   <Label>{t('orders.available_services')}</Label>
+                   <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto border rounded-lg p-3">
+                     {services.map(service => <div key={service.id} className="flex items-center space-x-2">
+                         <Checkbox id={service.id} checked={selectedServices.includes(service.id)} onCheckedChange={() => handleServiceToggle(service.id)} />
+                         <Label htmlFor={service.id} className="text-sm font-normal cursor-pointer flex-1">
+                           <div>
+                             <div className="font-medium">{service.name}</div>
+                             {service.description && <div className="text-xs text-muted-foreground">{service.description}</div>}
+                             {canViewPricing && service.price && <div className="text-xs font-medium">${service.price}</div>}
+                           </div>
+                         </Label>
+                       </div>)}
+                   </div>
+                   
+                   {canViewPricing && selectedServices.length > 0 && <div className="text-right font-semibold">
+                       {t('orders.total')}: ${totalPrice.toFixed(2)}
+                     </div>}
+                 </div>}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="notes">{t('orders.notes')}</Label>
-                  <Textarea id="notes" value={formData.notes} onChange={e => handleInputChange('notes', e.target.value)} placeholder={t('orders.order_notes_placeholder')} rows={3} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="internalNotes">{t('orders.internal_notes')}</Label>
-                  <Textarea id="internalNotes" value={formData.internalNotes} onChange={e => handleInputChange('internalNotes', e.target.value)} placeholder={t('orders.internal_notes_placeholder')} rows={3} />
-                </div>
-              </div>
+               <div className="space-y-2">
+                 <Label>{t('orders.due_date')}</Label>
+                 <DueDateTimePicker value={formData.dueDate} onChange={date => setFormData(prev => ({
+                 ...prev,
+                 dueDate: date
+               }))} />
+               </div>
+             </CardContent>
+           </Card>
 
-              <div className="space-y-2">
-                <Label>{t('orders.due_date')}</Label>
-                <DueDateTimePicker value={formData.dueDate} onChange={date => setFormData(prev => ({
-                ...prev,
-                dueDate: date
-              }))} />
-              </div>
-            </CardContent>
-          </Card>
+           {/* Service Notes */}
+           <Card>
+             <CardHeader>
+               <CardTitle>{t('service.service_notes')}</CardTitle>
+             </CardHeader>
+             <CardContent className="space-y-4">
+               <div className="grid grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                   <Label htmlFor="notes">{t('orders.notes')}</Label>
+                   <Textarea id="notes" value={formData.notes} onChange={e => handleInputChange('notes', e.target.value)} placeholder={t('orders.order_notes_placeholder')} rows={3} />
+                 </div>
+                 <div className="space-y-2">
+                   <Label htmlFor="internalNotes">{t('orders.internal_notes')}</Label>
+                   <Textarea id="internalNotes" value={formData.internalNotes} onChange={e => handleInputChange('internalNotes', e.target.value)} placeholder={t('orders.internal_notes_placeholder')} rows={3} />
+                 </div>
+               </div>
+             </CardContent>
+           </Card>
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-2 pt-4">
