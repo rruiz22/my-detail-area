@@ -182,6 +182,7 @@ export function EnhancedOrderDetailLayout({
                   <QRCodeDisplay 
                     orderId={order.id}
                     orderNumber={order.order_number}
+                    dealerId={order.dealer_id}
                   />
                 </div>
               </div>
@@ -274,9 +275,9 @@ export function EnhancedOrderDetailLayout({
                     <FileText className="w-4 h-4" />
                     {t('orders.attachments')}
                   </h3>
-                  <AttachmentUploader
-                    orderId={order.id}
-                  />
+                  <div className="text-sm text-muted-foreground">
+                    {t('attachments.coming_soon')}
+                  </div>
                 </div>
               </div>
             </div>

@@ -77,8 +77,10 @@ export function useCommunications(orderId: string) {
       const formattedMessages: Message[] = messagesData?.map(message => ({
         ...message,
         message_type: message.message_type as 'text' | 'voice' | 'file' | 'system_update',
-        attachments: Array.isArray(message.attachments) ? message.attachments : [],
-        mentions: Array.isArray(message.mentions) ? message.mentions : [],
+        attachments: Array.isArray(message.attachments) ? 
+          (message.attachments as any[]).filter(Boolean) : [],
+        mentions: Array.isArray(message.mentions) ? 
+          (message.mentions as any[]).filter(Boolean).map(String) : [],
         reactions: typeof message.reactions === 'object' && message.reactions !== null ? 
           message.reactions as Record<string, string[]> : {},
         user_name: profileMap[message.user_id]?.name,
@@ -97,8 +99,10 @@ export function useCommunications(orderId: string) {
           message.replies = replies?.map(reply => ({
             ...reply,
             message_type: reply.message_type as 'text' | 'voice' | 'file' | 'system_update',
-            attachments: Array.isArray(reply.attachments) ? reply.attachments : [],
-            mentions: Array.isArray(reply.mentions) ? reply.mentions : [],
+            attachments: Array.isArray(reply.attachments) ? 
+              (reply.attachments as any[]).filter(Boolean) : [],
+            mentions: Array.isArray(reply.mentions) ? 
+              (reply.mentions as any[]).filter(Boolean).map(String) : [],
             reactions: typeof reply.reactions === 'object' && reply.reactions !== null ? 
               reply.reactions as Record<string, string[]> : {},
             user_name: profileMap[reply.user_id]?.name,
