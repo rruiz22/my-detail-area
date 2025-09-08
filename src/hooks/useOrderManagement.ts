@@ -177,17 +177,26 @@ export function useOrderManagement(activeTab: string) {
     setLoading(false);
   }, []);
 
-  const updateOrder = useCallback(async (orderId: string, orderData: any) => {
-    setLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // In real implementation, this would update via API
-    console.log('Updating order:', orderId, orderData);
-    
-    setLoading(false);
-  }, []);
+   const updateOrder = useCallback(async (orderId: string, orderData: any) => {
+     setLoading(true);
+     
+     // Simulate API call
+     await new Promise(resolve => setTimeout(resolve, 500));
+     
+     // Update local state immediately for better UX
+     setOrders(prevOrders => 
+       prevOrders.map(order => 
+         order.id === orderId 
+           ? { ...order, ...orderData, updatedAt: new Date().toISOString() }
+           : order
+       )
+     );
+     
+     // In real implementation, this would update via API
+     console.log('Updating order:', orderId, orderData);
+     
+     setLoading(false);
+   }, []);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     setLoading(true);

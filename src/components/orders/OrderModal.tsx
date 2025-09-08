@@ -256,67 +256,75 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </Select>
                   </div>
 
-                  <div>
-                    <Label htmlFor="contact">{t('sales_orders.contact')}</Label>
-                    <Select 
-                      value={selectedContact} 
-                      onValueChange={handleContactChange} 
-                      disabled={loading || !selectedDealership}
-                    >
-                      <SelectTrigger className="border-input bg-background">
-                        <SelectValue placeholder={
-                          !selectedDealership 
-                            ? t('orders.selectClient') 
-                            : loading 
-                              ? t('common.loading') 
-                              : t('orders.selectClient')
-                        } />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border max-h-[200px]">
-                        {contacts.map((contact: any) => (
-                          <SelectItem key={contact.id} value={contact.id}>
-                            {contact.name} - {contact.email}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                   <div>
+                     <Label htmlFor="contact">{t('sales_orders.contact')}</Label>
+                     <Select 
+                       value={selectedContact} 
+                       onValueChange={handleContactChange} 
+                       disabled={loading || !selectedDealership}
+                     >
+                       <SelectTrigger className="border-input bg-background">
+                         <SelectValue placeholder={
+                           !selectedDealership 
+                             ? t('orders.selectClient') 
+                             : loading 
+                               ? t('common.loading') 
+                               : t('orders.selectClient')
+                         }>
+                           {selectedContact && contacts.find((c: any) => c.id === selectedContact)?.name}
+                         </SelectValue>
+                       </SelectTrigger>
+                       <SelectContent className="bg-popover border border-border max-h-[200px]">
+                         {contacts.map((contact: any) => (
+                           <SelectItem key={contact.id} value={contact.id}>
+                             {contact.name} - {contact.email}
+                           </SelectItem>
+                         ))}
+                       </SelectContent>
+                     </Select>
+                   </div>
 
                   <Separator />
 
-                  <div>
-                    <Label htmlFor="customerName">{t('orders.customerName')}</Label>
-                    <Input
-                      id="customerName"
-                      value={formData.customerName}
-                      onChange={(e) => handleInputChange('customerName', e.target.value)}
-                      className="border-input bg-background"
-                      required
-                    />
-                  </div>
+                   <div>
+                     <Label htmlFor="customerName">{t('orders.customerName')}</Label>
+                     <Input
+                       id="customerName"
+                       value={formData.customerName}
+                       onChange={(e) => handleInputChange('customerName', e.target.value)}
+                       className="border-input bg-background"
+                       readOnly={!!selectedContact}
+                       disabled={!!selectedContact}
+                       required
+                     />
+                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="customerEmail">{t('orders.customerEmail')}</Label>
-                      <Input
-                        id="customerEmail"
-                        type="email"
-                        value={formData.customerEmail}
-                        onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                        className="border-input bg-background"
-                      />
-                    </div>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div>
+                       <Label htmlFor="customerEmail">{t('orders.customerEmail')}</Label>
+                       <Input
+                         id="customerEmail"
+                         type="email"
+                         value={formData.customerEmail}
+                         onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                         className="border-input bg-background"
+                         readOnly={!!selectedContact}
+                         disabled={!!selectedContact}
+                       />
+                     </div>
 
-                    <div>
-                      <Label htmlFor="customerPhone">{t('orders.customerPhone')}</Label>
-                      <Input
-                        id="customerPhone"
-                        value={formData.customerPhone}
-                        onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-                        className="border-input bg-background"
-                      />
-                    </div>
-                  </div>
+                     <div>
+                       <Label htmlFor="customerPhone">{t('orders.customerPhone')}</Label>
+                       <Input
+                         id="customerPhone"
+                         value={formData.customerPhone}
+                         onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+                         className="border-input bg-background"
+                         readOnly={!!selectedContact}
+                         disabled={!!selectedContact}
+                       />
+                     </div>
+                   </div>
                 </CardContent>
               </Card>
 
@@ -388,20 +396,23 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   <Separator />
 
-                  {/* Due Date & Time Section */}
-                  <div>
-                    <Label className="text-base font-medium">{t('due_date.title')}</Label>
-                    <div className="mt-2">
-                      <DueDateTimePicker
-                        value={formData.dueDate}
-                        onChange={(date) => handleInputChange('dueDate', date)}
-                        placeholder={t('due_date.date_placeholder')}
-                      />
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {t('due_date.validation.business_hours_only')}
-                    </div>
-                  </div>
+                   {/* Due Date & Time Section */}
+                   <div className="space-y-4">
+                     <Label className="text-base font-medium">{t('due_date.title')}</Label>
+                     <div className="grid grid-cols-1 gap-4">
+                       <div>
+                         <Label className="text-sm font-medium">Fecha</Label>
+                         <DueDateTimePicker
+                           value={formData.dueDate}
+                           onChange={(date) => handleInputChange('dueDate', date)}
+                           placeholder={t('due_date.date_placeholder')}
+                         />
+                       </div>
+                     </div>
+                     <div className="text-xs text-muted-foreground">
+                       {t('due_date.validation.business_hours_only')}
+                     </div>
+                   </div>
                 </CardContent>
               </Card>
 
