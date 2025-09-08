@@ -229,6 +229,18 @@ export const useOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
+      // Get user's dealership from profile
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('dealership_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profileData?.dealership_id) {
+        console.error('Error getting user dealership:', profileError);
+        throw new Error('No se encontró concesionario para el usuario');
+      }
+
       const newOrder = {
         order_number: `ORD-${Date.now()}`,
         customer_name: orderData.customerName,
@@ -245,7 +257,7 @@ export const useOrderManagement = (activeTab: string) => {
         services: orderData.services || [],
         total_amount: orderData.totalAmount || 0,
         sla_deadline: orderData.dueDate,
-        dealer_id: 5, // Default dealer - will use table default
+        dealer_id: profileData.dealership_id,
       };
 
       const { data, error } = await supabase
