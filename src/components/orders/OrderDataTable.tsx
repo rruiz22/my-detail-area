@@ -38,13 +38,20 @@ import { useIsMobile } from '@/hooks/use-mobile';
 interface Order {
   id: string;
   createdAt: string;
-  stock?: string;
-  year?: string;
-  make?: string;
-  model?: string;
-  vin?: string;
+  orderNumber?: string;
+  customOrderNumber?: string;
+  stockNumber?: string;
+  vehicleYear?: number;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleVin?: string;
+  vehicleInfo?: string;
+  customerName?: string;
   status: string;
   dealer_id?: number;
+  dueDate?: string;
+  totalAmount?: number;
+  shortLink?: string;
   comments?: number;
   followers?: number;
 }
@@ -143,13 +150,13 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return { text: `${Math.abs(diffDays)} days overdue`, variant: 'destructive', className: 'bg-destructive text-destructive-foreground' };
+      return { text: `${Math.abs(diffDays)} días vencido`, variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground' };
     } else if (diffDays === 0) {
-      return { text: 'Due today', variant: 'warning', className: 'bg-warning text-warning-foreground' };
+      return { text: 'Vence hoy', variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };
     } else if (diffDays === 1) {
-      return { text: 'Due tomorrow', variant: 'secondary', className: 'bg-secondary text-secondary-foreground' };
+      return { text: 'Vence mañana', variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };
     } else {
-      return { text: `Due in ${diffDays} days`, variant: 'outline', className: 'border-border text-foreground' };
+      return { text: `Vence en ${diffDays} días`, variant: 'outline' as const, className: 'border-border text-foreground' };
     }
   };
 
@@ -192,10 +199,13 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                 />
               </TableHead>
               <TableHead className="font-medium text-foreground">{t('orders.id')}</TableHead>
+              <TableHead className="font-medium text-foreground">Cliente</TableHead>
               <TableHead className="font-medium text-foreground">Stock</TableHead>
-              <TableHead className="font-medium text-foreground">Vehicle</TableHead>
-              <TableHead className="font-medium text-foreground">Status</TableHead>
-              <TableHead className="w-12 font-medium text-foreground">Actions</TableHead>
+              <TableHead className="font-medium text-foreground">Vehículo</TableHead>
+              <TableHead className="font-medium text-foreground">Estado</TableHead>
+              <TableHead className="font-medium text-foreground">Fecha Límite</TableHead>
+              <TableHead className="font-medium text-foreground">Total</TableHead>
+              <TableHead className="w-12 font-medium text-foreground">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -208,19 +218,27 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                   />
                 </TableCell>
                 <TableCell className="font-medium text-foreground">
-                  {order.customOrderNumber || order.id}
+                  {order.orderNumber || order.customOrderNumber || order.id.slice(0, 8)}
                 </TableCell>
                 <TableCell className="text-foreground">
-                  {order.stock || 'N/A'}
+                  <div className="font-medium">{order.customerName || 'N/A'}</div>
+                </TableCell>
+                <TableCell className="text-foreground">
+                  {order.stockNumber || 'N/A'}
                 </TableCell>
                 <TableCell>
                   <div className="space-y-1">
                     <div className="font-medium text-foreground">
-                      {order.year} {order.make} {order.model}
+                      {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      VIN: {order.vin || 'Not provided'}
+                    <div className="text-xs font-mono text-muted-foreground">
+                      VIN: {order.vehicleVin || 'No proporcionado'}
                     </div>
+                    {order.vehicleInfo && (
+                      <div className="text-xs text-muted-foreground">
+                        {order.vehicleInfo}
+                      </div>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -231,6 +249,26 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                     canUpdateStatus={true}
                     onStatusChange={handleStatusChange}
                   />
+                </TableCell>
+                <TableCell>
+                  {order.dueDate ? (
+                    <Badge 
+                      variant={formatDueDate(order.dueDate).variant}
+                      className={formatDueDate(order.dueDate).className}
+                    >
+                      {formatDueDate(order.dueDate).text}
+                    </Badge>
+                  ) : (
+                    <span className="text-muted-foreground">Sin fecha</span>
+                  )}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {order.totalAmount ? `$${order.totalAmount.toLocaleString()}` : 'N/A'}
+                  {order.shortLink && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Short: {order.shortLink}
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -287,7 +325,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
             
             {paginatedOrders.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   {t('orders.noOrdersFound')}
                 </TableCell>
               </TableRow>

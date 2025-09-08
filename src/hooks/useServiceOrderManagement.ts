@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+import { useOrderActions } from '@/hooks/useOrderActions';
 
 // Order interface compatible with Service Orders
 export interface ServiceOrder {
@@ -109,6 +110,7 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
 
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { generateQR } = useOrderActions();
 
   // Calculate tab counts
   const tabCounts = useMemo((): TabCounts => {
@@ -267,6 +269,15 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
         throw new Error('Invalid dealership ID');
       }
 
+      // Use database function to generate sequential order number  
+      const { data: orderNumberData, error: numberError } = await supabase
+        .rpc('generate_service_order_number');
+
+      if (numberError || !orderNumberData) {
+        console.error('Error generating service order number:', numberError);
+        throw new Error('Failed to generate service order number');
+      }
+
       const { data, error } = await supabase
         .from('orders')
         .insert({
@@ -282,7 +293,7 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
           ro: orderData.ro,
           tag: orderData.tag,
           order_type: 'service',
-          order_number: `SV-${Math.floor(Math.random() * 90000) + 10000}`, // Generate 5-digit number like SV-12345
+          order_number: orderNumberData, // Use sequential SV-1001, SV-1002, etc.
           status: orderData.status,
           priority: orderData.priority || 'normal',
           services: orderData.services || [],
@@ -308,6 +319,15 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
 
       const newOrder = transformServiceOrder(data);
       setOrders(prev => [newOrder, ...prev]);
+      
+      // Auto-generate QR code and shortlink
+      try {
+        await generateQR(data.id, data.order_number, data.dealer_id);
+        console.log('QR code and shortlink generated for service order:', data.order_number);
+      } catch (qrError) {
+        console.error('Failed to generate QR code:', qrError);
+        // Don't fail the order creation if QR generation fails
+      }
       
       toast({
         title: t('common.success'),

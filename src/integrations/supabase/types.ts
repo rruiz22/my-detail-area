@@ -1041,6 +1041,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_sales_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_service_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_unique_slug: {
         Args: Record<PropertyKey, never>
         Returns: string
