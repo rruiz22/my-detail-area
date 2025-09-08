@@ -219,11 +219,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl max-h-[95vh] w-[95vw] p-0">
+      <DialogContent className="max-w-7xl max-h-[95vh] w-[95vw] p-0" aria-describedby="order-modal-description">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-xl font-semibold">
             {order ? t('orders.edit') : t('orders.create')}
           </DialogTitle>
+          <div id="order-modal-description" className="sr-only">
+            {order ? 'Edit existing order details and services' : 'Create a new order with customer and vehicle information'}
+          </div>
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
@@ -258,22 +261,20 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                    <div>
                      <Label htmlFor="contact">{t('sales_orders.contact')}</Label>
-                     <Select 
-                       value={selectedContact} 
-                       onValueChange={handleContactChange} 
-                       disabled={loading || !selectedDealership}
-                     >
-                       <SelectTrigger className="border-input bg-background">
-                         <SelectValue placeholder={
-                           !selectedDealership 
-                             ? t('orders.selectClient') 
-                             : loading 
-                               ? t('common.loading') 
-                               : t('orders.selectClient')
-                         }>
-                           {selectedContact && contacts.find((c: any) => c.id === selectedContact)?.name}
-                         </SelectValue>
-                       </SelectTrigger>
+                      <Select 
+                        value={selectedContact || ""} 
+                        onValueChange={handleContactChange} 
+                        disabled={loading || !selectedDealership}
+                      >
+                        <SelectTrigger className="border-input bg-background">
+                          <SelectValue placeholder={
+                            !selectedDealership 
+                              ? t('orders.selectClient') 
+                              : loading 
+                                ? t('common.loading') 
+                                : t('orders.selectClient')
+                          } />
+                        </SelectTrigger>
                        <SelectContent className="bg-popover border border-border max-h-[200px]">
                          {contacts.map((contact: any) => (
                            <SelectItem key={contact.id} value={contact.id}>

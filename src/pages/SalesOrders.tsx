@@ -41,14 +41,31 @@ export default function SalesOrders() {
     deleteOrder,
   } = useOrderManagement(activeFilter);
 
-  // Auto-refresh every 60 seconds
+  // Auto-refresh every 60 seconds, but skip if there were recent changes
   useEffect(() => {
+    let lastChangeTime = 0;
+    
     const interval = setInterval(() => {
-      refreshData();
-      setLastRefresh(new Date());
+      // Only refresh if there hasn't been a status change in the last 10 seconds
+      const now = Date.now();
+      if (now - lastChangeTime > 10000) {
+        refreshData();
+        setLastRefresh(new Date());
+      }
     }, 60000);
 
-    return () => clearInterval(interval);
+    // Track when status changes occur
+    const handleStatusChangeEvent = () => {
+      lastChangeTime = Date.now();
+    };
+
+    // Listen for status changes
+    window.addEventListener('orderStatusChanged', handleStatusChangeEvent);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('orderStatusChanged', handleStatusChangeEvent);
+    };
   }, [refreshData]);
 
   const handleCreateOrder = () => {
@@ -88,7 +105,8 @@ export default function SalesOrders() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     await updateOrder(orderId, { status: newStatus });
-    // Remove refreshData() to prevent reverting local changes
+    // Dispatch event to notify auto-refresh to pause
+    window.dispatchEvent(new CustomEvent('orderStatusChanged'));
   };
 
   const handleCardClick = (filter: string) => {
