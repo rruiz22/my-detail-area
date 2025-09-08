@@ -90,7 +90,7 @@ const DealerView = () => {
                 <span>{dealerName || t('dealer.view.title')}</span>
               </h1>
               <p className="text-muted-foreground">
-                {t('dealer.view.subtitle', { id })}
+                Dealer Management
               </p>
             </div>
           </div>
