@@ -250,9 +250,9 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                           <div className="text-xs text-muted-foreground">
                             {order.vehicleInfo}
                           </div>
-                        ) : order.vin && (
+                        ) : order.vehicleVin && (
                           <div className="text-xs text-muted-foreground">
-                            VIN: {order.vin.slice(-8)}
+                            VIN: {order.vehicleVin.slice(-8)}
                           </div>
                         )}
                       </div>

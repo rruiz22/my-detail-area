@@ -16,7 +16,7 @@ export interface Order {
   vehicleMake?: string;
   vehicleModel?: string;
   vehicleInfo?: string;
-  vin?: string;
+  vehicleVin?: string;
   stockNumber?: string;
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   priority?: string;
@@ -41,7 +41,7 @@ const transformOrder = (supabaseOrder: SupabaseOrder): Order => ({
   vehicleMake: supabaseOrder.vehicle_make || undefined,
   vehicleModel: supabaseOrder.vehicle_model || undefined,
   vehicleInfo: supabaseOrder.vehicle_info || undefined,
-  vin: supabaseOrder.vehicle_vin || undefined,
+  vehicleVin: supabaseOrder.vehicle_vin || undefined,
   stockNumber: supabaseOrder.stock_number || undefined,
   status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
   priority: supabaseOrder.priority || undefined,
@@ -159,7 +159,7 @@ export const useOrderManagement = (activeTab: string) => {
       const searchLower = currentFilters.search.toLowerCase();
       filtered = filtered.filter(order =>
         order.id?.toLowerCase().includes(searchLower) ||
-        order.vin?.toLowerCase().includes(searchLower) ||
+        order.vehicleVin?.toLowerCase().includes(searchLower) ||
         order.stockNumber?.toLowerCase().includes(searchLower) ||
         order.customerName?.toLowerCase().includes(searchLower) ||
         `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
@@ -231,15 +231,18 @@ export const useOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
+      console.log('Creating order with data:', orderData);
+      
       const newOrder = {
         order_number: `ORD-${Date.now()}`, // Keep for compatibility
         customer_name: orderData.customerName,
         customer_email: orderData.customerEmail,
         customer_phone: orderData.customerPhone,
-        vehicle_year: parseInt(orderData.year) || null,
-        vehicle_make: orderData.make,
-        vehicle_model: orderData.model,
-        vehicle_vin: orderData.vin,
+        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
+        vehicle_make: orderData.vehicleMake,
+        vehicle_model: orderData.vehicleModel,
+        vehicle_vin: orderData.vehicleVin,
+        vehicle_info: orderData.vehicleInfo,
         stock_number: orderData.stockNumber,
         order_type: 'sales',
         status: 'pending',
@@ -247,8 +250,10 @@ export const useOrderManagement = (activeTab: string) => {
         services: orderData.services || [],
         total_amount: orderData.totalAmount || 0,
         sla_deadline: orderData.dueDate,
-        dealer_id: 5, // Default dealer - admins can create for any dealer
+        dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
       };
+
+      console.log('Inserting order to DB:', newOrder);
 
       const { data, error } = await supabase
         .from('orders')

@@ -198,13 +198,13 @@ export function OrderDetailModal({
                         <p className="font-medium">{order.vehicleModel}</p>
                       </div>
                     )}
-                    {order.vin && (
+                    {order.vehicleVin && (
                       <div className="md:col-span-2">
                         <label className="text-sm font-medium text-muted-foreground">
                           VIN
                         </label>
                         <p className="font-mono text-sm bg-muted px-2 py-1 rounded">
-                          {order.vin}
+                          {order.vehicleVin}
                         </p>
                       </div>
                     )}

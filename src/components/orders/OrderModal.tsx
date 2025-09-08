@@ -39,6 +39,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     customerEmail: '',
     customerPhone: '',
     vehicleVin: '',
+    vehicleYear: '',
+    vehicleMake: '',
+    vehicleModel: '',
     vehicleInfo: '',
     stockNumber: '',
     orderType: 'sales',
@@ -69,6 +72,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           customerEmail: order.customerEmail || '',
           customerPhone: order.customerPhone || '',
           vehicleVin: order.vehicleVin || '',
+          vehicleYear: order.vehicleYear?.toString() || '',
+          vehicleMake: order.vehicleMake || '',
+          vehicleModel: order.vehicleModel || '',
           vehicleInfo: order.vehicleInfo || '',
           stockNumber: order.stockNumber || '',
           orderType: order.orderType || 'sales',
@@ -86,6 +92,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           customerEmail: '',
           customerPhone: '',
           vehicleVin: '',
+          vehicleYear: '',
+          vehicleMake: '',
+          vehicleModel: '',
           vehicleInfo: '',
           stockNumber: '',
           orderType: 'sales',
@@ -184,6 +193,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       if (vehicleData) {
         setFormData(prev => ({
           ...prev,
+          vehicleYear: vehicleData.year,
+          vehicleMake: vehicleData.make,
+          vehicleModel: vehicleData.model,
           vehicleInfo: vehicleData.vehicleInfo
         }));
         setVinDecoded(true);

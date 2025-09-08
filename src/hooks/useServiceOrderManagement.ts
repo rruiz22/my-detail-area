@@ -255,13 +255,25 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
   // Create new service order
   const createOrder = async (orderData: any) => {
     try {
+      console.log('Creating service order with data:', orderData);
+
+      // Validate dealerId before conversion
+      if (!orderData.dealerId) {
+        throw new Error('Dealership ID is required');
+      }
+
+      const dealerIdNumber = parseInt(orderData.dealerId.toString());
+      if (isNaN(dealerIdNumber)) {
+        throw new Error('Invalid dealership ID');
+      }
+
       const { data, error } = await supabase
         .from('orders')
         .insert({
           customer_name: orderData.customerName,
           customer_email: orderData.customerEmail,
           customer_phone: orderData.customerPhone,
-          vehicle_year: orderData.vehicleYear,
+          vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
           vehicle_make: orderData.vehicleMake,
           vehicle_model: orderData.vehicleModel,
           vehicle_vin: orderData.vehicleVin,
@@ -278,7 +290,7 @@ export const useServiceOrderManagement = (activeTab: string = 'all') => {
           notes: orderData.notes,
           internal_notes: orderData.internalNotes,
           due_date: orderData.dueDate,
-          dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : null,
+          dealer_id: dealerIdNumber,
           assigned_contact_id: orderData.assignedContactId || null
         })
         .select()

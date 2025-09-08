@@ -169,9 +169,9 @@ export function OrderPreviewPanel({
               <div>
                 <span className="font-medium">{vehicleDisplay}</span>
               </div>
-              {order.vin && (
+              {order.vehicleVin && (
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium">VIN:</span> {order.vin}
+                  <span className="font-medium">VIN:</span> {order.vehicleVin}
                 </div>
               )}
               {order.stockNumber && (
