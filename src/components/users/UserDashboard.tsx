@@ -27,6 +27,8 @@ import { AdvancedUserFilters } from './AdvancedUserFilters';
 import { UnifiedUserManagement } from './UnifiedUserManagement';
 import { InvitationManagement } from '../invitations/InvitationManagement';
 import { AdvancedPermissionManager } from '@/components/permissions/AdvancedPermissionManager';
+import { UserAnalytics } from './UserAnalytics';
+import { UserAuditLog } from './UserAuditLog';
 
 interface UserDashboardStats {
   totalUsers: number;
@@ -305,13 +307,15 @@ export const UserDashboard: React.FC = () => {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="overview">{t('management.overview')}</TabsTrigger>
             <TabsTrigger value="users">{t('management.users')}</TabsTrigger>
             <TabsTrigger value="invitations">Invitations</TabsTrigger>
             <TabsTrigger value="permissions">Permissions</TabsTrigger>
             <TabsTrigger value="activity">{t('common.activity')}</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="audit">Audit Log</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -369,55 +373,8 @@ export const UserDashboard: React.FC = () => {
             <UserActivityFeed activities={recentActivity} />
           </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Monthly Growth</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-green-500" />
-                    <span className="text-2xl font-bold">{stats?.monthlyGrowth}%</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Compared to last month
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Activation Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span className="text-2xl font-bold">
-                      {stats ? Math.round((stats.activeUsers / stats.totalUsers) * 100) : 0}%
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Users with active memberships
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Avg. Response Time</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-blue-500" />
-                    <span className="text-2xl font-bold">2.4h</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    For invitation acceptance
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+          <TabsContent value="analytics">
+            <UserAnalytics dealerId={stats?.dealershipDistribution?.[0] ? 5 : undefined} />
           </TabsContent>
 
           <TabsContent value="invitations">
@@ -426,6 +383,17 @@ export const UserDashboard: React.FC = () => {
 
           <TabsContent value="permissions">
             <AdvancedPermissionManager />
+          </TabsContent>
+
+          <TabsContent value="audit">
+            <UserAuditLog dealerId={stats?.dealershipDistribution?.[0] ? 5 : undefined} />
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <div className="text-center py-8">
+              <h3 className="text-lg font-medium">Notification Center</h3>
+              <p className="text-muted-foreground">Smart notification management coming soon</p>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
