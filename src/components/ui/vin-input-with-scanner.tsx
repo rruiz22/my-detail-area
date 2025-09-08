@@ -1,0 +1,59 @@
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { QrCode } from 'lucide-react';
+import { VinBarcodeScanner } from '@/components/ui/vin-barcode-scanner';
+import { cn } from '@/lib/utils';
+
+interface VinInputWithScannerProps extends React.ComponentProps<typeof Input> {
+  onVinScanned?: (vin: string) => void;
+}
+
+export function VinInputWithScanner({ 
+  onVinScanned, 
+  className, 
+  ...props 
+}: VinInputWithScannerProps) {
+  const [scannerOpen, setScannerOpen] = useState(false);
+
+  const handleVinDetected = (vin: string) => {
+    // Update the input value
+    if (props.onChange) {
+      const event = {
+        target: { value: vin, name: props.name }
+      } as React.ChangeEvent<HTMLInputElement>;
+      props.onChange(event);
+    }
+    
+    // Call the callback if provided
+    onVinScanned?.(vin);
+  };
+
+  return (
+    <>
+      <div className="relative">
+        <Input
+          {...props}
+          className={cn("pr-12", className)}
+          placeholder="17 caracteres del VIN..."
+          maxLength={17}
+        />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+          onClick={() => setScannerOpen(true)}
+        >
+          <QrCode className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <VinBarcodeScanner
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onVinDetected={handleVinDetected}
+      />
+    </>
+  );
+}

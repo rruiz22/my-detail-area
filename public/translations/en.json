@@ -277,6 +277,14 @@
     "enter_17_character_vin": "Enter 17-character VIN for automatic decoding",
     "manual_vehicle_entry": "Or enter vehicle details manually"
   },
+  "vinScanner": {
+    "title": "Scan VIN",
+    "detected": "Detected VINs:",
+    "capture": "Capture",
+    "instruction": "Start camera or upload VIN image",
+    "startCamera": "Start Camera",
+    "uploadImage": "Upload Image"
+  },
   "settings": {
     "title": "Settings",
     "general": "General Settings",

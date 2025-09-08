@@ -260,6 +260,14 @@
     "schedule_report": "Programar Reporte",
     "no_data_available": "No hay datos disponibles para los criterios seleccionados"
   },
+  "vinScanner": {
+    "title": "Escanear VIN",
+    "detected": "VINs detectados:",
+    "capture": "Capturar",
+    "instruction": "Inicia la cámara o sube una imagen del VIN",
+    "startCamera": "Iniciar Cámara",
+    "uploadImage": "Subir Imagen"
+  },
   "settings": {
     "title": "Configuración",
     "general": "Configuración General",

@@ -18,6 +18,7 @@ import { usePermissionContext } from '@/contexts/PermissionContext';
 import { canViewPricing } from '@/utils/permissions';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
+import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 
 interface OrderModalProps {
   order?: any;
@@ -358,13 +359,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       {t('orders.vin')}
                       {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                     </Label>
-                    <Input
+                    <VinInputWithScanner
                       id="vehicleVin"
+                      name="vehicleVin"
                       value={formData.vehicleVin}
                       onChange={(e) => handleVinChange(e.target.value)}
+                      onVinScanned={handleVinChange}
                       className="border-input bg-background font-mono"
-                      placeholder={t('sales_orders.enter_17_character_vin')}
-                      maxLength={17}
                     />
                     {vinError && (
                       <div className="flex items-center gap-1 text-sm text-destructive mt-1">
