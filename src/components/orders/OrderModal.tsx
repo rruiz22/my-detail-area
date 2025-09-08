@@ -399,15 +399,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                    {/* Due Date & Time Section */}
                    <div className="space-y-4">
                      <Label className="text-base font-medium">{t('due_date.title')}</Label>
-                     <div className="grid grid-cols-1 gap-4">
-                       <div>
-                         <Label className="text-sm font-medium">Fecha</Label>
-                         <DueDateTimePicker
-                           value={formData.dueDate}
-                           onChange={(date) => handleInputChange('dueDate', date)}
-                           placeholder={t('due_date.date_placeholder')}
-                         />
-                       </div>
+                     <div>
+                       <DueDateTimePicker
+                         value={formData.dueDate}
+                         onChange={(date) => handleInputChange('dueDate', date)}
+                         placeholder={t('due_date.date_placeholder')}
+                       />
                      </div>
                      <div className="text-xs text-muted-foreground">
                        {t('due_date.validation.business_hours_only')}

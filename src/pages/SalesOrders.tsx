@@ -88,7 +88,7 @@ export default function SalesOrders() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     await updateOrder(orderId, { status: newStatus });
-    refreshData();
+    // Remove refreshData() to prevent reverting local changes
   };
 
   const handleCardClick = (filter: string) => {
