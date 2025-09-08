@@ -51,7 +51,7 @@ export interface ChatMessage {
   is_mentioned?: boolean;
 }
 
-interface UseChatMessagesReturn {
+export interface UseChatMessagesReturn {
   messages: ChatMessage[];
   loading: boolean;
   error: string | null;
