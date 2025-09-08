@@ -203,7 +203,7 @@
     "error_deleting_order": "Erro ao excluir pedido de serviço",
     "order_created_successfully": "Pedido de serviço criado com sucesso",
     "order_updated_successfully": "Pedido de serviço atualizado com sucesso",
-    "order_deleted_successfully": "Pedido de serviço excluído com sucesso"
+    "order_deleted_successfully": "Pedido de serviço excluído com sucesso",
     "activity": {
       "recent_activity": "Atividade Recente",
       "system": "Sistema",

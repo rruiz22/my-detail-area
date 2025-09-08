@@ -197,7 +197,7 @@ export function EnhancedOrderDetailLayout({
             </div>
 
             {/* Right Sidebar - Hidden on mobile, collapsible on tablet */}
-            <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l bg-muted/30 flex flex-col order-1 lg:order-2 max-h-40 lg:max-h-none overflow-y-auto lg:overflow-visible">
+            <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l bg-muted/30 flex flex-col order-1 lg:order-2 max-h-[50vh] lg:max-h-none overflow-y-auto">
               {/* QR Code Section */}
               <div className="p-2 lg:p-4 border-b">
                 <div className="space-y-2 lg:space-y-3">
@@ -300,8 +300,10 @@ export function EnhancedOrderDetailLayout({
               </div>
 
               {/* Recent Activity */}
-              <div className="flex-1 p-2 lg:p-4 hidden lg:block">
-                <RecentActivity orderId={order.id} />
+              <div className="flex-1 p-2 lg:p-4 min-h-0 overflow-hidden">
+                <div className="h-full">
+                  <RecentActivity orderId={order.id} />
+                </div>
               </div>
             </div>
           </div>

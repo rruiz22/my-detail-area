@@ -203,7 +203,7 @@
     "error_deleting_order": "Error al eliminar orden de servicio",
     "order_created_successfully": "Orden de servicio creada exitosamente",
     "order_updated_successfully": "Orden de servicio actualizada exitosamente",
-    "order_deleted_successfully": "Orden de servicio eliminada exitosamente"
+    "order_deleted_successfully": "Orden de servicio eliminada exitosamente",
     "activity": {
       "recent_activity": "Actividad Reciente",
       "system": "Sistema",

@@ -203,7 +203,7 @@
     "error_deleting_order": "Error deleting service order", 
     "order_created_successfully": "Service order created successfully",
     "order_updated_successfully": "Service order updated successfully",
-    "order_deleted_successfully": "Service order deleted successfully"
+    "order_deleted_successfully": "Service order deleted successfully",
     "activity": {
       "recent_activity": "Recent Activity",
       "system": "System",
