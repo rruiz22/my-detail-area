@@ -1992,6 +1992,10 @@ export type Database = {
         Args: { target_dealer_id?: number; user_id?: string }
         Returns: boolean
       }
+      user_has_conversation_access: {
+        Args: { conversation_uuid: string; user_uuid: string }
+        Returns: boolean
+      }
       user_has_dealer_membership: {
         Args: { target_dealer_id: number; user_uuid: string }
         Returns: boolean

@@ -78,7 +78,7 @@ const Chat: React.FC = () => {
             </p>
           </div>
           
-          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground" data-testid="dealership-context">
             <Users className="h-4 w-4" />
             <span>{activeDealership.name}</span>
           </div>
@@ -86,7 +86,7 @@ const Chat: React.FC = () => {
 
         {/* Feature Highlights */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="p-4">
+          <Card className="p-4" data-testid="feature-realtime">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                 <MessageCircle className="h-5 w-5 text-primary" />
@@ -98,7 +98,7 @@ const Chat: React.FC = () => {
             </div>
           </Card>
           
-          <Card className="p-4">
+          <Card className="p-4" data-testid="feature-secure">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                 <Shield className="h-5 w-5 text-primary" />
@@ -110,7 +110,7 @@ const Chat: React.FC = () => {
             </div>
           </Card>
           
-          <Card className="p-4">
+          <Card className="p-4" data-testid="feature-multimedia">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                 <Zap className="h-5 w-5 text-primary" />
@@ -127,6 +127,7 @@ const Chat: React.FC = () => {
         <ChatLayout 
           dealerId={activeDealership.id} 
           className="shadow-sm border-0"
+          data-testid="chat-layout"
         />
       </div>
     </DashboardLayout>

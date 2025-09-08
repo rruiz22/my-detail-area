@@ -52,7 +52,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" data-testid="conversation-list">
       {/* Search and Filters */}
       <div className="p-3 space-y-3 border-b bg-background">
         <div className="relative">
@@ -136,6 +136,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                       "w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-muted/50 transition-colors",
                       isSelected && "bg-primary/10 border border-primary/20"
                     )}
+                    data-testid="conversation-item"
                   >
                     <div className="relative">
                       <Avatar className="h-10 w-10">

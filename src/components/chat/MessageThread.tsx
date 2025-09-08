@@ -105,7 +105,7 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full" data-testid="message-thread">
       {/* Messages Area */}
       <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
         <div className="py-4 space-y-1">

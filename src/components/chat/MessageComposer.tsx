@@ -180,7 +180,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const canSend = (message.trim() || attachedFiles.length > 0) && !sending && !disabled;
 
   return (
-    <div className="p-4 space-y-3">
+    <div className="p-4 space-y-3" data-testid="message-composer">
       {/* Attached Files Preview */}
       {attachedFiles.length > 0 && (
         <div className="flex flex-wrap gap-2">
