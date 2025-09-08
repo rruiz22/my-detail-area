@@ -1336,7 +1336,7 @@
     "feature_secure_desc": "End-to-end encrypted conversations",
     "feature_multimedia": "Rich Media Support",
     "feature_multimedia_desc": "Share files, images, and voice messages"
-  }
+  },
   "landing": {
     "welcome": "Welcome to the Management System",
     "description": "Sign in to access dealers, contacts and more features",
