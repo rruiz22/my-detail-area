@@ -309,6 +309,8 @@
     "max_users": "Maximum Users",
     "contacts_count": "Contacts",
     "users_count": "Users",
+    "select_dealership": "Select Dealership",
+    "dealership": "Dealership",
     "website": "Website",
     "tax_number": "Tax Number",
     "logo": "Logo",
@@ -445,6 +447,7 @@
   "users": {
     "title": "Detail Users",
     "add_new": "Add New User",
+    "invite_user": "Invite User",
     "edit": "Edit User",
     "role": "Role",
     "admin": "Administrator",
@@ -608,7 +611,8 @@
     "retry": "Retry",
     "new": "New",
     "activity": "Activity",
-    "excellent": "Excellent", 
+    "all": "All",
+    "excellent": "Excellent",
     "good": "Good",
     "low": "Low"
   },
@@ -696,7 +700,8 @@
     "no_roles": "No roles",
     "manage": "Manage",
     "no_users_found": "No users found",
-    "no_users_matching_filters": "No users found matching your filters"
+    "no_users_matching_filters": "No users found matching your filters",
+    "users": "users"
   },
   "dealer": {
     "view": {
