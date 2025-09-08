@@ -13,7 +13,7 @@ import { SmartDashboard } from '@/components/sales/SmartDashboard';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderPreviewPanel } from '@/components/sales/OrderPreviewPanel';
-import { OrderDetailModal } from '@/components/orders/OrderDetailModal';
+import { EnhancedOrderDetailModal } from './EnhancedOrderDetailModal';
 
 // Removed TABS - now using QuickFilterBar instead
 
@@ -214,8 +214,8 @@ export default function SalesOrders() {
           />
         )}
 
-        {/* Detail Modal - Full Screen */}
-        <OrderDetailModal
+        {/* Detail Modal - Enhanced Full Screen */}
+        <EnhancedOrderDetailModal
           order={previewOrder}
           open={!!previewOrder}
           onClose={() => setPreviewOrder(null)}
