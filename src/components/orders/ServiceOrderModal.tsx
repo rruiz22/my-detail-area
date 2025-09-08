@@ -203,14 +203,18 @@ export default function ServiceOrderModal({
     if (vin && vin.length >= 11 && vinDecoding.decodeVin) {
       try {
         const decodedData = await vinDecoding.decodeVin(vin);
-        if (decodedData) {
-          setFormData(prev => ({
-            ...prev,
-            vehicleMake: decodedData.make || prev.vehicleMake,
-            vehicleModel: decodedData.model || prev.vehicleModel,
-            vehicleYear: decodedData.year || prev.vehicleYear
-          }));
-        }
+         if (decodedData) {
+           // Auto-populate vehicle info field with decoded data
+           const vehicleDesc = `${decodedData.year || ''} ${decodedData.make || ''} ${decodedData.model || ''}`.trim();
+           
+           setFormData(prev => ({
+             ...prev,
+             vehicleMake: decodedData.make || prev.vehicleMake,
+             vehicleModel: decodedData.model || prev.vehicleModel,
+             vehicleYear: decodedData.year || prev.vehicleYear,
+             vehicleInfo: vehicleDesc || prev.vehicleInfo
+           }));
+         }
       } catch (error) {
         console.error('VIN decoding error:', error);
       }
@@ -299,49 +303,88 @@ export default function ServiceOrderModal({
             <CardHeader>
               <CardTitle>{t('orders.vehicle_information')}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="vehicleVin">{t('orders.vin')}</Label>
-                  <Input id="vehicleVin" value={formData.vehicleVin} onChange={handleVinChange} placeholder={t('orders.vin_placeholder')} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="vehicleInfo">{t('orders.additional_vehicle_info')}</Label>
-                  <Input id="vehicleInfo" value={formData.vehicleInfo} onChange={e => handleInputChange('vehicleInfo', e.target.value)} placeholder={t('orders.color_trim_etc')} />
-                </div>
-              </div>
+             <CardContent className="space-y-4">
+               {/* First row: Service-specific fields (PO, RO, Service Tag) */}
+               <div className="grid grid-cols-3 gap-4">
+                 <div className="space-y-2">
+                   <Label htmlFor="po">{t('service.po_number')}</Label>
+                   <Input id="po" value={formData.po} onChange={e => handleInputChange('po', e.target.value)} placeholder={t('service.purchase_order')} />
+                 </div>
+                 <div className="space-y-2">
+                   <Label htmlFor="ro">{t('service.ro_number')}</Label>
+                   <Input id="ro" value={formData.ro} onChange={e => handleInputChange('ro', e.target.value)} placeholder={t('service.repair_order')} />
+                 </div>
+                 <div className="space-y-2">
+                   <Label htmlFor="tag">{t('service.service_tag')}</Label>
+                   <Input id="tag" value={formData.tag} onChange={e => handleInputChange('tag', e.target.value)} placeholder={t('service.service_tag_number')} />
+                 </div>
+               </div>
 
-              {/* Service-specific fields */}
-              <Separator className="my-4" />
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="po">{t('service.po_number')}</Label>
-                  <Input id="po" value={formData.po} onChange={e => handleInputChange('po', e.target.value)} placeholder={t('service.purchase_order')} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ro">{t('service.ro_number')}</Label>
-                  <Input id="ro" value={formData.ro} onChange={e => handleInputChange('ro', e.target.value)} placeholder={t('service.repair_order')} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="tag">{t('service.service_tag')}</Label>
-                  <Input id="tag" value={formData.tag} onChange={e => handleInputChange('tag', e.target.value)} placeholder={t('service.service_tag_number')} />
-                </div>
-              </div>
+               <Separator className="my-4" />
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
-                  <Input id="vehicleYear" type="number" min="1900" max="2030" value={formData.vehicleYear} onChange={e => handleInputChange('vehicleYear', e.target.value)} placeholder={t('orders.vehicle_year')} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="vehicleMake">{t('orders.make')}</Label>
-                  <Input id="vehicleMake" value={formData.vehicleMake} onChange={e => handleInputChange('vehicleMake', e.target.value)} placeholder={t('orders.vehicle_make')} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="vehicleModel">{t('orders.model')}</Label>
-                  <Input id="vehicleModel" value={formData.vehicleModel} onChange={e => handleInputChange('vehicleModel', e.target.value)} placeholder={t('orders.vehicle_model')} />
-                </div>
-              </div>
+               {/* Second row: VIN and Vehicle information with VIN decoding */}
+               <div className="grid grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                   <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                     {t('orders.vin')}
+                     {vinDecoding.loading && (
+                       <div className="inline-flex items-center gap-1">
+                         <div className="w-3 h-3 animate-spin rounded-full border-2 border-primary border-r-transparent"></div>
+                         <span className="text-xs text-muted-foreground">Decoding...</span>
+                       </div>
+                     )}
+                   </Label>
+                   <Input
+                     id="vehicleVin"
+                     value={formData.vehicleVin}
+                     onChange={handleVinChange}
+                     placeholder={t('orders.vin_placeholder')}
+                     className="font-mono"
+                     maxLength={17}
+                   />
+                   {vinDecoding.error && (
+                     <div className="flex items-center gap-1 text-sm text-destructive">
+                       <div className="w-3 h-3 rounded-full bg-destructive"></div>
+                       {vinDecoding.error}
+                     </div>
+                   )}
+                   {formData.vehicleVin.length > 0 && formData.vehicleVin.length < 17 && (
+                     <div className="text-sm text-muted-foreground">
+                       {17 - formData.vehicleVin.length} characters remaining
+                     </div>
+                   )}
+                 </div>
+
+                 <div className="space-y-2">
+                   <Label htmlFor="vehicleInfo" className="flex items-center gap-2">
+                     {t('orders.vehicle')}
+                     {formData.vehicleMake && formData.vehicleModel && formData.vehicleYear && (
+                       <div className="inline-flex items-center gap-1">
+                         <div className="w-3 h-3 rounded-full bg-success"></div>
+                         <span className="text-xs text-success">VIN Decoded</span>
+                       </div>
+                     )}
+                   </Label>
+                   <Input
+                     id="vehicleInfo"
+                     value={formData.vehicleInfo}
+                     onChange={e => handleInputChange('vehicleInfo', e.target.value)}
+                     placeholder="2025 BMW X6 (xDrive40i)"
+                   />
+                   {!formData.vehicleInfo && formData.vehicleMake && formData.vehicleModel && formData.vehicleYear && (
+                     <div className="text-sm text-muted-foreground">
+                       Auto-filled: {formData.vehicleYear} {formData.vehicleMake} {formData.vehicleModel}
+                     </div>
+                   )}
+                 </div>
+               </div>
+
+               {/* Hidden fields for VIN decoded data */}
+               <div className="grid grid-cols-3 gap-4" style={{ display: 'none' }}>
+                 <Input id="vehicleYear" type="number" value={formData.vehicleYear} readOnly />
+                 <Input id="vehicleMake" value={formData.vehicleMake} readOnly />
+                 <Input id="vehicleModel" value={formData.vehicleModel} readOnly />
+               </div>
             </CardContent>
           </Card>
 

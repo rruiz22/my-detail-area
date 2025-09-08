@@ -733,6 +733,7 @@
     "confirmDelete": "Are you sure you want to delete this service?"
   },
   "orders": {
+    "vehicle": "Vehicle"
     "create": "Create Order",
     "edit": "Edit Order",
     "clientInfo": "Client Information",

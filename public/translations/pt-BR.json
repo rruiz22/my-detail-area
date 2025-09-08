@@ -696,6 +696,7 @@
     "confirmDelete": "Tem certeza de que deseja excluir este serviço?"
   },
   "orders": {
+    "vehicle": "Veículo"
     "create": "Criar Pedido",
     "edit": "Editar Pedido",
     "clientInfo": "Informações do Cliente",
