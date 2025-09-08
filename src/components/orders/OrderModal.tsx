@@ -36,14 +36,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     customerName: '',
     customerEmail: '',
     customerPhone: '',
-    vehicleMake: '',
-    vehicleModel: '',
-    vehicleYear: '',
     vehicleVin: '',
     vehicleInfo: '',
     stockNumber: '',
     orderType: 'sales',
-    priority: 'normal',
     status: 'pending',
     notes: '',
     dueDate: undefined as Date | undefined
@@ -70,14 +66,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           customerName: order.customerName || '',
           customerEmail: order.customerEmail || '',
           customerPhone: order.customerPhone || '',
-          vehicleMake: order.vehicleMake || '',
-          vehicleModel: order.vehicleModel || '',
-          vehicleYear: order.vehicleYear || '',
           vehicleVin: order.vehicleVin || '',
           vehicleInfo: order.vehicleInfo || '',
           stockNumber: order.stockNumber || '',
           orderType: order.orderType || 'sales',
-          priority: order.priority || 'normal',
           status: order.status || 'pending',
           notes: order.notes || '',
           dueDate: order.dueDate ? new Date(order.dueDate) : undefined
@@ -91,14 +83,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           customerName: '',
           customerEmail: '',
           customerPhone: '',
-          vehicleMake: '',
-          vehicleModel: '',
-          vehicleYear: '',
           vehicleVin: '',
           vehicleInfo: '',
           stockNumber: '',
           orderType: 'sales',
-          priority: 'normal',
           status: 'pending',
           notes: '',
           dueDate: undefined
@@ -194,9 +182,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       if (vehicleData) {
         setFormData(prev => ({
           ...prev,
-          vehicleYear: vehicleData.year,
-          vehicleMake: vehicleData.make,
-          vehicleModel: vehicleData.model,
           vehicleInfo: vehicleData.vehicleInfo
         }));
         setVinDecoded(true);
@@ -399,60 +384,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         {t('sales_orders.manual_vehicle_entry')}
                       </div>
                     )}
-                  </div>
-
-                  <Separator />
-
-                  {/* Individual Vehicle Fields (for editing if needed) */}
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <Label htmlFor="vehicleYear" className="text-sm">{t('orders.year')}</Label>
-                      <Input
-                        id="vehicleYear"
-                        type="number"
-                        value={formData.vehicleYear}
-                        onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
-                        className="border-input bg-background text-sm"
-                        min="1900"
-                        max="2030"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="vehicleMake" className="text-sm">{t('orders.make')}</Label>
-                      <Input
-                        id="vehicleMake"
-                        value={formData.vehicleMake}
-                        onChange={(e) => handleInputChange('vehicleMake', e.target.value)}
-                        className="border-input bg-background text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="vehicleModel" className="text-sm">{t('orders.model')}</Label>
-                      <Input
-                        id="vehicleModel"
-                        value={formData.vehicleModel}
-                        onChange={(e) => handleInputChange('vehicleModel', e.target.value)}
-                        className="border-input bg-background text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="priority">{t('orders.priority')}</Label>
-                    <Select 
-                      value={formData.priority} 
-                      onValueChange={(value) => handleInputChange('priority', value)}
-                    >
-                      <SelectTrigger className="border-input bg-background">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border">
-                        <SelectItem value="low">{t('orders.lowPriority')}</SelectItem>
-                        <SelectItem value="normal">{t('orders.normalPriority')}</SelectItem>
-                        <SelectItem value="high">{t('orders.highPriority')}</SelectItem>
-                        <SelectItem value="urgent">{t('orders.urgentPriority')}</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
 
                   <Separator />
