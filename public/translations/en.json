@@ -233,6 +233,23 @@
     "schedule_report": "Schedule Report",
     "no_data_available": "No data available for the selected criteria"
   },
+  "sales_orders": {
+    "title": "Sales Orders",
+    "dealership": "Dealership",
+    "stock_number": "Stock#",
+    "vehicle": "Vehicle",
+    "vin_decoding": "VIN Decoding",
+    "vehicle_auto_populated": "Vehicle info auto-populated from VIN",
+    "contact": "Contact",
+    "services_for_group": "Services for {group}",
+    "status_change_restricted": "Status change restricted",
+    "only_authorized_users": "Only authorized users can change status",
+    "decoding_vin": "Decoding VIN...",
+    "vin_decoded_successfully": "VIN decoded successfully",
+    "vin_decode_error": "Error decoding VIN",
+    "enter_17_character_vin": "Enter 17-character VIN for automatic decoding",
+    "manual_vehicle_entry": "Or enter vehicle details manually"
+  },
   "settings": {
     "title": "Settings",
     "general": "General Settings",
@@ -376,6 +393,26 @@
     "filters_apply_all_tabs": "Filters apply to all tabs",
     "clear_filters": "Clear Filters",
     "apply_filters": "Apply Filters"
+  },
+  "permissions": {
+    "update_status": "Update Status",
+    "change_to_progress": "Change to In Progress", 
+    "complete_orders": "Complete Orders",
+    "cancel_orders": "Cancel Orders",
+    "read_only_access": "Read-only access",
+    "full_access": "Full access",
+    "module_access": "Module Access",
+    "granular_permissions": "Granular Permissions"
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress", 
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "confirm_status_change": "Confirm Status Change",
+    "status_will_change_to": "Status will change to {status}",
+    "status_updated_successfully": "Status updated successfully",
+    "error_updating_status": "Error updating status"
   },
   "user_management": {
     "description": "Manage users, roles and permissions across all dealerships",

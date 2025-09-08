@@ -1,22 +1,84 @@
-import { useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
+import { 
+  MoreHorizontal, 
   Eye, 
   Edit, 
-  Trash2, 
-  MoreHorizontal, 
-  Download, 
-  QrCode,
-  MessageCircle,
-  Users,
-  Calendar
+  Trash, 
+  QrCode, 
+  MessageSquare, 
+  CheckCircle, 
+  Loader2 
 } from 'lucide-react';
-import { StatusBadge } from '@/components/StatusBadge';
+import { useTranslation } from 'react-i18next';
+import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
+import { useStatusPermissions } from '@/hooks/useStatusPermissions';
+import { useIsMobile } from '@/hooks/use-mobile';
+
+interface Order {
+  id: string;
+  createdAt: string;
+  stock?: string;
+  year?: string;
+  make?: string;
+  model?: string;
+  vin?: string;
+  status: string;
+  dealer_id?: number;
+  comments?: number;
+  followers?: number;
+}
+
+interface StatusInfo {
+  text: string;
+  variant: "default" | "destructive" | "outline" | "secondary" | "success" | "warning";
+  className: string;
+}
+
+interface OrderCardProps {
+  order: Order;
+  onView: (order: Order) => void;
+  onEdit: (order: Order) => void;
+  onDelete: (orderId: string) => void;
+}
+
+interface StatusBadgeProps {
+  status: string;
+}
+
+interface StatusBadgeInteractiveProps {
+  status: string;
+  orderId: string;
+  dealerId: string;
+  canUpdateStatus: boolean;
+  onStatusChange: (orderId: string, newStatus: string) => void;
+}
+
+interface MobileActionsProps {
+  order: Order;
+  onView: (order: Order) => void;
+  onEdit: (order: Order) => void;
+  onDelete: (orderId: string) => void;
+}
 
 interface OrderDataTableProps {
   orders: any[];
@@ -28,9 +90,12 @@ interface OrderDataTableProps {
 }
 
 export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabType }: OrderDataTableProps) {
+  const { t } = useTranslation();
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const isMobile = useIsMobile();
+  const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -42,30 +107,44 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
 
   const handleSelectOrder = (orderId: string, checked: boolean) => {
     if (checked) {
-      setSelectedOrders([...selectedOrders, orderId]);
+      setSelectedOrders(prev => [...prev, orderId]);
     } else {
-      setSelectedOrders(selectedOrders.filter(id => id !== orderId));
+      setSelectedOrders(prev => prev.filter(id => id !== orderId));
+    }
+  };
+
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+
+    try {
+      const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
+      if (success) {
+        console.log(`Status updated for order ${orderId} to ${newStatus}`);
+      }
+    } catch (error) {
+      console.error('Failed to update status:', error);
     }
   };
 
   const handleBulkAction = (action: string) => {
-    console.log(`Bulk action: ${action} for orders:`, selectedOrders);
-    // Implement bulk actions
+    console.log(`Bulk ${action} for orders:`, selectedOrders);
   };
 
-  const formatDueDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = (date.getTime() - now.getTime()) / (1000 * 60 * 60);
-    
-    if (diffInHours < 0) {
-      return { text: 'Vencido', variant: 'destructive' as const };
-    } else if (diffInHours < 24) {
-      return { text: 'Hoy', variant: 'default' as const };
-    } else if (diffInHours < 48) {
-      return { text: 'Mañana', variant: 'outline' as const };
+  const formatDueDate = (date: string) => {
+    const orderDate = new Date(date);
+    const today = new Date();
+    const diffTime = orderDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return { text: `${Math.abs(diffDays)} days overdue`, variant: 'destructive', className: 'bg-destructive text-destructive-foreground' };
+    } else if (diffDays === 0) {
+      return { text: 'Due today', variant: 'warning', className: 'bg-warning text-warning-foreground' };
+    } else if (diffDays === 1) {
+      return { text: 'Due tomorrow', variant: 'secondary', className: 'bg-secondary text-secondary-foreground' };
     } else {
-      return { text: date.toLocaleDateString(), variant: 'secondary' as const };
+      return { text: `Due in ${diffDays} days`, variant: 'outline', className: 'border-border text-foreground' };
     }
   };
 
@@ -78,10 +157,11 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
 
   if (loading) {
     return (
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardContent className="p-6">
-          <div className="flex items-center justify-center h-32">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="flex items-center justify-center">
+            <Loader2 className="w-6 h-6 animate-spin mr-2" />
+            <span>{t('common.loading')}</span>
           </div>
         </CardContent>
       </Card>
@@ -89,190 +169,126 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-          <CardTitle className="text-lg font-semibold">
-            {orders.length} {orders.length === 1 ? 'Orden' : 'Órdenes'}
-          </CardTitle>
-          
-          {selectedOrders.length > 0 && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                {selectedOrders.length} seleccionadas
-              </span>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    Acciones en lote
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-popover border-border">
-                  <DropdownMenuItem onClick={() => handleBulkAction('export')}>
-                    <Download className="w-4 h-4 mr-2" />
-                    Exportar seleccionadas
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleBulkAction('complete')}>
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Marcar como completadas
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={() => handleBulkAction('delete')}
-                    className="text-destructive"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Eliminar seleccionadas
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
-        </div>
+    <Card className="border-border shadow-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-semibold">
+          {orders.length} {t('orders.orders')} 
+        </CardTitle>
       </CardHeader>
-
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
+      
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-border hover:bg-transparent">
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={selectedOrders.length === paginatedOrders.length && paginatedOrders.length > 0}
+                  onCheckedChange={handleSelectAll}
+                />
+              </TableHead>
+              <TableHead className="font-medium text-foreground">{t('orders.id')}</TableHead>
+              <TableHead className="font-medium text-foreground">Stock</TableHead>
+              <TableHead className="font-medium text-foreground">Vehicle</TableHead>
+              <TableHead className="font-medium text-foreground">Status</TableHead>
+              <TableHead className="w-12 font-medium text-foreground">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedOrders.map((order) => (
+              <TableRow key={order.id} className="border-border hover:bg-muted/50">
+                <TableCell>
                   <Checkbox
-                    checked={selectedOrders.length === orders.length}
-                    onCheckedChange={handleSelectAll}
+                    checked={selectedOrders.includes(order.id)}
+                    onCheckedChange={(checked) => handleSelectOrder(order.id, checked)}
                   />
-                </TableHead>
-                <TableHead>ID</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead>Vehículo</TableHead>
-                <TableHead>Vencimiento</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                </TableCell>
+                <TableCell className="font-medium text-foreground">
+                  {order.id}
+                </TableCell>
+                <TableCell className="text-foreground">
+                  {order.stock || 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1">
+                    <div className="font-medium text-foreground">
+                      {order.year} {order.make} {order.model}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      VIN: {order.vin || 'Not provided'}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <StatusBadgeInteractive
+                    status={order.status}
+                    orderId={order.id}
+                    dealerId={order.dealer_id?.toString() || ''}
+                    canUpdateStatus={true}
+                    onStatusChange={handleStatusChange}
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onView(order)}
+                      className="h-8 w-8 p-0 hover:bg-accent hover:text-accent-foreground"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onEdit(order)}
+                      className="h-8 w-8 p-0 hover:bg-accent hover:text-accent-foreground"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="h-8 w-8 p-0 hover:bg-accent hover:text-accent-foreground"
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-popover border border-border">
+                        <DropdownMenuLabel className="text-foreground">Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => console.log('Generate QR', order.id)}>
+                          <QrCode className="w-4 h-4 mr-2" />
+                          Generate QR
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => console.log('Comments', order.id)}>
+                          <MessageSquare className="w-4 h-4 mr-2" />
+                          Comments
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => onDelete(order.id)} 
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedOrders.map((order) => {
-                const dueInfo = formatDueDate(order.createdAt);
-                
-                return (
-                  <TableRow key={order.id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <Checkbox
-                        checked={selectedOrders.includes(order.id)}
-                        onCheckedChange={(checked) => handleSelectOrder(order.id, checked as boolean)}
-                      />
-                    </TableCell>
-                    <TableCell className="font-mono text-sm">{order.id}</TableCell>
-                    <TableCell className="font-medium">{order.stock || 'N/A'}</TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium">
-                          {order.year} {order.make} {order.model}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          VIN: {order.vin}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={dueInfo.variant}>{dueInfo.text}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <StatusBadge status={order.status} />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onView(order)}
-                          className="h-8 w-8"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onEdit(order)}
-                          className="h-8 w-8"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-popover border-border">
-                            <DropdownMenuItem onClick={() => onView(order)}>
-                              <Eye className="w-4 h-4 mr-2" />
-                              Ver detalles
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onEdit(order)}>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <QrCode className="w-4 h-4 mr-2" />
-                              Generar QR
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <MessageCircle className="w-4 h-4 mr-2" />
-                              Comentarios ({order.comments || 0})
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Users className="w-4 h-4 mr-2" />
-                              Seguidores ({order.followers || 0})
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => onDelete(order.id)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Eliminar
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between px-2 py-4">
-            <div className="text-sm text-muted-foreground">
-              Mostrando {(currentPage - 1) * itemsPerPage + 1} a {Math.min(currentPage * itemsPerPage, orders.length)} de {orders.length} órdenes
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Anterior
-              </Button>
-              <span className="text-sm">
-                Página {currentPage} de {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Siguiente
-              </Button>
-            </div>
-          </div>
-        )}
+            ))}
+            
+            {paginatedOrders.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  {t('orders.noOrdersFound')}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
