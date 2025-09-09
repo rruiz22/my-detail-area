@@ -27,7 +27,7 @@ interface ServiceOrderModalProps {
   onSave: (orderData: any) => void;
 }
 
-export default function ServiceOrderModal({ order, open, onClose, onSave }: ServiceOrderModalProps) {
+const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onClose, onSave }) => {
   const { t } = useTranslation();
   const { roles } = usePermissionContext();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
@@ -545,4 +545,6 @@ export default function ServiceOrderModal({ order, open, onClose, onSave }: Serv
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default ServiceOrderModal;
