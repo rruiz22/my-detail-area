@@ -13,7 +13,7 @@ import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderPreviewPanel } from '@/components/sales/OrderPreviewPanel';
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
-import { ServiceOrderModal } from '@/components/orders/ServiceOrderModal';
+import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
 
 export default function ServiceOrders() {
   const { t } = useTranslation();
