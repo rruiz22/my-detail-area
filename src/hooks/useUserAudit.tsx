@@ -79,7 +79,7 @@ export const useUserAudit = (dealerId?: number) => {
 
       if (error) throw error;
 
-      const formattedEvents: AuditEvent[] = (data || []).map(event => ({
+      const formattedEvents: AuditEvent[] = (data || []).map((event: any) => ({
         id: event.id,
         event_type: event.event_type,
         entity_type: event.entity_type,
@@ -179,7 +179,7 @@ export const useUserAudit = (dealerId?: number) => {
       // Convert to CSV
       const csvContent = [
         ['Date', 'Event Type', 'Entity Type', 'User', 'Entity', 'Details', 'IP Address'].join(','),
-        ...(data || []).map(event => [
+        ...(data || []).map((event: any) => [
           new Date(event.created_at).toLocaleString(),
           event.event_type,
           event.entity_type,

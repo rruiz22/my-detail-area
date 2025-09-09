@@ -1465,6 +1465,53 @@ export type Database = {
         }
         Relationships: []
       }
+      user_audit_log: {
+        Row: {
+          created_at: string
+          dealer_id: number | null
+          entity_id: string
+          entity_type: string
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          dealer_id?: number | null
+          entity_id: string
+          entity_type: string
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number | null
+          entity_id?: string
+          entity_type?: string
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_audit_log_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_contact_permissions: {
         Row: {
           allow_channel_mentions: boolean
@@ -1514,6 +1561,118 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_contact_permissions_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_notification_settings: {
+        Row: {
+          created_at: string
+          dealer_id: number | null
+          email_notifications: boolean
+          id: string
+          in_app_notifications: boolean
+          notification_frequency: string
+          notification_types: Json | null
+          push_notifications: boolean
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dealer_id?: number | null
+          email_notifications?: boolean
+          id?: string
+          in_app_notifications?: boolean
+          notification_frequency?: string
+          notification_types?: Json | null
+          push_notifications?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number | null
+          email_notifications?: boolean
+          id?: string
+          in_app_notifications?: boolean
+          notification_frequency?: string
+          notification_types?: Json | null
+          push_notifications?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notification_settings_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_notifications: {
+        Row: {
+          action_label: string | null
+          action_url: string | null
+          created_at: string
+          data: Json | null
+          dealer_id: number | null
+          expires_at: string | null
+          id: string
+          message: string
+          notification_type: string
+          priority: string
+          read_at: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          data?: Json | null
+          dealer_id?: number | null
+          expires_at?: string | null
+          id?: string
+          message: string
+          notification_type: string
+          priority?: string
+          read_at?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          data?: Json | null
+          dealer_id?: number | null
+          expires_at?: string | null
+          id?: string
+          message?: string
+          notification_type?: string
+          priority?: string
+          read_at?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notifications_dealer_id_fkey"
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
