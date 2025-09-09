@@ -29,21 +29,17 @@ export class ShortLinkService {
   /**
    * Create short link and QR code for an order
    */
-  async createShortLink(orderId: string, orderNumber?: string): Promise<ShortLinkData> {
+  async createShortLink(orderId: string, orderNumber?: string, dealerId?: number): Promise<ShortLinkData> {
     try {
-      const slug = this.generateSlug();
-      const shortUrl = `https://${this.domain}/s/${slug}`;
+      console.log(`🔗 Generating short link for order ${orderNumber}`);
       
-      console.log(`🔗 Generating short link for order ${orderNumber}: ${shortUrl}`);
-      
-      // Call Supabase Edge Function to create short link
+      // Call Supabase Edge Function to create short link with correct parameters
       const { data, error } = await supabase.functions.invoke('generate-qr-shortlink', {
         body: {
           orderId,
-          slug,
-          domain: this.domain,
-          orderNumber,
-          redirectUrl: `${window.location.origin}/orders/${orderId}` // Deep link to order
+          orderNumber: orderNumber || orderId,
+          dealerId: dealerId || 5, // Default dealer ID
+          regenerate: false
         }
       });
 
@@ -55,12 +51,13 @@ export class ShortLinkService {
       console.log('✅ Short link created:', data);
       
       return {
-        slug,
-        shortUrl,
-        qrCodeUrl: data?.qrCodeUrl,
+        slug: data.slug,
+        shortUrl: data.shortLink,
+        qrCodeUrl: data.qrCodeUrl,
         analytics: {
-          totalClicks: 0,
-          uniqueVisitors: 0
+          totalClicks: data.analytics?.totalClicks || 0,
+          uniqueVisitors: data.analytics?.uniqueClicks || 0,
+          lastClicked: data.analytics?.lastClickedAt
         }
       };
       
@@ -102,23 +99,35 @@ export class ShortLinkService {
   /**
    * Regenerate short link for an order
    */
-  async regenerateShortLink(orderId: string, oldSlug?: string): Promise<ShortLinkData> {
+  async regenerateShortLink(orderId: string, orderNumber?: string, dealerId?: number): Promise<ShortLinkData> {
     try {
       console.log(`🔄 Regenerating short link for order ${orderId}`);
       
-      // Deactivate old slug if exists
-      if (oldSlug) {
-        await supabase.functions.invoke('track-qr-click', {
-          body: {
-            slug: oldSlug,
-            action: 'deactivate'
-          }
-        });
+      // Call Edge Function with regenerate flag
+      const { data, error } = await supabase.functions.invoke('generate-qr-shortlink', {
+        body: {
+          orderId,
+          orderNumber: orderNumber || orderId,
+          dealerId: dealerId || 5,
+          regenerate: true
+        }
+      });
+
+      if (error) {
+        console.error('❌ Regenerate short link failed:', error);
+        throw error;
       }
 
-      // Create new short link
-      return await this.createShortLink(orderId);
-      
+      return {
+        slug: data.slug,
+        shortUrl: data.shortLink,
+        qrCodeUrl: data.qrCodeUrl,
+        analytics: {
+          totalClicks: data.analytics?.totalClicks || 0,
+          uniqueVisitors: data.analytics?.uniqueClicks || 0,
+          lastClicked: data.analytics?.lastClickedAt
+        }
+      };
     } catch (error) {
       console.error('❌ Failed to regenerate short link:', error);
       throw error;

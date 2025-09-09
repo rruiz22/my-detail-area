@@ -109,13 +109,15 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
         first_name: formData.firstName,
         last_name: formData.lastName,
         user_type: formData.userType,
-        role: formData.role,
-        created_via: 'direct_creation'
+        role: formData.role
       };
 
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .insert(profileData)
+        .insert({
+          ...profileData,
+          id: crypto.randomUUID()
+        })
         .select()
         .single();
 

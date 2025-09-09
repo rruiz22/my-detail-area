@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
@@ -49,6 +50,7 @@ interface UseUserPresenceReturn {
 }
 
 export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { dealerships } = useAccessibleDealerships();
   

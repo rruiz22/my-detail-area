@@ -9,7 +9,6 @@ export type AppModule =
   | 'recon_orders'
   | 'car_wash'
   | 'chat'
-  | 'contacts'
   | 'reports'
   | 'settings'
   | 'dealerships'

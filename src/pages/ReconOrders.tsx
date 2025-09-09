@@ -150,7 +150,7 @@ export default function ReconOrders() {
     description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,
     price: order.reconCost || 0,
     advisor: t('recon_defaults.default_advisor'),
-    department: t('recon_defaults.default_department') as const
+    department: t('recon_defaults.default_department')
   }));
 
   // Filter orders based on search term

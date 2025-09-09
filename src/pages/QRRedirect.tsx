@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 
 export default function QRRedirect() {
+  const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const [loading, setLoading] = useState(true);
   const [deepLink, setDeepLink] = useState<string | null>(null);

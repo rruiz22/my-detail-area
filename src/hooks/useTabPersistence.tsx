@@ -54,7 +54,7 @@ export function useTabPersistence(pageKey: PageKey, dealerId?: string) {
   return useInstantTabPersistence(
     config.key,
     config.defaultTab,
-    config.validTabs as string[],
+    config.validTabs as unknown as string[],
     dealerId
   );
 }

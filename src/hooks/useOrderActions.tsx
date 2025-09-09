@@ -39,9 +39,9 @@ export function useOrderActions(): OrderActionsResult {
       const { error } = await supabase
         .from('orders')
         .update({
-          qr_slug: linkData.slug,
-          short_url: linkData.shortUrl,
-          qr_generated_at: new Date().toISOString()
+          short_link: linkData.shortUrl,
+          qr_code_url: linkData.qrCodeUrl,
+          updated_at: new Date().toISOString()
         })
         .eq('id', orderId);
 
@@ -57,7 +57,11 @@ export function useOrderActions(): OrderActionsResult {
         shortLink: linkData.shortUrl,
         linkId: orderId,
         slug: linkData.slug,
-        analytics: linkData.analytics
+        analytics: {
+          totalClicks: linkData.analytics?.totalClicks || 0,
+          uniqueClicks: linkData.analytics?.uniqueVisitors || 0,
+          lastClickedAt: linkData.analytics?.lastClicked || null
+        }
       };
       
     } catch (error) {

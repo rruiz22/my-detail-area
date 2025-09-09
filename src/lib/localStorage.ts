@@ -242,6 +242,3 @@ class LocalStorageService {
 
 // Export singleton instance
 export const storage = new LocalStorageService();
-
-// Export types
-export type { StorageOptions, StorageItem };

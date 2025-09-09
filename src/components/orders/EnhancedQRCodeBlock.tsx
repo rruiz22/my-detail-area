@@ -62,11 +62,11 @@ export function EnhancedQRCodeBlock({
       
       // Update order record with QR data
       const { error } = await supabase
-        .from('sales_orders') // This should be dynamic based on order type
+        .from('orders') 
         .update({
-          qr_slug: linkData.slug,
-          short_url: linkData.shortUrl,
-          qr_generated_at: new Date().toISOString()
+          short_link: linkData.shortUrl,
+          qr_code_url: linkData.qrCodeUrl,
+          updated_at: new Date().toISOString()
         })
         .eq('id', orderId);
 
@@ -92,11 +92,11 @@ export function EnhancedQRCodeBlock({
       
       // Update order record
       const { error } = await supabase
-        .from('sales_orders')
+        .from('orders')
         .update({
-          qr_slug: newLinkData.slug,
-          short_url: newLinkData.shortUrl,
-          qr_generated_at: new Date().toISOString()
+          short_link: newLinkData.shortUrl,
+          qr_code_url: newLinkData.qrCodeUrl,
+          updated_at: new Date().toISOString()
         })
         .eq('id', orderId);
 

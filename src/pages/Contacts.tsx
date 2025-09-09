@@ -229,7 +229,7 @@ export default function Contacts() {
               Contact information only - these are not system users
             </p>
           </div>
-          <PermissionGuard module="contacts" permission="write">
+          <PermissionGuard module="users" permission="write">
             <Button className="gap-2" onClick={handleAdd}>
               <Plus className="h-4 w-4" />
               {t('contacts.add_new')}
@@ -336,7 +336,7 @@ export default function Contacts() {
                             <Eye className="mr-2 h-4 w-4" />
                             {t('common.view')}
                           </DropdownMenuItem>
-                          <PermissionGuard module="contacts" permission="write">
+            <PermissionGuard module="management" permission="write">
                             <DropdownMenuItem onClick={() => handleEdit(contact)}>
                               <Edit className="mr-2 h-4 w-4" />
                               {t('common.edit')}
@@ -350,7 +350,7 @@ export default function Contacts() {
                             <MessageSquare className="mr-2 h-4 w-4" />
                             {t('contacts.send_email')}
                           </DropdownMenuItem>
-                          <PermissionGuard module="contacts" permission="delete">
+            <PermissionGuard module="management" permission="delete">
                             <DropdownMenuItem 
                               onClick={() => handleDelete(contact)}
                               className="text-destructive"
@@ -490,7 +490,7 @@ export default function Contacts() {
                               <Eye className="mr-2 h-4 w-4" />
                               {t('common.view')}
                             </DropdownMenuItem>
-                            <PermissionGuard module="contacts" permission="write">
+              <PermissionGuard module="management" permission="write">
                               <DropdownMenuItem onClick={() => handleEdit(contact)}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 {t('common.edit')}
@@ -504,7 +504,7 @@ export default function Contacts() {
                               <MessageSquare className="mr-2 h-4 w-4" />
                               {t('contacts.send_email')}
                             </DropdownMenuItem>
-                            <PermissionGuard module="contacts" permission="delete">
+                            <PermissionGuard module="management" permission="delete">
                               <DropdownMenuItem 
                                 onClick={() => handleDelete(contact)}
                                 className="text-destructive"

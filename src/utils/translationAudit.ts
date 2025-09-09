@@ -355,7 +355,7 @@ export class TranslationAuditService {
       .slice(0, 5);
 
     for (const [file, data] of problematicPages) {
-      recommendations.push(`Fix ${data.missingKeys.length} missing keys in ${file}`);
+      recommendations.push(`Fix ${(data as any)?.missingKeys?.length || 0} missing keys in ${file}`);
     }
 
     return recommendations;
