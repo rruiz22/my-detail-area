@@ -23,90 +23,13 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
   const videoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const startCamera = useCallback(async () => {
-    setCameraLoading(true);
-    setCameraError(null);
-    setVideoReady(false);
-    
-    try {
-      console.log('Requesting camera access...');
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: 'environment',
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
-      });
-      
-      console.log('Camera access granted, setting up video...');
-      setStream(mediaStream);
-      
-      if (videoRef.current) {
-        const video = videoRef.current;
-        video.srcObject = mediaStream;
-        
-        // Wait for video to be ready
-        video.onloadedmetadata = () => {
-          console.log('Video metadata loaded');
-          setVideoReady(true);
-          setCameraLoading(false);
-        };
-        
-        video.onerror = (e) => {
-          console.error('Video error:', e);
-          setCameraError(t('vinScanner.videoError', 'Error al cargar el video'));
-          setCameraLoading(false);
-          
-          // Stop camera on error
-          if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
-            setStream(null);
-          }
-        };
-        
-        // Try to play the video explicitly
-        try {
-          await video.play();
-          console.log('Video play started successfully');
-        } catch (playError) {
-          console.warn('Video play failed, but continuing:', playError);
-        }
-        
-        // Timeout fallback
-        setTimeout(() => {
-          if (mediaStream.active) {
-            console.log('Video timeout reached, forcing ready state');
-            setVideoReady(true);
-            setCameraLoading(false);
-          }
-        }, 4000);
-      }
-    } catch (err) {
-      console.error('Camera access error:', err);
-      setCameraLoading(false);
-      
-      if (err instanceof Error) {
-        if (err.name === 'NotAllowedError') {
-          setCameraError(t('vinScanner.permissionDenied', 'Permiso de cámara denegado'));
-        } else if (err.name === 'NotFoundError') {
-          setCameraError(t('vinScanner.noCamera', 'No se encontró cámara'));
-        } else {
-          setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
-        }
-      } else {
-        setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
-      }
-    }
-  }, [t]);
-
-  const stopCamera = useCallback(() => {
-    console.log('Stopping camera...');
+  const cleanupCamera = useCallback(() => {
+    console.log('Cleaning up camera...');
     if (stream) {
       stream.getTracks().forEach(track => {
         track.stop();
         console.log('Camera track stopped');
       });
-      setStream(null);
     }
     
     if (videoRef.current) {
@@ -115,13 +38,98 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
       videoRef.current.onerror = null;
     }
     
+    setStream(null);
     setVideoReady(false);
     setCameraLoading(false);
     setCameraError(null);
   }, [stream]);
 
+  const startCamera = useCallback(async () => {
+    // Clear any previous state
+    cleanupCamera();
+    
+    setCameraLoading(true);
+    setCameraError(null);
+    
+    try {
+      console.log('Requesting camera access...');
+      const constraints = {
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      };
+      
+      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      console.log('Camera access granted, setting up video...');
+      
+      setStream(mediaStream);
+      
+      if (videoRef.current) {
+        const video = videoRef.current;
+        video.srcObject = mediaStream;
+        
+        // Set up event handlers
+        const handleLoadedMetadata = () => {
+          console.log('Video metadata loaded');
+          setVideoReady(true);
+          setCameraLoading(false);
+        };
+        
+        const handleVideoError = (e: Event) => {
+          console.error('Video error:', e);
+          setCameraError(t('vinScanner.videoError', 'Error al cargar el video'));
+          setCameraLoading(false);
+          cleanupCamera();
+        };
+        
+        video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
+        video.addEventListener('error', handleVideoError, { once: true });
+        
+        // Try to play the video
+        try {
+          await video.play();
+          console.log('Video play started successfully');
+        } catch (playError) {
+          console.warn('Video play failed, but continuing:', playError);
+        }
+        
+        // Fallback timeout
+        setTimeout(() => {
+          if (mediaStream.active && !video.paused) {
+            console.log('Video timeout reached, forcing ready state');
+            setVideoReady(true);
+            setCameraLoading(false);
+          }
+        }, 5000);
+      }
+    } catch (err) {
+      console.error('Camera access error:', err);
+      setCameraLoading(false);
+      
+      if (err instanceof Error) {
+        switch (err.name) {
+          case 'NotAllowedError':
+            setCameraError(t('vinScanner.permissionDenied', 'Permiso de cámara denegado'));
+            break;
+          case 'NotFoundError':
+            setCameraError(t('vinScanner.noCamera', 'No se encontró cámara'));
+            break;
+          case 'NotReadableError':
+            setCameraError(t('vinScanner.cameraInUse', 'Cámara en uso por otra aplicación'));
+            break;
+          default:
+            setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
+        }
+      } else {
+        setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
+      }
+    }
+  }, [t, cleanupCamera]);
+
   const captureImage = useCallback(async () => {
-    if (!videoRef.current || !videoReady) {
+    if (!videoRef.current || !videoReady || !stream) {
       console.warn('Video not ready for capture');
       return;
     }
@@ -132,9 +140,10 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
       const context = canvas.getContext('2d');
       if (!context) return;
 
-      canvas.width = videoRef.current.videoWidth || 640;
-      canvas.height = videoRef.current.videoHeight || 480;
-      context.drawImage(videoRef.current, 0, 0);
+      const video = videoRef.current;
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      context.drawImage(video, 0, 0);
 
       canvas.toBlob(async (blob) => {
         if (blob) {
@@ -148,7 +157,7 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
       console.error('Capture error:', err);
       setCameraError(t('vinScanner.captureError', 'Error al capturar imagen'));
     }
-  }, [scanVin, videoReady, t]);
+  }, [scanVin, videoReady, stream, t]);
 
   const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -160,27 +169,19 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
 
   const handleVinSelect = useCallback((vin: string) => {
     onVinDetected(vin);
-    handleClose();
-  }, [onVinDetected]);
-
-  const handleClose = useCallback(() => {
-    console.log('Closing scanner modal...');
-    stopCamera();
-    setDetectedVins([]);
-    setCameraError(null);
     onClose();
-  }, [stopCamera, onClose]);
-  
-  // Cleanup on unmount or when dialog closes
+  }, [onVinDetected, onClose]);
+
+  // Cleanup when modal closes
   useEffect(() => {
     if (!open) {
-      stopCamera();
+      cleanupCamera();
       setDetectedVins([]);
       setCameraError(null);
     }
-  }, [open, stopCamera]);
-  
-  // Cleanup on component unmount
+  }, [open, cleanupCamera]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (stream) {
@@ -191,7 +192,7 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
   }, [stream]);
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -259,11 +260,13 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
                   ) : (
                     <Camera className="h-4 w-4" />
                   )}
-                  {t('vinScanner.capture', 'Capturar')}
+                  <span className="ml-2">
+                    {t('vinScanner.capture', 'Capturar')}
+                  </span>
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={stopCamera}
+                  onClick={cleanupCamera}
                   disabled={cameraLoading}
                 >
                   <X className="h-4 w-4" />
@@ -278,8 +281,16 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
                   {t('vinScanner.instruction', 'Inicia la cámara o sube una imagen del VIN')}
                 </p>
                 <div className="flex gap-2">
-                  <Button onClick={startCamera} className="flex-1">
-                    <Camera className="h-4 w-4 mr-2" />
+                  <Button 
+                    onClick={startCamera} 
+                    className="flex-1"
+                    disabled={cameraLoading}
+                  >
+                    {cameraLoading ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Camera className="h-4 w-4 mr-2" />
+                    )}
                     {t('vinScanner.startCamera', 'Iniciar Cámara')}
                   </Button>
                   <Button
