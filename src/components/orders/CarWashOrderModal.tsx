@@ -22,7 +22,7 @@ interface CarWashOrderModalProps {
   onSave: (orderData: any) => void;
 }
 
-export const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onClose, onSave }) => {
+const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onClose, onSave }) => {
   const { t } = useTranslation();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
@@ -403,3 +403,5 @@ export const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, ope
     </Dialog>
   );
 };
+
+export default CarWashOrderModal;

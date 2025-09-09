@@ -3,7 +3,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCw, Clock } from 'lucide-react';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
-import { CarWashOrderModal } from '@/components/orders/CarWashOrderModal';
+import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
 import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
