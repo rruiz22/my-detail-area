@@ -11,6 +11,7 @@ import {
   Eye,
   Users
 } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
 import { shortLinkService, ShortLinkData } from '@/services/shortLinkService';
 import { supabase } from '@/integrations/supabase/client';
@@ -59,8 +60,10 @@ export function EnhancedQRCodeBlock({
       
       const linkData = await shortLinkService.createShortLink(orderId, orderNumber);
       setQrData(linkData);
-      
-      // Update order record with QR data
+      // Load analytics for the new slug
+      if (linkData.slug) {
+        loadAnalytics(linkData.slug);
+      }
       const { error } = await supabase
         .from('orders') 
         .update({
@@ -135,7 +138,15 @@ export function EnhancedQRCodeBlock({
           {/* QR Code Display */}
           <div className="bg-white p-4 rounded-lg border text-center">
             <div className="w-32 h-32 bg-gray-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
-              <QrCode className="h-16 w-16 text-gray-400" />
+              {qrData.shortUrl || qrData.slug ? (
+                <QRCodeCanvas
+                  value={qrData.shortUrl || `${window.location.origin}/s/${qrData.slug}`}
+                  size={128}
+                  includeMargin
+                />
+              ) : (
+                <QrCode className="h-16 w-16 text-gray-400" />
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               QR Code for quick access

@@ -4,6 +4,7 @@ export interface ShortLinkData {
   slug: string;
   shortUrl: string;
   qrCodeUrl?: string;
+  deepLink?: string;
   analytics?: {
     totalClicks: number;
     uniqueVisitors: number;
@@ -54,6 +55,7 @@ export class ShortLinkService {
         slug: data.slug,
         shortUrl: data.shortLink,
         qrCodeUrl: data.qrCodeUrl,
+        deepLink: data.deepLink,
         analytics: {
           totalClicks: data.analytics?.totalClicks || 0,
           uniqueVisitors: data.analytics?.uniqueClicks || 0,
@@ -122,6 +124,7 @@ export class ShortLinkService {
         slug: data.slug,
         shortUrl: data.shortLink,
         qrCodeUrl: data.qrCodeUrl,
+        deepLink: data.deepLink,
         analytics: {
           totalClicks: data.analytics?.totalClicks || 0,
           uniqueVisitors: data.analytics?.uniqueClicks || 0,

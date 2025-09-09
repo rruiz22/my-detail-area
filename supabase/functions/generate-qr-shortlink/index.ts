@@ -78,70 +78,74 @@ const handler = async (req: Request): Promise<Response> => {
     const redirectUrl = `${baseUrl}/s/${slug}`;
     const deepLink = `${baseUrl}/sales-orders?order=${orderId}`;
 
-    // Generate short link using mda.to API
-    const shortLinkResponse = await fetch("https://mda.to/api/v1/shorten", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${mdaApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: redirectUrl,
-        title: `Order ${orderNumber}`,
-        description: `View order details for ${orderNumber}`,
-        alias: slug.toLowerCase(), // Use our slug as alias
-      }),
-    });
+    // Generate short link using mda.to API (fallback to redirectUrl if unavailable)
+    let shortLink = redirectUrl;
+    try {
+      const shortLinkResponse = await fetch("https://mda.to/api/v1/shorten", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${mdaApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: redirectUrl,
+          title: `Order ${orderNumber}`,
+          description: `View order details for ${orderNumber}`,
+          alias: slug.toLowerCase(), // Use our slug as alias
+        }),
+      });
 
-    if (!shortLinkResponse.ok) {
-      const errorText = await shortLinkResponse.text();
-      console.error("MDA API Error:", errorText);
-      throw new Error(`Failed to generate short link: ${shortLinkResponse.statusText}`);
+      if (shortLinkResponse.ok) {
+        const contentType = shortLinkResponse.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const shortLinkData = await shortLinkResponse.json();
+          shortLink = shortLinkData.shortUrl || redirectUrl;
+        } else {
+          const errorText = await shortLinkResponse.text();
+          console.warn("MDA API returned non-JSON response; using fallback:", errorText);
+        }
+      } else {
+        const errorText = await shortLinkResponse.text();
+        console.warn("MDA API Error (shorten); using fallback:", errorText);
+      }
+    } catch (err) {
+      console.warn("Shorten API call failed; using fallback redirectUrl:", err);
     }
 
-    // Check if response is JSON
-    const contentType = shortLinkResponse.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      const errorText = await shortLinkResponse.text();
-      console.error("MDA API returned non-JSON response:", errorText);
-      throw new Error(`MDA API returned invalid response format`);
+    // Generate QR code (client can also render QR locally; this is optional)
+    let qrCodeUrl: string | null = null;
+    try {
+      const qrResponse = await fetch("https://mda.to/api/v1/qr", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${mdaApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: shortLink,
+          size: 300,
+          format: "png",
+          errorCorrection: "M",
+          logo: null, // Could add logo later
+        }),
+      });
+
+      if (qrResponse.ok) {
+        const qrContentType = qrResponse.headers.get("content-type") || "";
+        if (qrContentType.includes("application/json")) {
+          const qrData = await qrResponse.json();
+          qrCodeUrl = qrData.qrUrl || null;
+        } else {
+          const errorText = await qrResponse.text();
+          console.warn("QR API returned non-JSON response; skipping hosted QR:", errorText);
+        }
+      } else {
+        const errorText = await qrResponse.text();
+        console.warn("QR API Error; skipping hosted QR:", errorText);
+      }
+    } catch (err) {
+      console.warn("QR API call failed; skipping hosted QR:", err);
     }
-
-    const shortLinkData = await shortLinkResponse.json();
-    const shortLink = shortLinkData.shortUrl || redirectUrl;
-
-    // Generate QR code using mda.to API
-    const qrResponse = await fetch("https://mda.to/api/v1/qr", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${mdaApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        data: shortLink,
-        size: 300,
-        format: "png",
-        errorCorrection: "M",
-        logo: null, // Could add logo later
-      }),
-    });
-
-    if (!qrResponse.ok) {
-      const errorText = await qrResponse.text();
-      console.error("QR API Error:", errorText);
-      throw new Error(`Failed to generate QR code: ${qrResponse.statusText}`);
-    }
-
-    // Check if QR response is JSON
-    const qrContentType = qrResponse.headers.get("content-type");
-    if (!qrContentType || !qrContentType.includes("application/json")) {
-      const errorText = await qrResponse.text();
-      console.error("QR API returned non-JSON response:", errorText);
-      throw new Error(`QR API returned invalid response format`);
-    }
-
-    const qrData = await qrResponse.json();
-    const qrCodeUrl = qrData.qrUrl;
 
     // Disable existing links if regenerating
     if (regenerate) {
