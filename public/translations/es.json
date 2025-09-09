@@ -492,7 +492,13 @@
     "capture": "Capturar",
     "instruction": "Inicia la cámara o sube una imagen del VIN",
     "startCamera": "Iniciar Cámara",
-    "uploadImage": "Subir Imagen"
+    "uploadImage": "Subir Imagen",
+    "videoError": "Error al cargar el video",
+    "permissionDenied": "Permiso de cámara denegado",
+    "noCamera": "No se encontró cámara",
+    "cameraError": "Error al acceder a la cámara",
+    "captureError": "Error al capturar imagen",
+    "initializingCamera": "Inicializando cámara..."
   },
   "settings": {
     "title": "Configuración",

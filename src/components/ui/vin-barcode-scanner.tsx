@@ -42,30 +42,44 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
       setStream(mediaStream);
       
       if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
+        const video = videoRef.current;
+        video.srcObject = mediaStream;
         
         // Wait for video to be ready
-        videoRef.current.onloadedmetadata = () => {
+        video.onloadedmetadata = () => {
           console.log('Video metadata loaded');
           setVideoReady(true);
           setCameraLoading(false);
         };
         
-        videoRef.current.onerror = (e) => {
+        video.onerror = (e) => {
           console.error('Video error:', e);
           setCameraError(t('vinScanner.videoError', 'Error al cargar el video'));
           setCameraLoading(false);
-          stopCamera();
+          
+          // Stop camera on error
+          if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+            setStream(null);
+          }
         };
+        
+        // Try to play the video explicitly
+        try {
+          await video.play();
+          console.log('Video play started successfully');
+        } catch (playError) {
+          console.warn('Video play failed, but continuing:', playError);
+        }
         
         // Timeout fallback
         setTimeout(() => {
-          if (!videoReady && mediaStream.active) {
-            console.log('Video timeout, assuming ready');
+          if (mediaStream.active) {
+            console.log('Video timeout reached, forcing ready state');
             setVideoReady(true);
             setCameraLoading(false);
           }
-        }, 3000);
+        }, 4000);
       }
     } catch (err) {
       console.error('Camera access error:', err);
@@ -83,7 +97,7 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
         setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
       }
     }
-  }, [t, videoReady]);
+  }, [t]);
 
   const stopCamera = useCallback(() => {
     console.log('Stopping camera...');
