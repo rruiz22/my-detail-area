@@ -497,6 +497,7 @@
     "permissionDenied": "Permiso de cámara denegado",
     "noCamera": "No se encontró cámara",
     "cameraError": "Error al acceder a la cámara",
+    "cameraInUse": "Cámara en uso por otra aplicación",
     "captureError": "Error al capturar imagen",
     "initializingCamera": "Inicializando cámara..."
   },

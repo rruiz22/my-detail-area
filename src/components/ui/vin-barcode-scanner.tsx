@@ -42,12 +42,15 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
     setVideoReady(false);
     setCameraLoading(false);
     setCameraError(null);
-  }, [stream]);
+  }, []);
 
   const startCamera = useCallback(async () => {
-    // Clear any previous state
-    cleanupCamera();
-    
+    // Clear any previous state first
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+    setStream(null);
+    setVideoReady(false);
     setCameraLoading(true);
     setCameraError(null);
     
@@ -64,46 +67,67 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       console.log('Camera access granted, setting up video...');
       
-      setStream(mediaStream);
+      // Check if component is still mounted and modal is open
+      if (!videoRef.current) {
+        console.log('Video ref not available, stopping stream');
+        mediaStream.getTracks().forEach(track => track.stop());
+        return;
+      }
       
-      if (videoRef.current) {
-        const video = videoRef.current;
-        video.srcObject = mediaStream;
-        
-        // Set up event handlers
-        const handleLoadedMetadata = () => {
-          console.log('Video metadata loaded');
+      setStream(mediaStream);
+      const video = videoRef.current;
+      video.srcObject = mediaStream;
+      
+      // Set up event handlers with proper cleanup
+      const handleLoadedMetadata = () => {
+        console.log('Video metadata loaded, video ready');
+        setVideoReady(true);
+        setCameraLoading(false);
+      };
+      
+      const handleVideoError = (e: Event) => {
+        console.error('Video error:', e);
+        setCameraError(t('vinScanner.videoError', 'Error al cargar el video'));
+        setCameraLoading(false);
+        // Stop the stream on error
+        mediaStream.getTracks().forEach(track => track.stop());
+        setStream(null);
+      };
+      
+      video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
+      video.addEventListener('error', handleVideoError, { once: true });
+      
+      // Try to play the video
+      try {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+          console.log('Video play started successfully');
+        }
+      } catch (playError) {
+        console.warn('Video play failed:', playError);
+        // Continue anyway, some browsers don't allow autoplay
+      }
+      
+      // Fallback timeout in case metadata never loads
+      const timeoutId = setTimeout(() => {
+        console.log('Video timeout reached, checking stream status');
+        if (mediaStream.active) {
+          console.log('Stream is active, forcing ready state');
           setVideoReady(true);
           setCameraLoading(false);
-        };
-        
-        const handleVideoError = (e: Event) => {
-          console.error('Video error:', e);
-          setCameraError(t('vinScanner.videoError', 'Error al cargar el video'));
+        } else {
+          console.log('Stream is not active, showing error');
+          setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
           setCameraLoading(false);
-          cleanupCamera();
-        };
-        
-        video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
-        video.addEventListener('error', handleVideoError, { once: true });
-        
-        // Try to play the video
-        try {
-          await video.play();
-          console.log('Video play started successfully');
-        } catch (playError) {
-          console.warn('Video play failed, but continuing:', playError);
         }
-        
-        // Fallback timeout
-        setTimeout(() => {
-          if (mediaStream.active && !video.paused) {
-            console.log('Video timeout reached, forcing ready state');
-            setVideoReady(true);
-            setCameraLoading(false);
-          }
-        }, 5000);
-      }
+      }, 5000);
+      
+      // Clear timeout if video loads properly
+      video.addEventListener('loadedmetadata', () => {
+        clearTimeout(timeoutId);
+      }, { once: true });
+      
     } catch (err) {
       console.error('Camera access error:', err);
       setCameraLoading(false);
@@ -126,7 +150,7 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
         setCameraError(t('vinScanner.cameraError', 'Error al acceder a la cámara'));
       }
     }
-  }, [t, cleanupCamera]);
+  }, [t, stream]);
 
   const captureImage = useCallback(async () => {
     if (!videoRef.current || !videoReady || !stream) {
@@ -174,12 +198,16 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
 
   // Cleanup when modal closes
   useEffect(() => {
-    if (!open) {
-      cleanupCamera();
+    if (!open && stream) {
+      console.log('Modal closed, cleaning up camera...');
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+      setVideoReady(false);
+      setCameraLoading(false);
       setDetectedVins([]);
       setCameraError(null);
     }
-  }, [open, cleanupCamera]);
+  }, [open, stream]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -193,13 +221,17 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md" aria-describedby="vin-scanner-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Camera className="h-5 w-5" />
             {t('vinScanner.title', 'Escanear VIN')}
           </DialogTitle>
         </DialogHeader>
+        
+        <div id="vin-scanner-description" className="sr-only">
+          {t('vinScanner.instruction', 'Inicia la cámara o sube una imagen del VIN')}
+        </div>
 
         <div className="space-y-4">
           {(error || cameraError) && (
@@ -266,7 +298,14 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={cleanupCamera}
+                  onClick={() => {
+                    if (stream) {
+                      stream.getTracks().forEach(track => track.stop());
+                      setStream(null);
+                      setVideoReady(false);
+                      setCameraLoading(false);
+                    }
+                  }}
                   disabled={cameraLoading}
                 >
                   <X className="h-4 w-4" />
