@@ -58,7 +58,11 @@ export function EnhancedQRCodeBlock({
     try {
       console.log('🔗 Generating QR code for order:', orderId);
       
-      const linkData = await shortLinkService.createShortLink(orderId, orderNumber);
+      const linkData = await shortLinkService.createShortLink(
+        orderId, 
+        orderNumber, 
+        dealerId ? parseInt(dealerId) : 5
+      );
       setQrData(linkData);
       // Load analytics for the new slug
       if (linkData.slug) {

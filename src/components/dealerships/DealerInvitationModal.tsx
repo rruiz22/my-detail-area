@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import {
   Dialog,
   DialogContent,
@@ -21,12 +22,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Mail, UserPlus, Send } from 'lucide-react';
+import { Loader2, Mail, UserPlus, Send, Building2 } from 'lucide-react';
 
 interface DealerInvitationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dealerId: number;
+  dealerId?: number | null; // Optional now
   onInvitationSent?: () => void;
 }
 
@@ -77,15 +78,17 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { dealerships, loading: dealershipsLoading } = useAccessibleDealerships();
   
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string>('');
+  const [selectedDealerId, setSelectedDealerId] = useState<number | null>(dealerId || null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !selectedRole) {
+    if (!email || !selectedRole || !selectedDealerId) {
       toast({
         title: t('common.error'),
         description: t('messages.required_field'),
@@ -109,7 +112,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       // Create dealer invitation using RPC function
       const { data: invitationToken, error } = await supabase
         .rpc('create_dealer_invitation', {
-          p_dealer_id: dealerId,
+          p_dealer_id: selectedDealerId,
           p_email: email,
           p_role_name: selectedRole,
         });
@@ -129,6 +132,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       // Reset form
       setEmail('');
       setSelectedRole('');
+      setSelectedDealerId(dealerId || null);
       onInvitationSent?.();
       onClose();
     } catch (error: any) {
@@ -147,8 +151,15 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
     if (!loading) {
       setEmail('');
       setSelectedRole('');
+      setSelectedDealerId(dealerId || null);
       onClose();
     }
+  };
+
+  const getDealershipName = () => {
+    if (!selectedDealerId) return 'No dealership selected';
+    const dealership = dealerships.find(d => d.id === selectedDealerId);
+    return dealership?.name || `Dealership #${selectedDealerId}`;
   };
 
   const selectedRoleInfo = DEALER_ROLES.find(role => role.value === selectedRole);
@@ -162,11 +173,45 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
             {t('invitations.send_invitation')}
           </DialogTitle>
           <DialogDescription>
-            {t('invitations.invite_user_to', { dealership: `Dealership #${dealerId}` })}
+            {selectedDealerId 
+              ? t('invitations.invite_user_to', { dealership: getDealershipName() })
+              : 'Invite a user to join a dealership'
+            }
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Dealership Selection */}
+          {dealerId ? (
+            <div className="space-y-2">
+              <Label>{t('dealerships.dealership')} *</Label>
+              <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">{getDealershipName()}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="dealership">{t('dealerships.select_dealership')} *</Label>
+              <Select 
+                value={selectedDealerId?.toString() || ''} 
+                onValueChange={(value) => setSelectedDealerId(parseInt(value))}
+                disabled={loading || dealershipsLoading}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t('dealerships.select_dealership')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {dealerships.map((dealership) => (
+                    <SelectItem key={dealership.id} value={dealership.id.toString()}>
+                      {dealership.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="email">{t('invitations.email')} *</Label>
             <div className="relative">
@@ -224,7 +269,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
             >
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={loading || !email || !selectedRole}>
+            <Button type="submit" disabled={loading || !email || !selectedRole || !selectedDealerId}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

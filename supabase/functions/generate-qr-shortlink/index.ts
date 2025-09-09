@@ -1,5 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { supabase } from "../_shared/supabase.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+// Use service role client for server operations
+export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -74,9 +80,9 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Generated slug: ${slug}`);
 
     // Create the deep link to our redirect endpoint
-    const baseUrl = "https://swfnnrpzpkdypbrzmgnr.supabase.co";
-    const redirectUrl = `${baseUrl}/s/${slug}`;
-    const deepLink = `${baseUrl}/sales-orders?order=${orderId}`;
+    const appUrl = Deno.env.get("PUBLIC_APP_URL") || "https://my-detail-area.lovable.app";
+    const redirectUrl = `${appUrl}/s/${slug}`;
+    const deepLink = `${appUrl}/sales-orders?order=${orderId}`;
 
     // Generate short link using mda.to API (fallback to redirectUrl if unavailable)
     let shortLink = redirectUrl;

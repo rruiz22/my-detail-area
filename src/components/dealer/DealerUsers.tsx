@@ -43,6 +43,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { safeFormatDateOnly } from '@/utils/dateUtils';
+import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 
 interface DealerUsersProps {
   dealerId: string;
@@ -73,13 +74,6 @@ interface DealerGroup {
   slug: string;
 }
 
-interface InviteFormData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  groupIds: string[];
-}
-
 export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -90,12 +84,6 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   const [showManageGroupsModal, setShowManageGroupsModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<DealerMembership | null>(null);
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
-  const [inviteFormData, setInviteFormData] = useState<InviteFormData>({
-    email: '',
-    firstName: '',
-    lastName: '',
-    groupIds: []
-  });
 
   useEffect(() => {
     fetchUsers();
@@ -212,49 +200,12 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
     }
   };
 
-  const handleInviteUser = async () => {
-    try {
-      // For now, we'll just create a membership record
-      // In a real implementation, you'd use an edge function to create the user
-      // and send an invitation email
-      
-      toast({
-        title: t('common.info'),
-        description: t('dealer.users.invite_feature_coming_soon'),
-      });
-
-      setShowInviteModal(false);
-      setInviteFormData({
-        email: '',
-        firstName: '',
-        lastName: '',
-        groupIds: []
-      });
-    } catch (error: any) {
-      console.error('Error inviting user:', error);
-      toast({
-        title: t('common.error'),
-        description: t('dealer.users.error_inviting_user'),
-        variant: 'destructive'
-      });
-    }
-  };
-
   const handleGroupToggle = (groupId: string) => {
     setSelectedGroupIds(prev =>
       prev.includes(groupId)
         ? prev.filter(id => id !== groupId)
         : [...prev, groupId]
     );
-  };
-
-  const handleInviteGroupToggle = (groupId: string) => {
-    setInviteFormData(prev => ({
-      ...prev,
-      groupIds: prev.groupIds.includes(groupId)
-        ? prev.groupIds.filter(id => id !== groupId)
-        : [...prev.groupIds, groupId]
-    }));
   };
 
   const getFullName = (user: DealerMembership) => {
@@ -389,79 +340,13 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
         </CardContent>
       </Card>
 
-      {/* Invite User Modal */}
-      <Dialog open={showInviteModal} onOpenChange={setShowInviteModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('dealer.users.invite_user')}</DialogTitle>
-            <DialogDescription>
-              {t('dealer.users.invite_user_desc')}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="email">{t('dealer.users.form.email')}</Label>
-              <Input
-                id="email"
-                type="email"
-                value={inviteFormData.email}
-                onChange={(e) => setInviteFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder={t('dealer.users.form.email_placeholder')}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="firstName">{t('dealer.users.form.first_name')}</Label>
-                <Input
-                  id="firstName"
-                  value={inviteFormData.firstName}
-                  onChange={(e) => setInviteFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                  placeholder={t('dealer.users.form.first_name_placeholder')}
-                />
-              </div>
-              <div>
-                <Label htmlFor="lastName">{t('dealer.users.form.last_name')}</Label>
-                <Input
-                  id="lastName"
-                  value={inviteFormData.lastName}
-                  onChange={(e) => setInviteFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                  placeholder={t('dealer.users.form.last_name_placeholder')}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label>{t('dealer.users.form.initial_groups')}</Label>
-              <div className="mt-2 space-y-2">
-                {groups.map((group) => (
-                  <div key={group.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`invite-${group.id}`}
-                      checked={inviteFormData.groupIds.includes(group.id)}
-                      onCheckedChange={() => handleInviteGroupToggle(group.id)}
-                    />
-                    <Label htmlFor={`invite-${group.id}`} className="text-sm">
-                      {group.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowInviteModal(false)}>
-              {t('common.cancel')}
-            </Button>
-            <Button onClick={handleInviteUser}>
-              <Mail className="h-4 w-4 mr-2" />
-              {t('dealer.users.send_invitation')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Invitation Modal */}
+      <DealerInvitationModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        dealerId={parseInt(dealerId)} // Fixed dealership from route
+        onInvitationSent={fetchUsers}
+      />
 
       {/* Manage User Groups Modal */}
       <Dialog open={showManageGroupsModal} onOpenChange={setShowManageGroupsModal}>

@@ -327,11 +327,11 @@ export const EnhancedUserManagementSection: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Role Assignment Modal */}
+      {/* Invitation Modal */}
       <DealerInvitationModal
         isOpen={isInvitationModalOpen}
         onClose={() => setIsInvitationModalOpen(false)}
-        dealerId={selectedDealership || dealerships[0]?.id || 1}
+        dealerId={selectedDealership} // Pass selected dealership or null for selector
         onInvitationSent={handleInvitationSent}
       />
 

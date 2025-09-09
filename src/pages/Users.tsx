@@ -65,7 +65,7 @@ const Users = () => {
         <DealerInvitationModal 
           isOpen={showInviteModal}
           onClose={() => setShowInviteModal(false)}
-          dealerId={null} // Will select dealership in modal
+          dealerId={null} // Will show dealership selector
         />
         
         <DirectUserCreationModal

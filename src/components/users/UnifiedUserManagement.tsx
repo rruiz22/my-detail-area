@@ -351,7 +351,7 @@ export const UnifiedUserManagement: React.FC = () => {
       <DealerInvitationModal
         isOpen={isInvitationModalOpen}
         onClose={() => setIsInvitationModalOpen(false)}
-        dealerId={selectedDealership || dealerships[0]?.id || 1}
+        dealerId={selectedDealership} // Pass selected dealership or null for selector
         onInvitationSent={handleInvitationSent}
       />
 
