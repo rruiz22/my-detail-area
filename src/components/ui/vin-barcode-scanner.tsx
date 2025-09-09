@@ -80,24 +80,31 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
         const video = videoRef.current;
         video.srcObject = mediaStream;
         
-        // Simple promise-based approach
-        await new Promise<void>((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            console.log('Video setup timeout, assuming ready');
-            resolve();
-          }, 3000);
-
-          video.onloadedmetadata = () => {
+        // Wait for video to be ready
+        const setupVideo = new Promise<void>((resolve) => {
+          const onLoadedMetadata = () => {
             console.log('Video metadata loaded - camera ready!');
-            clearTimeout(timeout);
+            video.removeEventListener('loadedmetadata', onLoadedMetadata);
+            setVideoReady(true);
             resolve();
           };
           
-          video.onerror = (e) => {
-            console.error('Video error:', e);
-            clearTimeout(timeout);
-            reject(new Error('Video setup failed'));
-          };
+          if (video.readyState >= 2) {
+            // Video is already loaded
+            console.log('Video already loaded');
+            setVideoReady(true);
+            resolve();
+          } else {
+            video.addEventListener('loadedmetadata', onLoadedMetadata);
+          }
+          
+          // Fallback timeout
+          setTimeout(() => {
+            console.log('Video setup timeout, forcing ready state');
+            video.removeEventListener('loadedmetadata', onLoadedMetadata);
+            setVideoReady(true);
+            resolve();
+          }, 2000);
         });
         
         // Try to play the video
@@ -105,10 +112,10 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
           await video.play();
           console.log('Video playing successfully');
         } catch (playError) {
-          console.warn('Video autoplay failed:', playError);
+          console.warn('Video autoplay failed, but continuing:', playError);
         }
         
-        setVideoReady(true);
+        await setupVideo;
         console.log('Camera initialization complete');
       }
     } catch (err) {
@@ -260,7 +267,7 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
 
           {streamRef.current ? (
             <div className="space-y-4">
-              {cameraLoading && (
+              {cameraLoading && !videoReady && (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin" />
                   <span className="ml-2 text-sm text-muted-foreground">
@@ -274,9 +281,7 @@ export function VinBarcodeScanner({ open, onClose, onVinDetected }: VinBarcodeSc
                 autoPlay
                 playsInline
                 muted
-                className={`w-full rounded-lg bg-muted transition-opacity ${
-                  videoReady && !cameraLoading ? 'opacity-100' : 'opacity-50'
-                }`}
+                className="w-full rounded-lg bg-muted"
                 style={{ aspectRatio: '4/3' }}
               />
               
