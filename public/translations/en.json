@@ -107,6 +107,33 @@
     "no_recent_activity": "No recent activity",
     "last_updated": "Last updated"
   },
+  "theme_studio": {
+    "title": "Theme Studio",
+    "description": "Customize colors, typography, shadows and spacing for your organization",
+    "colors": "Colors",
+    "typography": "Typography",
+    "visual_effects": "Visual Effects",
+    "theme_presets": "Theme Presets",
+    "custom_colors": "Custom Colors",
+    "font_family": "Font Family",
+    "font_size_scale": "Font Size Scale",
+    "enable_shadows": "Enable Shadows",
+    "shadow_intensity": "Shadow Intensity",
+    "apply_shadows_to": "Apply Shadows To",
+    "link_styling": "Link Styling",
+    "link_color": "Link Color",
+    "hover_color": "Hover Color",
+    "live_preview": "Live Preview",
+    "sample_order": "Sample Order",
+    "button_styles": "Button Styles",
+    "status_indicators": "Status Indicators",
+    "reset_to_default": "Reset to Default",
+    "apply_theme": "Apply Theme",
+    "applying": "Applying...",
+    "theme_applied": "Theme applied successfully",
+    "theme_reset": "Theme reset to default",
+    "theme_error": "Failed to apply theme"
+  },
   "management": {
     "title": "System Management",
     "overview": "Overview",
@@ -138,7 +165,9 @@
     "performance_desc": "Detailed performance metrics by dealership",
     "last_activity": "Last Activity",
     "user_growth": "User Growth",
-    "orders_per_user": "Orders per User"
+    "orders_per_user": "Orders per User",
+    "theme_studio": "Theme Studio",
+    "customize_appearance": "Customize colors, typography, shadows and spacing"
   },
   "service": {
     "new_service_order": "New Service Order",

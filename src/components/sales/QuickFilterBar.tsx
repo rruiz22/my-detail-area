@@ -42,7 +42,7 @@ export function QuickFilterBar({
     {
       id: 'dashboard',
       label: 'Overview',
-      count: tabCounts.all || 0,
+      count: 0, // Remove count badge
       icon: BarChart3,
       color: 'bg-primary/10 text-primary border-primary/20'
     },
@@ -84,7 +84,7 @@ export function QuickFilterBar({
     {
       id: 'all',
       label: 'All Orders',
-      count: tabCounts.all || 0,
+      count: 0, // Remove count badge
       icon: List,
       color: 'bg-muted/50 text-foreground border-border'
     }
@@ -167,18 +167,20 @@ export function QuickFilterBar({
               >
                 <Icon className="w-4 h-4 mr-2" />
                 <span>{option.label}</span>
-                <Badge 
-                  variant="secondary" 
-                  className={`
-                    ml-2 text-xs px-1.5 py-0 min-w-[20px] h-5 
-                    ${isActive 
-                      ? 'bg-white/20 text-current' 
-                      : 'bg-muted text-muted-foreground'
-                    }
-                  `}
-                >
-                  {option.count}
-                </Badge>
+                {option.count > 0 && (
+                  <Badge 
+                    variant="secondary" 
+                    className={`
+                      ml-2 text-xs px-1.5 py-0 min-w-[20px] h-5 
+                      ${isActive 
+                        ? 'bg-white/20 text-current' 
+                        : 'bg-muted text-muted-foreground'
+                      }
+                    `}
+                  >
+                    {option.count}
+                  </Badge>
+                )}
               </Button>
             );
           })}

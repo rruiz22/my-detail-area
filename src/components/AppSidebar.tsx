@@ -102,9 +102,6 @@ export function AppSidebar() {
                     <NavLink to={item.url} className={getNavClasses(item.url)}>
                       <item.icon className="w-4 h-4" />
                       {!collapsed && <span>{item.title}</span>}
-                      {!collapsed && item.title === t('navigation.sales_orders') && <Badge variant="secondary" className="ml-auto">
-                          12
-                        </Badge>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>)}

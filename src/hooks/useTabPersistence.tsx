@@ -34,7 +34,7 @@ export const TAB_CONFIGS = {
   management: {
     key: 'management',
     defaultTab: 'overview',
-    validTabs: ['overview', 'users', 'dealerships']
+    validTabs: ['overview', 'users', 'dealerships', 'permissions', 'theme']
   },
   dealer_view: {
     key: 'dealer',

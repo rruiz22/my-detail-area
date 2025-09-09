@@ -24,7 +24,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         
         <div className="flex-1 flex flex-col">
           {/* Header */}
-          <header className="h-16 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 flex items-center justify-between px-6">
+          <header className="h-16 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 flex items-center justify-between px-6 header-enhanced">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
             </div>
