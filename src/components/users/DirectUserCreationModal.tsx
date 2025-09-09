@@ -1,0 +1,375 @@
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from 'react-i18next';
+import { 
+  UserPlus, 
+  Mail, 
+  Building2, 
+  Shield, 
+  User, 
+  Key,
+  Check,
+  AlertTriangle 
+} from 'lucide-react';
+
+interface DirectUserCreationModalProps {
+  open: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+interface Dealership {
+  id: number;
+  name: string;
+  status: string;
+}
+
+export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUserCreationModalProps) {
+  const { t } = useTranslation();
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    dealershipId: '',
+    userType: 'dealer' as 'dealer' | 'detail',
+    role: '',
+    sendWelcomeEmail: true
+  });
+  
+  const [dealerships, setDealerships] = useState<Dealership[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1); // Multi-step form
+
+  const availableRoles = [
+    { id: 'dealer_user', name: t('roles.basic_user'), description: t('roles.basic_user_desc') },
+    { id: 'dealer_salesperson', name: t('roles.salesperson'), description: t('roles.salesperson_desc') },
+    { id: 'dealer_service_advisor', name: t('roles.service_advisor'), description: t('roles.service_advisor_desc') },
+    { id: 'dealer_sales_manager', name: t('roles.sales_manager'), description: t('roles.sales_manager_desc') },
+    { id: 'dealer_service_manager', name: t('roles.service_manager'), description: t('roles.service_manager_desc') },
+    { id: 'dealer_manager', name: t('roles.general_manager'), description: t('roles.general_manager_desc') },
+    { id: 'dealer_admin', name: t('roles.dealership_admin'), description: t('roles.dealership_admin_desc') }
+  ];
+
+  useEffect(() => {
+    if (open) {
+      fetchDealerships();
+      setStep(1);
+      setFormData({
+        email: '',
+        firstName: '',
+        lastName: '',
+        dealershipId: '',
+        userType: 'dealer',
+        role: '',
+        sendWelcomeEmail: true
+      });
+    }
+  }, [open]);
+
+  const fetchDealerships = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('dealerships')
+        .select('id, name, status')
+        .eq('status', 'active')
+        .order('name');
+
+      if (error) throw error;
+      setDealerships(data || []);
+    } catch (error: any) {
+      console.error('Error fetching dealerships:', error);
+      toast({
+        title: 'Error',
+        description: t('user_creation.failed_load_dealerships'),
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      // Step 1: Create user in auth system (if needed)
+      console.log('Creating user account...', formData);
+      
+      // Step 2: Create profile
+      const profileData = {
+        email: formData.email,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        user_type: formData.userType,
+        role: formData.role,
+        created_via: 'direct_creation'
+      };
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .insert(profileData)
+        .select()
+        .single();
+
+      if (profileError) throw profileError;
+
+      // Step 3: Create dealer membership
+      if (formData.dealershipId) {
+        const membershipData = {
+          user_id: profile.id,
+          dealer_id: parseInt(formData.dealershipId),
+          is_active: true,
+          roles: [formData.role],
+          created_at: new Date().toISOString()
+        };
+
+        const { error: membershipError } = await supabase
+          .from('dealer_memberships')
+          .insert(membershipData);
+
+        if (membershipError) throw membershipError;
+      }
+
+      // Step 4: Send welcome email (optional)
+      if (formData.sendWelcomeEmail) {
+        try {
+          await supabase.functions.invoke('send-welcome-email', {
+            body: {
+              email: formData.email,
+              firstName: formData.firstName,
+              dealershipName: dealerships.find(d => d.id === parseInt(formData.dealershipId))?.name
+            }
+          });
+        } catch (emailError) {
+          console.warn('Welcome email failed:', emailError);
+          // Don't fail the whole process if email fails
+        }
+      }
+
+      toast({
+        title: t('common.success'),
+        description: t('user_creation.user_created_success', { name: `${formData.firstName} ${formData.lastName}` }),
+      });
+
+      onSuccess?.();
+      onClose();
+      
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      toast({
+        title: t('common.error'),
+        description: error.message || t('user_creation.failed_create_user'),
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isStepValid = (stepNumber: number) => {
+    switch (stepNumber) {
+      case 1:
+        return formData.email && formData.firstName && formData.lastName;
+      case 2:
+        return formData.dealershipId && formData.role;
+      default:
+        return true;
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <UserPlus className="h-5 w-5" />
+{t('users.add_new')} - {t('user_creation.wizard_step', { step, total: 2 })}
+          </DialogTitle>
+          <DialogDescription>
+{t('user_creation.create_direct_desc')}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {step === 1 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <User className="h-4 w-4" />
+                  {t('user_creation.personal_information')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="email">{t('auth.email')}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="user@company.com"
+                    required
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="firstName">{t('auth.first_name')}</Label>
+                    <Input
+                      id="firstName"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                      placeholder="John"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="lastName">{t('auth.last_name')}</Label>
+                    <Input
+                      id="lastName"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                      placeholder="Doe"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+<Label htmlFor="userType">{t('user_creation.user_type')}</Label>
+                  <Select value={formData.userType} onValueChange={(value: 'dealer' | 'detail') => 
+                    setFormData(prev => ({ ...prev, userType: value }))
+                  }>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+<SelectItem value="dealer">{t('user_creation.dealer_user')}</SelectItem>
+<SelectItem value="detail">{t('user_creation.detail_user')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground mt-1">
+{t('user_creation.dealer_user_desc')}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Building2 className="h-4 w-4" />
+  {t('user_creation.dealership_assignment')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="dealership">Dealership</Label>
+                    <Select value={formData.dealershipId} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, dealershipId: value }))
+                    }>
+                      <SelectTrigger>
+<SelectValue placeholder={t('user_creation.select_dealership')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {dealerships.map((dealer) => (
+                          <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                            {dealer.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Shield className="h-4 w-4" />
+  {t('user_creation.role_assignment')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+<Label htmlFor="role">{t('user_creation.initial_role')}</Label>
+                    <Select value={formData.role} onValueChange={(value) => 
+                      setFormData(prev => ({ ...prev, role: value }))
+                    }>
+                      <SelectTrigger>
+<SelectValue placeholder={t('user_creation.select_role')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableRoles.map((role) => (
+                          <SelectItem key={role.id} value={role.id}>
+                            <div>
+                              <p className="font-medium">{role.name}</p>
+                              <p className="text-xs text-muted-foreground">{role.description}</p>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <div className="flex justify-between">
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (step === 1) {
+                  onClose();
+                } else {
+                  setStep(step - 1);
+                }
+              }}
+            >
+              {step === 1 ? t('common.cancel') : t('common.back')}
+            </Button>
+            
+            <Button
+              onClick={() => {
+                if (step === 1) {
+                  setStep(2);
+                } else {
+                  handleSubmit();
+                }
+              }}
+              disabled={!isStepValid(step) || loading}
+            >
+              {loading ? (
+                <>
+                  <UserPlus className="h-4 w-4 mr-2 animate-spin" />
+                  {t('user_creation.creating')}
+                </>
+              ) : step === 1 ? (
+                t('common.next')
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  {t('common.create')}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

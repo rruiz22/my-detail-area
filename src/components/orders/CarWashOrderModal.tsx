@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, AlertCircle, Zap, Clock } from 'lucide-react';
@@ -210,9 +210,9 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
               </Badge>
             )}
           </DialogTitle>
-          <div id="carwash-order-modal-description" className="sr-only">
-            {order ? 'Edit existing car wash order' : 'Create a new quick car wash order with VIN scanning'}
-          </div>
+          <DialogDescription className="sr-only" id="carwash-order-modal-description">
+            {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(95vh-120px)] px-6">

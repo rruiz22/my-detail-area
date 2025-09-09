@@ -129,7 +129,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       
     } catch (err) {
       console.error('Error initializing presence:', err);
-      setError(err instanceof Error ? err.message : 'Error initializing presence');
+      setError(err instanceof Error ? err.message : t('user_presence.error_initializing'));
     }
   }, [user?.id, activeDealerId]);
 
@@ -150,7 +150,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       // Simplified user presence data for now
       const processedPresence: UserPresence[] = data?.map(presence => ({
         ...presence,
-        user_name: 'Team Member',
+        user_name: t('user_presence.default_user_name'),
         user_avatar: undefined,
         is_online: ['online', 'busy'].includes(presence.status),
         last_seen_formatted: formatLastSeen(presence.last_seen_at)
@@ -159,7 +159,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       setUsersPresence(processedPresence);
     } catch (err) {
       console.error('Error fetching users presence:', err);
-      setError(err instanceof Error ? err.message : 'Error fetching users presence');
+      setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));
     }
   }, [activeDealerId, user?.id]);
 
@@ -214,7 +214,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       setMyPresence(data);
     } catch (err) {
       console.error('Error setting status:', err);
-      setError(err instanceof Error ? err.message : 'Error setting status');
+      setError(err instanceof Error ? err.message : t('user_presence.error_setting_status'));
     }
   }, [user?.id, activeDealerId]);
 
@@ -239,7 +239,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       setMyPresence(data);
     } catch (err) {
       console.error('Error setting custom status:', err);
-      setError(err instanceof Error ? err.message : 'Error setting custom status');
+      setError(err instanceof Error ? err.message : t('user_presence.error_custom_status'));
     }
   }, [user?.id, activeDealerId]);
 

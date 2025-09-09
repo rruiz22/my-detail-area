@@ -7,6 +7,7 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderModal } from '@/components/orders/OrderModal';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { useTranslation } from 'react-i18next';
+import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -21,13 +22,17 @@ import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetai
 
 export default function SalesOrders() {
   const { t } = useTranslation();
-  const [activeFilter, setActiveFilter] = useState('dashboard');
-  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
+  
+  // Persistent state
+  const [activeFilter, setActiveFilter] = useTabPersistence('sales_orders');
+  const [viewMode, setViewMode] = useViewModePersistence('sales_orders');
+  const [searchTerm, setSearchTerm] = useSearchPersistence('sales_orders');
+  
+  // Non-persistent UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const {

@@ -106,8 +106,8 @@ export function InvitationAccept() {
 
       setInvitation({
         ...invitationData,
-        dealership_name: dealershipData?.name || 'Concesionario',
-        inviter_email: inviterData?.email || 'Administrador',
+        dealership_name: dealershipData?.name || t('dealerships.title'),
+        inviter_email: inviterData?.email || t('users.admin'),
       });
     } catch (err: any) {
       console.error('Error fetching invitation:', err);
@@ -171,13 +171,13 @@ export function InvitationAccept() {
 
   const getRoleDisplayName = (roleName: string) => {
     const roleMap: Record<string, string> = {
-      dealer_user: 'Usuario Básico',
-      dealer_salesperson: 'Vendedor',
-      dealer_service_advisor: 'Asesor de Servicio',
-      dealer_sales_manager: 'Gerente de Ventas',
-      dealer_service_manager: 'Gerente de Servicio',
-      dealer_manager: 'Gerente General',
-      dealer_admin: 'Administrador',
+      dealer_user: t('invitations.dealer_user'),
+      dealer_salesperson: t('invitations.dealer_salesperson'),
+      dealer_service_advisor: t('invitations.dealer_service_advisor'),
+      dealer_sales_manager: t('invitations.dealer_sales_manager'),
+      dealer_service_manager: t('invitations.dealer_service_manager'),
+      dealer_manager: t('invitations.dealer_manager'),
+      dealer_admin: t('invitations.dealer_admin'),
     };
     return roleMap[roleName] || roleName;
   };

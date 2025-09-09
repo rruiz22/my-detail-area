@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { 
   X, 
@@ -26,6 +26,10 @@ import { QRCodeDisplay } from './QRCodeDisplay';
 import { CommunicationActions } from './CommunicationActions';
 import { AttachmentUploader } from './AttachmentUploader';
 import { RecentActivity } from './RecentActivity';
+import { VehicleInfoBlock } from './VehicleInfoBlock';
+import { ScheduleViewBlock } from './ScheduleViewBlock';
+import { SimpleNotesDisplay } from './SimpleNotesDisplay';
+import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
 
@@ -36,6 +40,7 @@ interface EnhancedOrderDetailLayoutProps {
   onEdit?: (order: any) => void;
   onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
+  onNotesUpdate?: (orderId: string, notes: string, type: 'general' | 'internal') => void;
   children: ReactNode; // Main content area (Communication Hub)
 }
 
@@ -46,6 +51,7 @@ export function EnhancedOrderDetailLayout({
   onEdit,
   onDelete,
   onStatusChange,
+  onNotesUpdate,
   children
 }: EnhancedOrderDetailLayoutProps) {
   const { t } = useTranslation();
@@ -77,7 +83,7 @@ export function EnhancedOrderDetailLayout({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-[100vw] max-h-[100vh] w-full h-full p-0 gap-0 sm:max-w-[95vw] sm:max-h-[95vh]">
+      <DialogContent className="max-w-none max-h-none w-screen h-screen p-0 gap-0 m-0 rounded-none border-0">
         <DialogTitle className="sr-only">
           {t('orders.order_details')} - {order.custom_order_number || order.order_number}
         </DialogTitle>
@@ -87,226 +93,135 @@ export function EnhancedOrderDetailLayout({
             vehicle: `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}` 
           })}
         </DialogDescription>
-        <div className="h-full flex flex-col">
-            {/* Top Bar */}
-            <div className="flex-none border-b bg-card">
-              <div className="flex items-center justify-between p-2 sm:p-4">
-                {/* Left Section - Order Info */}
-                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+        <div className="h-screen flex flex-col">
+            {/* Header - Clean Layout */}
+            <header className="flex-none border-b bg-background">
+              <div className="flex items-center justify-between p-4">
+                {/* Left - Order Info */}
+                <div className="flex items-center gap-4 min-w-0 flex-1">
                   <div className="min-w-0">
-                    <h1 className="text-lg sm:text-xl font-bold truncate">
+                    <h1 className="text-xl font-bold truncate">
                       {order.custom_order_number || order.order_number}
                     </h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                      {order.customer_name}
-                    </p>
-                  </div>
-                  <StatusBadgeInteractive
-                    status={order.status}
-                    orderId={order.id}
-                    dealerId={order.dealer_id}
-                    canUpdateStatus={true}
-                    onStatusChange={handleStatusChange}
-                  />
-                  <Badge variant={getPriorityColor(order.priority)} className="hidden sm:inline-flex">
-                    {order.priority || 'normal'}
-                  </Badge>
-                </div>
-
-                {/* Right Section - Actions */}
-                <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                  <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4" />
-                    {safeFormatDate(order.created_at)}
-                  </div>
-                  <Separator orientation="vertical" className="h-6 hidden md:block" />
-                  {onEdit && (
-                    <Button variant="outline" size="sm" onClick={() => onEdit(order)} className="hidden sm:flex">
-                      <Edit2 className="w-4 h-4 mr-1" />
-                      {t('common.edit')}
-                    </Button>
-                  )}
-                  {onEdit && (
-                    <Button variant="outline" size="sm" onClick={() => onEdit(order)} className="sm:hidden">
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                  )}
-                  {onDelete && (
-                    <Button 
-                      variant="destructive" 
-                      size="sm" 
-                      onClick={() => onDelete(order.id)}
-                      className="hidden sm:flex"
-                    >
-                      <Trash2 className="w-4 h-4 mr-1" />
-                      {t('common.delete')}
-                    </Button>
-                  )}
-                  {onDelete && (
-                    <Button 
-                      variant="destructive" 
-                      size="sm" 
-                      onClick={() => onDelete(order.id)}
-                      className="sm:hidden"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  )}
-                  <Button variant="ghost" size="sm" onClick={onClose}>
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Quick Info Bar */}
-              <div className="px-2 pb-2 sm:px-4 sm:pb-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Car className="w-4 h-4 text-muted-foreground" />
-                    <span className="truncate">
-                      {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
-                    </span>
-                  </div>
-                  {order.stock_number && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground">Stock:</span>
-                      <span className="font-mono">{order.stock_number}</span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground truncate">
+                        {order.customer_name}
+                      </span>
                     </div>
-                  )}
-                  {order.total_amount && (
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-semibold">{formatCurrency(order.total_amount)}</span>
-                    </div>
-                  )}
-                  {order.due_date && (
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span className="truncate">Due: {safeFormatDate(order.due_date)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-          {/* Main Layout */}
-          <div className="flex-1 flex min-h-0 flex-col lg:flex-row">
-            {/* Main Content Area - Communication Hub */}
-            <div className="flex-1 min-w-0 order-2 lg:order-1">
-              {children}
-            </div>
-
-            {/* Right Sidebar - Hidden on mobile, collapsible on tablet */}
-            <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l bg-muted/30 flex flex-col order-1 lg:order-2 max-h-[50vh] lg:max-h-none overflow-y-auto">
-              {/* QR Code Section */}
-              <div className="p-2 lg:p-4 border-b">
-                <div className="space-y-2 lg:space-y-3">
-                  <div className="flex items-center gap-2">
-                    <QrCode className="w-4 h-4" />
-                    <h3 className="font-semibold text-sm">{t('orders.qr_code')}</h3>
-                  </div>
-                  <div className="lg:block hidden">
-                    <QRCodeDisplay 
-                      orderId={order.id}
-                      orderNumber={order.order_number}
-                      dealerId={order.dealer_id}
-                    />
-                  </div>
-                  <div className="lg:hidden text-xs text-muted-foreground">
-                    {t('orders.qr_code_desktop_only')}
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div className="p-2 lg:p-4 border-b">
-                <div className="space-y-2 lg:space-y-3">
-                  <h3 className="font-semibold text-sm flex items-center gap-2">
-                    <Link className="w-4 h-4" />
-                    {t('orders.quick_actions')}
-                  </h3>
-                  <div className="space-y-2">
-                    <CommunicationActions
-                      order={order}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Order Summary */}
-              <div className="p-2 lg:p-4 border-b flex-1 lg:flex-none overflow-y-auto">
-                <div className="space-y-2 lg:space-y-3">
-                  <h3 className="font-semibold text-sm">{t('orders.summary')}</h3>
-                  <div className="space-y-2 text-xs lg:text-sm">
-                    <div className="flex justify-between items-center text-xs lg:text-sm">
-                      <span className="text-muted-foreground">{t('orders.status')}</span>
-                      <div className={`inline-flex items-center gap-1 ${getStatusColor(order.status)}`}>
-                        {order.status === 'completed' ? (
-                          <CheckCircle className="w-3 h-3" />
-                        ) : (
-                          <AlertCircle className="w-3 h-3" />
-                        )}
-                        {order.status}
-                      </div>
+                      <Car className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-medium">
+                        {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
+                      </span>
                     </div>
                     
-                    <div className="flex justify-between items-center text-xs lg:text-sm">
-                      <span className="text-muted-foreground">{t('orders.type')}</span>
-                      <span className="capitalize">{order.order_type}</span>
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">{order.advisor || 'Unassigned'}</span>
                     </div>
-
-                    {order.salesperson && (
-                      <div className="flex justify-between items-center text-xs lg:text-sm">
-                        <span className="text-muted-foreground">{t('orders.salesperson')}</span>
-                        <span className="truncate">{order.salesperson}</span>
-                      </div>
-                    )}
-
-                    {order.services && order.services.length > 0 && (
-                      <div>
-                        <div className="text-xs lg:text-sm font-medium mb-2">{t('orders.services')}</div>
-                        <div className="space-y-1">
-                          {order.services.slice(0, 2).map((service: any, index: number) => (
-                            <div key={index} className="text-xs bg-muted p-1 lg:p-2 rounded">
-                              <div className="flex justify-between gap-2">
-                                <span className="truncate">{service.name}</span>
-                                {service.price && (
-                                  <span className="font-medium flex-shrink-0">
-                                    {formatCurrency(service.price)}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                          {order.services.length > 2 && (
-                            <div className="text-xs text-muted-foreground text-center py-1">
-                              +{order.services.length - 2} more
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {order.total_amount && (
-                      <div className="pt-2 border-t">
-                        <div className="flex justify-between items-center font-semibold text-xs lg:text-sm">
-                          <span>{t('orders.total')}</span>
-                          <span className="text-primary">{formatCurrency(order.total_amount)}</span>
-                        </div>
-                      </div>
-                    )}
+                    
+                    <StatusBadgeInteractive
+                      status={order.status}
+                      orderId={order.id}
+                      dealerId={order.dealer_id}
+                      canUpdateStatus={true}
+                      onStatusChange={handleStatusChange}
+                    />
                   </div>
                 </div>
-              </div>
 
-              {/* Recent Activity */}
-              <div className="flex-1 p-2 lg:p-4 min-h-0 overflow-hidden">
-                <div className="h-full">
-                  <RecentActivity orderId={order.id} />
+                {/* Right - Single Close Button */}
+                <Button variant="ghost" size="icon" onClick={onClose}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </header>
+
+          {/* Unified Content Container - Single Scroll */}
+          <div className="flex-1 min-h-0 overflow-y-auto">
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
+                {/* Main Content Area */}
+                <div className="space-y-6">
+                  {/* Row 1: Vehicle Info + Schedule View (Two blocks side by side) */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <VehicleInfoBlock order={order} />
+                    <ScheduleViewBlock order={order} />
+                  </div>
+
+                  {/* Row 2: Simple Notes Display (Full width) */}
+                  <SimpleNotesDisplay order={order} />
+
+                  {/* Row 3: Communication Hub (Full width) */}
+                  <div className="min-h-[400px]">
+                    {children}
+                  </div>
+                </div>
+
+                {/* Right Sidebar - Clean Design */}
+                <div className="space-y-4">
+                  {/* Enhanced QR Code & Short Link Block */}
+                  <EnhancedQRCodeBlock 
+                    orderId={order.id}
+                    orderNumber={order.order_number}
+                    dealerId={order.dealer_id}
+                    qrSlug={order.qr_slug}
+                    shortUrl={order.short_url}
+                  />
+
+                  {/* Followers Block */}
+                  <div className="bg-muted/30 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-3">
+                      <User className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-sm">Followers</h3>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
+                          <User className="h-3 w-3 text-primary" />
+                        </div>
+                        <span>{order.advisor || 'Unassigned'}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Assigned advisor for this order
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quick Actions Block */}
+                  <div className="bg-muted/30 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-3">
+                      <MessageSquare className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-sm">Quick Actions</h3>
+                    </div>
+                    <CommunicationActions order={order} />
+                  </div>
+
+                  {/* Recent Activities Block */}
+                  <div className="bg-muted/30 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-sm">Recent Activities</h3>
+                    </div>
+                    <RecentActivity orderId={order.id} />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Footer with Close Button */}
+          <footer className="flex-none border-t bg-background p-4">
+            <div className="flex justify-end">
+              <Button onClick={onClose} size="lg" className="min-w-[120px]">
+                Close
+              </Button>
+            </div>
+          </footer>
         </div>
       </DialogContent>
     </Dialog>

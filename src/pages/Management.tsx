@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { UserManagementSection } from '@/components/management/UserManagementSection';
 import { DealershipManagementSection } from '@/components/management/DealershipManagementSection';
@@ -23,6 +24,7 @@ import { ManagementOverview } from '@/components/management/ManagementOverview';
 const Management = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useTabPersistence('management');
 
   return (
     <DashboardLayout title={t('management.title')}>
@@ -48,7 +50,7 @@ const Management = () => {
         </div>
 
         {/* Management Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />

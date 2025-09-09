@@ -155,6 +155,7 @@ export function EnhancedOrderDetailModal({
       onEdit={onEdit}
       onDelete={onDelete}
       onStatusChange={onStatusChange}
+      onNotesUpdate={handleNotesUpdate}
     >
       <CommunicationHub 
         orderId={order.id}

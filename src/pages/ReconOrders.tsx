@@ -7,6 +7,7 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
 import { useTranslation } from 'react-i18next';
+import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -17,13 +18,17 @@ import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 
 export default function ReconOrders() {
   const { t } = useTranslation();
-  const [activeFilter, setActiveFilter] = useState('dashboard');
-  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
+  
+  // Persistent state
+  const [activeFilter, setActiveFilter] = useTabPersistence('recon_orders');
+  const [viewMode, setViewMode] = useViewModePersistence('recon_orders');
+  const [searchTerm, setSearchTerm] = useSearchPersistence('recon_orders');
+  
+  // Non-persistent UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<ReconOrder | null>(null);
   const [previewOrder, setPreviewOrder] = useState<ReconOrder | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const {
@@ -117,8 +122,8 @@ export default function ReconOrders() {
   const transformedOrders = orders.map(order => ({
     id: order.id,
     order_number: order.orderNumber,
-    customer_name: 'Recon Vehicle', // Default for recon orders
-    customerName: 'Recon Vehicle', // Also add this for compatibility
+    customer_name: t('recon_defaults.default_customer'),
+    customerName: t('recon_defaults.default_customer'),
     vehicle_year: order.vehicleYear,
     vehicle_make: order.vehicleMake,
     vehicle_model: order.vehicleModel,
@@ -141,11 +146,11 @@ export default function ReconOrders() {
     condition_grade: order.conditionGrade,
     recon_category: order.reconCategory,
     // Required fields for Order interface
-    service: 'Reconditioning',
-    description: `Recon - ${order.reconCategory || 'General'}`,
+    service: t('recon_defaults.default_service'),
+    description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,
     price: order.reconCost || 0,
-    advisor: 'Recon Team',
-    department: 'Recon' as const
+    advisor: t('recon_defaults.default_advisor'),
+    department: t('recon_defaults.default_department') as const
   }));
 
   // Filter orders based on search term

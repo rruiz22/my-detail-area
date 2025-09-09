@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { shortLinkService } from '@/services/shortLinkService';
 
 interface OrderActionsResult {
   generateQR: (orderId: string, orderNumber: string, dealerId: number, regenerate?: boolean) => Promise<{ 
@@ -27,28 +28,38 @@ export function useOrderActions(): OrderActionsResult {
   const generateQR = async (orderId: string, orderNumber: string, dealerId: number, regenerate = false) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('generate-qr-shortlink', {
-        body: { orderId, orderNumber, dealerId, regenerate },
-      });
+      console.log(`🔗 ${regenerate ? 'Regenerating' : 'Generating'} QR for order:`, orderNumber);
+      
+      // Use our enhanced shortLinkService
+      const linkData = regenerate 
+        ? await shortLinkService.regenerateShortLink(orderId)
+        : await shortLinkService.createShortLink(orderId, orderNumber);
+
+      // Update order with QR data
+      const { error } = await supabase
+        .from('orders')
+        .update({
+          qr_slug: linkData.slug,
+          short_url: linkData.shortUrl,
+          qr_generated_at: new Date().toISOString()
+        })
+        .eq('id', orderId);
 
       if (error) throw error;
 
-      if (data?.success) {
-        const message = regenerate 
-          ? t('orders.qr_regenerated_successfully') 
-          : t('orders.qr_generated_successfully');
-        toast.success(message);
-        
-        return {
-          qrCodeUrl: data.qrCodeUrl,
-          shortLink: data.shortLink,
-          linkId: data.linkId,
-          slug: data.slug,
-          analytics: data.analytics
-        };
-      } else {
-        throw new Error(data.error || 'Failed to generate QR code');
-      }
+      const message = regenerate 
+        ? t('order_detail.regenerate_qr')
+        : t('order_detail.short_link_created');
+      toast.success(message);
+      
+      return {
+        qrCodeUrl: linkData.qrCodeUrl,
+        shortLink: linkData.shortUrl,
+        linkId: orderId,
+        slug: linkData.slug,
+        analytics: linkData.analytics
+      };
+      
     } catch (error) {
       console.error('Error generating QR:', error);
       toast.error(t('orders.error_generating_qr'));

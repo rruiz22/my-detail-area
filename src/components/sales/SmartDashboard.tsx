@@ -122,7 +122,7 @@ export function SmartDashboard({ tabCounts, onCardClick }: SmartDashboardProps) 
               </div>
               <Progress value={completionRate} className="h-2" />
               <p className="text-xs text-muted-foreground">
-                {tabCounts.all - tabCounts.pending} of {tabCounts.all} orders completed
+                {(tabCounts.all || 0) - (tabCounts.pending || 0)} of {tabCounts.all || 0} orders completed
               </p>
             </div>
           </CardContent>
@@ -155,7 +155,7 @@ export function SmartDashboard({ tabCounts, onCardClick }: SmartDashboardProps) 
             </div>
             <div className="flex justify-between text-sm">
               <span>Orders this month</span>
-              <span className="font-medium">{tabCounts.all * 4}</span>
+              <span className="font-medium">{(tabCounts.all || 0) * 4}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span>SLA Compliance</span>

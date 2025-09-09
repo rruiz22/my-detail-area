@@ -35,7 +35,12 @@ const App = () => (
           <NotificationProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
+            <BrowserRouter
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true
+              }}
+            >
               <Routes>
                 <Route path="/auth" element={<Auth />} />
                 

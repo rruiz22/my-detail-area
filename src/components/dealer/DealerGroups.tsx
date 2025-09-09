@@ -316,9 +316,9 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
                     <TableCell>{group.description || '-'}</TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {Array.isArray(group.permissions) && group.permissions.map((permission) => (
-                          <Badge key={permission} variant="secondary" className="text-xs">
-                            {permission}
+                        {Array.isArray(group.permissions) && group.permissions.map((permission, index) => (
+                          <Badge key={`permission-${group.id}-${index}`} variant="secondary" className="text-xs">
+                            {typeof permission === 'string' ? permission : permission?.key || permission?.name || 'Unknown'}
                           </Badge>
                         ))}
                       </div>

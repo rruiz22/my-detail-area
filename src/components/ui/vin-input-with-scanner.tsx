@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { QrCode } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { VinBarcodeScanner } from '@/components/ui/vin-barcode-scanner';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +15,7 @@ export function VinInputWithScanner({
   className, 
   ...props 
 }: VinInputWithScannerProps) {
+  const { t } = useTranslation();
   const [scannerOpen, setScannerOpen] = useState(false);
 
   const handleVinDetected = (vin: string) => {
@@ -35,7 +37,7 @@ export function VinInputWithScanner({
         <Input
           {...props}
           className={cn("pr-12", className)}
-          placeholder="17 caracteres del VIN..."
+          placeholder={t('vin_scanner_errors.vin_input_placeholder')}
           maxLength={17}
         />
         <Button

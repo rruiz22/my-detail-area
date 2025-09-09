@@ -156,7 +156,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
     if (diffDays < 0) {
       return { text: `${Math.abs(diffDays)} días vencido`, variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground' };
     } else if (diffDays === 0) {
-      return { text: 'Vence hoy', variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };
+      return { text: t('data_table.due_today'), variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };
     } else if (diffDays === 1) {
       return { text: 'Vence mañana', variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };
     } else {
@@ -231,7 +231,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                     </div>
                     <div className="flex items-center text-sm text-muted-foreground">
                       <User className="w-3 h-3 mr-1" />
-                      {order.customerName || 'Cliente no asignado'}
+                      {order.customerName || t('data_table.unassigned_customer')}
                     </div>
                   </div>
                 </TableCell>
@@ -240,7 +240,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                 <TableCell className="py-4">
                   <div className="space-y-1">
                     <div className="font-medium text-foreground">
-                      {order.stockNumber || 'Sin stock'}
+                      {order.stockNumber || t('data_table.no_stock')}
                     </div>
                     <div className="flex items-center text-xs text-muted-foreground">
                       <Calendar className="w-3 h-3 mr-1" />
@@ -259,7 +259,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                       </div>
                     </div>
                     <div className="text-xs font-mono text-muted-foreground bg-muted/30 rounded px-2 py-1 inline-block">
-                      VIN: {order.vehicleVin || 'No proporcionado'}
+                      VIN: {order.vehicleVin || t('data_table.vin_not_provided')}
                     </div>
                     {order.vehicleInfo && (
                       <div className="text-xs text-muted-foreground">

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -238,9 +238,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           <DialogTitle className="text-xl font-semibold">
             {order ? t('orders.edit_service_order') : t('orders.create_service_order')}
           </DialogTitle>
-          <div id="service-order-modal-description" className="sr-only">
-            {order ? 'Edit existing service order details' : 'Create a new service order'}
-          </div>
+          <DialogDescription className="sr-only" id="service-order-modal-description">
+            {order ? t('orders.edit_service_order') : t('orders.create_service_order')}
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(95vh-120px)] px-6">

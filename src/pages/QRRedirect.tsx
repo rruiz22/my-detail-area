@@ -12,7 +12,7 @@ export default function QRRedirect() {
   useEffect(() => {
     const trackClickAndRedirect = async () => {
       if (!slug) {
-        setError('Invalid link');
+        setError(t('qr_redirect.invalid_link'));
         setLoading(false);
         return;
       }
@@ -37,7 +37,7 @@ export default function QRRedirect() {
 
         if (error) {
           console.error('Error tracking click:', error);
-          setError('Link not found or expired');
+          setError(t('qr_redirect.link_not_found'));
           setLoading(false);
           return;
         }
@@ -45,11 +45,11 @@ export default function QRRedirect() {
         if (data?.deepLink) {
           setDeepLink(data.deepLink);
         } else {
-          setError('Invalid link destination');
+          setError(t('qr_redirect.invalid_destination'));
         }
       } catch (err) {
         console.error('Error processing redirect:', err);
-        setError('Error processing link');
+        setError(t('qr_redirect.processing_error'));
       } finally {
         setLoading(false);
       }

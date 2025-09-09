@@ -11,6 +11,7 @@ import { OperationalReports } from '@/components/reports/sections/OperationalRep
 import { FinancialReports } from '@/components/reports/sections/FinancialReports';
 import { ExportCenter } from '@/components/reports/sections/ExportCenter';
 import { useReportsData, type ReportsFilters } from '@/hooks/useReportsData';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
 
 export default function Reports() {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ export default function Reports() {
     dealerId: defaultDealerId
   });
 
-  const [activeTab, setActiveTab] = useState('operational');
+  const [activeTab, setActiveTab] = useTabPersistence('reports');
 
   const handleRefresh = () => {
     // Force refresh by updating a timestamp in the filters

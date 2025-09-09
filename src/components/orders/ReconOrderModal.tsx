@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -213,6 +213,9 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
             <Package className="h-5 w-5" />
             {mode === 'create' ? t('recon.create_recon_order') : t('recon.edit_recon_order')}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            {mode === 'create' ? t('recon.create_recon_order') : t('recon.edit_recon_order')}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">

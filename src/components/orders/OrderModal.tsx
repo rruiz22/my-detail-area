@@ -239,7 +239,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             {order ? t('orders.edit') : t('orders.create')}
           </DialogTitle>
           <div id="order-modal-description" className="sr-only">
-            {order ? 'Edit existing order details and services' : 'Create a new order with customer and vehicle information'}
+            {order ? t('orders.edit') : t('orders.create')}
           </div>
         </DialogHeader>
 

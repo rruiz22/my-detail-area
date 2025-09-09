@@ -39,12 +39,15 @@ import {
   Building2,
   Star,
   PhoneCall,
-  MessageSquare 
+  MessageSquare,
+  Eye
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { ContactModal } from '@/components/contacts/ContactModal';
+import { ContactDetailModal } from '@/components/contacts/ContactDetailModal';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { ContactDepartment, DealershipStatus, LanguageCode } from '@/types/dealership';
 
 interface Contact {
@@ -77,6 +80,8 @@ export default function Contacts() {
   const [dealerships, setDealerships] = useState<{ id: number; name: string }[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
+  const [viewingContact, setViewingContact] = useState<Contact | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const fetchContacts = async () => {
     try {
@@ -162,6 +167,18 @@ export default function Contacts() {
     setIsModalOpen(true);
   };
 
+  const handleViewDetails = (contact: Contact) => {
+    setViewingContact(contact);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleEditFromDetail = (contact: Contact) => {
+    setIsDetailModalOpen(false);
+    setViewingContact(null);
+    setEditingContact(contact);
+    setIsModalOpen(true);
+  };
+
   const handleAdd = () => {
     setEditingContact(null);
     setIsModalOpen(true);
@@ -197,19 +214,27 @@ export default function Contacts() {
 
   return (
     <DashboardLayout title={t('contacts.title')}>
-      <div className="space-y-6">
+        <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{t('contacts.title')}</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+              <Users2 className="h-8 w-8 text-secondary" />
+              {t('contacts.title')}
+            </h1>
+            <p className="text-muted-foreground mt-2">
               {t('contacts.manage_description', 'Manage contacts across all dealerships')}
             </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Contact information only - these are not system users
+            </p>
           </div>
-          <Button className="gap-2" onClick={handleAdd}>
-            <Plus className="h-4 w-4" />
-            {t('contacts.add_new')}
-          </Button>
+          <PermissionGuard module="contacts" permission="write">
+            <Button className="gap-2" onClick={handleAdd}>
+              <Plus className="h-4 w-4" />
+              {t('contacts.add_new')}
+            </Button>
+          </PermissionGuard>
         </div>
 
         {/* Filters */}
@@ -307,10 +332,16 @@ export default function Contacts() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEdit(contact)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            {t('common.edit')}
+                          <DropdownMenuItem onClick={() => handleViewDetails(contact)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            {t('common.view')}
                           </DropdownMenuItem>
+                          <PermissionGuard module="contacts" permission="write">
+                            <DropdownMenuItem onClick={() => handleEdit(contact)}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              {t('common.edit')}
+                            </DropdownMenuItem>
+                          </PermissionGuard>
                           <DropdownMenuItem>
                             <PhoneCall className="mr-2 h-4 w-4" />
                             {t('contacts.call')}
@@ -319,13 +350,15 @@ export default function Contacts() {
                             <MessageSquare className="mr-2 h-4 w-4" />
                             {t('contacts.send_email')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => handleDelete(contact)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            {t('common.delete')}
-                          </DropdownMenuItem>
+                          <PermissionGuard module="contacts" permission="delete">
+                            <DropdownMenuItem 
+                              onClick={() => handleDelete(contact)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              {t('common.delete')}
+                            </DropdownMenuItem>
+                          </PermissionGuard>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -392,7 +425,11 @@ export default function Contacts() {
                   </TableRow>
                 ) : (
                   contacts.map((contact) => (
-                    <TableRow key={contact.id}>
+                    <TableRow 
+                      key={contact.id} 
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleViewDetails(contact)}
+                    >
                       <TableCell>
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={contact.avatar_url} alt={getDisplayName(contact)} />
@@ -443,16 +480,22 @@ export default function Contacts() {
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                             <Button variant="ghost" size="sm">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(contact)}>
-                              <Edit className="mr-2 h-4 w-4" />
-                              {t('common.edit')}
+                            <DropdownMenuItem onClick={() => handleViewDetails(contact)}>
+                              <Eye className="mr-2 h-4 w-4" />
+                              {t('common.view')}
                             </DropdownMenuItem>
+                            <PermissionGuard module="contacts" permission="write">
+                              <DropdownMenuItem onClick={() => handleEdit(contact)}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                {t('common.edit')}
+                              </DropdownMenuItem>
+                            </PermissionGuard>
                             <DropdownMenuItem>
                               <PhoneCall className="mr-2 h-4 w-4" />
                               {t('contacts.call')}
@@ -461,13 +504,15 @@ export default function Contacts() {
                               <MessageSquare className="mr-2 h-4 w-4" />
                               {t('contacts.send_email')}
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handleDelete(contact)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              {t('common.delete')}
-                            </DropdownMenuItem>
+                            <PermissionGuard module="contacts" permission="delete">
+                              <DropdownMenuItem 
+                                onClick={() => handleDelete(contact)}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                {t('common.delete')}
+                              </DropdownMenuItem>
+                            </PermissionGuard>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -478,7 +523,7 @@ export default function Contacts() {
             </Table>
           </CardContent>
         </Card>
-      </div>
+        </div>
 
       <ContactModal
         isOpen={isModalOpen}
@@ -486,6 +531,16 @@ export default function Contacts() {
         onSuccess={handleModalSuccess}
         contact={editingContact}
         dealerships={dealerships}
+      />
+
+      <ContactDetailModal
+        contact={viewingContact}
+        open={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setViewingContact(null);
+        }}
+        onEdit={handleEditFromDetail}
       />
     </DashboardLayout>
   );

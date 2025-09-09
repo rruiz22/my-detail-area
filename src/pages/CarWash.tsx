@@ -6,18 +6,22 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
 import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
 import { useTranslation } from 'react-i18next';
+import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
 import { Badge } from '@/components/ui/badge';
 
 export default function CarWash() {
   const { t } = useTranslation();
-  const [activeFilter, setActiveFilter] = useState('today');
-  const [viewMode, setViewMode] = useState<'kanban' | 'table'>('table');
+  // Persistent state
+  const [activeFilter, setActiveFilter] = useTabPersistence('car_wash');
+  const [viewMode, setViewMode] = useViewModePersistence('car_wash');
+  const [searchTerm, setSearchTerm] = useSearchPersistence('car_wash');
+  
+  // Non-persistent UI state
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
 
   const {
     orders,

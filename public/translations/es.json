@@ -360,11 +360,26 @@
     "inactive": "Inactivo",
     "suspended": "Suspendido",
     "notes": "Notas",
-    "notes_placeholder": "Notas adicionales sobre este contacto"
+    "notes_placeholder": "Notas adicionales sobre este contacto",
+    "organization_department": "Organización y Departamento",
+    "contact_notes": "Notas del Contacto",
+    "no_groups_assigned": "Sin grupos asignados",
+    "primary_contact": "Contacto Principal",
+    "unknown_dealership": "Concesionario Desconocido",
+    "add_to_phone_contacts": "Agregar a Contactos del Teléfono",
+    "scan_to_add_contact": "Escanea con la cámara de tu teléfono para agregar contacto",
+    "download_vcf_file": "Descargar Archivo .vcf",
+    "contact_downloaded": "Contacto descargado exitosamente",
+    "download_failed": "Error al descargar contacto"
   },
   "users": {
     "title": "Usuarios de Detallado",
     "add_new": "Agregar Nuevo Usuario",
+    "invite_user": "Invitar Usuario",
+    "create_direct": "Crear Usuario Directamente",
+    "user_creation_wizard": "Asistente de Creación de Usuario",
+    "system_users": "Usuarios del Sistema",
+    "system_users_desc": "Usuarios que pueden iniciar sesión y acceder al sistema",
     "edit": "Editar Usuario",
     "role": "Rol",
     "admin": "Administrador",
@@ -453,7 +468,11 @@
       "pending": "Pendiente",
       "in_progress": "En Progreso",
       "completed": "Completado",
-      "cancelled": "Cancelado"
+      "cancelled": "Cancelado",
+      "confirm_status_change": "Confirmar Cambio de Estado",
+      "status_will_change_to": "El estado cambiará a {status}",
+      "status_updated_successfully": "Estado actualizado exitosamente",
+      "error_updating_status": "Error al actualizar estado"
     },
     "export": {
       "operational_report": "Reporte Operacional",
@@ -652,7 +671,8 @@
     "activity": "Atividade",
     "excellent": "Excelente",
     "good": "Bom",
-    "low": "Baixo"
+    "low": "Bajo",
+    "general": "General"
   },
   "messages": {
     "success": "Operación completada exitosamente",
@@ -673,6 +693,45 @@
     "forbidden": "Acceso denegado.",
     "not_found": "Recurso no encontrado.",
     "timeout": "Tiempo de espera agotado. Por favor inténtalo de nuevo."
+  },
+  "qr_redirect": {
+    "invalid_link": "Enlace inválido",
+    "link_not_found": "Enlace no encontrado o expirado",
+    "invalid_destination": "Destino del enlace inválido",
+    "processing_error": "Error al procesar enlace"
+  },
+  "recon_defaults": {
+    "default_customer": "Vehículo Recon",
+    "default_service": "Reacondicionamiento",
+    "default_advisor": "Equipo Recon",
+    "default_department": "Recon"
+  },
+  "user_presence": {
+    "error_initializing": "Error al inicializar presencia",
+    "error_fetching_users": "Error al obtener presencia de usuarios",
+    "error_setting_status": "Error al establecer estado",
+    "error_custom_status": "Error al establecer estado personalizado",
+    "default_user_name": "Miembro del Equipo"
+  },
+  "vin_scanner_errors": {
+    "no_vin_found": "No se encontró un VIN válido en la imagen",
+    "processing_error": "Error al procesar la imagen. Intenta nuevamente.",
+    "vin_input_placeholder": "17 caracteres del VIN..."
+  },
+  "permissions": {
+    "update_status": "Actualizar Estado",
+    "change_to_progress": "Cambiar a En Progreso",
+    "complete_orders": "Completar Órdenes",
+    "cancel_orders": "Cancelar Órdenes",
+    "read_only_access": "Acceso de solo lectura",
+    "full_access": "Acceso completo",
+    "module_access": "Acceso a Módulos",
+    "granular_permissions": "Permisos Granulares",
+    "contacts_view": "Ver Contactos",
+    "contacts_create": "Crear Contactos",
+    "contacts_edit": "Editar Contactos",
+    "contacts_delete": "Eliminar Contactos",
+    "contacts_admin": "Administración de Contactos"
   },
   "filters": {
     "global_filters": "Filtros Globales",
@@ -737,7 +796,8 @@
       "groups_short": "Grupos", 
       "users": "Usuarios",
       "users_short": "Usuarios",
-      "services": "Servicios"
+      "services": "Servicios",
+      "categories": "Categorías"
     },
     "overview": {
       "title": "Resumen del Concesionario",
@@ -906,6 +966,7 @@
   },
   "categories": {
     "title": "Categorías de Servicios",
+    "subtitle": "Gestionar categorías para este concesionario",
     "description": "Gestiona las categorías de servicios de tu concesionario",
     "error_fetching": "Error al obtener las categorías",
     "insufficient_permissions": "Permisos insuficientes para gestionar categorías",
@@ -935,7 +996,7 @@
     "no_categories_description": "Comienza creando tu primera categoría"
   },
   "orders": {
-    "vehicle": "Vehículo"
+    "vehicle": "Vehículo",
     "create": "Crear Orden",
     "edit": "Editar Orden",
     "clientInfo": "Información del Cliente",
@@ -960,6 +1021,92 @@
     "total": "Total",
     "notes": "Notas",
     "notesPlaceholder": "Instrucciones especiales, observaciones, etc.",
+    "edit_service_order": "Editar Orden de Servicio",
+    "create_service_order": "Crear Orden de Servicio",
+    "available": "disponibles",
+    "totalPrice": "Precio Total", 
+    "noServicesAvailable": "No hay servicios disponibles",
+    "selectClient": "Seleccionar cliente...",
+    "vehicle_information": "Información del Vehículo"
+  },
+  "data_table": {
+    "due_today": "Vence hoy",
+    "unassigned_customer": "Cliente no asignado",
+    "no_stock": "Sin stock", 
+    "vin_not_provided": "VIN no proporcionado",
+    "generate_qr": "Generar QR",
+    "unknown_user": "Usuario Desconocido",
+    "user_not_authenticated": "Usuario no autenticado"
+  },
+  "order_detail": {
+    "full_screen_view": "Detalles de Orden - Vista Completa",
+    "simple_notes": "Notas de la Orden",
+    "no_notes_provided": "No se proporcionaron notas",
+    "qr_analytics": "Análisis QR",
+    "short_link_created": "Enlace corto creado exitosamente",
+    "copy_link": "Enlace copiado al portapapeles",
+    "regenerate_qr": "Código QR regenerado exitosamente",
+    "total_scans": "Escaneos Totales",
+    "unique_visitors": "Visitantes Únicos"
+  },
+  "user_creation": {
+    "wizard_step": "Paso {{step}} de {{total}}",
+    "personal_information": "Información Personal",
+    "dealership_assignment": "Asignación de Concesionario",
+    "role_assignment": "Asignación de Rol",
+    "initial_role": "Rol Inicial",
+    "select_role": "Seleccionar rol...",
+    "select_dealership": "Seleccionar concesionario...",
+    "user_type": "Tipo de Usuario",
+    "dealer_user": "Usuario de Concesionario",
+    "detail_user": "Usuario de Detalle",
+    "dealer_user_desc": "Los usuarios de concesionarios trabajan en concesionarios, los usuarios de detalle brindan servicios",
+    "create_direct_desc": "Crear un nuevo usuario del sistema con acceso directo",
+    "creating": "Creando...",
+    "failed_load_dealerships": "Error al cargar concesionarios",
+    "failed_create_user": "Error al crear usuario",
+    "user_created_success": "Usuario {{name}} creado exitosamente"
+  },
+  "roles": {
+    "basic_user": "Usuario Básico",
+    "basic_user_desc": "Acceso básico a módulos asignados",
+    "salesperson": "Vendedor",
+    "salesperson_desc": "Acceso al módulo de ventas con creación de órdenes",
+    "service_advisor": "Asesor de Servicio",
+    "service_advisor_desc": "Acceso y gestión del módulo de servicio",
+    "sales_manager": "Gerente de Ventas",
+    "sales_manager_desc": "Gestión del equipo de ventas y reportes",
+    "service_manager": "Gerente de Servicio",
+    "service_manager_desc": "Gestión del departamento de servicio",
+    "general_manager": "Gerente General",
+    "general_manager_desc": "Acceso completo de gestión del concesionario",
+    "dealership_admin": "Administrador del Concesionario",
+    "dealership_admin_desc": "Administración completa del concesionario"
+  },
+  "vehicle_info": {
+    "manual_entry": "Entrada Manual",
+    "manually_entered": "Información del vehículo ingresada manualmente",
+    "vin_status": "Estado VIN",
+    "display_preview": "Vista Previa"
+  },
+  "schedule_view": {
+    "schedule_timeline": "Cronograma y Línea de Tiempo",
+    "order_progress": "Progreso de la Orden",
+    "timeline": "Línea de Tiempo",
+    "sla_compliance": "Cumplimiento SLA",
+    "on_track": "En Camino",
+    "at_risk": "En Riesgo",
+    "target_completion": "Completación objetivo: {{hours}} horas",
+    "days_overdue": "{{days}} días vencido",
+    "due_tomorrow": "Vence mañana",
+    "due_in_days": "Vence en {{days}} días",
+    "order_completed": "Orden completada",
+    "in_progress": "En progreso",
+    "most_recent_change": "Cambio más reciente",
+    "not_set": "No establecido",
+    "no_due_date": "Sin fecha de vencimiento"
+  },
+  "table": {
     "search_orders": "Buscar órdenes...",
     "filter_by_status": "Filtrar por estado",
     "all_status": "Todos los Estados",
@@ -1156,6 +1303,21 @@
     "back_to_dashboard": "Volver al Panel"
   },
   "sales_orders": {
+    "title": "Órdenes de Venta",
+    "dealership": "Concesionario",
+    "stock_number": "Stock#",
+    "vehicle": "Vehículo",
+    "vin_decoding": "Decodificación VIN",
+    "vehicle_auto_populated": "Información del vehículo auto-completada desde VIN",
+    "contact": "Contacto",
+    "services_for_group": "Servicios para {group}",
+    "status_change_restricted": "Cambio de estado restringido",
+    "only_authorized_users": "Solo usuarios autorizados pueden cambiar el estado",
+    "decoding_vin": "Decodificando VIN...",
+    "vin_decoded_successfully": "VIN decodificado exitosamente",
+    "vin_decode_error": "Error al decodificar VIN",
+    "enter_17_character_vin": "Ingrese VIN de 17 caracteres para decodificación automática",
+    "manual_vehicle_entry": "O ingrese los detalles del vehículo manualmente",
     "tabs": {
       "dashboard": "Tablero",
       "today": "Órdenes de Hoy",
@@ -1219,7 +1381,10 @@
   },
   "service_orders": {
     "title": "Órdenes de Servicio",
-    "description": "Gestionar órdenes de servicio automotriz"
+    "description": "Gestionar órdenes de servicio automotriz",
+    "po_number": "Número PO",
+    "ro_number": "Número RO",
+    "tag_number": "Número de Etiqueta"
   },
   "recon_orders": {
     "title": "Órdenes de Reacondicionamiento",
@@ -1318,7 +1483,7 @@
     "feature_secure_desc": "Conversaciones encriptadas de extremo a extremo",
     "feature_multimedia": "Soporte Multimedia Rico",
     "feature_multimedia_desc": "Comparte archivos, imágenes y mensajes de voz"
-  }
+  },
   "landing": {
     "welcome": "Bienvenido al Sistema de Gestión",
     "description": "Inicia sesión para acceder a dealers, contactos y más funciones",

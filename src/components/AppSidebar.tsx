@@ -37,6 +37,10 @@ export function AppSidebar() {
     title: t('chat.title'),
     url: "/chat",
     icon: MessageCircle
+  }, {
+    title: t('contacts.title'),
+    url: "/contacts",
+    icon: Users2
   }];
 
   const secondaryNavItems = [{
@@ -44,13 +48,13 @@ export function AppSidebar() {
     url: "/dealerships",
     icon: Building2
   }, {
-    title: t('contacts.title'),
-    url: "/contacts",
-    icon: Users2
-  }, {
     title: t('navigation.management'),
     url: "/management",
     icon: Shield
+  }, {
+    title: t('pages.user_management'),
+    url: "/users",
+    icon: Users
   }, {
     title: t('navigation.reports'),
     url: "/reports",

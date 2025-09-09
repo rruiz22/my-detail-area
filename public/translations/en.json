@@ -442,12 +442,26 @@
     "inactive": "Inactive",
     "suspended": "Suspended",
     "notes": "Notes",
-    "notes_placeholder": "Additional notes about this contact"
+    "notes_placeholder": "Additional notes about this contact",
+    "organization_department": "Organization & Department",
+    "contact_notes": "Contact Notes",
+    "no_groups_assigned": "No groups assigned",
+    "primary_contact": "Primary Contact",
+    "unknown_dealership": "Unknown Dealership",
+    "add_to_phone_contacts": "Add to Phone Contacts",
+    "scan_to_add_contact": "Scan with your phone camera to add contact",
+    "download_vcf_file": "Download .vcf File",
+    "contact_downloaded": "Contact downloaded successfully",
+    "download_failed": "Failed to download contact"
   },
   "users": {
     "title": "Detail Users",
     "add_new": "Add New User",
     "invite_user": "Invite User",
+    "create_direct": "Create User Directly",
+    "user_creation_wizard": "User Creation Wizard",
+    "system_users": "System Users",
+    "system_users_desc": "Users who can log in and access the system",
     "edit": "Edit User",
     "role": "Role",
     "admin": "Administrator",
@@ -504,22 +518,23 @@
     "vin_decoded_successfully": "VIN decoded successfully",
     "vin_decode_error": "Error decoding VIN",
     "enter_17_character_vin": "Enter 17-character VIN for automatic decoding",
-    "manual_vehicle_entry": "Or enter vehicle details manually"
+    "manual_vehicle_entry": "Or enter vehicle details manually",
+    "vehicle": "Vehicle"
   },
   "vinScanner": {
     "title": "Scan VIN",
     "detected": "Detected VINs:",
     "capture": "Capture",
     "instruction": "Start camera or upload VIN image",
-    "startCamera": "Iniciar Cámara",
-    "uploadImage": "Subir Imagen",
-    "videoError": "Error al cargar el video",
-    "permissionDenied": "Permiso de cámara denegado",
-    "noCamera": "No se encontró cámara",
-    "cameraError": "Error al acceder a la cámara",
-    "cameraInUse": "Cámara en uso por otra aplicación",
-    "captureError": "Error al capturar imagen",
-    "initializingCamera": "Inicializando cámara..."
+    "startCamera": "Start Camera",
+    "uploadImage": "Upload Image",
+    "videoError": "Error loading video",
+    "permissionDenied": "Camera permission denied",
+    "noCamera": "No camera found",
+    "cameraError": "Error accessing camera",
+    "cameraInUse": "Camera in use by another application",
+    "captureError": "Error capturing image",
+    "initializingCamera": "Initializing camera..."
   },
   "settings": {
     "title": "Settings",
@@ -621,7 +636,11 @@
     "all": "All",
     "excellent": "Excellent",
     "good": "Good",
-    "low": "Low"
+    "low": "Low",
+    "general": "General",
+    "recently": "recently",
+    "words": "words",
+    "characters": "characters"
   },
   "messages": {
     "success": "Operation completed successfully",
@@ -642,6 +661,30 @@
     "forbidden": "Access denied.",
     "not_found": "Resource not found.",
     "timeout": "Request timeout. Please try again."
+  },
+  "qr_redirect": {
+    "invalid_link": "Invalid link",
+    "link_not_found": "Link not found or expired",
+    "invalid_destination": "Invalid link destination",
+    "processing_error": "Error processing link"
+  },
+  "recon": {
+    "default_customer": "Recon Vehicle",
+    "default_service": "Reconditioning",
+    "default_advisor": "Recon Team",
+    "default_department": "Recon"
+  },
+  "user_presence": {
+    "error_initializing": "Error initializing presence",
+    "error_fetching_users": "Error fetching users presence",
+    "error_setting_status": "Error setting status",
+    "error_custom_status": "Error setting custom status",
+    "default_user_name": "Team Member"
+  },
+  "vin_scanner_errors": {
+    "no_vin_found": "No valid VIN found in the image",
+    "processing_error": "Error processing image. Please try again.",
+    "vin_input_placeholder": "17 VIN characters..."
   },
   "filters": {
     "global_filters": "Global Filters",
@@ -679,7 +722,12 @@
     "read_only_access": "Read-only access",
     "full_access": "Full access",
     "module_access": "Module Access",
-    "granular_permissions": "Granular Permissions"
+    "granular_permissions": "Granular Permissions",
+    "contacts_view": "View Contacts",
+    "contacts_create": "Create Contacts",
+    "contacts_edit": "Edit Contacts", 
+    "contacts_delete": "Delete Contacts",
+    "contacts_admin": "Contact Administration"
   },
   "status": {
     "pending": "Pending",
@@ -727,7 +775,8 @@
       "groups_short": "Groups",
       "users": "Users",
       "users_short": "Users",
-      "services": "Services"
+      "services": "Services",
+      "categories": "Categories"
     },
     "overview": {
       "title": "Dealer Overview",
@@ -896,6 +945,7 @@
   },
   "categories": {
     "title": "Service Categories",
+    "subtitle": "Manage categories for this dealer",
     "description": "Manage service categories for your dealership",
     "error_fetching": "Error fetching categories",
     "insufficient_permissions": "Insufficient permissions to manage categories",
@@ -951,6 +1001,113 @@
     "total": "Total",
     "notes": "Notes",
     "notesPlaceholder": "Special instructions, observations, etc.",
+    "edit_service_order": "Edit Service Order",
+    "create_service_order": "Create Service Order",
+    "available": "available",
+    "totalPrice": "Total Price",
+    "noServicesAvailable": "No services available",
+    "selectClient": "Select client...",
+    "vehicle_information": "Vehicle Information"
+  },
+  "data_table": {
+    "due_today": "Due today",
+    "unassigned_customer": "Unassigned customer", 
+    "no_stock": "No stock",
+    "vin_not_provided": "VIN not provided",
+    "generate_qr": "Generate QR",
+    "unknown_user": "Unknown User",
+    "user_not_authenticated": "User not authenticated"
+  },
+  "order_detail": {
+    "full_screen_view": "Order Details - Full View",
+    "simple_notes": "Order Notes",
+    "no_notes_provided": "No notes provided",
+    "qr_analytics": "QR Analytics",
+    "short_link_created": "Short link created successfully",
+    "copy_link": "Link copied to clipboard",
+    "regenerate_qr": "QR code regenerated successfully",
+    "total_scans": "Total Scans",
+    "unique_visitors": "Unique Visitors"
+  },
+  "user_creation": {
+    "wizard_step": "Step {{step}} of {{total}}",
+    "personal_information": "Personal Information",
+    "dealership_assignment": "Dealership Assignment",
+    "role_assignment": "Role Assignment",
+    "initial_role": "Initial Role",
+    "select_role": "Select role...",
+    "select_dealership": "Select dealership...",
+    "user_type": "User Type",
+    "dealer_user": "Dealer User",
+    "detail_user": "Detail User",
+    "dealer_user_desc": "Dealer users work at dealerships, Detail users provide services",
+    "create_direct_desc": "Create a new system user with direct access",
+    "send_welcome_email": "Send welcome email",
+    "creating": "Creating...",
+    "failed_load_dealerships": "Failed to load dealerships",
+    "failed_create_user": "Failed to create user",
+    "user_created_success": "User {{name}} created successfully"
+  },
+  "roles": {
+    "basic_user": "Basic User",
+    "basic_user_desc": "Basic access to assigned modules",
+    "salesperson": "Salesperson", 
+    "salesperson_desc": "Sales module access with order creation",
+    "service_advisor": "Service Advisor",
+    "service_advisor_desc": "Service module access and management",
+    "sales_manager": "Sales Manager",
+    "sales_manager_desc": "Sales team management and reporting",
+    "service_manager": "Service Manager",
+    "service_manager_desc": "Service department management",
+    "general_manager": "General Manager",
+    "general_manager_desc": "Full dealership management access",
+    "dealership_admin": "Dealership Admin",
+    "dealership_admin_desc": "Complete dealership administration"
+  },
+  "vehicle_info": {
+    "manual_entry": "Manual Entry",
+    "manually_entered": "Manually entered vehicle information",
+    "vin_status": "VIN Status",
+    "display_preview": "Display Preview"
+  },
+  "schedule_view": {
+    "schedule_timeline": "Schedule & Timeline",
+    "order_progress": "Order Progress",
+    "timeline": "Timeline",
+    "sla_compliance": "SLA Compliance",
+    "on_track": "On Track",
+    "at_risk": "At Risk",
+    "target_completion": "Target completion: {{hours}} hours",
+    "days_overdue": "{{days}} days overdue",
+    "due_tomorrow": "Due tomorrow",
+    "due_in_days": "Due in {{days}} days",
+    "order_completed": "Order completed",
+    "in_progress": "In progress",
+    "order_age_today": "Today",
+    "order_age_yesterday": "Yesterday",
+    "order_age_days": "{{days}} days ago",
+    "most_recent_change": "Most recent change",
+    "not_set": "Not set",
+    "no_due_date": "No due date"
+  },
+  "qr_block": {
+    "qr_code_for_access": "QR Code for quick access",
+    "generating": "Generating...",
+    "regenerate": "Regenerate",
+    "personal_info": "Personal Information",
+    "dealership": "Dealership",
+    "words_in_general": "Words in general notes",
+    "words_in_internal": "Words in internal notes",
+    "last_accessed": "Last accessed: {{date}}",
+    "target_completion_hours": "Target completion: {{hours}} hours",
+    "role_distribution": "Role Distribution",
+    "dealership_distribution": "Dealership Distribution",
+    "notification_center": "Notification Center",
+    "smart_notification_coming": "Smart notification management coming soon",
+    "contact_info_only": "Contact information only - these are not system users",
+    "system_users_login": "System users who can log in and access the application"
+  },
+  "table": {
     "search_orders": "Search orders...",
     "filter_by_status": "Filter by status",
     "all_status": "All Status",
@@ -1250,7 +1407,10 @@
   },
   "service_orders": {
     "title": "Service Orders", 
-    "description": "Manage automotive service orders"
+    "description": "Manage automotive service orders",
+    "po_number": "PO Number",
+    "ro_number": "RO Number", 
+    "tag_number": "Tag Number"
   },
   "recon_orders": {
     "title": "Recon Orders",

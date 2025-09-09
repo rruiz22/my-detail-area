@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import Tesseract from 'tesseract.js';
 
 interface UseVinScannerReturn {
@@ -8,6 +9,7 @@ interface UseVinScannerReturn {
 }
 
 export function useVinScanner(): UseVinScannerReturn {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +37,7 @@ export function useVinScanner(): UseVinScannerReturn {
       );
 
       if (uniqueVins.length === 0) {
-        setError('No se encontró un VIN válido en la imagen');
+        setError(t('vin_scanner_errors.no_vin_found'));
       } else {
         console.log('VINs detectados:', uniqueVins);
       }
@@ -43,7 +45,7 @@ export function useVinScanner(): UseVinScannerReturn {
       return uniqueVins;
     } catch (err) {
       console.error('VIN scanning error:', err);
-      setError('Error al procesar la imagen. Intenta nuevamente.');
+      setError(t('vin_scanner_errors.processing_error'));
       return [];
     } finally {
       setLoading(false);

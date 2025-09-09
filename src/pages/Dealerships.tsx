@@ -227,7 +227,7 @@ export function Dealerships() {
               className="gap-2"
             >
               <BarChart3 className="h-4 w-4" />
-              {showStats ? 'Ocultar' : 'Mostrar'} Estadísticas
+              {showStats ? t('dealerships.hide_stats') : t('dealerships.show_stats')}
             </Button>
             <Button onClick={handleAdd} className="gap-2">
               <Plus className="h-4 w-4" />

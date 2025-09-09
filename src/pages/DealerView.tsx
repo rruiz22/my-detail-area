@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { DealerOverview } from '@/components/dealer/DealerOverview';
 import { DealerGroups } from '@/components/dealer/DealerGroups';
 import { DealerUsers } from '@/components/dealer/DealerUsers';
@@ -30,6 +31,9 @@ const DealerView = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const [dealerName, setDealerName] = useState<string>('');
+  
+  // Dealer-specific tab persistence
+  const [activeTab, setActiveTab] = useTabPersistence('dealer_view', id);
 
   useEffect(() => {
     const fetchDealerInfo = async () => {
@@ -90,7 +94,7 @@ const DealerView = () => {
                 <span>{dealerName || t('dealer.view.title')}</span>
               </h1>
               <p className="text-muted-foreground">
-                Dealer Management
+                {t('dealer.view.subtitle', { id })}
               </p>
             </div>
           </div>
@@ -101,7 +105,7 @@ const DealerView = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
