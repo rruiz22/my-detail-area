@@ -1915,6 +1915,43 @@ export type Database = {
           total_users: number
         }[]
       }
+      get_orders_analytics: {
+        Args: {
+          p_dealer_id: number
+          p_end_date?: string
+          p_order_type?: string
+          p_start_date?: string
+          p_status?: string
+        }
+        Returns: {
+          avg_order_value: number
+          avg_processing_time_hours: number
+          cancelled_orders: number
+          completed_orders: number
+          completion_rate: number
+          daily_data: Json
+          in_progress_orders: number
+          pending_orders: number
+          sla_compliance_rate: number
+          status_distribution: Json
+          total_orders: number
+          total_revenue: number
+          type_distribution: Json
+        }[]
+      }
+      get_performance_trends: {
+        Args: {
+          p_dealer_id: number
+          p_end_date?: string
+          p_start_date?: string
+        }
+        Returns: {
+          department_performance: Json
+          efficiency_trends: Json
+          sla_trends: Json
+          volume_trends: Json
+        }[]
+      }
       get_recent_system_activity: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1924,6 +1961,21 @@ export type Database = {
           entity_id: string
           entity_type: string
           user_email: string
+        }[]
+      }
+      get_revenue_analytics: {
+        Args: {
+          p_dealer_id: number
+          p_end_date?: string
+          p_grouping?: string
+          p_start_date?: string
+        }
+        Returns: {
+          avg_revenue_per_period: number
+          growth_rate: number
+          period_data: Json
+          top_services: Json
+          total_revenue: number
         }[]
       }
       get_system_stats: {
