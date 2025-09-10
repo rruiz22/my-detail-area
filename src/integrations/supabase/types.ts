@@ -2606,6 +2606,10 @@ export type Database = {
         Args: { p_scan_data?: Json; p_tag_id: string }
         Returns: Json
       }
+      format_dh: {
+        Args: { interval_val: unknown }
+        Returns: string
+      }
       generate_custom_order_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -2751,6 +2755,30 @@ export type Database = {
           type_distribution: Json
         }[]
       }
+      get_overview_table: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          created_at: string
+          current_step_color: string
+          current_step_name: string
+          current_step_order: number
+          days_in_step: string
+          id: string
+          media_count: number
+          notes_preview: string
+          priority: string
+          retail_value: number
+          short_vin: string
+          status: string
+          stock_number: string
+          vehicle_make: string
+          vehicle_model: string
+          vehicle_trim: string
+          vehicle_year: number
+          vin: string
+          work_item_counts: Json
+        }[]
+      }
       get_performance_trends: {
         Args: {
           p_dealer_id: number
@@ -2788,6 +2816,19 @@ export type Database = {
           period_data: Json
           top_services: Json
           total_revenue: number
+        }[]
+      }
+      get_steps_with_counts: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          color: string
+          description: string
+          icon: string
+          id: string
+          is_default: boolean
+          name: string
+          order_index: number
+          vehicle_count: number
         }[]
       }
       get_system_stats: {
@@ -2879,6 +2920,16 @@ export type Database = {
           user_type: Database["public"]["Enums"]["user_type"]
         }[]
       }
+      get_vehicle_detail: {
+        Args: { p_vehicle_id: string }
+        Returns: {
+          media: Json
+          notes: Json
+          timeline: Json
+          vehicle_info: Json
+          work_items: Json
+        }[]
+      }
       has_permission: {
         Args: {
           check_module: Database["public"]["Enums"]["app_module"]
@@ -2898,6 +2949,10 @@ export type Database = {
       set_membership_groups: {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
+      }
+      short_vin: {
+        Args: { vin_text: string }
+        Returns: string
       }
       update_dealership_module: {
         Args: {
