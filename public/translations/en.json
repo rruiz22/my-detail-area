@@ -1858,5 +1858,19 @@
     "not_supported": "NFC not supported on this device",
     "permission_required": "NFC permission required",
     "enable_nfc": "Please enable NFC in device settings"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel", 
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
   }
 }

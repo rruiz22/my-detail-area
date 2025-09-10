@@ -1821,5 +1821,19 @@
     "not_supported": "NFC no compatible en este dispositivo",
     "permission_required": "Permiso NFC requerido",
     "enable_nfc": "Por favor habilite NFC en configuración del dispositivo"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar", 
+    "create": "Crear",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información"
   }
 }
