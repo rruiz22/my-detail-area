@@ -100,29 +100,70 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      console.log('Creating user account...', formData);
+      console.log('=== FRONTEND USER CREATION START ===');
+      console.log('Form data:', formData);
+      
+      // Check if user is authenticated
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      console.log('Current session:', session);
+      console.log('Session error:', sessionError);
+      
+      if (!session?.user) {
+        throw new Error('You must be logged in to create users');
+      }
+      
+      console.log('Authenticated user:', session.user.id, session.user.email);
+      
+      // Validate dealershipId before sending
+      const dealershipIdNum = parseInt(formData.dealershipId);
+      if (isNaN(dealershipIdNum) || dealershipIdNum <= 0) {
+        throw new Error('Invalid dealership selection');
+      }
+      
+      const requestPayload = {
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        dealershipId: dealershipIdNum,
+        role: formData.role,
+        userType: formData.userType,
+        sendWelcomeEmail: formData.sendWelcomeEmail,
+        dealershipName: dealerships.find(d => d.id === dealershipIdNum)?.name
+      };
+      
+      console.log('Request payload to send:', JSON.stringify(requestPayload, null, 2));
       
       // Use the new Edge Function to properly create the user
+      console.log('Invoking create-dealer-user function...');
       const { data, error } = await supabase.functions.invoke('create-dealer-user', {
-        body: {
-          email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          dealershipId: parseInt(formData.dealershipId),
-          role: formData.role,
-          userType: formData.userType,
-          sendWelcomeEmail: formData.sendWelcomeEmail,
-          dealershipName: dealerships.find(d => d.id === parseInt(formData.dealershipId))?.name
-        }
+        body: requestPayload
       });
 
-      if (error) throw error;
+      console.log('Function response - data:', data);
+      console.log('Function response - error:', error);
+
+      if (error) {
+        console.error('=== SUPABASE FUNCTION ERROR ===');
+        console.error('Error type:', typeof error);
+        console.error('Error name:', error?.name);
+        console.error('Error message:', error?.message);
+        console.error('Error status:', error?.status);
+        console.error('Error details:', error?.details);
+        console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+        throw error;
+      }
+      
+      if (!data) {
+        console.error('No data returned from function');
+        throw new Error('No response data from server');
+      }
       
       if (!data.success) {
-        throw new Error(data.error || 'Failed to create user');
+        console.error('Function returned failure:', data);
+        throw new Error(data.error || 'Server returned failure status');
       }
 
-      console.log('User created successfully:', data);
+      console.log('✅ User created successfully:', data);
 
       toast({
         title: t('common.success'),
@@ -133,10 +174,28 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
       onClose();
       
     } catch (error: any) {
-      console.error('Error creating user:', error);
+      console.error('=== FRONTEND ERROR HANDLING ===');
+      console.error('Error type:', typeof error);
+      console.error('Error name:', error?.name);
+      console.error('Error message:', error?.message);
+      console.error('Error status:', error?.status);
+      console.error('Error context:', error?.context);
+      console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      
+      // Extract meaningful error message
+      let errorMessage = t('user_creation.failed_create_user');
+      
+      if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.details?.error) {
+        errorMessage = error.details.error;
+      } else if (error?.context?.error) {
+        errorMessage = error.context.error;
+      }
+      
       toast({
         title: t('common.error'),
-        description: error.message || t('user_creation.failed_create_user'),
+        description: errorMessage,
         variant: 'destructive'
       });
     } finally {
