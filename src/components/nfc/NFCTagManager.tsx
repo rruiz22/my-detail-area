@@ -319,21 +319,6 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
             {t('nfc_tracking.tag_manager.register_new')}
           </Button>
         </div>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>{t('nfc_tracking.tag_manager.create_tag')}</DialogTitle>
-            </DialogHeader>
-            <TagForm />
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
-                {t('common.cancel')}
-              </Button>
-              <Button onClick={handleCreateTag} disabled={loading}>
-                {t('common.create')}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
 
       {/* Filters */}
@@ -400,22 +385,33 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
                     <p className="text-xs text-muted-foreground">#{tag.tag_uid}</p>
                   </div>
                 </div>
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => openEditDialog(tag)}
-                  >
-                    <Edit className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeleteTag(tag.id)}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreVertical className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => {
+                      setWritingTag(tag);
+                      setIsWriterDialogOpen(true);
+                    }}>
+                      <Smartphone className="h-4 w-4 mr-2" />
+                      {t('nfc.writer.write_to_physical')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setEditingTag(tag)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      {t('common.edit')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => handleDeleteTag(tag.id)}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      {t('common.delete')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </CardHeader>
 
