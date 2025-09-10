@@ -488,10 +488,10 @@ export function EnhancedThemeStudio({ className }: EnhancedThemeStudioProps) {
                 <div key={key} className="text-center">
                   <div 
                     className="w-full h-12 rounded border mb-2"
-                    style={{ backgroundColor: color }}
+                    style={{ backgroundColor: color as string }}
                   />
                   <p className="text-sm font-medium capitalize">{key}</p>
-                  <p className="text-xs text-muted-foreground">{color}</p>
+                  <p className="text-xs text-muted-foreground">{color as string}</p>
                 </div>
               ))}
             </div>

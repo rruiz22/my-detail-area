@@ -1,4 +1,127 @@
 {
+  "get_ready": {
+    "title": "Get Ready",
+    "tabs": {
+      "overview": "Visão Geral",
+      "details_view": "Vista de Detalhes",
+      "approvals": "Aprovações",
+      "forms": "Formulários",
+      "vendors": "Fornecedores",
+      "reports": "Relatórios",
+      "integrations": "Integrações",
+      "setup": "Configuração",
+      "help": "Ajuda"
+    },
+    "overview": {
+      "title": "Visão Geral",
+      "description": "Visão geral de todos os veículos em processo",
+      "search_placeholder": "Buscar por estoque, VIN ou veículo...",
+      "priority_filter": "Filtrar por prioridade",
+      "status_filter": "Filtrar por status",
+      "no_vehicle_selected": "Selecione um veículo para ver os detalhes",
+      "select_vehicle_details": "Selecione um veículo da tabela para ver informações detalhadas aqui",
+      "loading_vehicles": "Carregando veículos...",
+      "no_vehicles": "Nenhum veículo encontrado"
+    },
+    "details_view": {
+      "title": "Vista de Detalhes",
+      "description": "Vista detalhada por step selecionado",
+      "no_step_selected": "Selecione um step para ver a vista de detalhes"
+    },
+    "approvals": {
+      "title": "Aprovações",
+      "description": "Gerenciar aprovações de veículos e work items",
+      "view_by": "Ver por:",
+      "vehicle": "Veículo",
+      "work_item": "Work Item",
+      "step": "Step",
+      "vendor_team": "Fornecedor/Equipe",
+      "quick_filters": "Filtros Rápidos:",
+      "needs_approval": "Precisa de Aprovação",
+      "no_vendor": "Sem Fornecedor",
+      "priority": "Prioridade",
+      "qc_recheck": "Revisão QC",
+      "unrepairable": "Não Reparável",
+      "bulk_actions": "Ações em Massa",
+      "select_all": "Selecionar Tudo",
+      "approve_selected": "Aprovar Selecionados",
+      "reject_selected": "Rejeitar Selecionados"
+    },
+    "forms": {
+      "title": "Formulários",
+      "description": "Gerenciar formulários e templates de inspeção",
+      "inspection_forms": "Formulários de Inspeção",
+      "checklists": "Checklists",
+      "templates": "Templates",
+      "create_new": "Criar Novo"
+    },
+    "vendors": {
+      "title": "Fornecedores",
+      "description": "Gerenciar fornecedores e atribuições",
+      "vendor_list": "Lista de Fornecedores",
+      "assignments": "Atribuições",
+      "performance": "Desempenho",
+      "add_vendor": "Adicionar Fornecedor"
+    },
+    "reports": {
+      "title": "Relatórios",
+      "description": "Relatórios e análise de desempenho",
+      "favorites": "Favoritos",
+      "featured_reports": "Relatórios em Destaque",
+      "recon_performance": "Desempenho Recon",
+      "t2l_adr": "T2L/ADR",
+      "star_favorite": "Marcar como Favorito",
+      "view_report": "Ver Relatório"
+    },
+    "integrations": {
+      "title": "Integrações",
+      "description": "Configurar conexões e APIs externas",
+      "dms_connections": "Conexões DMS",
+      "external_apis": "APIs Externas",
+      "sync_settings": "Configurações de Sincronização"
+    },
+    "setup": {
+      "title": "Configuração",
+      "description": "Configurar steps, work items e notificações",
+      "steps_config": "Configuração de Steps",
+      "work_items": "Work Items",
+      "notifications": "Notificações"
+    },
+    "help": {
+      "title": "Ajuda",
+      "description": "Documentação e recursos de ajuda",
+      "documentation": "Documentação",
+      "tutorials": "Tutoriais",
+      "faqs": "Perguntas Frequentes",
+      "support": "Suporte"
+    },
+    "steps_sidebar": {
+      "toggle_collapse": "Alternar colapso",
+      "loading_steps": "Carregando steps...",
+      "no_steps": "Nenhum step encontrado"
+    },
+    "vehicle_table": {
+      "stock_number": "# Estoque",
+      "vin": "VIN",
+      "vehicle": "Veículo",
+      "current_step": "Step Atual",
+      "status": "Status",
+      "priority": "Prioridade",
+      "days_in_step": "Dias no Step",
+      "retail_value": "Valor Varejo",
+      "actions": "Ações"
+    },
+    "vehicle_detail": {
+      "overview": "Visão Geral",
+      "work_items": "Work Items",
+      "vendors": "Fornecedores", 
+      "timeline": "Timeline",
+      "appraisal": "Avaliação",
+      "media": "Mídia",
+      "notes": "Notas",
+      "loading": "Carregando detalhes do veículo..."
+    }
+  },
   "due_date": {
     "title": "Data e Hora de Vencimento",
     "date_label": "Data de Vencimento",

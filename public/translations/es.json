@@ -2228,5 +2228,128 @@
     "vehicle_info": "[PT] Vehicle Information",
     "year": "[PT] Year"
   },
+  "get_ready": {
+    "title": "Get Ready",
+    "tabs": {
+      "overview": "Vista General",
+      "details_view": "Vista de Detalles",
+      "approvals": "Aprobaciones",
+      "forms": "Formularios",
+      "vendors": "Proveedores",
+      "reports": "Reportes",
+      "integrations": "Integraciones",
+      "setup": "Configuración",
+      "help": "Ayuda"
+    },
+    "overview": {
+      "title": "Vista General",
+      "description": "Vista general de todos los vehículos en proceso",
+      "search_placeholder": "Buscar por stock, VIN o vehículo...",
+      "priority_filter": "Filtrar por prioridad",
+      "status_filter": "Filtrar por estado",
+      "no_vehicle_selected": "Seleccione un vehículo para ver los detalles",
+      "select_vehicle_details": "Seleccione un vehículo de la tabla para ver información detallada aquí",
+      "loading_vehicles": "Cargando vehículos...",
+      "no_vehicles": "No se encontraron vehículos"
+    },
+    "details_view": {
+      "title": "Vista de Detalles",
+      "description": "Vista detallada por step seleccionado",
+      "no_step_selected": "Seleccione un step para ver la vista de detalles"
+    },
+    "approvals": {
+      "title": "Aprobaciones",
+      "description": "Gestionar aprobaciones de vehículos y work items",
+      "view_by": "Ver por:",
+      "vehicle": "Vehículo",
+      "work_item": "Work Item",
+      "step": "Step",
+      "vendor_team": "Proveedor/Equipo",
+      "quick_filters": "Filtros Rápidos:",
+      "needs_approval": "Necesita Aprobación",
+      "no_vendor": "Sin Proveedor",
+      "priority": "Prioridad",
+      "qc_recheck": "Revisión QC",
+      "unrepairable": "No Reparable",
+      "bulk_actions": "Acciones Masivas",
+      "select_all": "Seleccionar Todo",
+      "approve_selected": "Aprobar Seleccionados",
+      "reject_selected": "Rechazar Seleccionados"
+    },
+    "forms": {
+      "title": "Formularios",
+      "description": "Gestionar formularios y templates de inspección",
+      "inspection_forms": "Formularios de Inspección",
+      "checklists": "Checklists",
+      "templates": "Templates",
+      "create_new": "Crear Nuevo"
+    },
+    "vendors": {
+      "title": "Proveedores",
+      "description": "Gestionar proveedores y asignaciones",
+      "vendor_list": "Lista de Proveedores",
+      "assignments": "Asignaciones",
+      "performance": "Rendimiento",
+      "add_vendor": "Agregar Proveedor"
+    },
+    "reports": {
+      "title": "Reportes",
+      "description": "Reportes y análisis de rendimiento",
+      "favorites": "Favoritos",
+      "featured_reports": "Reportes Destacados",
+      "recon_performance": "Rendimiento Recon",
+      "t2l_adr": "T2L/ADR",
+      "star_favorite": "Marcar como Favorito",
+      "view_report": "Ver Reporte"
+    },
+    "integrations": {
+      "title": "Integraciones",
+      "description": "Configurar conexiones y APIs externas",
+      "dms_connections": "Conexiones DMS",
+      "external_apis": "APIs Externas",
+      "sync_settings": "Configuración de Sincronización"
+    },
+    "setup": {
+      "title": "Configuración",
+      "description": "Configurar steps, work items y notificaciones",
+      "steps_config": "Configuración de Steps",
+      "work_items": "Work Items",
+      "notifications": "Notificaciones"
+    },
+    "help": {
+      "title": "Ayuda",
+      "description": "Documentación y recursos de ayuda",
+      "documentation": "Documentación",
+      "tutorials": "Tutoriales",
+      "faqs": "Preguntas Frecuentes",
+      "support": "Soporte"
+    },
+    "steps_sidebar": {
+      "toggle_collapse": "Alternar colapso",
+      "loading_steps": "Cargando steps...",
+      "no_steps": "No se encontraron steps"
+    },
+    "vehicle_table": {
+      "stock_number": "# Stock",
+      "vin": "VIN",
+      "vehicle": "Vehículo",
+      "current_step": "Step Actual",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "days_in_step": "Días en Step",
+      "retail_value": "Valor Retail",
+      "actions": "Acciones"
+    },
+    "vehicle_detail": {
+      "overview": "Vista General",
+      "work_items": "Work Items",
+      "vendors": "Proveedores",
+      "timeline": "Timeline",
+      "appraisal": "Avalúo",
+      "media": "Media",
+      "notes": "Notas",
+      "loading": "Cargando detalles del vehículo..."
+    }
+  },
   "wholesale": "[PT] Wholesale"
 }
