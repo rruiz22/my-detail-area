@@ -20,6 +20,44 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 
+interface OrderFormData {
+  // Order identification
+  orderNumber: string;
+  orderType: string;
+  status: string;
+  
+  // Customer information (vehicle owner)
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  
+  // Vehicle information
+  vehicleVin: string;
+  vehicleYear: string;
+  vehicleMake: string;
+  vehicleModel: string;
+  vehicleInfo: string;
+  
+  // Service order specific fields
+  po: string;
+  ro: string;
+  tag: string;
+  
+  // Assignment information (employee responsible)
+  assignedGroupId?: string;
+  assignedContactId?: string;
+  salesperson?: string;
+  
+  // Order details
+  notes: string;
+  internalNotes?: string;
+  priority?: string;
+  dueDate?: Date;
+  slaDeadline?: Date;
+  scheduledDate?: Date;
+  scheduledTime?: string;
+}
+
 interface ServiceOrderModalProps {
   order?: any;
   open: boolean;
@@ -33,7 +71,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<OrderFormData>({
+    orderNumber: '',
+    orderType: 'service',
+    status: 'pending',
     customerName: '',
     customerEmail: '',
     customerPhone: '',
@@ -45,9 +86,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     po: '',
     ro: '',
     tag: '',
-    status: 'pending',
+    assignedGroupId: '',
+    assignedContactId: '',
+    salesperson: '',
     notes: '',
-    dueDate: undefined as Date | undefined
+    internalNotes: '',
+    priority: 'normal',
+    dueDate: undefined,
+    slaDeadline: undefined,
+    scheduledDate: undefined,
+    scheduledTime: ''
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
@@ -67,26 +115,39 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       
       if (order) {
         setFormData({
-          customerName: order.customerName || '',
-          customerEmail: order.customerEmail || '',
-          customerPhone: order.customerPhone || '',
-          vehicleVin: order.vehicleVin || '',
-          vehicleYear: order.vehicleYear?.toString() || '',
-          vehicleMake: order.vehicleMake || '',
-          vehicleModel: order.vehicleModel || '',
-          vehicleInfo: order.vehicleInfo || '',
+          orderNumber: order.orderNumber || order.order_number || '',
+          orderType: order.orderType || order.order_type || 'service',
+          status: order.status || 'pending',
+          customerName: order.customerName || order.customer_name || '',
+          customerEmail: order.customerEmail || order.customer_email || '',
+          customerPhone: order.customerPhone || order.customer_phone || '',
+          vehicleVin: order.vehicleVin || order.vehicle_vin || '',
+          vehicleYear: order.vehicleYear?.toString() || order.vehicle_year?.toString() || '',
+          vehicleMake: order.vehicleMake || order.vehicle_make || '',
+          vehicleModel: order.vehicleModel || order.vehicle_model || '',
+          vehicleInfo: order.vehicleInfo || order.vehicle_info || '',
           po: order.po || '',
           ro: order.ro || '',
           tag: order.tag || '',
-          status: order.status || 'pending',
+          assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
+          assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
+          salesperson: order.salesperson || '',
           notes: order.notes || '',
-          dueDate: order.dueDate ? safeParseDate(order.dueDate) || undefined : undefined
+          internalNotes: order.internalNotes || order.internal_notes || '',
+          priority: order.priority || 'normal',
+          dueDate: order.dueDate || order.due_date ? safeParseDate(order.dueDate || order.due_date) || undefined : undefined,
+          slaDeadline: order.slaDeadline || order.sla_deadline ? safeParseDate(order.slaDeadline || order.sla_deadline) || undefined : undefined,
+          scheduledDate: order.scheduledDate || order.scheduled_date ? safeParseDate(order.scheduledDate || order.scheduled_date) || undefined : undefined,
+          scheduledTime: order.scheduledTime || order.scheduled_time || ''
         });
         setSelectedServices(order.services || []);
         setSelectedDealership(order.dealerId?.toString() || '');
       } else {
         // Reset form for new order
         setFormData({
+          orderNumber: '',
+          orderType: 'service',
+          status: 'pending',
           customerName: '',
           customerEmail: '',
           customerPhone: '',
@@ -98,9 +159,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           po: '',
           ro: '',
           tag: '',
-          status: 'pending',
+          assignedGroupId: '',
+          assignedContactId: '',
+          salesperson: '',
           notes: '',
-          dueDate: undefined
+          internalNotes: '',
+          priority: 'normal',
+          dueDate: undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: ''
         });
         setSelectedServices([]);
         setSelectedDealership('');
@@ -173,16 +241,11 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   const handleContactChange = (contactId: string) => {
     setSelectedContact(contactId);
-    // Find selected contact and populate form
-    const selectedContactData = contacts.find((c: any) => c.id === contactId);
-    if (selectedContactData) {
-      setFormData(prev => ({
-        ...prev,
-        customerName: selectedContactData.name,
-        customerEmail: selectedContactData.email,
-        customerPhone: selectedContactData.phone
-      }));
-    }
+    // Update assignment in form data - do NOT overwrite customer info automatically
+    setFormData(prev => ({
+      ...prev,
+      assignedContactId: contactId
+    }));
   };
 
   const handleVinChange = async (vin: string) => {
@@ -217,13 +280,40 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     }
   };
 
+  const transformToDbFormat = (formData: OrderFormData) => ({
+    // Map frontend camelCase to backend snake_case
+    order_number: formData.orderNumber,
+    customer_name: formData.customerName,
+    customer_email: formData.customerEmail || null,
+    customer_phone: formData.customerPhone || null,
+    vehicle_vin: formData.vehicleVin || null,
+    vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
+    vehicle_make: formData.vehicleMake || null,
+    vehicle_model: formData.vehicleModel || null,
+    vehicle_info: formData.vehicleInfo || null,
+    po: formData.po || null,
+    ro: formData.ro || null,
+    tag: formData.tag || null,
+    order_type: formData.orderType,
+    status: formData.status,
+    assigned_group_id: formData.assignedGroupId || null,
+    assigned_contact_id: formData.assignedContactId || null,
+    salesperson: formData.salesperson || null,
+    notes: formData.notes || null,
+    internal_notes: formData.internalNotes || null,
+    priority: formData.priority || 'normal',
+    due_date: formData.dueDate || null,
+    sla_deadline: formData.slaDeadline || null,
+    scheduled_date: formData.scheduledDate || null,
+    scheduled_time: formData.scheduledTime || null,
+    dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
+    services: selectedServices
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-      services: selectedServices,
-      dealerId: selectedDealership ? parseInt(selectedDealership) : null
-    });
+    const dbData = transformToDbFormat(formData);
+    onSave(dbData);
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
@@ -522,6 +612,15 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                   </div>
                 </CardContent>
               </Card>
+            </div>
+
+            {/* Hidden fields with default values for later editing in order details */}
+            <div className="hidden">
+              <input type="hidden" name="salesperson" value={formData.salesperson || ''} />
+              <input type="hidden" name="internal_notes" value={formData.internalNotes || ''} />
+              <input type="hidden" name="sla_deadline" value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} />
+              <input type="hidden" name="scheduled_date" value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} />
+              <input type="hidden" name="scheduled_time" value={formData.scheduledTime || ''} />
             </div>
 
             {/* Footer Actions */}

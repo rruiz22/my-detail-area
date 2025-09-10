@@ -13,8 +13,44 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { formatVehicleDisplay, createVehicleDisplay } from '@/utils/vehicleUtils';
+import { safeParseDate } from '@/utils/dateUtils';
 import { Car, Calendar, FileText, Package, Building2 } from 'lucide-react';
 import type { ReconOrder } from '@/hooks/useReconOrderManagement';
+
+interface OrderFormData {
+  // Order identification
+  orderNumber: string;
+  orderType: string;
+  status: string;
+  
+  // Customer information (vehicle owner)
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  
+  // Vehicle information
+  vehicleVin: string;
+  vehicleYear: string;
+  vehicleMake: string;
+  vehicleModel: string;
+  vehicleInfo: string;
+  stockNumber: string;
+  
+  // Assignment information (employee responsible)
+  assignedGroupId?: string;
+  assignedContactId?: string;
+  salesperson?: string;
+  
+  // Order details
+  notes: string;
+  internalNotes?: string;
+  priority?: string;
+  dueDate?: Date;
+  slaDeadline?: Date;
+  scheduledDate?: Date;
+  scheduledTime?: string;
+  dealerId: string;
+}
 
 interface ReconOrderModalProps {
   isOpen: boolean;
@@ -37,17 +73,29 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
   const { decodeVin, loading: isDecodingVin } = useVinDecoding();
   const { dealerships, loading: loadingDealerships, filterByModule } = useAccessibleDealerships();
 
-  const [formData, setFormData] = useState({
-    stockNumber: '',
+  const [formData, setFormData] = useState<OrderFormData>({
+    orderNumber: '',
+    orderType: 'recon',
+    status: 'pending',
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
     vehicleModel: '',
     vehicleInfo: '',
-    status: 'pending',
-    priority: 'normal',
-    notes: '',
+    stockNumber: '',
+    assignedGroupId: '',
     assignedContactId: '',
+    salesperson: '',
+    notes: '',
+    internalNotes: '',
+    priority: 'normal',
+    dueDate: undefined,
+    slaDeadline: undefined,
+    scheduledDate: undefined,
+    scheduledTime: '',
     dealerId: ''
   });
 
@@ -60,30 +108,54 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     if (isOpen) {
       if (mode === 'edit' && order) {
         setFormData({
-          stockNumber: order.stockNumber || '',
+          orderNumber: order.orderNumber || '',
+          orderType: 'recon',
+          status: order.status || 'pending',
+          customerName: '',
+          customerEmail: '',
+          customerPhone: '',
           vehicleVin: order.vehicleVin || '',
           vehicleYear: order.vehicleYear?.toString() || '',
           vehicleMake: order.vehicleMake || '',
           vehicleModel: order.vehicleModel || '',
           vehicleInfo: order.vehicleInfo || '',
-          status: order.status || 'pending',
-          priority: order.priority || 'normal',
-          notes: order.notes || '',
+          stockNumber: order.stockNumber || '',
+          assignedGroupId: '',
           assignedContactId: order.assignedContactId || '',
+          salesperson: '',
+          notes: order.notes || '',
+          internalNotes: '',
+          priority: order.priority || 'normal',
+          dueDate: undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: '',
           dealerId: order.dealerId?.toString() || ''
         });
       } else {
         setFormData({
-          stockNumber: '',
+          orderNumber: '',
+          orderType: 'recon',
+          status: 'pending',
+          customerName: '',
+          customerEmail: '',
+          customerPhone: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
           vehicleModel: '',
           vehicleInfo: '',
-          status: 'pending',
-          priority: 'normal',
-          notes: '',
+          stockNumber: '',
+          assignedGroupId: '',
           assignedContactId: '',
+          salesperson: '',
+          notes: '',
+          internalNotes: '',
+          priority: 'normal',
+          dueDate: undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: '',
           dealerId: ''
         });
       }
@@ -191,12 +263,34 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      const submitData = {
-        ...formData,
-        vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
+      const transformedData = {
+        // Map frontend camelCase to backend snake_case
+        order_number: formData.orderNumber,
+        customer_name: formData.customerName || 'Trade-in Vehicle',
+        customer_email: formData.customerEmail || null,
+        customer_phone: formData.customerPhone || null,
+        vehicle_vin: formData.vehicleVin || null,
+        vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
+        vehicle_make: formData.vehicleMake || null,
+        vehicle_model: formData.vehicleModel || null,
+        vehicle_info: formData.vehicleInfo || null,
+        stock_number: formData.stockNumber || null,
+        order_type: formData.orderType,
+        status: formData.status,
+        assigned_group_id: formData.assignedGroupId || null,
+        assigned_contact_id: formData.assignedContactId || null,
+        salesperson: formData.salesperson || null,
+        notes: formData.notes || null,
+        internal_notes: formData.internalNotes || null,
+        priority: formData.priority || 'normal',
+        due_date: formData.dueDate || null,
+        sla_deadline: formData.slaDeadline || null,
+        scheduled_date: formData.scheduledDate || null,
+        scheduled_time: formData.scheduledTime || null,
+        dealer_id: formData.dealerId ? parseInt(formData.dealerId) : null
       };
 
-      await onSubmit(submitData);
+      await onSubmit(transformedData);
       onClose();
     } catch (error) {
       console.error('Error submitting recon order:', error);
@@ -444,6 +538,58 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
               </div>
             </CardContent>
           </Card>
+
+          {/* Hidden fields with default values for later editing in order details */}
+          <div className="hidden">
+            <input 
+              type="hidden" 
+              name="customer_name" 
+              value={formData.customerName || ''} 
+              onChange={(e) => handleInputChange('customerName', e.target.value)}
+            />
+            <input 
+              type="hidden" 
+              name="customer_email" 
+              value={formData.customerEmail || ''} 
+              onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+            />
+            <input 
+              type="hidden" 
+              name="customer_phone" 
+              value={formData.customerPhone || ''} 
+              onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+            />
+            <input 
+              type="hidden" 
+              name="salesperson" 
+              value={formData.salesperson || ''} 
+              onChange={(e) => handleInputChange('salesperson', e.target.value)}
+            />
+            <input 
+              type="hidden" 
+              name="internal_notes" 
+              value={formData.internalNotes || ''} 
+              onChange={(e) => handleInputChange('internalNotes', e.target.value)}
+            />
+            <input 
+              type="hidden" 
+              name="sla_deadline" 
+              value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
+              onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
+            />
+            <input 
+              type="hidden" 
+              name="scheduled_date" 
+              value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
+              onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
+            />
+            <input 
+              type="hidden" 
+              name="scheduled_time" 
+              value={formData.scheduledTime || ''} 
+              onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
+            />
+          </div>
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t">
