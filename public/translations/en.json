@@ -599,6 +599,39 @@
     "captureError": "Error capturing image",
     "initializingCamera": "Initializing camera..."
   },
+  "modern_vin_scanner": {
+    "title": "VIN Scanner",
+    "subtitle": "Scan vehicle identification numbers with AI precision",
+    "dialog_title": "Modern VIN Scanner",
+    "scan_camera": "Scan with Camera",
+    "upload_image": "Upload Image",
+    "capture": "Capture VIN",
+    "processing": "Processing...",
+    "perfect_alignment": "Perfect alignment detected",
+    "adjusting_focus": "Position VIN in target area",
+    "errors": {
+      "no_vin_detected": "No VIN detected in image",
+      "processing_failed": "Processing failed. Please try again."
+    }
+  },
+  "vin_validator": {
+    "errors": {
+      "invalid_length": "VIN must be exactly 17 characters",
+      "invalid_characters": "VIN contains invalid characters",
+      "invalid_characters_ioq": "VIN cannot contain letters I, O, or Q",
+      "invalid_check_digit": "Invalid check digit - VIN may be incorrect"
+    },
+    "warnings": {
+      "unknown_year": "Could not determine model year",
+      "future_year": "Model year appears to be in the future",
+      "old_year": "Model year is very old (pre-1980)",
+      "unknown_manufacturer": "Could not identify manufacturer"
+    },
+    "suggestions": {
+      "check_digit_should_be": "Check digit should be {{digit}}",
+      "try_substitution": "Try replacing {{from}} with {{to}}: {{vin}}"
+    }
+  },
   "settings": {
     "title": "Settings",
     "general": "General Settings",

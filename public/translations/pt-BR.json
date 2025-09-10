@@ -600,6 +600,39 @@
     "vin_api_description": "Integração da API MarketCheck para decodificação automática de VIN",
     "photo_management": "Gestão de Fotos",
     "photo_description": "Configurar armazenamento e configurações de gestão de fotos"
+   },
+  "modern_vin_scanner": {
+    "title": "Scanner VIN",
+    "subtitle": "Escaneie números de identificação veicular com precisão IA",
+    "dialog_title": "Scanner VIN Moderno",
+    "scan_camera": "Escanear com Câmera",
+    "upload_image": "Enviar Imagem",
+    "capture": "Capturar VIN",
+    "processing": "Processando...",
+    "perfect_alignment": "Alinhamento perfeito detectado",
+    "adjusting_focus": "Posicione o VIN na área alvo",
+    "errors": {
+      "no_vin_detected": "Nenhum VIN detectado na imagem",
+      "processing_failed": "Processamento falhou. Tente novamente."
+    }
+  },
+  "vin_validator": {
+    "errors": {
+      "invalid_length": "VIN deve ter exatamente 17 caracteres",
+      "invalid_characters": "VIN contém caracteres inválidos",
+      "invalid_characters_ioq": "VIN não pode conter as letras I, O ou Q",
+      "invalid_check_digit": "Dígito de verificação inválido - VIN pode estar incorreto"
+    },
+    "warnings": {
+      "unknown_year": "Não foi possível determinar o ano do modelo",
+      "future_year": "Ano do modelo parece estar no futuro",
+      "old_year": "Ano do modelo é muito antigo (pré-1980)",
+      "unknown_manufacturer": "Não foi possível identificar o fabricante"
+    },
+    "suggestions": {
+      "check_digit_should_be": "Dígito de verificação deve ser {{digit}}",
+      "try_substitution": "Tente substituir {{from}} por {{to}}: {{vin}}"
+    }
   },
   "invitations": {
     "title": "Convites",

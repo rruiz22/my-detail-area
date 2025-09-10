@@ -1,6 +1,10 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVinScanner } from './useVinScanner';
+import { useMultiEngineOCR } from '@/components/scanner/engines/MultiEngineOCR';
+import { useImagePreprocessor } from '@/components/scanner/engines/ImagePreprocessor';
+import { useRegionDetector } from '@/components/scanner/engines/RegionDetector';
+import { useVinValidator } from '@/components/scanner/engines/VinValidator';
 
 interface VinScanResult {
   vin: string;
@@ -20,50 +24,20 @@ interface UseAdvancedVinScannerReturn {
 export function useAdvancedVinScanner(): UseAdvancedVinScannerReturn {
   const { t } = useTranslation();
   const { scanVin: basicScanVin, loading: basicLoading } = useVinScanner();
+  const { processMultiEngine } = useMultiEngineOCR();
+  const { preprocessImage } = useImagePreprocessor();
+  const { detectTextRegions } = useRegionDetector();
+  const { validateVin, suggestCorrections } = useVinValidator();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Enhanced VIN validation with confidence scoring
   const validateVinWithConfidence = (vin: string): { isValid: boolean; confidence: number } => {
-    if (!vin || vin.length !== 17) {
-      return { isValid: false, confidence: 0 };
-    }
-
-    let confidence = 0.5; // Base confidence for 17-character string
-
-    // Check for invalid characters (I, O, Q not allowed in VINs)
-    if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(vin)) {
-      return { isValid: false, confidence: 0.1 };
-    }
-
-    confidence += 0.2; // Valid character set
-
-    // VIN check digit validation (position 9)
-    const weights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
-    const values: { [key: string]: number } = {
-      'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8,
-      'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5, 'P': 7, 'R': 9,
-      'S': 2, 'T': 3, 'U': 4, 'V': 5, 'W': 6, 'X': 7, 'Y': 8, 'Z': 9,
-      '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9
+    const validation = validateVin(vin);
+    return {
+      isValid: validation.isValid,
+      confidence: validation.confidence
     };
-
-    let sum = 0;
-    for (let i = 0; i < 17; i++) {
-      if (i !== 8) { // Skip check digit position
-        sum += (values[vin[i]] || 0) * weights[i];
-      }
-    }
-
-    const checkDigit = sum % 11;
-    const expectedCheckDigit = checkDigit === 10 ? 'X' : checkDigit.toString();
-    
-    if (vin[8] === expectedCheckDigit) {
-      confidence += 0.3; // Valid check digit significantly increases confidence
-    } else {
-      confidence = Math.max(0.3, confidence - 0.2); // Invalid check digit but keep some confidence
-    }
-
-    return { isValid: true, confidence: Math.min(1, confidence) };
   };
 
   // Process image with multiple techniques
@@ -77,43 +51,110 @@ export function useAdvancedVinScanner(): UseAdvancedVinScannerReturn {
     try {
       const results: VinScanResult[] = [];
       
-      // Step 1: Use basic Tesseract scanning
-      onConfidenceUpdate?.(0.2);
+      // Step 1: Image preprocessing if it's a Blob/File
+      onConfidenceUpdate?.(0.1);
+      let processedImage: File | Blob | string = imageSource;
       
-      // Convert Blob to File if needed for basic scanner
-      let scanSource = imageSource;
-      if (imageSource instanceof Blob && !(imageSource instanceof File)) {
-        scanSource = new File([imageSource], 'capture.jpg', { type: 'image/jpeg' });
-      }
-      
-      const basicVins = await basicScanVin(scanSource as File | string);
-      
-      for (const vin of basicVins) {
-        const validation = validateVinWithConfidence(vin);
-        if (validation.isValid) {
-          results.push({
-            vin,
-            confidence: validation.confidence * 0.8, // Scale down as it's basic OCR
-            source: 'tesseract'
+      if (typeof imageSource === 'object' && imageSource instanceof File) {
+        try {
+          const preprocessResult = await preprocessImage(imageSource, {
+            enhanceContrast: true,
+            denoiseImage: true,
+            targetSize: { width: 1920, height: 1080 }
           });
+          processedImage = preprocessResult.processedImage;
+          onConfidenceUpdate?.(0.2);
+        } catch (preprocessError) {
+          console.warn('Preprocessing failed, using original image:', preprocessError);
+        }
+      } else if (typeof imageSource === 'object' && imageSource instanceof Blob) {
+        try {
+          const preprocessResult = await preprocessImage(imageSource, {
+            enhanceContrast: true,
+            denoiseImage: true,
+            targetSize: { width: 1920, height: 1080 }
+          });
+          processedImage = preprocessResult.processedImage;
+          onConfidenceUpdate?.(0.2);
+        } catch (preprocessError) {
+          console.warn('Preprocessing failed, using original image:', preprocessError);
         }
       }
 
-      onConfidenceUpdate?.(0.5);
-
-      // Step 2: Try enhanced processing if available
-      if ((window as any).vinStickerDetector && imageSource instanceof Blob) {
+      // Step 2: Region detection for VIN stickers
+      onConfidenceUpdate?.(0.3);
+      let vinRegions: any[] = [];
+      
+      if (typeof processedImage === 'object' && processedImage instanceof Blob) {
         try {
-          const regions = await (window as any).vinStickerDetector.processImage(imageSource);
-          
-          for (const region of regions) {
-            // Process each detected region with higher confidence
-            // This would typically involve cropping the image to the region
-            // and running OCR with optimized parameters
-            onConfidenceUpdate?.(0.7 + (region.x / 1000)); // Simulate progress
-          }
+          vinRegions = await detectTextRegions(processedImage, {
+            targetType: 'vin_sticker',
+            minConfidence: 0.5,
+            maxRegions: 5
+          });
+          onConfidenceUpdate?.(0.4);
         } catch (regionError) {
           console.warn('Region detection failed:', regionError);
+        }
+      }
+
+      // Step 3: Multi-engine OCR processing
+      onConfidenceUpdate?.(0.5);
+      
+      // Convert Blob to File if needed for basic scanner
+      let scanSource: File | Blob | string = processedImage;
+      if (typeof processedImage === 'object' && processedImage instanceof Blob && !(processedImage instanceof File)) {
+        scanSource = new File([processedImage], 'capture.jpg', { type: 'image/jpeg' });
+      }
+      
+      // Use multi-engine OCR
+      const ocrResults = await processMultiEngine(scanSource as File | Blob | string, onConfidenceUpdate);
+      
+      // Process OCR results
+      for (const ocrResult of ocrResults) {
+        // Extract potential VINs from OCR text
+        const vinPattern = /[A-HJ-NPR-Z0-9]{17}/g;
+        const matches = ocrResult.text.match(vinPattern) || [];
+        
+        for (const vin of matches) {
+          const validation = validateVin(vin);
+          if (validation.isValid) {
+            results.push({
+              vin,
+              confidence: Math.min(1, validation.confidence * ocrResult.confidence),
+              source: ocrResult.engine as 'tesseract' | 'enhanced' | 'region-detected'
+            });
+          }
+        }
+      }
+
+      // Fallback to basic scanning if no results
+      if (results.length === 0) {
+        onConfidenceUpdate?.(0.7);
+        const basicVins = await basicScanVin(scanSource as File | string);
+        
+        for (const vin of basicVins) {
+          const validation = validateVin(vin);
+          if (validation.isValid) {
+            results.push({
+              vin,
+              confidence: validation.confidence * 0.8, // Scale down as it's basic OCR
+              source: 'tesseract'
+            });
+          } else if (validation.confidence > 0.3) {
+            // Try corrections for low-confidence VINs
+            const suggestions = suggestCorrections(vin);
+            for (const suggestion of suggestions) {
+              const suggestionValidation = validateVin(suggestion);
+              if (suggestionValidation.isValid) {
+                results.push({
+                  vin: suggestion,
+                  confidence: suggestionValidation.confidence * 0.7,
+                  source: 'tesseract'
+                });
+              }
+            }
+          }
         }
       }
 
@@ -167,7 +208,7 @@ export function useAdvancedVinScanner(): UseAdvancedVinScannerReturn {
     } finally {
       setLoading(false);
     }
-  }, [basicScanVin, t]);
+  }, [basicScanVin, processMultiEngine, preprocessImage, detectTextRegions, validateVin, suggestCorrections, t]);
 
   return {
     scanVin,
