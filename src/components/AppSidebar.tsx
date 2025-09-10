@@ -4,11 +4,12 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 export function AppSidebar() {
-  const { open } = useSidebar();
+  const { state, open } = useSidebar();
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
   const location = useLocation();
@@ -73,7 +74,7 @@ export function AppSidebar() {
     icon: Settings
   }];
   const currentPath = location.pathname;
-  const collapsed = !open;
+  const collapsed = state === "collapsed";
   const handleSignOut = async () => {
     await signOut();
   };
@@ -87,48 +88,97 @@ export function AppSidebar() {
     const active = isActive(path);
     return active ? "bg-primary text-primary-foreground font-medium shadow-sm" : "hover:bg-muted/50 transition-colors";
   };
-  return <Sidebar className={collapsed ? "w-16" : "w-64"}>
+  return (
+    <TooltipProvider>
+      <Sidebar collapsible="icon" className="border-r" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <Car className="w-5 h-5 text-white" />
-          </div>
-          {!collapsed && <div>
-              <h1 className="font-bold text-lg">{t('layout.app_name')}</h1>
-              <p className="text-xs text-muted-foreground">{t('layout.app_full_name')}</p>
-            </div>}
+        <div className="flex items-center justify-center">
+          {collapsed ? (
+            <div className="font-bold text-lg text-primary">MDA</div>
+          ) : (
+            <div>
+              <h1 className="font-bold text-xl">My Detail Area</h1>
+              <p className="text-[10px] text-muted-foreground">Enterprise Dealership Management</p>
+            </div>
+          )}
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t('navigation.operations')}</SidebarGroupLabel>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.operations')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavItems.map(item => <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={getNavClasses(item.url)}>
-                      <item.icon className="w-4 h-4" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>)}
+              {mainNavItems.map(item => (
+                <SidebarMenuItem key={item.title}>
+                  {collapsed ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton asChild>
+                          <NavLink 
+                            to={item.url} 
+                            className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                          >
+                            <item.icon className="w-4 h-4" />
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>{item.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={getNavClasses(item.url)}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>{t('navigation.management')}</SidebarGroupLabel>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.management')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {secondaryNavItems.map(item => <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={getNavClasses(item.url)}>
-                      <item.icon className="w-4 h-4" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>)}
+              {secondaryNavItems.map(item => (
+                <SidebarMenuItem key={item.title}>
+                  {collapsed ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton asChild>
+                          <NavLink 
+                            to={item.url} 
+                            className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                          >
+                            <item.icon className="w-4 h-4" />
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>{item.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={getNavClasses(item.url)}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -136,27 +186,57 @@ export function AppSidebar() {
 
       <SidebarFooter className="p-4">
         <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <Avatar className="w-8 h-8">
-              <AvatarImage src="/placeholder.svg" />
-              <AvatarFallback>
-                {user?.email?.charAt(0).toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            {!collapsed && <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
-                  {user?.email?.split('@')[0] || 'User'}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {user?.email || ''}
-                </p>
-              </div>}
-          </div>
-          {!collapsed && <Button variant="ghost" size="sm" onClick={handleSignOut} className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground">
-              <LogOut className="w-4 h-4" />
-              {t('navigation.sign_out')}
-            </Button>}
+          {collapsed ? (
+            <div className="flex flex-col items-center gap-2">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src="/placeholder.svg" />
+                <AvatarFallback>
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleSignOut} 
+                className="w-8 h-8 p-0 flex items-center justify-center"
+                title={t('navigation.sign_out')}
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-3">
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback>
+                    {user?.email?.charAt(0).toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {user?.email?.split('@')[0] || 'User'}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {user?.email || ''}
+                  </p>
+                </div>
+              </div>
+              
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleSignOut} 
+                className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="w-4 h-4" />
+                {t('navigation.sign_out')}
+              </Button>
+            </>
+          )}
         </div>
       </SidebarFooter>
-    </Sidebar>;
+      </Sidebar>
+    </TooltipProvider>
+  );
 }

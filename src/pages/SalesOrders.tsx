@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Plus, RefreshCw, Search, Clock } from 'lucide-react';
 import { OrderFilters } from '@/components/orders/OrderFilters';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderModal } from '@/components/orders/OrderModal';
@@ -34,6 +36,7 @@ export default function SalesOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [nextRefresh, setNextRefresh] = useState<number>(60);
 
   const {
     orders,
@@ -47,11 +50,47 @@ export default function SalesOrders() {
     deleteOrder,
   } = useOrderManagement(activeFilter);
 
-  // Real-time updates are handled by useOrderManagement hook
-  // Keep lastRefresh for UI purposes
+  // Auto-refresh with countdown timer
   useEffect(() => {
-    setLastRefresh(new Date());
-  }, [orders]);
+    let lastChangeTime = 0;
+    
+    // Countdown timer (updates every second)
+    const countdownInterval = setInterval(() => {
+      setNextRefresh(prev => {
+        if (prev <= 1) {
+          return 60; // Reset to 60 seconds
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Refresh timer (every 60 seconds)
+    const refreshInterval = setInterval(() => {
+      const now = Date.now();
+      if (now - lastChangeTime > 10000) {
+        refreshData();
+        setLastRefresh(new Date());
+        setNextRefresh(60); // Reset countdown
+      }
+    }, 60000);
+
+    // Track when status changes occur
+    const handleStatusChangeEvent = () => {
+      lastChangeTime = Date.now();
+      setNextRefresh(60); // Reset countdown when user makes changes
+    };
+
+    // Listen for status changes (both old and new events)
+    window.addEventListener('orderStatusChanged', handleStatusChangeEvent);
+    window.addEventListener('orderStatusUpdated', handleStatusChangeEvent);
+
+    return () => {
+      clearInterval(refreshInterval);
+      clearInterval(countdownInterval);
+      window.removeEventListener('orderStatusChanged', handleStatusChangeEvent);
+      window.removeEventListener('orderStatusUpdated', handleStatusChangeEvent);
+    };
+  }, [refreshData]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -90,7 +129,17 @@ export default function SalesOrders() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     await updateOrder(orderId, { status: newStatus });
-    // Real-time updates will handle the refresh automatically
+    
+    // Immediately refresh data to show updated status
+    refreshData();
+    setLastRefresh(new Date());
+    setNextRefresh(60); // Reset timer
+    
+    // Dispatch event to notify other components
+    window.dispatchEvent(new CustomEvent('orderStatusChanged'));
+    window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+      detail: { orderId, newStatus, timestamp: Date.now() }
+    }));
   };
 
   const handleCardClick = (filter: string) => {
@@ -98,6 +147,22 @@ export default function SalesOrders() {
     if (filter !== 'dashboard') {
       setViewMode('kanban');
     }
+  };
+
+  // Get dynamic title based on active filter
+  const getFilterTitle = (filter: string): string => {
+    const titleMap: Record<string, string> = {
+      dashboard: t('sales_orders.tabs.dashboard'),
+      today: t('sales_orders.tabs.today'),
+      tomorrow: t('sales_orders.tabs.tomorrow'), 
+      pending: t('sales_orders.tabs.pending'),
+      in_process: t('sales_orders.in_process_orders'),
+      week: t('sales_orders.tabs.week'),
+      all: t('sales_orders.tabs.all'),
+      services: t('sales_orders.tabs.services'),
+      deleted: t('sales_orders.tabs.deleted')
+    };
+    return titleMap[filter] || filter;
   };
 
   // Filter orders based on search term
@@ -169,7 +234,48 @@ export default function SalesOrders() {
               onCardClick={handleCardClick}
             />
           ) : (
-            <>
+            <div className="space-y-4">
+              {/* Responsive Table Header */}
+              <div className="space-y-4">
+                {/* Title and Badge - Responsive */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+                    {getFilterTitle(activeFilter)}
+                  </h2>
+                  <Badge variant="secondary" className="text-sm self-center sm:self-auto">
+                    {filteredOrders.length}
+                  </Badge>
+                </div>
+                
+                {/* Timer and Last Update - Mobile Responsive */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="flex flex-col gap-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      <span>Next update: {nextRefresh}s</span>
+                    </div>
+                    <div className="text-xs">
+                      Last updated: {lastRefresh.toLocaleTimeString()}
+                    </div>
+                  </div>
+                  
+                  {/* Mobile-friendly info */}
+                  <div className="text-xs text-muted-foreground sm:hidden">
+                    {searchTerm && `Searching: "${searchTerm}"`}
+                  </div>
+                </div>
+                
+                {/* Search Context - Desktop */}
+                {searchTerm && (
+                  <div className="text-center hidden sm:block">
+                    <p className="text-sm text-muted-foreground">
+                      Showing results matching "{searchTerm}"
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Table/Kanban Content */}
               {viewMode === 'kanban' ? (
                 <OrderKanbanBoard
                   orders={filteredOrders}
@@ -185,10 +291,11 @@ export default function SalesOrders() {
                   onEdit={handleEditOrder}
                   onDelete={handleDeleteOrder}
                   onView={handleViewOrder}
+                  onStatusChange={handleStatusChange}
                   tabType={activeFilter}
                 />
               )}
-            </>
+            </div>
           )}
         </div>
 

@@ -74,6 +74,7 @@ export function StatusBadgeInteractive({
             variant="ghost"
             size="sm"
             className="h-auto p-0 hover:bg-transparent"
+            aria-label="Change order status"
           >
             <Badge className={`${currentStatusConfig.color} hover:opacity-80 cursor-pointer`}>
               {t(currentStatusConfig.label)}

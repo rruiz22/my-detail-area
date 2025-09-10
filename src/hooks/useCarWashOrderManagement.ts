@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
+import { orderNumberService } from '@/services/orderNumberService';
 import type { Database } from '@/integrations/supabase/types';
 
 // Use Supabase types but create a unified interface for components

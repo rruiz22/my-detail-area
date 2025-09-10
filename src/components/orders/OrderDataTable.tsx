@@ -23,16 +23,20 @@ import {
   MoreHorizontal, 
   Eye, 
   Edit, 
-  Trash, 
+  Trash2, 
   QrCode, 
   MessageSquare, 
   CheckCircle, 
   Loader2,
   User,
   Car,
-  Calendar
+  Calendar,
+  Building2,
+  Hash
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { orderNumberService } from '@/services/orderNumberService';
+import { toast } from 'sonner';
 import { safeParseDate } from '@/utils/dateUtils';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
@@ -98,16 +102,36 @@ interface OrderDataTableProps {
   onEdit: (order: any) => void;
   onDelete: (orderId: string) => void;
   onView: (order: any) => void;
+  onStatusChange?: (orderId: string, newStatus: string) => void;
   tabType: string;
 }
 
-export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabType }: OrderDataTableProps) {
+export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onStatusChange, tabType }: OrderDataTableProps) {
   const { t } = useTranslation();
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const isMobile = useIsMobile();
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
+
+  // Format order number for display
+  const formatOrderNumber = (order: any): string => {
+    const orderNumber = order.orderNumber || order.customOrderNumber || order.order_number;
+    
+    // If already in new format, return as-is
+    if (orderNumber && (orderNumber.includes('SA-') || orderNumber.includes('SE-') || 
+                       orderNumber.includes('CW-') || orderNumber.includes('RC-'))) {
+      return orderNumber;
+    }
+    
+    // For legacy orders, add appropriate prefix based on order type
+    const orderType = order.order_type || 'sales';
+    const prefix = orderType === 'sales' ? 'SA' :
+                  orderType === 'service' ? 'SE' :
+                  orderType === 'carwash' ? 'CW' : 'RC';
+    
+    return orderNumber ? orderNumber : `${prefix}-${order.id.slice(0, 8)}`;
+  };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -133,9 +157,30 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
       const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
       if (success) {
         console.log(`Status updated for order ${orderId} to ${newStatus}`);
+        
+        // Trigger immediate refresh of order data
+        if (onStatusChange) {
+          onStatusChange(orderId, newStatus);
+        }
+        
+        // Dispatch custom event for real-time updates
+        window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+          detail: { orderId, newStatus, timestamp: Date.now() }
+        }));
       }
     } catch (error) {
       console.error('Failed to update status:', error);
+    }
+  };
+
+  // Copy VIN to clipboard
+  const copyVinToClipboard = async (vin: string) => {
+    try {
+      await navigator.clipboard.writeText(vin);
+      toast.success('VIN copied to clipboard');
+    } catch (error) {
+      console.error('Failed to copy VIN:', error);
+      toast.error('Failed to copy VIN');
     }
   };
 
@@ -185,15 +230,141 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
   }
 
   return (
-    <Card className="border-border shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold">
-          {orders.length} {t('orders.orders')} 
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="p-0">
-        <Table>
+    <>
+      {/* Mobile Card Layout */}
+      <div className="block lg:hidden space-y-4">
+        {paginatedOrders.map((order) => (
+          <Card key={order.id} className="border-border shadow-sm">
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                {/* Header Row */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="text-lg font-bold text-foreground">
+                      {formatOrderNumber(order)}
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground mt-1">
+                      <Building2 className="w-4 h-4 mr-2 text-blue-600" />
+                      <span>{order.dealershipName || 'Premium Auto'}</span>
+                    </div>
+                  </div>
+                  <StatusBadgeInteractive
+                    status={order.status}
+                    orderId={order.id}
+                    dealerId={order.dealer_id?.toString() || ''}
+                    canUpdateStatus={true}
+                    onStatusChange={handleStatusChange}
+                  />
+                </div>
+
+                {/* Vehicle and Stock Row */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</label>
+                    <div className="text-sm font-semibold text-foreground">
+                      {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
+                    </div>
+                    <div 
+                      className="text-xs font-mono text-muted-foreground cursor-pointer hover:text-orange-600 mt-1"
+                      onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
+                      title="Tap to copy VIN"
+                    >
+                      {order.vehicleVin || 'No VIN'}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Stock</label>
+                    <div className="text-sm font-semibold text-foreground">
+                      {order.stockNumber || 'No Stock'}
+                    </div>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <User className="w-3 h-3 mr-1 text-green-600" />
+                      {order.advisor || 'Unassigned'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Due Date Row */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Due</label>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold">
+                      {order.dueTime || '12:00 PM'} - {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'No date'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions Row */}
+                <div className="flex items-center justify-end gap-2 pt-2 border-t">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => onView(order)}
+                    className="flex items-center gap-2 text-blue-600 hover:bg-blue-50"
+                  >
+                    <Eye className="h-4 w-4" />
+                    View
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => onEdit(order)}
+                    className="flex items-center gap-2 text-emerald-600 hover:bg-emerald-50"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => onDelete(order.id)}
+                    className="flex items-center gap-2 text-rose-600 hover:bg-rose-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+        
+        {/* Mobile Pagination */}
+        <div className="flex justify-center space-x-2 pt-4">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <span className="flex items-center px-3 text-sm text-muted-foreground">
+            Page {currentPage} of {Math.ceil(orders.length / itemsPerPage)}
+          </span>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(orders.length / itemsPerPage), prev + 1))}
+            disabled={currentPage >= Math.ceil(orders.length / itemsPerPage)}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+
+      {/* Desktop/Tablet Table Layout */}
+      <Card className="hidden lg:block border-border shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">
+            {orders.length} orders
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="p-0">
+          <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">
               <TableHead className="w-12">
@@ -202,19 +373,20 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                   onCheckedChange={handleSelectAll}
                 />
               </TableHead>
-              <TableHead className="font-medium text-foreground">Orden & Cliente</TableHead>
-              <TableHead className="font-medium text-foreground">Stock & Fecha</TableHead>
-              <TableHead className="font-medium text-foreground">Vehículo</TableHead>
-              <TableHead className="font-medium text-foreground">Estado & Vencimiento</TableHead>
-              <TableHead className="font-medium text-foreground">Total & Enlaces</TableHead>
-              <TableHead className="w-12 font-medium text-foreground">Acciones</TableHead>
+              <TableHead className="font-medium text-foreground text-center">Order ID</TableHead>
+              <TableHead className="font-medium text-foreground text-center">Stock</TableHead>
+              <TableHead className="font-medium text-foreground text-center">Vehicle</TableHead>
+              <TableHead className="font-medium text-foreground text-center">Due</TableHead>
+              <TableHead className="font-medium text-foreground text-center">Status</TableHead>
+              <TableHead className="font-medium text-foreground text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedOrders.map((order) => (
               <TableRow 
                 key={order.id} 
-                className={`border-border transition-colors ${getStatusRowColor(order.status)}`}
+                className={`border-border transition-colors cursor-pointer hover:bg-muted/50 ${getStatusRowColor(order.status)}`}
+                onDoubleClick={() => onView(order)}
               >
                 <TableCell>
                   <Checkbox
@@ -223,136 +395,110 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
                   />
                 </TableCell>
                 
-                {/* Order Number & Customer */}
-                <TableCell className="py-4">
+                {/* Column 1: Order ID & Dealer */}
+                <TableCell className="py-4 text-center">
                   <div className="space-y-1">
-                    <div className="text-lg font-semibold text-foreground">
-                      {order.orderNumber || order.customOrderNumber || order.id.slice(0, 8)}
+                    <div className="text-base font-bold text-foreground">
+                      {formatOrderNumber(order)}
                     </div>
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <User className="w-3 h-3 mr-1" />
-                      {order.customerName || t('data_table.unassigned_customer')}
+                    <div className="flex items-center justify-center text-sm text-muted-foreground">
+                      <Building2 className="w-3 h-3 mr-1 text-blue-600" />
+                      <span>{order.dealershipName || 'Premium Auto'}</span>
                     </div>
                   </div>
                 </TableCell>
 
-                {/* Stock & Creation Date */}
-                <TableCell className="py-4">
+                {/* Column 2: Stock & Assigned User */}
+                <TableCell className="py-4 text-center">
                   <div className="space-y-1">
-                    <div className="font-medium text-foreground">
+                    <div className="text-base font-bold text-foreground">
                       {order.stockNumber || t('data_table.no_stock')}
                     </div>
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      {new Date(order.createdAt).toLocaleDateString()}
+                    <div className="flex items-center justify-center text-sm text-muted-foreground">
+                      <User className="w-3 h-3 mr-1 text-green-600" />
+                      <span>{order.advisor || 'Unassigned'}</span>
                     </div>
                   </div>
                 </TableCell>
 
-                {/* Vehicle Info */}
-                <TableCell className="py-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-1">
-                      <Car className="w-3 h-3 text-muted-foreground" />
-                      <div className="font-medium text-foreground">
-                        {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
-                      </div>
-                    </div>
-                    <div className="text-xs font-mono text-muted-foreground bg-muted/30 rounded px-2 py-1 inline-block">
-                      VIN: {order.vehicleVin || t('data_table.vin_not_provided')}
-                    </div>
-                    {order.vehicleInfo && (
-                      <div className="text-xs text-muted-foreground">
-                        {order.vehicleInfo}
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-
-                {/* Status & Due Date */}
-                <TableCell className="py-4">
-                  <div className="space-y-2">
-                    <StatusBadgeInteractive
-                      status={order.status}
-                      orderId={order.id}
-                      dealerId={order.dealer_id?.toString() || ''}
-                      canUpdateStatus={true}
-                      onStatusChange={handleStatusChange}
-                    />
-                    {order.dueDate && (
-                      <Badge 
-                        variant={formatDueDate(order.dueDate).variant}
-                        className={`text-xs ${formatDueDate(order.dueDate).className}`}
-                      >
-                        {formatDueDate(order.dueDate).text}
-                      </Badge>
-                    )}
-                  </div>
-                </TableCell>
-
-                {/* Amount & Quick Links */}
-                <TableCell className="py-4">
+                {/* Column 3: Vehicle & VIN */}
+                <TableCell className="py-4 text-center">
                   <div className="space-y-1">
-                    <div className="font-semibold text-success">
-                      {order.totalAmount ? `$${order.totalAmount.toLocaleString()}` : 'N/A'}
+                    <div className="text-base font-bold text-foreground">
+                      {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
+                      {order.vehicleTrim && ` (${order.vehicleTrim})`}
                     </div>
-                    {order.shortLink && (
-                      <div className="text-xs text-muted-foreground bg-muted/30 rounded px-2 py-1 font-mono">
-                        {order.shortLink.slice(-8)}
-                      </div>
-                    )}
+                    <div className="flex items-center justify-center text-sm text-muted-foreground">
+                      <Hash className="w-3 h-3 mr-1 text-orange-600" />
+                      <span 
+                        className="font-mono text-xs cursor-pointer hover:bg-orange-50 hover:text-orange-700 px-2 py-1 rounded transition-colors"
+                        onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
+                        title="Click to copy VIN"
+                      >
+                        {order.vehicleVin || t('data_table.vin_not_provided')}
+                      </span>
+                    </div>
                   </div>
                 </TableCell>
 
-                {/* Actions */}
-                <TableCell className="py-4">
-                  <div className="flex items-center gap-1">
-                    <Button
+                {/* Column 4: Due Time & Date */}
+                <TableCell className="py-4 text-center">
+                  <div className="space-y-1">
+                    <div className="text-base font-bold text-foreground">
+                      {order.dueTime || '12:00 PM'}
+                    </div>
+                    <div className="flex items-center justify-center text-sm text-muted-foreground">
+                      <Calendar className="w-3 h-3 mr-1 text-purple-600" />
+                      <span>
+                        {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'No date set'}
+                      </span>
+                    </div>
+                  </div>
+                </TableCell>
+
+                {/* Column 5: Interactive Status */}
+                <TableCell className="py-4 text-center">
+                  <StatusBadgeInteractive
+                    status={order.status}
+                    orderId={order.id}
+                    dealerId={order.dealer_id?.toString() || ''}
+                    canUpdateStatus={true}
+                    onStatusChange={handleStatusChange}
+                  />
+                </TableCell>
+
+                {/* Column 6: Colorful Action Buttons */}
+                <TableCell className="py-4 text-center">
+                  <div className="flex items-center justify-center gap-1">
+                    <Button 
+                      variant="outline" 
                       size="sm"
-                      variant="ghost"
                       onClick={() => onView(order)}
-                      className="h-8 w-8 p-0 hover:bg-accent hover:text-accent-foreground"
+                      className="h-8 w-8 p-0 hover:bg-blue-50 hover:border-blue-300 transition-all hover:scale-105"
+                      title="View Details"
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye className="h-4 w-4 text-blue-600" />
                     </Button>
-                    <Button
+                    
+                    <Button 
+                      variant="outline" 
                       size="sm"
-                      variant="ghost"
                       onClick={() => onEdit(order)}
-                      className="h-8 w-8 p-0 hover:bg-accent hover:text-accent-foreground"
+                      className="h-8 w-8 p-0 hover:bg-emerald-50 hover:border-emerald-300 transition-all hover:scale-105"
+                      title="Edit Order"
                     >
-                      <Edit className="w-4 h-4" />
+                      <Edit className="h-4 w-4 text-emerald-600" />
                     </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="h-8 w-8 p-0 hover:bg-accent hover:text-accent-foreground"
-                        >
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-popover border border-border">
-                        <DropdownMenuLabel className="text-foreground">Acciones</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => console.log('Generate QR', order.id)}>
-                          <QrCode className="w-4 h-4 mr-2" />
-                          Generar QR
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log('Comments', order.id)}>
-                          <MessageSquare className="w-4 h-4 mr-2" />
-                          Comentarios
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={() => onDelete(order.id)} 
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <Trash className="w-4 h-4 mr-2" />
-                          Eliminar
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => onDelete(order.id)}
+                      className="h-8 w-8 p-0 hover:bg-rose-50 hover:border-rose-300 transition-all hover:scale-105"
+                      title="Delete Order"
+                    >
+                      <Trash2 className="h-4 w-4 text-rose-600" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -373,5 +519,6 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, tabT
         </Table>
       </CardContent>
     </Card>
+    </>
   );
 }

@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import { useOrderActions } from '@/hooks/useOrderActions';
+import { orderNumberService } from '@/services/orderNumberService';
 
 // Recon Order interface - specific for reconditioning workflow
 export interface ReconOrder {

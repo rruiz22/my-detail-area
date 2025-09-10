@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,8 @@ import {
   QrCode,
   MessageSquare,
   Link,
-  FileText
+  FileText,
+  Hash
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
@@ -30,6 +31,12 @@ import { VehicleInfoBlock } from './VehicleInfoBlock';
 import { ScheduleViewBlock } from './ScheduleViewBlock';
 import { SimpleNotesDisplay } from './SimpleNotesDisplay';
 import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
+import { PublicCommentsBlock } from './PublicCommentsBlock';
+import { InternalNotesBlock } from './InternalNotesBlock';
+import { OrderStatusBadges } from './OrderStatusBadges';
+import { FollowersBlock } from './FollowersBlock';
+import { RecentActivityBlock } from './RecentActivityBlock';
+import { TimeRemaining } from './TimeRemaining';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
 
@@ -41,7 +48,6 @@ interface EnhancedOrderDetailLayoutProps {
   onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
   onNotesUpdate?: (orderId: string, notes: string, type: 'general' | 'internal') => void;
-  children: ReactNode; // Main content area (Communication Hub)
 }
 
 export function EnhancedOrderDetailLayout({
@@ -51,10 +57,24 @@ export function EnhancedOrderDetailLayout({
   onEdit,
   onDelete,
   onStatusChange,
-  onNotesUpdate,
-  children
+  onNotesUpdate
 }: EnhancedOrderDetailLayoutProps) {
   const { t } = useTranslation();
+
+  // Reset scroll position when modal opens
+  useEffect(() => {
+    if (open) {
+      // Small delay to ensure modal is fully rendered
+      const timer = setTimeout(() => {
+        const modalTop = document.getElementById('modal-top');
+        if (modalTop) {
+          modalTop.scrollIntoView({ behavior: 'instant', block: 'start' });
+        }
+      }, 50);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   const formatCurrency = (amount: number | null | undefined) => {
     if (!amount) return 'N/A';
@@ -83,67 +103,69 @@ export function EnhancedOrderDetailLayout({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-none max-h-none w-screen h-screen p-0 gap-0 m-0 rounded-none border-0">
-        <DialogTitle className="sr-only">
-          {t('orders.order_details')} - {order.custom_order_number || order.order_number}
-        </DialogTitle>
-        <DialogDescription className="sr-only">
-          {t('orders.order_details_description', { 
-            customer: order.customer_name, 
-            vehicle: `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}` 
-          })}
-        </DialogDescription>
+      <DialogContent 
+        className="max-w-none max-h-none w-screen h-screen p-0 gap-0 m-0 rounded-none border-0"
+        data-testid="order-detail-modal"
+      >
         <div className="h-screen flex flex-col">
-            {/* Header - Clean Layout */}
-            <header className="flex-none border-b bg-background">
-              <div className="flex items-center justify-between p-4">
-                {/* Left - Order Info */}
-                <div className="flex items-center gap-4 min-w-0 flex-1">
-                  <div className="min-w-0">
-                    <h1 className="text-xl font-bold truncate">
-                      {order.custom_order_number || order.order_number}
-                    </h1>
-                    <div className="flex items-center gap-2 mt-1">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground truncate">
-                        {order.customer_name}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <Car className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">
-                        {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{order.advisor || 'Unassigned'}</span>
-                    </div>
-                    
-                    <StatusBadgeInteractive
-                      status={order.status}
-                      orderId={order.id}
-                      dealerId={order.dealer_id}
-                      canUpdateStatus={true}
-                      onStatusChange={handleStatusChange}
-                    />
-                  </div>
-                </div>
-
-                {/* Right - Single Close Button */}
-                <Button variant="ghost" size="icon" onClick={onClose}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </header>
+          <DialogTitle className="sr-only">
+            {t('orders.order_details')} - {order.custom_order_number || order.order_number}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('orders.order_details_description', { 
+              customer: order.customer_name, 
+              vehicle: `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}` 
+            })}
+          </DialogDescription>
 
           {/* Unified Content Container - Single Scroll */}
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <div className="p-6">
+          <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
+            <div className="p-6" id="modal-top">
+              {/* Professional Topbar - Like Reference Image */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-6 shadow-sm">
+                <div className="flex items-center justify-center text-center">
+                  <div className="space-y-2">
+                    {/* Order Number - Prominent */}
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      {order.order_number || order.custom_order_number || 'New Order'}
+                    </h1>
+                    
+                    {/* Business Context - Centered */}
+                    <div className="text-lg text-gray-700">
+                      <span className="font-semibold">{order.dealership_name || 'Premium Auto'}</span>
+                      <span className="mx-2 text-gray-400">•</span>
+                      <span>{order.advisor || 'Unassigned'} (Advisor)</span>
+                      <span className="mx-2 text-gray-400">•</span>
+                      <span>{order.customer_name || 'Customer'}</span>
+                    </div>
+                    
+                    {/* Vehicle + Status Row - Centered */}
+                    <div className="flex items-center justify-center gap-6 pt-2">
+                      <div className="flex items-center gap-2">
+                        <Car className="h-5 w-5 text-blue-600" />
+                        <span className="font-semibold text-gray-800">
+                          {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
+                        </span>
+                      </div>
+                      
+                      <div className="font-mono text-sm bg-gray-200 px-3 py-1 rounded-md">
+                        VIN: {order.vehicle_vin || 'Not provided'}
+                      </div>
+                      
+                      <TimeRemaining order={order} size="lg" />
+                      
+                      <StatusBadgeInteractive
+                        status={order.status}
+                        orderId={order.id}
+                        dealerId={order.dealer_id}
+                        canUpdateStatus={true}
+                        onStatusChange={handleStatusChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
                 {/* Main Content Area */}
                 <div className="space-y-6">
@@ -156,9 +178,10 @@ export function EnhancedOrderDetailLayout({
                   {/* Row 2: Simple Notes Display (Full width) */}
                   <SimpleNotesDisplay order={order} />
 
-                  {/* Row 3: Communication Hub (Full width) */}
-                  <div className="min-h-[400px]">
-                    {children}
+                  {/* Row 3: Team Communication (Full width like order notes) */}
+                  <div className="space-y-4">
+                    <PublicCommentsBlock orderId={order.id} />
+                    <InternalNotesBlock orderId={order.id} />
                   </div>
                 </div>
 
@@ -173,51 +196,28 @@ export function EnhancedOrderDetailLayout({
                     shortUrl={order.short_url}
                   />
 
-                  {/* Followers Block */}
-                  <div className="bg-muted/30 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 mb-3">
-                      <User className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-sm">Followers</h3>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
-                          <User className="h-3 w-3 text-primary" />
-                        </div>
-                        <span>{order.advisor || 'Unassigned'}</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Assigned advisor for this order
-                      </p>
-                    </div>
-                  </div>
+                  {/* Enhanced Followers Block */}
+                  <FollowersBlock 
+                    orderId={order.id}
+                    dealerId={order.dealer_id}
+                  />
 
-                  {/* Quick Actions Block */}
-                  <div className="bg-muted/30 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 mb-3">
-                      <MessageSquare className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-sm">Quick Actions</h3>
-                    </div>
-                    <CommunicationActions order={order} />
-                  </div>
-
-                  {/* Recent Activities Block */}
-                  <div className="bg-muted/30 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Clock className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-sm">Recent Activities</h3>
-                    </div>
-                    <RecentActivity orderId={order.id} />
-                  </div>
+                  {/* Enhanced Recent Activity Block */}
+                  <RecentActivityBlock orderId={order.id} />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Footer with Close Button */}
+          {/* Footer with Danger Close Button */}
           <footer className="flex-none border-t bg-background p-4">
             <div className="flex justify-end">
-              <Button onClick={onClose} size="lg" className="min-w-[120px]">
+              <Button 
+                variant="destructive" 
+                onClick={onClose} 
+                size="lg" 
+                className="min-w-[120px]"
+              >
                 Close
               </Button>
             </div>

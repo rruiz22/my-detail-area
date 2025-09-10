@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
+import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import type { Database } from '@/integrations/supabase/types';
 
 // Use Supabase types but create a unified interface for components
@@ -235,17 +236,11 @@ export const useOrderManagement = (activeTab: string) => {
     try {
       console.log('Creating order with data:', orderData);
       
-      // Use database function to generate sequential order number
-      const { data: orderNumberData, error: numberError } = await supabase
-        .rpc('generate_sales_order_number');
-
-      if (numberError || !orderNumberData) {
-        console.error('Error generating order number:', numberError);
-        throw new Error('Failed to generate order number');
-      }
+      // Generate order number using new service
+      const orderNumber = await orderNumberService.generateOrderNumber('sales', orderData.dealerId);
 
       const newOrder = {
-        order_number: orderNumberData, // Use sequential SA-1001, SA-1002, etc.
+        order_number: orderNumber, // Use new format: SA-2025-00001, SA-2025-00002, etc.
         customer_name: orderData.customerName,
         customer_email: orderData.customerEmail,
         customer_phone: orderData.customerPhone,

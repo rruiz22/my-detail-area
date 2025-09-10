@@ -1815,6 +1815,7 @@
       "services": "Services",
       "deleted": "Deleted Orders"
     },
+    "in_process_orders": "In Process Orders",
     "charts": {
       "trend_analysis": "Orders Trend Analysis",
       "track_performance": "Track order performance over time",

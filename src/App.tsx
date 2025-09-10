@@ -27,6 +27,11 @@ import Auth from "./pages/Auth";
 import { InvitationAccept } from "./pages/InvitationAccept";
 import NotFound from "./pages/NotFound";
 
+// Load order migration utility for development
+if (import.meta.env.DEV) {
+  import('@/utils/migrateOrders');
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (

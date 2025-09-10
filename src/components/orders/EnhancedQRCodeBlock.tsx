@@ -140,20 +140,27 @@ export function EnhancedQRCodeBlock({
       {qrData ? (
         <div className="space-y-4">
           {/* QR Code Display */}
-          <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="w-32 h-32 bg-gray-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg border text-center shadow-md">
+            <div className="w-40 h-40 bg-gray-50 rounded-lg mx-auto mb-4 flex items-center justify-center shadow-sm">
               {qrData.shortUrl || qrData.slug ? (
                 <QRCodeCanvas
-                  value={qrData.shortUrl || `${window.location.origin}/s/${qrData.slug}`}
-                  size={128}
+                  value={qrData.shortUrl || `https://mda.to/${qrData.slug}`}
+                  size={150}
+                  level="M"
                   includeMargin
+                  imageSettings={{
+                    src: "/favicon-mda.svg",
+                    width: 20,
+                    height: 20,
+                    excavate: true
+                  }}
                 />
               ) : (
-                <QrCode className="h-16 w-16 text-gray-400" />
+                <QrCode className="h-20 w-20 text-gray-400" />
               )}
             </div>
-            <p className="text-xs text-muted-foreground">
-              QR Code for quick access
+            <p className="text-sm text-muted-foreground font-medium">
+              Scan for Quick Access
             </p>
           </div>
 
@@ -165,7 +172,7 @@ export function EnhancedQRCodeBlock({
             </div>
             <div className="flex items-center gap-2">
               <code className="flex-1 text-xs bg-background p-2 rounded border font-mono truncate">
-                {qrData.shortUrl}
+                {qrData.shortUrl || `https://mda.to/${qrData.slug}`}
               </code>
               <Button
                 variant="outline"

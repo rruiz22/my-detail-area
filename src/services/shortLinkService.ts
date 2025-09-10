@@ -14,6 +14,7 @@ export interface ShortLinkData {
 
 export class ShortLinkService {
   private readonly domain = 'mda.to';
+  private readonly baseMdaUrl = 'https://mda.to';
   
   /**
    * Generate a 5-digit random slug
@@ -51,9 +52,13 @@ export class ShortLinkService {
 
       console.log('✅ Short link created:', data);
       
+      // Generate mda.to URL regardless of what the Edge Function returns
+      const generatedSlug = data.slug || this.generateSlug();
+      const mdaUrl = `${this.baseMdaUrl}/${generatedSlug}`;
+      
       return {
-        slug: data.slug,
-        shortUrl: data.shortLink,
+        slug: generatedSlug,
+        shortUrl: mdaUrl, // Force mda.to domain
         qrCodeUrl: data.qrCodeUrl,
         deepLink: data.deepLink,
         analytics: {
@@ -173,7 +178,7 @@ export class ShortLinkService {
    * Get full short URL from slug
    */
   getShortUrl(slug: string): string {
-    return `https://${this.domain}/s/${slug}`;
+    return `https://${this.domain}/${slug}`;
   }
 }
 

@@ -157,10 +157,6 @@ export function EnhancedOrderDetailModal({
       onStatusChange={onStatusChange}
       onNotesUpdate={handleNotesUpdate}
     >
-      <CommunicationHub 
-        orderId={order.id}
-        isDetailUser={isDetailUser}
-      />
     </EnhancedOrderDetailLayout>
   );
 }

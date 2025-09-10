@@ -12,12 +12,14 @@ import {
   Settings,
   ArrowRight,
   BarChart3,
-  Palette
+  Palette,
+  Database
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { ThemeStudio } from '@/components/theme/ThemeStudio';
+import { OrderNumberMigrationTool } from '@/components/dev/OrderNumberMigrationTool';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { UserManagementSection } from '@/components/management/UserManagementSection';
 import { DealershipManagementSection } from '@/components/management/DealershipManagementSection';
@@ -74,6 +76,12 @@ const Management = () => {
               <Palette className="h-4 w-4" />
               {t('management.theme_studio')}
             </TabsTrigger>
+            {import.meta.env.DEV && (
+              <TabsTrigger value="migration" className="flex items-center gap-2">
+                <Database className="h-4 w-4" />
+                Order Migration
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -142,6 +150,14 @@ const Management = () => {
               <ThemeStudio />
             </PermissionGuard>
           </TabsContent>
+
+          {import.meta.env.DEV && (
+            <TabsContent value="migration" className="space-y-6">
+              <PermissionGuard module="management" permission="admin">
+                <OrderNumberMigrationTool />
+              </PermissionGuard>
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </DashboardLayout>

@@ -14,17 +14,38 @@ interface DashboardLayoutProps {
   title?: string;
 }
 
+// Synchronously read sidebar state before rendering (no async, no useEffect)
+const getSavedSidebarState = (): boolean => {
+  try {
+    const saved = localStorage.getItem('mda.ui.sidebar.open');
+    return saved !== null ? JSON.parse(saved) : true;
+  } catch {
+    return true; // Default to open if error
+  }
+};
+
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const { t } = useTranslation();
+  const initialSidebarState = getSavedSidebarState();
   
   return (
-    <SidebarProvider>
+    <SidebarProvider 
+      defaultOpen={initialSidebarState}
+      onOpenChange={(open) => {
+        try {
+          localStorage.setItem('mda.ui.sidebar.open', JSON.stringify(open));
+          console.log('💾 Sidebar state saved:', open);
+        } catch (error) {
+          console.warn('Failed to save sidebar state:', error);
+        }
+      }}
+    >
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         
         <div className="flex-1 flex flex-col">
-          {/* Header */}
-          <header className="h-16 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 flex items-center justify-between px-6 header-enhanced">
+          {/* Sticky Header */}
+          <header className="sticky top-0 z-50 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
             <div className="flex items-center gap-4">
               <SidebarTrigger />
             </div>
@@ -54,6 +75,29 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           <main className="flex-1 p-6">
             {children}
           </main>
+          
+          {/* Footer */}
+          <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 px-6 py-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>© 2025 My Detail Area</span>
+                <span>•</span>
+                <span>Enterprise Dealership Management</span>
+              </div>
+              
+              <div className="flex items-center gap-4 text-sm">
+                <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+                  Privacy Policy
+                </Button>
+                <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+                  Terms of Service
+                </Button>
+                <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+                  Support
+                </Button>
+              </div>
+            </div>
+          </footer>
         </div>
       </div>
     </SidebarProvider>

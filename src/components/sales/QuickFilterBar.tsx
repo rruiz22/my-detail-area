@@ -152,8 +152,8 @@ export function QuickFilterBar({
           </div>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex flex-wrap gap-2">
+        {/* Filter Pills - Mobile Responsive */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-2">
           {filterOptions.map((option) => {
             const Icon = option.icon;
             const isActive = activeFilter === option.id;
@@ -165,15 +165,15 @@ export function QuickFilterBar({
                 size="sm"
                 onClick={() => onFilterChange(option.id)}
                 className={`
-                  h-9 px-3 border-2 transition-all duration-200 hover:scale-105
+                  h-9 px-2 sm:px-3 border-2 transition-all duration-200 hover:scale-105
                   ${isActive 
                     ? `${option.color} shadow-sm` 
                     : 'bg-background hover:bg-muted/50 border-border text-muted-foreground hover:text-foreground'
                   }
                 `}
               >
-                <Icon className="w-4 h-4 mr-2" />
-                <span>{option.label}</span>
+                <Icon className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="text-sm sm:text-base">{option.label}</span>
                 {option.count > 0 && (
                   <Badge 
                     variant="secondary" 
