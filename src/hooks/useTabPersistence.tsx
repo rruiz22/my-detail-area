@@ -19,7 +19,7 @@ export const TAB_CONFIGS = {
   recon_orders: {
     key: 'recon',
     defaultTab: 'dashboard', 
-    validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']
+    validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted', 'recon_hub']
   },
   car_wash: {
     key: 'carwash',
