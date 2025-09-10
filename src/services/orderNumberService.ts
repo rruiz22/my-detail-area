@@ -146,7 +146,7 @@ export class OrderNumberService {
         if (error) throw error;
 
         if (!orders || orders.length === 0) {
-          console.log(`✅ No orders to migrate in ${tableName}`);
+          console.log(`✅ No orders to migrate in orders table`);
           continue;
         }
 

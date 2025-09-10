@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as rtl from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
@@ -48,6 +49,9 @@ const customRender = (
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
 export * from '@testing-library/react';
+export const screen = (rtl as any).screen;
+export const fireEvent = (rtl as any).fireEvent;
+export const waitFor = (rtl as any).waitFor;
 export { customRender as render, userEvent };
 
 // Mock user data for tests
