@@ -105,7 +105,74 @@
     "view_all_orders": "Ver Todos os Pedidos",
     "view_reports": "Ver Relatórios",
     "no_recent_activity": "Nenhuma atividade recente",
-    "last_updated": "Última atualização"
+    "last_updated": "Última atualização",
+    "hero": {
+      "welcome": "Bem-vindo ao My Detail Area",
+      "subtitle": "Seu centro de comando de operações da concessionária"
+    },
+    "actions": {
+      "create_order": "Criar Pedido",
+      "view_reports": "Ver Relatórios",
+      "manage_users": "Gerenciar Usuários",
+      "success": "{{action}} iniciado com sucesso!",
+      "started": "Ação Iniciada"
+    },
+    "metrics": {
+      "total_orders": "Pedidos Totais",
+      "pending_orders": "Pedidos Pendentes",
+      "completed_today": "Concluídos Hoje",
+      "revenue": "Receita",
+      "active_vehicles": "Veículos Ativos",
+      "avg_processing": "Processamento Médio",
+      "satisfaction": "Satisfação",
+      "efficiency": "Eficiência",
+      "orders_this_month": "Pedidos neste mês",
+      "awaiting_processing": "Aguardando processamento",
+      "finished_today": "Finalizados hoje",
+      "monthly_revenue": "Receita mensal",
+      "in_process": "Em processo",
+      "per_order": "Por pedido",
+      "customer_rating": "Avaliação do cliente",
+      "team_performance": "Performance da equipe"
+    },
+    "departments": {
+      "sales": "Vendas",
+      "service": "Serviço",
+      "recon": "Recon",
+      "car_wash": "Lavagem de Carros"
+    },
+    "department_overview": {
+      "title": "Visão Geral dos Departamentos",
+      "live_data": "Dados ao Vivo",
+      "revenue": "receita",
+      "pending": "Pendente",
+      "in_progress": "Em Progresso",
+      "completed": "Concluído",
+      "efficiency": "Eficiência",
+      "total_orders": "Pedidos Totais"
+    },
+    "activity": {
+      "recent_activity": "Atividade Recente",
+      "filter": "Filtrar",
+      "all": "Todos",
+      "order_created": "Pedido Criado",
+      "order_updated": "Pedido Atualizado",
+      "order_completed": "Pedido Concluído",
+      "user_login": "Login do Usuário",
+      "new_sales_order_desc": "Novo pedido de vendas criado para entrega de veículo",
+      "status_changed_desc": "Status do pedido alterado para Em Progresso",
+      "recon_completed_desc": "Processo de recon concluído com sucesso",
+      "car_wash_created_desc": "Pedido de lavagem expressa criado",
+      "user_logged_in_desc": "Usuário fez login no sistema",
+      "vehicle": "Veículo"
+    },
+    "quick_tools": {
+      "title": "Ferramentas de Acesso Rápido",
+      "vin_scanner": "Scanner VIN",
+      "nfc_tracking": "Rastreamento NFC",
+      "chat": "Chat da Equipe",
+      "settings": "Configurações"
+    }
   },
   "management": {
     "title": "Gestão do Sistema",

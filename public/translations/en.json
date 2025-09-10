@@ -105,7 +105,74 @@
     "view_all_orders": "View All Orders",
     "view_reports": "View Reports",
     "no_recent_activity": "No recent activity",
-    "last_updated": "Last updated"
+    "last_updated": "Last updated",
+    "hero": {
+      "welcome": "Welcome to My Detail Area",
+      "subtitle": "Your dealership operations command center"
+    },
+    "actions": {
+      "create_order": "Create Order",
+      "view_reports": "View Reports",
+      "manage_users": "Manage Users",
+      "success": "{{action}} initiated successfully!",
+      "started": "Action Started"
+    },
+    "metrics": {
+      "total_orders": "Total Orders",
+      "pending_orders": "Pending Orders",
+      "completed_today": "Completed Today",
+      "revenue": "Revenue",
+      "active_vehicles": "Active Vehicles",
+      "avg_processing": "Avg Processing",
+      "satisfaction": "Satisfaction",
+      "efficiency": "Efficiency",
+      "orders_this_month": "Orders this month",
+      "awaiting_processing": "Awaiting processing",
+      "finished_today": "Finished today",
+      "monthly_revenue": "Monthly revenue",
+      "in_process": "In process",
+      "per_order": "Per order",
+      "customer_rating": "Customer rating",
+      "team_performance": "Team performance"
+    },
+    "departments": {
+      "sales": "Sales",
+      "service": "Service",
+      "recon": "Recon",
+      "car_wash": "Car Wash"
+    },
+    "department_overview": {
+      "title": "Department Overview",
+      "live_data": "Live Data",
+      "revenue": "revenue",
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "efficiency": "Efficiency",
+      "total_orders": "Total Orders"
+    },
+    "activity": {
+      "recent_activity": "Recent Activity",
+      "filter": "Filter",
+      "all": "All",
+      "order_created": "Order Created",
+      "order_updated": "Order Updated",
+      "order_completed": "Order Completed",
+      "user_login": "User Login",
+      "new_sales_order_desc": "New sales order created for vehicle delivery",
+      "status_changed_desc": "Order status changed to In Progress",
+      "recon_completed_desc": "Recon process completed successfully",
+      "car_wash_created_desc": "Express car wash order created",
+      "user_logged_in_desc": "User logged into the system",
+      "vehicle": "Vehicle"
+    },
+    "quick_tools": {
+      "title": "Quick Access Tools",
+      "vin_scanner": "VIN Scanner",
+      "nfc_tracking": "NFC Tracking",
+      "chat": "Team Chat",
+      "settings": "Settings"
+    }
   },
   "theme_studio": {
     "title": "Theme Studio",
