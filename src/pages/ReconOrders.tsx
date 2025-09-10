@@ -16,6 +16,7 @@ import { ReconApprovalWorkflow } from '@/components/recon/ReconApprovalWorkflow'
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { ReconHubDashboard } from '@/components/recon-hub/ReconHubDashboard';
+import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 
 export default function ReconOrders() {
