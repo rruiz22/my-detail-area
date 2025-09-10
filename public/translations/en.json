@@ -1872,5 +1872,68 @@
     "success": "Success",
     "warning": "Warning",
     "info": "Information"
+  },
+  "nfc": {
+    "title": "NFC Tracking",
+    "subtitle": "Manage NFC tags and vehicle tracking",
+    "create_tag": "Create Tag",
+    "edit_tag": "Edit Tag",
+    "delete_tag": "Delete Tag",
+    "tag_created": "NFC tag created successfully",
+    "tag_updated": "NFC tag updated successfully",
+    "tag_deleted": "NFC tag deleted successfully",
+    "errors": {
+      "not_supported": "NFC is not supported on this device or browser. Please use Chrome on Android or Safari on iOS.",
+      "permission_denied": "NFC permission denied. Please enable NFC in your browser settings.",
+      "permission_failed": "Failed to request NFC permissions.",
+      "write_failed": "Failed to write to NFC tag. Please try again.",
+      "read_failed": "Failed to read NFC tag. Please try again.",
+      "read_timeout": "Reading timeout. Please try bringing the tag closer.",
+      "scan_failed": "Failed to start NFC scanning."
+    },
+    "writer": {
+      "title": "Write to Physical NFC Tag",
+      "write_to_physical": "Write to Physical Tag",
+      "write_tag": "Write Tag",
+      "retry": "Retry",
+      "preparing": "Preparing...",
+      "writing": "Writing to tag...",
+      "success": "Tag written successfully!",
+      "error": "Failed to write tag",
+      "ready": "Ready to write",
+      "instructions": {
+        "ready": "Click 'Write Tag' and then hold your NFC tag near your device.",
+        "preparing": "Preparing to write to NFC tag...",
+        "writing": "Hold your NFC tag steady near your device.",
+        "success": "Your NFC tag has been programmed successfully!",
+        "error": "Something went wrong. Please try again."
+      }
+    },
+    "reader": {
+      "title": "Read NFC Tag",
+      "start_scanning": "Start Scanning",
+      "stop_scanning": "Stop Scanning",
+      "scan_another": "Scan Another",
+      "retry": "Retry",
+      "scanning": "Scanning for tags...",
+      "success": "Tag read successfully!",
+      "error": "Failed to read tag",
+      "ready": "Ready to scan",
+      "tag_data": "Tag Data",
+      "instructions": {
+        "ready": "Click 'Start Scanning' to begin reading NFC tags.",
+        "scanning": "Hold an NFC tag near your device to read it.",
+        "success": "NFC tag data has been read successfully!",
+        "error": "Could not read the NFC tag. Please try again."
+      }
+    },
+    "tag_info": {
+      "id": "Tag ID",
+      "name": "Name",
+      "type": "Type",
+      "vin": "VIN",
+      "location": "Location",
+      "url": "URL"
+    }
   }
 }

@@ -1835,5 +1835,68 @@
     "success": "Éxito",
     "warning": "Advertencia",
     "info": "Información"
+  },
+  "nfc": {
+    "title": "Seguimiento NFC",
+    "subtitle": "Gestionar etiquetas NFC y seguimiento de vehículos",
+    "create_tag": "Crear Etiqueta",
+    "edit_tag": "Editar Etiqueta",
+    "delete_tag": "Eliminar Etiqueta",
+    "tag_created": "Etiqueta NFC creada exitosamente",
+    "tag_updated": "Etiqueta NFC actualizada exitosamente",
+    "tag_deleted": "Etiqueta NFC eliminada exitosamente",
+    "errors": {
+      "not_supported": "NFC no es compatible con este dispositivo o navegador. Usa Chrome en Android o Safari en iOS.",
+      "permission_denied": "Permiso NFC denegado. Activa NFC en la configuración del navegador.",
+      "permission_failed": "Falló al solicitar permisos NFC.",
+      "write_failed": "Falló al escribir en la etiqueta NFC. Inténtalo de nuevo.",
+      "read_failed": "Falló al leer la etiqueta NFC. Inténtalo de nuevo.",
+      "read_timeout": "Tiempo de espera agotado. Acerca más la etiqueta.",
+      "scan_failed": "Falló al iniciar el escaneo NFC."
+    },
+    "writer": {
+      "title": "Escribir en Etiqueta NFC Física",
+      "write_to_physical": "Escribir en Etiqueta Física",
+      "write_tag": "Escribir Etiqueta",
+      "retry": "Reintentar",
+      "preparing": "Preparando...",
+      "writing": "Escribiendo en etiqueta...",
+      "success": "¡Etiqueta escrita exitosamente!",
+      "error": "Falló al escribir etiqueta",
+      "ready": "Listo para escribir",
+      "instructions": {
+        "ready": "Haz clic en 'Escribir Etiqueta' y luego mantén tu etiqueta NFC cerca del dispositivo.",
+        "preparing": "Preparando para escribir en la etiqueta NFC...",
+        "writing": "Mantén tu etiqueta NFC cerca del dispositivo.",
+        "success": "¡Tu etiqueta NFC ha sido programada exitosamente!",
+        "error": "Algo salió mal. Inténtalo de nuevo."
+      }
+    },
+    "reader": {
+      "title": "Leer Etiqueta NFC",
+      "start_scanning": "Iniciar Escaneo",
+      "stop_scanning": "Detener Escaneo",
+      "scan_another": "Escanear Otra",
+      "retry": "Reintentar",
+      "scanning": "Escaneando etiquetas...",
+      "success": "¡Etiqueta leída exitosamente!",
+      "error": "Falló al leer etiqueta",
+      "ready": "Listo para escanear",
+      "tag_data": "Datos de Etiqueta",
+      "instructions": {
+        "ready": "Haz clic en 'Iniciar Escaneo' para comenzar a leer etiquetas NFC.",
+        "scanning": "Mantén una etiqueta NFC cerca de tu dispositivo para leerla.",
+        "success": "¡Los datos de la etiqueta NFC se han leído exitosamente!",
+        "error": "No se pudo leer la etiqueta NFC. Inténtalo de nuevo."
+      }
+    },
+    "tag_info": {
+      "id": "ID de Etiqueta",
+      "name": "Nombre",
+      "type": "Tipo",
+      "vin": "VIN",
+      "location": "Ubicación",
+      "url": "URL"
+    }
   }
 }

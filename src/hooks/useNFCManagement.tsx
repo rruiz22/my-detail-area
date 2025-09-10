@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-interface NFCTag {
+export interface NFCTag {
   id: string;
   name: string;
   tag_uid: string;

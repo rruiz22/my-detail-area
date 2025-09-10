@@ -1840,5 +1840,68 @@
     "success": "Sucesso",
     "warning": "Aviso",
     "info": "Informação"
+  },
+  "nfc": {
+    "title": "Rastreamento NFC",
+    "subtitle": "Gerenciar tags NFC e rastreamento de veículos",
+    "create_tag": "Criar Tag",
+    "edit_tag": "Editar Tag",
+    "delete_tag": "Excluir Tag",
+    "tag_created": "Tag NFC criada com sucesso",
+    "tag_updated": "Tag NFC atualizada com sucesso",
+    "tag_deleted": "Tag NFC excluída com sucesso",
+    "errors": {
+      "not_supported": "NFC não é compatível com este dispositivo ou navegador. Use Chrome no Android ou Safari no iOS.",
+      "permission_denied": "Permissão NFC negada. Ative o NFC nas configurações do navegador.",
+      "permission_failed": "Falha ao solicitar permissões NFC.",
+      "write_failed": "Falha ao escrever na tag NFC. Tente novamente.",
+      "read_failed": "Falha ao ler a tag NFC. Tente novamente.",
+      "read_timeout": "Tempo limite de leitura. Aproxime mais a tag.",
+      "scan_failed": "Falha ao iniciar o escaneamento NFC."
+    },
+    "writer": {
+      "title": "Escrever na Tag NFC Física",
+      "write_to_physical": "Escrever na Tag Física",
+      "write_tag": "Escrever Tag",
+      "retry": "Tentar Novamente",
+      "preparing": "Preparando...",
+      "writing": "Escrevendo na tag...",
+      "success": "Tag escrita com sucesso!",
+      "error": "Falha ao escrever tag",
+      "ready": "Pronto para escrever",
+      "instructions": {
+        "ready": "Clique em 'Escrever Tag' e então mantenha sua tag NFC perto do dispositivo.",
+        "preparing": "Preparando para escrever na tag NFC...",
+        "writing": "Mantenha sua tag NFC perto do dispositivo.",
+        "success": "Sua tag NFC foi programada com sucesso!",
+        "error": "Algo deu errado. Tente novamente."
+      }
+    },
+    "reader": {
+      "title": "Ler Tag NFC",
+      "start_scanning": "Iniciar Escaneamento",
+      "stop_scanning": "Parar Escaneamento",
+      "scan_another": "Escanear Outra",
+      "retry": "Tentar Novamente",
+      "scanning": "Escaneando tags...",
+      "success": "Tag lida com sucesso!",
+      "error": "Falha ao ler tag",
+      "ready": "Pronto para escanear",
+      "tag_data": "Dados da Tag",
+      "instructions": {
+        "ready": "Clique em 'Iniciar Escaneamento' para começar a ler tags NFC.",
+        "scanning": "Mantenha uma tag NFC perto do seu dispositivo para lê-la.",
+        "success": "Os dados da tag NFC foram lidos com sucesso!",
+        "error": "Não foi possível ler a tag NFC. Tente novamente."
+      }
+    },
+    "tag_info": {
+      "id": "ID da Tag",
+      "name": "Nome",
+      "type": "Tipo",
+      "vin": "VIN",
+      "location": "Localização",
+      "url": "URL"
+    }
   }
 }

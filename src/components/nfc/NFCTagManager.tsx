@@ -21,10 +21,16 @@ import {
   Filter,
   QrCode,
   Settings,
-  Activity
+  Activity,
+  Smartphone,
+  Eye,
+  MoreVertical
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNFCManagement } from '@/hooks/useNFCManagement';
+import { NFCTag, useNFCManagement } from '@/hooks/useNFCManagement';
+import { NFCPhysicalWriter } from './NFCPhysicalWriter';
+import { NFCPhysicalReader } from './NFCPhysicalReader';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -60,6 +66,9 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingTag, setEditingTag] = useState<any>(null);
+  const [isWriterDialogOpen, setIsWriterDialogOpen] = useState(false);
+  const [isReaderDialogOpen, setIsReaderDialogOpen] = useState(false);
+  const [writingTag, setWritingTag] = useState<NFCTag | null>(null);
   
   const [formData, setFormData] = useState<TagFormData>({
     name: '',
@@ -296,13 +305,20 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
           </p>
         </div>
 
-        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              {t('nfc_tracking.tag_manager.register_new')}
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline"
+            onClick={() => setIsReaderDialogOpen(true)}
+            className="mr-2"
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            {t('nfc.reader.title')}
+          </Button>
+          <Button onClick={() => setShowCreateDialog(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            {t('nfc_tracking.tag_manager.register_new')}
+          </Button>
+        </div>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>{t('nfc_tracking.tag_manager.create_tag')}</DialogTitle>
@@ -504,6 +520,44 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Create Dialog */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{t('nfc_tracking.tag_manager.create_tag')}</DialogTitle>
+          </DialogHeader>
+          <TagForm />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button onClick={handleCreateTag} disabled={loading}>
+              {t('common.create')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Physical NFC Writer */}
+      {writingTag && (
+        <NFCPhysicalWriter
+          isOpen={isWriterDialogOpen}
+          onClose={() => {
+            setIsWriterDialogOpen(false);
+            setWritingTag(null);
+          }}
+          tag={writingTag}
+          onSuccess={() => console.log('NFC tag written successfully')}
+        />
+      )}
+
+      {/* Physical NFC Reader */}
+      <NFCPhysicalReader
+        isOpen={isReaderDialogOpen}
+        onClose={() => setIsReaderDialogOpen(false)}
+        onTagRead={(tagData) => console.log('Tag read:', tagData)}
+      />
     </div>
   );
 }
