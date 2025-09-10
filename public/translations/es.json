@@ -1013,7 +1013,9 @@
     "manage": "Gestionar",
     "no_users_found": "No se encontraron usuarios",
     "no_users_matching_filters": "No se encontraron usuarios que coincidan con los filtros",
-    "users": "[PT] users"
+    "users": "[PT] users",
+    "no_dealership_assigned": "Sin concesionario asignado",
+    "incomplete_setup": "Configuración incompleta"
   },
   "dealer": {
     "view": {

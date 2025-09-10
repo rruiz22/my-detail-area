@@ -42,6 +42,11 @@ Deno.serve(async (req) => {
     }: CreateUserRequest = await req.json()
 
     console.log('Creating user with data:', { email, firstName, lastName, dealershipId, role, userType })
+    
+    // Validate required dealership_id
+    if (!dealershipId) {
+      throw new Error('dealershipId is required')
+    }
 
     // Step 1: Create user in Auth
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
@@ -63,7 +68,7 @@ Deno.serve(async (req) => {
     console.log('Auth user created:', authUser.user.id)
 
     // Step 2: Create/update profile (this should happen automatically via trigger, but we'll ensure it)
-    const { error: profileError } = await supabase
+    const { data: profileData, error: profileError } = await supabase
       .from('profiles')
       .upsert({
         id: authUser.user.id,
@@ -76,11 +81,14 @@ Deno.serve(async (req) => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
+      .select()
 
     if (profileError) {
       console.error('Profile creation failed:', profileError)
-      // Don't throw here, profile might be created by trigger
+      throw new Error(`Profile creation failed: ${profileError.message}`)
     }
+    
+    console.log('Profile created successfully:', profileData?.[0]?.id)
 
     // Step 3: Create dealer membership
     const { error: membershipError } = await supabase

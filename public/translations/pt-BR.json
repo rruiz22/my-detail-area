@@ -1110,7 +1110,9 @@
     "manage": "Gerenciar",
     "no_users_found": "Nenhum usuário encontrado",
     "no_users_matching_filters": "Nenhum usuário encontrado que corresponda aos filtros",
-    "users": "[PT] users"
+    "users": "[PT] users",
+    "no_dealership_assigned": "Nenhuma concessionária atribuída",
+    "incomplete_setup": "Configuração incompleta"
   },
   "dealer": {
     "view": {

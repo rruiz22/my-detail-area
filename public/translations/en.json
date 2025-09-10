@@ -1230,7 +1230,9 @@
     "manage": "Manage",
     "no_users_found": "No users found",
     "no_users_matching_filters": "No users found matching your filters",
-    "users": "users"
+    "users": "users",
+    "no_dealership_assigned": "No dealership assigned",
+    "incomplete_setup": "Incomplete setup"
   },
   "dealer": {
     "view": {

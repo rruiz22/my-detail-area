@@ -56,12 +56,12 @@ export const UnifiedUserManagement: React.FC = () => {
     try {
       setIsLoading(true);
 
-      // Fetch users with their dealer memberships
+      // Fetch users with their dealer memberships (using LEFT JOIN to include all users)
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select(`
           *,
-          dealer_memberships!inner (
+          dealer_memberships (
             dealer_id,
             is_active
           )
@@ -76,8 +76,9 @@ export const UnifiedUserManagement: React.FC = () => {
           const { data: rolesData } = await supabase
             .rpc('get_user_roles', { user_uuid: profile.id });
 
-          // Get the dealership_id from the first active membership
+          // Get the dealership_id from profile first, then from active membership
           const activeMembership = profile.dealer_memberships?.find((m: any) => m.is_active);
+          const dealershipId = profile.dealership_id || activeMembership?.dealer_id;
           
           return {
             id: profile.id,
@@ -85,16 +86,23 @@ export const UnifiedUserManagement: React.FC = () => {
             first_name: profile.first_name,
             last_name: profile.last_name,
             user_type: profile.user_type,
-            dealership_id: activeMembership?.dealer_id,
+            dealership_id: dealershipId,
             roles: rolesData || [],
           };
         })
       );
 
-      // Filter to only show dealer users (Phase 1 cleanup)
-      const dealerUsers = usersWithRoles.filter(user => user.user_type === 'dealer');
+      // Show all users but prioritize dealer users
+      const sortedUsers = usersWithRoles.sort((a, b) => {
+        // Prioritize users with dealership_id and dealer type
+        if (a.dealership_id && !b.dealership_id) return -1;
+        if (!a.dealership_id && b.dealership_id) return 1;
+        if (a.user_type === 'dealer' && b.user_type !== 'dealer') return -1;
+        if (a.user_type !== 'dealer' && b.user_type === 'dealer') return 1;
+        return 0;
+      });
 
-      setUsers(dealerUsers);
+      setUsers(sortedUsers);
     } catch (error: any) {
       console.error('Error fetching users:', error);
       toast({
@@ -165,7 +173,7 @@ export const UnifiedUserManagement: React.FC = () => {
   };
 
   const getDealershipName = (dealershipId?: number) => {
-    if (!dealershipId) return 'Sin asignar';
+    if (!dealershipId) return t('user_management.no_dealership_assigned');
     const dealership = dealerships.find(d => d.id === dealershipId);
     return dealership?.name || `Dealership ${dealershipId}`;
   };
@@ -295,8 +303,10 @@ export const UnifiedUserManagement: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Building2 className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{getDealershipName(user.dealership_id)}</span>
+                          <Building2 className={`h-4 w-4 ${user.dealership_id ? 'text-muted-foreground' : 'text-destructive'}`} />
+                          <span className={`text-sm ${user.dealership_id ? '' : 'text-destructive'}`}>
+                            {getDealershipName(user.dealership_id)}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -314,9 +324,9 @@ export const UnifiedUserManagement: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Activity className="h-4 w-4 text-green-500" />
-                          <Badge variant="default" className="text-xs">
-                            {t('common.active')}
+                          <Activity className={`h-4 w-4 ${user.dealership_id ? 'text-green-500' : 'text-yellow-500'}`} />
+                          <Badge variant={user.dealership_id ? "default" : "secondary"} className="text-xs">
+                            {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}
                           </Badge>
                         </div>
                       </TableCell>
