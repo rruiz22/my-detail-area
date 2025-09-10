@@ -85,18 +85,29 @@ export function PublicCommentsBlock({ orderId }: PublicCommentsBlockProps) {
         .from('order_comments')
         .insert({
           order_id: orderId,
-          message: newMessage.trim(),
           user_id: user.id,
-          user_name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email.split('@')[0],
-          is_internal: false,
-          created_at: new Date().toISOString()
+          comment_text: newMessage.trim(),
+          comment_type: 'public'
         })
         .select()
         .single();
 
       if (error) throw error;
 
-      setComments(prev => [...prev, data]);
+      const meta: any = (user as any)?.user_metadata || {};
+      const displayName = meta.first_name && meta.last_name
+        ? `${meta.first_name} ${meta.last_name}`
+        : (user.email?.split('@')[0] || 'User');
+
+      const added: Comment = {
+        id: data.id,
+        message: data.comment_text,
+        user_name: displayName,
+        created_at: data.created_at,
+        user_id: data.user_id
+      };
+
+      setComments(prev => [...prev, added]);
       setNewMessage('');
       toast.success('Comment added');
     } catch (error) {

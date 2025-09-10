@@ -67,13 +67,13 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       if (commentsError) throw commentsError;
 
       // Transform comments to activity items
-      const commentActivities: ActivityItem[] = (comments || []).map(comment => ({
+      const commentActivities: ActivityItem[] = (comments || []).map((comment: any) => ({
         id: `comment-${comment.id}`,
-        action: comment.is_internal ? 'Added internal note' : 'Added comment',
-        description: comment.message.substring(0, 50) + (comment.message.length > 50 ? '...' : ''),
-        user_name: comment.user_name,
+        action: comment.comment_type === 'internal' ? 'Added internal note' : 'Added comment',
+        description: (comment.comment_text || '').substring(0, 50) + (((comment.comment_text || '').length > 50) ? '...' : ''),
+        user_name: 'User',
         created_at: comment.created_at,
-        action_type: comment.is_internal ? 'note' : 'comment',
+        action_type: comment.comment_type === 'internal' ? 'note' : 'comment',
         metadata: comment
       }));
 

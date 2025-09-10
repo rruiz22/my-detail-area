@@ -21,13 +21,6 @@ export class OrderNumberService {
     recon: 'RC'
   };
 
-  private readonly tableNames: Record<OrderType, string> = {
-    sales: 'sales_orders',
-    service: 'service_orders',
-    carwash: 'car_wash_orders', 
-    recon: 'recon_orders'
-  };
-
   /**
    * Generate next order number for specific type
    */
@@ -61,13 +54,12 @@ export class OrderNumberService {
    */
   private async getLastSequenceNumber(orderType: OrderType, year: number): Promise<number> {
     try {
-      const tableName = this.tableNames[orderType];
       const prefix = this.prefixes[orderType];
       const yearPrefix = `${prefix}-${year}-`;
       
-      // Query for highest order number with this year prefix
+      // Query highest order number in unified orders table
       const { data, error } = await supabase
-        .from(tableName)
+        .from('orders')
         .select('order_number')
         .ilike('order_number', `${yearPrefix}%`)
         .order('order_number', { ascending: false })
@@ -141,14 +133,14 @@ export class OrderNumberService {
   async migrateExistingOrders(): Promise<void> {
     console.log('🔄 Starting order number migration...');
     
-    for (const [orderType, tableName] of Object.entries(this.tableNames)) {
+    for (const orderType of Object.keys(this.prefixes) as OrderType[]) {
       try {
-        console.log(`📋 Migrating ${orderType} orders in ${tableName}...`);
+        console.log(`📋 Migrating ${orderType} orders in unified orders table...`);
         
         // Get all orders without proper format
         const { data: orders, error } = await supabase
-          .from(tableName)
-          .select('id, order_number')
+          .from('orders')
+          .select('id, order_number, created_at')
           .order('created_at', { ascending: true });
 
         if (error) throw error;
@@ -172,7 +164,7 @@ export class OrderNumberService {
           const newOrderNumber = `${prefix}-${year}-${sequenceCounter.toString().padStart(5, '0')}`;
           
           const { error: updateError } = await supabase
-            .from(tableName)
+            .from('orders')
             .update({ 
               order_number: newOrderNumber,
               updated_at: new Date().toISOString()
