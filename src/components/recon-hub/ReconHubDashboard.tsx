@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Clock, AlertTriangle, TrendingUp, Car } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { supabase } from '@/integrations/supabase/client';
 import { T2LMetricsGrid } from './dashboard/T2LMetricsGrid';
 import { ColorTriggerReport } from './dashboard/ColorTriggerReport';
 import { WorkflowStatusGrid } from './dashboard/WorkflowStatusGrid';
@@ -25,7 +24,6 @@ interface ReconHubDashboardProps {
 
 export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
   const { t } = useTranslation();
-  const [isConnected, setIsConnected] = useState(true);
 
   const { 
     dashboardStats,
@@ -39,22 +37,6 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
     alertSummary,
     alertsLoading 
   } = useReconAlerts({ dealerId });
-
-  // Real-time connection indicator
-  useEffect(() => {
-    const channel = supabase
-      .channel('recon_hub_connection')
-      .on('presence', { event: 'sync' }, () => {
-        setIsConnected(true);
-      })
-      .subscribe((status) => {
-        setIsConnected(status === 'SUBSCRIBED');
-      });
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
 
   if (isLoading) {
     return (
@@ -84,14 +66,6 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
           <p className="text-muted-foreground">
             {t('reconHub.dashboard.subtitle', 'Real-time reconditioning operations overview')}
           </p>
-        </div>
-        
-        {/* Connection Status */}
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="flex items-center gap-1">
-            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
-            {isConnected ? t('common.connected') : t('common.disconnected')}
-          </Badge>
         </div>
       </div>
 
