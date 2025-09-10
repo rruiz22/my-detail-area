@@ -1884,13 +1884,68 @@
         "description": "Segurança de nível empresarial com controles de acesso baseados em funções."
       }
     },
+    "stats": {
+      "orders_processed": "Pedidos Processados",
+      "orders_processed_value": "25,000+", 
+      "avg_time": "Tempo Médio",
+      "avg_time_value": "45min",
+      "customer_satisfaction": "Satisfação do Cliente",
+      "customer_satisfaction_value": "98%",
+      "team_efficiency": "Eficiência da Equipe",
+      "team_efficiency_value": "85%"
+    },
+    "testimonials": {
+      "title": "O Que Dizem Nossos Clientes",
+      "description": "Concessionárias líderes confiam no My Detail Area para otimizar suas operações",
+      "testimonial1": {
+        "name": "Carlos Mendoza", 
+        "role": "Gerente de Serviço",
+        "company": "AutoMax Dealership",
+        "content": "O MDA transformou completamente nossas operações de detalhamento. A coordenação entre departamentos nunca foi tão suave."
+      },
+      "testimonial2": {
+        "name": "Ana Rodriguez",
+        "role": "Coordenadora de Detalhamento",
+        "company": "Premium Motors",
+        "content": "O sistema de comunicação em tempo real nos permitiu reduzir os tempos de entrega em 40%. Plataforma incrível."
+      },
+      "testimonial3": {
+        "name": "Miguel Torres",
+        "role": "Diretor de Operações",
+        "company": "Elite Auto Group", 
+        "content": "A análise nos deu insights valiosos para otimizar nossos processos. ROI positivo desde o primeiro mês."
+      }
+    },
+    "navigation": {
+      "features": "Recursos",
+      "benefits": "Benefícios",
+      "testimonials": "Depoimentos",
+      "learn_more": "Saber Mais", 
+      "start_trial": "Teste Gratuito"
+    },
     "cta": {
-      "title": "Pronto para Transformar Suas Operações de Detalhamento?",
-      "description": "Junte-se às concessionárias que já usam My Detail Area para otimizar suas operações.",
-      "get_started": "Inicie Seu Teste Gratuito"
+      "title": "Pronto para Transformar sua Concessionária?",
+      "description": "Junte-se a centenas de concessionárias que já otimizam suas operações com My Detail Area",
+      "get_started": "Inicie Seu Teste Gratuito",
+      "schedule_demo": "Agendar Demo"
     },
     "footer": {
-      "rights": "Todos os direitos reservados."
+      "rights": "Todos os direitos reservados.",
+      "tagline": "Otimize Suas Operações de Detalhamento",
+      "product": "Produto",
+      "pricing": "Preços",
+      "integrations": "Integrações", 
+      "api": "API",
+      "company": "Empresa",
+      "about": "Sobre",
+      "blog": "Blog",
+      "careers": "Carreiras", 
+      "contact": "Contato",
+      "support": "Suporte",
+      "help_center": "Central de Ajuda",
+      "documentation": "Documentação",
+      "status": "Status",
+      "privacy": "Privacidade"
     }
   },
   "nfc_tracking": {

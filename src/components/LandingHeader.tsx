@@ -30,6 +30,19 @@ export function LandingHeader() {
               {t('landing.app_name')}
             </span>
           </Link>
+        
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+              {t('landing.navigation.features')}
+            </a>
+            <a href="#benefits" className="text-muted-foreground hover:text-foreground transition-colors">
+              {t('landing.navigation.benefits')}
+            </a>
+            <a href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">
+              {t('landing.navigation.testimonials')}
+            </a>
+          </nav>
 
           {/* Navigation - depends on auth state */}
           <div className="flex items-center space-x-4">
@@ -90,17 +103,11 @@ export function LandingHeader() {
             ) : (
               // Guest user menu
               <>
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/auth" className="gap-2">
-                    <LogIn className="h-4 w-4" />
-                    {t('auth.sign_in')}
-                  </Link>
+                <Button variant="outline" size="sm">
+                  {t('landing.navigation.learn_more')}
                 </Button>
                 <Button asChild size="sm">
-                  <Link to="/auth" className="gap-2">
-                    <UserPlus className="h-4 w-4" />
-                    {t('auth.sign_up')}
-                  </Link>
+                  <Link to="/auth">{t('landing.navigation.start_trial')}</Link>
                 </Button>
               </>
             )}

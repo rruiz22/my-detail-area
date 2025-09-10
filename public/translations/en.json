@@ -1917,13 +1917,68 @@
         "description": "Enterprise-grade security with role-based access controls."
       }
     },
+    "stats": {
+      "orders_processed": "Orders Processed",
+      "orders_processed_value": "25,000+",
+      "avg_time": "Average Time", 
+      "avg_time_value": "45min",
+      "customer_satisfaction": "Customer Satisfaction",
+      "customer_satisfaction_value": "98%",
+      "team_efficiency": "Team Efficiency",
+      "team_efficiency_value": "85%"
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "description": "Leading dealerships trust My Detail Area to optimize their operations",
+      "testimonial1": {
+        "name": "Carlos Mendoza",
+        "role": "Service Manager",
+        "company": "AutoMax Dealership",
+        "content": "MDA has completely transformed our detail operations. The coordination between departments has never been smoother."
+      },
+      "testimonial2": {
+        "name": "Ana Rodriguez", 
+        "role": "Detail Coordinator",
+        "company": "Premium Motors",
+        "content": "The real-time communication system has allowed us to reduce delivery times by 40%. Amazing platform."
+      },
+      "testimonial3": {
+        "name": "Miguel Torres",
+        "role": "Operations Director", 
+        "company": "Elite Auto Group",
+        "content": "The analytics have given us valuable insights to optimize our processes. Positive ROI from the first month."
+      }
+    },
+    "navigation": {
+      "features": "Features",
+      "benefits": "Benefits",
+      "testimonials": "Testimonials",
+      "learn_more": "Learn More",
+      "start_trial": "Start Free Trial"
+    },
     "cta": {
-      "title": "Ready to Transform Your Detail Operations?",
-      "description": "Join dealerships already using My Detail Area to streamline their operations.",
-      "get_started": "Start Your Free Trial"
+      "title": "Ready to Transform Your Dealership?",
+      "description": "Join hundreds of dealerships already optimizing their operations with My Detail Area",
+      "get_started": "Start Your Free Trial",
+      "schedule_demo": "Schedule Demo"
     },
     "footer": {
-      "rights": "All rights reserved."
+      "rights": "All rights reserved.",
+      "tagline": "Streamline Your Detail Operations",
+      "product": "Product",
+      "pricing": "Pricing", 
+      "integrations": "Integrations",
+      "api": "API",
+      "company": "Company",
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "support": "Support",
+      "help_center": "Help Center",
+      "documentation": "Documentation",
+      "status": "Status",
+      "privacy": "Privacy"
     }
   },
 

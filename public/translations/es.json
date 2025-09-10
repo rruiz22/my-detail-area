@@ -1784,13 +1784,68 @@
         "description": "Seguridad de nivel empresarial con controles de acceso basados en roles."
       }
     },
+    "stats": {
+      "orders_processed": "Órdenes Procesadas",
+      "orders_processed_value": "25,000+",
+      "avg_time": "Tiempo Promedio",
+      "avg_time_value": "45min", 
+      "customer_satisfaction": "Satisfacción del Cliente",
+      "customer_satisfaction_value": "98%",
+      "team_efficiency": "Eficiencia del Equipo",
+      "team_efficiency_value": "85%"
+    },
+    "testimonials": {
+      "title": "Lo Que Dicen Nuestros Clientes",
+      "description": "Concesionarios líderes confían en My Detail Area para optimizar sus operaciones",
+      "testimonial1": {
+        "name": "Carlos Mendoza",
+        "role": "Gerente de Servicio", 
+        "company": "AutoMax Dealership",
+        "content": "MDA ha transformado completamente nuestras operaciones de detailing. La coordinación entre departamentos nunca había sido tan fluida."
+      },
+      "testimonial2": {
+        "name": "Ana Rodriguez",
+        "role": "Coordinadora de Detailing",
+        "company": "Premium Motors", 
+        "content": "El sistema de comunicación en tiempo real nos ha permitido reducir los tiempos de entrega en un 40%. Increíble plataforma."
+      },
+      "testimonial3": {
+        "name": "Miguel Torres",
+        "role": "Director de Operaciones",
+        "company": "Elite Auto Group",
+        "content": "Los analytics nos han dado insights valiosos para optimizar nuestros procesos. ROI positivo desde el primer mes."
+      }
+    },
+    "navigation": {
+      "features": "Características",
+      "benefits": "Beneficios", 
+      "testimonials": "Testimonios",
+      "learn_more": "Saber Más",
+      "start_trial": "Prueba Gratuita"
+    },
     "cta": {
-      "title": "¿Listo para Transformar Tus Operaciones de Detallado?",
-      "description": "Únete a concesionarios que ya usan My Detail Area para optimizar sus operaciones.",
-      "get_started": "Inicia Tu Prueba Gratuita"
+      "title": "¿Listo para Transformar tu Concesionario?",
+      "description": "Únete a cientos de concesionarios que ya optimizan sus operaciones con My Detail Area",
+      "get_started": "Inicia Tu Prueba Gratuita", 
+      "schedule_demo": "Programar Demo"
     },
     "footer": {
-      "rights": "Todos los derechos reservados."
+      "rights": "Todos los derechos reservados.",
+      "tagline": "Optimiza Tus Operaciones de Detallado",
+      "product": "Producto",
+      "pricing": "Precios",
+      "integrations": "Integraciones",
+      "api": "API",
+      "company": "Empresa", 
+      "about": "Acerca de",
+      "blog": "Blog",
+      "careers": "Carreras",
+      "contact": "Contacto",
+      "support": "Soporte",
+      "help_center": "Centro de Ayuda",
+      "documentation": "Documentación", 
+      "status": "Estado",
+      "privacy": "Privacidad"
     }
   },
   "nfc_tracking": {
