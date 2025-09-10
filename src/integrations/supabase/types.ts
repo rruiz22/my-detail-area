@@ -1400,6 +1400,293 @@ export type Database = {
           },
         ]
       }
+      recon_step_instances: {
+        Row: {
+          assigned_group_id: string | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          notes: string | null
+          order_id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["recon_step_status"] | null
+          step_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          order_id: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["recon_step_status"] | null
+          step_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          order_id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["recon_step_status"] | null
+          step_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recon_step_instances_assigned_group_id_fkey"
+            columns: ["assigned_group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recon_step_instances_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recon_step_instances_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "recon_workflow_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recon_t2l_metrics: {
+        Row: {
+          acquisition_date: string
+          created_at: string | null
+          frontline_ready_date: string | null
+          holding_cost_daily: number | null
+          id: string
+          order_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          acquisition_date: string
+          created_at?: string | null
+          frontline_ready_date?: string | null
+          holding_cost_daily?: number | null
+          id?: string
+          order_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          acquisition_date?: string
+          created_at?: string | null
+          frontline_ready_date?: string | null
+          holding_cost_daily?: number | null
+          id?: string
+          order_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recon_t2l_metrics_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recon_vehicle_locations: {
+        Row: {
+          coordinates: unknown | null
+          created_at: string | null
+          id: string
+          location_name: string
+          metadata: Json | null
+          order_id: string
+          qr_code: string | null
+          scanned_at: string | null
+          scanned_by: string | null
+        }
+        Insert: {
+          coordinates?: unknown | null
+          created_at?: string | null
+          id?: string
+          location_name: string
+          metadata?: Json | null
+          order_id: string
+          qr_code?: string | null
+          scanned_at?: string | null
+          scanned_by?: string | null
+        }
+        Update: {
+          coordinates?: unknown | null
+          created_at?: string | null
+          id?: string
+          location_name?: string
+          metadata?: Json | null
+          order_id?: string
+          qr_code?: string | null
+          scanned_at?: string | null
+          scanned_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recon_vehicle_locations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recon_vendors: {
+        Row: {
+          contact_info: Json | null
+          created_at: string | null
+          dealer_id: number
+          id: string
+          is_active: boolean | null
+          name: string
+          notes: string | null
+          performance_rating: number | null
+          specialties: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          contact_info?: Json | null
+          created_at?: string | null
+          dealer_id: number
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notes?: string | null
+          performance_rating?: number | null
+          specialties?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          contact_info?: Json | null
+          created_at?: string | null
+          dealer_id?: number
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notes?: string | null
+          performance_rating?: number | null
+          specialties?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recon_vendors_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recon_workflow_steps: {
+        Row: {
+          can_be_parallel: boolean | null
+          created_at: string | null
+          id: string
+          order_index: number
+          requires_approval: boolean | null
+          sla_hours: number | null
+          step_name: string
+          step_type: Database["public"]["Enums"]["workflow_step_type"]
+          updated_at: string | null
+          workflow_id: string
+        }
+        Insert: {
+          can_be_parallel?: boolean | null
+          created_at?: string | null
+          id?: string
+          order_index: number
+          requires_approval?: boolean | null
+          sla_hours?: number | null
+          step_name: string
+          step_type: Database["public"]["Enums"]["workflow_step_type"]
+          updated_at?: string | null
+          workflow_id: string
+        }
+        Update: {
+          can_be_parallel?: boolean | null
+          created_at?: string | null
+          id?: string
+          order_index?: number
+          requires_approval?: boolean | null
+          sla_hours?: number | null
+          step_name?: string
+          step_type?: Database["public"]["Enums"]["workflow_step_type"]
+          updated_at?: string | null
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recon_workflow_steps_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "recon_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recon_workflows: {
+        Row: {
+          created_at: string | null
+          dealer_id: number
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          name: string
+          steps_config: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: number
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name: string
+          steps_config?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: number
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name?: string
+          steps_config?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recon_workflows_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           created_at: string
@@ -2058,6 +2345,17 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_dealer_t2l_stats: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          average_holding_cost: number
+          average_t2l_hours: number
+          best_t2l_hours: number
+          completed_vehicles: number
+          total_vehicles: number
+          worst_active_t2l_hours: number
+        }[]
+      }
       get_dealership_modules: {
         Args: { p_dealer_id: number }
         Returns: {
@@ -2377,11 +2675,30 @@ export type Database = {
       language_code: "en" | "es" | "pt-BR"
       notification_frequency: "all" | "mentions" | "none" | "scheduled"
       permission_level: "none" | "read" | "write" | "delete" | "admin"
+      recon_step_status:
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "blocked"
+        | "skipped"
       subscription_plan: "basic" | "premium" | "enterprise"
       user_department: "detailing" | "wash" | "service"
       user_presence_status: "online" | "away" | "busy" | "offline" | "invisible"
       user_role: "admin" | "manager" | "technician" | "viewer"
       user_type: "dealer" | "detail"
+      workflow_step_type:
+        | "created"
+        | "bring_to_recon"
+        | "inspection"
+        | "mechanical"
+        | "body_work"
+        | "detailing"
+        | "photos"
+        | "needs_approval"
+        | "wholesale"
+        | "front_line"
+        | "not_for_sale"
+        | "cant_find_keys"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2546,11 +2863,32 @@ export const Constants = {
       language_code: ["en", "es", "pt-BR"],
       notification_frequency: ["all", "mentions", "none", "scheduled"],
       permission_level: ["none", "read", "write", "delete", "admin"],
+      recon_step_status: [
+        "pending",
+        "in_progress",
+        "completed",
+        "blocked",
+        "skipped",
+      ],
       subscription_plan: ["basic", "premium", "enterprise"],
       user_department: ["detailing", "wash", "service"],
       user_presence_status: ["online", "away", "busy", "offline", "invisible"],
       user_role: ["admin", "manager", "technician", "viewer"],
       user_type: ["dealer", "detail"],
+      workflow_step_type: [
+        "created",
+        "bring_to_recon",
+        "inspection",
+        "mechanical",
+        "body_work",
+        "detailing",
+        "photos",
+        "needs_approval",
+        "wholesale",
+        "front_line",
+        "not_for_sale",
+        "cant_find_keys",
+      ],
     },
   },
 } as const
