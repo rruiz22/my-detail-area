@@ -36,8 +36,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [formData, setFormData] = useState({
     orderNumber: '',
     customerName: '',
-    customerEmail: '',
-    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
@@ -51,9 +49,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
-  const [selectedContact, setSelectedContact] = useState('');
+  const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
   const [dealerships, setDealerships] = useState([]);
-  const [contacts, setContacts] = useState([]);
+  const [assignedUsers, setAssignedUsers] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -69,8 +67,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         setFormData({
           orderNumber: order.orderNumber || '',
           customerName: order.customerName || '',
-          customerEmail: order.customerEmail || '',
-          customerPhone: order.customerPhone || '',
           vehicleVin: order.vehicleVin || '',
           vehicleYear: order.vehicleYear?.toString() || '',
           vehicleMake: order.vehicleMake || '',
@@ -89,8 +85,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         setFormData({
           orderNumber: '',
           customerName: '',
-          customerEmail: '',
-          customerPhone: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
@@ -104,7 +98,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         });
         setSelectedServices([]);
         setSelectedDealership('');
-        setSelectedContact('');
+        setSelectedAssignedTo('');
       }
     }
   }, [order, open]);
@@ -130,22 +124,29 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     
     setLoading(true);
     try {
-      const [contactsResult, servicesResult] = await Promise.all([
+      // Get users from dealer memberships with their profiles
+      const [usersResult, servicesResult] = await Promise.all([
         supabase
-          .from('dealership_contacts')
-          .select('id, first_name, last_name, email, phone')
-          .eq('dealership_id', parseInt(dealershipId))
-          .eq('status', 'active'),
+          .from('dealer_memberships')
+          .select(`
+            profiles!inner (
+              id,
+              first_name,
+              last_name,
+              email
+            )
+          `)
+          .eq('dealer_id', parseInt(dealershipId))
+          .eq('is_active', true),
         supabase
           .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealershipId) })
       ]);
 
-      if (contactsResult.data) {
-        setContacts(contactsResult.data.map(contact => ({
-          id: contact.id,
-          name: `${contact.first_name} ${contact.last_name}`,
-          email: contact.email,
-          phone: contact.phone
+      if (usersResult.data) {
+        setAssignedUsers(usersResult.data.map((membership: any) => ({
+          id: membership.profiles.id,
+          name: `${membership.profiles.first_name || ''} ${membership.profiles.last_name || ''}`.trim() || membership.profiles.email,
+          email: membership.profiles.email
         })));
       }
 
@@ -161,8 +162,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealership(dealershipId);
-    setSelectedContact('');
-    setContacts([]);
+    setSelectedAssignedTo('');
+    setAssignedUsers([]);
     setServices([]);
     setSelectedServices([]);
     
@@ -171,16 +172,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     }
   };
 
-  const handleContactChange = (contactId: string) => {
-    setSelectedContact(contactId);
-    // Find selected contact and populate form
-    const selectedContactData = contacts.find((c: any) => c.id === contactId);
-    if (selectedContactData) {
+  const handleAssignedToChange = (userId: string) => {
+    setSelectedAssignedTo(userId);
+    // Find selected user and populate form
+    const selectedUserData = assignedUsers.find((u: any) => u.id === userId);
+    if (selectedUserData) {
       setFormData(prev => ({
         ...prev,
-        customerName: selectedContactData.name,
-        customerEmail: selectedContactData.email,
-        customerPhone: selectedContactData.phone
+        customerName: selectedUserData.name
       }));
     }
   };
@@ -245,7 +244,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
           <form onSubmit={handleSubmit} className="space-y-6 pb-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
               
               {/* Dealership & Customer Information */}
               <Card className="border-border">
@@ -274,10 +273,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                    <div>
-                     <Label htmlFor="contact">{t('sales_orders.contact')}</Label>
+                     <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
                       <Select 
-                        value={selectedContact || ""} 
-                        onValueChange={handleContactChange} 
+                        value={selectedAssignedTo || ""} 
+                        onValueChange={handleAssignedToChange} 
                         disabled={loading || !selectedDealership}
                       >
                         <SelectTrigger className="border-input bg-background">
@@ -290,9 +289,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                           } />
                         </SelectTrigger>
                        <SelectContent className="bg-popover border border-border max-h-[200px]">
-                         {contacts.map((contact: any) => (
-                           <SelectItem key={contact.id} value={contact.id}>
-                             {contact.name} - {contact.email}
+                         {assignedUsers.map((user: any) => (
+                           <SelectItem key={user.id} value={user.id}>
+                             {user.name} - {user.email}
                            </SelectItem>
                          ))}
                        </SelectContent>
@@ -308,37 +307,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                        value={formData.customerName}
                        onChange={(e) => handleInputChange('customerName', e.target.value)}
                        className="border-input bg-background"
-                       readOnly={!!selectedContact}
-                       disabled={!!selectedContact}
-                       required
+                       placeholder={t('common.optional')}
+                       readOnly={!!selectedAssignedTo}
+                       disabled={!!selectedAssignedTo}
                      />
-                   </div>
-
-                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <div>
-                       <Label htmlFor="customerEmail">{t('orders.customerEmail')}</Label>
-                       <Input
-                         id="customerEmail"
-                         type="email"
-                         value={formData.customerEmail}
-                         onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                         className="border-input bg-background"
-                         readOnly={!!selectedContact}
-                         disabled={!!selectedContact}
-                       />
-                     </div>
-
-                     <div>
-                       <Label htmlFor="customerPhone">{t('orders.customerPhone')}</Label>
-                       <Input
-                         id="customerPhone"
-                         value={formData.customerPhone}
-                         onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-                         className="border-input bg-background"
-                         readOnly={!!selectedContact}
-                         disabled={!!selectedContact}
-                       />
-                     </div>
                    </div>
                 </CardContent>
               </Card>
@@ -421,9 +393,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                          placeholder={t('due_date.date_placeholder')}
                        />
                      </div>
-                     <div className="text-xs text-muted-foreground">
-                       {t('due_date.validation.business_hours_only')}
-                     </div>
                    </div>
                 </CardContent>
               </Card>
@@ -437,7 +406,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   <div>
                     <Label className="text-sm font-medium">
                       {t('orders.services')} 
-                      {selectedDealership && contacts.length > 0 && (
+                      {selectedDealership && assignedUsers.length > 0 && (
                         <span className="text-muted-foreground ml-1">
                           ({services.length} {t('orders.available')})
                         </span>
