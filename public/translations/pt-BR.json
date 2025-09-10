@@ -935,6 +935,57 @@
     "default_advisor": "Equipe Recon",
     "default_department": "Recon"
   },
+  "recon": {
+    "new_recon_order": "Nova Ordem de Recondicionamento",
+    "order_created_successfully": "Ordem de recondicionamento criada com sucesso",
+    "order_updated_successfully": "Ordem de recondicionamento atualizada com sucesso",
+    "order_deleted_successfully": "Ordem de recondicionamento excluída com sucesso",
+    "error_creating_order": "Erro ao criar ordem de recondicionamento",
+    "error_updating_order": "Erro ao atualizar ordem de recondicionamento",
+    "error_deleting_order": "Erro ao excluir ordem de recondicionamento",
+    "error_fetching_orders": "Erro ao buscar ordens de recondicionamento",
+    "dashboard": {
+      "title": "Dashboard de Recondicionamento",
+      "subtitle": "Desempenho e métricas de recondicionamento de veículos",
+      "updated": "Atualizado",
+      "pending_vehicles": "Veículos Pendentes",
+      "awaiting_work": "Aguardando trabalho de recondicionamento",
+      "in_progress": "Em Andamento",
+      "being_reconditioned": "Sendo recondicionados atualmente",
+      "needs_approval": "Precisa de Aprovação",
+      "manager_review": "Requer revisão do gerente",
+      "high_priority": "Alta Prioridade",
+      "ready_for_sale": "Pronto para Venda",
+      "inventory_value": "Valor total do estoque",
+      "profit_margin": "Margem de Lucro",
+      "average_margin": "Percentual médio de lucro",
+      "avg_profit": "lucro médio por veículo",
+      "roi": "ROI",
+      "return_investment": "Retorno sobre investimento",
+      "high_margin_vehicles": "veículos de alta margem",
+      "cycle_time": "Tempo de Ciclo",
+      "average_completion": "Tempo médio de conclusão",
+      "target": "Meta:",
+      "ready_vehicles": "Veículos prontos para venda",
+      "units_ready": "unidades prontas",
+      "condition_distribution": "Distribuição por Condição",
+      "acquisition_sources": "Fontes de Aquisição"
+    },
+    "condition_grades": {
+      "excellent": "Excelente",
+      "good": "Bom",
+      "fair": "Regular",
+      "poor": "Ruim",
+      "unknown": "Desconhecido"
+    },
+    "acquisition_sources": {
+      "trade-in": "Troca",
+      "auction": "Leilão",
+      "dealer-swap": "Troca entre Dealers", 
+      "lease-return": "Devolução de Leasing",
+      "unknown": "Desconhecido"
+    }
+  },
   "user_presence": {
     "error_initializing": "Erro ao inicializar presença",
     "error_fetching_users": "Erro ao buscar presença dos usuários",

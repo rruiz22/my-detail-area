@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 
 // New improved components
-import { SmartDashboard } from '@/components/sales/SmartDashboard';
+import { ReconDashboard } from '@/components/recon/ReconDashboard';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
@@ -217,7 +217,8 @@ export default function ReconOrders() {
         {/* Main Content Area */}
         <div className="space-y-6">
           {activeFilter === 'dashboard' ? (
-            <SmartDashboard 
+            <ReconDashboard 
+              orders={orders}
               tabCounts={tabCounts as unknown as Record<string, number>} 
               onCardClick={handleCardClick}
             />

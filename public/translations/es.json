@@ -933,6 +933,57 @@
     "default_advisor": "Equipo Recon",
     "default_department": "Recon"
   },
+  "recon": {
+    "new_recon_order": "Nueva Orden de Reacon",
+    "order_created_successfully": "Orden de reacondicionamiento creada exitosamente",
+    "order_updated_successfully": "Orden de reacondicionamiento actualizada exitosamente",
+    "order_deleted_successfully": "Orden de reacondicionamiento eliminada exitosamente",
+    "error_creating_order": "Error al crear orden de reacondicionamiento",
+    "error_updating_order": "Error al actualizar orden de reacondicionamiento",
+    "error_deleting_order": "Error al eliminar orden de reacondicionamiento",
+    "error_fetching_orders": "Error al obtener órdenes de reacondicionamiento",
+    "dashboard": {
+      "title": "Dashboard de Reacondicionamiento",
+      "subtitle": "Rendimiento y métricas de reacondicionamiento de vehículos",
+      "updated": "Actualizado",
+      "pending_vehicles": "Vehículos Pendientes",
+      "awaiting_work": "Esperando trabajo de reacondicionamiento",
+      "in_progress": "En Progreso",
+      "being_reconditioned": "Siendo reacondicionados actualmente",
+      "needs_approval": "Necesita Aprobación",
+      "manager_review": "Requiere revisión del gerente",
+      "high_priority": "Alta Prioridad",
+      "ready_for_sale": "Listo para Venta",
+      "inventory_value": "Valor total del inventario",
+      "profit_margin": "Margen de Ganancia",
+      "average_margin": "Porcentaje promedio de ganancia",
+      "avg_profit": "ganancia promedio por vehículo",
+      "roi": "ROI",
+      "return_investment": "Retorno de inversión",
+      "high_margin_vehicles": "vehículos de alto margen",
+      "cycle_time": "Tiempo de Ciclo",
+      "average_completion": "Tiempo promedio de finalización",
+      "target": "Objetivo:",
+      "ready_vehicles": "Vehículos listos para venta",
+      "units_ready": "unidades listas",
+      "condition_distribution": "Distribución por Condición",
+      "acquisition_sources": "Fuentes de Adquisición"
+    },
+    "condition_grades": {
+      "excellent": "Excelente",
+      "good": "Bueno",
+      "fair": "Regular",
+      "poor": "Malo",
+      "unknown": "Desconocido"
+    },
+    "acquisition_sources": {
+      "trade-in": "Intercambio",
+      "auction": "Subasta",
+      "dealer-swap": "Intercambio entre Dealers",
+      "lease-return": "Devolución de Leasing",
+      "unknown": "Desconocido"
+    }
+  },
   "user_presence": {
     "error_initializing": "Error al inicializar presencia",
     "error_fetching_users": "Error al obtener presencia de usuarios",

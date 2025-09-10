@@ -907,11 +907,62 @@
     "invalid_destination": "Invalid link destination",
     "processing_error": "Error processing link"
   },
-  "recon": {
+  "recon_defaults": {
     "default_customer": "Recon Vehicle",
     "default_service": "Reconditioning",
     "default_advisor": "Recon Team",
     "default_department": "Recon"
+  },
+  "recon": {
+    "new_recon_order": "New Recon Order",
+    "order_created_successfully": "Recon order created successfully",
+    "order_updated_successfully": "Recon order updated successfully", 
+    "order_deleted_successfully": "Recon order deleted successfully",
+    "error_creating_order": "Error creating recon order",
+    "error_updating_order": "Error updating recon order",
+    "error_deleting_order": "Error deleting recon order",
+    "error_fetching_orders": "Error fetching recon orders",
+    "dashboard": {
+      "title": "Reconditioning Dashboard",
+      "subtitle": "Vehicle reconditioning performance and metrics",
+      "updated": "Updated",
+      "pending_vehicles": "Pending Vehicles",
+      "awaiting_work": "Awaiting reconditioning work",
+      "in_progress": "In Progress",
+      "being_reconditioned": "Currently being reconditioned",
+      "needs_approval": "Needs Approval",
+      "manager_review": "Requires manager review",
+      "high_priority": "High Priority",
+      "ready_for_sale": "Ready for Sale",
+      "inventory_value": "Total inventory value",
+      "profit_margin": "Profit Margin",
+      "average_margin": "Average profit percentage",
+      "avg_profit": "avg profit per vehicle",
+      "roi": "ROI",
+      "return_investment": "Return on investment",
+      "high_margin_vehicles": "high-margin vehicles",
+      "cycle_time": "Cycle Time",
+      "average_completion": "Average completion time",
+      "target": "Target:",
+      "ready_vehicles": "Ready for sale vehicles",
+      "units_ready": "units ready",
+      "condition_distribution": "Condition Grade Distribution",
+      "acquisition_sources": "Acquisition Sources"
+    },
+    "condition_grades": {
+      "excellent": "Excellent",
+      "good": "Good", 
+      "fair": "Fair",
+      "poor": "Poor",
+      "unknown": "Unknown"
+    },
+    "acquisition_sources": {
+      "trade-in": "Trade-in",
+      "auction": "Auction",
+      "dealer-swap": "Dealer Swap",
+      "lease-return": "Lease Return",
+      "unknown": "Unknown"
+    }
   },
   "user_presence": {
     "error_initializing": "Error initializing presence",
