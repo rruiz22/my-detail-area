@@ -43,32 +43,11 @@ export default function ServiceOrders() {
     deleteOrder,
   } = useServiceOrderManagement(activeFilter);
 
-  // Auto-refresh every 60 seconds, but skip if there were recent changes
+  // Real-time updates are handled by useServiceOrderManagement hook
+  // Keep lastRefresh for UI purposes  
   useEffect(() => {
-    let lastChangeTime = 0;
-    
-    const interval = setInterval(() => {
-      // Only refresh if there hasn't been a status change in the last 10 seconds
-      const now = Date.now();
-      if (now - lastChangeTime > 10000) {
-        refreshData();
-        setLastRefresh(new Date());
-      }
-    }, 60000);
-
-    // Track when status changes occur
-    const handleStatusChangeEvent = () => {
-      lastChangeTime = Date.now();
-    };
-
-    // Listen for status changes
-    window.addEventListener('orderStatusChanged', handleStatusChangeEvent);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('orderStatusChanged', handleStatusChangeEvent);
-    };
-  }, [refreshData]);
+    setLastRefresh(new Date());
+  }, [orders]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -107,8 +86,7 @@ export default function ServiceOrders() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     await updateOrder(orderId, { status: newStatus });
-    // Dispatch event to notify auto-refresh to pause
-    window.dispatchEvent(new CustomEvent('orderStatusChanged'));
+    // Real-time updates will handle the refresh automatically
   };
 
   const handleCardClick = (filter: string) => {

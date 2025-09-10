@@ -481,6 +481,63 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
     refreshData();
   }, []);
 
+  // Real-time subscription for recon orders
+  useEffect(() => {
+    const channel = supabase
+      .channel('recon_orders_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: 'order_type=eq.recon'
+        },
+        async (payload) => {
+          console.log('Recon order real-time update:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            const newOrder = transformReconOrder(payload.new as any);
+            setOrders(prevOrders => [newOrder, ...prevOrders]);
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedOrder = transformReconOrder(payload.new as any);
+            setOrders(prevOrders => 
+              prevOrders.map(order => 
+                order.id === updatedOrder.id ? updatedOrder : order
+              )
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setOrders(prevOrders => 
+              prevOrders.filter(order => order.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    // Also listen for T2L metrics changes
+    const t2lChannel = supabase
+      .channel('recon_t2l_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'recon_t2l_metrics'
+        },
+        () => {
+          console.log('T2L metrics updated, refreshing data');
+          refreshData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+      supabase.removeChannel(t2lChannel);
+    };
+  }, []);
+
   return {
     orders: filteredOrders,
     tabCounts,

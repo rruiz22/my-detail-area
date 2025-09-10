@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { supabase } from '@/integrations/supabase/client';
 import { T2LMetricsGrid } from './dashboard/T2LMetricsGrid';
 import { ColorTriggerReport } from './dashboard/ColorTriggerReport';
 import { WorkflowStatusGrid } from './dashboard/WorkflowStatusGrid';
@@ -24,7 +25,7 @@ interface ReconHubDashboardProps {
 
 export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
   const { t } = useTranslation();
-  const [refreshInterval, setRefreshInterval] = useState(30000); // 30 seconds
+  const [isConnected, setIsConnected] = useState(true);
 
   const { 
     dashboardStats,
@@ -39,15 +40,21 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
     alertsLoading 
   } = useReconAlerts({ dealerId });
 
-  // Auto-refresh data
+  // Real-time connection indicator
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Trigger refetch of data
-      window.location.reload();
-    }, refreshInterval);
+    const channel = supabase
+      .channel('recon_hub_connection')
+      .on('presence', { event: 'sync' }, () => {
+        setIsConnected(true);
+      })
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
 
-    return () => clearInterval(interval);
-  }, [refreshInterval]);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -79,22 +86,12 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
           </p>
         </div>
         
-        {/* Refresh Controls */}
+        {/* Connection Status */}
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            Live
+            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+            {isConnected ? t('common.connected') : t('common.disconnected')}
           </Badge>
-          <select 
-            value={refreshInterval}
-            onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            className="text-sm border rounded px-2 py-1"
-          >
-            <option value={10000}>10s</option>
-            <option value={30000}>30s</option>
-            <option value={60000}>1m</option>
-            <option value={300000}>5m</option>
-          </select>
         </div>
       </div>
 

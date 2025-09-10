@@ -46,9 +46,50 @@ export const SystemStatsCard: React.FC<SystemStatsCardProps> = ({ className }) =
   useEffect(() => {
     fetchSystemStats();
     
-    // Refresh stats every 5 minutes
-    const interval = setInterval(fetchSystemStats, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    // Real-time subscription for system changes
+    const channel = supabase
+      .channel('system_stats_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dealerships'
+        },
+        () => {
+          console.log('Dealerships changed, refreshing stats...');
+          fetchSystemStats();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dealer_memberships'
+        },
+        () => {
+          console.log('Memberships changed, refreshing stats...');
+          fetchSystemStats();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders'
+        },
+        () => {
+          console.log('Orders changed, refreshing stats...');
+          fetchSystemStats();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchSystemStats = async () => {

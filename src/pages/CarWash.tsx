@@ -35,14 +35,7 @@ export default function CarWash() {
     deleteOrder,
   } = useCarWashOrderManagement(activeFilter);
 
-  // Auto-refresh every 30 seconds for fast-paced car wash environment
-  useEffect(() => {
-    const interval = setInterval(() => {
-      refreshData();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [refreshData]);
+  // Real-time updates are handled by useCarWashOrderManagement hook
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);

@@ -349,6 +349,51 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     refreshData();
   }, [refreshData]);
 
+  // Real-time subscription for car wash orders
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('car_wash_orders_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: 'order_type=eq.car_wash'
+        },
+        async (payload) => {
+          console.log('Car wash order real-time update:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            const newOrder = transformCarWashOrder(payload.new as any);
+            setOrders(prevOrders => [newOrder, ...prevOrders]);
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedOrder = transformCarWashOrder(payload.new as any);
+            setOrders(prevOrders => 
+              prevOrders.map(order => 
+                order.id === updatedOrder.id ? updatedOrder : order
+              )
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setOrders(prevOrders => 
+              prevOrders.filter(order => order.id !== payload.old.id)
+            );
+          }
+          
+          // Recalculate tab counts
+          const allOrders = [...orders];
+          setTabCounts(calculateTabCounts(allOrders));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, orders, calculateTabCounts]);
+
   return {
     orders,
     tabCounts,

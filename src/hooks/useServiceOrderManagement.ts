@@ -347,6 +347,47 @@ export const useServiceOrderManagement = (activeTab: string) => {
     refreshData();
   }, [refreshData]);
 
+  // Real-time subscription for service orders
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('service_orders_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: 'order_type=eq.service'
+        },
+        async (payload) => {
+          console.log('Service order real-time update:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            const newOrder = transformServiceOrder(payload.new as any);
+            setOrders(prevOrders => [newOrder, ...prevOrders]);
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedOrder = transformServiceOrder(payload.new as any);
+            setOrders(prevOrders => 
+              prevOrders.map(order => 
+                order.id === updatedOrder.id ? updatedOrder : order
+              )
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setOrders(prevOrders => 
+              prevOrders.filter(order => order.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   return {
     orders: filteredOrders,
     tabCounts,

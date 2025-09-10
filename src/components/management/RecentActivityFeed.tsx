@@ -45,9 +45,50 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ classNam
   useEffect(() => {
     fetchRecentActivity();
     
-    // Refresh activity every 2 minutes
-    const interval = setInterval(fetchRecentActivity, 2 * 60 * 1000);
-    return () => clearInterval(interval);
+    // Real-time subscription for dealer activities
+    const channel = supabase
+      .channel('system_activity_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dealerships'
+        },
+        () => {
+          console.log('System activity changed, refreshing...');
+          fetchRecentActivity();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dealer_invitations'
+        },
+        () => {
+          console.log('Invitations changed, refreshing activity...');
+          fetchRecentActivity();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dealer_memberships'
+        },
+        () => {
+          console.log('Memberships changed, refreshing activity...');
+          fetchRecentActivity();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchRecentActivity = async () => {

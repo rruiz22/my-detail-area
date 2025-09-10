@@ -364,6 +364,50 @@ export const useOrderManagement = (activeTab: string) => {
     refreshData();
   }, [refreshData]);
 
+  // Real-time subscription for orders
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('sales_orders_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: 'order_type=eq.sales'
+        },
+        async (payload) => {
+          console.log('Real-time update received:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            const newOrder = transformOrder(payload.new as any);
+            setOrders(prevOrders => [newOrder, ...prevOrders]);
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedOrder = transformOrder(payload.new as any);
+            setOrders(prevOrders => 
+              prevOrders.map(order => 
+                order.id === updatedOrder.id ? updatedOrder : order
+              )
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setOrders(prevOrders => 
+              prevOrders.filter(order => order.id !== payload.old.id)
+            );
+          }
+          
+          // Refresh tab counts after any change
+          refreshData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   return {
     orders,
     tabCounts,

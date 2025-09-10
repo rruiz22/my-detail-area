@@ -38,7 +38,7 @@ interface ActivityItem {
 
 export function LiveActivityFeed({ dealerId, limit = 20 }: LiveActivityFeedProps) {
   const { t } = useTranslation();
-  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [isConnected, setIsConnected] = useState(true);
 
   const { 
     data: activities = [],
@@ -161,8 +161,34 @@ export function LiveActivityFeed({ dealerId, limit = 20 }: LiveActivityFeedProps
         .slice(0, limit);
     },
     enabled: !!dealerId,
-    refetchInterval: autoRefresh ? 30000 : false, // Refresh every 30 seconds if auto-refresh is enabled
+    // Real-time updates are handled via Supabase subscriptions
+    refetchInterval: false
   });
+
+  // Real-time subscription for activity updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('recon_activity_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'order_activity_log'
+        },
+        () => {
+          console.log('Activity changed, refreshing...');
+          refetch();
+        }
+      )
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetch]);
 
   const getActivityType = (activityType: string): ActivityItem['type'] => {
     switch (activityType) {
@@ -264,19 +290,11 @@ export function LiveActivityFeed({ dealerId, limit = 20 }: LiveActivityFeedProps
           <div className="flex items-center gap-2">
             <Badge 
               variant="outline" 
-              className={`text-xs ${autoRefresh ? 'bg-green-50 text-green-700' : ''}`}
+              className={`text-xs ${isConnected ? 'bg-green-50 text-green-700' : ''}`}
             >
-              <div className={`w-2 h-2 rounded-full mr-1 ${autoRefresh ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
-              {autoRefresh ? 'Live' : 'Paused'}
+              <div className={`w-2 h-2 rounded-full mr-1 ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+              {isConnected ? 'Live' : 'Disconnected'}
             </Badge>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setAutoRefresh(!autoRefresh)}
-            >
-              {autoRefresh ? 'Pause' : 'Resume'}
-            </Button>
             
             <Button
               variant="ghost"
