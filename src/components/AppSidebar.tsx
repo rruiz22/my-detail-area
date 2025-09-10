@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -41,6 +41,14 @@ export function AppSidebar() {
     title: t('contacts.title'),
     url: "/contacts",
     icon: Users2
+  }, {
+    title: t('vin_scanner_hub.title'),
+    url: "/vin-scanner",
+    icon: QrCode
+  }, {
+    title: t('nfc_tracking.title'),
+    url: "/nfc-tracking",
+    icon: Nfc
   }];
 
   const secondaryNavItems = [{

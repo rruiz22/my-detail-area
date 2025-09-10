@@ -1689,5 +1689,22 @@
     "description": "Faça login para acessar revendedores, contatos e mais funcionalidades",
     "sign_in": "Entrar",
     "register": "Cadastrar"
+  },
+  "nfc_tracking": {
+    "title": "Rastreamento NFC",
+    "subtitle": "Gerenciar tags NFC e rastreamento de veículos",
+    "dashboard": "Painel",
+    "tag_manager": "Gerenciador de Tags",
+    "vehicle_tracker": "Rastreador de Veículos",
+    "location_heatmap": "Mapa de Calor",
+    "analytics": "Análises"
+  },
+  "nfc_reader": {
+    "scanning": "Escaneando tags NFC...",
+    "found": "Tag NFC encontrada",
+    "error": "Erro ao ler tag NFC",
+    "not_supported": "NFC não suportado neste dispositivo",
+    "permission_required": "Permissão NFC necessária",
+    "enable_nfc": "Por favor habilite NFC nas configurações do dispositivo"
   }
 }

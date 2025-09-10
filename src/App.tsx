@@ -21,6 +21,8 @@ import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import Management from "./pages/Management";
 import QRRedirect from "./pages/QRRedirect";
+import VinScanner from "./pages/VinScanner";
+import NFCTracking from "./pages/NFCTracking";
 import Auth from "./pages/Auth";
 import { InvitationAccept } from "./pages/InvitationAccept";
 import NotFound from "./pages/NotFound";
@@ -53,6 +55,8 @@ const App = () => (
                 <Route path="/recon" element={<ProtectedRoute><ReconOrders /></ProtectedRoute>} />
                 <Route path="/carwash" element={<ProtectedRoute><CarWash /></ProtectedRoute>} />
                 <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                <Route path="/vin-scanner" element={<ProtectedRoute><VinScanner /></ProtectedRoute>} />
+                <Route path="/nfc-tracking" element={<ProtectedRoute><NFCTracking /></ProtectedRoute>} />
                 <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/dealerships" element={<ProtectedRoute><Dealerships /></ProtectedRoute>} />

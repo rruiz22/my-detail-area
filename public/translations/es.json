@@ -1684,5 +1684,22 @@
     "description": "Inicia sesión para acceder a dealers, contactos y más funciones",
     "sign_in": "Iniciar Sesión",
     "register": "Registrarse"
+  },
+  "nfc_tracking": {
+    "title": "Seguimiento NFC",
+    "subtitle": "Gestionar etiquetas NFC y seguimiento de vehículos",
+    "dashboard": "Panel",
+    "tag_manager": "Gestor de Etiquetas",
+    "vehicle_tracker": "Rastreador de Vehículos",
+    "location_heatmap": "Mapa de Calor",
+    "analytics": "Análisis"
+  },
+  "nfc_reader": {
+    "scanning": "Escaneando etiquetas NFC...",
+    "found": "Etiqueta NFC encontrada",
+    "error": "Error al leer etiqueta NFC",
+    "not_supported": "NFC no compatible en este dispositivo",
+    "permission_required": "Permiso NFC requerido",
+    "enable_nfc": "Por favor habilite NFC en configuración del dispositivo"
   }
 }

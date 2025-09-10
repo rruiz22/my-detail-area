@@ -1721,5 +1721,22 @@
     "description": "Sign in to access dealers, contacts and more features",
     "sign_in": "Sign In", 
     "register": "Register"
+  },
+  "nfc_tracking": {
+    "title": "NFC Tracking",
+    "subtitle": "Manage NFC tags and vehicle tracking",
+    "dashboard": "Dashboard",
+    "tag_manager": "Tag Manager",
+    "vehicle_tracker": "Vehicle Tracker",
+    "location_heatmap": "Location Heatmap",
+    "analytics": "Analytics"
+  },
+  "nfc_reader": {
+    "scanning": "Scanning for NFC tags...",
+    "found": "NFC tag found",
+    "error": "Failed to read NFC tag",
+    "not_supported": "NFC not supported on this device",
+    "permission_required": "NFC permission required",
+    "enable_nfc": "Please enable NFC in device settings"
   }
 }
