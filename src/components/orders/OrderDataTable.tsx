@@ -245,7 +245,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </div>
                     <div className="flex items-center text-sm text-muted-foreground mt-1">
                       <Building2 className="w-4 h-4 mr-2 text-blue-600" />
-                      <span>{order.dealershipName || 'Premium Auto'}</span>
+                      <span>{order.dealershipName || 'Unknown Dealer'}</span>
                     </div>
                   </div>
                   <StatusBadgeInteractive
@@ -279,7 +279,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </div>
                     <div className="flex items-center text-xs text-muted-foreground mt-1">
                       <User className="w-3 h-3 mr-1 text-green-600" />
-                      {order.advisor || 'Unassigned'}
+                      {order.assignedTo || 'Unassigned'}
                     </div>
                   </div>
                 </div>
@@ -403,7 +403,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </div>
                     <div className="flex items-center justify-center text-sm text-muted-foreground">
                       <Building2 className="w-3 h-3 mr-1 text-blue-600" />
-                      <span>{order.dealershipName || 'Premium Auto'}</span>
+                      <span>{order.dealershipName || 'Unknown Dealer'}</span>
                     </div>
                   </div>
                 </TableCell>
@@ -416,7 +416,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </div>
                     <div className="flex items-center justify-center text-sm text-muted-foreground">
                       <User className="w-3 h-3 mr-1 text-green-600" />
-                      <span>{order.advisor || 'Unassigned'}</span>
+                      <span>{order.assignedTo || 'Unassigned'}</span>
                     </div>
                   </div>
                 </TableCell>

@@ -28,10 +28,17 @@ export interface CarWashOrder {
   customOrderNumber?: string;
   dealerId: number;
   tag?: string;
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  assignedTo?: string;
+  dueTime?: string;
+  dueDate?: string;
 }
 
 // Transform Supabase order to component order
-const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
+const transformCarWashOrder = (supabaseOrder: any): CarWashOrder => ({
   id: supabaseOrder.id,
   vehicleYear: supabaseOrder.vehicle_year || undefined,
   vehicleMake: supabaseOrder.vehicle_make || undefined,
@@ -50,6 +57,17 @@ const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
   dealerId: supabaseOrder.dealer_id,
   tag: supabaseOrder.tag || undefined,
+  // Enhanced fields from manual JOINs (will be set in refreshData)
+  dealershipName: 'Unknown Dealer',
+  assignedGroupName: undefined,
+  createdByGroupName: undefined,
+  assignedTo: 'Unassigned',
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  }) : undefined,
+  dueDate: supabaseOrder.sla_deadline || supabaseOrder.due_date || undefined,
 });
 
 export const useCarWashOrderManagement = (activeTab: string) => {
@@ -177,7 +195,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
-      // Fetch car wash orders from Supabase for the current user's dealer
+      // Fetch car wash orders from Supabase (basic query first)
       const { data: orders, error } = await supabase
         .from('orders')
         .select('*')
@@ -189,7 +207,39 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         return;
       }
 
-      const allOrders = (orders || []).map(transformCarWashOrder);
+      // Fetch dealerships data separately
+      const { data: dealerships, error: dealershipsError } = await supabase
+        .from('dealerships')
+        .select('id, name');
+
+      if (dealershipsError) {
+        console.error('Error fetching dealerships:', dealershipsError);
+      }
+
+      // Fetch dealer groups data separately
+      const { data: dealerGroups, error: groupsError } = await supabase
+        .from('dealer_groups')
+        .select('id, name');
+
+      if (groupsError) {
+        console.error('Error fetching dealer groups:', groupsError);
+      }
+
+      // Create lookup maps for better performance
+      const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
+      const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
+
+      // Transform orders with joined data
+      const allOrders = (orders || []).map(order => {
+        const transformedOrder = transformCarWashOrder(order);
+        // Add joined data manually
+        transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
+        transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+        transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
+        return transformedOrder;
+      });
+
       const filtered = filterOrders(allOrders, activeTab, filters);
       
       setOrders(filtered);

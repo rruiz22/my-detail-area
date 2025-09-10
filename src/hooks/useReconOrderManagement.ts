@@ -39,6 +39,12 @@ export interface ReconOrder {
   acquisitionSource?: string; // trade-in, auction, dealer-swap, etc.
   conditionGrade?: string; // excellent, good, fair, poor
   reconCategory?: string; // mechanical, cosmetic, full-recon, detail-only
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  assignedTo?: string;
+  dueTime?: string;
 }
 
 interface ReconOrderFilters {
@@ -100,6 +106,16 @@ const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
   acquisitionSource: supabaseOrder.services?.find((s: any) => s.type === 'acquisition_source')?.value || 'trade-in',
   conditionGrade: supabaseOrder.services?.find((s: any) => s.type === 'condition_grade')?.value || 'good',
   reconCategory: supabaseOrder.services?.find((s: any) => s.type === 'recon_category')?.value || 'full-recon',
+  // Enhanced fields from manual JOINs (will be set in refreshData)
+  dealershipName: 'Unknown Dealer',
+  assignedGroupName: undefined,
+  createdByGroupName: undefined,
+  assignedTo: 'Unassigned',
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  }) : undefined,
 });
 
 export const useReconOrderManagement = (activeTab: string = 'all') => {
@@ -241,7 +257,8 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
     try {
       setLoading(true);
       
-      const { data, error } = await supabase
+      // Fetch recon orders from Supabase (basic query first)
+      const { data: orders, error } = await supabase
         .from('orders')
         .select('*')
         .eq('order_type', 'recon')
@@ -257,7 +274,39 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         return;
       }
 
-      const transformedOrders = data.map(transformReconOrder);
+      // Fetch dealerships data separately
+      const { data: dealerships, error: dealershipsError } = await supabase
+        .from('dealerships')
+        .select('id, name');
+
+      if (dealershipsError) {
+        console.error('Error fetching dealerships:', dealershipsError);
+      }
+
+      // Fetch dealer groups data separately
+      const { data: dealerGroups, error: groupsError } = await supabase
+        .from('dealer_groups')
+        .select('id, name');
+
+      if (groupsError) {
+        console.error('Error fetching dealer groups:', groupsError);
+      }
+
+      // Create lookup maps for better performance
+      const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
+      const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
+
+      // Transform orders with joined data
+      const transformedOrders = (orders || []).map(order => {
+        const transformedOrder = transformReconOrder(order);
+        // Add joined data manually
+        transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
+        transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+        transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
+        return transformedOrder;
+      });
+
       setOrders(transformedOrders);
     } catch (error) {
       console.error('Error fetching recon orders:', error);
