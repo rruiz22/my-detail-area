@@ -1400,6 +1400,96 @@ export type Database = {
           },
         ]
       }
+      recon_media: {
+        Row: {
+          category: string | null
+          created_at: string
+          file_name: string
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          is_primary: boolean | null
+          metadata: Json | null
+          mime_type: string | null
+          sort_order: number | null
+          upload_context: string | null
+          uploaded_by: string
+          vehicle_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          file_name: string
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          is_primary?: boolean | null
+          metadata?: Json | null
+          mime_type?: string | null
+          sort_order?: number | null
+          upload_context?: string | null
+          uploaded_by: string
+          vehicle_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          file_name?: string
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          is_primary?: boolean | null
+          metadata?: Json | null
+          mime_type?: string | null
+          sort_order?: number | null
+          upload_context?: string | null
+          uploaded_by?: string
+          vehicle_id?: string
+        }
+        Relationships: []
+      }
+      recon_notes: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          is_internal: boolean | null
+          mentions: Json | null
+          note_type: string | null
+          tags: Json | null
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_internal?: boolean | null
+          mentions?: Json | null
+          note_type?: string | null
+          tags?: Json | null
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_internal?: boolean | null
+          mentions?: Json | null
+          note_type?: string | null
+          tags?: Json | null
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: []
+      }
       recon_step_instances: {
         Row: {
           assigned_group_id: string | null
@@ -1466,6 +1556,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      recon_steps: {
+        Row: {
+          color: string | null
+          created_at: string
+          dealer_id: number | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          is_default: boolean
+          name: string
+          order_index: number
+          requires_approval: boolean | null
+          sla_hours: number | null
+          step_type: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          dealer_id?: number | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name: string
+          order_index?: number
+          requires_approval?: boolean | null
+          sla_hours?: number | null
+          step_type?: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          dealer_id?: number | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name?: string
+          order_index?: number
+          requires_approval?: boolean | null
+          sla_hours?: number | null
+          step_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       recon_t2l_metrics: {
         Row: {
@@ -1549,6 +1690,105 @@ export type Database = {
           },
         ]
       }
+      recon_vehicle_step_history: {
+        Row: {
+          changed_by: string | null
+          days_in_step: number | null
+          entered_at: string
+          exited_at: string | null
+          hours_in_step: number | null
+          id: string
+          notes: string | null
+          step_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          changed_by?: string | null
+          days_in_step?: number | null
+          entered_at?: string
+          exited_at?: string | null
+          hours_in_step?: number | null
+          id?: string
+          notes?: string | null
+          step_id: string
+          vehicle_id: string
+        }
+        Update: {
+          changed_by?: string | null
+          days_in_step?: number | null
+          entered_at?: string
+          exited_at?: string | null
+          hours_in_step?: number | null
+          id?: string
+          notes?: string | null
+          step_id?: string
+          vehicle_id?: string
+        }
+        Relationships: []
+      }
+      recon_vehicles: {
+        Row: {
+          acquisition_date: string | null
+          created_at: string
+          created_by: string | null
+          current_step_id: string | null
+          dealer_id: number
+          id: string
+          notes: string | null
+          priority: string | null
+          retail_value: number | null
+          status: string
+          stock_number: string
+          target_completion_date: string | null
+          updated_at: string
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_trim: string | null
+          vehicle_year: number | null
+          vin: string
+        }
+        Insert: {
+          acquisition_date?: string | null
+          created_at?: string
+          created_by?: string | null
+          current_step_id?: string | null
+          dealer_id: number
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          retail_value?: number | null
+          status?: string
+          stock_number: string
+          target_completion_date?: string | null
+          updated_at?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin: string
+        }
+        Update: {
+          acquisition_date?: string | null
+          created_at?: string
+          created_by?: string | null
+          current_step_id?: string | null
+          dealer_id?: number
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          retail_value?: number | null
+          status?: string
+          stock_number?: string
+          target_completion_date?: string | null
+          updated_at?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin?: string
+        }
+        Relationships: []
+      }
       recon_vendors: {
         Row: {
           contact_info: Json | null
@@ -1595,6 +1835,87 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      recon_work_items: {
+        Row: {
+          actual_cost: number | null
+          actual_hours: number | null
+          approval_required: boolean | null
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
+          assigned_to: string | null
+          assigned_vendor_id: string | null
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          due_date: string | null
+          estimated_cost: number | null
+          estimated_hours: number | null
+          id: string
+          notes: string | null
+          priority: string | null
+          started_at: string | null
+          status: string
+          title: string
+          updated_at: string
+          vehicle_id: string
+          work_type: string | null
+        }
+        Insert: {
+          actual_cost?: number | null
+          actual_hours?: number | null
+          approval_required?: boolean | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_to?: string | null
+          assigned_vendor_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          started_at?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          vehicle_id: string
+          work_type?: string | null
+        }
+        Update: {
+          actual_cost?: number | null
+          actual_hours?: number | null
+          approval_required?: boolean | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_to?: string | null
+          assigned_vendor_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          started_at?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          vehicle_id?: string
+          work_type?: string | null
+        }
+        Relationships: []
       }
       recon_workflow_steps: {
         Row: {
