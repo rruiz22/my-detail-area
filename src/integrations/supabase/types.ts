@@ -859,6 +859,179 @@ export type Database = {
         }
         Relationships: []
       }
+      nfc_scans: {
+        Row: {
+          action_data: Json
+          action_type: string
+          context_data: Json
+          device_info: Json
+          id: string
+          is_unique_scan: boolean
+          order_id: string | null
+          scan_address: string | null
+          scan_location: unknown | null
+          scanned_at: string
+          scanned_by: string
+          session_id: string | null
+          tag_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          action_data?: Json
+          action_type?: string
+          context_data?: Json
+          device_info?: Json
+          id?: string
+          is_unique_scan?: boolean
+          order_id?: string | null
+          scan_address?: string | null
+          scan_location?: unknown | null
+          scanned_at?: string
+          scanned_by: string
+          session_id?: string | null
+          tag_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          action_data?: Json
+          action_type?: string
+          context_data?: Json
+          device_info?: Json
+          id?: string
+          is_unique_scan?: boolean
+          order_id?: string | null
+          scan_address?: string | null
+          scan_location?: unknown | null
+          scanned_at?: string
+          scanned_by?: string
+          session_id?: string | null
+          tag_id?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nfc_scans_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "nfc_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nfc_tags: {
+        Row: {
+          created_at: string
+          created_by: string
+          dealer_id: number
+          description: string | null
+          id: string
+          is_active: boolean
+          is_permanent: boolean
+          last_scanned_at: string | null
+          location_coordinates: unknown | null
+          location_name: string | null
+          name: string
+          order_id: string | null
+          scan_count: number
+          tag_data: Json
+          tag_type: string
+          tag_uid: string
+          updated_at: string
+          vehicle_vin: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          dealer_id: number
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          is_permanent?: boolean
+          last_scanned_at?: string | null
+          location_coordinates?: unknown | null
+          location_name?: string | null
+          name: string
+          order_id?: string | null
+          scan_count?: number
+          tag_data?: Json
+          tag_type?: string
+          tag_uid: string
+          updated_at?: string
+          vehicle_vin?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          dealer_id?: number
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          is_permanent?: boolean
+          last_scanned_at?: string | null
+          location_coordinates?: unknown | null
+          location_name?: string | null
+          name?: string
+          order_id?: string | null
+          scan_count?: number
+          tag_data?: Json
+          tag_type?: string
+          tag_uid?: string
+          updated_at?: string
+          vehicle_vin?: string | null
+        }
+        Relationships: []
+      }
+      nfc_workflows: {
+        Row: {
+          actions: Json
+          created_at: string
+          created_by: string
+          dealer_id: number
+          description: string | null
+          execution_count: number
+          id: string
+          is_active: boolean
+          last_executed_at: string | null
+          name: string
+          priority: number
+          trigger_conditions: Json
+          trigger_tag_type: string
+          updated_at: string
+        }
+        Insert: {
+          actions?: Json
+          created_at?: string
+          created_by: string
+          dealer_id: number
+          description?: string | null
+          execution_count?: number
+          id?: string
+          is_active?: boolean
+          last_executed_at?: string | null
+          name: string
+          priority?: number
+          trigger_conditions?: Json
+          trigger_tag_type: string
+          updated_at?: string
+        }
+        Update: {
+          actions?: Json
+          created_at?: string
+          created_by?: string
+          dealer_id?: number
+          description?: string | null
+          execution_count?: number
+          id?: string
+          is_active?: boolean
+          last_executed_at?: string | null
+          name?: string
+          priority?: number
+          trigger_conditions?: Json
+          trigger_tag_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_activity_log: {
         Row: {
           activity_type: string
@@ -1821,6 +1994,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      execute_nfc_workflows: {
+        Args: { p_scan_data?: Json; p_tag_id: string }
+        Returns: Json
+      }
       generate_custom_order_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -1913,6 +2090,22 @@ export type Database = {
           pending_invitations: number
           total_orders: number
           total_users: number
+        }[]
+      }
+      get_nfc_analytics: {
+        Args: {
+          p_dealer_id: number
+          p_end_date?: string
+          p_start_date?: string
+        }
+        Returns: {
+          active_tags: number
+          avg_scans_per_tag: number
+          daily_scan_trends: Json
+          popular_locations: Json
+          total_scans: number
+          total_tags: number
+          unique_scanners: number
         }[]
       }
       get_orders_analytics: {
