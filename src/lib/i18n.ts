@@ -19,7 +19,29 @@ i18n
 const loadLanguage = async (language: string) => {
   try {
     const response = await fetch(`/translations/${language}.json`);
-    const translations = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const text = await response.text();
+    
+    // Validate JSON before parsing
+    if (!text.trim()) {
+      throw new Error('Empty response received');
+    }
+    
+    // Try to parse JSON with better error handling
+    let translations;
+    try {
+      translations = JSON.parse(text);
+    } catch (parseError) {
+      console.error(`JSON parse error in ${language}.json:`, parseError);
+      console.error('Response text length:', text.length);
+      console.error('First 100 chars:', text.substring(0, 100));
+      console.error('Last 100 chars:', text.substring(text.length - 100));
+      throw new Error(`Invalid JSON in ${language}.json: ${parseError.message}`);
+    }
     
     if (!i18n.hasResourceBundle(language, 'translation')) {
       i18n.addResourceBundle(language, 'translation', translations);

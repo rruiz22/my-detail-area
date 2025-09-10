@@ -47,7 +47,7 @@ export interface ServiceOrderFilters {
   dateRange: { from: any; to: any };
 }
 
-// Transform Supabase order to ServiceOrder (with JOIN data)
+// Transform Supabase order to ServiceOrder
 const transformServiceOrder = (supabaseOrder: any): ServiceOrder => ({
   id: supabaseOrder.id,
   orderNumber: supabaseOrder.order_number,
@@ -68,13 +68,13 @@ const transformServiceOrder = (supabaseOrder: any): ServiceOrder => ({
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
   dueDate: supabaseOrder.sla_deadline || undefined,
-  assignedTo: supabaseOrder.assigned_group?.name || 'Unassigned',
+  assignedTo: 'Unassigned', // Will be overwritten in refreshData
   notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
-  // Enhanced fields from JOINs
-  dealershipName: supabaseOrder.dealerships?.name || 'Unknown Dealer',
-  assignedGroupName: supabaseOrder.assigned_group?.name || undefined,
-  createdByGroupName: supabaseOrder.created_by_group?.name || undefined,
+  // Enhanced fields from manual JOINs (will be set in refreshData)
+  dealershipName: 'Unknown Dealer',
+  assignedGroupName: undefined,
+  createdByGroupName: undefined,
   dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
     hour: '2-digit', 
     minute: '2-digit',
@@ -198,15 +198,10 @@ export const useServiceOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
-      // Fetch service orders from Supabase with JOINs for dealer and group names
+      // Fetch service orders from Supabase (basic query first)
       const { data: orders, error } = await supabase
         .from('orders')
-        .select(`
-          *,
-          dealerships!inner(name),
-          assigned_group:dealer_groups!assigned_group_id(name),
-          created_by_group:dealer_groups!created_by_group_id(name)
-        `)
+        .select('*')
         .eq('order_type', 'service')
         .order('created_at', { ascending: false });
 
@@ -215,7 +210,39 @@ export const useServiceOrderManagement = (activeTab: string) => {
         return;
       }
 
-      const serviceOrders = (orders || []).map(transformServiceOrder);
+      // Fetch dealerships data separately
+      const { data: dealerships, error: dealershipsError } = await supabase
+        .from('dealerships')
+        .select('id, name');
+
+      if (dealershipsError) {
+        console.error('Error fetching dealerships:', dealershipsError);
+      }
+
+      // Fetch dealer groups data separately
+      const { data: dealerGroups, error: groupsError } = await supabase
+        .from('dealer_groups')
+        .select('id, name');
+
+      if (groupsError) {
+        console.error('Error fetching dealer groups:', groupsError);
+      }
+
+      // Create lookup maps for better performance
+      const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
+      const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
+
+      // Transform orders with joined data
+      const serviceOrders = (orders || []).map(order => {
+        const transformedOrder = transformServiceOrder(order);
+        // Add joined data manually
+        transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
+        transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+        transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
+        return transformedOrder;
+      });
+
       setOrders(serviceOrders);
     } catch (error) {
       console.error('Error in refreshData:', error);
