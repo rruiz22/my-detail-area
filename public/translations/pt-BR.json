@@ -1902,6 +1902,46 @@
       "vin": "VIN",
       "location": "Localização",
       "url": "URL"
+    },
+    "templates": {
+      "title": "Modelos de Tags NFC",
+      "subtitle": "Escolha entre modelos pré-configurados para casos de uso comuns",
+      "quick_create": "Criar Rápido",
+      "create_tag": "Criar Tag",
+      "vehicle_delivery": {
+        "name": "Entrega de Veículo",
+        "description": "Rastrear veículos desde as vendas até a entrega ao cliente"
+      },
+      "service_bay": {
+        "name": "Baía de Serviço",
+        "description": "Rastreamento da área de trabalho do departamento de serviço"
+      },
+      "parts_inventory": {
+        "name": "Inventário de Peças",
+        "description": "Rastrear peças e movimento de inventário"
+      },
+      "quality_control": {
+        "name": "Controle de Qualidade",
+        "description": "Pontos de inspeção e validação de qualidade"
+      },
+      "customer_area": {
+        "name": "Área do Cliente",
+        "description": "Atendimento ao cliente e áreas de espera"
+      },
+      "time_tracking": {
+        "name": "Controle de Tempo",
+        "description": "Relógio de ponto e presença de funcionários"
+      },
+      "form": {
+        "name": "Nome da Tag",
+        "name_placeholder": "Digite um nome descritivo para esta tag",
+        "vin": "VIN do Veículo",
+        "vin_placeholder": "Digite o número VIN do veículo",
+        "location": "Nome da Localização",
+        "location_placeholder": "Digite o nome da localização",
+        "description": "Descrição",
+        "description_placeholder": "Digite detalhes adicionais sobre esta tag"
+      }
     }
   }
 }

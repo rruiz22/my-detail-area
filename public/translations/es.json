@@ -1897,6 +1897,46 @@
       "vin": "VIN",
       "location": "Ubicación",
       "url": "URL"
+    },
+    "templates": {
+      "title": "Plantillas de Etiquetas NFC",
+      "subtitle": "Elige entre plantillas preconfiguradas para casos de uso comunes",
+      "quick_create": "Crear Rápido",
+      "create_tag": "Crear Etiqueta",
+      "vehicle_delivery": {
+        "name": "Entrega de Vehículo",
+        "description": "Rastrear vehículos desde ventas hasta entrega al cliente"
+      },
+      "service_bay": {
+        "name": "Bahía de Servicio",
+        "description": "Seguimiento del área de trabajo del departamento de servicio"
+      },
+      "parts_inventory": {
+        "name": "Inventario de Repuestos",
+        "description": "Rastrear repuestos y movimiento de inventario"
+      },
+      "quality_control": {
+        "name": "Control de Calidad",
+        "description": "Puntos de inspección y validación de calidad"
+      },
+      "customer_area": {
+        "name": "Área de Clientes",
+        "description": "Servicio al cliente y áreas de espera"
+      },
+      "time_tracking": {
+        "name": "Control de Tiempo",
+        "description": "Reloj de tiempo y asistencia de empleados"
+      },
+      "form": {
+        "name": "Nombre de Etiqueta",
+        "name_placeholder": "Ingresa un nombre descriptivo para esta etiqueta",
+        "vin": "VIN del Vehículo",
+        "vin_placeholder": "Ingresa el número VIN del vehículo",
+        "location": "Nombre de Ubicación",
+        "location_placeholder": "Ingresa el nombre de la ubicación",
+        "description": "Descripción",
+        "description_placeholder": "Ingresa detalles adicionales sobre esta etiqueta"
+      }
     }
   }
 }

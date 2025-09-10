@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { NFCTag, useNFCManagement } from '@/hooks/useNFCManagement';
 import { NFCPhysicalWriter } from './NFCPhysicalWriter';
 import { NFCPhysicalReader } from './NFCPhysicalReader';
+import { NFCTagTemplates } from './NFCTagTemplates';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
@@ -69,6 +70,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
   const [isWriterDialogOpen, setIsWriterDialogOpen] = useState(false);
   const [isReaderDialogOpen, setIsReaderDialogOpen] = useState(false);
   const [writingTag, setWritingTag] = useState<NFCTag | null>(null);
+  const [isTemplatesDialogOpen, setIsTemplatesDialogOpen] = useState(false);
   
   const [formData, setFormData] = useState<TagFormData>({
     name: '',
@@ -306,6 +308,14 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline"
+            onClick={() => setIsTemplatesDialogOpen(true)}
+            className="mr-2"
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            {t('nfc.templates.quick_create')}
+          </Button>
           <Button 
             variant="outline"
             onClick={() => setIsReaderDialogOpen(true)}
@@ -553,6 +563,16 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
         isOpen={isReaderDialogOpen}
         onClose={() => setIsReaderDialogOpen(false)}
         onTagRead={(tagData) => console.log('Tag read:', tagData)}
+      />
+
+      {/* NFC Tag Templates */}
+      <NFCTagTemplates
+        isOpen={isTemplatesDialogOpen}
+        onClose={() => setIsTemplatesDialogOpen(false)}
+        onTemplateSelect={() => {
+          // Refresh tags after creating from template
+          loadTags();
+        }}
       />
     </div>
   );

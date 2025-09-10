@@ -1934,6 +1934,46 @@
       "vin": "VIN",
       "location": "Location",
       "url": "URL"
+    },
+    "templates": {
+      "title": "NFC Tag Templates",
+      "subtitle": "Choose from pre-configured templates for common use cases",
+      "quick_create": "Quick Create",
+      "create_tag": "Create Tag",
+      "vehicle_delivery": {
+        "name": "Vehicle Delivery",
+        "description": "Track vehicles from sales to customer delivery"
+      },
+      "service_bay": {
+        "name": "Service Bay",
+        "description": "Service department work area tracking"
+      },
+      "parts_inventory": {
+        "name": "Parts Inventory",
+        "description": "Track parts and inventory movement"
+      },
+      "quality_control": {
+        "name": "Quality Control",
+        "description": "Quality inspection and validation points"
+      },
+      "customer_area": {
+        "name": "Customer Area",
+        "description": "Customer service and waiting areas"
+      },
+      "time_tracking": {
+        "name": "Time Tracking",
+        "description": "Employee time clock and attendance"
+      },
+      "form": {
+        "name": "Tag Name",
+        "name_placeholder": "Enter a descriptive name for this tag",
+        "vin": "Vehicle VIN",
+        "vin_placeholder": "Enter the vehicle VIN number",
+        "location": "Location Name",
+        "location_placeholder": "Enter the location name",
+        "description": "Description",
+        "description_placeholder": "Enter additional details about this tag"
+      }
     }
   }
 }
