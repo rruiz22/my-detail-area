@@ -1722,6 +1722,59 @@
     "sign_in": "Sign In", 
     "register": "Register"
   },
+  "vin_scanner_hub": {
+    "title": "VIN Scanner",
+    "subtitle": "Advanced VIN scanning and management",
+    "scan_camera": "Scan with Camera",
+    "scan_camera_desc": "Use device camera to scan VIN codes",
+    "upload_image": "Upload Image", 
+    "upload_image_desc": "Upload photo containing VIN code",
+    "quick_mode": "Quick Mode",
+    "quick_mode_desc": "Fast scanning with instant results",
+    "analytics": "Analytics",
+    "analytics_desc": "Performance metrics and insights",
+    "manual_input_label": "Manual VIN Entry",
+    "manual_input_placeholder": "Enter 17-character VIN...",
+    "current_vin": "Current VIN",
+    "scanner": "Scanner",
+    "scan": "Scan",
+    "quick": "Quick",
+    "history": "History", 
+    "hist": "Hist",
+    "stats": "Stats",
+    "advanced_scanner": "Advanced VIN Scanner",
+    "ready_to_scan": "Ready to Scan",
+    "scanner_description": "Use advanced AI-powered scanning to detect VIN codes with high accuracy",
+    "start_scanning": "Start Scanning",
+    "vin_detected_success": "VIN detected successfully!",
+    "confidence": "Confidence",
+    "ai_powered": "AI Powered",
+    "multi_engine": "Multi-Engine",
+    "mobile_optimized": "Mobile Optimized",
+    "tablet_optimized": "Tablet Optimized", 
+    "desktop_optimized": "Desktop Optimized"
+  },
+  "vin_scanner_errors": {
+    "no_vin_found": "No VIN codes detected in the image",
+    "processing_error": "Error processing the image",
+    "vin_input_placeholder": "Enter VIN (17 characters)"
+  },
+  "modern_vin_scanner": {
+    "title": "Advanced VIN Scanner",
+    "subtitle": "AI-powered vehicle identification",
+    "confidence": {
+      "excellent": "Excellent", 
+      "good": "Good",
+      "detecting": "Detecting",
+      "ready_capture": "Ready to capture",
+      "adjust_position": "Adjust position for better detection",
+      "position_vin": "Position VIN sticker in camera view"
+    },
+    "errors": {
+      "no_vin_detected": "No VIN codes detected",
+      "processing_failed": "Image processing failed"
+    }
+  },
   "nfc_tracking": {
     "title": "NFC Tracking",
     "subtitle": "Manage NFC tags and vehicle tracking",

@@ -1685,6 +1685,59 @@
     "sign_in": "Iniciar Sesión",
     "register": "Registrarse"
   },
+  "vin_scanner_hub": {
+    "title": "Escáner VIN",
+    "subtitle": "Escaneado y gestión avanzada de VIN",
+    "scan_camera": "Escanear con Cámara",
+    "scan_camera_desc": "Usar cámara del dispositivo para escanear códigos VIN",
+    "upload_image": "Subir Imagen",
+    "upload_image_desc": "Subir foto que contenga código VIN",
+    "quick_mode": "Modo Rápido",
+    "quick_mode_desc": "Escaneado rápido con resultados instantáneos",
+    "analytics": "Análisis",
+    "analytics_desc": "Métricas de rendimiento y estadísticas",
+    "manual_input_label": "Entrada Manual de VIN",
+    "manual_input_placeholder": "Ingrese VIN de 17 caracteres...",
+    "current_vin": "VIN Actual",
+    "scanner": "Escáner",
+    "scan": "Escanear",
+    "quick": "Rápido",
+    "history": "Historial",
+    "hist": "Hist",
+    "stats": "Stats",
+    "advanced_scanner": "Escáner VIN Avanzado",
+    "ready_to_scan": "Listo para Escanear",
+    "scanner_description": "Use escaneado avanzado con IA para detectar códigos VIN con alta precisión",
+    "start_scanning": "Iniciar Escaneado",
+    "vin_detected_success": "¡VIN detectado exitosamente!",
+    "confidence": "Confianza",
+    "ai_powered": "Potenciado por IA",
+    "multi_engine": "Multi-Motor",
+    "mobile_optimized": "Optimizado Móvil",
+    "tablet_optimized": "Optimizado Tablet",
+    "desktop_optimized": "Optimizado Escritorio"
+  },
+  "vin_scanner_errors": {
+    "no_vin_found": "No se detectaron códigos VIN en la imagen",
+    "processing_error": "Error al procesar la imagen",
+    "vin_input_placeholder": "Ingrese VIN (17 caracteres)"
+  },
+  "modern_vin_scanner": {
+    "title": "Escáner VIN Avanzado",
+    "subtitle": "Identificación de vehículos con IA",
+    "confidence": {
+      "excellent": "Excelente",
+      "good": "Bueno",
+      "detecting": "Detectando",
+      "ready_capture": "Listo para capturar",
+      "adjust_position": "Ajuste la posición para mejor detección",
+      "position_vin": "Posicione la etiqueta VIN en la vista de la cámara"
+    },
+    "errors": {
+      "no_vin_detected": "No se detectaron códigos VIN",
+      "processing_failed": "Falló el procesamiento de imagen"
+    }
+  },
   "nfc_tracking": {
     "title": "Seguimiento NFC",
     "subtitle": "Gestionar etiquetas NFC y seguimiento de vehículos",

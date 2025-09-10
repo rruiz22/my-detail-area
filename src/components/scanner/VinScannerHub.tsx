@@ -21,6 +21,9 @@ import {
 import { ModernVinScanner } from './modern/ModernVinScanner';
 import { VinScannerHistory } from './analytics/VinScannerHistory';
 import { ScannerAnalytics } from './analytics/ScannerAnalytics';
+import { VinStatistics } from './enhanced/VinStatistics';
+import { VinHistory } from './enhanced/VinHistory';
+import { VinAnalyzer } from './enhanced/VinAnalyzer';
 import { QuickScanMode } from './QuickScanMode';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 import { cn } from '@/lib/utils';
@@ -210,31 +213,41 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
         </TabsList>
 
         <TabsContent value="scanner" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="w-5 h-5" />
-                {t('vin_scanner_hub.advanced_scanner')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center py-12">
-              <div className="max-w-md mx-auto space-y-4">
-                <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto">
-                  <Camera className="w-10 h-10 text-primary-foreground" />
-                </div>
-                <h3 className="text-lg font-semibold">{t('vin_scanner_hub.ready_to_scan')}</h3>
-                <p className="text-muted-foreground">
-                  {t('vin_scanner_hub.scanner_description')}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button onClick={() => setScannerOpen(true)} size="lg" className="button-enhanced">
-                    <Camera className="w-5 h-5 mr-2" />
-                    {t('vin_scanner_hub.start_scanning')}
-                  </Button>
-                </div>
+          <div className="grid gap-6 xl:grid-cols-3">
+            <div className="xl:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <QrCode className="w-5 h-5" />
+                    {t('vin_scanner_hub.advanced_scanner')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center py-12">
+                  <div className="max-w-md mx-auto space-y-4">
+                    <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto">
+                      <Camera className="w-10 h-10 text-primary-foreground" />
+                    </div>
+                    <h3 className="text-lg font-semibold">{t('vin_scanner_hub.ready_to_scan')}</h3>
+                    <p className="text-muted-foreground">
+                      {t('vin_scanner_hub.scanner_description')}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button onClick={() => setScannerOpen(true)} size="lg" className="button-enhanced">
+                        <Camera className="w-5 h-5 mr-2" />
+                        {t('vin_scanner_hub.start_scanning')}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {selectedVin && (
+              <div className="xl:col-span-1">
+                <VinAnalyzer vin={selectedVin} />
               </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
         </TabsContent>
 
         <TabsContent value="quick" className="space-y-6">
@@ -251,7 +264,10 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <ScannerAnalytics />
+          <div className="grid gap-6 lg:grid-cols-2">
+            <VinStatistics />
+            <VinHistory onVinSelect={setSelectedVin} />
+          </div>
         </TabsContent>
       </Tabs>
 
