@@ -187,7 +187,7 @@ export function Dealerships() {
   };
 
   const handleViewDealer = (dealership: Dealership) => {
-    navigate(`/app/dealers/${dealership.id}`);
+    navigate(`/dealers/${dealership.id}`);
   };
 
   const handleInviteUser = (dealership: Dealership) => {

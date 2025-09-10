@@ -40,7 +40,7 @@ export default function Dashboard() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Button 
                 variant="secondary" 
-                onClick={() => handleQuickAction(t('dashboard.actions.create_order'), '/app/vin-scanner')}
+                onClick={() => handleQuickAction(t('dashboard.actions.create_order'), '/vin-scanner')}
                 className="button-enhanced"
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -49,7 +49,7 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="border-white/20 text-primary-foreground hover:bg-white/10"
-                onClick={() => handleQuickAction(t('dashboard.actions.view_reports'), '/app/reports')}
+                onClick={() => handleQuickAction(t('dashboard.actions.view_reports'), '/reports')}
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 {t('dashboard.actions.view_reports')}
@@ -57,7 +57,7 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="border-white/20 text-primary-foreground hover:bg-white/10"
-                onClick={() => handleQuickAction(t('dashboard.actions.manage_users'), '/app/users')}
+                onClick={() => handleQuickAction(t('dashboard.actions.manage_users'), '/users')}
               >
                 <Users className="h-4 w-4 mr-2" />
                 {t('dashboard.actions.manage_users')}
@@ -92,7 +92,7 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.vin_scanner'), '/app/vin-scanner')}
+                onClick={() => handleQuickAction(t('dashboard.quick_tools.vin_scanner'), '/vin-scanner')}
               >
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                   <TrendingUp className="w-4 h-4 text-primary" />
@@ -103,7 +103,7 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.nfc_tracking'), '/app/nfc-tracking')}
+                onClick={() => handleQuickAction(t('dashboard.quick_tools.nfc_tracking'), '/nfc-tracking')}
               >
                 <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
                   <Clock className="w-4 h-4 text-secondary" />
@@ -114,7 +114,7 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.chat'), '/app/chat')}
+                onClick={() => handleQuickAction(t('dashboard.quick_tools.chat'), '/chat')}
               >
                 <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
                   <Users className="w-4 h-4 text-accent" />
@@ -125,7 +125,7 @@ export default function Dashboard() {
               <Button 
                 variant="outline" 
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.settings'), '/app/settings')}
+                onClick={() => handleQuickAction(t('dashboard.quick_tools.settings'), '/settings')}
               >
                 <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
                   <Settings className="w-4 h-4 text-muted-foreground" />

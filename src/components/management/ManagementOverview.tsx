@@ -28,28 +28,28 @@ export const ManagementOverview: React.FC = () => {
       icon: Users,
       label: t('management.user_management'),
       description: t('user_management.description'),
-      action: () => navigate('/app/users'),
+      action: () => navigate('/users'),
       color: 'text-blue-600 bg-blue-100'
     },
     {
       icon: Building2,
       label: t('management.dealership_management'),
       description: t('dealerships.manage_description'),
-      action: () => navigate('/app/dealerships'),
+      action: () => navigate('/dealerships'),
       color: 'text-green-600 bg-green-100'
     },
     {
       icon: Shield,
       label: t('management.permission_management'),
       description: t('management.role_configuration'),
-      action: () => navigate('/app/management'),
+      action: () => navigate('/management'),
       color: 'text-purple-600 bg-purple-100'
     },
     {
       icon: Database,
       label: t('management.system_configuration'),
       description: t('management.system_configuration_desc'),
-      action: () => navigate('/app/settings'),
+      action: () => navigate('/settings'),
       color: 'text-orange-600 bg-orange-100'
     }
   ];
@@ -72,7 +72,7 @@ export const ManagementOverview: React.FC = () => {
             <Activity className="h-3 w-3" />
             {t('management.admin_access')}
           </Badge>
-          <Button variant="outline" size="sm" onClick={() => navigate('/app/settings')}>
+          <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
             <Settings className="h-4 w-4 mr-2" />
             {t('settings.title')}
           </Button>

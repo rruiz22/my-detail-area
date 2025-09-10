@@ -52,13 +52,13 @@ export function VinOrderIntegration({ vin, className }: VinOrderIntegrationProps
     // Navigate to respective order creation page with pre-filled data
     switch (orderType) {
       case 'sales':
-        navigate('/app/sales', { state: { prefillData: baseData } });
+        navigate('/sales', { state: { prefillData: baseData } });
         break;
       case 'service':
-        navigate('/app/service', { state: { prefillData: baseData } });
+        navigate('/service', { state: { prefillData: baseData } });
         break;
       case 'recon':
-        navigate('/app/recon', { state: { prefillData: baseData } });
+        navigate('/recon', { state: { prefillData: baseData } });
         break;
     }
   };

@@ -46,7 +46,7 @@ export function DepartmentOverview() {
       orders: { total: 45, pending: 8, inProgress: 12, completed: 25 },
       revenue: 6750.00,
       efficiency: 92,
-      route: '/app/sales'
+      route: '/sales'
     },
     {
       id: 'service', 
@@ -56,7 +56,7 @@ export function DepartmentOverview() {
       orders: { total: 38, pending: 6, inProgress: 15, completed: 17 },
       revenue: 4280.50,
       efficiency: 87,
-      route: '/app/service'
+      route: '/service'
     },
     {
       id: 'recon',
@@ -66,7 +66,7 @@ export function DepartmentOverview() {
       orders: { total: 29, pending: 5, inProgress: 8, completed: 16 },
       revenue: 2890.00,
       efficiency: 78,
-      route: '/app/recon'
+      route: '/recon'
     },
     {
       id: 'carwash',
@@ -76,7 +76,7 @@ export function DepartmentOverview() {
       orders: { total: 67, pending: 4, inProgress: 18, completed: 45 },
       revenue: 1500.00,
       efficiency: 95,
-      route: '/app/carwash'
+      route: '/carwash'
     }
   ];
 
@@ -86,7 +86,7 @@ export function DepartmentOverview() {
 
   const handleCreateOrder = (departmentId: string) => {
     // Navigate to create order form for specific department
-    navigate(`/app/${departmentId}?action=create`);
+    navigate(`/${departmentId}?action=create`);
   };
 
   const getStatusColor = (status: string) => {
