@@ -42,11 +42,16 @@ interface OrderFormData {
   // Assignment information (employee responsible)
   assignedGroupId?: string;
   assignedContactId?: string;
+  salesperson?: string;
   
   // Order details
   notes: string;
+  internalNotes?: string;
   priority?: string;
   dueDate?: Date;
+  slaDeadline?: Date;
+  scheduledDate?: Date;
+  scheduledTime?: string;
 }
 
 interface OrderModalProps {
@@ -77,9 +82,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     status: 'pending',
     assignedGroupId: '',
     assignedContactId: '',
+    salesperson: '',
     notes: '',
+    internalNotes: '',
     priority: 'normal',
-    dueDate: undefined
+    dueDate: undefined,
+    slaDeadline: undefined,
+    scheduledDate: undefined,
+    scheduledTime: ''
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
@@ -113,9 +123,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           status: order.status || 'pending',
           assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
           assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
+          salesperson: order.salesperson || '',
           notes: order.notes || '',
+          internalNotes: order.internalNotes || order.internal_notes || '',
           priority: order.priority || 'normal',
-          dueDate: order.dueDate || order.due_date ? safeParseDate(order.dueDate || order.due_date) || undefined : undefined
+          dueDate: order.dueDate || order.due_date ? safeParseDate(order.dueDate || order.due_date) || undefined : undefined,
+          slaDeadline: order.slaDeadline || order.sla_deadline ? safeParseDate(order.slaDeadline || order.sla_deadline) || undefined : undefined,
+          scheduledDate: order.scheduledDate || order.scheduled_date ? safeParseDate(order.scheduledDate || order.scheduled_date) || undefined : undefined,
+          scheduledTime: order.scheduledTime || order.scheduled_time || ''
         });
         setSelectedServices(order.services || []);
         setSelectedDealership(order.dealerId?.toString() || order.dealer_id?.toString() || '');
@@ -137,9 +152,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           status: 'pending',
           assignedGroupId: '',
           assignedContactId: '',
+          salesperson: '',
           notes: '',
+          internalNotes: '',
           priority: 'normal',
-          dueDate: undefined
+          dueDate: undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: ''
         });
         setSelectedServices([]);
         setSelectedDealership('');
@@ -274,9 +294,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     status: formData.status,
     assigned_group_id: formData.assignedGroupId || null,
     assigned_contact_id: formData.assignedContactId || null,
+    salesperson: formData.salesperson || null,
     notes: formData.notes || null,
+    internal_notes: formData.internalNotes || null,
     priority: formData.priority || 'normal',
     due_date: formData.dueDate || null,
+    sla_deadline: formData.slaDeadline || null,
+    scheduled_date: formData.scheduledDate || null,
+    scheduled_time: formData.scheduledTime || null,
     dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
     services: selectedServices
   });
@@ -614,6 +639,40 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             </div>
 
             <Separator className="my-6" />
+
+            {/* Hidden fields with default values for later editing in order details */}
+            <div className="hidden">
+              <input 
+                type="hidden" 
+                name="salesperson" 
+                value={formData.salesperson || ''} 
+                onChange={(e) => handleInputChange('salesperson', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="internal_notes" 
+                value={formData.internalNotes || ''} 
+                onChange={(e) => handleInputChange('internalNotes', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="sla_deadline" 
+                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
+                onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input 
+                type="hidden" 
+                name="scheduled_date" 
+                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
+                onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input 
+                type="hidden" 
+                name="scheduled_time" 
+                value={formData.scheduledTime || ''} 
+                onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
+              />
+            </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row justify-end gap-3">
