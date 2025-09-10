@@ -8,7 +8,13 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "translation:audit": "node scripts/translation-scanner.js",
+    "translation:fix": "node scripts/translation-batch-fix.js fix",
+    "translation:fix-restore": "node scripts/translation-batch-fix.js restore",
+    "translation:fix-cleanup": "node scripts/translation-batch-fix.js cleanup",
+    "translation:coverage": "npm run translation:audit && echo 'Translation coverage check complete'",
+    "pre-commit": "npm run translation:coverage"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

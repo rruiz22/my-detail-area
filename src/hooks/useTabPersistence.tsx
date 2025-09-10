@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { useInstantTabPersistence, useInstantPersistedState } from './useInstantPersistedState';
+import { useCloudSyncedTabPersistence, useCloudSyncedState } from './useCloudSync';
 
 /**
  * Tab persistence configurations for different pages
@@ -46,11 +47,22 @@ export const TAB_CONFIGS = {
 export type PageKey = keyof typeof TAB_CONFIGS;
 
 /**
- * Hook for ultra-responsive tab persistence with instant UI updates
+ * Hook for ultra-responsive tab persistence with instant UI updates and cloud sync
  */
-export function useTabPersistence(pageKey: PageKey, dealerId?: string) {
+export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableCloudSync = true) {
   const config = TAB_CONFIGS[pageKey];
   
+  if (enableCloudSync) {
+    // Use cloud-synced version for enterprise features
+    return useCloudSyncedTabPersistence(
+      config.key,
+      config.defaultTab,
+      config.validTabs as unknown as string[],
+      dealerId
+    );
+  }
+  
+  // Fallback to instant persistence without cloud sync
   return useInstantTabPersistence(
     config.key,
     config.defaultTab,
@@ -60,9 +72,24 @@ export function useTabPersistence(pageKey: PageKey, dealerId?: string) {
 }
 
 /**
- * Hook for view mode persistence (kanban vs table) with instant response
+ * Hook for view mode persistence (kanban vs table) with cloud sync
  */
-export function useViewModePersistence(pageKey: PageKey) {
+export function useViewModePersistence(pageKey: PageKey, enableCloudSync = true) {
+  if (enableCloudSync) {
+    const [viewMode, setViewMode] = useCloudSyncedState(
+      `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
+      'kanban' as 'kanban' | 'table',
+      {
+        priority: 'important',
+        autoSync: true,
+        restoreOnMount: true
+      }
+    );
+
+    return [viewMode, setViewMode] as const;
+  }
+
+  // Fallback to instant persistence without cloud sync
   const [viewMode, setViewMode] = useInstantPersistedState(
     `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
     'kanban' as 'kanban' | 'table',

@@ -198,7 +198,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
               id="tag_uid"
               value={formData.tag_uid}
               onChange={(e) => setFormData(prev => ({ ...prev, tag_uid: e.target.value }))}
-              placeholder="A1B2C3D4"
+              placeholder={t('nfc_tracking.tag_manager.uid_placeholder')}
             />
             <Button type="button" variant="outline" onClick={generateTagUID}>
               <QrCode className="w-4 h-4" />
@@ -232,7 +232,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
             id="vehicle_vin"
             value={formData.vehicle_vin}
             onChange={(e) => setFormData(prev => ({ ...prev, vehicle_vin: e.target.value }))}
-            placeholder="1HGBH41JXMN109186"
+            placeholder={t('nfc_tracking.tag_manager.vin_placeholder')}
           />
         </div>
       )}

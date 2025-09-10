@@ -1,12 +1,15 @@
 /**
  * Enterprise-grade localStorage service for My Detail Area
- * Handles JSON serialization, error recovery, and namespacing
+ * Handles JSON serialization, error recovery, namespacing, and cloud sync
  */
+import { cloudSync, getSyncConfig, type CloudSyncOptions } from './cloudSync';
 
 export interface StorageOptions {
   expiration?: number; // milliseconds
   compress?: boolean;
   namespace?: string;
+  cloudSync?: boolean | CloudSyncOptions; // Enable cloud sync
+  syncPriority?: 'critical' | 'important' | 'normal' | 'low';
 }
 
 export interface StorageItem<T> {
@@ -14,6 +17,8 @@ export interface StorageItem<T> {
   timestamp: number;
   expiration?: number;
   version?: string;
+  cloudSynced?: boolean;
+  lastCloudSync?: number;
 }
 
 class LocalStorageService {
@@ -21,7 +26,7 @@ class LocalStorageService {
   private version = '1.0.0';
 
   /**
-   * Set item in localStorage with enterprise features
+   * Set item in localStorage with enterprise features and cloud sync
    */
   set<T>(key: string, value: T, options: StorageOptions = {}): boolean {
     try {
@@ -31,6 +36,7 @@ class LocalStorageService {
         data: value,
         timestamp: Date.now(),
         version: this.version,
+        cloudSynced: false,
         ...(options.expiration && { expiration: Date.now() + options.expiration })
       };
 
@@ -38,6 +44,10 @@ class LocalStorageService {
       localStorage.setItem(namespacedKey, serialized);
       
       console.log(`💾 Stored: ${namespacedKey}`, value);
+      
+      // Handle cloud sync if enabled
+      this.handleCloudSync(key, value, options);
+      
       return true;
       
     } catch (error) {
@@ -237,6 +247,186 @@ class LocalStorageService {
   private getKey(key: string, namespace?: string): string {
     const ns = namespace || this.namespace;
     return `${ns}.${key}`;
+  }
+
+  // Cloud Sync Methods
+
+  /**
+   * Handle cloud sync for stored items
+   */
+  private async handleCloudSync<T>(key: string, value: T, options: StorageOptions): Promise<void> {
+    if (!options.cloudSync) return;
+
+    try {
+      const syncOptions = typeof options.cloudSync === 'boolean' 
+        ? getSyncConfig(key) 
+        : options.cloudSync;
+
+      const result = await cloudSync.syncToCloud(key, value, {
+        ...syncOptions,
+        priority: options.syncPriority || syncOptions.priority
+      });
+
+      if (result.success) {
+        this.markCloudSynced(key, options.namespace);
+      }
+    } catch (error) {
+      console.warn(`⚠️ Cloud sync failed for ${key}:`, error);
+    }
+  }
+
+  /**
+   * Mark item as cloud synced
+   */
+  private markCloudSynced(key: string, namespace?: string): void {
+    try {
+      const namespacedKey = this.getKey(key, namespace);
+      const stored = localStorage.getItem(namespacedKey);
+      
+      if (stored) {
+        const item = JSON.parse(stored);
+        item.cloudSynced = true;
+        item.lastCloudSync = Date.now();
+        localStorage.setItem(namespacedKey, JSON.stringify(item));
+      }
+    } catch (error) {
+      console.warn(`⚠️ Failed to mark ${key} as cloud synced:`, error);
+    }
+  }
+
+  /**
+   * Sync item to cloud manually
+   */
+  async syncToCloud<T>(key: string, options: StorageOptions = {}): Promise<boolean> {
+    try {
+      const namespacedKey = this.getKey(key, options.namespace);
+      const stored = localStorage.getItem(namespacedKey);
+      
+      if (!stored) {
+        console.warn(`⚠️ No data found for ${key} to sync`);
+        return false;
+      }
+
+      const item: StorageItem<T> = JSON.parse(stored);
+      const syncOptions = getSyncConfig(key);
+
+      const result = await cloudSync.syncToCloud(key, item.data, {
+        ...syncOptions,
+        priority: options.syncPriority || syncOptions.priority
+      });
+
+      if (result.success) {
+        this.markCloudSynced(key, options.namespace);
+        console.log(`☁️ Successfully synced ${key} to cloud`);
+        return true;
+      } else {
+        console.error(`❌ Failed to sync ${key} to cloud:`, result.error);
+        return false;
+      }
+    } catch (error) {
+      console.error(`❌ Cloud sync error for ${key}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Restore item from cloud
+   */
+  async restoreFromCloud<T>(key: string, defaultValue: T, options: StorageOptions = {}): Promise<T> {
+    try {
+      const syncOptions = getSyncConfig(key);
+      const result = await cloudSync.restoreFromCloud(key, syncOptions);
+
+      if (result.success && result.data !== undefined) {
+        // Store restored data locally
+        this.set(key, result.data, options);
+        console.log(`☁️ Successfully restored ${key} from cloud`);
+        return result.data;
+      } else {
+        console.warn(`⚠️ Failed to restore ${key} from cloud:`, result.error);
+        return this.get(key, defaultValue, options);
+      }
+    } catch (error) {
+      console.error(`❌ Cloud restore error for ${key}:`, error);
+      return this.get(key, defaultValue, options);
+    }
+  }
+
+  /**
+   * Setup cloud sync for the application
+   */
+  async setupCloudSync(): Promise<boolean> {
+    try {
+      const success = await cloudSync.setupCloudSync();
+      if (success) {
+        console.log('☁️ Cloud sync initialized successfully');
+        
+        // Sync critical data on startup
+        await this.syncCriticalData();
+      }
+      return success;
+    } catch (error) {
+      console.error('❌ Cloud sync setup failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Sync all critical data to cloud
+   */
+  async syncCriticalData(): Promise<void> {
+    const keys = this.getKeys();
+    const criticalKeys = keys.filter(key => 
+      key.includes('activeTab') || 
+      key.includes('theme') || 
+      key.includes('preferences')
+    );
+
+    const syncPromises = criticalKeys.map(key => 
+      this.syncToCloud(key, { cloudSync: true, syncPriority: 'critical' })
+    );
+
+    await Promise.allSettled(syncPromises);
+    console.log(`☁️ Synced ${criticalKeys.length} critical items to cloud`);
+  }
+
+  /**
+   * Get cloud sync status for a key
+   */
+  getCloudSyncStatus(key: string): { synced: boolean; lastSync?: number; status?: any } {
+    try {
+      const namespacedKey = this.getKey(key);
+      const stored = localStorage.getItem(namespacedKey);
+      
+      if (stored) {
+        const item = JSON.parse(stored);
+        const cloudStatus = cloudSync.getSyncStatus(key);
+        
+        return {
+          synced: item.cloudSynced || false,
+          lastSync: item.lastCloudSync,
+          status: cloudStatus
+        };
+      }
+    } catch (error) {
+      console.warn(`⚠️ Failed to get sync status for ${key}:`, error);
+    }
+    
+    return { synced: false };
+  }
+
+  /**
+   * Force sync all data to cloud
+   */
+  async forceSyncAll(): Promise<void> {
+    await cloudSync.forceSyncAll();
+  }
+
+  /**
+   * Get network status
+   */
+  isOnline(): boolean {
+    return cloudSync.isNetworkOnline();
   }
 }
 

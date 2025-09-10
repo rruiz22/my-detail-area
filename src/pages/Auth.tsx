@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,10 +42,14 @@ export default function Auth() {
   const [passwordValidation, setPasswordValidation] = useState(validatePassword(''));
   const { user, signIn, signUp } = useAuth();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
 
   // Redirect if already authenticated
   if (user) {
-    return <Navigate to="/" replace />;
+    const redirectTo = searchParams.get('redirect');
+    // If redirect parameter exists and is a valid app route, use it; otherwise default to /app
+    const destination = redirectTo && redirectTo.startsWith('/app') ? redirectTo : '/app';
+    return <Navigate to={destination} replace />;
   }
 
   const handlePasswordChange = (value: string) => {

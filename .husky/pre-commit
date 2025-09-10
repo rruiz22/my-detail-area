@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Translation coverage check
+echo "🔍 Checking translation coverage..."
+node scripts/translation-scanner.js
+
+# Check if coverage is acceptable (80% minimum)
+if [ $? -ne 0 ]; then
+  echo "❌ Translation coverage is below acceptable threshold!"
+  echo "📋 Please fix hardcoded strings before committing."
+  echo "🔧 Run: npm run translation:fix"
+  exit 1
+fi
+
+echo "✅ Translation coverage check passed!"

@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -7,6 +7,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -17,7 +18,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    // Store the intended destination for post-auth redirect
+    const intendedPath = location.pathname + location.search;
+    return <Navigate to={`/auth?redirect=${encodeURIComponent(intendedPath)}`} replace />;
   }
 
   return <>{children}</>;

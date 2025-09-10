@@ -42,6 +42,7 @@
     "confirm_password": "Confirm Password",
     "forgot_password": "Forgot Password?",
     "remember_me": "Remember me",
+    "create_account": "Create Account",
     "already_have_account": "Already have an account? Sign in",
     "dont_have_account": "Don't have an account? Sign up",
     "reset_password": "Reset Password",
@@ -336,8 +337,7 @@
     "error_deleting_order": "Error deleting service order", 
     "order_created_successfully": "Service order created successfully",
     "order_updated_successfully": "Service order updated successfully",
-    "order_deleted_successfully": "Service order deleted successfully"
-  },
+    "order_deleted_successfully": "Service order deleted successfully",
   "reconHub": {
     "dashboard": {
       "title": "ReconHub Dashboard",
@@ -356,8 +356,7 @@
       "overview": "Overview",
       "t2lMetrics": "T2L Metrics",
       "alerts": "Alerts",
-      "workflow": "Workflow",
-      "services": "Services"
+      "workflow": "Workflow"
     },
     "alerts": {
       "criticalBanner": "Critical Alerts Require Attention",
@@ -647,6 +646,7 @@
     "position_placeholder": "Sales Manager",
     "department": "Department",
     "is_primary": "Primary Contact",
+    "primary_contact": "Primary Contact",
     "send_email": "Send Email",
     "call": "Call",
     "mobile": "Mobile",
@@ -785,44 +785,7 @@
     "vin_decode_error": "Error decoding VIN",
     "enter_17_character_vin": "Enter 17-character VIN for automatic decoding",
     "manual_vehicle_entry": "Or enter vehicle details manually",
-    "tabs": {
-      "dashboard": "Dashboard",
-      "today": "Today's Orders",
-      "tomorrow": "Tomorrow's Orders", 
-      "pending": "Pending Orders",
-      "week": "Week View",
-      "all": "All Orders",
-      "services": "Services",
-      "deleted": "Deleted Orders"
-    },
-    "in_process_orders": "In Process Orders",
-    "charts": {
-      "trend_analysis": "Orders Trend Analysis",
-      "track_performance": "Track order performance over time",
-      "status_distribution": "Status Distribution", 
-      "current_status_breakdown": "Current order status breakdown",
-      "require_attention": "Require Attention",
-      "last_update": "Last update"
-    },
-    "actions": {
-      "refresh": "Refresh",
-      "filters": "Filters",
-      "new_order": "New Order"
-    },
-    "days": {
-      "mon": "Mon",
-      "tue": "Tue", 
-      "wed": "Wed",
-      "thu": "Thu",
-      "fri": "Fri",
-      "sat": "Sat",
-      "sun": "Sun"
-    },
-    "status_types": {
-      "pending": "Pending",
-      "processing": "Processing", 
-      "completed": "Completed"
-    }
+    "vehicle": "Vehicle"
   },
   "vinScanner": {
     "title": "Scan VIN",
@@ -838,6 +801,21 @@
     "cameraInUse": "Camera in use by another application",
     "captureError": "Error capturing image",
     "initializingCamera": "Initializing camera..."
+  },
+  "modern_vin_scanner": {
+    "title": "VIN Scanner",
+    "subtitle": "Scan vehicle identification numbers with AI precision",
+    "dialog_title": "Modern VIN Scanner",
+    "scan_camera": "Scan with Camera",
+    "upload_image": "Upload Image",
+    "capture": "Capture VIN",
+    "processing": "Processing...",
+    "perfect_alignment": "Perfect alignment detected",
+    "adjusting_focus": "Position VIN in target area",
+    "errors": {
+      "no_vin_detected": "No VIN detected in image",
+      "processing_failed": "Processing failed. Please try again."
+    }
   },
   "vin_scanner_history": {
     "title": "Scan History",
@@ -1346,6 +1324,9 @@
         "groups": "Initial Groups"
       }
     },
+    "tabs": {
+      "services": "Services"
+    },
     "modules": {
       "title": "Modules",
       "description": "Manage which modules this dealership can access",
@@ -1477,6 +1458,7 @@
     "available": "available",
     "totalPrice": "Total Price",
     "noServicesAvailable": "No services available",
+    "selectClient": "Select client...",
     "vehicle_information": "Vehicle Information",
     "vin_decoded_successfully": "VIN decoded successfully", 
     "vin_decode_error": "Error decoding VIN",
@@ -1682,6 +1664,46 @@
       "search_users": "Search users...",
       "no_users_found": "No users found"
     },
+    "communication": {
+      "hub_title": "Communication Hub",
+      "all": "All",
+      "voice": "Voice", 
+      "files": "Files",
+      "mentions": "Mentions",
+      "search_messages": "Search messages...",
+      "participants": "Participants",
+      "message_placeholder": "Type your message...",
+      "reply_placeholder": "Write a reply...",
+      "send": "Send",
+      "reply": "Reply",
+      "show_replies": "Show {{count}} replies",
+      "hide_replies": "Hide replies",
+      "loading": "Loading...",
+      "load_more": "Load More",
+      "no_messages": "No messages yet",
+      "transcription": "Transcription",
+      "edited": "edited",
+      "internal": "Internal",
+      "internal_message": "Internal Message",
+      "public": "Public",
+      "voice_message": "Voice Message",
+      "recording": "Recording",
+      "voice_message_unavailable": "Voice message unavailable",
+      "voice_message_sent": "Voice message sent",
+      "message_sent": "Message sent",
+      "reply_sent": "Reply sent",
+      "comment_added_successfully": "Comment added successfully",
+      "error_loading_messages": "Error loading messages",
+      "error_sending_message": "Error sending message",
+      "error_sending_voice": "Error sending voice message",
+      "error_sending_reply": "Error sending reply",
+      "error_adding_reaction": "Error adding reaction",
+      "microphone_error": "Error accessing microphone",
+      "max_duration_reached": "Maximum recording duration reached",
+      "mention_someone": "Mention Someone",
+      "search_users": "Search users...",
+      "no_users_found": "No users found"
+    },
     "generate_qr": "Generate QR Code",
     "regenerate_qr": "Regenerate QR Code", 
     "qr_generated_successfully": "QR code generated successfully",
@@ -1692,6 +1714,7 @@
     "unique_clicks": "Unique Visitors",
     "last_clicked": "Last Accessed",
     "short_code": "Short Code",
+    "communication": "Communication",
     "call_contact": "Call Contact",
     "send_sms": "Send SMS",
     "send_email": "Send Email",
@@ -1717,7 +1740,6 @@
     "sales_orders": "Sales Orders",
     "service_orders": "Service Orders", 
     "recon_orders": "Recon Orders",
-    "get_ready": "Get Ready",
     "car_wash": "Car Wash",
     "dealerships": "Dealerships",
     "contacts": "Contacts", 
@@ -1743,7 +1765,85 @@
     "user_management": "User Management",
     "user_management_desc": "Manage users, roles, and permissions across your organization"
   },
-
+  "placeholders": {
+    "search_orders": "Search orders...",
+    "filter_by_status": "Filter by status",
+    "select_time_period": "Select time period",
+    "select_department": "Select department",
+    "enter_dealership_name": "Enter dealership name",
+    "enter_location": "Enter location",
+    "enter_full_address": "Enter full address"
+  },
+  "dashboard_hero": {
+    "welcome": "Welcome to My Detail Area",
+    "subtitle": "Your dealership operations command center",
+    "create_order": "Create Order",
+    "view_reports": "View Reports",
+    "total_orders": "Total Orders",
+    "from_last_month": "+12% from last month",
+    "active_orders": "Active Orders",
+    "completed_orders": "Completed Orders",
+    "pending_approval": "Pending Approval",
+    "order_completion_rate": "Order Completion Rate",
+    "service_quality": "Service Quality",
+    "rating": "rating",
+    "revenue_growth": "Revenue Growth",
+    "vs_last_month": "vs last month",
+    "no_recent_orders": "No recent orders to display",
+    "recent_orders": "Recent Orders",
+    "view_all": "View All",
+    "order": "Order",
+    "customer": "Customer",
+    "service": "Service",
+    "status": "Status",
+    "amount": "Amount"
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "go_back": "Go Back",
+    "back_to_dashboard": "Back to Dashboard"
+  },
+  "sales_orders": {
+    "tabs": {
+      "dashboard": "Dashboard",
+      "today": "Today's Orders",
+      "tomorrow": "Tomorrow's Orders", 
+      "pending": "Pending Orders",
+      "week": "Week View",
+      "all": "All Orders",
+      "services": "Services",
+      "deleted": "Deleted Orders"
+    },
+    "in_process_orders": "In Process Orders",
+    "charts": {
+      "trend_analysis": "Orders Trend Analysis",
+      "track_performance": "Track order performance over time",
+      "status_distribution": "Status Distribution", 
+      "current_status_breakdown": "Current order status breakdown",
+      "require_attention": "Require Attention",
+      "last_update": "Last update"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "filters": "Filters",
+      "new_order": "New Order"
+    },
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue", 
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "status_types": {
+      "pending": "Pending",
+      "processing": "Processing", 
+      "completed": "Completed"
+    }
+  },
   "car_wash_orders": {
     "title": "Car Wash Orders",
     "description": "Manage car wash services and orders",
@@ -1778,7 +1878,24 @@
     "title": "Recon Orders",
     "description": "Manage vehicle reconditioning orders"
   },
-
+  "table": {
+    "order_id": "Order ID",
+    "vehicle": "Vehicle",
+    "customer": "Customer",
+    "service": "Service",
+    "advisor": "Advisor",
+    "price": "Price",
+    "status": "Status",
+    "actions": "Actions",
+    "stock": "Stock",
+    "vin": "VIN",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "no_results": "No results found",
+    "loading": "Loading...",
+    "empty_state": "No data available"
+  },
   "attachments": {
     "title": "Attachments",
     "dragDropOrClick": "Drag & drop files here, or click to select",
@@ -1860,7 +1977,59 @@
     "sign_in": "Sign In", 
     "register": "Register"
   },
-
+  "vin_scanner_hub": {
+    "title": "VIN Scanner",
+    "subtitle": "Advanced VIN scanning and management",
+    "scan_camera": "Scan with Camera",
+    "scan_camera_desc": "Use device camera to scan VIN codes",
+    "upload_image": "Upload Image", 
+    "upload_image_desc": "Upload photo containing VIN code",
+    "quick_mode": "Quick Mode",
+    "quick_mode_desc": "Fast scanning with instant results",
+    "analytics": "Analytics",
+    "analytics_desc": "Performance metrics and insights",
+    "manual_input_label": "Manual VIN Entry",
+    "manual_input_placeholder": "Enter 17-character VIN...",
+    "current_vin": "Current VIN",
+    "scanner": "Scanner",
+    "scan": "Scan",
+    "quick": "Quick",
+    "history": "History", 
+    "hist": "Hist",
+    "stats": "Stats",
+    "advanced_scanner": "Advanced VIN Scanner",
+    "ready_to_scan": "Ready to Scan",
+    "scanner_description": "Use advanced AI-powered scanning to detect VIN codes with high accuracy",
+    "start_scanning": "Start Scanning",
+    "vin_detected_success": "VIN detected successfully!",
+    "confidence": "Confidence",
+    "ai_powered": "AI Powered",
+    "multi_engine": "Multi-Engine",
+    "mobile_optimized": "Mobile Optimized",
+    "tablet_optimized": "Tablet Optimized", 
+    "desktop_optimized": "Desktop Optimized"
+  },
+  "vin_scanner_errors": {
+    "no_vin_found": "No VIN codes detected in the image",
+    "processing_error": "Error processing the image",
+    "vin_input_placeholder": "Enter VIN (17 characters)"
+  },
+  "modern_vin_scanner": {
+    "title": "Advanced VIN Scanner",
+    "subtitle": "AI-powered vehicle identification",
+    "confidence": {
+      "excellent": "Excellent", 
+      "good": "Good",
+      "detecting": "Detecting",
+      "ready_capture": "Ready to capture",
+      "adjust_position": "Adjust position for better detection",
+      "position_vin": "Position VIN sticker in camera view"
+    },
+    "errors": {
+      "no_vin_detected": "No VIN codes detected",
+      "processing_failed": "Image processing failed"
+    }
+  },
   "nfc_tracking": {
     "title": "NFC Tracking",
     "subtitle": "Manage NFC tags and vehicle tracking",
@@ -1878,7 +2047,20 @@
     "permission_required": "NFC permission required",
     "enable_nfc": "Please enable NFC in device settings"
   },
-
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel", 
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
   "nfc": {
     "title": "NFC Tracking",
     "subtitle": "Manage NFC tags and vehicle tracking",
@@ -2006,120 +2188,5 @@
     "status_changes": "Status Changes",
     "cost_updates": "Cost Updates",
     "timeline_updates": "Timeline Updates"
-  },
-  
-  "nfc_tracking": {
-    "workflows": {
-      "title": "NFC Workflows",
-      "subtitle": "Automate actions based on NFC tag interactions",
-      "create_workflow": "Create Workflow",
-      "edit_workflow": "Edit Workflow",
-      "search_placeholder": "Search workflows...",
-      "active": "Active",
-      "inactive": "Inactive", 
-      "edit": "Edit",
-      "disable": "Disable",
-      "enable": "Enable",
-      "delete": "Delete",
-      "more_actions": "more",
-      "executions": "Executions",
-      "success_rate": "Success Rate",
-      "last_run": "Last Run",
-      "no_results": "No workflows found matching your search",
-      "no_workflows": "No workflows created yet",
-      "workflow_description": "Configure automated actions that trigger when NFC tags are scanned",
-      "name": "Workflow Name",
-      "name_placeholder": "Enter workflow name",
-      "description": "Description",
-      "description_placeholder": "Describe what this workflow does",
-      "trigger_config": "Trigger Configuration",
-      "trigger_type": "Trigger Type",
-      "actions": "Actions",
-      "add_action": "Add Action",
-      "action": "Action",
-      "cancel": "Cancel",
-      "save": "Save Changes",
-      "create": "Create Workflow",
-      "recipient": "Recipient",
-      "subject": "Subject",
-      "message": "Message",
-      "triggers": {
-        "tag_scan": "Tag Scan",
-        "location_entry": "Location Entry", 
-        "time_based": "Time Based",
-        "status_change": "Status Change"
-      },
-      "actions": {
-        "send_email": "Send Email",
-        "send_sms": "Send SMS",
-        "send_notification": "Send Notification",
-        "update_order_status": "Update Order Status",
-        "create_task": "Create Task",
-        "webhook": "Webhook"
-      }
-    },
-    "tag_manager": {
-      "title": "NFC Tag Manager",
-      "subtitle": "Manage and track NFC tags for vehicle and location identification",
-      "register_new": "Register New Tag",
-      "search_placeholder": "Search tags by name, UID, or VIN...",
-      "filter_type": "Filter by Type",
-      "all_types": "All Types",
-      "vehicle_tag": "Vehicle",
-      "location_tag": "Location",
-      "equipment_tag": "Equipment",
-      "process_tag": "Process",
-      "filter_status": "Filter by Status",
-      "all_status": "All Statuses",
-      "active_only": "Active Only",
-      "inactive_only": "Inactive Only",
-      "results": "results",
-      "active": "Active",
-      "inactive": "Inactive",
-      "permanent": "Permanent",
-      "vin": "VIN",
-      "location": "Location",
-      "scans": "scans",
-      "never_scanned": "Never scanned",
-      "no_results": "No tags found matching your criteria",
-      "try_different_filters": "Try adjusting your search or filters",
-      "no_tags": "No NFC tags registered yet",
-      "create_first_tag": "Create your first NFC tag to get started",
-      "edit_tag": "Edit Tag",
-      "create_tag": "Create New Tag",
-      "tag_name": "Tag Name",
-      "tag_name_placeholder": "Enter a descriptive name for this tag",
-      "tag_uid": "Tag UID",
-      "uid_placeholder": "A1B2C3D4",
-      "tag_type": "Tag Type",
-      "vehicle_vin": "Vehicle VIN",
-      "vin_placeholder": "1HGBH41JXMN109186",
-      "location_name": "Location Name",
-      "location_placeholder": "Enter location name",
-      "description": "Description",
-      "description_placeholder": "Enter additional details about this tag",
-      "active_tag": "Active Tag",
-      "permanent_tag": "Permanent Tag",
-      "confirm_delete": "Are you sure you want to delete this tag?"
-    }
-  },
-  
-  "recon": {
-    "create_recon_order": "Create Recon Order",
-    "edit_recon_order": "Edit Recon Order", 
-    "stock_number": "Stock Number",
-    "stock_number_required": "Stock number is required",
-    "enter_stock_number": "Enter stock number",
-    "vehicle_display": "Vehicle Display",
-    "auto_generated_vehicle_info": "Auto-generated from vehicle details",
-    "updates_automatically": "Updates automatically based on VIN decoding",
-    "dealer_required": "Please select a dealership",
-    "loading_dealerships": "Loading dealerships...",
-    "no_dealerships_with_recon_access": "No dealerships with recon access found",
-    "needs_approval": "Needs Approval",
-    "ready_for_sale": "Ready for Sale",
-    "recon_instructions": "Enter specific reconditioning instructions...",
-    "create_order": "Create Order",
-    "recon_hub": "ReconHub"
   }
 }

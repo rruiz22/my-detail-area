@@ -115,7 +115,7 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
   };
 
   const handleViewDealership = (dealershipId: number) => {
-    navigate(`/dealers/${dealershipId}`);
+    navigate(`/app/dealers/${dealershipId}`);
   };
 
   if (loading) {

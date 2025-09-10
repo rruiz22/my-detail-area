@@ -1,0 +1,293 @@
+name: Translation Coverage Check
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**'
+      - 'public/translations/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**'
+      - 'public/translations/**'
+
+jobs:
+  translation-coverage:
+    runs-on: ubuntu-latest
+    name: Check Translation Coverage
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        npm install -g glob
+
+    - name: Run Translation Coverage Check
+      run: |
+        npm run translation:audit
+      id: coverage-check
+
+    - name: Generate Coverage Report
+      if: always()
+      run: |
+        echo "## 🌍 Translation Coverage Report" >> $GITHUB_STEP_SUMMARY
+        if [ -f "translation-audit-report.json" ]; then
+          # Extract key metrics from the report
+          COVERAGE=$(node -pe "JSON.parse(require('fs').readFileSync('translation-audit-report.json')).coverage")
+          HARDCODED=$(node -pe "JSON.parse(require('fs').readFileSync('translation-audit-report.json')).hardcodedStrings")
+          TOTAL_STRINGS=$(node -pe "JSON.parse(require('fs').readFileSync('translation-audit-report.json')).totalStrings")
+          FILES_SCANNED=$(node -pe "JSON.parse(require('fs').readFileSync('translation-audit-report.json')).scannedFiles")
+          
+          echo "### 📊 Coverage Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "- **Coverage**: ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Strings**: ${TOTAL_STRINGS}" >> $GITHUB_STEP_SUMMARY  
+          echo "- **Hardcoded Strings**: ${HARDCODED}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Files Scanned**: ${FILES_SCANNED}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Status based on coverage
+          if [ $COVERAGE -ge 95 ]; then
+            echo "✅ **Status**: EXCELLENT - Ready for production" >> $GITHUB_STEP_SUMMARY
+          elif [ $COVERAGE -ge 85 ]; then
+            echo "⚠️ **Status**: GOOD - Minor improvements needed" >> $GITHUB_STEP_SUMMARY
+          elif [ $COVERAGE -ge 70 ]; then
+            echo "❌ **Status**: NEEDS WORK - Significant translation gaps" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🚨 **Status**: CRITICAL - Major translation coverage issues" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔧 Quick Fix" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Run automated fixes" >> $GITHUB_STEP_SUMMARY
+          echo "npm run translation:fix" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Check coverage again" >> $GITHUB_STEP_SUMMARY
+          echo "npm run translation:audit" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Error**: Could not generate translation report" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Upload Translation Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: translation-coverage-report
+        path: |
+          translation-audit-report.json
+          new-translation-keys.json
+        retention-days: 30
+
+    - name: Comment PR with Translation Coverage
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          if (!fs.existsSync('translation-audit-report.json')) {
+            return;
+          }
+          
+          const report = JSON.parse(fs.readFileSync('translation-audit-report.json'));
+          const { coverage, hardcodedStrings, totalStrings, scannedFiles } = report;
+          
+          const statusIcon = coverage >= 95 ? '✅' 
+                           : coverage >= 85 ? '⚠️' 
+                           : coverage >= 70 ? '❌' 
+                           : '🚨';
+          
+          const body = `
+          ## ${statusIcon} Translation Coverage Report
+          
+          **Coverage**: ${coverage}% (${totalStrings - hardcodedStrings}/${totalStrings} strings translated)
+          
+          | Metric | Value |
+          |--------|-------|
+          | Files Scanned | ${scannedFiles} |
+          | Total Strings | ${totalStrings} |
+          | Hardcoded Strings | ${hardcodedStrings} |
+          | Translated Strings | ${totalStrings - hardcodedStrings} |
+          | **Coverage** | **${coverage}%** |
+          
+          ### Status
+          ${coverage >= 95 ? '✅ **EXCELLENT** - Ready for production' :
+            coverage >= 85 ? '⚠️ **GOOD** - Minor improvements needed' :
+            coverage >= 70 ? '❌ **NEEDS WORK** - Significant translation gaps' :
+            '🚨 **CRITICAL** - Major translation coverage issues'}
+          
+          ${coverage < 95 ? `
+          ### 🔧 Quick Fix Commands
+          \`\`\`bash
+          # Run automated translation fixes
+          npm run translation:fix
+          
+          # Check coverage after fixes
+          npm run translation:audit
+          \`\`\`
+          ` : ''}
+          
+          ---
+          
+          🤖 *Automated translation coverage check*
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+    - name: Fail if coverage is below threshold
+      run: |
+        if [ -f "translation-audit-report.json" ]; then
+          COVERAGE=$(node -pe "JSON.parse(require('fs').readFileSync('translation-audit-report.json')).coverage")
+          
+          # For main/develop branches, require 90% coverage
+          if [ "$GITHUB_REF" = "refs/heads/main" ] || [ "$GITHUB_REF" = "refs/heads/develop" ]; then
+            REQUIRED_COVERAGE=90
+          else
+            # For feature branches, require 80% coverage
+            REQUIRED_COVERAGE=80
+          fi
+          
+          if [ $COVERAGE -lt $REQUIRED_COVERAGE ]; then
+            echo "❌ Translation coverage ($COVERAGE%) is below required threshold ($REQUIRED_COVERAGE%)"
+            echo "🔧 Please run 'npm run translation:fix' to automatically fix common issues"
+            exit 1
+          else
+            echo "✅ Translation coverage ($COVERAGE%) meets requirements ($REQUIRED_COVERAGE%)"
+          fi
+        else
+          echo "❌ Translation audit failed to generate report"
+          exit 1
+        fi
+
+  validate-translation-files:
+    runs-on: ubuntu-latest
+    name: Validate Translation Files
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Validate JSON syntax
+      run: |
+        echo "🔍 Validating translation file syntax..."
+        
+        # Check each translation file for valid JSON
+        for file in public/translations/*.json; do
+          echo "Checking $file..."
+          if ! node -c "JSON.parse(require('fs').readFileSync('$file'))" 2>/dev/null; then
+            echo "❌ Invalid JSON syntax in $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All translation files have valid JSON syntax"
+
+    - name: Check translation completeness
+      run: |
+        echo "🔍 Checking translation completeness..."
+        
+        # Get all keys from English (primary) translation
+        node -e "
+          const fs = require('fs');
+          const en = JSON.parse(fs.readFileSync('public/translations/en.json'));
+          
+          function getKeys(obj, prefix = '') {
+            let keys = [];
+            for (let key in obj) {
+              if (typeof obj[key] === 'object' && obj[key] !== null) {
+                keys = keys.concat(getKeys(obj[key], prefix + key + '.'));
+              } else {
+                keys.push(prefix + key);
+              }
+            }
+            return keys;
+          }
+          
+          const enKeys = getKeys(en).sort();
+          const languages = ['es', 'pt-BR'];
+          let allComplete = true;
+          
+          languages.forEach(lang => {
+            try {
+              const translations = JSON.parse(fs.readFileSync(\`public/translations/\${lang}.json\`));
+              const langKeys = getKeys(translations).sort();
+              
+              const missingKeys = enKeys.filter(key => !langKeys.includes(key));
+              const extraKeys = langKeys.filter(key => !enKeys.includes(key));
+              
+              console.log(\`\n📋 \${lang.toUpperCase()} Translation Status:\`);
+              console.log(\`Total Keys: \${langKeys.length}/\${enKeys.length}\`);
+              
+              if (missingKeys.length > 0) {
+                console.log(\`❌ Missing \${missingKeys.length} keys:\`);
+                missingKeys.slice(0, 10).forEach(key => console.log(\`   - \${key}\`));
+                if (missingKeys.length > 10) {
+                  console.log(\`   ... and \${missingKeys.length - 10} more\`);
+                }
+                allComplete = false;
+              }
+              
+              if (extraKeys.length > 0) {
+                console.log(\`⚠️ Extra \${extraKeys.length} keys (should review):\`);
+                extraKeys.slice(0, 5).forEach(key => console.log(\`   + \${key}\`));
+              }
+              
+              if (missingKeys.length === 0) {
+                console.log(\`✅ Complete translation coverage\`);
+              }
+              
+            } catch (error) {
+              console.log(\`❌ Error reading \${lang}.json: \${error.message}\`);
+              allComplete = false;
+            }
+          });
+          
+          if (!allComplete) {
+            console.log(\'\n🚨 Translation files are incomplete!\');
+            process.exit(1);
+          } else {
+            console.log(\'\n✅ All translation files are complete\');
+          }
+        "
+
+  security-check:
+    runs-on: ubuntu-latest
+    name: Security Check for Translation Scripts
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check for sensitive data in translations
+      run: |
+        echo "🔒 Checking for sensitive data in translation files..."
+        
+        # Check for potential sensitive data patterns
+        if grep -r -E "(password|secret|key|token|api_key)" public/translations/ --include="*.json"; then
+          echo "❌ Potential sensitive data found in translation files!"
+          echo "Please review and remove any sensitive information"
+          exit 1
+        fi
+        
+        echo "✅ No sensitive data detected in translation files"

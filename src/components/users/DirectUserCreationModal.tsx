@@ -100,61 +100,29 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Step 1: Create user in auth system (if needed)
       console.log('Creating user account...', formData);
       
-      // Step 2: Create profile
-      const profileData = {
-        email: formData.email,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        user_type: formData.userType,
-        role: formData.role
-      };
-
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          ...profileData,
-          id: crypto.randomUUID()
-        })
-        .select()
-        .single();
-
-      if (profileError) throw profileError;
-
-      // Step 3: Create dealer membership
-      if (formData.dealershipId) {
-        const membershipData = {
-          user_id: profile.id,
-          dealer_id: parseInt(formData.dealershipId),
-          is_active: true,
-          roles: [formData.role],
-          created_at: new Date().toISOString()
-        };
-
-        const { error: membershipError } = await supabase
-          .from('dealer_memberships')
-          .insert(membershipData);
-
-        if (membershipError) throw membershipError;
-      }
-
-      // Step 4: Send welcome email (optional)
-      if (formData.sendWelcomeEmail) {
-        try {
-          await supabase.functions.invoke('send-welcome-email', {
-            body: {
-              email: formData.email,
-              firstName: formData.firstName,
-              dealershipName: dealerships.find(d => d.id === parseInt(formData.dealershipId))?.name
-            }
-          });
-        } catch (emailError) {
-          console.warn('Welcome email failed:', emailError);
-          // Don't fail the whole process if email fails
+      // Use the new Edge Function to properly create the user
+      const { data, error } = await supabase.functions.invoke('create-dealer-user', {
+        body: {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          dealershipId: parseInt(formData.dealershipId),
+          role: formData.role,
+          userType: formData.userType,
+          sendWelcomeEmail: formData.sendWelcomeEmail,
+          dealershipName: dealerships.find(d => d.id === parseInt(formData.dealershipId))?.name
         }
+      });
+
+      if (error) throw error;
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to create user');
       }
+
+      console.log('User created successfully:', data);
 
       toast({
         title: t('common.success'),

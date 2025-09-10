@@ -48,9 +48,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
           <header className="sticky top-0 z-50 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
             <div className="flex items-center gap-4">
               <SidebarTrigger />
-            </div>
-            
-            <div className="flex items-center gap-4">
               <div className="relative max-w-sm">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input 
@@ -58,7 +55,9 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
                   className="pl-10 w-full"
                 />
               </div>
-              
+            </div>
+            
+            <div className="flex items-center gap-4">
               <LanguageSwitcher />
               <ThemeToggle />
               

@@ -7,6 +7,8 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Save, Database, Mail, MessageSquare } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import { StorageDevTools } from "@/components/dev/StorageDevTools";
+import { developmentConfig } from "@/config/development";
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -125,6 +127,11 @@ export default function Settings() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Development Tools - Only shown in development mode */}
+        {developmentConfig.features.enableStorageDebug && (
+          <StorageDevTools />
+        )}
 
         {/* Save Button */}
         <div className="flex justify-end">
