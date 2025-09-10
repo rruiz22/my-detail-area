@@ -47,6 +47,13 @@ export function QuickFilterBar({
       color: 'bg-primary/10 text-primary border-primary/20'
     },
     {
+      id: 'recon_hub',
+      label: 'ReconHub',
+      count: 0, // Remove count badge
+      icon: Clock,
+      color: 'bg-purple-100/50 text-purple-700 border-purple-200/50 dark:bg-purple-950/50 dark:text-purple-300 dark:border-purple-800/50'
+    },
+    {
       id: 'today',
       label: 'Today',
       count: tabCounts.today || 0,

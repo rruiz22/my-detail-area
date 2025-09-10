@@ -8,6 +8,7 @@ import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 
 // New improved components
 import { ReconDashboard } from '@/components/recon/ReconDashboard';
@@ -21,6 +22,7 @@ import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 
 export default function ReconOrders() {
   const { t } = useTranslation();
+  const { dealerships } = useAccessibleDealerships();
   
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('recon_orders');
@@ -45,6 +47,9 @@ export default function ReconOrders() {
     updateOrder,
     deleteOrder,
   } = useReconOrderManagement(activeFilter);
+
+  // Get dealer ID from orders or fallback to first accessible dealership
+  const dealerId = orders.length > 0 ? orders[0].dealerId : (dealerships.length > 0 ? dealerships[0].id : 5);
 
   // Auto-refresh every 60 seconds, but skip if there were recent changes
   useEffect(() => {
@@ -156,6 +161,12 @@ export default function ReconOrders() {
     department: t('recon_defaults.default_department')
   }));
 
+  // Enhanced tab counts with ReconHub tab
+  const enhancedTabCounts = {
+    ...tabCounts,
+    recon_hub: 0 // ReconHub dashboard doesn't need a count
+  } as Record<string, number>;
+
   // Filter orders based on search term
   const filteredOrders = transformedOrders.filter((order: any) => {
     if (!searchTerm) return true;
@@ -198,7 +209,7 @@ export default function ReconOrders() {
         {/* Quick Filter Bar */}
         <QuickFilterBar
           activeFilter={activeFilter}
-          tabCounts={tabCounts as unknown as Record<string, number>}
+          tabCounts={enhancedTabCounts}
           onFilterChange={setActiveFilter}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
@@ -225,6 +236,8 @@ export default function ReconOrders() {
               tabCounts={tabCounts as unknown as Record<string, number>} 
               onCardClick={handleCardClick}
             />
+          ) : activeFilter === 'recon_hub' ? (
+            <ReconHubDashboard dealerId={dealerId} />
           ) : (
             <>
               {viewMode === 'kanban' ? (

@@ -1994,5 +1994,30 @@
         "description_placeholder": "Digite detalhes adicionais sobre esta tag"
       }
     }
+  },
+  "recon_hub": {
+    "dashboard_title": "Painel ReconHub",
+    "overview": "Visão Geral",
+    "metrics": "Métricas",
+    "workflows": "Fluxos",
+    "activity": "Atividade",
+    "t2l_metrics": "Métricas Tempo para Lote",
+    "average_t2l": "T2L Médio",
+    "hours": "horas",
+    "best_t2l": "Melhor T2L",
+    "worst_active": "Pior Ativo",
+    "total_vehicles": "Total Veículos",
+    "completed_vehicles": "Completos",
+    "avg_holding_cost": "Custo Médio de Manutenção",
+    "color_triggers": "Alertas e Gatilhos de Cor",
+    "workflow_status": "Status do Fluxo",
+    "live_activity": "Feed de Atividade ao Vivo",
+    "no_activity": "Nenhuma atividade recente",
+    "recent_updates": "Atualizações Recentes", 
+    "trigger_alerts": "Alertas de Gatilho",
+    "workflow_updates": "Atualizações de Fluxo",
+    "status_changes": "Mudanças de Status",
+    "cost_updates": "Atualizações de Custo",
+    "timeline_updates": "Atualizações de Cronograma"
   }
 }

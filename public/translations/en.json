@@ -2162,5 +2162,30 @@
         "description_placeholder": "Enter additional details about this tag"
       }
     }
+  },
+  "recon_hub": {
+    "dashboard_title": "ReconHub Dashboard",
+    "overview": "Overview",
+    "metrics": "Metrics", 
+    "workflows": "Workflows",
+    "activity": "Activity",
+    "t2l_metrics": "Time to Lot Metrics",
+    "average_t2l": "Average T2L",
+    "hours": "hours",
+    "best_t2l": "Best T2L", 
+    "worst_active": "Worst Active",
+    "total_vehicles": "Total Vehicles",
+    "completed_vehicles": "Completed",
+    "avg_holding_cost": "Avg Holding Cost",
+    "color_triggers": "Color Triggers & Alerts",
+    "workflow_status": "Workflow Status",
+    "live_activity": "Live Activity Feed",
+    "no_activity": "No recent activity",
+    "recent_updates": "Recent Updates",
+    "trigger_alerts": "Trigger Alerts",
+    "workflow_updates": "Workflow Updates",
+    "status_changes": "Status Changes",
+    "cost_updates": "Cost Updates",
+    "timeline_updates": "Timeline Updates"
   }
 }
