@@ -9,6 +9,12 @@ import { T2LMetricsGrid } from './dashboard/T2LMetricsGrid';
 import { ColorTriggerReport } from './dashboard/ColorTriggerReport';
 import { WorkflowStatusGrid } from './dashboard/WorkflowStatusGrid';
 import { LiveActivityFeed } from './dashboard/LiveActivityFeed';
+import { T2LTrendAnalysis } from './analytics/T2LTrendAnalysis';
+import { BottleneckAnalysis } from './analytics/BottleneckAnalysis';
+import { PerformanceComparison } from './analytics/PerformanceComparison';
+import { ReportExportCenter } from './analytics/ReportExportCenter';
+import { ReconHubSettings } from './settings/ReconHubSettings';
+import { ReconNotificationCenter } from './notifications/ReconNotificationCenter';
 import useReconHub from '@/hooks/useReconHub';
 import useReconAlerts from '@/hooks/useReconAlerts';
 
@@ -192,12 +198,12 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
 
       {/* Main Dashboard Content */}
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
           <TabsTrigger value="overview">
             {t('reconHub.tabs.overview', 'Overview')}
           </TabsTrigger>
           <TabsTrigger value="t2l">
-            {t('reconHub.tabs.t2lMetrics', 'T2L Metrics')}
+            {t('reconHub.tabs.t2lMetrics', 'T2L')}
           </TabsTrigger>
           <TabsTrigger value="alerts">
             {t('reconHub.tabs.alerts', 'Alerts')}
@@ -209,6 +215,18 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
           </TabsTrigger>
           <TabsTrigger value="workflow">
             {t('reconHub.tabs.workflow', 'Workflow')}
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="hidden lg:flex">
+            {t('reconHub.tabs.analytics', 'Analytics')}
+          </TabsTrigger>
+          <TabsTrigger value="bottlenecks" className="hidden lg:flex">
+            {t('reconHub.tabs.bottlenecks', 'Bottlenecks')}
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="hidden lg:flex">
+            {t('reconHub.tabs.reports', 'Reports')}
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="hidden lg:flex">
+            {t('reconHub.tabs.settings', 'Settings')}
           </TabsTrigger>
         </TabsList>
 
@@ -234,6 +252,32 @@ export function ReconHubDashboard({ dealerId }: ReconHubDashboardProps) {
 
         <TabsContent value="workflow" className="space-y-4">
           <WorkflowStatusGrid dealerId={dealerId} orders={reconOrders} expanded />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <T2LTrendAnalysis dealerId={dealerId} />
+            <PerformanceComparison dealerId={dealerId} orders={reconOrders} />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="bottlenecks" className="space-y-4">
+          <BottleneckAnalysis dealerId={dealerId} orders={reconOrders} />
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-4">
+          <ReportExportCenter dealerId={dealerId} orders={reconOrders} />
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-4">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div className="xl:col-span-2">
+              <ReconHubSettings dealerId={dealerId} />
+            </div>
+            <div className="xl:col-span-1">
+              <ReconNotificationCenter dealerId={dealerId} alerts={colorTriggerAlerts} />
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
