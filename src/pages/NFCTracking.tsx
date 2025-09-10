@@ -15,6 +15,7 @@ import { NFCDashboard } from '@/components/nfc/NFCDashboard';
 import { NFCTagManager } from '@/components/nfc/NFCTagManager';
 import { NFCVehicleTracker } from '@/components/nfc/NFCVehicleTracker';
 import { NFCLocationHeatmap } from '@/components/nfc/NFCLocationHeatmap';
+import { NFCWorkflowManager } from '@/components/nfc/NFCWorkflowManager';
 
 export default function NFCTracking() {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ export default function NFCTracking() {
         </div>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <Radio className="w-4 h-4" />
               <span className="hidden sm:inline">{t('nfc_tracking.dashboard.title')}</span>
@@ -60,6 +61,11 @@ export default function NFCTracking() {
               <span className="hidden sm:inline">{t('nfc_tracking.location_heatmap.title')}</span>
               <span className="sm:hidden">Heatmap</span>
             </TabsTrigger>
+            <TabsTrigger value="workflows" className="flex items-center gap-2">
+              <Activity className="w-4 h-4" />
+              <span className="hidden sm:inline">{t('nfc_tracking.workflows.title')}</span>
+              <span className="sm:hidden">Workflows</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
@@ -76,6 +82,10 @@ export default function NFCTracking() {
 
           <TabsContent value="heatmap" className="space-y-6">
             <NFCLocationHeatmap />
+          </TabsContent>
+
+          <TabsContent value="workflows" className="space-y-6">
+            <NFCWorkflowManager />
           </TabsContent>
         </Tabs>
       </div>
