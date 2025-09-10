@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { QrCode } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { VinBarcodeScanner } from '@/components/ui/vin-barcode-scanner';
+import { ModernVinScanner } from '@/components/scanner/modern/ModernVinScanner';
 import { cn } from '@/lib/utils';
 
 interface VinInputWithScannerProps extends React.ComponentProps<typeof Input> {
@@ -51,7 +51,7 @@ export function VinInputWithScanner({
         </Button>
       </div>
 
-      <VinBarcodeScanner
+      <ModernVinScanner
         open={scannerOpen}
         onClose={() => setScannerOpen(false)}
         onVinDetected={handleVinDetected}

@@ -105,10 +105,24 @@ export default {
             height: "0",
           },
         },
+        "scan-line": {
+          "0%": { 
+            transform: "translateY(0px)", 
+            opacity: "0" 
+          },
+          "50%": { 
+            opacity: "1" 
+          },
+          "100%": { 
+            transform: "translateY(128px)", 
+            opacity: "0" 
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "scan-line": "scan-line 2s ease-in-out infinite",
       },
     },
   },

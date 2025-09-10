@@ -760,6 +760,32 @@
     "processing_error": "Erro ao processar imagem. Tente novamente.",
     "vin_input_placeholder": "17 caracteres do VIN..."
   },
+  "modern_vin_scanner": {
+    "title": "Scanner VIN",
+    "subtitle": "Escaneie etiquetas VIN usando sua câmera ou faça upload de uma imagem para identificação instantânea do veículo",
+    "dialog_title": "Scanner VIN Avançado",
+    "scan_camera": "Escanear com Câmera",
+    "upload_image": "Fazer Upload de Imagem",
+    "capture": "Capturar VIN",
+    "processing": "Processando...",
+    "analyzing_image": "Analisando imagem...",
+    "ready_to_capture": "Perfeito! Pronto para capturar",
+    "align_vin_sticker": "Alinhe a etiqueta VIN no quadro",
+    "perfect_alignment": "Alinhamento perfeito",
+    "adjusting_focus": "Ajustando foco...",
+    "confidence": {
+      "excellent": "Excelente",
+      "good": "Bom",
+      "detecting": "Detectando",
+      "ready_capture": "Pronto para capturar VIN",
+      "adjust_position": "Ajuste a posição da câmera",
+      "position_vin": "Posicione a etiqueta VIN no quadro"
+    },
+    "errors": {
+      "no_vin_detected": "Nenhum VIN detectado na imagem",
+      "processing_failed": "Processamento falhou. Tente novamente."
+    }
+  },
   "permissions": {
     "update_status": "Atualizar Status",
     "change_to_progress": "Alterar para Em Andamento",

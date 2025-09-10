@@ -756,6 +756,32 @@
     "processing_error": "Error processing image. Please try again.",
     "vin_input_placeholder": "17 VIN characters..."
   },
+  "modern_vin_scanner": {
+    "title": "VIN Scanner",
+    "subtitle": "Scan VIN stickers using your camera or upload an image for instant vehicle identification",
+    "dialog_title": "Advanced VIN Scanner",
+    "scan_camera": "Scan with Camera",
+    "upload_image": "Upload Image",
+    "capture": "Capture VIN",
+    "processing": "Processing...",
+    "analyzing_image": "Analyzing image...",
+    "ready_to_capture": "Perfect! Ready to capture",
+    "align_vin_sticker": "Align VIN sticker in the frame",
+    "perfect_alignment": "Perfect alignment",
+    "adjusting_focus": "Adjusting focus...",
+    "confidence": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "detecting": "Detecting",
+      "ready_capture": "Ready to capture VIN",
+      "adjust_position": "Adjust camera position",
+      "position_vin": "Position VIN sticker in frame"
+    },
+    "errors": {
+      "no_vin_detected": "No VIN detected in image",
+      "processing_failed": "Processing failed. Please try again."
+    }
+  },
   "filters": {
     "global_filters": "Global Filters",
     "clear": "Clear",
