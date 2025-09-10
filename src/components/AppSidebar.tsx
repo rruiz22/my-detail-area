@@ -16,19 +16,19 @@ export function AppSidebar() {
 
   const mainNavItems = [{
     title: t('navigation.dashboard'),
-    url: "/app",
+    url: "/dashboard",
     icon: LayoutDashboard
   }, {
     title: t('navigation.sales_orders'),
-    url: "/app/sales",
+    url: "/sales",
     icon: ShoppingCart
   }, {
     title: t('navigation.service_orders'),
-    url: "/app/service",
+    url: "/service",
     icon: Wrench
   }, {
     title: t('navigation.recon_orders'),
-    url: "/app/recon",
+    url: "/recon",
     icon: RefreshCw
   }, {
     title: t('navigation.get_ready'),
@@ -36,45 +36,45 @@ export function AppSidebar() {
     icon: Zap
   }, {
     title: t('navigation.car_wash'),
-    url: "/app/carwash",
+    url: "/carwash",
     icon: Car
   }, {
     title: t('chat.title'),
-    url: "/app/chat",
+    url: "/chat",
     icon: MessageCircle
   }, {
     title: t('contacts.title'),
-    url: "/app/contacts",
+    url: "/contacts",
     icon: Users2
   }, {
     title: t('vin_scanner_hub.title'),
-    url: "/app/vin-scanner",
+    url: "/vin-scanner",
     icon: QrCode
   }, {
     title: t('nfc_tracking.title'),
-    url: "/app/nfc-tracking",
+    url: "/nfc-tracking",
     icon: Nfc
   }];
 
   const secondaryNavItems = [{
     title: t('dealerships.title'),
-    url: "/app/dealerships",
+    url: "/dealerships",
     icon: Building2
   }, {
     title: t('navigation.management'),
-    url: "/app/management",
+    url: "/management",
     icon: Shield
   }, {
     title: t('pages.user_management'),
-    url: "/app/users",
+    url: "/users",
     icon: Users
   }, {
     title: t('navigation.reports'),
-    url: "/app/reports",
+    url: "/reports",
     icon: FileText
   }, {
     title: t('navigation.settings'),
-    url: "/app/settings",
+    url: "/settings",
     icon: Settings
   }];
   const currentPath = location.pathname;
@@ -83,8 +83,8 @@ export function AppSidebar() {
     await signOut();
   };
   const isActive = (path: string) => {
-    if (path === "/app") {
-      return currentPath === "/app";
+    if (path === "/dashboard") {
+      return currentPath === "/dashboard";
     }
     return currentPath.startsWith(path);
   };

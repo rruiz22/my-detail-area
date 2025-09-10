@@ -61,24 +61,22 @@ const App = () => (
                 {/* Public invitation acceptance route */}
                 <Route path="/invitation/:token" element={<InvitationAccept />} />
                 
-                {/* Protected application routes under /app prefix */}
-                <Route path="/app" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/app/sales" element={<ProtectedRoute><SalesOrders /></ProtectedRoute>} />
-                <Route path="/app/service" element={<ProtectedRoute><ServiceOrders /></ProtectedRoute>} />
-                <Route path="/app/recon" element={<ProtectedRoute><ReconOrders /></ProtectedRoute>} />
-                <Route path="/app/carwash" element={<ProtectedRoute><CarWash /></ProtectedRoute>} />
-                <Route path="/app/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
-                <Route path="/app/vin-scanner" element={<ProtectedRoute><VinScanner /></ProtectedRoute>} />
-                <Route path="/app/nfc-tracking" element={<ProtectedRoute><NFCTracking /></ProtectedRoute>} />
-                <Route path="/app/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
-                <Route path="/app/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                <Route path="/app/dealerships" element={<ProtectedRoute><Dealerships /></ProtectedRoute>} />
-                <Route path="/app/dealers/:id" element={<ProtectedRoute><DealerView /></ProtectedRoute>} />
-                <Route path="/app/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
-                <Route path="/app/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
-                <Route path="/app/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
-                <Route path="/app/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
-                <Route path="/get-ready" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
+                {/* Protected application routes - Root level */}
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/sales" element={<ProtectedRoute><SalesOrders /></ProtectedRoute>} />
+                <Route path="/service" element={<ProtectedRoute><ServiceOrders /></ProtectedRoute>} />
+                <Route path="/recon" element={<ProtectedRoute><ReconOrders /></ProtectedRoute>} />
+                <Route path="/carwash" element={<ProtectedRoute><CarWash /></ProtectedRoute>} />
+                <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                <Route path="/vin-scanner" element={<ProtectedRoute><VinScanner /></ProtectedRoute>} />
+                <Route path="/nfc-tracking" element={<ProtectedRoute><NFCTracking /></ProtectedRoute>} />
+                <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                <Route path="/dealerships" element={<ProtectedRoute><Dealerships /></ProtectedRoute>} />
+                <Route path="/dealers/:id" element={<ProtectedRoute><DealerView /></ProtectedRoute>} />
+                <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+                <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+                <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
                 <Route path="/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
