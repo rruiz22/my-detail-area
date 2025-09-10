@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import SalesOrders from "./pages/SalesOrders";
 import ServiceOrders from "./pages/ServiceOrders";
 import ReconOrders from "./pages/ReconOrders";
+import GetReady from "./pages/GetReady";
 import CarWash from "./pages/CarWash";
 import Chat from "./pages/Chat";
 import { Dealerships } from "./pages/Dealerships";
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/sales" element={<ProtectedRoute><SalesOrders /></ProtectedRoute>} />
                 <Route path="/service" element={<ProtectedRoute><ServiceOrders /></ProtectedRoute>} />
                 <Route path="/recon" element={<ProtectedRoute><ReconOrders /></ProtectedRoute>} />
+                <Route path="/get-ready" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
                 <Route path="/carwash" element={<ProtectedRoute><CarWash /></ProtectedRoute>} />
                 <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
                 <Route path="/vin-scanner" element={<ProtectedRoute><VinScanner /></ProtectedRoute>} />

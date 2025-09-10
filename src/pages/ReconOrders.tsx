@@ -16,7 +16,7 @@ import { ReconCostingSystem } from '@/components/recon/ReconCostingSystem';
 import { ReconApprovalWorkflow } from '@/components/recon/ReconApprovalWorkflow';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { ReconHubDashboard } from '@/components/recon-hub/ReconHubDashboard';
+
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 
@@ -139,11 +139,8 @@ export default function ReconOrders() {
     department: t('recon_defaults.default_department')
   }));
 
-  // Enhanced tab counts with ReconHub tab
-  const enhancedTabCounts = {
-    ...tabCounts,
-    recon_hub: 0 // ReconHub dashboard doesn't need a count
-  } as Record<string, number>;
+  // Tab counts without ReconHub (now moved to Get Ready module)
+  const enhancedTabCounts = tabCounts;
 
   // Filter orders based on search term
   const filteredOrders = transformedOrders.filter((order: any) => {
@@ -187,7 +184,7 @@ export default function ReconOrders() {
         {/* Quick Filter Bar */}
         <QuickFilterBar
           activeFilter={activeFilter}
-          tabCounts={enhancedTabCounts}
+          tabCounts={enhancedTabCounts as unknown as Record<string, number>}
           onFilterChange={setActiveFilter}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
@@ -214,8 +211,6 @@ export default function ReconOrders() {
               tabCounts={tabCounts as unknown as Record<string, number>} 
               onCardClick={handleCardClick}
             />
-          ) : activeFilter === 'recon_hub' ? (
-            <ReconHubDashboard dealerId={dealerId} />
           ) : (
             <>
               {viewMode === 'kanban' ? (
