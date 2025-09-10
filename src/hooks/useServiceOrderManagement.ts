@@ -32,6 +32,11 @@ export interface ServiceOrder {
   assignedTo?: string;
   notes?: string;
   customOrderNumber?: string;
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  dueTime?: string;
 }
 
 export interface ServiceOrderFilters {
@@ -42,8 +47,8 @@ export interface ServiceOrderFilters {
   dateRange: { from: any; to: any };
 }
 
-// Transform Supabase order to ServiceOrder
-const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
+// Transform Supabase order to ServiceOrder (with JOIN data)
+const transformServiceOrder = (supabaseOrder: any): ServiceOrder => ({
   id: supabaseOrder.id,
   orderNumber: supabaseOrder.order_number,
   customerName: supabaseOrder.customer_name,
@@ -63,9 +68,18 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
   dueDate: supabaseOrder.sla_deadline || undefined,
-  assignedTo: undefined, // Not in Supabase schema yet
+  assignedTo: supabaseOrder.assigned_group?.name || 'Unassigned',
   notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
+  // Enhanced fields from JOINs
+  dealershipName: supabaseOrder.dealerships?.name || 'Unknown Dealer',
+  assignedGroupName: supabaseOrder.assigned_group?.name || undefined,
+  createdByGroupName: supabaseOrder.created_by_group?.name || undefined,
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  }) : undefined,
 });
 
 export const useServiceOrderManagement = (activeTab: string) => {
@@ -184,10 +198,15 @@ export const useServiceOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
-      // Fetch service orders from Supabase
+      // Fetch service orders from Supabase with JOINs for dealer and group names
       const { data: orders, error } = await supabase
         .from('orders')
-        .select('*')
+        .select(`
+          *,
+          dealerships!inner(name),
+          assigned_group:dealer_groups!assigned_group_id(name),
+          created_by_group:dealer_groups!created_by_group_id(name)
+        `)
         .eq('order_type', 'service')
         .order('created_at', { ascending: false });
 

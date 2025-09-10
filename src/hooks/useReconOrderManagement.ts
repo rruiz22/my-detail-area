@@ -39,6 +39,12 @@ export interface ReconOrder {
   acquisitionSource?: string; // trade-in, auction, dealer-swap, etc.
   conditionGrade?: string; // excellent, good, fair, poor
   reconCategory?: string; // mechanical, cosmetic, full-recon, detail-only
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  assignedTo?: string;
+  dueTime?: string;
 }
 
 interface ReconOrderFilters {
@@ -66,7 +72,7 @@ interface TabCounts {
   readyForSale: number;
 }
 
-// Transform Supabase order to ReconOrder interface
+// Transform Supabase order to ReconOrder interface (with JOIN data)
 const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
   id: supabaseOrder.id,
   orderNumber: supabaseOrder.order_number || supabaseOrder.custom_order_number,
@@ -100,6 +106,16 @@ const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
   acquisitionSource: supabaseOrder.services?.find((s: any) => s.type === 'acquisition_source')?.value || 'trade-in',
   conditionGrade: supabaseOrder.services?.find((s: any) => s.type === 'condition_grade')?.value || 'good',
   reconCategory: supabaseOrder.services?.find((s: any) => s.type === 'recon_category')?.value || 'full-recon',
+  // Enhanced fields from JOINs
+  dealershipName: supabaseOrder.dealerships?.name || 'Unknown Dealer',
+  assignedGroupName: supabaseOrder.assigned_group?.name || undefined,
+  createdByGroupName: supabaseOrder.created_by_group?.name || undefined,
+  assignedTo: supabaseOrder.assigned_group?.name || 'Unassigned',
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  }) : undefined,
 });
 
 export const useReconOrderManagement = (activeTab: string = 'all') => {
@@ -243,7 +259,12 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       
       const { data, error } = await supabase
         .from('orders')
-        .select('*')
+        .select(`
+          *,
+          dealerships!inner(name),
+          assigned_group:dealer_groups!assigned_group_id(name),
+          created_by_group:dealer_groups!created_by_group_id(name)
+        `)
         .eq('order_type', 'recon')
         .order('created_at', { ascending: false });
 

@@ -28,10 +28,17 @@ export interface CarWashOrder {
   customOrderNumber?: string;
   dealerId: number;
   tag?: string;
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  assignedTo?: string;
+  dueTime?: string;
+  dueDate?: string;
 }
 
-// Transform Supabase order to component order
-const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
+// Transform Supabase order to component order (with JOIN data)
+const transformCarWashOrder = (supabaseOrder: any): CarWashOrder => ({
   id: supabaseOrder.id,
   vehicleYear: supabaseOrder.vehicle_year || undefined,
   vehicleMake: supabaseOrder.vehicle_make || undefined,
@@ -50,6 +57,17 @@ const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
   dealerId: supabaseOrder.dealer_id,
   tag: supabaseOrder.tag || undefined,
+  // Enhanced fields from JOINs
+  dealershipName: supabaseOrder.dealerships?.name || 'Unknown Dealer',
+  assignedGroupName: supabaseOrder.assigned_group?.name || undefined,
+  createdByGroupName: supabaseOrder.created_by_group?.name || undefined,
+  assignedTo: supabaseOrder.assigned_group?.name || 'Unassigned',
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  }) : undefined,
+  dueDate: supabaseOrder.sla_deadline || supabaseOrder.due_date || undefined,
 });
 
 export const useCarWashOrderManagement = (activeTab: string) => {
@@ -177,10 +195,15 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
-      // Fetch car wash orders from Supabase for the current user's dealer
+      // Fetch car wash orders from Supabase with JOINs for dealer and group names
       const { data: orders, error } = await supabase
         .from('orders')
-        .select('*')
+        .select(`
+          *,
+          dealerships!inner(name),
+          assigned_group:dealer_groups!assigned_group_id(name),
+          created_by_group:dealer_groups!created_by_group_id(name)
+        `)
         .eq('order_type', 'car_wash')
         .order('created_at', { ascending: false });
 

@@ -31,10 +31,15 @@ export interface Order {
   assignedTo?: string;
   notes?: string;
   customOrderNumber?: string;
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  dueTime?: string;
 }
 
-// Transform Supabase order to component order
-const transformOrder = (supabaseOrder: SupabaseOrder): Order => ({
+// Transform Supabase order to component order (with JOIN data)
+const transformOrder = (supabaseOrder: any): Order => ({
   id: supabaseOrder.id,
   customerName: supabaseOrder.customer_name,
   customerEmail: supabaseOrder.customer_email || undefined,
@@ -47,15 +52,24 @@ const transformOrder = (supabaseOrder: SupabaseOrder): Order => ({
   stockNumber: supabaseOrder.stock_number || undefined,
   status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
   priority: supabaseOrder.priority || undefined,
-  dueDate: supabaseOrder.sla_deadline || undefined,
+  dueDate: supabaseOrder.sla_deadline || supabaseOrder.due_date || undefined,
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
   totalAmount: supabaseOrder.total_amount || undefined,
   services: supabaseOrder.services as any[] || [],
   orderType: supabaseOrder.order_type || undefined,
-  assignedTo: undefined, // Not in Supabase schema yet
-  notes: undefined, // Not in Supabase schema yet
+  assignedTo: supabaseOrder.assigned_group?.name || 'Unassigned',
+  notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
+  // Enhanced fields from JOINs
+  dealershipName: supabaseOrder.dealerships?.name || 'Unknown Dealer',
+  assignedGroupName: supabaseOrder.assigned_group?.name || undefined,
+  createdByGroupName: supabaseOrder.created_by_group?.name || undefined,
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  }) : undefined,
 });
 
 export const useOrderManagement = (activeTab: string) => {
@@ -201,10 +215,15 @@ export const useOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
-      // Fetch orders from Supabase for the current user's dealer
+      // Fetch orders from Supabase with JOINs for dealer and group names
       const { data: orders, error } = await supabase
         .from('orders')
-        .select('*')
+        .select(`
+          *,
+          dealerships!inner(name),
+          assigned_group:dealer_groups!assigned_group_id(name),
+          created_by_group:dealer_groups!created_by_group_id(name)
+        `)
         .order('created_at', { ascending: false });
 
       if (error) {
