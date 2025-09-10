@@ -56,6 +56,16 @@ export const UnifiedUserManagement: React.FC = () => {
     try {
       setIsLoading(true);
 
+      // First, let's check the current user context
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      console.log('🔍 DEBUG: Current authenticated user:', currentUser);
+      
+      // Let's also test a simple count query to see if RLS is limiting our access
+      const { data: profileCount, error: countError } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+      console.log('🔍 DEBUG: Total profiles count (head request):', profileCount, countError);
+
       // Fetch users with their dealer memberships (using LEFT JOIN to include all users)
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
@@ -67,6 +77,7 @@ export const UnifiedUserManagement: React.FC = () => {
           )
         `)
         .order('email');
+
 
       if (profilesError) throw profilesError;
 
@@ -101,6 +112,7 @@ export const UnifiedUserManagement: React.FC = () => {
         if (a.user_type !== 'dealer' && b.user_type === 'dealer') return 1;
         return 0;
       });
+
 
       setUsers(sortedUsers);
     } catch (error: any) {

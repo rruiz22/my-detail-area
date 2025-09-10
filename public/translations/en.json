@@ -517,7 +517,8 @@
         "amount_updated": "Amount",
         "notes_updated": "Notes"
       }
-    },
+    }
+  },
   "dealerships": {
     "title": "Dealerships",
     "add_new": "Add New Dealership",

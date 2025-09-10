@@ -209,6 +209,9 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   };
 
   const getFullName = (user: DealerMembership) => {
+    if (!user.profiles) {
+      return t('common.unnamed');
+    }
     const { first_name, last_name } = user.profiles;
     if (first_name && last_name) {
       return `${first_name} ${last_name}`;
@@ -217,8 +220,12 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   };
 
   const getInitials = (user: DealerMembership) => {
-    const { first_name, last_name } = user.profiles;
-    return `${first_name?.[0] || ''}${last_name?.[0] || ''}`.toUpperCase() || user.profiles.email[0].toUpperCase();
+    if (!user.profiles) {
+      return '??';
+    }
+    const { first_name, last_name, email } = user.profiles;
+    const initials = `${first_name?.[0] || ''}${last_name?.[0] || ''}`.toUpperCase();
+    return initials || email[0].toUpperCase();
   };
 
   if (loading) {
@@ -286,7 +293,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                         <span className="font-medium">{getFullName(user)}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{user.profiles.email}</TableCell>
+                    <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>
                     <TableCell>
                       <Badge variant={user.is_active ? "default" : "secondary"}>
                         {user.is_active ? t('common.active') : t('common.inactive')}

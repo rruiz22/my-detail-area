@@ -67,7 +67,7 @@ export const UserDashboard: React.FC = () => {
 
       // Fetch user statistics
       const [usersResult, invitationsResult, rolesResult, dealershipsResult] = await Promise.all([
-        // Users with memberships
+        // Users with memberships (INNER JOIN - only users with memberships)
         supabase
           .from('profiles')
           .select(`
@@ -102,6 +102,9 @@ export const UserDashboard: React.FC = () => {
       const users = usersResult.data || [];
       const invitations = invitationsResult.data || [];
       const dealerships = dealershipsResult.data || [];
+
+      console.log('🔍 DEBUG UserDashboard: Invitations:', invitations.length);
+      console.log('🔍 DEBUG UserDashboard: Dealerships:', dealerships.length);
 
       // Calculate stats
       const activeUsers = users.filter(user => 
