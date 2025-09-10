@@ -1722,10 +1722,76 @@
     "feature_multimedia_desc": "Comparte archivos, imágenes y mensajes de voz"
   },
   "landing": {
+    "app_name": "My Detail Area",
     "welcome": "Bienvenido al Sistema de Gestión",
-    "description": "Inicia sesión para acceder a dealers, contactos y más funciones",
+    "description": "Inicia sesión para acceder a distribuidores, contactos y más funciones",
     "sign_in": "Iniciar Sesión",
-    "register": "Registrarse"
+    "register": "Registrarse",
+    "hero": {
+      "badge": "Gestión de Detallado Automotriz",
+      "title_part1": "Optimiza Tus",
+      "title_part2": "Operaciones de Detallado",
+      "description": "Sistema integral de gestión para concesionarios automotrices para coordinar operaciones de detallado, reacondicionamiento y lavado de autos entre todos los departamentos.",
+      "get_started": "Comenzar",
+      "learn_more": "Saber Más",
+      "go_to_dashboard": "Ir al Dashboard"
+    },
+    "features": {
+      "title": "Suite Completa de Gestión de Detallado",
+      "description": "Todo lo que necesitas para gestionar operaciones de detallado automotriz eficientemente",
+      "sales": {
+        "title": "Órdenes de Ventas",
+        "description": "Gestiona servicios de detallado pre-entrega para vehículos vendidos con coordinación fluida."
+      },
+      "service": {
+        "title": "Integración de Servicio",
+        "description": "Coordina paquetes de detallado con citas de servicio para soluciones completas al cliente."
+      },
+      "recon": {
+        "title": "Reacondicionamiento",
+        "description": "Maneja intercambios, vehículos de subasta y preparación de inventario con seguimiento detallado."
+      },
+      "carwash": {
+        "title": "Lavado Express",
+        "description": "Servicios de lavado rápido, mantenimiento de vehículos prestados y lavados cortesía."
+      },
+      "communication": {
+        "title": "Comunicación en Tiempo Real",
+        "description": "Mensajería instantánea, actualizaciones de estado y herramientas de coordinación interdepartamental."
+      },
+      "analytics": {
+        "title": "Análisis de Rendimiento",
+        "description": "Reportes integrales, KPIs e insights para optimizar tus operaciones de detallado."
+      }
+    },
+    "benefits": {
+      "title": "¿Por Qué Elegir My Detail Area?",
+      "description": "Construido específicamente para concesionarios automotrices para mejorar eficiencia y comunicación",
+      "efficiency": {
+        "title": "Mayor Eficiencia",
+        "description": "Optimiza flujos de trabajo y reduce coordinación manual entre departamentos."
+      },
+      "collaboration": {
+        "title": "Mejor Colaboración",
+        "description": "Comunicación en tiempo real y actualizaciones de estado mantienen a todos informados."
+      },
+      "performance": {
+        "title": "Insights de Rendimiento",
+        "description": "Rastrea métricas e identifica oportunidades para mejoras operacionales."
+      },
+      "security": {
+        "title": "Seguro y Confiable",
+        "description": "Seguridad de nivel empresarial con controles de acceso basados en roles."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Transformar Tus Operaciones de Detallado?",
+      "description": "Únete a concesionarios que ya usan My Detail Area para optimizar sus operaciones.",
+      "get_started": "Inicia Tu Prueba Gratuita"
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
   },
   "nfc_tracking": {
     "workflows": {

@@ -1855,10 +1855,76 @@
     "feature_multimedia_desc": "Share files, images, and voice messages"
   },
   "landing": {
+    "app_name": "My Detail Area",
     "welcome": "Welcome to the Management System",
     "description": "Sign in to access dealers, contacts and more features",
     "sign_in": "Sign In", 
-    "register": "Register"
+    "register": "Register",
+    "hero": {
+      "badge": "Automotive Detail Management",
+      "title_part1": "Streamline Your",
+      "title_part2": "Detail Operations",
+      "description": "Comprehensive management system for automotive dealerships to coordinate detail, reconditioning, and car wash operations across all departments.",
+      "get_started": "Get Started",
+      "learn_more": "Learn More",
+      "go_to_dashboard": "Go to Dashboard"
+    },
+    "features": {
+      "title": "Complete Detail Management Suite",
+      "description": "Everything you need to manage automotive detail operations efficiently",
+      "sales": {
+        "title": "Sales Orders",
+        "description": "Manage pre-delivery detail services for sold vehicles with seamless handoff coordination."
+      },
+      "service": {
+        "title": "Service Integration",
+        "description": "Coordinate detail packages with service appointments for complete customer solutions."
+      },
+      "recon": {
+        "title": "Reconditioning",
+        "description": "Handle trade-ins, auction vehicles, and inventory preparation with detailed workflow tracking."
+      },
+      "carwash": {
+        "title": "Express Car Wash",
+        "description": "Quick wash services, loaner vehicle maintenance, and complementary customer washes."
+      },
+      "communication": {
+        "title": "Real-time Communication",
+        "description": "Instant messaging, status updates, and cross-department coordination tools."
+      },
+      "analytics": {
+        "title": "Performance Analytics",
+        "description": "Comprehensive reporting, KPIs, and insights to optimize your detail operations."
+      }
+    },
+    "benefits": {
+      "title": "Why Choose My Detail Area?",
+      "description": "Built specifically for automotive dealerships to enhance efficiency and communication",
+      "efficiency": {
+        "title": "Increased Efficiency",
+        "description": "Streamline workflows and reduce manual coordination between departments."
+      },
+      "collaboration": {
+        "title": "Better Collaboration",
+        "description": "Real-time communication and status updates keep everyone informed."
+      },
+      "performance": {
+        "title": "Performance Insights",
+        "description": "Track metrics and identify opportunities for operational improvements."
+      },
+      "security": {
+        "title": "Secure & Reliable",
+        "description": "Enterprise-grade security with role-based access controls."
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Detail Operations?",
+      "description": "Join dealerships already using My Detail Area to streamline their operations.",
+      "get_started": "Start Your Free Trial"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
   },
 
   "nfc_tracking": {
