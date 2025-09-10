@@ -236,6 +236,44 @@
     "theme_studio": "Theme Studio",
     "customize_appearance": "Customize colors, typography, shadows and spacing"
   },
+  "vin_integration": {
+    "vehicle_info": "Vehicle Information",
+    "decode_vin": "Decode VIN",
+    "decoding": "Decoding...",
+    "year": "Year",
+    "make": "Make", 
+    "model": "Model",
+    "create_order": "Create Order",
+    "sales_order": "Sales Order",
+    "service_order": "Service Order",
+    "recon_order": "Recon Order"
+  },
+  "recon_costing": {
+    "estimated_total": "Estimated Total",
+    "actual_total": "Actual Total",
+    "variance": "Variance",
+    "completion": "Completion",
+    "categories": {
+      "labor": "Labor",
+      "parts": "Parts", 
+      "materials": "Materials",
+      "external": "External Services"
+    }
+  },
+  "recon_approval": {
+    "title": "Approval Workflow",
+    "types": {
+      "budget_increase": "Budget Increase",
+      "completion_approval": "Completion Approval"
+    },
+    "approve": "Approve",
+    "reject": "Reject"
+  },
+  "nfc_geolocation": {
+    "title": "NFC Geolocation",
+    "list_view": "List View",
+    "map_view": "Map View"
+  },
   "service": {
     "new_service_order": "New Service Order",
     "service_order": "Service Order",

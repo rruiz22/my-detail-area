@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNFCManagement } from '@/hooks/useNFCManagement';
+import { NFCGeolocationMap } from './NFCGeolocationMap';
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -285,6 +286,9 @@ export function NFCDashboard({ className }: NFCDashboardProps) {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Geolocation Map */}
+      <NFCGeolocationMap />
     </div>
   );
 }

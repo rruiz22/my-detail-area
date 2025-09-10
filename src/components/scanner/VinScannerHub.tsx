@@ -26,6 +26,7 @@ import { VinHistory } from './enhanced/VinHistory';
 import { VinAnalyzer } from './enhanced/VinAnalyzer';
 import { QuickScanMode } from './QuickScanMode';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { VinOrderIntegration } from './VinOrderIntegration';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -243,8 +244,9 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
             </div>
             
             {selectedVin && (
-              <div className="xl:col-span-1">
+              <div className="xl:col-span-1 space-y-6">
                 <VinAnalyzer vin={selectedVin} />
+                <VinOrderIntegration vin={selectedVin} />
               </div>
             )}
           </div>

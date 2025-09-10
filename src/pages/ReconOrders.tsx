@@ -11,6 +11,8 @@ import { useTabPersistence, useViewModePersistence, useSearchPersistence } from 
 
 // New improved components
 import { ReconDashboard } from '@/components/recon/ReconDashboard';
+import { ReconCostingSystem } from '@/components/recon/ReconCostingSystem';
+import { ReconApprovalWorkflow } from '@/components/recon/ReconApprovalWorkflow';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
