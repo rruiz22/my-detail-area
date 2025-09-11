@@ -29,6 +29,7 @@ import { InvitationManagement } from '../invitations/InvitationManagement';
 import { AdvancedPermissionManager } from '@/components/permissions/AdvancedPermissionManager';
 import { UserAnalytics } from './UserAnalytics';
 import { UserAuditLog } from './UserAuditLog';
+import { UserPasswordManagement } from './password/UserPasswordManagement';
 
 interface UserDashboardStats {
   totalUsers: number;
@@ -319,6 +320,7 @@ export const UserDashboard: React.FC = () => {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="audit">Audit Log</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="password-security">Password Security</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -392,12 +394,18 @@ export const UserDashboard: React.FC = () => {
             <UserAuditLog dealerId={stats?.dealershipDistribution?.[0] ? 5 : undefined} />
           </TabsContent>
 
-          <TabsContent value="notifications">
-            <div className="text-center py-8">
-              <h3 className="text-lg font-medium">Notification Center</h3>
-              <p className="text-muted-foreground">Smart notification management coming soon</p>
-            </div>
-          </TabsContent>
+        <TabsContent value="notifications">
+          <div className="text-center py-8">
+            <h3 className="text-lg font-medium">Notification Center</h3>
+            <p className="text-muted-foreground">Smart notification management coming soon</p>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="password-security">
+          <PermissionGuard module="users" permission="write">
+            <UserPasswordManagement />
+          </PermissionGuard>
+        </TabsContent>
         </Tabs>
       </div>
     </PermissionGuard>

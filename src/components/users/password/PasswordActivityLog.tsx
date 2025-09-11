@@ -14,7 +14,8 @@ import {
   Shield,
   Clock,
   User,
-  RefreshCw
+  RefreshCw,
+  Lock
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { usePasswordManagement } from '@/hooks/usePasswordManagement';

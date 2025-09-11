@@ -62,10 +62,10 @@ export const usePasswordPolicies = (dealerId: number) => {
       
       // Find password policy
       const passwordPolicyData = data?.find(p => p.policy_name === 'password_policy');
-      if (passwordPolicyData) {
+      if (passwordPolicyData && passwordPolicyData.policy_value) {
         setPasswordPolicy({
           ...defaultPasswordPolicy,
-          ...passwordPolicyData.policy_value
+          ...(passwordPolicyData.policy_value as Partial<PasswordPolicy>)
         });
       }
 

@@ -136,23 +136,23 @@ export const usePasswordManagement = () => {
 
   const getPasswordResetRequests = async (dealerId?: number) => {
     try {
-      let query = supabase
+      const { data, error } = await supabase
         .from('password_reset_requests')
-        .select(`
-          *,
-          profiles!password_reset_requests_user_id_fkey(first_name, last_name, email),
-          admin_profiles:profiles!password_reset_requests_admin_id_fkey(first_name, last_name, email)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (dealerId) {
-        query = query.eq('metadata->dealer_id', dealerId);
-      }
-
-      const { data, error } = await query;
-
       if (error) throw error;
-      return data || [];
+      
+      // Filter by dealer_id if provided
+      let filteredData = data || [];
+      if (dealerId) {
+        filteredData = filteredData.filter(req => {
+          const metadata = req.metadata as any;
+          return metadata && metadata.dealer_id === dealerId;
+        });
+      }
+      
+      return filteredData;
 
     } catch (error: any) {
       console.error('Error fetching password reset requests:', error);
@@ -169,10 +169,7 @@ export const usePasswordManagement = () => {
     try {
       const { data, error } = await supabase
         .from('bulk_password_operations')
-        .select(`
-          *,
-          profiles!bulk_password_operations_initiated_by_fkey(first_name, last_name, email)
-        `)
+        .select('*')
         .eq('dealer_id', dealerId)
         .order('created_at', { ascending: false });
 
@@ -194,10 +191,7 @@ export const usePasswordManagement = () => {
     try {
       const { data, error } = await supabase
         .from('password_history')
-        .select(`
-          *,
-          profiles!password_history_created_by_fkey(first_name, last_name, email)
-        `)
+        .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(10);
