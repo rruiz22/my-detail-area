@@ -42,7 +42,7 @@ export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
         const stockEnabled = await filterByModule('stock');
         setStockDealerships(stockEnabled);
         
-        // Auto-select if only one dealer has stock access
+        // Auto-select if only one dealer has stock access and no dealer is currently selected
         if (stockEnabled.length === 1 && !selectedDealerId) {
           setSelectedDealerId(stockEnabled[0].id);
         }
@@ -60,7 +60,17 @@ export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
     };
 
     fetchStockDealerships();
-  }, [dealerships, filterByModule, selectedDealerId, setSelectedDealerId]);
+  }, [dealerships, filterByModule]); // REMOVED selectedDealerId and setSelectedDealerId from dependencies
+
+  // Separate effect to handle selectedDealerId validation
+  useEffect(() => {
+    if (stockDealerships.length > 0 && selectedDealerId) {
+      const isValidSelection = stockDealerships.find(d => d.id === selectedDealerId);
+      if (!isValidSelection) {
+        setSelectedDealerId(null);
+      }
+    }
+  }, [stockDealerships]); // Only depends on stockDealerships
 
   const needsSelection = !loading && stockDealerships.length > 1 && !selectedDealerId;
 

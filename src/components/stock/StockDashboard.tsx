@@ -121,14 +121,7 @@ export const StockDashboard: React.FC = () => {
     );
   }
 
-  // Debug info
-  console.log('Stock Dashboard Debug:', {
-    stockDealerships: stockDealerships.length,
-    selectedDealerId,
-    needsSelection,
-    loading: dealerLoading
-  });
-
+  // Remove debug log
   return (
     <>
       <DealerSelectionModal
