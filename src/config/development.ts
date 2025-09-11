@@ -7,27 +7,27 @@ export const isDevelopment = import.meta.env.DEV;
 export const isProduction = import.meta.env.PROD;
 
 export const developmentConfig = {
-  // Cloud sync settings for development
+  // Cloud sync settings - DISABLED for stability
   cloudSync: {
-    enabled: false, // Disable cloud sync in development to reduce console noise
+    enabled: false, // Disabled globally - external API not available
     fallbackToLocal: true,
-    showWarnings: false, // Reduce CORS error noise in console
-    retryAttempts: 0, // Don't retry in development
-    timeout: 2000 // Shorter timeout for faster fallback
+    showWarnings: false, // Reduce console noise
+    retryAttempts: 0, // Don't retry
+    timeout: 2000
   },
   
   // API endpoints
   api: {
     baseUrl: isDevelopment 
-      ? 'http://localhost:3000' // Use local API in development if available
+      ? 'http://localhost:3000'
       : 'https://claude-memory-sync-api-production.up.railway.app',
     timeout: isDevelopment ? 2000 : 10000
   },
   
-  // Storage settings
+  // Storage settings - LOCAL ONLY
   storage: {
     namespace: isDevelopment ? 'mda-dev' : 'mda-enterprise',
-    enableCloudSync: !isDevelopment, // Only sync in production
+    enableCloudSync: false, // Disabled - use localStorage only
     verboseLogging: isDevelopment
   },
   

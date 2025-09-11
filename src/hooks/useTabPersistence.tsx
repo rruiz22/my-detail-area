@@ -49,7 +49,7 @@ export type PageKey = keyof typeof TAB_CONFIGS;
 /**
  * Hook for ultra-responsive tab persistence with instant UI updates and cloud sync
  */
-export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableCloudSync = true) {
+export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableCloudSync = false) {
   const config = TAB_CONFIGS[pageKey];
   
   if (enableCloudSync) {
@@ -74,7 +74,7 @@ export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableClo
 /**
  * Hook for view mode persistence (kanban vs table) with cloud sync
  */
-export function useViewModePersistence(pageKey: PageKey, enableCloudSync = true) {
+export function useViewModePersistence(pageKey: PageKey, enableCloudSync = false) {
   if (enableCloudSync) {
     const [viewMode, setViewMode] = useCloudSyncedState(
       `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
