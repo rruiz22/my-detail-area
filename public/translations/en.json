@@ -11,7 +11,11 @@
       "minimum_advance": "Must be at least 1 hour from now",
       "invalid_time_slot": "Selected time slot is not available",
       "no_slots_available": "No time slots available for selected date",
-      "same_day_notice": "Same day scheduling available until 6:00 PM"
+      "same_day_notice": "Same day scheduling available until 6:00 PM",
+      "customerNameRequired": "Customer name is required",
+      "vinInvalidLength": "VIN must be exactly 17 characters",
+      "emailInvalid": "Please enter a valid email address",
+      "dealershipRequired": "Please select a dealership"
     }
   },
   "sweetalert": {
@@ -908,6 +912,7 @@
     "no": "No",
     "confirm": "Confirm",
     "loading": "Loading...",
+    "optional": "Optional",
     "no_data": "No data available",
     "showing": "Showing",
     "of": "of",

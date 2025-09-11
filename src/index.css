@@ -220,4 +220,40 @@ All colors MUST be HSL.
   .sidebar-icon-centered .lucide {
     margin: 0 !important;
   }
+
+  /* Due Date Attention Animations */
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes flash-red {
+    0%, 100% {
+      background-color: transparent;
+    }
+    50% {
+      background-color: hsl(0 84.2% 60.2% / 0.1);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  .animate-flash-red {
+    animation: flash-red 2s ease-in-out infinite;
+  }
+
+  /* Due Date Indicator Styles */
+  .due-date-attention {
+    transition: all 0.3s ease;
+  }
+
+  .due-date-delayed {
+    transition: all 0.3s ease;
+  }
 }

@@ -11,7 +11,11 @@
       "minimum_advance": "Debe ser al menos 1 hora desde ahora",
       "invalid_time_slot": "El horario seleccionado no está disponible",
       "no_slots_available": "No hay horarios disponibles para la fecha seleccionada",
-      "same_day_notice": "Programación el mismo día disponible hasta las 6:00 PM"
+      "same_day_notice": "Programación el mismo día disponible hasta las 6:00 PM",
+      "customerNameRequired": "El nombre del cliente es obligatorio",
+      "vinInvalidLength": "El VIN debe tener exactamente 17 caracteres",
+      "emailInvalid": "Por favor ingrese un email válido",
+      "dealershipRequired": "Por favor seleccione un concesionario"
     }
   },
   "sweetalert": {
@@ -831,6 +835,7 @@
     "search": "Buscar",
     "filter": "Filtrar",
     "loading": "Cargando...",
+    "optional": "Opcional",
     "error": "Error",
     "success": "Éxito",
     "warning": "Advertencia",
