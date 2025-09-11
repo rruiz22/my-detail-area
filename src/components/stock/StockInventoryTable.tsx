@@ -217,29 +217,38 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                     <TableCell className="font-mono font-medium">
                       {vehicle.stock_number}
                     </TableCell>
-                    <TableCell className="font-mono text-sm">
-                      <div className="flex items-center space-x-2">
-                        {vehicle.key_photo_url && (
-                          <img 
-                            src={vehicle.key_photo_url} 
-                            alt="Vehicle"
-                            className="w-8 h-8 rounded object-cover"
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        )}
-                        <span>{vehicle.vin || '--'}</span>
+                    <TableCell>
+                      <div className="font-mono text-sm">
+                        {vehicle.vin || 'N/A'}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium">
-                          {vehicle.make} {vehicle.model}
+                      <div className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors" 
+                           onClick={() => handleVehicleClick(vehicle)}>
+                        <div className="w-10 h-10 bg-muted rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {vehicle.key_photo_url ? (
+                            <img 
+                              src={vehicle.key_photo_url} 
+                              alt="Vehicle" 
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                target.parentElement!.innerHTML = '<div class="h-4 w-4 text-muted-foreground"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg></div>';
+                              }}
+                            />
+                          ) : (
+                            <Car className="h-4 w-4 text-muted-foreground" />
+                          )}
                         </div>
-                        {vehicle.trim && (
-                          <div className="text-sm text-muted-foreground">
-                            {vehicle.trim}
+                        <div>
+                          <div className="font-medium">
+                            {vehicle.year} {vehicle.make} {vehicle.model || `${vehicle.raw_data?.Model || ''} ${vehicle.raw_data?.Trim || ''}`.trim()}
                           </div>
-                        )}
+                          <div className="text-sm text-muted-foreground">
+                            {vehicle.trim || vehicle.raw_data?.Trim}
+                          </div>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell className="text-right">{vehicle.year || '--'}</TableCell>
@@ -287,8 +296,8 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
       
       <VehicleDetailsModal
         vehicle={selectedVehicle}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
       />
     </Card>
   );

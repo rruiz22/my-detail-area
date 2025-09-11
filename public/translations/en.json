@@ -2370,5 +2370,33 @@
         "description": "No vehicles match your current filters"
       }
     }
+    },
+    "vehicleDetails": {
+      "overview": "Vehicle Overview",
+      "pricing": "Pricing Information",
+      "details": "Vehicle Details", 
+      "locationStatus": "Location & Status",
+      "leadPerformance": "Lead Performance",
+      "rawData": "Raw Data",
+      "year": "Year",
+      "make": "Make",
+      "model": "Model",
+      "trim": "Trim",
+      "vin": "VIN",
+      "stockNumber": "Stock Number",
+      "price": "Price",
+      "msrp": "MSRP",
+      "mileage": "Mileage",
+      "color": "Color",
+      "drivetrain": "Drivetrain",
+      "certified": "Certified",
+      "lotLocation": "Lot Location",
+      "dmsStatus": "DMS Status",
+      "objective": "Objective",
+      "ageDays": "Age (Days)",
+      "riskLight": "Risk Light",
+      "leadsLast7Days": "Leads (Last 7 Days)",
+      "leadsTotal": "Total Leads",
+      "photos": "photos"
+    }
   }
-}

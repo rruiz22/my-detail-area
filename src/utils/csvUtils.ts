@@ -43,6 +43,7 @@ const COLUMN_MAPPINGS: Record<string, string[]> = {
   make: ['make', 'marca', 'manufacturer', 'mfg', 'brand'],
   model: ['model', 'modelo', 'vehicle model', 'model name'],
   trim: ['trim', 'trim level', 'trim_level', 'variant'],
+  objective: ['objective', 'objetivo', 'sales status', 'inventory objective', 'status objective'],
   drivetrain: ['drivetrain', 'drive train', 'drive_train', 'transmission', 'trans'],
   segment: ['segment', 'category', 'type', 'class'],
   stock_number: ['stock number', 'stock_number', 'stocknumber', 'stock no', 'stock #', 'stock'],
@@ -52,7 +53,7 @@ const COLUMN_MAPPINGS: Record<string, string[]> = {
   is_certified: ['certified', 'is_certified', 'cert', 'certification'],
   certified_program: ['certified program', 'cert program', 'certification program'],
   dms_status: ['dms status', 'status', 'inventory status', 'stock status'],
-  age_days: ['age', 'age days', 'days in stock', 'inventory age', 'age_days'],
+  age_days: ['age', 'age days', 'days in stock', 'inventory age', 'age_days', 'days'],
   price: ['price', 'asking price', 'retail price', 'selling price', 'precio'],
   msrp: ['msrp', 'list price', 'manufacturer price', 'suggested retail'],
   photo_count: ['photo count', 'photos', 'image count', 'pictures'],
@@ -274,6 +275,8 @@ export function processVehicleData(
 
     let hasRequiredFields = 0;
     let hasMissingRequired = false;
+    let modelParts: string[] = [];
+    let trimParts: string[] = [];
 
     // Process each column
     headers.forEach((header, columnIndex) => {
@@ -296,9 +299,14 @@ export function processVehicleData(
             break;
           case 'model':
             vehicle.model = value;
+            modelParts.push(value);
             break;
           case 'trim':
             vehicle.trim = value;
+            trimParts.push(value);
+            break;
+          case 'objective':
+            vehicle.objective = value;
             break;
           case 'drivetrain':
             vehicle.drivetrain = value;
@@ -383,6 +391,14 @@ export function processVehicleData(
         vehicle.raw_data[header] = value;
       }
     });
+
+    // Combine model and trim for full model name
+    if (modelParts.length > 0 || trimParts.length > 0) {
+      const combinedModel = [...modelParts, ...trimParts].filter(Boolean).join(' ');
+      if (combinedModel) {
+        vehicle.model = combinedModel;
+      }
+    }
 
     // Validate required fields
     if (hasRequiredFields >= 2) { // stock_number AND vin
