@@ -25,48 +25,26 @@ interface UseStockDealerSelectionReturn {
 }
 
 export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
-  const { dealerships, loading: dealershipsLoading, filterByModule, refreshDealerships } = useAccessibleDealerships();
+  const { dealerships, loading: dealershipsLoading, refreshDealerships } = useAccessibleDealerships();
   const [stockDealerships, setStockDealerships] = useState<StockEnabledDealer[]>([]);
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Filter and auto-select first dealer
+  // Filter dealers and auto-select first one
   useEffect(() => {
     if (dealershipsLoading || !dealerships.length) return;
     
-    let isCancelled = false;
+    // Simple filter for stock-enabled dealers (assuming all have access for now)
+    const stockEnabled = dealerships.filter(dealer => dealer.status === 'active');
+    setStockDealerships(stockEnabled);
     
-    const processStockDealerships = async () => {
-      try {
-        setLoading(true);
-        const stockEnabled = await filterByModule('stock');
-        
-        if (isCancelled) return;
-        
-        setStockDealerships(stockEnabled);
-        
-        // Auto-select first dealer if available and none selected
-        if (stockEnabled.length > 0 && !selectedDealerId) {
-          setSelectedDealerId(stockEnabled[0].id);
-        }
-      } catch (error) {
-        if (!isCancelled) {
-          console.error('Error filtering stock dealerships:', error);
-          setStockDealerships([]);
-        }
-      } finally {
-        if (!isCancelled) {
-          setLoading(false);
-        }
-      }
-    };
-
-    processStockDealerships();
+    // Auto-select first dealer if available and none is currently selected
+    if (stockEnabled.length > 0 && selectedDealerId === null) {
+      setSelectedDealerId(stockEnabled[0].id);
+    }
     
-    return () => {
-      isCancelled = true;
-    };
-  }, [dealerships, dealershipsLoading, filterByModule]);
+    setLoading(false);
+  }, [dealerships, dealershipsLoading]);
 
   return {
     stockDealerships,

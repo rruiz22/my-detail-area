@@ -43,7 +43,7 @@ class LocalStorageService {
       const serialized = JSON.stringify(item);
       localStorage.setItem(namespacedKey, serialized);
       
-      console.log(`💾 Stored: ${namespacedKey}`, value);
+      // Stored successfully
       
       // Handle cloud sync if enabled
       this.handleCloudSync(key, value, options);
@@ -102,7 +102,7 @@ class LocalStorageService {
         return defaultValue;
       }
 
-      console.log(`📦 Retrieved: ${namespacedKey}`, item.data);
+      // Retrieved successfully
       return item.data;
       
     } catch (error) {
