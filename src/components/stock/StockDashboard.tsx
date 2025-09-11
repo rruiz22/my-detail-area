@@ -121,59 +121,58 @@ export const StockDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-3xl font-bold text-foreground">{t('stock.title')}</h1>
-              {stockDealerships.length > 1 && (
-                <Select value={selectedDealerId?.toString() || ''} onValueChange={(value) => setSelectedDealerId(parseInt(value))}>
-                  <SelectTrigger className="w-[280px]">
-                    <div className="flex items-center space-x-2">
-                      <Building2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="truncate">
-                        {selectedDealer ? selectedDealer.name : 'Select Dealer'}
-                      </span>
-                    </div>
-                    <ChevronDown className="w-4 h-4 opacity-50" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {stockDealerships.map((dealer) => (
-                      <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                        <div className="flex items-center space-x-2">
-                          <Building2 className="w-4 h-4" />
-                          <span>{dealer.name}</span>
-                          <Badge variant="outline" className="ml-auto text-xs">
-                            {dealer.city}, {dealer.state}
-                          </Badge>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-            <p className="text-muted-foreground">{t('stock.description')}</p>
-            {selectedDealer && stockDealerships.length === 1 && (
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Building2 className="w-3 h-3" />
-                <span>{selectedDealer.name} - {selectedDealer.city}, {selectedDealer.state}</span>
-              </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-4">
+            {stockDealerships.length > 1 && (
+              <Select value={selectedDealerId?.toString() || ''} onValueChange={(value) => setSelectedDealerId(parseInt(value))}>
+                <SelectTrigger className="w-[280px]">
+                  <div className="flex items-center space-x-2">
+                    <Building2 className="w-4 h-4 text-muted-foreground" />
+                    <span className="truncate">
+                      {selectedDealer ? selectedDealer.name : 'Select Dealer'}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-4 h-4 opacity-50" />
+                </SelectTrigger>
+                <SelectContent>
+                  {stockDealerships.map((dealer) => (
+                    <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                      <div className="flex items-center space-x-2">
+                        <Building2 className="w-4 h-4" />
+                        <span>{dealer.name}</span>
+                        <Badge variant="outline" className="ml-auto text-xs">
+                          {dealer.city}, {dealer.state}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={refreshInventory}
-              disabled={loading || !selectedDealerId}
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              {t('stock.actions.refresh')}
-            </Button>
-          </div>
+          <p className="text-muted-foreground">{t('stock.description')}</p>
+          {selectedDealer && stockDealerships.length === 1 && (
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <Building2 className="w-3 h-3" />
+              <span>{selectedDealer.name} - {selectedDealer.city}, {selectedDealer.state}</span>
+            </div>
+          )}
         </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={refreshInventory}
+            disabled={loading || !selectedDealerId}
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            {t('stock.actions.refresh')}
+          </Button>
+        </div>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
