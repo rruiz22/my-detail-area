@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAccessibleDealerships } from './useAccessibleDealerships';
-import { usePersistedState } from './usePersistedState';
 
 interface StockEnabledDealer {
   id: number;
@@ -30,47 +29,76 @@ export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
   const { dealerships, loading: dealershipsLoading, filterByModule, refreshDealerships } = useAccessibleDealerships();
   const [stockDealerships, setStockDealerships] = useState<StockEnabledDealer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDealerId, setSelectedDealerId] = usePersistedState<number | null>('stock-selected-dealer', null);
+  
+  // Simple localStorage access without hooks to avoid circular dependencies
+  const getStoredDealerId = useCallback((): number | null => {
+    try {
+      const stored = localStorage.getItem('mda.stock-selected-dealer');
+      return stored ? parseInt(stored, 10) : null;
+    } catch {
+      return null;
+    }
+  }, []);
 
-  // Filter dealerships with stock module access
+  const setStoredDealerId = useCallback((dealerId: number | null) => {
+    try {
+      if (dealerId) {
+        localStorage.setItem('mda.stock-selected-dealer', dealerId.toString());
+      } else {
+        localStorage.removeItem('mda.stock-selected-dealer');
+      }
+    } catch (error) {
+      console.error('Failed to store dealer ID:', error);
+    }
+  }, []);
+
+  const [selectedDealerId, setSelectedDealerIdState] = useState<number | null>(() => getStoredDealerId());
+
+  const setSelectedDealerId = useCallback((dealerId: number) => {
+    setSelectedDealerIdState(dealerId);
+    setStoredDealerId(dealerId);
+  }, [setStoredDealerId]);
+
+  // Single effect to filter dealerships - removed all problematic dependencies
   useEffect(() => {
+    let isCancelled = false;
+    
     const fetchStockDealerships = async () => {
-      if (!dealerships.length) return;
+      if (!dealerships.length || dealershipsLoading) return;
       
       try {
         setLoading(true);
         const stockEnabled = await filterByModule('stock');
+        
+        if (isCancelled) return;
+        
         setStockDealerships(stockEnabled);
         
-        // Auto-select if only one dealer has stock access and no dealer is currently selected
-        if (stockEnabled.length === 1 && !selectedDealerId) {
-          setSelectedDealerId(stockEnabled[0].id);
-        }
-        
-        // Validate current selection is still valid
-        if (selectedDealerId && !stockEnabled.find(d => d.id === selectedDealerId)) {
-          setSelectedDealerId(null);
+        // Auto-select logic
+        const currentSelected = getStoredDealerId();
+        if (stockEnabled.length === 1 && !currentSelected) {
+          const dealerId = stockEnabled[0].id;
+          setSelectedDealerIdState(dealerId);
+          setStoredDealerId(dealerId);
         }
       } catch (error) {
-        console.error('Error filtering stock dealerships:', error);
-        setStockDealerships([]);
+        if (!isCancelled) {
+          console.error('Error filtering stock dealerships:', error);
+          setStockDealerships([]);
+        }
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
     fetchStockDealerships();
-  }, [dealerships, filterByModule]); // REMOVED selectedDealerId and setSelectedDealerId from dependencies
-
-  // Separate effect to handle selectedDealerId validation
-  useEffect(() => {
-    if (stockDealerships.length > 0 && selectedDealerId) {
-      const isValidSelection = stockDealerships.find(d => d.id === selectedDealerId);
-      if (!isValidSelection) {
-        setSelectedDealerId(null);
-      }
-    }
-  }, [stockDealerships]); // Only depends on stockDealerships
+    
+    return () => {
+      isCancelled = true;
+    };
+  }, [dealerships.length, dealershipsLoading]); // Minimal dependencies
 
   const needsSelection = !loading && stockDealerships.length > 1 && !selectedDealerId;
 

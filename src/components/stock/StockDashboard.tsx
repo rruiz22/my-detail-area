@@ -121,7 +121,7 @@ export const StockDashboard: React.FC = () => {
     );
   }
 
-  // Remove debug log
+  // Fixed infinite loop - simplified hook without circular dependencies
   return (
     <>
       <DealerSelectionModal
