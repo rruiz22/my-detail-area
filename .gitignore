@@ -29,3 +29,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude temporary files
+*.sql
+step*.sql
+fix_*.sql
+create_*.sql
+diagnostic_*.sql
+src/utils/debug*.js
