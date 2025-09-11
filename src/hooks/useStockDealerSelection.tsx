@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccessibleDealerships } from './useAccessibleDealerships';
 
 interface StockEnabledDealer {
@@ -21,51 +21,22 @@ interface UseStockDealerSelectionReturn {
   selectedDealerId: number | null;
   setSelectedDealerId: (dealerId: number) => void;
   loading: boolean;
-  needsSelection: boolean;
   refreshDealerships: () => void;
 }
 
 export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
   const { dealerships, loading: dealershipsLoading, filterByModule, refreshDealerships } = useAccessibleDealerships();
   const [stockDealerships, setStockDealerships] = useState<StockEnabledDealer[]>([]);
+  const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  
-  // Simple localStorage access without hooks to avoid circular dependencies
-  const getStoredDealerId = useCallback((): number | null => {
-    try {
-      const stored = localStorage.getItem('mda.stock-selected-dealer');
-      return stored ? parseInt(stored, 10) : null;
-    } catch {
-      return null;
-    }
-  }, []);
 
-  const setStoredDealerId = useCallback((dealerId: number | null) => {
-    try {
-      if (dealerId) {
-        localStorage.setItem('mda.stock-selected-dealer', dealerId.toString());
-      } else {
-        localStorage.removeItem('mda.stock-selected-dealer');
-      }
-    } catch (error) {
-      console.error('Failed to store dealer ID:', error);
-    }
-  }, []);
-
-  const [selectedDealerId, setSelectedDealerIdState] = useState<number | null>(() => getStoredDealerId());
-
-  const setSelectedDealerId = useCallback((dealerId: number) => {
-    setSelectedDealerIdState(dealerId);
-    setStoredDealerId(dealerId);
-  }, [setStoredDealerId]);
-
-  // Single effect to filter dealerships - removed all problematic dependencies
+  // Filter and auto-select first dealer
   useEffect(() => {
+    if (dealershipsLoading || !dealerships.length) return;
+    
     let isCancelled = false;
     
-    const fetchStockDealerships = async () => {
-      if (!dealerships.length || dealershipsLoading) return;
-      
+    const processStockDealerships = async () => {
       try {
         setLoading(true);
         const stockEnabled = await filterByModule('stock');
@@ -74,12 +45,9 @@ export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
         
         setStockDealerships(stockEnabled);
         
-        // Auto-select logic
-        const currentSelected = getStoredDealerId();
-        if (stockEnabled.length === 1 && !currentSelected) {
-          const dealerId = stockEnabled[0].id;
-          setSelectedDealerIdState(dealerId);
-          setStoredDealerId(dealerId);
+        // Auto-select first dealer if available and none selected
+        if (stockEnabled.length > 0 && !selectedDealerId) {
+          setSelectedDealerId(stockEnabled[0].id);
         }
       } catch (error) {
         if (!isCancelled) {
@@ -93,21 +61,18 @@ export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
       }
     };
 
-    fetchStockDealerships();
+    processStockDealerships();
     
     return () => {
       isCancelled = true;
     };
-  }, [dealerships.length, dealershipsLoading]); // Minimal dependencies
-
-  const needsSelection = !loading && stockDealerships.length > 1 && !selectedDealerId;
+  }, [dealerships, dealershipsLoading, filterByModule]);
 
   return {
     stockDealerships,
     selectedDealerId,
     setSelectedDealerId,
     loading: dealershipsLoading || loading,
-    needsSelection,
     refreshDealerships
   };
 };

@@ -13,7 +13,7 @@ import { StockCSVUploader } from './StockCSVUploader';
 import { StockAnalytics } from './StockAnalytics';
 import { StockDMSConfig } from './StockDMSConfig';
 import { StockSyncHistory } from './StockSyncHistory';
-import { DealerSelectionModal } from './DealerSelectionModal';
+
 import { 
   Package, 
   Upload, 
@@ -35,8 +35,7 @@ export const StockDashboard: React.FC = () => {
     stockDealerships,
     selectedDealerId,
     setSelectedDealerId,
-    loading: dealerLoading,
-    needsSelection
+    loading: dealerLoading
   } = useStockDealerSelection();
   
   const { 
@@ -121,27 +120,21 @@ export const StockDashboard: React.FC = () => {
     );
   }
 
-  // Fixed infinite loop - simplified hook without circular dependencies
   return (
-    <>
-      <DealerSelectionModal
-        isOpen={needsSelection}
-        dealers={stockDealerships}
-        onSelectDealer={(dealerId) => setSelectedDealerId(dealerId)}
-      />
-      
-      <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <div className="flex items-center space-x-4">
               <h1 className="text-3xl font-bold text-foreground">{t('stock.title')}</h1>
-              {stockDealerships.length > 1 && selectedDealer && (
-                <Select value={selectedDealerId?.toString()} onValueChange={(value) => setSelectedDealerId(parseInt(value))}>
+              {stockDealerships.length > 1 && (
+                <Select value={selectedDealerId?.toString() || ''} onValueChange={(value) => setSelectedDealerId(parseInt(value))}>
                   <SelectTrigger className="w-[280px]">
                     <div className="flex items-center space-x-2">
                       <Building2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="truncate">{selectedDealer.name}</span>
+                      <span className="truncate">
+                        {selectedDealer ? selectedDealer.name : 'Select Dealer'}
+                      </span>
                     </div>
                     <ChevronDown className="w-4 h-4 opacity-50" />
                   </SelectTrigger>
@@ -162,10 +155,10 @@ export const StockDashboard: React.FC = () => {
               )}
             </div>
             <p className="text-muted-foreground">{t('stock.description')}</p>
-            {selectedDealer && (
+            {selectedDealer && stockDealerships.length === 1 && (
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Building2 className="w-3 h-3" />
-                <span>{selectedDealer.city}, {selectedDealer.state}</span>
+                <span>{selectedDealer.name} - {selectedDealer.city}, {selectedDealer.state}</span>
               </div>
             )}
           </div>
@@ -261,7 +254,6 @@ export const StockDashboard: React.FC = () => {
           <StockSyncHistory dealerId={selectedDealerId || undefined} />
         </TabsContent>
       </Tabs>
-      </div>
-    </>
+    </div>
   );
 };
