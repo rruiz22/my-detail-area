@@ -47,42 +47,62 @@ export const StockDashboard: React.FC = () => {
   const selectedDealer = stockDealerships.find(d => d.id === selectedDealerId);
   const loading = dealerLoading || inventoryLoading;
 
-  // Mock metrics for now
-  const metrics = {
-    totalVehicles: inventory?.length || 0,
-    averagePrice: 32500,
-    averageAgeDays: 42,
-    totalValue: 5297500
-  };
+  // Calculate real metrics from inventory data
+  const metrics = React.useMemo(() => {
+    if (!inventory?.length) {
+      return {
+        totalVehicles: 0,
+        averagePrice: 0,
+        averageAgeDays: 0,
+        totalValue: 0
+      };
+    }
+
+    const validPrices = inventory.filter(v => v.price && v.price > 0);
+    const validAges = inventory.filter(v => v.age_days !== null && v.age_days !== undefined);
+    
+    const averagePrice = validPrices.length > 0 
+      ? validPrices.reduce((sum, v) => sum + (v.price || 0), 0) / validPrices.length
+      : 0;
+      
+    const averageAgeDays = validAges.length > 0
+      ? validAges.reduce((sum, v) => sum + (v.age_days || 0), 0) / validAges.length
+      : 0;
+      
+    const totalValue = inventory.reduce((sum, v) => sum + (v.price || 0), 0);
+
+    return {
+      totalVehicles: inventory.length,
+      averagePrice: Math.round(averagePrice),
+      averageAgeDays: Math.round(averageAgeDays),
+      totalValue: Math.round(totalValue)
+    };
+  }, [inventory]);
 
   const stats = [
     {
       title: t('stock.metrics.totalVehicles'),
       value: metrics?.totalVehicles || 0,
       icon: Package,
-      trend: '+5%',
-      trendUp: true
+      suffix: ' vehicles'
     },
     {
       title: t('stock.dashboard.avg_price'),
       value: `$${(metrics?.averagePrice || 0).toLocaleString()}`,
       icon: DollarSign,
-      trend: '+2.1%',
-      trendUp: true
+      suffix: ' avg'
     },
     {
       title: t('stock.dashboard.avg_age_days'),
-      value: metrics?.averageAgeDays || 0,
+      value: `${metrics?.averageAgeDays || 0} days`,
       icon: Calendar,
-      trend: '-3 days',
-      trendUp: false
+      suffix: ' on lot'
     },
     {
       title: t('stock.dashboard.inventory_value'),
       value: `$${(metrics?.totalValue || 0).toLocaleString()}`,
       icon: TrendingUp,
-      trend: '+12.5%',
-      trendUp: true
+      suffix: ' total'
     }
   ];
 
@@ -189,17 +209,11 @@ export const StockDashboard: React.FC = () => {
                   </p>
                   <div className="flex items-center space-x-2">
                     <p className="text-2xl font-bold">{stat.value}</p>
-                    <Badge 
-                      variant={stat.trendUp ? "default" : "secondary"}
-                      className="text-xs"
-                    >
-                      {stat.trendUp ? (
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                      ) : (
-                        <TrendingDown className="w-3 h-3 mr-1" />
-                      )}
-                      {stat.trend}
-                    </Badge>
+                    {stat.suffix && (
+                      <span className="text-xs text-muted-foreground">
+                        {stat.suffix}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

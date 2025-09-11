@@ -1,13 +1,60 @@
 {
   "stock": {
     "title": "Gestión de Inventario",
-    "subtitle": "Administra tu inventario de vehículos",
+    "subtitle": "Administra tu inventario de vehículos", 
+    "description": "Gestión integral de inventario de vehículos y análisis",
     "inventory": {
       "title": "Inventario de Vehículos",
       "no_vehicles": "No se encontraron vehículos",
       "upload_csv": "Subir CSV",
       "last_sync": "Última sincronización",
       "total_vehicles": "Total de vehículos"
+    },
+    "errors": {
+      "no_access": "Sin Acceso a Inventario",
+      "no_access_description": "No tienes acceso a concesionarios con inventario habilitado. Contacta a tu administrador para habilitar la gestión de inventario."
+    },
+    "actions": {
+      "refresh": "Actualizar"
+    },
+    "tabs": {
+      "inventory": "Inventario",
+      "upload": "Subir",
+      "analytics": "Análisis",
+      "dms_config": "Config DMS", 
+      "sync_history": "Historial Sync"
+    },
+    "upload": {
+      "title": "Subir Inventario",
+      "drop_files": "Suelta tus archivos CSV aquí",
+      "drag_drop_files": "Arrastra y suelta archivos CSV aquí, o haz clic para explorar",
+      "supported_formats": "Formatos soportados: CSV",
+      "browse_files": "Explorar Archivos",
+      "sample_csv": "CSV de Muestra",
+      "sample_csv_description": "Descargar plantilla CSV de muestra",
+      "download_sample": "Descargar Muestra",
+      "files_to_upload": "Archivos para Subir",
+      "clear_all": "Limpiar Todo",
+      "upload_all": "Subir Todo",
+      "preview": "Vista Previa",
+      "more_rows": "y {{count}} filas más...",
+      "success": "Subida Exitosa",
+      "error": "Error de Subida",
+      "error_message": "Falló al subir archivo",
+      "status": {
+        "pending": "Pendiente",
+        "uploading": "Subiendo",
+        "success": "Éxito",
+        "error": "Error"
+      }
+    },
+    "dashboard": {
+      "avg_price": "Precio Promedio",
+      "avg_age_days": "Edad Promedio",
+      "inventory_value": "Valor del Inventario"
+    },
+    "metrics": {
+      "totalVehicles": "Total de Vehículos"
     },
     "table": {
       "stock_number": "# Stock",

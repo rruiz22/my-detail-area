@@ -2,12 +2,59 @@
   "stock": {
     "title": "Stock Management",
     "subtitle": "Manage your vehicle inventory",
+    "description": "Comprehensive vehicle inventory management and analytics",
     "inventory": {
       "title": "Vehicle Inventory",
       "no_vehicles": "No vehicles found",
       "upload_csv": "Upload CSV",
       "last_sync": "Last sync",
       "total_vehicles": "Total vehicles"
+    },
+    "errors": {
+      "no_access": "No Stock Access",
+      "no_access_description": "You don't have access to any stock-enabled dealerships. Contact your administrator to enable stock management."
+    },
+    "actions": {
+      "refresh": "Refresh"
+    },
+    "tabs": {
+      "inventory": "Inventory",
+      "upload": "Upload",
+      "analytics": "Analytics", 
+      "dms_config": "DMS Config",
+      "sync_history": "Sync History"
+    },
+    "upload": {
+      "title": "Upload Inventory",
+      "drop_files": "Drop your CSV files here",
+      "drag_drop_files": "Drag and drop CSV files here, or click to browse",
+      "supported_formats": "Supported formats: CSV",
+      "browse_files": "Browse Files",
+      "sample_csv": "Sample CSV",
+      "sample_csv_description": "Download a sample CSV template",
+      "download_sample": "Download Sample",
+      "files_to_upload": "Files to Upload",
+      "clear_all": "Clear All",
+      "upload_all": "Upload All",
+      "preview": "Preview",
+      "more_rows": "and {{count}} more rows...",
+      "success": "Upload Successful",
+      "error": "Upload Error",
+      "error_message": "Failed to upload file",
+      "status": {
+        "pending": "Pending",
+        "uploading": "Uploading",
+        "success": "Success",
+        "error": "Error"
+      }
+    },
+    "dashboard": {
+      "avg_price": "Average Price",
+      "avg_age_days": "Average Age",
+      "inventory_value": "Inventory Value"
+    },
+    "metrics": {
+      "totalVehicles": "Total Vehicles"
     },
     "table": {
       "stock_number": "Stock #",

@@ -1,13 +1,60 @@
 {
   "stock": {
-    "title": "Gestão de Estoque",
+    "title": "Gestão de Estoque", 
     "subtitle": "Gerencie seu inventário de veículos",
+    "description": "Gestão abrangente de inventário de veículos e análise",
     "inventory": {
-      "title": "Inventário de Veículos", 
+      "title": "Inventário de Veículos",
       "no_vehicles": "Nenhum veículo encontrado",
-      "upload_csv": "Enviar CSV",
+      "upload_csv": "Enviar CSV", 
       "last_sync": "Última sincronização",
       "total_vehicles": "Total de veículos"
+    },
+    "errors": {
+      "no_access": "Sem Acesso ao Estoque",
+      "no_access_description": "Você não tem acesso a concessionárias com estoque habilitado. Contate seu administrador para habilitar a gestão de estoque."
+    },
+    "actions": {
+      "refresh": "Atualizar"
+    },
+    "tabs": {
+      "inventory": "Inventário",
+      "upload": "Enviar",
+      "analytics": "Análise",
+      "dms_config": "Config DMS",
+      "sync_history": "Histórico Sync"
+    },
+    "upload": {
+      "title": "Enviar Inventário",
+      "drop_files": "Solte seus arquivos CSV aqui",
+      "drag_drop_files": "Arraste e solte arquivos CSV aqui, ou clique para navegar",
+      "supported_formats": "Formatos suportados: CSV",
+      "browse_files": "Navegar Arquivos",
+      "sample_csv": "CSV de Exemplo",
+      "sample_csv_description": "Baixar modelo CSV de exemplo",
+      "download_sample": "Baixar Exemplo",
+      "files_to_upload": "Arquivos para Enviar",
+      "clear_all": "Limpar Tudo",
+      "upload_all": "Enviar Tudo",
+      "preview": "Visualização",
+      "more_rows": "e mais {{count}} linhas...",
+      "success": "Envio Bem-sucedido",
+      "error": "Erro de Envio",
+      "error_message": "Falha ao enviar arquivo",
+      "status": {
+        "pending": "Pendente",
+        "uploading": "Enviando",
+        "success": "Sucesso",
+        "error": "Erro"
+      }
+    },
+    "dashboard": {
+      "avg_price": "Preço Médio",
+      "avg_age_days": "Idade Média", 
+      "inventory_value": "Valor do Inventário"
+    },
+    "metrics": {
+      "totalVehicles": "Total de Veículos"
     },
     "table": {
       "stock_number": "# Estoque",
