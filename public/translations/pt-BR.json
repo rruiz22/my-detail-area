@@ -153,6 +153,116 @@
     "confirm_status": "Confirmar Mudança de Status",
     "status_change_warning": "Isso mudará o status do pedido"
   },
+  "stock": {
+    "title": "Inventário de Estoque",
+    "description": "Gerenciar inventário de veículos e acompanhar desempenho do estoque",
+    "uploadCSV": "Upload CSV",
+    "analytics": "Analytics",
+    "metrics": {
+      "totalVehicles": "Total de Veículos",
+      "avgAge": "Idade Média",
+      "totalValue": "Valor Total"
+    },
+    "inventory": {
+      "title": "Inventário de Veículos",
+      "description": "Navegar e gerenciar seu estoque atual de veículos"
+    },
+    "placeholder": {
+      "title": "Sistema de Gestão de Estoque",
+      "description": "Faça upload do seu inventário de veículos para começar com a gestão de estoque",
+      "action": "Fazer Upload do Inventário"
+    },
+    "tabs": {
+      "inventory": "Inventário",
+      "upload": "Upload CSV",
+      "analytics": "Analytics",
+      "dms": "Config DMS",
+      "history": "Histórico Sync"
+    },
+    "dashboard": {
+      "title": "Painel de Estoque",
+      "description": "Visão geral do desempenho do seu inventário de veículos",
+      "refresh": "Atualizar Dados"
+    },
+    "table": {
+      "stockNumber": "# Estoque",
+      "vin": "VIN",
+      "vehicle": "Veículo",
+      "year": "Ano",
+      "make": "Marca",
+      "model": "Modelo",
+      "trim": "Versão",
+      "price": "Preço",
+      "age": "Idade",
+      "leads": "Leads",
+      "status": "Status",
+      "actions": "Ações",
+      "search": "Pesquisar inventário...",
+      "noResults": "Nenhum veículo encontrado",
+      "loading": "Carregando inventário...",
+      "empty": "Nenhum dado de inventário disponível"
+    },
+    "upload": {
+      "title": "Upload CSV",
+      "description": "Faça upload dos dados do seu inventário de veículos",
+      "selectFile": "Selecionar arquivo CSV",
+      "dragDrop": "Arraste e solte seu arquivo CSV aqui, ou clique para navegar",
+      "uploading": "Fazendo upload...",
+      "success": "Upload bem-sucedido",
+      "error": "Falha no upload",
+      "processing": "Processando arquivo CSV...",
+      "validating": "Validando dados..."
+    },
+    "analytics": {
+      "title": "Analytics de Estoque",
+      "description": "Insights detalhados sobre o desempenho do seu inventário",
+      "timeRange": "Período de Tempo",
+      "exportData": "Exportar Dados",
+      "inventoryByMake": "Inventário por Marca",
+      "priceDistribution": "Distribuição de Preços",
+      "ageAnalysis": "Análise de Idade",
+      "trends": "Tendências do Inventário"
+    },
+    "dms": {
+      "title": "Configuração DMS",
+      "description": "Configure sua integração com o Sistema de Gestão de Concessionária",
+      "provider": "Provedor DMS",
+      "endpoint": "Endpoint da API",
+      "dealerCode": "Código da Concessionária",
+      "apiKey": "Chave da API",
+      "autoSync": "Sincronização Automática",
+      "frequency": "Frequência de Sync",
+      "testConnection": "Testar Conexão",
+      "saveConfig": "Salvar Configuração",
+      "connectionStatus": "Status da Conexão",
+      "lastSync": "Última Sincronização",
+      "connected": "Conectado",
+      "disconnected": "Desconectado"
+    },
+    "history": {
+      "title": "Histórico de Sincronização",
+      "description": "Ver os logs de sincronização do seu inventário",
+      "date": "Data",
+      "type": "Tipo",
+      "status": "Status",
+      "records": "Registros",
+      "details": "Detalhes"
+    },
+    "autopop": {
+      "searchVehicle": "Pesquisar por # Estoque ou VIN",
+      "searchResults": "Resultados da Pesquisa de Veículos",
+      "useVehicle": "Usar Este Veículo",
+      "localInventory": "Inventário Local",
+      "vinDecoded": "VIN Decodificado",
+      "noResults": "Nenhum veículo encontrado",
+      "searching": "Pesquisando...",
+      "confidence": {
+        "high": "Alta Confiança",
+        "medium": "Confiança Média",
+        "low": "Baixa Confiança"
+      }
+    }
+  },
   "app": {
     "name": "Sistema de Gestão de Detalhamento",
     "welcome": "Bem-vindo",

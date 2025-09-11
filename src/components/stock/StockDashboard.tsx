@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useStockManagement } from '@/hooks/useStockManagement';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { StockInventoryTable } from './StockInventoryTable';
 import { StockCSVUploader } from './StockCSVUploader';
 import { StockAnalytics } from './StockAnalytics';
@@ -25,11 +26,13 @@ import {
 export const StockDashboard: React.FC = () => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('inventory');
+  const { dealerships } = useAccessibleDealerships();
+  const dealerId = dealerships[0]?.id;
   const { 
     inventory, 
     loading, 
     refreshInventory
-  } = useStockManagement();
+  } = useStockManagement(dealerId);
 
   // Mock metrics for now
   const metrics = {
@@ -41,7 +44,7 @@ export const StockDashboard: React.FC = () => {
 
   const stats = [
     {
-      title: t('stock.dashboard.total_vehicles'),
+      title: t('stock.metrics.totalVehicles'),
       value: metrics?.totalVehicles || 0,
       icon: Package,
       trend: '+5%',

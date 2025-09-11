@@ -30,6 +30,116 @@
     "confirm_status": "Confirmar Cambio de Estado",
     "status_change_warning": "Esto cambiará el estado de la orden"
   },
+  "stock": {
+    "title": "Inventario de Stock",
+    "description": "Gestionar inventario de vehículos y seguimiento de rendimiento",
+    "uploadCSV": "Subir CSV",
+    "analytics": "Analíticas",
+    "metrics": {
+      "totalVehicles": "Total de Vehículos",
+      "avgAge": "Edad Promedio",
+      "totalValue": "Valor Total"
+    },
+    "inventory": {
+      "title": "Inventario de Vehículos",
+      "description": "Explorar y gestionar tu stock actual de vehículos"
+    },
+    "placeholder": {
+      "title": "Sistema de Gestión de Stock",
+      "description": "Sube tu inventario de vehículos para comenzar con la gestión de stock",
+      "action": "Subir Inventario"
+    },
+    "tabs": {
+      "inventory": "Inventario",
+      "upload": "Subir CSV",
+      "analytics": "Analíticas",
+      "dms": "Config DMS",
+      "history": "Historial Sync"
+    },
+    "dashboard": {
+      "title": "Panel de Stock",
+      "description": "Vista general del rendimiento de tu inventario de vehículos",
+      "refresh": "Actualizar Datos"
+    },
+    "table": {
+      "stockNumber": "# Stock",
+      "vin": "VIN",
+      "vehicle": "Vehículo",
+      "year": "Año",
+      "make": "Marca",
+      "model": "Modelo",
+      "trim": "Versión",
+      "price": "Precio",
+      "age": "Edad",
+      "leads": "Leads",
+      "status": "Estado",
+      "actions": "Acciones",
+      "search": "Buscar inventario...",
+      "noResults": "No se encontraron vehículos",
+      "loading": "Cargando inventario...",
+      "empty": "No hay datos de inventario disponibles"
+    },
+    "upload": {
+      "title": "Subida CSV",
+      "description": "Sube los datos de tu inventario de vehículos",
+      "selectFile": "Seleccionar archivo CSV",
+      "dragDrop": "Arrastra y suelta tu archivo CSV aquí, o haz clic para navegar",
+      "uploading": "Subiendo...",
+      "success": "Subida exitosa",
+      "error": "Error en la subida",
+      "processing": "Procesando archivo CSV...",
+      "validating": "Validando datos..."
+    },
+    "analytics": {
+      "title": "Analíticas de Stock",
+      "description": "Información detallada sobre el rendimiento de tu inventario",
+      "timeRange": "Rango de Tiempo",
+      "exportData": "Exportar Datos",
+      "inventoryByMake": "Inventario por Marca",
+      "priceDistribution": "Distribución de Precios",
+      "ageAnalysis": "Análisis de Edad",
+      "trends": "Tendencias del Inventario"
+    },
+    "dms": {
+      "title": "Configuración DMS",
+      "description": "Configura tu integración con el Sistema de Gestión de Concesionario",
+      "provider": "Proveedor DMS",
+      "endpoint": "Endpoint API",
+      "dealerCode": "Código del Concesionario",
+      "apiKey": "Clave API",
+      "autoSync": "Auto Sincronización",
+      "frequency": "Frecuencia de Sync",
+      "testConnection": "Probar Conexión",
+      "saveConfig": "Guardar Configuración",
+      "connectionStatus": "Estado de Conexión",
+      "lastSync": "Última Sincronización",
+      "connected": "Conectado",
+      "disconnected": "Desconectado"
+    },
+    "history": {
+      "title": "Historial de Sincronización",
+      "description": "Ver los registros de sincronización de tu inventario",
+      "date": "Fecha",
+      "type": "Tipo",
+      "status": "Estado",
+      "records": "Registros",
+      "details": "Detalles"
+    },
+    "autopop": {
+      "searchVehicle": "Buscar por # Stock o VIN",
+      "searchResults": "Resultados de Búsqueda de Vehículos",
+      "useVehicle": "Usar Este Vehículo",
+      "localInventory": "Inventario Local",
+      "vinDecoded": "VIN Decodificado",
+      "noResults": "No se encontraron vehículos",
+      "searching": "Buscando...",
+      "confidence": {
+        "high": "Alta Confianza",
+        "medium": "Confianza Media",
+        "low": "Baja Confianza"
+      }
+    }
+  },
   "app": {
     "name": "Sistema de Gestión de Detallado",
     "welcome": "Bienvenido",

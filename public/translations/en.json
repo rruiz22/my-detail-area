@@ -30,6 +30,116 @@
     "confirm_status": "Confirm Status Change",
     "status_change_warning": "This will change the order status"
   },
+  "stock": {
+    "title": "Stock Inventory",
+    "description": "Manage vehicle inventory and track stock performance",
+    "uploadCSV": "Upload CSV",
+    "analytics": "Analytics",
+    "metrics": {
+      "totalVehicles": "Total Vehicles",
+      "avgAge": "Average Age",
+      "totalValue": "Total Value"
+    },
+    "inventory": {
+      "title": "Vehicle Inventory",
+      "description": "Browse and manage your current vehicle stock"
+    },
+    "placeholder": {
+      "title": "Stock Management System",
+      "description": "Upload your vehicle inventory to get started with stock management",
+      "action": "Upload Inventory"
+    },
+    "tabs": {
+      "inventory": "Inventory",
+      "upload": "Upload CSV",
+      "analytics": "Analytics",
+      "dms": "DMS Config",
+      "history": "Sync History"
+    },
+    "dashboard": {
+      "title": "Stock Dashboard",
+      "description": "Overview of your vehicle inventory performance",
+      "refresh": "Refresh Data"
+    },
+    "table": {
+      "stockNumber": "Stock #",
+      "vin": "VIN",
+      "vehicle": "Vehicle",
+      "year": "Year",
+      "make": "Make",
+      "model": "Model",
+      "trim": "Trim",
+      "price": "Price",
+      "age": "Age",
+      "leads": "Leads",
+      "status": "Status",
+      "actions": "Actions",
+      "search": "Search inventory...",
+      "noResults": "No vehicles found",
+      "loading": "Loading inventory...",
+      "empty": "No inventory data available"
+    },
+    "upload": {
+      "title": "CSV Upload",
+      "description": "Upload your vehicle inventory data",
+      "selectFile": "Select CSV File",
+      "dragDrop": "Drag and drop your CSV file here, or click to browse",
+      "uploading": "Uploading...",
+      "success": "Upload successful",
+      "error": "Upload failed",
+      "processing": "Processing CSV file...",
+      "validating": "Validating data..."
+    },
+    "analytics": {
+      "title": "Stock Analytics",
+      "description": "Detailed insights into your inventory performance",
+      "timeRange": "Time Range",
+      "exportData": "Export Data",
+      "inventoryByMake": "Inventory by Make",
+      "priceDistribution": "Price Distribution",
+      "ageAnalysis": "Age Analysis",
+      "trends": "Inventory Trends"
+    },
+    "dms": {
+      "title": "DMS Configuration",
+      "description": "Configure your Dealer Management System integration",
+      "provider": "DMS Provider",
+      "endpoint": "API Endpoint",
+      "dealerCode": "Dealer Code",
+      "apiKey": "API Key",
+      "autoSync": "Auto Sync",
+      "frequency": "Sync Frequency",
+      "testConnection": "Test Connection",
+      "saveConfig": "Save Configuration",
+      "connectionStatus": "Connection Status",
+      "lastSync": "Last Sync",
+      "connected": "Connected",
+      "disconnected": "Disconnected"
+    },
+    "history": {
+      "title": "Sync History",
+      "description": "View your inventory synchronization logs",
+      "date": "Date",
+      "type": "Type",
+      "status": "Status",
+      "records": "Records",
+      "details": "Details"
+    },
+    "autopop": {
+      "searchVehicle": "Search by Stock # or VIN",
+      "searchResults": "Vehicle Search Results",
+      "useVehicle": "Use This Vehicle",
+      "localInventory": "Local Inventory",
+      "vinDecoded": "VIN Decoded",
+      "noResults": "No vehicles found",
+      "searching": "Searching...",
+      "confidence": {
+        "high": "High Confidence",
+        "medium": "Medium Confidence", 
+        "low": "Low Confidence"
+      }
+    }
+  },
   "app": {
     "name": "Detailing Management System",
     "welcome": "Welcome",
