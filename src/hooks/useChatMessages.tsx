@@ -127,15 +127,39 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
 
       if (fetchError) throw fetchError;
 
-      // Process messages with sender info
+      // Get real sender information
+      const userIds = [...new Set(data?.map(msg => msg.user_id) || [])];
+      let senderProfiles: Record<string, any> = {};
+      
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, first_name, last_name, email')
+          .in('id', userIds);
+        
+        if (profiles) {
+          senderProfiles = profiles.reduce((acc, profile) => {
+            acc[profile.id] = {
+              id: profile.id,
+              name: profile.first_name && profile.last_name 
+                ? `${profile.first_name} ${profile.last_name}`
+                : profile.email,
+              avatar_url: undefined
+            };
+            return acc;
+          }, {} as Record<string, any>);
+        }
+      }
+
+      // Process messages with real sender info
       const processedMessages: ChatMessage[] = data?.map(msg => ({
         ...msg,
         reactions: (msg.reactions as Record<string, string[]>) || {},
         mentions: (msg.mentions as string[]) || [],
         metadata: (msg.metadata as Record<string, any>) || {},
-        sender: {
+        sender: senderProfiles[msg.user_id] || {
           id: msg.user_id,
-          name: 'User', // Simplified for now
+          name: 'Unknown User',
           avatar_url: undefined
         },
         is_own_message: msg.user_id === user.id,
@@ -182,14 +206,38 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         .order('created_at', { ascending: true });
 
       if (data && data.length > 0) {
+        // Get sender profiles for new messages
+        const userIds = [...new Set(data.map(msg => msg.user_id))];
+        let senderProfiles: Record<string, any> = {};
+        
+        if (userIds.length > 0) {
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, first_name, last_name, email')
+            .in('id', userIds);
+          
+          if (profiles) {
+            senderProfiles = profiles.reduce((acc, profile) => {
+              acc[profile.id] = {
+                id: profile.id,
+                name: profile.first_name && profile.last_name 
+                  ? `${profile.first_name} ${profile.last_name}`
+                  : profile.email,
+                avatar_url: undefined
+              };
+              return acc;
+            }, {} as Record<string, any>);
+          }
+        }
+
         const processedMessages: ChatMessage[] = data.map(msg => ({
           ...msg,
           reactions: (msg.reactions as Record<string, string[]>) || {},
           mentions: (msg.mentions as string[]) || [],
           metadata: (msg.metadata as Record<string, any>) || {},
-          sender: {
+          sender: senderProfiles[msg.user_id] || {
             id: msg.user_id,
-            name: 'User',
+            name: 'Unknown User',
             avatar_url: undefined
           },
           is_own_message: msg.user_id === user.id,

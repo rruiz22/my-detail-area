@@ -3598,6 +3598,29 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_conversation_last_messages: {
+        Args: { conversation_ids: string[] }
+        Returns: {
+          conversation_id: string
+          last_message_at: string
+          last_message_content: string
+          last_message_type: string
+          last_sender_name: string
+        }[]
+      }
+      get_conversation_participants: {
+        Args: { conversation_uuid: string; requesting_user_id: string }
+        Returns: {
+          avatar_url: string
+          joined_at: string
+          last_seen_at: string
+          permission_level: string
+          presence_status: string
+          user_email: string
+          user_id: string
+          user_name: string
+        }[]
+      }
       get_dealer_categories_for_module: {
         Args: {
           p_dealer_id: number
@@ -3949,6 +3972,10 @@ export type Database = {
           p_is_enabled: boolean
           p_module: Database["public"]["Enums"]["app_module"]
         }
+        Returns: boolean
+      }
+      update_user_presence: {
+        Args: { p_activity?: string; p_dealer_id: number; p_status?: string }
         Returns: boolean
       }
       user_can_update_order_status: {

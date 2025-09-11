@@ -103,19 +103,53 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
 
       if (conversationsError) throw conversationsError;
 
-      // Get unread counts for each conversation
+      // Get real unread counts for each conversation
       const conversationIds = conversationsData?.map(c => c.id) || [];
       
-      // Simulate unread data for now
-      const unreadData = conversationIds.map(id => ({ conversation_id: id, unread_count: 0 }));
+      let unreadData: { conversation_id: string; unread_count: number }[] = [];
+      if (conversationIds.length > 0) {
+        const { data: unreadCounts, error: unreadError } = await supabase
+          .rpc('get_unread_message_counts', {
+            conversation_ids: conversationIds,
+            user_id: user.id
+          });
 
-      // Simplified participant data for now  
-      const participantsData: any[] = [];
+        if (!unreadError && unreadCounts) {
+          unreadData = unreadCounts;
+        }
+      }
 
-      // Process conversations with additional data
+      // Get real last message previews
+      let lastMessages: any[] = [];
+      if (conversationIds.length > 0) {
+        const { data: lastMessageData, error: lastMessageError } = await supabase
+          .rpc('get_conversation_last_messages', {
+            conversation_ids: conversationIds
+          });
+
+        if (!lastMessageError && lastMessageData) {
+          lastMessages = lastMessageData;
+        }
+      }
+
+      // Get participants data with real profiles
+      const participantsPromises = conversationIds.map(async (convId) => {
+        const { data: participants } = await supabase
+          .rpc('get_conversation_participants', {
+            conversation_uuid: convId,
+            requesting_user_id: user.id
+          });
+        return { convId, participants: participants || [] };
+      });
+
+      const participantsResults = await Promise.all(participantsPromises);
+
+      // Process conversations with real data
       const processedConversations: ChatConversation[] = conversationsData?.map(conv => {
         const unreadInfo = unreadData?.find((u: any) => u.conversation_id === conv.id);
-        const otherParticipants = participantsData?.filter(p => p.conversation_id === conv.id);
+        const lastMessage = lastMessages?.find(m => m.conversation_id === conv.id);
+        const participantsInfo = participantsResults.find(p => p.convId === conv.id);
+        const otherParticipants = participantsInfo?.participants?.filter((p: any) => p.user_id !== user.id) || [];
         
         // For direct conversations, get the other participant
         let otherParticipant = undefined;
@@ -123,9 +157,9 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           const participant = otherParticipants[0];
           otherParticipant = {
             id: participant.user_id,
-            name: 'Direct Chat User', // Simplified for now
-            avatar_url: undefined,
-            is_online: false
+            name: participant.user_name,
+            avatar_url: participant.avatar_url,
+            is_online: participant.presence_status === 'online'
           };
         }
 
@@ -133,8 +167,10 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           ...conv,
           metadata: (conv.metadata as Record<string, any>) || {},
           unread_count: unreadInfo?.unread_count || 0,
-          participant_count: otherParticipants?.length || 0,
-          other_participant: otherParticipant
+          participant_count: participantsInfo?.participants?.length || 0,
+          other_participant: otherParticipant,
+          last_message_preview: lastMessage?.last_message_content,
+          last_message_at: lastMessage?.last_message_at || conv.last_message_at
         };
       }) || [];
 
