@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTranslation } from "react-i18next";
+import { SmartNotificationCenter } from "./notifications/SmartNotificationCenter";
+import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -61,13 +63,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             <div className="flex items-center gap-4">
               <LanguageSwitcher />
               <ThemeToggle />
-              
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="w-4 h-4" />
-                <Badge className="absolute -top-1 -right-1 w-5 h-5 text-xs p-0 flex items-center justify-center bg-accent">
-                  3
-                </Badge>
-              </Button>
+              <SmartNotificationCenter />
             </div>
           </header>
 
@@ -99,6 +95,9 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             </div>
           </footer>
         </div>
+        
+        {/* Floating Chat Bubble */}
+        <FloatingChatBubble />
       </div>
     </SidebarProvider>
   );

@@ -40,6 +40,7 @@ import { TimeRemaining } from './TimeRemaining';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
 import { SkeletonLoader } from './SkeletonLoader';
+import { ChatAndSMSActions } from './ChatAndSMSActions';
 
 interface EnhancedOrderDetailLayoutProps {
   order: any;
@@ -214,6 +215,25 @@ export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetail
                       shortUrl={order.short_url}
                     />
                   )}
+
+                  {/* Chat and Communication Actions */}
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm flex items-center gap-2">
+                        <MessageSquare className="h-4 w-4" />
+                        {t('orders.communication_actions', 'Team Communication')}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ChatAndSMSActions
+                        orderId={order.id}
+                        orderNumber={order.order_number}
+                        customerPhone={order.customer_phone}
+                        dealerId={order.dealer_id}
+                        variant="compact"
+                      />
+                    </CardContent>
+                  </Card>
 
                   {/* Enhanced Followers Block */}
                   {isLoadingData ? (

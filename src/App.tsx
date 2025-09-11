@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
+import { GlobalChatProvider } from "@/contexts/GlobalChatProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import SalesOrders from "./pages/SalesOrders";
@@ -45,7 +46,8 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <PermissionProvider>
-          <NotificationProvider>
+          <GlobalChatProvider>
+            <NotificationProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter
@@ -92,6 +94,7 @@ const App = () => (
               </Routes>
             </BrowserRouter>
           </NotificationProvider>
+          </GlobalChatProvider>
         </PermissionProvider>
       </AuthProvider>
     </TooltipProvider>
