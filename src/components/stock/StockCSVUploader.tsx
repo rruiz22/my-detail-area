@@ -27,6 +27,11 @@ interface UploadFile {
   progress: number;
   error?: string;
   preview?: any[];
+  metadata?: {
+    separator?: string;
+    timestamp?: Date | null;
+  };
+  result?: any;
 }
 
 interface StockCSVUploaderProps {
@@ -70,11 +75,28 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
   const previewFile = async (uploadFile: UploadFile) => {
     try {
       const text = await uploadFile.file.text();
-      const lines = text.split('\n').slice(0, 6); // First 5 rows + header
-      const preview = lines.map(line => line.split(','));
+      const { detectSeparator, extractFileTimestamp } = await import('@/utils/csvUtils');
+      
+      // Detect separator and use it for consistent parsing
+      const separator = detectSeparator(text);
+      const timestamp = extractFileTimestamp(uploadFile.file.name);
+      
+      const lines = text.split('\n').filter(line => line.trim()).slice(0, 6);
+      const preview = lines.map(line => line.split(separator));
+      
+      console.log(`📋 Preview for ${uploadFile.file.name}:`, {
+        separator: `"${separator}"`,
+        timestamp,
+        columns: preview[0]?.length || 0,
+        rows: preview.length - 1
+      });
       
       setUploadFiles(prev => 
-        prev.map(f => f.id === uploadFile.id ? { ...f, preview } : f)
+        prev.map(f => f.id === uploadFile.id ? { 
+          ...f, 
+          preview,
+          metadata: { separator, timestamp }
+        } : f)
       );
     } catch (error) {
       console.error('Error previewing file:', error);
@@ -111,14 +133,16 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
         setUploadFiles(prev => 
           prev.map(f => 
             f.id === uploadFile.id 
-              ? { ...f, status: 'success', progress: 100 } 
+              ? { ...f, status: 'success', progress: 100, result } 
               : f
           )
         );
         
         toast({
           title: t('stock.upload.success'),
-          description: t('stock.upload.success_message'),
+          description: result.details ? 
+            `${result.message}. Separator: "${result.details.separator}"` : 
+            result.message,
         });
       } else {
         throw new Error(result.message || 'Upload failed');
@@ -289,23 +313,62 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
                   </div>
                 </div>
 
-                {/* File Preview */}
+                {/* File Preview with Debug Info */}
                 {uploadFile.preview && (
-                  <div className="ml-7 p-4 bg-muted/30 rounded-lg">
-                    <p className="text-sm font-medium mb-2">{t('stock.upload.preview')}:</p>
-                    <div className="text-xs font-mono space-y-1">
-                      {uploadFile.preview.slice(0, 3).map((row, index) => (
-                        <div key={index} className="truncate">
-                          {row.slice(0, 6).join(' | ')}
-                          {row.length > 6 && ' | ...'}
+                  <div className="ml-7 space-y-3">
+                    <div className="p-4 bg-muted/30 rounded-lg">
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm font-medium">{t('stock.upload.preview')}:</p>
+                        <div className="flex gap-2 text-xs">
+                          {uploadFile.metadata?.separator && (
+                            <Badge variant="outline">
+                              Sep: "{uploadFile.metadata.separator}"
+                            </Badge>
+                          )}
+                          {uploadFile.metadata?.timestamp && (
+                            <Badge variant="outline">
+                              {uploadFile.metadata.timestamp.toLocaleDateString()}
+                            </Badge>
+                          )}
                         </div>
-                      ))}
-                      {uploadFile.preview.length > 3 && (
-                        <div className="text-muted-foreground">
-                          ... {t('stock.upload.more_rows', { count: uploadFile.preview.length - 3 })}
-                        </div>
-                      )}
+                      </div>
+                      <div className="text-xs font-mono space-y-1">
+                        {uploadFile.preview.slice(0, 3).map((row, index) => (
+                          <div key={index} className="truncate">
+                            {row.slice(0, 6).join(' | ')}
+                            {row.length > 6 && ' | ...'}
+                          </div>
+                        ))}
+                        {uploadFile.preview.length > 3 && (
+                          <div className="text-muted-foreground">
+                            ... {t('stock.upload.more_rows', { count: uploadFile.preview.length - 3 })}
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    {/* Processing Results */}
+                    {uploadFile.result?.details && (
+                      <div className="p-4 bg-muted/20 rounded-lg">
+                        <p className="text-sm font-medium mb-2">Processing Details:</p>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div>Processed: {uploadFile.result.details.processed}</div>
+                          <div>Valid: {uploadFile.result.details.valid}</div>
+                          <div>Invalid: {uploadFile.result.details.invalid}</div>
+                          <div>Separator: &quot;{uploadFile.result.details.separator}&quot;</div>
+                        </div>
+                        {uploadFile.result.details.mappedColumns && (
+                          <div className="mt-2">
+                            <p className="text-xs font-medium">Mapped Columns:</p>
+                            <div className="text-xs text-muted-foreground">
+                              {Object.entries(uploadFile.result.details.mappedColumns).map(([field, column]) => (
+                                <div key={field}>{field} ← {String(column)}</div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

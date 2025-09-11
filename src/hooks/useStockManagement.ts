@@ -41,7 +41,7 @@ interface UseStockManagementReturn {
   searchInventory: (query: string) => VehicleInventory[];
   getVehicleByStock: (stockNumber: string) => VehicleInventory | null;
   getVehicleByVin: (vin: string) => VehicleInventory | null;
-  uploadCSV: (file: File) => Promise<{ success: boolean; message: string }>;
+  uploadCSV: (file: File) => Promise<{ success: boolean; message: string; details?: any }>;
   refreshInventory: () => Promise<void>;
 }
 
@@ -107,154 +107,125 @@ export const useStockManagement = (dealerId?: number): UseStockManagementReturn 
     ) || null;
   }, [inventory]);
 
-  const uploadCSV = useCallback(async (file: File): Promise<{ success: boolean; message: string }> => {
+  const uploadCSV = useCallback(async (file: File): Promise<{ success: boolean; message: string; details?: any }> => {
     if (!dealerId || !user) {
       return { success: false, message: 'Missing dealer ID or user authentication' };
     }
 
     try {
-      const text = await file.text();
-      const lines = text.split('\n').filter(line => line.trim());
+      console.log(`🔄 Starting CSV upload: ${file.name} (${file.size} bytes)`);
       
-      if (lines.length < 2) {
-        return { success: false, message: 'CSV file must have at least a header and one data row' };
+      const text = await file.text();
+      
+      if (!text.trim()) {
+        return { success: false, message: 'CSV file is empty' };
       }
 
-      // Parse CSV (simplified - in production would use a proper CSV parser)
-      const headers = lines[0].split('\t').map(h => h.trim());
-      const rows = lines.slice(1).map(line => line.split('\t'));
+      // Parse CSV with intelligent detection
+      const { parseCSV, processVehicleData, extractFileTimestamp } = await import('@/utils/csvUtils');
+      
+      // Extract timestamp from filename
+      const fileTimestamp = extractFileTimestamp(file.name);
+      console.log('📅 File timestamp:', fileTimestamp);
 
-      // Process each row
-      const processedVehicles: any[] = [];
-      for (const row of rows) {
-        if (row.length < headers.length) continue;
+      // Parse CSV content
+      const parseResult = parseCSV(text);
+      console.log('📊 Parse results:', {
+        separator: parseResult.separator,
+        headers: parseResult.headers.length,
+        rows: parseResult.rows.length,
+        detectedColumns: Object.keys(parseResult.detectedColumns)
+      });
+
+      // Process vehicle data with detailed logging
+      const processingResult = processVehicleData(parseResult, dealerId);
+      
+      // Log detailed processing information
+      console.log('🚗 Processing results:', processingResult.stats);
+      processingResult.logs.forEach(log => {
+        console.log(`[${log.step}] ${log.message}`, log.data || '');
+      });
+
+      if (processingResult.vehicles.length > 0) {
+        console.log(`📤 Uploading ${processingResult.vehicles.length} vehicles to database...`);
         
-        const vehicle: any = {
-          dealer_id: dealerId,
-          is_active: true
-        };
-
-        // Map CSV columns to database fields
-        headers.forEach((header, index) => {
-          const value = row[index]?.trim();
-          if (!value) return;
-
-          switch (header.toLowerCase()) {
-            case 'year':
-              vehicle.year = parseInt(value) || null;
-              break;
-            case 'make':
-              vehicle.make = value;
-              break;
-            case 'model':
-              vehicle.model = value;
-              break;
-            case 'trim':
-              vehicle.trim = value;
-              break;
-            case 'drivetrain':
-              vehicle.drivetrain = value;
-              break;
-            case 'segment':
-              vehicle.segment = value;
-              break;
-            case 'stock number':
-              vehicle.stock_number = value;
-              break;
-            case 'vin':
-              vehicle.vin = value;
-              break;
-            case 'color':
-              vehicle.color = value;
-              break;
-            case 'mileage':
-              vehicle.mileage = parseInt(value) || null;
-              break;
-            case 'certified':
-              vehicle.is_certified = value.toLowerCase() === 'yes';
-              break;
-            case 'certified program':
-              vehicle.certified_program = value;
-              break;
-            case 'dms status':
-              vehicle.dms_status = value;
-              break;
-            case 'age':
-              vehicle.age_days = parseInt(value) || null;
-              break;
-            case 'price':
-              vehicle.price = parseFloat(value.replace(/[$,]/g, '')) || null;
-              break;
-            case 'msrp':
-              vehicle.msrp = parseFloat(value.replace(/[$,]/g, '')) || null;
-              break;
-            case 'photo count':
-              vehicle.photo_count = parseInt(value) || 0;
-              break;
-            case 'key photo':
-              vehicle.key_photo_url = value;
-              break;
-            case 'leads (last 7 days)':
-              vehicle.leads_last_7_days = parseInt(value) || 0;
-              break;
-            case 'leads (all)':
-              vehicle.leads_total = parseInt(value) || 0;
-              break;
-            case 'risk light':
-              vehicle.risk_light = value;
-              break;
-            default:
-              // Store other fields in raw_data
-              if (!vehicle.raw_data) vehicle.raw_data = {};
-              vehicle.raw_data[header] = value;
-              break;
-          }
-        });
-
-        if (vehicle.stock_number && vehicle.vin) {
-          processedVehicles.push(vehicle);
-        }
-      }
-
-      // Batch upsert vehicles
-      if (processedVehicles.length > 0) {
         const { error: upsertError } = await supabase
           .from('dealer_vehicle_inventory')
-          .upsert(processedVehicles, {
+          .upsert(processingResult.vehicles, {
             onConflict: 'dealer_id,stock_number'
           });
 
         if (upsertError) throw upsertError;
 
-        // Log the sync
+        // Enhanced sync logging with processing details
+        const syncLogData = {
+          dealer_id: dealerId,
+          sync_type: 'csv_upload',
+          sync_status: 'completed',
+          records_processed: processingResult.stats.processed,
+          records_added: processingResult.vehicles.length,
+          records_invalid: processingResult.stats.invalid,
+          file_name: file.name,
+          file_size: file.size,
+          file_timestamp: fileTimestamp?.toISOString(),
+          separator_detected: parseResult.separator,
+          columns_mapped: Object.keys(parseResult.detectedColumns),
+          processing_logs: processingResult.logs,
+          processed_by: user.id
+        };
+
         await supabase
           .from('dealer_inventory_sync_log')
-          .insert({
-            dealer_id: dealerId,
-            sync_type: 'csv_upload',
-            sync_status: 'completed',
-            records_processed: processedVehicles.length,
-            records_added: processedVehicles.length, // Simplified - would calculate actual new vs updated
-            file_name: file.name,
-            file_size: file.size,
-            processed_by: user.id
-          });
+          .insert(syncLogData);
 
         await refreshInventory();
         
+        console.log('✅ CSV upload completed successfully');
+        
         return { 
           success: true, 
-          message: `Successfully processed ${processedVehicles.length} vehicles` 
+          message: `Successfully processed ${processingResult.vehicles.length} of ${processingResult.stats.processed} vehicles`,
+          details: {
+            processed: processingResult.stats.processed,
+            valid: processingResult.vehicles.length,
+            invalid: processingResult.stats.invalid,
+            separator: parseResult.separator,
+            mappedColumns: parseResult.detectedColumns,
+            fileTimestamp,
+            logs: processingResult.logs.slice(-10) // Last 10 log entries
+          }
         };
       } else {
-        return { success: false, message: 'No valid vehicles found in CSV' };
+        const errorMessage = `No valid vehicles found. Processed ${processingResult.stats.processed} rows but none had required fields (stock_number AND vin).`;
+        
+        console.error('❌ No valid vehicles:', {
+          stats: processingResult.stats,
+          detectedColumns: parseResult.detectedColumns,
+          recentLogs: processingResult.logs.slice(-5)
+        });
+
+        return { 
+          success: false, 
+          message: errorMessage,
+          details: {
+            stats: processingResult.stats,
+            detectedColumns: parseResult.detectedColumns,
+            separator: parseResult.separator,
+            logs: processingResult.logs,
+            suggestions: [
+              'Verify your CSV has Stock Number and VIN columns',
+              `Detected separator: "${parseResult.separator}"`,
+              `Mapped columns: ${Object.keys(parseResult.detectedColumns).join(', ') || 'None'}`
+            ]
+          }
+        };
       }
 
     } catch (err) {
-      console.error('Error uploading CSV:', err);
+      console.error('💥 Error uploading CSV:', err);
       return { 
         success: false, 
-        message: err instanceof Error ? err.message : 'Failed to upload CSV' 
+        message: err instanceof Error ? err.message : 'Failed to upload CSV'
       };
     }
   }, [dealerId, user, refreshInventory]);
