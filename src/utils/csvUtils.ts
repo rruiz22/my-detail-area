@@ -39,9 +39,9 @@ const SEPARATORS = ['\t', ',', '|', ';', ':'];
 
 // Flexible column mapping - maps various column names to our standard fields
 const COLUMN_MAPPINGS: Record<string, string[]> = {
-  year: ['year', 'año', 'model year', 'vehicle year'],
-  make: ['make', 'marca', 'manufacturer', 'mfg'],
-  model: ['model', 'modelo', 'vehicle model'],
+  year: ['year', 'año', 'model year', 'vehicle year', 'yr'],
+  make: ['make', 'marca', 'manufacturer', 'mfg', 'brand'],
+  model: ['model', 'modelo', 'vehicle model', 'model name'],
   trim: ['trim', 'trim level', 'trim_level', 'variant'],
   drivetrain: ['drivetrain', 'drive train', 'drive_train', 'transmission', 'trans'],
   segment: ['segment', 'category', 'type', 'class'],

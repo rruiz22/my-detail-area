@@ -1,4 +1,83 @@
 {
+  "stock": {
+    "title": "Gestão de Estoque",
+    "subtitle": "Gerencie seu inventário de veículos",
+    "inventory": {
+      "title": "Inventário de Veículos", 
+      "no_vehicles": "Nenhum veículo encontrado",
+      "upload_csv": "Enviar CSV",
+      "last_sync": "Última sincronização",
+      "total_vehicles": "Total de veículos"
+    },
+    "table": {
+      "stock_number": "# Estoque",
+      "vin": "VIN",
+      "vehicle": "Veículo",
+      "year": "Ano",
+      "make": "Marca",
+      "model": "Modelo",
+      "trim": "Versão",
+      "mileage": "Quilometragem",
+      "price": "Preço",
+      "age_days": "Idade",
+      "status": "Status",
+      "leads": "Leads",
+      "photos": "Fotos"
+    },
+    "filters": {
+      "search_placeholder": "Buscar por estoque #, VIN, marca ou modelo",
+      "make": "Marca",
+      "status": "Status",
+      "all_makes": "Todas as Marcas",
+      "all_statuses": "Todos os Status"
+    },
+    "status": {
+      "available": "Disponível",
+      "sold": "Vendido",
+      "pending": "Pendente",
+      "unknown": "Desconhecido"
+    },
+    "actions": {
+      "view_details": "Ver Detalhes",
+      "export": "Exportar",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
+    "details": {
+      "title": "Detalhes do Veículo",
+      "overview": "Visão Geral",
+      "pricing": "Preços e Avaliação",
+      "market_analysis": "Análise de Mercado",
+      "leads_performance": "Performance de Leads",
+      "vehicle_info": "Informações do Veículo",
+      "location_status": "Localização e Status",
+      "raw_data": "Dados Brutos",
+      "full_vin": "VIN Completo",
+      "estimated_profit": "Lucro Est.",
+      "unit_cost": "Custo Unitário",
+      "acv_wholesale": "ACV Atacado",
+      "acv_max_retail": "ACV Max Varejo",
+      "market_rank": "Ranking de Mercado",
+      "market_listings": "Anúncios do Mercado",
+      "percent_to_market": "% para Mercado",
+      "cost_to_market": "Custo para Mercado",
+      "mds_score": "Pontuação MDS",
+      "cargurus_ctr": "CTR CarGurus",
+      "cargurus_views": "Visualizações CarGurus",
+      "leads_7_days": "Leads (7 dias)",
+      "leads_total": "Total de Leads",
+      "leads_daily_avg": "Média Diária",
+      "drivetrain": "Tração",
+      "color": "Cor",
+      "segment": "Segmento",
+      "certified": "Certificado",
+      "lot_location": "Localização no Pátio",
+      "dms_status": "Status DMS",
+      "risk_light": "Semáforo de Risco",
+      "syndication": "Sindicação",
+      "water_damage": "Dano por Água"
+    }
+  },
   "get_ready": {
     "title": "Get Ready",
     "tabs": {

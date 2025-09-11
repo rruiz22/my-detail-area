@@ -1,4 +1,83 @@
 {
+  "stock": {
+    "title": "Stock Management",
+    "subtitle": "Manage your vehicle inventory",
+    "inventory": {
+      "title": "Vehicle Inventory",
+      "no_vehicles": "No vehicles found",
+      "upload_csv": "Upload CSV",
+      "last_sync": "Last sync",
+      "total_vehicles": "Total vehicles"
+    },
+    "table": {
+      "stock_number": "Stock #",
+      "vin": "VIN",
+      "vehicle": "Vehicle",
+      "year": "Year",
+      "make": "Make", 
+      "model": "Model",
+      "trim": "Trim",
+      "mileage": "Mileage",
+      "price": "Price",
+      "age_days": "Age",
+      "status": "Status",
+      "leads": "Leads",
+      "photos": "Photos"
+    },
+    "filters": {
+      "search_placeholder": "Search by stock #, VIN, make, or model",
+      "make": "Make",
+      "status": "Status",
+      "all_makes": "All Makes",
+      "all_statuses": "All Statuses"
+    },
+    "status": {
+      "available": "Available",
+      "sold": "Sold", 
+      "pending": "Pending",
+      "unknown": "Unknown"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "export": "Export",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "details": {
+      "title": "Vehicle Details",
+      "overview": "Overview",
+      "pricing": "Pricing & Valuation",
+      "market_analysis": "Market Analysis", 
+      "leads_performance": "Lead Performance",
+      "vehicle_info": "Vehicle Information",
+      "location_status": "Location & Status",
+      "raw_data": "Raw Data",
+      "full_vin": "Full VIN",
+      "estimated_profit": "Est. Profit",
+      "unit_cost": "Unit Cost",
+      "acv_wholesale": "ACV Wholesale",
+      "acv_max_retail": "ACV Max Retail",
+      "market_rank": "Market Rank",
+      "market_listings": "Market Listings",
+      "percent_to_market": "% to Market",
+      "cost_to_market": "Cost to Market",
+      "mds_score": "MDS Score",
+      "cargurus_ctr": "CarGurus CTR",
+      "cargurus_views": "CarGurus Views",
+      "leads_7_days": "Leads (7 days)",
+      "leads_total": "Total Leads",
+      "leads_daily_avg": "Daily Avg Leads",
+      "drivetrain": "Drivetrain",
+      "color": "Color",
+      "segment": "Segment",
+      "certified": "Certified",
+      "lot_location": "Lot Location",
+      "dms_status": "DMS Status",
+      "risk_light": "Risk Light",
+      "syndication": "Syndication",
+      "water_damage": "Water Damage"
+    }
+  },
   "due_date": {
     "title": "Due Date & Time",
     "date_label": "Due Date",

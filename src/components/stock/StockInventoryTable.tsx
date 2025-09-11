@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { VehicleDetailsModal } from './VehicleDetailsModal';
+import { VehicleInventory } from '@/hooks/useStockManagement';
 import {
   Table,
   TableBody,
@@ -44,6 +46,18 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('created_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleInventory | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleVehicleClick = (vehicle: VehicleInventory) => {
+    setSelectedVehicle(vehicle);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedVehicle(null);
+  };
 
   // Get unique makes for filter
   const uniqueMakes = useMemo(() => {
@@ -199,12 +213,22 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                 </TableRow>
               ) : (
                 filteredInventory.map((vehicle) => (
-                  <TableRow key={vehicle.id} className="hover:bg-muted/50">
+                  <TableRow key={vehicle.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => handleVehicleClick(vehicle)}>
                     <TableCell className="font-mono font-medium">
                       {vehicle.stock_number}
                     </TableCell>
                     <TableCell className="font-mono text-sm">
-                      {vehicle.vin ? vehicle.vin.slice(-8) : '--'}
+                      <div className="flex items-center space-x-2">
+                        {vehicle.key_photo_url && (
+                          <img 
+                            src={vehicle.key_photo_url} 
+                            alt="Vehicle"
+                            className="w-8 h-8 rounded object-cover"
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        )}
+                        <span>{vehicle.vin || '--'}</span>
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
@@ -243,7 +267,10 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => {
+                            e.stopPropagation();
+                            handleVehicleClick(vehicle);
+                          }}>
                             <Eye className="w-4 h-4 mr-2" />
                             {t('stock.actions.view_details')}
                           </DropdownMenuItem>
@@ -257,6 +284,12 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
           </Table>
         </div>
       </CardContent>
+      
+      <VehicleDetailsModal
+        vehicle={selectedVehicle}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </Card>
   );
 };

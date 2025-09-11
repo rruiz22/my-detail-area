@@ -1,4 +1,83 @@
 {
+  "stock": {
+    "title": "Gestión de Inventario",
+    "subtitle": "Administra tu inventario de vehículos",
+    "inventory": {
+      "title": "Inventario de Vehículos",
+      "no_vehicles": "No se encontraron vehículos",
+      "upload_csv": "Subir CSV",
+      "last_sync": "Última sincronización",
+      "total_vehicles": "Total de vehículos"
+    },
+    "table": {
+      "stock_number": "# Stock",
+      "vin": "VIN",
+      "vehicle": "Vehículo",
+      "year": "Año",
+      "make": "Marca",
+      "model": "Modelo", 
+      "trim": "Versión",
+      "mileage": "Kilometraje",
+      "price": "Precio",
+      "age_days": "Edad",
+      "status": "Estado",
+      "leads": "Leads",
+      "photos": "Fotos"
+    },
+    "filters": {
+      "search_placeholder": "Buscar por stock #, VIN, marca o modelo",
+      "make": "Marca",
+      "status": "Estado",
+      "all_makes": "Todas las Marcas",
+      "all_statuses": "Todos los Estados"
+    },
+    "status": {
+      "available": "Disponible",
+      "sold": "Vendido",
+      "pending": "Pendiente", 
+      "unknown": "Desconocido"
+    },
+    "actions": {
+      "view_details": "Ver Detalles",
+      "export": "Exportar",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "details": {
+      "title": "Detalles del Vehículo",
+      "overview": "Resumen",
+      "pricing": "Precios y Valoración",
+      "market_analysis": "Análisis de Mercado",
+      "leads_performance": "Rendimiento de Leads",
+      "vehicle_info": "Información del Vehículo",
+      "location_status": "Ubicación y Estado",
+      "raw_data": "Datos Sin Procesar",
+      "full_vin": "VIN Completo",
+      "estimated_profit": "Ganancia Est.",
+      "unit_cost": "Costo Unitario",
+      "acv_wholesale": "ACV Mayorista",
+      "acv_max_retail": "ACV Max Retail",
+      "market_rank": "Ranking de Mercado",
+      "market_listings": "Listings de Mercado",
+      "percent_to_market": "% al Mercado",
+      "cost_to_market": "Costo al Mercado",
+      "mds_score": "Puntuación MDS",
+      "cargurus_ctr": "CTR CarGurus",
+      "cargurus_views": "Vistas CarGurus",
+      "leads_7_days": "Leads (7 días)",
+      "leads_total": "Total de Leads",
+      "leads_daily_avg": "Promedio Diario",
+      "drivetrain": "Tracción",
+      "color": "Color",
+      "segment": "Segmento",
+      "certified": "Certificado",
+      "lot_location": "Ubicación en Lote",
+      "dms_status": "Estado DMS",
+      "risk_light": "Semáforo de Riesgo",
+      "syndication": "Sindicación",
+      "water_damage": "Daño por Agua"
+    }
+  },
   "due_date": {
     "title": "Fecha y Hora de Vencimiento",
     "date_label": "Fecha de Vencimiento",
