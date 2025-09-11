@@ -88,7 +88,7 @@ class DuplicateTestDataGenerator {
       vehicleYear: year,
       vehicleMake: make,
       vehicleModel: model,
-      vehicleInfo: `${year} ${make} ${model}`,
+      // vehicleInfo: `${year} ${make} ${model}`, // This property doesn't exist on Order type
       customerName: this.customerNames[Math.floor(Math.random() * this.customerNames.length)],
       status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
       dealer_id: dealerId,

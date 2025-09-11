@@ -95,7 +95,7 @@ export function useOrderModalData({ orderId, qrSlug, enabled = true }: UseOrderM
           .select('*')
           .eq('order_id', orderId)
           .order('created_at', { ascending: false })
-          .catch(() => ({ data: [], error: null })), // Graceful fallback
+          .then(result => result.error ? { data: [], error: null } : result), // Graceful fallback
         
         // Fetch comments with user names - fetch separately to avoid join issues
         supabase
@@ -103,7 +103,7 @@ export function useOrderModalData({ orderId, qrSlug, enabled = true }: UseOrderM
           .select('*')
           .eq('order_id', orderId)
           .order('created_at', { ascending: false })
-          .catch(() => ({ data: [], error: null })), // Graceful fallback
+          .then(result => result.error ? { data: [], error: null } : result), // Graceful fallback
         
         // Check user type
         supabase.auth.getUser().then(async ({ data: user }) => {

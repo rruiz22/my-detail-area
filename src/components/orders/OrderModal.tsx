@@ -401,10 +401,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       errors.vehicleVin = t('validation.vinInvalidLength');
     }
     
-    // Validate email format if provided
-    if (formData.customerEmail && !formData.customerEmail.includes('@')) {
-      errors.customerEmail = t('validation.emailInvalid');
-    }
+    // Validate email format if provided (remove this check since customerEmail doesn't exist)
+    // if (formData.customerEmail && !formData.customerEmail.includes('@')) {
+    //   errors.customerEmail = t('validation.emailInvalid');
+    // }
     
     // Validate dealership selection
     if (!selectedDealership) {

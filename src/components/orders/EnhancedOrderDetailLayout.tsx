@@ -222,7 +222,6 @@ export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetail
                     <FollowersBlock 
                       orderId={order.id}
                       dealerId={order.dealer_id}
-                      followers={modalData?.followers || []}
                     />
                   )}
 
@@ -232,7 +231,6 @@ export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetail
                   ) : (
                     <RecentActivityBlock 
                       orderId={order.id}
-                      activities={modalData?.activities || []}
                     />
                   )}
                 </div>

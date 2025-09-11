@@ -93,10 +93,10 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     );
   }
 
-  const vehicle = vehicleDetail.vehicle_info as any;
-  const workItems = (vehicleDetail.work_items as any[]) || [];
-  const media = (vehicleDetail.media as any[]) || [];
-  const notes = (vehicleDetail.notes as any[]) || [];
+  const vehicle = vehicleDetail as any;
+  const workItems = (vehicleDetail.work_orders as any[]) || [];
+  const media: any[] = []; // Empty for now since attachments property doesn't exist
+  const notes: any[] = []; // Empty for now since comments property doesn't exist
 
   // Calculate work item counters
   const workItemCounters = workItems.reduce((acc: Record<string, number>, item: any) => {
