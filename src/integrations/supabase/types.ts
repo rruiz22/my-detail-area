@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      bulk_password_operations: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          dealer_id: number
+          error_details: Json | null
+          failed_operations: number
+          id: string
+          initiated_by: string
+          operation_type: string
+          processed_users: number
+          started_at: string | null
+          status: string
+          successful_operations: number
+          target_filters: Json
+          total_users: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          dealer_id: number
+          error_details?: Json | null
+          failed_operations?: number
+          id?: string
+          initiated_by: string
+          operation_type: string
+          processed_users?: number
+          started_at?: string | null
+          status?: string
+          successful_operations?: number
+          target_filters?: Json
+          total_users?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          dealer_id?: number
+          error_details?: Json | null
+          failed_operations?: number
+          id?: string
+          initiated_by?: string
+          operation_type?: string
+          processed_users?: number
+          started_at?: string | null
+          status?: string
+          successful_operations?: number
+          target_filters?: Json
+          total_users?: number
+        }
+        Relationships: []
+      }
       category_module_mappings: {
         Row: {
           category_id: string
@@ -1633,6 +1684,81 @@ export type Database = {
           },
         ]
       }
+      password_history: {
+        Row: {
+          change_reason: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          password_hash: string
+          user_id: string
+        }
+        Insert: {
+          change_reason?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          password_hash: string
+          user_id: string
+        }
+        Update: {
+          change_reason?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          password_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      password_reset_requests: {
+        Row: {
+          admin_id: string
+          completed_at: string | null
+          created_at: string
+          expires_at: string
+          force_change_on_login: boolean
+          id: string
+          metadata: Json | null
+          request_type: string
+          status: string
+          temp_password: string | null
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_id: string
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          force_change_on_login?: boolean
+          id?: string
+          metadata?: Json | null
+          request_type?: string
+          status?: string
+          temp_password?: string | null
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_id?: string
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          force_change_on_login?: boolean
+          id?: string
+          metadata?: Json | null
+          request_type?: string
+          status?: string
+          temp_password?: string | null
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -2477,6 +2603,39 @@ export type Database = {
           title?: string | null
           total_clicks?: number
           unique_clicks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      security_policies: {
+        Row: {
+          created_at: string
+          created_by: string
+          dealer_id: number
+          id: string
+          is_active: boolean
+          policy_name: string
+          policy_value: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          dealer_id: number
+          id?: string
+          is_active?: boolean
+          policy_name: string
+          policy_value?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          dealer_id?: number
+          id?: string
+          is_active?: boolean
+          policy_name?: string
+          policy_value?: Json
           updated_at?: string
         }
         Relationships: []
