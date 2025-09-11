@@ -17,6 +17,7 @@
     "pre-commit": "npm run translation:coverage"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.2.1",
     "@huggingface/transformers": "^3.7.2",
     "@playwright/test": "^1.55.0",
