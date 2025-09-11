@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -38,10 +38,6 @@ export function AppSidebar() {
     title: t('navigation.car_wash'),
     url: "/carwash",
     icon: Droplets
-  }, {
-    title: t('navigation.stock'),
-    url: "/stock",
-    icon: Package
   }, {
     title: t('navigation.stock'),
     url: "/stock",

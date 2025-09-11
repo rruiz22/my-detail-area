@@ -18,7 +18,7 @@ interface User {
   email: string;
   first_name?: string;
   last_name?: string;
-  user_type: 'dealer' | 'detail';
+  user_type: 'dealer' | 'detail' | 'system_admin';
   dealership_id?: number;
   role?: string;
 }

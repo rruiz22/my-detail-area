@@ -18,14 +18,14 @@ interface User {
   email: string;
   first_name?: string;
   last_name?: string;
-  user_type: 'dealer' | 'detail';
+  user_type: 'dealer' | 'detail' | 'system_admin';
 }
 
 interface Role {
   id: string;
   name: string;
   display_name: string;
-  user_type: 'dealer' | 'detail';
+  user_type: 'dealer' | 'detail' | 'system_admin';
 }
 
 interface RoleAssignmentModalProps {

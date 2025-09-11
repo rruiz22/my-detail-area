@@ -38,7 +38,7 @@ interface Role {
   name: string;
   display_name: string;
   description?: string;
-  user_type: 'dealer' | 'detail';
+  user_type: 'dealer' | 'detail' | 'system_admin';
   is_system_role: boolean;
   permissions: Permission[];
 }

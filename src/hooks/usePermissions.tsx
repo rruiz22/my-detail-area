@@ -27,7 +27,7 @@ export type UserRole = {
   role_id: string;
   role_name: string;
   display_name: string;
-  user_type: 'dealer' | 'detail';
+  user_type: 'dealer' | 'detail' | 'system_admin';
   dealer_role?: string;
   detail_role?: string;
   expires_at?: string;
