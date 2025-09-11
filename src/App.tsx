@@ -9,6 +9,7 @@ import { PermissionProvider } from "@/contexts/PermissionContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import SalesOrders from "./pages/SalesOrders";
+import Profile from "./pages/Profile";
 import ServiceOrders from "./pages/ServiceOrders";
 import ReconOrders from "./pages/ReconOrders";
 import GetReady from "./pages/GetReady";
@@ -79,6 +80,7 @@ const App = () => (
                 <Route path="/dealerships" element={<ProtectedRoute><Dealerships /></ProtectedRoute>} />
                 <Route path="/dealers/:id" element={<ProtectedRoute><DealerView /></ProtectedRoute>} />
                 <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
                 <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
                 <Route path="/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />

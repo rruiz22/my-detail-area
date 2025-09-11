@@ -2523,6 +2523,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_activity_log: {
+        Row: {
+          action_description: string | null
+          action_type: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action_description?: string | null
+          action_type: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action_description?: string | null
+          action_type?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_audit_log: {
         Row: {
           created_at: string
@@ -2738,6 +2771,75 @@ export type Database = {
           },
         ]
       }
+      user_preferences: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          date_format: string | null
+          department: string | null
+          id: string
+          job_title: string | null
+          language_preference: string | null
+          notification_email: boolean | null
+          notification_frequency: string | null
+          notification_in_app: boolean | null
+          notification_push: boolean | null
+          notification_sms: boolean | null
+          phone: string | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          time_format: string | null
+          timezone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          date_format?: string | null
+          department?: string | null
+          id?: string
+          job_title?: string | null
+          language_preference?: string | null
+          notification_email?: boolean | null
+          notification_frequency?: string | null
+          notification_in_app?: boolean | null
+          notification_push?: boolean | null
+          notification_sms?: boolean | null
+          phone?: string | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          time_format?: string | null
+          timezone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          date_format?: string | null
+          department?: string | null
+          id?: string
+          job_title?: string | null
+          language_preference?: string | null
+          notification_email?: boolean | null
+          notification_frequency?: string | null
+          notification_in_app?: boolean | null
+          notification_push?: boolean | null
+          notification_sms?: boolean | null
+          phone?: string | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          time_format?: string | null
+          timezone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_presence: {
         Row: {
           auto_away_minutes: number | null
@@ -2854,6 +2956,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          ip_address: unknown | null
+          is_current: boolean | null
+          last_activity: string | null
+          location_info: Json | null
+          session_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_current?: boolean | null
+          last_activity?: string | null
+          location_info?: Json | null
+          session_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_current?: boolean | null
+          last_activity?: string | null
+          location_info?: Json | null
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
