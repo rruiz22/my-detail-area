@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,45 @@ import { supabase } from '@/integrations/supabase/client';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 
+interface OrderFormData {
+  // Order identification
+  orderNumber: string;
+  orderType: string;
+  status: string;
+  
+  // Customer information (vehicle owner)
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  
+  // Vehicle information
+  vehicleVin: string;
+  vehicleYear: string;
+  vehicleMake: string;
+  vehicleModel: string;
+  vehicleInfo: string;
+  stockNumber: string;
+  tag: string;
+  
+  // Car wash specific
+  service: string;
+  isWaiter: boolean;
+  
+  // Assignment information (employee responsible)
+  assignedGroupId?: string;
+  assignedContactId?: string;
+  salesperson?: string;
+  
+  // Order details
+  notes: string;
+  internalNotes?: string;
+  priority?: string;
+  dueDate?: Date;
+  slaDeadline?: Date;
+  scheduledDate?: Date;
+  scheduledTime?: string;
+}
+
 interface CarWashOrderModalProps {
   order?: any;
   open: boolean;
@@ -27,7 +67,13 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<OrderFormData>({
+    orderNumber: '',
+    orderType: 'car_wash',
+    status: 'pending',
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
@@ -36,8 +82,17 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     stockNumber: '',
     tag: '',
     service: '',
+    isWaiter: false,
+    assignedGroupId: '',
+    assignedContactId: '',
+    salesperson: '',
     notes: '',
-    isWaiter: false
+    internalNotes: '',
+    priority: 'normal',
+    dueDate: undefined,
+    slaDeadline: undefined,
+    scheduledDate: undefined,
+    scheduledTime: ''
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
@@ -65,22 +120,43 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
       
       if (order) {
         setFormData({
-          vehicleVin: order.vehicleVin || '',
-          vehicleYear: order.vehicleYear?.toString() || '',
-          vehicleMake: order.vehicleMake || '',
-          vehicleModel: order.vehicleModel || '',
-          vehicleInfo: order.vehicleInfo || '',
-          stockNumber: order.stockNumber || '',
+          orderNumber: order.orderNumber || order.order_number || '',
+          orderType: order.orderType || order.order_type || 'car_wash',
+          status: order.status || 'pending',
+          customerName: order.customerName || order.customer_name || '',
+          customerEmail: order.customerEmail || order.customer_email || '',
+          customerPhone: order.customerPhone || order.customer_phone || '',
+          vehicleVin: order.vehicleVin || order.vehicle_vin || '',
+          vehicleYear: order.vehicleYear?.toString() || order.vehicle_year?.toString() || '',
+          vehicleMake: order.vehicleMake || order.vehicle_make || '',
+          vehicleModel: order.vehicleModel || order.vehicle_model || '',
+          vehicleInfo: order.vehicleInfo || order.vehicle_info || '',
+          stockNumber: order.stockNumber || order.stock_number || '',
           tag: order.tag || '',
           service: order.service || '',
+          isWaiter: order.isWaiter || false,
+          assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
+          assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
+          salesperson: order.salesperson || '',
           notes: order.notes || '',
-          isWaiter: order.isWaiter || false
+          internalNotes: order.internalNotes || order.internal_notes || '',
+          priority: order.priority || 'normal',
+          dueDate: order.dueDate ? safeParseDate(order.dueDate) || undefined : undefined,
+          slaDeadline: order.slaDeadline ? safeParseDate(order.slaDeadline) || undefined : undefined,
+          scheduledDate: order.scheduledDate ? safeParseDate(order.scheduledDate) || undefined : undefined,
+          scheduledTime: order.scheduledTime || ''
         });
         setSelectedServices(order.services || []);
         setSelectedDealership(order.dealerId?.toString() || '');
       } else {
         // Reset form for new order
         setFormData({
+          orderNumber: '',
+          orderType: 'car_wash',
+          status: 'pending',
+          customerName: '',
+          customerEmail: '',
+          customerPhone: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
@@ -89,8 +165,17 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           stockNumber: '',
           tag: '',
           service: '',
+          isWaiter: false,
+          assignedGroupId: '',
+          assignedContactId: '',
+          salesperson: '',
           notes: '',
-          isWaiter: false
+          internalNotes: '',
+          priority: 'normal',
+          dueDate: undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: ''
         });
         setSelectedServices([]);
         setSelectedDealership('');
@@ -183,13 +268,41 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     }
   };
 
+  const transformToDbFormat = (formData: OrderFormData) => ({
+    // Map frontend camelCase to backend snake_case
+    order_number: formData.orderNumber,
+    customer_name: formData.customerName || 'Walk-in Customer',
+    customer_email: formData.customerEmail || null,
+    customer_phone: formData.customerPhone || null,
+    vehicle_vin: formData.vehicleVin || null,
+    vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
+    vehicle_make: formData.vehicleMake || null,
+    vehicle_model: formData.vehicleModel || null,
+    vehicle_info: formData.vehicleInfo || null,
+    stock_number: formData.stockNumber || null,
+    tag: formData.tag || null,
+    service: formData.service || null,
+    is_waiter: formData.isWaiter,
+    order_type: formData.orderType,
+    status: formData.status,
+    assigned_group_id: formData.assignedGroupId || null,
+    assigned_contact_id: formData.assignedContactId || null,
+    salesperson: formData.salesperson || null,
+    notes: formData.notes || null,
+    internal_notes: formData.internalNotes || null,
+    priority: formData.priority || 'normal',
+    due_date: formData.dueDate || null,
+    sla_deadline: formData.slaDeadline || null,
+    scheduled_date: formData.scheduledDate || null,
+    scheduled_time: formData.scheduledTime || null,
+    dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
+    services: selectedServices
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-      services: selectedServices,
-      dealerId: selectedDealership ? parseInt(selectedDealership) : null
-    });
+    const dbData = transformToDbFormat(formData);
+    onSave(dbData);
   };
 
   const totalPrice = selectedServices.reduce((total, serviceId) => {
@@ -381,6 +494,58 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Hidden fields with default values for later editing in order details */}
+            <div className="hidden">
+              <input 
+                type="hidden" 
+                name="customer_name" 
+                value={formData.customerName || ''} 
+                onChange={(e) => handleInputChange('customerName', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="customer_email" 
+                value={formData.customerEmail || ''} 
+                onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="customer_phone" 
+                value={formData.customerPhone || ''} 
+                onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="salesperson" 
+                value={formData.salesperson || ''} 
+                onChange={(e) => handleInputChange('salesperson', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="internal_notes" 
+                value={formData.internalNotes || ''} 
+                onChange={(e) => handleInputChange('internalNotes', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="sla_deadline" 
+                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
+                onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input 
+                type="hidden" 
+                name="scheduled_date" 
+                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
+                onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input 
+                type="hidden" 
+                name="scheduled_time" 
+                value={formData.scheduledTime || ''} 
+                onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
+              />
             </div>
 
             {/* Submit Buttons */}

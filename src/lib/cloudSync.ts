@@ -45,12 +45,10 @@ class CloudSyncService {
    * Sync critical data to cloud immediately
    */
   async syncToCloud(key: string, data: any, options: CloudSyncOptions = {}): Promise<CloudSyncResponse> {
-    // Skip cloud sync in development mode
+    // Skip cloud sync - disabled globally for stability
     if (!this.cloudSyncEnabled) {
-      if (developmentConfig.storage.verboseLogging) {
-        console.log(`🚧 Cloud sync disabled in development for: ${key}`);
-      }
-      return { success: false, error: 'Cloud sync disabled in development' };
+      // Silently fail without console noise
+      return { success: false, error: 'Cloud sync disabled' };
     }
 
     const {
@@ -124,12 +122,10 @@ class CloudSyncService {
    * Restore data from cloud
    */
   async restoreFromCloud(key: string, options: CloudSyncOptions = {}): Promise<CloudSyncResponse> {
-    // Skip cloud sync in development mode
+    // Skip cloud sync - disabled globally for stability
     if (!this.cloudSyncEnabled) {
-      if (developmentConfig.storage.verboseLogging) {
-        console.log(`🚧 Cloud restore disabled in development for: ${key}`);
-      }
-      return { success: false, error: 'Cloud restore disabled in development' };
+      // Silently fail without console noise
+      return { success: false, error: 'Cloud restore disabled' };
     }
 
     const {

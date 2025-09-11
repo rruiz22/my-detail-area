@@ -283,26 +283,15 @@ export const useOrderManagement = (activeTab: string) => {
       console.log('Creating order with data:', orderData);
       
       // Generate order number using new service
-      const orderNumber = await orderNumberService.generateOrderNumber('sales', orderData.dealerId);
+      const orderNumber = await orderNumberService.generateOrderNumber('sales', orderData.dealer_id);
 
+      // orderData is already in snake_case format from transformToDbFormat in the modal
       const newOrder = {
-        order_number: orderNumber, // Use new format: SA-2025-00001, SA-2025-00002, etc.
-        customer_name: orderData.customerName,
-        customer_email: orderData.customerEmail,
-        customer_phone: orderData.customerPhone,
-        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
-        vehicle_make: orderData.vehicleMake,
-        vehicle_model: orderData.vehicleModel,
-        vehicle_vin: orderData.vehicleVin,
-        vehicle_info: orderData.vehicleInfo,
-        stock_number: orderData.stockNumber,
-        order_type: 'sales',
-        status: 'pending',
-        priority: orderData.priority || 'normal',
-        services: orderData.services || [],
-        total_amount: orderData.totalAmount || 0,
-        sla_deadline: orderData.dueDate,
-        dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
+        ...orderData,
+        order_number: orderNumber, // Override with generated number
+        order_type: 'sales', // Ensure it's always sales for this module
+        status: 'pending', // Default status
+        dealer_id: orderData.dealer_id || 5, // Ensure dealer_id is set
       };
 
       console.log('Inserting order to DB:', newOrder);
@@ -344,6 +333,7 @@ export const useOrderManagement = (activeTab: string) => {
     setLoading(true);
     
     try {
+      // orderData may come in snake_case format, so use it directly
       const { data, error } = await supabase
         .from('orders')
         .update(orderData)
@@ -356,11 +346,35 @@ export const useOrderManagement = (activeTab: string) => {
         throw error;
       }
 
+      // Transform data back to camelCase for local state update
+      const transformedData = {
+        customerName: orderData.customer_name || orderData.customerName,
+        customerEmail: orderData.customer_email || orderData.customerEmail,
+        customerPhone: orderData.customer_phone || orderData.customerPhone,
+        vehicleYear: orderData.vehicle_year || orderData.vehicleYear,
+        vehicleMake: orderData.vehicle_make || orderData.vehicleMake,
+        vehicleModel: orderData.vehicle_model || orderData.vehicleModel,
+        vehicleVin: orderData.vehicle_vin || orderData.vehicleVin,
+        vehicleInfo: orderData.vehicle_info || orderData.vehicleInfo,
+        stockNumber: orderData.stock_number || orderData.stockNumber,
+        assignedGroupId: orderData.assigned_group_id || orderData.assignedGroupId,
+        assignedContactId: orderData.assigned_contact_id || orderData.assignedContactId,
+        salesperson: orderData.salesperson,
+        notes: orderData.notes,
+        internalNotes: orderData.internal_notes || orderData.internalNotes,
+        priority: orderData.priority,
+        dueDate: orderData.due_date || orderData.dueDate,
+        slaDeadline: orderData.sla_deadline || orderData.slaDeadline,
+        scheduledDate: orderData.scheduled_date || orderData.scheduledDate,
+        scheduledTime: orderData.scheduled_time || orderData.scheduledTime,
+        updatedAt: new Date().toISOString()
+      };
+
       // Update local state immediately for better UX
       setOrders(prevOrders => 
         prevOrders.map(order => 
           order.id === orderId 
-            ? { ...order, ...orderData, updatedAt: new Date().toISOString() }
+            ? { ...order, ...transformedData }
             : order
         )
       );

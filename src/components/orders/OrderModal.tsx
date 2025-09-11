@@ -20,6 +20,40 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 
+interface OrderFormData {
+  // Order identification
+  orderNumber: string;
+  orderType: string;
+  status: string;
+  
+  // Customer information (vehicle owner)
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  
+  // Vehicle information
+  vehicleVin: string;
+  vehicleYear: string;
+  vehicleMake: string;
+  vehicleModel: string;
+  vehicleInfo: string;
+  stockNumber: string;
+  
+  // Assignment information (employee responsible)
+  assignedGroupId?: string;
+  assignedContactId?: string;
+  salesperson?: string;
+  
+  // Order details
+  notes: string;
+  internalNotes?: string;
+  priority?: string;
+  dueDate?: Date;
+  slaDeadline?: Date;
+  scheduledDate?: Date;
+  scheduledTime?: string;
+}
+
 interface OrderModalProps {
   order?: any;
   open: boolean;
@@ -33,9 +67,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<OrderFormData>({
     orderNumber: '',
     customerName: '',
+    customerEmail: '',
+    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
@@ -44,8 +80,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     stockNumber: '',
     orderType: 'sales',
     status: 'pending',
+    assignedGroupId: '',
+    assignedContactId: '',
+    salesperson: '',
     notes: '',
-    dueDate: undefined as Date | undefined
+    internalNotes: '',
+    priority: 'normal',
+    dueDate: undefined,
+    slaDeadline: undefined,
+    scheduledDate: undefined,
+    scheduledTime: ''
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
@@ -65,26 +109,39 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       
       if (order) {
         setFormData({
-          orderNumber: order.orderNumber || '',
-          customerName: order.customerName || '',
-          vehicleVin: order.vehicleVin || '',
-          vehicleYear: order.vehicleYear?.toString() || '',
-          vehicleMake: order.vehicleMake || '',
-          vehicleModel: order.vehicleModel || '',
-          vehicleInfo: order.vehicleInfo || '',
-          stockNumber: order.stockNumber || '',
-          orderType: order.orderType || 'sales',
+          orderNumber: order.orderNumber || order.order_number || '',
+          customerName: order.customerName || order.customer_name || '',
+          customerEmail: order.customerEmail || order.customer_email || '',
+          customerPhone: order.customerPhone || order.customer_phone || '',
+          vehicleVin: order.vehicleVin || order.vehicle_vin || '',
+          vehicleYear: order.vehicleYear?.toString() || order.vehicle_year?.toString() || '',
+          vehicleMake: order.vehicleMake || order.vehicle_make || '',
+          vehicleModel: order.vehicleModel || order.vehicle_model || '',
+          vehicleInfo: order.vehicleInfo || order.vehicle_info || '',
+          stockNumber: order.stockNumber || order.stock_number || '',
+          orderType: order.orderType || order.order_type || 'sales',
           status: order.status || 'pending',
+          assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
+          assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
+          salesperson: order.salesperson || '',
           notes: order.notes || '',
-          dueDate: order.dueDate ? safeParseDate(order.dueDate) || undefined : undefined
+          internalNotes: order.internalNotes || order.internal_notes || '',
+          priority: order.priority || 'normal',
+          dueDate: order.dueDate || order.due_date ? safeParseDate(order.dueDate || order.due_date) || undefined : undefined,
+          slaDeadline: order.slaDeadline || order.sla_deadline ? safeParseDate(order.slaDeadline || order.sla_deadline) || undefined : undefined,
+          scheduledDate: order.scheduledDate || order.scheduled_date ? safeParseDate(order.scheduledDate || order.scheduled_date) || undefined : undefined,
+          scheduledTime: order.scheduledTime || order.scheduled_time || ''
         });
         setSelectedServices(order.services || []);
-        setSelectedDealership(order.dealerId?.toString() || '');
+        setSelectedDealership(order.dealerId?.toString() || order.dealer_id?.toString() || '');
+        setSelectedAssignedTo(order.assignedGroupId || order.assigned_group_id || '');
       } else {
         // Reset form for new order
         setFormData({
           orderNumber: '',
           customerName: '',
+          customerEmail: '',
+          customerPhone: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
@@ -93,8 +150,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           stockNumber: '',
           orderType: 'sales',
           status: 'pending',
+          assignedGroupId: '',
+          assignedContactId: '',
+          salesperson: '',
           notes: '',
-          dueDate: undefined
+          internalNotes: '',
+          priority: 'normal',
+          dueDate: undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: ''
         });
         setSelectedServices([]);
         setSelectedDealership('');
@@ -172,16 +237,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     }
   };
 
-  const handleAssignedToChange = (userId: string) => {
-    setSelectedAssignedTo(userId);
-    // Find selected user and populate form
-    const selectedUserData = assignedUsers.find((u: any) => u.id === userId);
-    if (selectedUserData) {
-      setFormData(prev => ({
-        ...prev,
-        customerName: selectedUserData.name
-      }));
-    }
+  const handleAssignedToChange = (groupId: string) => {
+    setSelectedAssignedTo(groupId);
+    // Update assignment in form data - do NOT touch customerName
+    setFormData(prev => ({
+      ...prev,
+      assignedGroupId: groupId
+    }));
   };
 
   const handleVinChange = async (vin: string) => {
@@ -216,13 +278,38 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     }
   };
 
+  const transformToDbFormat = (formData: OrderFormData) => ({
+    // Map frontend camelCase to backend snake_case
+    order_number: formData.orderNumber,
+    customer_name: formData.customerName,
+    customer_email: formData.customerEmail || null,
+    customer_phone: formData.customerPhone || null,
+    vehicle_vin: formData.vehicleVin || null,
+    vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
+    vehicle_make: formData.vehicleMake || null,
+    vehicle_model: formData.vehicleModel || null,
+    vehicle_info: formData.vehicleInfo || null,
+    stock_number: formData.stockNumber || null,
+    order_type: formData.orderType,
+    status: formData.status,
+    assigned_group_id: formData.assignedGroupId || null,
+    assigned_contact_id: formData.assignedContactId || null,
+    salesperson: formData.salesperson || null,
+    notes: formData.notes || null,
+    internal_notes: formData.internalNotes || null,
+    priority: formData.priority || 'normal',
+    due_date: formData.dueDate || null,
+    sla_deadline: formData.slaDeadline || null,
+    scheduled_date: formData.scheduledDate || null,
+    scheduled_time: formData.scheduledTime || null,
+    dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
+    services: selectedServices
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-      services: selectedServices,
-      dealerId: selectedDealership ? parseInt(selectedDealership) : null
-    });
+    const dbData = transformToDbFormat(formData);
+    onSave(dbData);
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
@@ -246,10 +333,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           <form onSubmit={handleSubmit} className="space-y-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
               
-              {/* Dealership & Customer Information */}
+              {/* Dealership & Assignment Information */}
               <Card className="border-border">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base">{t('sales_orders.dealership')} & {t('orders.clientInfo')}</CardTitle>
+                  <CardTitle className="text-base">{t('sales_orders.dealership')} & {t('sales_orders.assignment')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -260,7 +347,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       disabled={loading}
                     >
                       <SelectTrigger className="border-input bg-background">
-                        <SelectValue placeholder={loading ? t('common.loading') : t('orders.selectClient')} />
+                        <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border max-h-[200px]">
                         {dealerships.map((dealer: any) => (
@@ -272,46 +359,90 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </Select>
                   </div>
 
-                   <div>
-                     <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
-                      <Select 
-                        value={selectedAssignedTo || ""} 
-                        onValueChange={handleAssignedToChange} 
-                        disabled={loading || !selectedDealership}
-                      >
-                        <SelectTrigger className="border-input bg-background">
-                          <SelectValue placeholder={
-                            !selectedDealership 
-                              ? t('orders.selectClient') 
-                              : loading 
-                                ? t('common.loading') 
-                                : t('orders.selectClient')
-                          } />
-                        </SelectTrigger>
-                       <SelectContent className="bg-popover border border-border max-h-[200px]">
-                         {assignedUsers.map((user: any) => (
-                           <SelectItem key={user.id} value={user.id}>
-                             {user.name} - {user.email}
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
-                     </Select>
-                   </div>
+                  <div>
+                    <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
+                    <Select 
+                      value={selectedAssignedTo || ""} 
+                      onValueChange={handleAssignedToChange} 
+                      disabled={loading || !selectedDealership}
+                    >
+                      <SelectTrigger className="border-input bg-background">
+                        <SelectValue placeholder={
+                          !selectedDealership 
+                            ? t('sales_orders.select_dealership_first') 
+                            : loading 
+                              ? t('common.loading') 
+                              : t('sales_orders.select_assignee')
+                        } />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover border border-border max-h-[200px]">
+                        {assignedUsers.map((user: any) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.name} - {user.email}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
                   <Separator />
 
-                   <div>
-                     <Label htmlFor="customerName">{t('orders.customerName')}</Label>
-                     <Input
-                       id="customerName"
-                       value={formData.customerName}
-                       onChange={(e) => handleInputChange('customerName', e.target.value)}
-                       className="border-input bg-background"
-                       placeholder={t('common.optional')}
-                       readOnly={!!selectedAssignedTo}
-                       disabled={!!selectedAssignedTo}
-                     />
-                   </div>
+                  {/* Customer Information Section */}
+                  <div className="space-y-4">
+                    <Label className="text-sm font-medium text-foreground">{t('orders.customer_information')}</Label>
+                    
+                    <div>
+                      <Label htmlFor="customerName">{t('orders.customerName')}</Label>
+                      <Input
+                        id="customerName"
+                        value={formData.customerName}
+                        onChange={(e) => handleInputChange('customerName', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder={t('orders.enter_customer_name')}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="customerEmail">{t('orders.customer_email')}</Label>
+                      <Input
+                        id="customerEmail"
+                        type="email"
+                        value={formData.customerEmail || ''}
+                        onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder={t('orders.customer_email_placeholder')}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="customerPhone">{t('orders.customer_phone')}</Label>
+                      <Input
+                        id="customerPhone"
+                        type="tel"
+                        value={formData.customerPhone || ''}
+                        onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder={t('orders.customer_phone_placeholder')}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="priority">{t('orders.priority')}</Label>
+                      <Select 
+                        value={formData.priority || 'normal'} 
+                        onValueChange={(value) => handleInputChange('priority', value)}
+                      >
+                        <SelectTrigger className="border-input bg-background">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover border border-border">
+                          <SelectItem value="normal">{t('orders.priority_normal')}</SelectItem>
+                          <SelectItem value="high">{t('orders.priority_high')}</SelectItem>
+                          <SelectItem value="urgent">{t('orders.priority_urgent')}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -508,6 +639,40 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             </div>
 
             <Separator className="my-6" />
+
+            {/* Hidden fields with default values for later editing in order details */}
+            <div className="hidden">
+              <input 
+                type="hidden" 
+                name="salesperson" 
+                value={formData.salesperson || ''} 
+                onChange={(e) => handleInputChange('salesperson', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="internal_notes" 
+                value={formData.internalNotes || ''} 
+                onChange={(e) => handleInputChange('internalNotes', e.target.value)}
+              />
+              <input 
+                type="hidden" 
+                name="sla_deadline" 
+                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
+                onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input 
+                type="hidden" 
+                name="scheduled_date" 
+                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
+                onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input 
+                type="hidden" 
+                name="scheduled_time" 
+                value={formData.scheduledTime || ''} 
+                onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
+              />
+            </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row justify-end gap-3">
