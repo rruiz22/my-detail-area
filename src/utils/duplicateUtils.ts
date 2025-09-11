@@ -2,6 +2,15 @@
  * Utility functions for detecting and handling duplicate orders
  */
 
+export interface Order {
+  id: string;
+  vehicle_vin?: string;
+  stock_number?: string;
+  customer_email?: string;
+  customer_name?: string;
+  [key: string]: any;
+}
+
 export interface DuplicateMatch {
   orderId: string;
   matchType: 'vin' | 'customer' | 'stock';
@@ -66,4 +75,30 @@ export const getDuplicateCount = (duplicates: DuplicateMatch[]): number => {
  */
 export const hasHighRiskDuplicates = (duplicates: DuplicateMatch[]): boolean => {
   return duplicates.some(d => d.confidence === 'high');
+};
+
+/**
+ * Get duplicate orders - legacy function for compatibility
+ */
+export const getDuplicateOrders = (orders: Order[]): Record<string, Order[]> => {
+  const duplicateGroups: Record<string, Order[]> = {};
+  
+  for (const order of orders) {
+    const duplicates = findPotentialDuplicates(order, orders);
+    if (duplicates.length > 0) {
+      duplicateGroups[order.id] = orders.filter(o => 
+        duplicates.some(d => d.orderId === o.id)
+      );
+    }
+  }
+  
+  return duplicateGroups;
+};
+
+/**
+ * Get duplicate cell background color - legacy function for compatibility
+ */
+export const getDuplicateCellBackground = (duplicates: DuplicateMatch[]): string => {
+  if (duplicates.length === 0) return '';
+  return hasHighRiskDuplicates(duplicates) ? 'bg-red-50' : 'bg-yellow-50';
 };

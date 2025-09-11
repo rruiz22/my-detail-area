@@ -405,6 +405,42 @@ export type Database = {
           },
         ]
       }
+      dealer_dms_configs: {
+        Row: {
+          auto_sync_enabled: boolean
+          created_at: string
+          dealer_id: number
+          dms_provider: string
+          id: string
+          last_sync_at: string | null
+          sync_frequency: string
+          sync_settings: Json
+          updated_at: string
+        }
+        Insert: {
+          auto_sync_enabled?: boolean
+          created_at?: string
+          dealer_id: number
+          dms_provider?: string
+          id?: string
+          last_sync_at?: string | null
+          sync_frequency?: string
+          sync_settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          auto_sync_enabled?: boolean
+          created_at?: string
+          dealer_id?: number
+          dms_provider?: string
+          id?: string
+          last_sync_at?: string | null
+          sync_frequency?: string
+          sync_settings?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       dealer_groups: {
         Row: {
           created_at: string
@@ -449,6 +485,60 @@ export type Database = {
           },
         ]
       }
+      dealer_inventory_sync_log: {
+        Row: {
+          dealer_id: number
+          file_name: string | null
+          file_size: number | null
+          id: string
+          processed_by: string | null
+          records_added: number | null
+          records_processed: number | null
+          records_removed: number | null
+          records_updated: number | null
+          sync_completed_at: string | null
+          sync_details: Json | null
+          sync_errors: Json | null
+          sync_started_at: string
+          sync_status: string
+          sync_type: string
+        }
+        Insert: {
+          dealer_id: number
+          file_name?: string | null
+          file_size?: number | null
+          id?: string
+          processed_by?: string | null
+          records_added?: number | null
+          records_processed?: number | null
+          records_removed?: number | null
+          records_updated?: number | null
+          sync_completed_at?: string | null
+          sync_details?: Json | null
+          sync_errors?: Json | null
+          sync_started_at?: string
+          sync_status?: string
+          sync_type?: string
+        }
+        Update: {
+          dealer_id?: number
+          file_name?: string | null
+          file_size?: number | null
+          id?: string
+          processed_by?: string | null
+          records_added?: number | null
+          records_processed?: number | null
+          records_removed?: number | null
+          records_updated?: number | null
+          sync_completed_at?: string | null
+          sync_details?: Json | null
+          sync_errors?: Json | null
+          sync_started_at?: string
+          sync_status?: string
+          sync_type?: string
+        }
+        Relationships: []
+      }
       dealer_invitations: {
         Row: {
           accepted_at: string | null
@@ -492,6 +582,13 @@ export type Database = {
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_invitations_inviter_id_fkey"
+            columns: ["inviter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -662,6 +759,186 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dealer_vehicle_inventory: {
+        Row: {
+          acv_max_retail: number | null
+          acv_wholesale: number | null
+          age_days: number | null
+          cargurus_ctr: number | null
+          cargurus_srp_views: number | null
+          cargurus_vdp_views: number | null
+          certified_program: string | null
+          color: string | null
+          cost_to_market: number | null
+          created_at: string
+          dealer_id: number
+          dms_status: string | null
+          drivetrain: string | null
+          estimated_profit: number | null
+          galves_value: number | null
+          id: string
+          is_active: boolean
+          is_certified: boolean | null
+          key_information: string | null
+          key_photo_url: string | null
+          last_reprice_date: string | null
+          leads_daily_avg_last_7_days: number | null
+          leads_last_7_days: number | null
+          leads_since_last_reprice: number | null
+          leads_total: number | null
+          lot_location: string | null
+          make: string | null
+          market_listings_matching: number | null
+          market_listings_overall: number | null
+          market_rank_matching: number | null
+          market_rank_overall: number | null
+          mds_matching: number | null
+          mds_overall: number | null
+          mileage: number | null
+          mmr_value: number | null
+          mmr_vs_cost: number | null
+          model: string | null
+          msrp: number | null
+          objective: string | null
+          percent_to_market: number | null
+          photo_count: number | null
+          price: number | null
+          proof_point_jd_power: string | null
+          proof_point_kbb: string | null
+          proof_point_market: string | null
+          proof_point_msrp: string | null
+          raw_data: Json | null
+          risk_light: string | null
+          segment: string | null
+          stock_number: string
+          syndication_status: string | null
+          trim: string | null
+          unit_cost: number | null
+          updated_at: string
+          vin: string
+          water_damage: boolean | null
+          year: number | null
+        }
+        Insert: {
+          acv_max_retail?: number | null
+          acv_wholesale?: number | null
+          age_days?: number | null
+          cargurus_ctr?: number | null
+          cargurus_srp_views?: number | null
+          cargurus_vdp_views?: number | null
+          certified_program?: string | null
+          color?: string | null
+          cost_to_market?: number | null
+          created_at?: string
+          dealer_id: number
+          dms_status?: string | null
+          drivetrain?: string | null
+          estimated_profit?: number | null
+          galves_value?: number | null
+          id?: string
+          is_active?: boolean
+          is_certified?: boolean | null
+          key_information?: string | null
+          key_photo_url?: string | null
+          last_reprice_date?: string | null
+          leads_daily_avg_last_7_days?: number | null
+          leads_last_7_days?: number | null
+          leads_since_last_reprice?: number | null
+          leads_total?: number | null
+          lot_location?: string | null
+          make?: string | null
+          market_listings_matching?: number | null
+          market_listings_overall?: number | null
+          market_rank_matching?: number | null
+          market_rank_overall?: number | null
+          mds_matching?: number | null
+          mds_overall?: number | null
+          mileage?: number | null
+          mmr_value?: number | null
+          mmr_vs_cost?: number | null
+          model?: string | null
+          msrp?: number | null
+          objective?: string | null
+          percent_to_market?: number | null
+          photo_count?: number | null
+          price?: number | null
+          proof_point_jd_power?: string | null
+          proof_point_kbb?: string | null
+          proof_point_market?: string | null
+          proof_point_msrp?: string | null
+          raw_data?: Json | null
+          risk_light?: string | null
+          segment?: string | null
+          stock_number: string
+          syndication_status?: string | null
+          trim?: string | null
+          unit_cost?: number | null
+          updated_at?: string
+          vin: string
+          water_damage?: boolean | null
+          year?: number | null
+        }
+        Update: {
+          acv_max_retail?: number | null
+          acv_wholesale?: number | null
+          age_days?: number | null
+          cargurus_ctr?: number | null
+          cargurus_srp_views?: number | null
+          cargurus_vdp_views?: number | null
+          certified_program?: string | null
+          color?: string | null
+          cost_to_market?: number | null
+          created_at?: string
+          dealer_id?: number
+          dms_status?: string | null
+          drivetrain?: string | null
+          estimated_profit?: number | null
+          galves_value?: number | null
+          id?: string
+          is_active?: boolean
+          is_certified?: boolean | null
+          key_information?: string | null
+          key_photo_url?: string | null
+          last_reprice_date?: string | null
+          leads_daily_avg_last_7_days?: number | null
+          leads_last_7_days?: number | null
+          leads_since_last_reprice?: number | null
+          leads_total?: number | null
+          lot_location?: string | null
+          make?: string | null
+          market_listings_matching?: number | null
+          market_listings_overall?: number | null
+          market_rank_matching?: number | null
+          market_rank_overall?: number | null
+          mds_matching?: number | null
+          mds_overall?: number | null
+          mileage?: number | null
+          mmr_value?: number | null
+          mmr_vs_cost?: number | null
+          model?: string | null
+          msrp?: number | null
+          objective?: string | null
+          percent_to_market?: number | null
+          photo_count?: number | null
+          price?: number | null
+          proof_point_jd_power?: string | null
+          proof_point_kbb?: string | null
+          proof_point_market?: string | null
+          proof_point_msrp?: string | null
+          raw_data?: Json | null
+          risk_light?: string | null
+          segment?: string | null
+          stock_number?: string
+          syndication_status?: string | null
+          trim?: string | null
+          unit_cost?: number | null
+          updated_at?: string
+          vin?: string
+          water_damage?: boolean | null
+          year?: number | null
+        }
+        Relationships: []
       }
       dealership_contacts: {
         Row: {
@@ -3029,6 +3306,7 @@ export type Database = {
         | "users"
         | "management"
         | "chat"
+        | "stock"
       chat_conversation_type: "direct" | "group" | "channel" | "announcement"
       chat_message_type: "text" | "voice" | "file" | "image" | "system"
       chat_permission_level: "read" | "write" | "moderate" | "admin"
@@ -3061,7 +3339,7 @@ export type Database = {
       user_department: "detailing" | "wash" | "service"
       user_presence_status: "online" | "away" | "busy" | "offline" | "invisible"
       user_role: "admin" | "manager" | "technician" | "viewer"
-      user_type: "dealer" | "detail"
+      user_type: "dealer" | "detail" | "system_admin"
       workflow_step_type:
         | "created"
         | "bring_to_recon"
@@ -3214,6 +3492,7 @@ export const Constants = {
         "users",
         "management",
         "chat",
+        "stock",
       ],
       chat_conversation_type: ["direct", "group", "channel", "announcement"],
       chat_message_type: ["text", "voice", "file", "image", "system"],
@@ -3250,7 +3529,7 @@ export const Constants = {
       user_department: ["detailing", "wash", "service"],
       user_presence_status: ["online", "away", "busy", "offline", "invisible"],
       user_role: ["admin", "manager", "technician", "viewer"],
-      user_type: ["dealer", "detail"],
+      user_type: ["dealer", "detail", "system_admin"],
       workflow_step_type: [
         "created",
         "bring_to_recon",
