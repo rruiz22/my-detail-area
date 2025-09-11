@@ -48,6 +48,7 @@ import {
 } from '@/utils/duplicateUtils';
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
+import { ChatAndSMSActions } from './ChatAndSMSActions';
 import { DueDateIndicator, useDueDateAttention } from '@/components/ui/due-date-indicator';
 import { 
   isSameDayOrder, 
@@ -608,9 +609,17 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                     </TableCell>
 
-                    {/* Column 6: Colorful Action Buttons */}
+                    {/* Column 6: Chat & SMS Actions + Action Buttons */}
                     <TableCell className="py-4 text-center">
                       <div className="flex items-center justify-center gap-1">
+                        <ChatAndSMSActions
+                          orderId={order.id}
+                          orderNumber={order.orderNumber}
+                          customerPhone={order.customerPhone}
+                          dealerId={order.dealer_id || 1}
+                          variant="icon"
+                        />
+                        
                         <Button 
                           variant="ghost" 
                           size="sm"
