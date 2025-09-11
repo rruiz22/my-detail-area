@@ -158,7 +158,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           otherParticipant = {
             id: participant.user_id,
             name: participant.user_name,
-            avatar_url: participant.avatar_url,
+            avatar_url: undefined,
             is_online: participant.presence_status === 'online'
           };
         }

@@ -3611,7 +3611,6 @@ export type Database = {
       get_conversation_participants: {
         Args: { conversation_uuid: string; requesting_user_id: string }
         Returns: {
-          avatar_url: string
           joined_at: string
           last_seen_at: string
           permission_level: string
