@@ -51,6 +51,10 @@ export function AppSidebar() {
     url: "/contacts",
     icon: Users2
   }, {
+    title: t('profile.title'),
+    url: "/profile",
+    icon: User
+  }, {
     title: t('vin_scanner_hub.title'),
     url: "/vin-scanner",
     icon: QrCode
