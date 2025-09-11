@@ -32,9 +32,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export const StockInventoryTable: React.FC = () => {
+interface StockInventoryTableProps {
+  dealerId?: number;
+}
+
+export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealerId }) => {
   const { t } = useTranslation();
-  const { inventory, loading } = useStockManagement();
+  const { inventory, loading } = useStockManagement(dealerId);
   const [searchTerm, setSearchTerm] = useState('');
   const [makeFilter, setMakeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');

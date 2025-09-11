@@ -29,10 +29,14 @@ interface UploadFile {
   preview?: any[];
 }
 
-export const StockCSVUploader: React.FC = () => {
+interface StockCSVUploaderProps {
+  dealerId?: number;
+}
+
+export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { uploadCSV, loading } = useStockManagement();
+  const { uploadCSV, loading } = useStockManagement(dealerId);
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [showPreview, setShowPreview] = useState(false);
 

@@ -4,13 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useStockDealerSelection } from '@/hooks/useStockDealerSelection';
 import { StockInventoryTable } from './StockInventoryTable';
 import { StockCSVUploader } from './StockCSVUploader';
 import { StockAnalytics } from './StockAnalytics';
 import { StockDMSConfig } from './StockDMSConfig';
 import { StockSyncHistory } from './StockSyncHistory';
+import { DealerSelectionModal } from './DealerSelectionModal';
 import { 
   Package, 
   Upload, 
@@ -20,19 +23,30 @@ import {
   TrendingDown,
   DollarSign,
   Calendar,
-  RefreshCw
+  RefreshCw,
+  Building2,
+  ChevronDown
 } from 'lucide-react';
 
 export const StockDashboard: React.FC = () => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('inventory');
-  const { dealerships } = useAccessibleDealerships();
-  const dealerId = dealerships[0]?.id;
+  const {
+    stockDealerships,
+    selectedDealerId,
+    setSelectedDealerId,
+    loading: dealerLoading,
+    needsSelection
+  } = useStockDealerSelection();
+  
   const { 
     inventory, 
-    loading, 
+    loading: inventoryLoading, 
     refreshInventory
-  } = useStockManagement(dealerId);
+  } = useStockManagement(selectedDealerId || undefined);
+
+  const selectedDealer = stockDealerships.find(d => d.id === selectedDealerId);
+  const loading = dealerLoading || inventoryLoading;
 
   // Mock metrics for now
   const metrics = {
@@ -73,26 +87,99 @@ export const StockDashboard: React.FC = () => {
     }
   ];
 
-  return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">{t('stock.title')}</h1>
-          <p className="text-muted-foreground">{t('stock.description')}</p>
+  // Loading state
+  if (dealerLoading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-96" />
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={refreshInventory}
-            disabled={loading}
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            {t('stock.actions.refresh')}
-          </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
         </div>
       </div>
+    );
+  }
+
+  // No stock-enabled dealerships
+  if (!stockDealerships.length) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12">
+          <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">
+            {t('stock.errors.no_access')}
+          </h3>
+          <p className="text-muted-foreground">
+            {t('stock.errors.no_access_description')}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <DealerSelectionModal
+        isOpen={needsSelection}
+        dealers={stockDealerships}
+        onSelectDealer={(dealerId) => setSelectedDealerId(dealerId)}
+      />
+      
+      <div className="space-y-6 p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-3xl font-bold text-foreground">{t('stock.title')}</h1>
+              {stockDealerships.length > 1 && selectedDealer && (
+                <Select value={selectedDealerId?.toString()} onValueChange={(value) => setSelectedDealerId(parseInt(value))}>
+                  <SelectTrigger className="w-[280px]">
+                    <div className="flex items-center space-x-2">
+                      <Building2 className="w-4 h-4 text-muted-foreground" />
+                      <span className="truncate">{selectedDealer.name}</span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 opacity-50" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stockDealerships.map((dealer) => (
+                      <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                        <div className="flex items-center space-x-2">
+                          <Building2 className="w-4 h-4" />
+                          <span>{dealer.name}</span>
+                          <Badge variant="outline" className="ml-auto text-xs">
+                            {dealer.city}, {dealer.state}
+                          </Badge>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+            <p className="text-muted-foreground">{t('stock.description')}</p>
+            {selectedDealer && (
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Building2 className="w-3 h-3" />
+                <span>{selectedDealer.city}, {selectedDealer.state}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refreshInventory}
+              disabled={loading || !selectedDealerId}
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              {t('stock.actions.refresh')}
+            </Button>
+          </div>
+        </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -154,25 +241,26 @@ export const StockDashboard: React.FC = () => {
         </TabsList>
 
         <TabsContent value="inventory" className="space-y-4">
-          <StockInventoryTable />
+          <StockInventoryTable dealerId={selectedDealerId || undefined} />
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-4">
-          <StockCSVUploader />
+          <StockCSVUploader dealerId={selectedDealerId || undefined} />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <StockAnalytics />
+          <StockAnalytics dealerId={selectedDealerId || undefined} />
         </TabsContent>
 
         <TabsContent value="dms" className="space-y-4">
-          <StockDMSConfig />
+          <StockDMSConfig dealerId={selectedDealerId || undefined} />
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          <StockSyncHistory />
+          <StockSyncHistory dealerId={selectedDealerId || undefined} />
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </>
   );
 };

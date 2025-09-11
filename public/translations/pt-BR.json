@@ -154,8 +154,19 @@
     "status_change_warning": "Isso mudará o status do pedido"
   },
   "stock": {
-    "title": "Inventário de Estoque",
-    "description": "Gerenciar inventário de veículos e acompanhar desempenho do estoque",
+    "title": "Gestão de Estoque",
+    "description": "Gerenciar inventário de veículos e operações de estoque",
+    "dealer_selection": {
+      "title": "Selecionar Concessionária",
+      "description": "Escolha uma concessionária para visualizar e gerenciar o inventário de estoque",
+      "stock_module_enabled": "Módulo de estoque habilitado",
+      "remember_selection": "Lembrar minha seleção para futuras visitas",
+      "continue": "Continuar"
+    },
+    "errors": {
+      "no_access": "Sem Acesso ao Estoque",
+      "no_access_description": "Você não tem acesso ao módulo de estoque para nenhuma concessionária. Entre em contato com seu administrador."
+    },
     "uploadCSV": "Upload CSV",
     "analytics": "Analytics",
     "metrics": {
@@ -165,7 +176,8 @@
     },
     "inventory": {
       "title": "Inventário de Veículos",
-      "description": "Navegar e gerenciar seu estoque atual de veículos"
+      "description": "Navegar e gerenciar seu estoque atual de veículos",
+      "no_vehicles": "Nenhum veículo encontrado"
     },
     "placeholder": {
       "title": "Sistema de Gestão de Estoque",
@@ -176,16 +188,20 @@
       "inventory": "Inventário",
       "upload": "Upload CSV",
       "analytics": "Analytics",
-      "dms": "Config DMS",
-      "history": "Histórico Sync"
+      "dms_config": "Config DMS",
+      "sync_history": "Histórico Sync"
     },
     "dashboard": {
       "title": "Painel de Estoque",
       "description": "Visão geral do desempenho do seu inventário de veículos",
-      "refresh": "Atualizar Dados"
+      "refresh": "Atualizar Dados",
+      "avg_price": "Preço Médio",
+      "avg_age_days": "Idade Média",
+      "inventory_value": "Valor Total"
     },
     "table": {
       "stockNumber": "# Estoque",
+      "stock_number": "Estoque #",
       "vin": "VIN",
       "vehicle": "Veículo",
       "year": "Ano",
@@ -2540,5 +2556,12 @@
     "vehicle_info": "[PT] Vehicle Information",
     "year": "[PT] Year"
   },
-  "wholesale": "[PT] Wholesale"
+  "wholesale": "[PT] Wholesale",
+  "subscription": {
+    "plan": {
+      "basic": "Básico",
+      "pro": "Pro",
+      "premium": "Premium"
+    }
+  }
 }

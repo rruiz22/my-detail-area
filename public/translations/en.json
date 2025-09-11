@@ -31,8 +31,19 @@
     "status_change_warning": "This will change the order status"
   },
   "stock": {
-    "title": "Stock Inventory",
-    "description": "Manage vehicle inventory and track stock performance",
+    "title": "Stock Management",
+    "description": "Manage vehicle inventory and stock operations",
+    "dealer_selection": {
+      "title": "Select Dealership",
+      "description": "Choose a dealership to view and manage stock inventory",
+      "stock_module_enabled": "Stock module enabled",
+      "remember_selection": "Remember my selection for future visits",
+      "continue": "Continue"
+    },
+    "errors": {
+      "no_access": "No Stock Access",
+      "no_access_description": "You don't have access to the stock module for any dealerships. Please contact your administrator."
+    },
     "uploadCSV": "Upload CSV",
     "analytics": "Analytics",
     "metrics": {
@@ -42,7 +53,8 @@
     },
     "inventory": {
       "title": "Vehicle Inventory",
-      "description": "Browse and manage your current vehicle stock"
+      "description": "Browse and manage your current vehicle stock",
+      "no_vehicles": "No vehicles found"
     },
     "placeholder": {
       "title": "Stock Management System",
@@ -53,16 +65,20 @@
       "inventory": "Inventory",
       "upload": "Upload CSV",
       "analytics": "Analytics",
-      "dms": "DMS Config",
-      "history": "Sync History"
+      "dms_config": "DMS Config",
+      "sync_history": "Sync History"
     },
     "dashboard": {
       "title": "Stock Dashboard",
       "description": "Overview of your vehicle inventory performance",
-      "refresh": "Refresh Data"
+      "refresh": "Refresh Data",
+      "avg_price": "Average Price",
+      "avg_age_days": "Average Age",
+      "inventory_value": "Total Value"
     },
     "table": {
       "stockNumber": "Stock #",
+      "stock_number": "Stock #",
       "vin": "VIN",
       "vehicle": "Vehicle",
       "year": "Year",
@@ -2282,5 +2298,12 @@
     "recon_instructions": "Enter specific reconditioning instructions...",
     "create_order": "Create Order",
     "recon_hub": "ReconHub"
+  },
+  "subscription": {
+    "plan": {
+      "basic": "Basic",
+      "pro": "Pro", 
+      "premium": "Premium"
+    }
   }
 }

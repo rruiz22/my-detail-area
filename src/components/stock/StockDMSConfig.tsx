@@ -42,7 +42,11 @@ interface DMSConfig {
   };
 }
 
-export const StockDMSConfig: React.FC = () => {
+interface StockDMSConfigProps {
+  dealerId?: number;
+}
+
+export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { loading } = useStockManagement();

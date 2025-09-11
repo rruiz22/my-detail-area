@@ -17,7 +17,11 @@ import {
   Download
 } from 'lucide-react';
 
-export const StockAnalytics: React.FC = () => {
+interface StockAnalyticsProps {
+  dealerId?: number;
+}
+
+export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { loading } = useStockManagement();
   const [timeRange, setTimeRange] = useState('30');

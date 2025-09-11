@@ -26,7 +26,11 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-export const StockSyncHistory: React.FC = () => {
+interface StockSyncHistoryProps {
+  dealerId?: number;
+}
+
+export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { loading } = useStockManagement();
   const [searchTerm, setSearchTerm] = useState('');

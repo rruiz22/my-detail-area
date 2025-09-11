@@ -31,8 +31,19 @@
     "status_change_warning": "Esto cambiará el estado de la orden"
   },
   "stock": {
-    "title": "Inventario de Stock",
-    "description": "Gestionar inventario de vehículos y seguimiento de rendimiento",
+    "title": "Gestión de Stock",
+    "description": "Gestionar inventario de vehículos y operaciones de stock",
+    "dealer_selection": {
+      "title": "Seleccionar Concesionario",
+      "description": "Elige un concesionario para ver y gestionar el inventario de stock",
+      "stock_module_enabled": "Módulo de stock habilitado",
+      "remember_selection": "Recordar mi selección para futuras visitas",
+      "continue": "Continuar"
+    },
+    "errors": {
+      "no_access": "Sin Acceso a Stock",
+      "no_access_description": "No tienes acceso al módulo de stock para ningún concesionario. Por favor contacta a tu administrador."
+    },
     "uploadCSV": "Subir CSV",
     "analytics": "Analíticas",
     "metrics": {
@@ -42,7 +53,8 @@
     },
     "inventory": {
       "title": "Inventario de Vehículos",
-      "description": "Explorar y gestionar tu stock actual de vehículos"
+      "description": "Explorar y gestionar tu stock actual de vehículos",
+      "no_vehicles": "No se encontraron vehículos"
     },
     "placeholder": {
       "title": "Sistema de Gestión de Stock",
@@ -53,16 +65,20 @@
       "inventory": "Inventario",
       "upload": "Subir CSV",
       "analytics": "Analíticas",
-      "dms": "Config DMS",
-      "history": "Historial Sync"
+      "dms_config": "Config DMS",
+      "sync_history": "Historial Sync"
     },
     "dashboard": {
       "title": "Panel de Stock",
       "description": "Vista general del rendimiento de tu inventario de vehículos",
-      "refresh": "Actualizar Datos"
+      "refresh": "Actualizar Datos",
+      "avg_price": "Precio Promedio",
+      "avg_age_days": "Edad Promedio",
+      "inventory_value": "Valor Total"
     },
     "table": {
       "stockNumber": "# Stock",
+      "stock_number": "Stock #",
       "vin": "VIN",
       "vehicle": "Vehículo",
       "year": "Año",
@@ -2589,5 +2605,12 @@
       "loading": "Cargando detalles del vehículo..."
     }
   },
-  "wholesale": "[PT] Wholesale"
+  "wholesale": "[PT] Wholesale",
+  "subscription": {
+    "plan": {
+      "basic": "Básico",
+      "pro": "Pro",
+      "premium": "Premium"
+    }
+  }
 }
