@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { CommunicationHub } from './communication/CommunicationHub';
 import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
+import { useOrderModalData } from '@/hooks/useOrderModalData';
+import { SkeletonLoader } from './SkeletonLoader';
 
 interface OrderAttachment {
   id: string;
@@ -28,6 +30,7 @@ interface EnhancedOrderDetailModalProps {
   onStatusChange?: (orderId: string, newStatus: string) => void;
 }
 
+// Modal component for order details
 export function EnhancedOrderDetailModal({
   order,
   open,
@@ -36,48 +39,45 @@ export function EnhancedOrderDetailModal({
   onDelete,
   onStatusChange
 }: EnhancedOrderDetailModalProps) {
+  // Early return MUST be before any hooks to avoid Rules of Hooks violation
+  if (!order) return null;
+  
   const { t } = useTranslation();
-  const [isDetailUser, setIsDetailUser] = useState(false);
   const [editingNotes, setEditingNotes] = useState(false);
   const [editingInternalNotes, setEditingInternalNotes] = useState(false);
-  const [notes, setNotes] = useState(order?.notes || '');
-  const [internalNotes, setInternalNotes] = useState(order?.internal_notes || '');
-  const [attachments, setAttachments] = useState<OrderAttachment[]>([]);
-  const [loadingAttachments, setLoadingAttachments] = useState(false);
+  const [notes, setNotes] = useState(order.notes || '');
+  const [internalNotes, setInternalNotes] = useState(order.internal_notes || '');
+
+  // Use parallel data fetching hook for optimal performance
+  const { 
+    data: modalData, 
+    loading: dataLoading, 
+    error: dataError,
+    addAttachment: handleAttachmentUploaded,
+    removeAttachment: handleAttachmentDeleted,
+    refetch: refetchModalData
+  } = useOrderModalData({
+    orderId: order.id,
+    qrSlug: order.qr_slug,
+    enabled: open // Only fetch when modal is open
+  });
 
   useEffect(() => {
     if (order) {
       setNotes(order.notes || '');
       setInternalNotes(order.internal_notes || '');
-      fetchAttachments();
     }
-    checkUserType();
   }, [order]);
 
-  const checkUserType = async () => {
-    try {
-      const { data: user } = await supabase.auth.getUser();
-      if (user.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('user_type')
-          .eq('id', user.user.id)
-          .single();
-        
-        setIsDetailUser(profile?.user_type === 'detail');
-      }
-    } catch (error) {
-      console.error('Error checking user type:', error);
-    }
-  };
-
-  const handleStatusChange = async (newStatus: string) => {
+  // Memoize status change handler
+  const handleStatusChange = useCallback(async (newStatus: string) => {
     if (onStatusChange) {
       await onStatusChange(order.id, newStatus);
     }
-  };
+  }, [onStatusChange, order.id]);
 
-  const handleNotesUpdate = async (field: 'notes' | 'internal_notes', value: string) => {
+  // Memoize notes update handler
+  const handleNotesUpdate = useCallback(async (field: 'notes' | 'internal_notes', value: string) => {
     try {
       const { error } = await supabase
         .from('orders')
@@ -97,55 +97,53 @@ export function EnhancedOrderDetailModal({
       console.error('Error updating notes:', error);
       toast.error(t('messages.error_updating_notes'));
     }
-  };
+  }, [order.id, t]);
 
-  const fetchAttachments = async () => {
-    if (!order?.id) return;
-    
-    setLoadingAttachments(true);
-    try {
-      const { data, error } = await supabase
-        .from('order_attachments')
-        .select('*')
-        .eq('order_id', order.id)
-        .order('created_at', { ascending: false });
+  // Enhanced attachment handlers with optimistic updates
+  const handleAttachmentUploadedOptimistic = useCallback((newAttachment: OrderAttachment) => {
+    handleAttachmentUploaded(newAttachment);
+    toast.success(t('attachments.uploadSuccess'));
+  }, [handleAttachmentUploaded, t]);
 
-      if (error) throw error;
-      setAttachments(data || []);
-    } catch (error) {
-      console.error('Error fetching attachments:', error);
-      toast.error(t('attachments.loadError'));
-    } finally {
-      setLoadingAttachments(false);
-    }
-  };
+  const handleAttachmentDeletedOptimistic = useCallback((attachmentId: string) => {
+    handleAttachmentDeleted(attachmentId);
+    toast.success(t('attachments.deleteSuccess'));
+  }, [handleAttachmentDeleted, t]);
 
-  const handleAttachmentUploaded = (newAttachment: OrderAttachment) => {
-    setAttachments((prev) => [newAttachment, ...prev]);
-  };
-
-  const handleAttachmentDeleted = (attachmentId: string) => {
-    setAttachments((prev) => prev.filter(att => att.id !== attachmentId));
-  };
-
-  const formatCurrency = (amount: number | null | undefined) => {
+  // Memoize utility functions
+  const formatCurrency = useMemo(() => (amount: number | null | undefined) => {
     if (!amount) return 'N/A';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
     }).format(amount);
-  };
+  }, []);
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = useMemo(() => (priority: string) => {
     switch (priority?.toLowerCase()) {
       case 'high': return 'destructive';
       case 'medium': return 'secondary';
       case 'low': return 'outline';
       default: return 'outline';
     }
-  };
+  }, []);
 
-  if (!order) return null;
+  // Show loading state for critical data
+  if (dataLoading && !modalData.attachments.length) {
+    return (
+      <EnhancedOrderDetailLayout
+        order={order}
+        open={open}
+        onClose={onClose}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onStatusChange={onStatusChange}
+        onNotesUpdate={handleNotesUpdate}
+        modalData={modalData}
+        isLoadingData={true}
+      />
+    );
+  }
 
   return (
     <EnhancedOrderDetailLayout
@@ -156,7 +154,9 @@ export function EnhancedOrderDetailModal({
       onDelete={onDelete}
       onStatusChange={onStatusChange}
       onNotesUpdate={handleNotesUpdate}
-    >
-    </EnhancedOrderDetailLayout>
+      modalData={modalData}
+      isLoadingData={dataLoading}
+      dataError={dataError}
+    />
   );
 }

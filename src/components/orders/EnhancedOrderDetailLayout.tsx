@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useCallback, useMemo } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +39,7 @@ import { RecentActivityBlock } from './RecentActivityBlock';
 import { TimeRemaining } from './TimeRemaining';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
+import { SkeletonLoader } from './SkeletonLoader';
 
 interface EnhancedOrderDetailLayoutProps {
   order: any;
@@ -48,16 +49,23 @@ interface EnhancedOrderDetailLayoutProps {
   onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
   onNotesUpdate?: (orderId: string, notes: string, type: 'general' | 'internal') => void;
+  modalData?: any;
+  isLoadingData?: boolean;
+  dataError?: string | null;
 }
 
-export function EnhancedOrderDetailLayout({
+// Memoized component to prevent unnecessary re-renders
+export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetailLayout({
   order,
   open,
   onClose,
   onEdit,
   onDelete,
   onStatusChange,
-  onNotesUpdate
+  onNotesUpdate,
+  modalData,
+  isLoadingData = false,
+  dataError
 }: EnhancedOrderDetailLayoutProps) {
   const { t } = useTranslation();
 
@@ -76,28 +84,35 @@ export function EnhancedOrderDetailLayout({
     }
   }, [open]);
 
-  const formatCurrency = (amount: number | null | undefined) => {
+  // Memoize utility functions
+  const formatCurrency = useMemo(() => (amount: number | null | undefined) => {
     if (!amount) return 'N/A';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
     }).format(amount);
-  };
+  }, []);
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = useMemo(() => (priority: string) => {
     switch (priority?.toLowerCase()) {
       case 'high': return 'destructive';
       case 'medium': return 'secondary';
       case 'low': return 'outline';
       default: return 'outline';
     }
-  };
+  }, []);
 
-  const handleStatusChange = async (newStatus: string) => {
+  // Memoize status change handler
+  const handleStatusChange = useCallback(async (newStatus: string) => {
     if (onStatusChange) {
       await onStatusChange(order.id, newStatus);
     }
-  };
+  }, [onStatusChange, order.id]);
+
+  // Memoize vehicle display name
+  const vehicleDisplayName = useMemo(() => {
+    return `${order.vehicle_year || ''} ${order.vehicle_make || ''} ${order.vehicle_model || ''}`.trim() || 'Unknown Vehicle';
+  }, [order.vehicle_year, order.vehicle_make, order.vehicle_model]);
 
   if (!order) return null;
 
@@ -144,7 +159,7 @@ export function EnhancedOrderDetailLayout({
                       <div className="flex items-center gap-2">
                         <Car className="h-5 w-5 text-blue-600" />
                         <span className="font-semibold text-gray-800">
-                          {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
+                          {vehicleDisplayName}
                         </span>
                       </div>
                       
@@ -188,22 +203,38 @@ export function EnhancedOrderDetailLayout({
                 {/* Right Sidebar - Clean Design */}
                 <div className="space-y-4">
                   {/* Enhanced QR Code & Short Link Block */}
-                  <EnhancedQRCodeBlock 
-                    orderId={order.id}
-                    orderNumber={order.order_number}
-                    dealerId={order.dealer_id}
-                    qrSlug={order.qr_slug}
-                    shortUrl={order.short_url}
-                  />
+                  {isLoadingData ? (
+                    <SkeletonLoader variant="qr-code" />
+                  ) : (
+                    <EnhancedQRCodeBlock 
+                      orderId={order.id}
+                      orderNumber={order.order_number}
+                      dealerId={order.dealer_id}
+                      qrSlug={order.qr_slug}
+                      shortUrl={order.short_url}
+                    />
+                  )}
 
                   {/* Enhanced Followers Block */}
-                  <FollowersBlock 
-                    orderId={order.id}
-                    dealerId={order.dealer_id}
-                  />
+                  {isLoadingData ? (
+                    <SkeletonLoader variant="notes" />
+                  ) : (
+                    <FollowersBlock 
+                      orderId={order.id}
+                      dealerId={order.dealer_id}
+                      followers={modalData?.followers || []}
+                    />
+                  )}
 
                   {/* Enhanced Recent Activity Block */}
-                  <RecentActivityBlock orderId={order.id} />
+                  {isLoadingData ? (
+                    <SkeletonLoader variant="activity" />
+                  ) : (
+                    <RecentActivityBlock 
+                      orderId={order.id}
+                      activities={modalData?.activities || []}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -226,4 +257,4 @@ export function EnhancedOrderDetailLayout({
       </DialogContent>
     </Dialog>
   );
-}
+});

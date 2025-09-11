@@ -7,14 +7,14 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   const variants = {
-    'Pending': 'bg-pending text-pending-foreground',
-    'In Progress': 'bg-warning text-warning-foreground',
+    'Pending': 'bg-warning text-warning-foreground',
+    'In Progress': 'bg-blue-100 text-blue-800',
     'Complete': 'bg-success text-success-foreground',
     'Cancelled': 'bg-destructive text-destructive-foreground'
   };
 
   return (
-    <Badge className={variants[status]}>
+    <Badge className={`${variants[status]} px-3 py-1.5`}>
       {status}
     </Badge>
   );

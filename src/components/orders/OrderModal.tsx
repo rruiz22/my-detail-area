@@ -28,8 +28,6 @@ interface OrderFormData {
   
   // Customer information (vehicle owner)
   customerName: string;
-  customerEmail?: string;
-  customerPhone?: string;
   
   // Vehicle information
   vehicleVin: string;
@@ -70,8 +68,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [formData, setFormData] = useState<OrderFormData>({
     orderNumber: '',
     customerName: '',
-    customerEmail: '',
-    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
@@ -100,6 +96,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const canViewPrices = canViewPricing(roles);
 
@@ -108,40 +105,68 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       fetchDealerships();
       
       if (order) {
+        // Helper function to safely extract field values with fallbacks
+        const getFieldValue = (camelCase: any, snakeCase: any, defaultValue = '') => {
+          return camelCase ?? snakeCase ?? defaultValue;
+        };
+
+        // Helper function to safely parse dates
+        const parseDateField = (camelCaseDate: any, snakeCaseDate: any) => {
+          const dateValue = camelCaseDate || snakeCaseDate;
+          if (!dateValue) return undefined;
+          const parsed = safeParseDate(dateValue);
+          return parsed || undefined;
+        };
+
+        // Helper function to safely convert to string
+        const toStringValue = (value: any) => {
+          if (value === null || value === undefined) return '';
+          return value.toString();
+        };
+
         setFormData({
-          orderNumber: order.orderNumber || order.order_number || '',
-          customerName: order.customerName || order.customer_name || '',
-          customerEmail: order.customerEmail || order.customer_email || '',
-          customerPhone: order.customerPhone || order.customer_phone || '',
-          vehicleVin: order.vehicleVin || order.vehicle_vin || '',
-          vehicleYear: order.vehicleYear?.toString() || order.vehicle_year?.toString() || '',
-          vehicleMake: order.vehicleMake || order.vehicle_make || '',
-          vehicleModel: order.vehicleModel || order.vehicle_model || '',
-          vehicleInfo: order.vehicleInfo || order.vehicle_info || '',
-          stockNumber: order.stockNumber || order.stock_number || '',
-          orderType: order.orderType || order.order_type || 'sales',
-          status: order.status || 'pending',
-          assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
-          assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
-          salesperson: order.salesperson || '',
-          notes: order.notes || '',
-          internalNotes: order.internalNotes || order.internal_notes || '',
-          priority: order.priority || 'normal',
-          dueDate: order.dueDate || order.due_date ? safeParseDate(order.dueDate || order.due_date) || undefined : undefined,
-          slaDeadline: order.slaDeadline || order.sla_deadline ? safeParseDate(order.slaDeadline || order.sla_deadline) || undefined : undefined,
-          scheduledDate: order.scheduledDate || order.scheduled_date ? safeParseDate(order.scheduledDate || order.scheduled_date) || undefined : undefined,
-          scheduledTime: order.scheduledTime || order.scheduled_time || ''
+          // Basic order info
+          orderNumber: getFieldValue(order.orderNumber, order.order_number),
+          orderType: getFieldValue(order.orderType, order.order_type, 'sales'),
+          status: getFieldValue(order.status, order.status, 'pending'),
+          priority: getFieldValue(order.priority, order.priority, 'normal'),
+          
+          // Customer information
+          customerName: getFieldValue(order.customerName, order.customer_name),
+          
+          // Vehicle information - handle both individual and consolidated fields
+          vehicleVin: getFieldValue(order.vehicleVin, order.vehicle_vin),
+          vehicleYear: toStringValue(getFieldValue(order.vehicleYear, order.vehicle_year)),
+          vehicleMake: getFieldValue(order.vehicleMake, order.vehicle_make),
+          vehicleModel: getFieldValue(order.vehicleModel, order.vehicle_model),
+          vehicleInfo: getFieldValue(order.vehicleInfo, order.vehicle_info),
+          stockNumber: getFieldValue(order.stockNumber, order.stock_number),
+          
+          // Assignment information
+          assignedGroupId: getFieldValue(order.assignedGroupId, order.assigned_group_id),
+          assignedContactId: getFieldValue(order.assignedContactId, order.assigned_contact_id),
+          salesperson: getFieldValue(order.salesperson, order.salesperson),
+          
+          // Notes
+          notes: getFieldValue(order.notes, order.notes),
+          internalNotes: getFieldValue(order.internalNotes, order.internal_notes),
+          
+          // Date fields - handle proper parsing
+          dueDate: parseDateField(order.dueDate, order.due_date),
+          slaDeadline: parseDateField(order.slaDeadline, order.sla_deadline),
+          scheduledDate: parseDateField(order.scheduledDate, order.scheduled_date),
+          scheduledTime: getFieldValue(order.scheduledTime, order.scheduled_time)
         });
-        setSelectedServices(order.services || []);
-        setSelectedDealership(order.dealerId?.toString() || order.dealer_id?.toString() || '');
-        setSelectedAssignedTo(order.assignedGroupId || order.assigned_group_id || '');
+
+        // Set related data with proper fallbacks
+        setSelectedServices(Array.isArray(order.services) ? order.services : []);
+        setSelectedDealership(toStringValue(getFieldValue(order.dealerId, order.dealer_id)));
+        setSelectedAssignedTo(toStringValue(getFieldValue(order.assignedGroupId, order.assigned_group_id)));
       } else {
         // Reset form for new order
         setFormData({
           orderNumber: '',
           customerName: '',
-          customerEmail: '',
-          customerPhone: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
@@ -252,22 +277,51 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     if (vin.length === 17 && !vinDecoded) {
       const vehicleData = await decodeVin(vin);
       if (vehicleData) {
+        // Update both individual fields (for filtering) and consolidated vehicle_info (primary field)
         setFormData(prev => ({
           ...prev,
           vehicleYear: vehicleData.year,
           vehicleMake: vehicleData.make,
           vehicleModel: vehicleData.model,
-          vehicleInfo: vehicleData.vehicleInfo
+          vehicleInfo: vehicleData.vehicleInfo // Consolidated field from VIN service
         }));
         setVinDecoded(true);
       }
     } else if (vin.length !== 17) {
       setVinDecoded(false);
+      // Clear VIN-derived data when VIN becomes invalid
+      if (vin.length === 0) {
+        setFormData(prev => ({
+          ...prev,
+          vehicleYear: '',
+          vehicleMake: '',
+          vehicleModel: '',
+          vehicleInfo: ''
+        }));
+      }
     }
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // If individual vehicle fields are manually changed, update consolidated vehicle_info
+      if (['vehicleYear', 'vehicleMake', 'vehicleModel'].includes(field)) {
+        const year = field === 'vehicleYear' ? value : prev.vehicleYear;
+        const make = field === 'vehicleMake' ? value : prev.vehicleMake;
+        const model = field === 'vehicleModel' ? value : prev.vehicleModel;
+        
+        // Build consolidated vehicle_info only if we have year, make, and model
+        if (year && make && model) {
+          newData.vehicleInfo = `${year} ${make} ${model}`;
+        } else if (!year && !make && !model) {
+          newData.vehicleInfo = '';
+        }
+      }
+      
+      return newData;
+    });
   };
 
   const handleServiceToggle = (serviceId: string, checked: boolean) => {
@@ -278,36 +332,96 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     }
   };
 
-  const transformToDbFormat = (formData: OrderFormData) => ({
-    // Map frontend camelCase to backend snake_case
-    order_number: formData.orderNumber,
-    customer_name: formData.customerName,
-    customer_email: formData.customerEmail || null,
-    customer_phone: formData.customerPhone || null,
-    vehicle_vin: formData.vehicleVin || null,
-    vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
-    vehicle_make: formData.vehicleMake || null,
-    vehicle_model: formData.vehicleModel || null,
-    vehicle_info: formData.vehicleInfo || null,
-    stock_number: formData.stockNumber || null,
-    order_type: formData.orderType,
-    status: formData.status,
-    assigned_group_id: formData.assignedGroupId || null,
-    assigned_contact_id: formData.assignedContactId || null,
-    salesperson: formData.salesperson || null,
-    notes: formData.notes || null,
-    internal_notes: formData.internalNotes || null,
-    priority: formData.priority || 'normal',
-    due_date: formData.dueDate || null,
-    sla_deadline: formData.slaDeadline || null,
-    scheduled_date: formData.scheduledDate || null,
-    scheduled_time: formData.scheduledTime || null,
-    dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
-    services: selectedServices
-  });
+  const transformToDbFormat = (formData: OrderFormData) => {
+    // Ensure vehicle_info is properly set as the primary field
+    let vehicleInfo = formData.vehicleInfo;
+    
+    // Fallback: if vehicle_info is empty but individual fields exist, construct it
+    if (!vehicleInfo && formData.vehicleYear && formData.vehicleMake && formData.vehicleModel) {
+      vehicleInfo = `${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}`;
+    }
+    
+    // Handle date formatting - ensure proper ISO string format
+    const formatDateForDb = (date: Date | undefined) => {
+      if (!date) return null;
+      return date instanceof Date ? date.toISOString() : null;
+    };
+    
+    return {
+      // Map frontend camelCase to backend snake_case
+      order_number: formData.orderNumber || null,
+      customer_name: formData.customerName || null,
+      customer_email: null, // Removed field - always null
+      customer_phone: null, // Removed field - always null
+      
+      // Vehicle information fields
+      vehicle_vin: formData.vehicleVin || null,
+      vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
+      vehicle_make: formData.vehicleMake || null,
+      vehicle_model: formData.vehicleModel || null,
+      vehicle_info: vehicleInfo || null, // Primary consolidated field
+      stock_number: formData.stockNumber || null,
+      
+      // Order management fields
+      order_type: formData.orderType || 'sales',
+      status: formData.status || 'pending',
+      priority: formData.priority || 'normal',
+      
+      // Assignment fields
+      assigned_group_id: formData.assignedGroupId || null,
+      assigned_contact_id: formData.assignedContactId || null,
+      salesperson: formData.salesperson || null,
+      
+      // Date fields - due_date is primary, sla_deadline is secondary
+      due_date: formatDateForDb(formData.dueDate),
+      sla_deadline: formatDateForDb(formData.slaDeadline),
+      scheduled_date: formatDateForDb(formData.scheduledDate),
+      scheduled_time: formData.scheduledTime || null,
+      
+      // Notes and additional info
+      notes: formData.notes || null,
+      internal_notes: formData.internalNotes || null,
+      
+      // Related data
+      dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
+      services: selectedServices || []
+    };
+  };
+
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+    
+    // Validate required fields
+    if (!formData.customerName.trim()) {
+      errors.customerName = t('validation.customerNameRequired');
+    }
+    
+    // Validate VIN if provided
+    if (formData.vehicleVin && formData.vehicleVin.length !== 17) {
+      errors.vehicleVin = t('validation.vinInvalidLength');
+    }
+    
+    // Validate email format if provided
+    if (formData.customerEmail && !formData.customerEmail.includes('@')) {
+      errors.customerEmail = t('validation.emailInvalid');
+    }
+    
+    // Validate dealership selection
+    if (!selectedDealership) {
+      errors.dealership = t('validation.dealershipRequired');
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     const dbData = transformToDbFormat(formData);
     onSave(dbData);
   };
@@ -331,14 +445,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
           <form onSubmit={handleSubmit} className="space-y-6 pb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+            {/* Single Responsive Container */}
+            <Card className="border-border">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg">{order ? t('orders.edit') : t('orders.create')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               
-              {/* Dealership & Assignment Information */}
-              <Card className="border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">{t('sales_orders.dealership')} & {t('sales_orders.assignment')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                  {/* Column 1: Dealership & Assignment Information */}
+                  <div className="space-y-4">
+                    <div className="border-b border-border pb-3 mb-4">
+                      <h3 className="text-base font-medium text-foreground">{t('sales_orders.dealership')} & {t('sales_orders.assignment')}</h3>
+                    </div>
                   <div>
                     <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
                     <Select 
@@ -398,31 +517,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         value={formData.customerName}
                         onChange={(e) => handleInputChange('customerName', e.target.value)}
                         className="border-input bg-background"
-                        placeholder={t('orders.enter_customer_name')}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="customerEmail">{t('orders.customer_email')}</Label>
-                      <Input
-                        id="customerEmail"
-                        type="email"
-                        value={formData.customerEmail || ''}
-                        onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                        className="border-input bg-background"
-                        placeholder={t('orders.customer_email_placeholder')}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="customerPhone">{t('orders.customer_phone')}</Label>
-                      <Input
-                        id="customerPhone"
-                        type="tel"
-                        value={formData.customerPhone || ''}
-                        onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-                        className="border-input bg-background"
-                        placeholder={t('orders.customer_phone_placeholder')}
+                        placeholder={t('common.optional')}
                       />
                     </div>
 
@@ -443,21 +538,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       </Select>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  </div>
 
-              {/* Vehicle Information with VIN Decoding */}
-              <Card className="border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    {t('orders.vehicleInfo')}
-                    {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground">
-                      <Zap className="w-3 h-3 mr-1" />
-                      {t('sales_orders.vin_decoded_successfully')}
-                    </Badge>}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                  {/* Column 2: Vehicle Information */}
+                  <div className="space-y-4">
+                    <div className="border-b border-border pb-3 mb-4">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
+                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground">
+                          <Zap className="w-3 h-3 mr-1" />
+                          {t('sales_orders.vin_decoded_successfully')}
+                        </Badge>}
+                      </div>
+                    </div>
                   <div>
                     <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>
                     <Input
@@ -525,15 +618,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                        />
                      </div>
                    </div>
-                </CardContent>
-              </Card>
+                  </div>
 
-              {/* Services & Notes */}
-              <Card className="border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">{t('orders.servicesAndNotes')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                  {/* Column 3: Services & Notes */}
+                  <div className="space-y-4 xl:col-span-1 lg:col-span-2">
+                    <div className="border-b border-border pb-3 mb-4">
+                      <h3 className="text-base font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
+                    </div>
                   <div>
                     <Label className="text-sm font-medium">
                       {t('orders.services')} 
@@ -634,9 +725,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       placeholder={t('orders.notesPlaceholder')}
                     />
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             <Separator className="my-6" />
 

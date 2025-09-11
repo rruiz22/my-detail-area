@@ -21,8 +21,8 @@ interface StatusBadgeInteractiveProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'pending', label: 'status.pending', color: 'bg-pending text-pending-foreground' },
-  { value: 'in_progress', label: 'status.in_progress', color: 'bg-warning text-warning-foreground' },
+  { value: 'pending', label: 'status.pending', color: 'bg-warning text-warning-foreground' },
+  { value: 'in_progress', label: 'status.in_progress', color: 'bg-blue-100 text-blue-800' },
   { value: 'completed', label: 'status.completed', color: 'bg-success text-success-foreground' },
   { value: 'cancelled', label: 'status.cancelled', color: 'bg-destructive text-destructive-foreground' },
 ];
@@ -58,7 +58,7 @@ export function StatusBadgeInteractive({
   if (!canUpdateStatus) {
     return (
       <div className="flex items-center gap-1">
-        <Badge className={currentStatusConfig.color}>
+        <Badge className={`${currentStatusConfig.color} px-3 py-1.5`}>
           {t(currentStatusConfig.label)}
         </Badge>
         <Lock className="w-3 h-3 text-muted-foreground" />
@@ -76,7 +76,7 @@ export function StatusBadgeInteractive({
             className="h-auto p-0 hover:bg-transparent"
             aria-label="Change order status"
           >
-            <Badge className={`${currentStatusConfig.color} hover:opacity-80 cursor-pointer`}>
+            <Badge className={`${currentStatusConfig.color} hover:opacity-80 cursor-pointer px-3 py-1.5`}>
               {t(currentStatusConfig.label)}
               <ChevronDown className="w-3 h-3 ml-1" />
             </Badge>
@@ -92,7 +92,7 @@ export function StatusBadgeInteractive({
             >
               <Badge 
                 variant="secondary" 
-                className={`${option.color} mr-2 pointer-events-none`}
+                className={`${option.color} mr-2 pointer-events-none px-3 py-1.5`}
               >
                 {t(option.label)}
               </Badge>

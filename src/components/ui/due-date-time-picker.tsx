@@ -25,6 +25,7 @@ export function DueDateTimePicker({
   disabled
 }: DueDateTimePickerProps) {
   const { t } = useTranslation();
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
 
   // Generate time slots based on business hours
   const generateTimeSlots = (selectedDate?: Date) => {
@@ -68,6 +69,7 @@ export function DueDateTimePicker({
   const handleDateChange = (date: Date | undefined) => {
     if (!date) {
       onChange(undefined);
+      setIsCalendarOpen(false);
       return;
     }
 
@@ -97,6 +99,9 @@ export function DueDateTimePicker({
         onChange(setMinutes(setHours(date, defaultHour), 0));
       }
     }
+    
+    // Close the calendar after selecting a date
+    setIsCalendarOpen(false);
   };
 
   const handleTimeChange = (hourString: string) => {
@@ -135,7 +140,7 @@ export function DueDateTimePicker({
     <div className={cn("grid gap-2", className)}>
       <div className="grid grid-cols-1 gap-2">
         {/* Date Picker */}
-        <Popover>
+        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -195,16 +200,11 @@ export function DueDateTimePicker({
       </div>
 
       {/* Validation Messages */}
-      {value && (
+      {value && isToday(value) && (
         <div className="text-xs text-muted-foreground space-y-1">
-          <p>
-            {t('due_date.validation.business_hours_only')}
+          <p className="text-amber-600 dark:text-amber-400">
+            {t('due_date.validation.same_day_notice')}
           </p>
-          {isToday(value) && (
-            <p className="text-amber-600 dark:text-amber-400">
-              {t('due_date.validation.same_day_notice')}
-            </p>
-          )}
         </div>
       )}
     </div>

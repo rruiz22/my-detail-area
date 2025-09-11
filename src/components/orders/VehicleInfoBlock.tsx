@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,10 +9,12 @@ interface VehicleInfoBlockProps {
   order: any;
 }
 
-export function VehicleInfoBlock({ order }: VehicleInfoBlockProps) {
+// Memoized component to prevent unnecessary re-renders
+export const VehicleInfoBlock = React.memo(function VehicleInfoBlock({ order }: VehicleInfoBlockProps) {
   const { t } = useTranslation();
 
-  const vehicleInfo = [
+  // Memoize vehicle info array to prevent recreation on every render
+  const vehicleInfo = useMemo(() => [
     {
       icon: Calendar,
       label: t('common.year'),
@@ -44,9 +46,10 @@ export function VehicleInfoBlock({ order }: VehicleInfoBlockProps) {
       label: t('common.color'),
       value: order.vehicle_color || 'N/A'
     }
-  ];
+  ], [order.vehicle_year, order.vehicle_make, order.vehicle_model, order.vehicle_vin, order.stock_number, order.vehicle_color, t]);
 
-  const getDecodeStatus = () => {
+  // Memoize decode status calculation
+  const decodeStatus = useMemo(() => {
     if (order.vin_decoded) {
       return {
         status: 'success',
@@ -59,9 +62,13 @@ export function VehicleInfoBlock({ order }: VehicleInfoBlockProps) {
       text: t('vehicle_info.manual_entry'),
       desc: t('vehicle_info.manually_entered')
     };
-  };
+  }, [order.vin_decoded, t]);
 
-  const decodeStatus = getDecodeStatus();
+  // Memoize vehicle summary for display preview
+  const vehicleSummary = useMemo(() => ({
+    displayName: `${order.vehicle_year || ''} ${order.vehicle_make || ''} ${order.vehicle_model || ''}`.trim() || 'Unknown Vehicle',
+    vinDisplay: order.vehicle_vin ? `${order.vehicle_vin.slice(0, 8)}...${order.vehicle_vin.slice(-4)}` : 'N/A'
+  }), [order.vehicle_year, order.vehicle_make, order.vehicle_model, order.vehicle_vin]);
 
   return (
     <Card className="h-full">
@@ -120,14 +127,14 @@ export function VehicleInfoBlock({ order }: VehicleInfoBlockProps) {
           </div>
           <div className="p-3 bg-muted/50 rounded-lg border border-dashed">
             <p className="text-sm font-semibold text-center">
-              {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
+              {vehicleSummary.displayName}
             </p>
             <p className="text-xs text-muted-foreground text-center mt-1">
-              VIN: {order.vehicle_vin ? `${order.vehicle_vin.slice(0, 8)}...${order.vehicle_vin.slice(-4)}` : 'N/A'}
+              VIN: {vehicleSummary.vinDisplay}
             </p>
           </div>
         </div>
       </CardContent>
     </Card>
   );
-}
+});

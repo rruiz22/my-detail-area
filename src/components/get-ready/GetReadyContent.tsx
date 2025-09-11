@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { GetReadyTopbar } from './GetReadyTopbar';
 import { GetReadyStepsSidebar } from './GetReadyStepsSidebar';
+import { GetReadySplitContent } from './GetReadySplitContent';
 import { cn } from '@/lib/utils';
 
-interface GetReadyLayoutProps {
+interface GetReadyContentProps {
   children?: React.ReactNode;
 }
 
-export function GetReadyLayout({ children }: GetReadyLayoutProps) {
+export function GetReadyContent({ children }: GetReadyContentProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Top Bar */}
+    <div className="h-full flex flex-col">
+      {/* Get Ready Secondary Navigation */}
       <GetReadyTopbar />
       
       {/* Main Content Area */}
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="flex flex-1 overflow-hidden">
         {/* Steps Sidebar */}
         <div className={cn(
           "border-r bg-card transition-all duration-300",
@@ -32,7 +33,7 @@ export function GetReadyLayout({ children }: GetReadyLayoutProps) {
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <main className="flex-1 overflow-hidden">
-            {children || <Outlet />}
+            {children || <GetReadySplitContent className="p-4" />}
           </main>
         </div>
       </div>

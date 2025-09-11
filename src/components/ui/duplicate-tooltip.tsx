@@ -75,38 +75,29 @@ export function DuplicateTooltip({
       return { shouldShow: false, error: errorMsg };
     }
   }, [orders, value, field, debug]);
-
-  // Early return if tooltip shouldn't show
-  if (!tooltipData.shouldShow) {
-    if (tooltipData.error && debug) {
-      return (
-        <div className="relative inline-block">
-          {children}
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
-            <AlertTriangle className="w-2 h-2 text-white" />
-          </div>
-        </div>
-      );
-    }
-    return <>{children}</>;
-  }
   
-  // Memoize expensive calculations
+  // Memoize expensive calculations - always called regardless of shouldShow
   const { displayOrders, remainingCount, fieldLabel } = useMemo(() => {
+    if (!tooltipData.shouldShow) {
+      return {
+        displayOrders: [],
+        remainingCount: 0,
+        fieldLabel: field === 'stockNumber' ? 'Stock Number' : 'VIN'
+      };
+    }
+    
     const display = orders.slice(0, MAX_DISPLAY_ORDERS);
     const remaining = Math.max(0, orders.length - MAX_DISPLAY_ORDERS);
     const label = field === 'stockNumber' ? 'Stock Number' : 'VIN';
     
-    // Processing display orders (debug logging removed from render cycle)
-
     return {
       displayOrders: display,
       remainingCount: remaining,
       fieldLabel: label
     };
-  }, [orders, field]);
+  }, [orders, field, tooltipData.shouldShow]);
 
-  // Optimized event handlers with error handling
+  // Optimized event handlers with error handling - always defined
   const handleTooltipOpen = useCallback(() => {
     try {
       setIsOpen(true);
@@ -137,7 +128,7 @@ export function DuplicateTooltip({
     }
   }, [onOrderClick, field]);
   
-  // Utility functions
+  // Utility functions - always defined
   const formatDate = useCallback((dateString: string) => {
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -308,7 +299,7 @@ export function DuplicateTooltip({
     }
   }, [displayOrders, remainingCount, fieldLabel, value, orders.length, tooltipError, debug, formatDate, getOrderNumber, getStatusColor, handleOrderClick]);
   
-  // Enhanced mobile touch handling
+  // Enhanced mobile touch handling - always defined
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (isMobile && !isOpen) {
       e.preventDefault(); // Prevent default touch behavior
@@ -327,6 +318,21 @@ export function DuplicateTooltip({
       handleTooltipOpen();
     }
   }, [isOpen, handleTooltipOpen]);
+
+  // Early return after all hooks are defined
+  if (!tooltipData.shouldShow) {
+    if (tooltipData.error && debug) {
+      return (
+        <div className="relative inline-block">
+          {children}
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
+            <AlertTriangle className="w-2 h-2 text-white" />
+          </div>
+        </div>
+      );
+    }
+    return <>{children}</>;
+  }
 
   return (
     <Tooltip 

@@ -39,38 +39,67 @@ export interface Order {
 }
 
 // Transform Supabase order to component order
-const transformOrder = (supabaseOrder: any): Order => ({
-  id: supabaseOrder.id,
-  customerName: supabaseOrder.customer_name,
-  customerEmail: supabaseOrder.customer_email || undefined,
-  customerPhone: supabaseOrder.customer_phone || undefined,
-  vehicleYear: supabaseOrder.vehicle_year || undefined,
-  vehicleMake: supabaseOrder.vehicle_make || undefined,
-  vehicleModel: supabaseOrder.vehicle_model || undefined,
-  vehicleInfo: supabaseOrder.vehicle_info || undefined,
-  vehicleVin: supabaseOrder.vehicle_vin || undefined,
-  stockNumber: supabaseOrder.stock_number || undefined,
-  status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
-  priority: supabaseOrder.priority || undefined,
-  dueDate: supabaseOrder.sla_deadline || supabaseOrder.due_date || undefined,
-  createdAt: supabaseOrder.created_at,
-  updatedAt: supabaseOrder.updated_at,
-  totalAmount: supabaseOrder.total_amount || undefined,
-  services: supabaseOrder.services as any[] || [],
-  orderType: supabaseOrder.order_type || undefined,
-  assignedTo: 'Unassigned', // Will be overwritten in refreshData
-  notes: supabaseOrder.notes || undefined,
-  customOrderNumber: supabaseOrder.custom_order_number || undefined,
-  // Enhanced fields from manual JOINs (will be set in refreshData)
-  dealershipName: 'Unknown Dealer',
-  assignedGroupName: undefined,
-  createdByGroupName: undefined,
-  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    hour12: true 
-  }) : undefined,
-});
+const transformOrder = (supabaseOrder: any): Order => {
+  // Helper function to safely get field values
+  const getFieldValue = (value: any, defaultValue?: any) => {
+    if (value === null || value === undefined) return defaultValue;
+    return value;
+  };
+
+  // Primary date source is due_date, fallback to sla_deadline for compatibility
+  const primaryDate = getFieldValue(supabaseOrder.due_date) || getFieldValue(supabaseOrder.sla_deadline);
+
+  return {
+    // Core identifiers
+    id: supabaseOrder.id,
+    customOrderNumber: getFieldValue(supabaseOrder.order_number) || getFieldValue(supabaseOrder.custom_order_number) || supabaseOrder.id,
+    
+    // Customer information
+    customerName: getFieldValue(supabaseOrder.customer_name, ''),
+    customerEmail: getFieldValue(supabaseOrder.customer_email),
+    customerPhone: getFieldValue(supabaseOrder.customer_phone),
+    
+    // Vehicle information - prioritize consolidated field but keep individual fields for compatibility
+    vehicleInfo: getFieldValue(supabaseOrder.vehicle_info),
+    vehicleYear: getFieldValue(supabaseOrder.vehicle_year),
+    vehicleMake: getFieldValue(supabaseOrder.vehicle_make),
+    vehicleModel: getFieldValue(supabaseOrder.vehicle_model),
+    vehicleVin: getFieldValue(supabaseOrder.vehicle_vin),
+    stockNumber: getFieldValue(supabaseOrder.stock_number),
+    
+    // Order management
+    status: (supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled') || 'pending',
+    priority: getFieldValue(supabaseOrder.priority, 'normal'),
+    orderType: getFieldValue(supabaseOrder.order_type, 'sales'),
+    
+    // Date handling - due_date is primary
+    dueDate: primaryDate,
+    
+    // System fields
+    createdAt: supabaseOrder.created_at,
+    updatedAt: supabaseOrder.updated_at,
+    
+    // Financial and services
+    totalAmount: getFieldValue(supabaseOrder.total_amount),
+    services: Array.isArray(supabaseOrder.services) ? supabaseOrder.services : [],
+    
+    // Assignment - will be populated by refreshData with proper names
+    assignedTo: 'Unassigned', // Will be overwritten in refreshData
+    
+    // Notes
+    notes: getFieldValue(supabaseOrder.notes),
+    
+    // Enhanced fields from manual JOINs (will be set in refreshData)
+    dealershipName: 'Unknown Dealer',
+    assignedGroupName: undefined,
+    createdByGroupName: undefined,
+    dueTime: primaryDate ? new Date(primaryDate).toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    }) : undefined,
+  };
+};
 
 export const useOrderManagement = (activeTab: string) => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -235,6 +264,15 @@ export const useOrderManagement = (activeTab: string) => {
         console.error('Error fetching dealerships:', dealershipsError);
       }
 
+      // Fetch user profiles data separately for assignments
+      const { data: userProfiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email');
+
+      if (profilesError) {
+        console.error('Error fetching user profiles:', profilesError);
+      }
+
       // Fetch dealer groups data separately
       const { data: dealerGroups, error: groupsError } = await supabase
         .from('dealer_groups')
@@ -247,6 +285,10 @@ export const useOrderManagement = (activeTab: string) => {
       // Create lookup maps for better performance
       const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
       const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
+      const userMap = new Map(userProfiles?.map(u => [
+        u.id, 
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
 
       // Transform orders with joined data
       const allOrders = (orders || []).map(order => {
@@ -255,7 +297,11 @@ export const useOrderManagement = (activeTab: string) => {
         transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
         transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
         transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
+        
+        // Fix assignment mapping - assigned_group_id actually contains user IDs, not group IDs
+        transformedOrder.assignedTo = order.assigned_group_id ? 
+          userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+        
         return transformedOrder;
       });
 
@@ -282,14 +328,17 @@ export const useOrderManagement = (activeTab: string) => {
     try {
       console.log('Creating order with data:', orderData);
       
+      // Determine order type from data or default to sales
+      const orderType = (orderData.order_type || 'sales') as OrderType;
+      
       // Generate order number using new service
-      const orderNumber = await orderNumberService.generateOrderNumber('sales', orderData.dealer_id);
+      const orderNumber = await orderNumberService.generateOrderNumber(orderType, orderData.dealer_id);
 
       // orderData is already in snake_case format from transformToDbFormat in the modal
       const newOrder = {
         ...orderData,
         order_number: orderNumber, // Override with generated number
-        order_type: 'sales', // Ensure it's always sales for this module
+        order_type: orderType, // Use determined order type
         status: 'pending', // Default status
         dealer_id: orderData.dealer_id || 5, // Ensure dealer_id is set
       };

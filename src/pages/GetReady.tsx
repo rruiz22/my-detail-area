@@ -1,11 +1,14 @@
 import React from 'react';
-import { GetReadyLayout } from '@/components/get-ready/GetReadyLayout';
-import { GetReadySplitContent } from '@/components/get-ready/GetReadySplitContent';
+import { DashboardLayout } from '@/components/DashboardLayout';
+import { GetReadyContent } from '@/components/get-ready/GetReadyContent';
+import { useTranslation } from 'react-i18next';
 
 export default function GetReady() {
+  const { t } = useTranslation();
+  
   return (
-    <GetReadyLayout>
-      <GetReadySplitContent className="p-4" />
-    </GetReadyLayout>
+    <DashboardLayout title={t('navigation.get_ready')}>
+      <GetReadyContent />
+    </DashboardLayout>
   );
 }

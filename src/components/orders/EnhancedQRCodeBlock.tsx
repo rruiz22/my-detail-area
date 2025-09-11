@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -25,7 +25,8 @@ interface EnhancedQRCodeBlockProps {
   shortUrl?: string;
 }
 
-export function EnhancedQRCodeBlock({ 
+// Memoized component to prevent unnecessary re-renders
+export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({ 
   orderId, 
   orderNumber, 
   dealerId, 
@@ -44,16 +45,18 @@ export function EnhancedQRCodeBlock({
     }
   }, [qrSlug, shortUrl]);
 
-  const loadAnalytics = async (slug: string) => {
+  // Memoize analytics loading function
+  const loadAnalytics = useCallback(async (slug: string) => {
     try {
       const analyticsData = await shortLinkService.getAnalytics(slug);
       setAnalytics(analyticsData);
     } catch (error) {
       console.warn('Failed to load analytics:', error);
     }
-  };
+  }, []);
 
-  const generateQRCode = async () => {
+  // Memoize QR code generation function
+  const generateQRCode = useCallback(async () => {
     setLoading(true);
     try {
       console.log('🔗 Generating QR code for order:', orderId);
@@ -87,9 +90,10 @@ export function EnhancedQRCodeBlock({
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId, orderNumber, dealerId, loadAnalytics, t]);
 
-  const regenerateQR = async () => {
+  // Memoize QR regeneration function
+  const regenerateQR = useCallback(async () => {
     if (!qrData?.slug) return;
     
     setLoading(true);
@@ -117,9 +121,10 @@ export function EnhancedQRCodeBlock({
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId, qrData?.slug, t]);
 
-  const copyLink = async () => {
+  // Memoize copy link function
+  const copyLink = useCallback(async () => {
     if (!qrData?.shortUrl) return;
     
     const success = await shortLinkService.copyToClipboard(qrData.shortUrl);
@@ -128,7 +133,24 @@ export function EnhancedQRCodeBlock({
     } else {
       toast.error('Failed to copy link');
     }
-  };
+  }, [qrData?.shortUrl, t]);
+
+  // Memoize QR URL calculation
+  const qrUrl = useMemo(() => {
+    return qrData?.shortUrl || (qrData?.slug ? `https://mda.to/${qrData.slug}` : '');
+  }, [qrData?.shortUrl, qrData?.slug]);
+
+  // Memoize analytics display formatting
+  const formattedAnalytics = useMemo(() => {
+    if (!analytics) return null;
+    
+    return {
+      totalClicks: analytics.totalClicks || 0,
+      uniqueVisitors: analytics.uniqueVisitors || 0,
+      lastClickedFormatted: analytics.lastClicked ? 
+        new Date(analytics.lastClicked).toLocaleDateString() : null
+    };
+  }, [analytics]);
 
   return (
     <div className="bg-muted/30 p-4 rounded-lg">
@@ -142,9 +164,9 @@ export function EnhancedQRCodeBlock({
           {/* QR Code Display */}
           <div className="bg-white p-6 rounded-lg border text-center shadow-md">
             <div className="w-40 h-40 bg-gray-50 rounded-lg mx-auto mb-4 flex items-center justify-center shadow-sm">
-              {qrData.shortUrl || qrData.slug ? (
+              {qrUrl ? (
                 <QRCodeCanvas
-                  value={qrData.shortUrl || `https://mda.to/${qrData.slug}`}
+                  value={qrUrl}
                   size={150}
                   level="M"
                   includeMargin
@@ -172,7 +194,7 @@ export function EnhancedQRCodeBlock({
             </div>
             <div className="flex items-center gap-2">
               <code className="flex-1 text-xs bg-background p-2 rounded border font-mono truncate">
-                {qrData.shortUrl || `https://mda.to/${qrData.slug}`}
+                {qrUrl}
               </code>
               <Button
                 variant="outline"
@@ -186,7 +208,7 @@ export function EnhancedQRCodeBlock({
           </div>
 
           {/* Analytics */}
-          {analytics && (
+          {formattedAnalytics && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 mb-2">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
@@ -200,7 +222,7 @@ export function EnhancedQRCodeBlock({
                     <span className="text-xs text-muted-foreground">{t('order_detail.total_scans')}</span>
                   </div>
                   <p className="text-lg font-bold text-primary">
-                    {analytics.totalClicks || 0}
+                    {formattedAnalytics.totalClicks}
                   </p>
                 </div>
                 
@@ -210,14 +232,14 @@ export function EnhancedQRCodeBlock({
                     <span className="text-xs text-muted-foreground">{t('order_detail.unique_visitors')}</span>
                   </div>
                   <p className="text-lg font-bold text-secondary">
-                    {analytics.uniqueVisitors || 0}
+                    {formattedAnalytics.uniqueVisitors}
                   </p>
                 </div>
               </div>
               
-              {analytics.lastClicked && (
+              {formattedAnalytics.lastClickedFormatted && (
                 <p className="text-xs text-muted-foreground text-center">
-                  Last accessed: {new Date(analytics.lastClicked).toLocaleDateString()}
+                  Last accessed: {formattedAnalytics.lastClickedFormatted}
                 </p>
               )}
             </div>
@@ -264,4 +286,4 @@ export function EnhancedQRCodeBlock({
       )}
     </div>
   );
-}
+});

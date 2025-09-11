@@ -79,7 +79,7 @@ export function OrderDetailModal({
         <DialogHeader className="flex flex-row items-center justify-between p-6 pb-4 border-b">
           <div className="flex items-center gap-4">
             <DialogTitle className="text-2xl font-bold">
-              Orden #{order.customOrderNumber || order.id}
+              Orden #{order.customOrderNumber}
             </DialogTitle>
             <Badge variant={order.status === 'completed' ? 'default' : order.status === 'pending' ? 'secondary' : 'outline'}>
               {order.status}

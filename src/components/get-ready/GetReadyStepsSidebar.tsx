@@ -35,12 +35,12 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-gray-50/50 border-gray-200/60">
       {/* Header */}
-      <div className="p-4 border-b">
+      <div className="p-4 border-b border-gray-200/60">
         <div className="flex items-center justify-between">
           {!collapsed && (
-            <h2 className="font-semibold text-sm">
+            <h2 className="font-semibold text-sm text-gray-900">
               {t('get_ready.steps.title')}
             </h2>
           )}
@@ -48,6 +48,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
+            className="text-gray-600 hover:text-gray-900"
           >
             {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </Button>
@@ -100,11 +101,26 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                         </Badge>
                       )}
                     </div>
-                    {step.description && (
-                      <p className="text-xs text-muted-foreground truncate mt-0.5">
-                        {step.description}
-                      </p>
-                    )}
+                    
+                    {/* DIS and DTF badges */}
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-1">
+                        <Badge 
+                          variant="outline" 
+                          className="h-4 px-1 text-xs bg-blue-50 border-blue-200 text-blue-700"
+                          title={t('get_ready.steps.dis_tooltip')}
+                        >
+                          {t('get_ready.steps.dis')}: {step.days_in_step_avg}d
+                        </Badge>
+                        <Badge 
+                          variant="outline" 
+                          className="h-4 px-1 text-xs bg-green-50 border-green-200 text-green-700"
+                          title={t('get_ready.steps.dtf_tooltip')}
+                        >
+                          {t('get_ready.steps.dtf')}: {step.days_to_frontline_avg}d
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 )}
 

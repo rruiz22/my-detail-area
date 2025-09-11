@@ -18,7 +18,9 @@ import {
   AlertTriangle,
   CheckCircle,
   Circle,
-  Pause
+  Pause,
+  RefreshCw,
+  Printer
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useOverviewTable } from '@/hooks/useGetReadyVehicles';
@@ -86,6 +88,30 @@ export function VehicleTable({ className }: VehicleTableProps) {
 
   return (
     <div className={cn("border rounded-lg", className)}>
+      {/* Table Header with Actions */}
+      <div className="flex items-center justify-between p-4 border-b bg-muted/30">
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold text-sm text-foreground">
+            {t('get_ready.vehicle_list.title', 'Vehicle List')}
+          </h3>
+          <Badge variant="outline" className="text-xs">
+            {vehicles?.length || 0} {t('get_ready.vehicle_list.vehicles', 'vehicles')}
+          </Badge>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            {t('common.refresh', 'Refresh')}
+          </Button>
+          
+          <Button variant="outline" size="sm">
+            <Printer className="h-4 w-4 mr-2" />
+            {t('common.print', 'Print')}
+          </Button>
+        </div>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -167,23 +193,29 @@ export function VehicleTable({ className }: VehicleTableProps) {
               {/* Work Items */}
               <TableCell>
                 <div className="flex flex-wrap gap-1">
-                  {vehicle.work_item_counts.pending > 0 && (
+                  {vehicle.work_item_counts?.pending && vehicle.work_item_counts.pending > 0 && (
                     <Badge variant="outline" className="text-xs h-5">
                       <AlertTriangle className="h-3 w-3 mr-1 text-yellow-600" />
                       {vehicle.work_item_counts.pending}
                     </Badge>
                   )}
-                  {vehicle.work_item_counts.in_progress > 0 && (
+                  {vehicle.work_item_counts?.in_progress && vehicle.work_item_counts.in_progress > 0 && (
                     <Badge variant="outline" className="text-xs h-5">
                       <Circle className="h-3 w-3 mr-1 text-blue-600" />
                       {vehicle.work_item_counts.in_progress}
                     </Badge>
                   )}
-                  {vehicle.work_item_counts.completed > 0 && (
+                  {vehicle.work_item_counts?.completed && vehicle.work_item_counts.completed > 0 && (
                     <Badge variant="outline" className="text-xs h-5">
                       <CheckCircle className="h-3 w-3 mr-1 text-green-600" />
                       {vehicle.work_item_counts.completed}
                     </Badge>
+                  )}
+                  {/* Show placeholder when no work items data */}
+                  {!vehicle.work_item_counts && (
+                    <span className="text-xs text-muted-foreground">
+                      {t('get_ready.table.no_work_items')}
+                    </span>
                   )}
                 </div>
               </TableCell>

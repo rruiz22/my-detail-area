@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tooltip Debug Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .tooltip-trigger {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .tooltip-trigger:hover {
+            background: #0056b3;
+        }
+        .status { 
+            margin-top: 10px; 
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #cce6ff; color: #004085; }
+    </style>
+</head>
+<body>
+    <h1>Tooltip Implementation Debug Test</h1>
+    
+    <div class="test-container">
+        <h2>Test Scenario</h2>
+        <p>This test checks if duplicate tooltips are working by:</p>
+        <ol>
+            <li>Creating mock order data with known duplicates</li>
+            <li>Testing the duplicate detection logic</li>
+            <li>Verifying tooltip content generation</li>
+        </ol>
+    </div>
+
+    <div class="test-container">
+        <h2>Mock Data Analysis</h2>
+        <div id="mockDataResults"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Duplicate Detection Results</h2>
+        <div id="duplicateResults"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Tooltip Structure Check</h2>
+        <div id="tooltipStructure"></div>
+    </div>
+
+    <script>
+        // Mock order data with known duplicates
+        const mockOrders = [
+            {
+                id: "order1",
+                stockNumber: "ST001",
+                vehicleVin: "1HGBH41JXMN109186",
+                dealer_id: 1,
+                dealershipName: "Test Dealer 1",
+                status: "pending",
+                createdAt: "2024-01-01T10:00:00Z",
+                vehicleYear: 2024,
+                vehicleMake: "Honda",
+                vehicleModel: "Civic"
+            },
+            {
+                id: "order2", 
+                stockNumber: "ST001", // DUPLICATE STOCK
+                vehicleVin: "2HGBH41JXMN109187",
+                dealer_id: 1,
+                dealershipName: "Test Dealer 1", 
+                status: "in_progress",
+                createdAt: "2024-01-02T10:00:00Z",
+                vehicleYear: 2024,
+                vehicleMake: "Toyota",
+                vehicleModel: "Camry"
+            },
+            {
+                id: "order3",
+                stockNumber: "ST002",
+                vehicleVin: "1HGBH41JXMN109186", // DUPLICATE VIN
+                dealer_id: 1,
+                dealershipName: "Test Dealer 1",
+                status: "completed", 
+                createdAt: "2024-01-03T10:00:00Z",
+                vehicleYear: 2024,
+                vehicleMake: "Honda",
+                vehicleModel: "Accord"
+            }
+        ];
+
+        // Duplicate detection logic (copied from utils)
+        function normalizeValue(value, field) {
+            if (!value) return '';
+            let normalized = value.trim().toLowerCase();
+            if (field === 'vehicleVin') {
+                normalized = normalized.replace(/[-\s]/g, '');
+            }
+            return normalized;
+        }
+
+        function isValidValue(value) {
+            return Boolean(value && value.trim() && value.trim().toLowerCase() !== 'n/a');
+        }
+
+        function getDuplicateCount(orders, field, value, dealerId) {
+            if (!isValidValue(value)) return 0;
+            
+            const normalizedValue = normalizeValue(value, field);
+            if (!normalizedValue) return 0;
+            
+            const filteredOrders = dealerId 
+                ? orders.filter(order => order.dealer_id === dealerId)
+                : orders;
+            
+            return filteredOrders.filter(order => {
+                const orderValue = order[field];
+                if (!isValidValue(orderValue)) return false;
+                return normalizeValue(orderValue, field) === normalizedValue;
+            }).length;
+        }
+
+        function getDuplicateOrders(orders, field, value, dealerId) {
+            if (!isValidValue(value)) return [];
+            
+            const normalizedValue = normalizeValue(value, field);
+            if (!normalizedValue) return [];
+            
+            const filteredOrders = dealerId 
+                ? orders.filter(order => order.dealer_id === dealerId)
+                : orders;
+            
+            return filteredOrders
+                .filter(order => {
+                    const orderValue = order[field];
+                    if (!isValidValue(orderValue)) return false;
+                    return normalizeValue(orderValue, field) === normalizedValue;
+                })
+                .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        }
+
+        // Test the duplicate detection
+        function runTests() {
+            const results = {
+                mockData: [],
+                duplicates: [],
+                tooltipChecks: []
+            };
+
+            // Test 1: Mock data analysis
+            results.mockData.push(`Total orders: ${mockOrders.length}`);
+            results.mockData.push(`Orders with stock numbers: ${mockOrders.filter(o => o.stockNumber).length}`);
+            results.mockData.push(`Orders with VINs: ${mockOrders.filter(o => o.vehicleVin).length}`);
+
+            // Test 2: Check for stock duplicates
+            const stockDuplicates = {};
+            mockOrders.forEach(order => {
+                const count = getDuplicateCount(mockOrders, 'stockNumber', order.stockNumber, order.dealer_id);
+                if (count > 1) {
+                    stockDuplicates[order.id] = count;
+                }
+            });
+
+            // Test 3: Check for VIN duplicates  
+            const vinDuplicates = {};
+            mockOrders.forEach(order => {
+                const count = getDuplicateCount(mockOrders, 'vehicleVin', order.vehicleVin, order.dealer_id);
+                if (count > 1) {
+                    vinDuplicates[order.id] = count;
+                }
+            });
+
+            results.duplicates.push(`Stock duplicates found: ${Object.keys(stockDuplicates).length}`);
+            results.duplicates.push(`VIN duplicates found: ${Object.keys(vinDuplicates).length}`);
+            
+            Object.entries(stockDuplicates).forEach(([orderId, count]) => {
+                const order = mockOrders.find(o => o.id === orderId);
+                results.duplicates.push(`Order ${orderId} has stock "${order.stockNumber}" duplicated ${count} times`);
+            });
+
+            Object.entries(vinDuplicates).forEach(([orderId, count]) => {
+                const order = mockOrders.find(o => o.id === orderId);
+                results.duplicates.push(`Order ${orderId} has VIN "${order.vehicleVin}" duplicated ${count} times`);
+            });
+
+            // Test 4: Tooltip content generation  
+            mockOrders.forEach(order => {
+                const stockDuplicateOrders = getDuplicateOrders(mockOrders, 'stockNumber', order.stockNumber, order.dealer_id);
+                const vinDuplicateOrders = getDuplicateOrders(mockOrders, 'vehicleVin', order.vehicleVin, order.dealer_id);
+                
+                if (stockDuplicateOrders.length > 1) {
+                    results.tooltipChecks.push(`Order ${order.id}: Stock tooltip should show ${stockDuplicateOrders.length} orders`);
+                }
+                
+                if (vinDuplicateOrders.length > 1) {
+                    results.tooltipChecks.push(`Order ${order.id}: VIN tooltip should show ${vinDuplicateOrders.length} orders`);
+                }
+            });
+
+            return results;
+        }
+
+        // Display results
+        function displayResults() {
+            const results = runTests();
+            
+            document.getElementById('mockDataResults').innerHTML = 
+                '<div class="status info">' + results.mockData.join('<br>') + '</div>';
+            
+            document.getElementById('duplicateResults').innerHTML = 
+                '<div class="status ' + (results.duplicates.length > 2 ? 'success' : 'error') + '">' + 
+                results.duplicates.join('<br>') + '</div>';
+            
+            document.getElementById('tooltipStructure').innerHTML = 
+                '<div class="status ' + (results.tooltipChecks.length > 0 ? 'success' : 'error') + '">' + 
+                (results.tooltipChecks.length > 0 ? results.tooltipChecks.join('<br>') : 'No tooltips should be shown - no duplicates detected') + '</div>';
+        }
+
+        // Run tests on page load
+        displayResults();
+    </script>
+</body>
+</html>

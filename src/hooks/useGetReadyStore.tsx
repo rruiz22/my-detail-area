@@ -17,7 +17,11 @@ export interface ReconVehicle {
   priority: string;
   days_in_step: string;
   media_count: number;
-  work_item_counts: Record<string, number>;
+  work_item_counts?: {
+    pending: number;
+    in_progress: number;
+    completed: number;
+  };
   notes_preview: string;
   retail_value: number | null;
   created_at: string;

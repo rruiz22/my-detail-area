@@ -35,6 +35,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         try {
           localStorage.setItem('mda.ui.sidebar.open', JSON.stringify(open));
           console.log('💾 Sidebar state saved:', open);
+          console.log('🔄 Sidebar toggled to:', open ? 'OPEN' : 'CLOSED');
         } catch (error) {
           console.warn('Failed to save sidebar state:', error);
         }

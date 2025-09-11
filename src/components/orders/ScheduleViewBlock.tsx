@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -18,10 +18,12 @@ interface ScheduleViewBlockProps {
   order: any;
 }
 
-export function ScheduleViewBlock({ order }: ScheduleViewBlockProps) {
+// Memoized component to prevent unnecessary re-renders
+export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({ order }: ScheduleViewBlockProps) {
   const { t } = useTranslation();
 
-  const getDueDateStatus = () => {
+  // Memoize due date status calculation to prevent recalculation on every render
+  const dueDateStatus = useMemo(() => {
     if (!order.due_date) return null;
     
     const daysLeft = calculateDaysFromNow(order.due_date);
@@ -30,7 +32,7 @@ export function ScheduleViewBlock({ order }: ScheduleViewBlockProps) {
     if (daysLeft < 0) {
       return {
         status: 'overdue',
-text: t('schedule_view.days_overdue', { days: Math.abs(daysLeft) }),
+        text: t('schedule_view.days_overdue', { days: Math.abs(daysLeft) }),
         color: 'text-destructive',
         bgColor: 'bg-destructive/10',
         icon: AlertTriangle
@@ -46,7 +48,7 @@ text: t('schedule_view.days_overdue', { days: Math.abs(daysLeft) }),
     } else if (daysLeft === 1) {
       return {
         status: 'tomorrow',
-text: t('schedule_view.due_tomorrow'),
+        text: t('schedule_view.due_tomorrow'),
         color: 'text-warning',
         bgColor: 'bg-warning/10',
         icon: Clock
@@ -54,15 +56,16 @@ text: t('schedule_view.due_tomorrow'),
     } else {
       return {
         status: 'future',
-text: t('schedule_view.due_in_days', { days: daysLeft }),
+        text: t('schedule_view.due_in_days', { days: daysLeft }),
         color: 'text-muted-foreground',
         bgColor: 'bg-muted/10',
         icon: Calendar
       };
     }
-  };
+  }, [order.due_date, t]);
 
-  const getOrderProgress = () => {
+  // Memoize order progress calculation
+  const progress = useMemo(() => {
     const statusProgress = {
       pending: 25,
       in_progress: 60,
@@ -70,9 +73,10 @@ text: t('schedule_view.due_in_days', { days: daysLeft }),
       cancelled: 0
     };
     return statusProgress[order.status as keyof typeof statusProgress] || 0;
-  };
+  }, [order.status]);
 
-  const getOrderAge = () => {
+  // Memoize order age calculation
+  const orderAge = useMemo(() => {
     if (!order.created_at) return 'N/A';
     const createdDate = new Date(order.created_at);
     const now = new Date();
@@ -82,13 +86,10 @@ text: t('schedule_view.due_in_days', { days: daysLeft }),
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday'; 
     return `${diffDays} days ago`;
-  };
+  }, [order.created_at]);
 
-  const dueDateStatus = getDueDateStatus();
-  const progress = getOrderProgress();
-  const orderAge = getOrderAge();
-
-  const scheduleItems = [
+  // Memoize schedule items array to prevent recreation on every render
+  const scheduleItems = useMemo(() => [
     {
       icon: Calendar,
       label: t('orders.created'),
@@ -98,16 +99,16 @@ text: t('schedule_view.due_in_days', { days: daysLeft }),
     {
       icon: Target,
       label: t('orders.due_date'),
-value: order.due_date ? safeFormatDate(order.due_date) : t('schedule_view.not_set'),
-subtitle: dueDateStatus?.text || t('schedule_view.no_due_date')
+      value: order.due_date ? safeFormatDate(order.due_date) : t('schedule_view.not_set'),
+      subtitle: dueDateStatus?.text || t('schedule_view.no_due_date')
     },
     {
       icon: Clock,
-label: t('orders.updated'),
+      label: t('orders.updated'),
       value: safeFormatDate(order.updated_at),
-subtitle: t('schedule_view.most_recent_change')
+      subtitle: t('schedule_view.most_recent_change')
     }
-  ];
+  ], [order.created_at, order.due_date, order.updated_at, orderAge, dueDateStatus?.text, t]);
 
   return (
     <Card className="h-full">
@@ -199,4 +200,4 @@ subtitle: t('schedule_view.most_recent_change')
       </CardContent>
     </Card>
   );
-}
+});

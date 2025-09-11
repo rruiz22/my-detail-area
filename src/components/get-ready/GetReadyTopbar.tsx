@@ -5,19 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
   Search, 
-  RefreshCw, 
-  Printer, 
   Download,
   Settings,
-  HelpCircle,
   Grid3X3,
   Eye,
   UserCheck,
-  FileText,
   Users,
   BarChart3,
-  Wrench,
-  Package
+  Wrench
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -31,12 +26,9 @@ const TABS: TabConfig[] = [
   { key: 'overview', icon: Grid3X3, path: '/get-ready' },
   { key: 'details_view', icon: Eye, path: '/get-ready/details' },
   { key: 'approvals', icon: UserCheck, path: '/get-ready/approvals' },
-  { key: 'forms', icon: FileText, path: '/get-ready/forms' },
   { key: 'vendors', icon: Users, path: '/get-ready/vendors' },
   { key: 'reports', icon: BarChart3, path: '/get-ready/reports' },
-  { key: 'integrations', icon: Package, path: '/get-ready/integrations' },
-  { key: 'setup', icon: Wrench, path: '/get-ready/setup' },
-  { key: 'help', icon: HelpCircle, path: '/get-ready/help' }
+  { key: 'setup', icon: Wrench, path: '/get-ready/setup' }
 ];
 
 export function GetReadyTopbar() {
@@ -44,8 +36,8 @@ export function GetReadyTopbar() {
   const location = useLocation();
 
   return (
-    <div className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="h-full px-4 flex items-center justify-between">
+    <div className="h-12 border-b bg-gradient-to-r from-background to-muted/20 border-border/40 shadow-sm">
+      <div className="h-full px-4 flex items-center justify-between gap-4">
         {/* Left Section - Navigation Tabs */}
         <div className="flex items-center space-x-1">
           {TABS.map((tab) => {
@@ -85,16 +77,6 @@ export function GetReadyTopbar() {
           </div>
 
           {/* Action Buttons */}
-          <Button variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            {t('common.refresh')}
-          </Button>
-          
-          <Button variant="outline" size="sm">
-            <Printer className="h-4 w-4 mr-2" />
-            {t('common.print')}
-          </Button>
-          
           <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
             {t('common.export')}

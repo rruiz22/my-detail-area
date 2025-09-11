@@ -29,6 +29,8 @@ import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import { InvitationAccept } from "./pages/InvitationAccept";
 import NotFound from "./pages/NotFound";
+import { TooltipTester } from "./components/debug/TooltipTester";
+import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 
 // Load order migration utility for development
 if (import.meta.env.DEV) {
@@ -80,6 +82,8 @@ const App = () => (
                 <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
                 <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
                 <Route path="/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
+                <Route path="/debug/tooltips" element={<ProtectedRoute><TooltipTester /></ProtectedRoute>} />
+                <Route path="/debug/duplicate-tooltips" element={<ProtectedRoute><DuplicateTooltipTester /></ProtectedRoute>} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

@@ -1,104 +1,228 @@
-/**
- * Utility functions for detecting and handling duplicate orders
- */
-
-export interface Order {
+interface Order {
   id: string;
-  vehicle_vin?: string;
-  stock_number?: string;
-  customer_email?: string;
-  customer_name?: string;
-  [key: string]: any;
+  createdAt: string;
+  orderNumber?: string;
+  customOrderNumber?: string;
+  stockNumber?: string;
+  vehicleVin?: string;
+  customerName?: string;
+  status: string;
+  dealer_id?: number;
+  dealershipName?: string;
+  order_type?: string;
+  dueDate?: string;
+  vehicleYear?: number;
+  vehicleMake?: string;
+  vehicleModel?: string;
 }
 
-export interface DuplicateMatch {
-  orderId: string;
-  matchType: 'vin' | 'customer' | 'stock';
-  confidence: 'high' | 'medium' | 'low';
+interface DuplicateInfo {
+  count: number;
+  orders: Order[];
+  field: 'stockNumber' | 'vehicleVin';
+  value: string;
 }
 
 /**
- * Check if an order has potential duplicates based on VIN, customer info, or stock number
+ * Normalize a string value for duplicate comparison
+ * - Trims whitespace
+ * - Converts to lowercase
+ * - Removes special characters for VIN comparison
  */
-export const findPotentialDuplicates = (
-  currentOrder: any,
-  allOrders: any[]
-): DuplicateMatch[] => {
-  const duplicates: DuplicateMatch[] = [];
+function normalizeValue(value: string | undefined, field: 'stockNumber' | 'vehicleVin'): string {
+  if (!value) return '';
   
-  for (const order of allOrders) {
-    if (order.id === currentOrder.id) continue;
-    
-    // Check VIN match (high confidence)
-    if (currentOrder.vehicle_vin && order.vehicle_vin && 
-        currentOrder.vehicle_vin === order.vehicle_vin) {
-      duplicates.push({
-        orderId: order.id,
-        matchType: 'vin',
-        confidence: 'high'
-      });
-    }
-    
-    // Check stock number match (high confidence)
-    if (currentOrder.stock_number && order.stock_number && 
-        currentOrder.stock_number === order.stock_number) {
-      duplicates.push({
-        orderId: order.id,
-        matchType: 'stock',
-        confidence: 'high'
-      });
-    }
-    
-    // Check customer match (medium confidence)
-    if (currentOrder.customer_email && order.customer_email && 
-        currentOrder.customer_email.toLowerCase() === order.customer_email.toLowerCase()) {
-      duplicates.push({
-        orderId: order.id,
-        matchType: 'customer',
-        confidence: 'medium'
-      });
-    }
+  let normalized = value.trim().toLowerCase();
+  
+  // For VINs, remove any dashes or spaces
+  if (field === 'vehicleVin') {
+    normalized = normalized.replace(/[-\s]/g, '');
   }
   
-  return duplicates;
-};
+  return normalized;
+}
 
 /**
- * Get duplicate count for an order
+ * Check if a value should be considered for duplicate detection
  */
-export const getDuplicateCount = (duplicates: DuplicateMatch[]): number => {
-  return duplicates.length;
-};
+function isValidValue(value: string | undefined): boolean {
+  return Boolean(value && value.trim() && value.trim().toLowerCase() !== 'n/a');
+}
 
 /**
- * Check if duplicates are high risk (high confidence matches)
+ * Detect all duplicates in orders for a specific field within the same dealer
  */
-export const hasHighRiskDuplicates = (duplicates: DuplicateMatch[]): boolean => {
-  return duplicates.some(d => d.confidence === 'high');
-};
-
-/**
- * Get duplicate orders - legacy function for compatibility
- */
-export const getDuplicateOrders = (orders: Order[]): Record<string, Order[]> => {
-  const duplicateGroups: Record<string, Order[]> = {};
+export function detectDuplicates(
+  orders: Order[], 
+  field: 'stockNumber' | 'vehicleVin',
+  dealerId?: number
+): Map<string, DuplicateInfo> {
+  const duplicatesMap = new Map<string, DuplicateInfo>();
   
-  for (const order of orders) {
-    const duplicates = findPotentialDuplicates(order, orders);
-    if (duplicates.length > 0) {
-      duplicateGroups[order.id] = orders.filter(o => 
-        duplicates.some(d => d.orderId === o.id)
-      );
+  // Filter orders by dealer if specified
+  const filteredOrders = dealerId 
+    ? orders.filter(order => order.dealer_id === dealerId)
+    : orders;
+  
+  // Group orders by normalized field value
+  const groupedOrders = new Map<string, Order[]>();
+  
+  filteredOrders.forEach(order => {
+    const value = order[field];
+    if (!isValidValue(value)) return;
+    
+    const normalizedValue = normalizeValue(value, field);
+    if (!normalizedValue) return;
+    
+    if (!groupedOrders.has(normalizedValue)) {
+      groupedOrders.set(normalizedValue, []);
     }
+    groupedOrders.get(normalizedValue)!.push(order);
+  });
+  
+  // Find groups with duplicates (count > 1)
+  groupedOrders.forEach((orderGroup, normalizedValue) => {
+    if (orderGroup.length > 1) {
+      // Use the original value from the first order as the key
+      const originalValue = orderGroup[0][field] || '';
+      
+      duplicatesMap.set(originalValue, {
+        count: orderGroup.length,
+        orders: orderGroup.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
+        field,
+        value: originalValue
+      });
+    }
+  });
+  
+  return duplicatesMap;
+}
+
+/**
+ * Get duplicate count for a specific field value within the same dealer
+ */
+export function getDuplicateCount(
+  orders: Order[], 
+  field: 'stockNumber' | 'vehicleVin',
+  value: string | undefined,
+  dealerId?: number
+): number {
+  console.log('getDuplicateCount called:', { field, value, dealerId, totalOrders: orders.length });
+  
+  if (!isValidValue(value)) {
+    console.log('Invalid value, returning 0');
+    return 0;
   }
   
-  return duplicateGroups;
-};
+  const normalizedValue = normalizeValue(value, field);
+  if (!normalizedValue) {
+    console.log('Empty normalized value, returning 0');
+    return 0;
+  }
+  
+  const filteredOrders = dealerId 
+    ? orders.filter(order => order.dealer_id === dealerId)
+    : orders;
+  
+  console.log('Filtered orders:', filteredOrders.length);
+  
+  const matchingOrders = filteredOrders.filter(order => {
+    const orderValue = order[field];
+    if (!isValidValue(orderValue)) return false;
+    return normalizeValue(orderValue, field) === normalizedValue;
+  });
+  
+  console.log('Matching orders found:', matchingOrders.length, matchingOrders.map(o => o.id));
+  
+  return matchingOrders.length;
+}
 
 /**
- * Get duplicate cell background color - legacy function for compatibility
+ * Get all orders that have the same field value within the same dealer
  */
-export const getDuplicateCellBackground = (duplicates: DuplicateMatch[]): string => {
-  if (duplicates.length === 0) return '';
-  return hasHighRiskDuplicates(duplicates) ? 'bg-red-50' : 'bg-yellow-50';
-};
+export function getDuplicateOrders(
+  orders: Order[],
+  field: 'stockNumber' | 'vehicleVin',
+  value: string | undefined,
+  dealerId?: number
+): Order[] {
+  console.log('getDuplicateOrders called:', { field, value, dealerId, totalOrders: orders.length });
+  
+  if (!isValidValue(value)) {
+    console.log('Invalid value, returning empty array');
+    return [];
+  }
+  
+  const normalizedValue = normalizeValue(value, field);
+  if (!normalizedValue) {
+    console.log('Empty normalized value, returning empty array');
+    return [];
+  }
+  
+  const filteredOrders = dealerId 
+    ? orders.filter(order => order.dealer_id === dealerId)
+    : orders;
+  
+  console.log('Filtered orders by dealer:', filteredOrders.length);
+  
+  const duplicateOrders = filteredOrders
+    .filter(order => {
+      const orderValue = order[field];
+      if (!isValidValue(orderValue)) return false;
+      const normalized = normalizeValue(orderValue, field);
+      const matches = normalized === normalizedValue;
+      console.log('Order comparison:', {
+        orderId: order.id,
+        orderValue,
+        normalized,
+        target: normalizedValue,
+        matches
+      });
+      return matches;
+    })
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  
+  console.log('Final duplicate orders:', duplicateOrders.length, duplicateOrders.map(o => o.id));
+  
+  return duplicateOrders;
+}
+
+/**
+ * Get badge color based on duplicate count
+ */
+export function getDuplicateBadgeColor(count: number): {
+  bg: string;
+  text: string;
+  border: string;
+} {
+  if (count <= 1) {
+    return { bg: '', text: '', border: '' }; // No badge for non-duplicates
+  } else if (count <= 3) {
+    return { 
+      bg: 'bg-amber-500', 
+      text: 'text-white', 
+      border: 'border-amber-600' 
+    };
+  } else {
+    return { 
+      bg: 'bg-red-500', 
+      text: 'text-white', 
+      border: 'border-red-600' 
+    };
+  }
+}
+
+/**
+ * Get background color for cells with duplicates
+ */
+export function getDuplicateCellBackground(count: number): string {
+  if (count <= 1) {
+    return '';
+  } else if (count <= 3) {
+    return 'bg-amber-50 border-amber-200';
+  } else {
+    return 'bg-red-50 border-red-200';
+  }
+}
+
+export type { Order, DuplicateInfo };

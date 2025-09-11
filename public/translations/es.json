@@ -30,132 +30,6 @@
     "confirm_status": "Confirmar Cambio de Estado",
     "status_change_warning": "Esto cambiará el estado de la orden"
   },
-  "stock": {
-    "title": "Gestión de Stock",
-    "description": "Gestionar inventario de vehículos y operaciones de stock",
-    "dealer_selection": {
-      "title": "Seleccionar Concesionario",
-      "description": "Elige un concesionario para ver y gestionar el inventario de stock",
-      "stock_module_enabled": "Módulo de stock habilitado",
-      "remember_selection": "Recordar mi selección para futuras visitas",
-      "continue": "Continuar"
-    },
-    "errors": {
-      "no_access": "Sin Acceso a Stock",
-      "no_access_description": "No tienes acceso al módulo de stock para ningún concesionario. Por favor contacta a tu administrador."
-    },
-    "uploadCSV": "Subir CSV",
-    "analytics": "Analíticas",
-    "metrics": {
-      "totalVehicles": "Total de Vehículos",
-      "avgAge": "Edad Promedio",
-      "totalValue": "Valor Total"
-    },
-    "inventory": {
-      "title": "Inventario de Vehículos",
-      "description": "Explorar y gestionar tu stock actual de vehículos",
-      "no_vehicles": "No se encontraron vehículos"
-    },
-    "placeholder": {
-      "title": "Sistema de Gestión de Stock",
-      "description": "Sube tu inventario de vehículos para comenzar con la gestión de stock",
-      "action": "Subir Inventario"
-    },
-    "tabs": {
-      "inventory": "Inventario",
-      "upload": "Subir CSV",
-      "analytics": "Analíticas",
-      "dms_config": "Config DMS",
-      "sync_history": "Historial Sync"
-    },
-    "dashboard": {
-      "title": "Panel de Stock",
-      "description": "Vista general del rendimiento de tu inventario de vehículos",
-      "refresh": "Actualizar Datos",
-      "avg_price": "Precio Promedio",
-      "avg_age_days": "Edad Promedio",
-      "inventory_value": "Valor Total"
-    },
-    "table": {
-      "stockNumber": "# Stock",
-      "stock_number": "Stock #",
-      "vin": "VIN",
-      "vehicle": "Vehículo",
-      "year": "Año",
-      "make": "Marca",
-      "model": "Modelo",
-      "trim": "Versión",
-      "price": "Precio",
-      "age": "Edad",
-      "leads": "Leads",
-      "status": "Estado",
-      "actions": "Acciones",
-      "search": "Buscar inventario...",
-      "noResults": "No se encontraron vehículos",
-      "loading": "Cargando inventario...",
-      "empty": "No hay datos de inventario disponibles"
-    },
-    "upload": {
-      "title": "Subida CSV",
-      "description": "Sube los datos de tu inventario de vehículos",
-      "selectFile": "Seleccionar archivo CSV",
-      "dragDrop": "Arrastra y suelta tu archivo CSV aquí, o haz clic para navegar",
-      "uploading": "Subiendo...",
-      "success": "Subida exitosa",
-      "error": "Error en la subida",
-      "processing": "Procesando archivo CSV...",
-      "validating": "Validando datos..."
-    },
-    "analytics": {
-      "title": "Analíticas de Stock",
-      "description": "Información detallada sobre el rendimiento de tu inventario",
-      "timeRange": "Rango de Tiempo",
-      "exportData": "Exportar Datos",
-      "inventoryByMake": "Inventario por Marca",
-      "priceDistribution": "Distribución de Precios",
-      "ageAnalysis": "Análisis de Edad",
-      "trends": "Tendencias del Inventario"
-    },
-    "dms": {
-      "title": "Configuración DMS",
-      "description": "Configura tu integración con el Sistema de Gestión de Concesionario",
-      "provider": "Proveedor DMS",
-      "endpoint": "Endpoint API",
-      "dealerCode": "Código del Concesionario",
-      "apiKey": "Clave API",
-      "autoSync": "Auto Sincronización",
-      "frequency": "Frecuencia de Sync",
-      "testConnection": "Probar Conexión",
-      "saveConfig": "Guardar Configuración",
-      "connectionStatus": "Estado de Conexión",
-      "lastSync": "Última Sincronización",
-      "connected": "Conectado",
-      "disconnected": "Desconectado"
-    },
-    "history": {
-      "title": "Historial de Sincronización",
-      "description": "Ver los registros de sincronización de tu inventario",
-      "date": "Fecha",
-      "type": "Tipo",
-      "status": "Estado",
-      "records": "Registros",
-      "details": "Detalles"
-    },
-    "autopop": {
-      "searchVehicle": "Buscar por # Stock o VIN",
-      "searchResults": "Resultados de Búsqueda de Vehículos",
-      "useVehicle": "Usar Este Vehículo",
-      "localInventory": "Inventario Local",
-      "vinDecoded": "VIN Decodificado",
-      "noResults": "No se encontraron vehículos",
-      "searching": "Buscando...",
-      "confidence": {
-        "high": "Alta Confianza",
-        "medium": "Confianza Media",
-        "low": "Baja Confianza"
-      }
-    }
-  },
   "app": {
     "name": "Sistema de Gestión de Detallado",
     "welcome": "Bienvenido",
@@ -960,6 +834,8 @@
     "delete": "Eliminar",
     "search": "Buscar",
     "filter": "Filtrar",
+    "refresh": "Actualizar",
+    "print": "Imprimir",
     "loading": "Cargando...",
     "optional": "Opcional",
     "error": "Error",
@@ -2605,12 +2481,106 @@
       "loading": "Cargando detalles del vehículo..."
     }
   },
-  "wholesale": "[PT] Wholesale",
-  "subscription": {
-    "plan": {
-      "basic": "Básico",
-      "pro": "Pro",
-      "premium": "Premium"
+  "get_ready": {
+    "title": "Get Ready",
+    "description": "Gestión de flujo de trabajo de reacondicionamiento de vehículos",
+    "search_placeholder": "Buscar vehículos por stock, VIN o año/marca/modelo...",
+    "tabs": {
+      "overview": "Vista General",
+      "details_view": "Vista Detallada",
+      "approvals": "Aprobaciones",
+      "forms": "Formularios",
+      "vendors": "Proveedores",
+      "reports": "Reportes",
+      "integrations": "Integraciones",
+      "setup": "Configuración",
+      "help": "Ayuda"
+    },
+    "steps": {
+      "title": "Pasos",
+      "all": "Todos los Vehículos",
+      "inspection": "Inspección",
+      "mechanical": "Mecánica",
+      "body_work": "Carrocería",
+      "detailing": "Detallado",
+      "ready": "Listo para Venta",
+      "dis": "DEP",
+      "dtf": "DLV",
+      "dis_tooltip": "Días en Paso - Promedio de días que los vehículos pasan en este paso",
+      "dtf_tooltip": "Días hasta Primera Línea - Promedio de días hasta que los vehículos estén listos para venta"
+    },
+    "vehicle": {
+      "stock_number": "# Stock",
+      "vin": "VIN",
+      "short_vin": "VIN Corto",
+      "year": "Año",
+      "make": "Marca",
+      "model": "Modelo",
+      "trim": "Versión",
+      "mileage": "Kilometraje",
+      "color": "Color",
+      "location": "Ubicación",
+      "technician": "Técnico",
+      "priority": "Prioridad",
+      "status": "Estado",
+      "step": "Paso Actual",
+      "days_in_inventory": "Días en Inventario",
+      "estimated_completion": "Finalización Est.",
+      "notes": "Notas"
+    },
+    "priority": {
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completado",
+      "on_hold": "En Espera"
+    },
+    "filters": {
+      "all_priorities": "Todas las Prioridades",
+      "all_statuses": "Todos los Estados",
+      "filter_by_priority": "Filtrar por Prioridad",
+      "filter_by_status": "Filtrar por Estado",
+      "clear_filters": "Limpiar Filtros"
+    },
+    "actions": {
+      "view_details": "Ver Detalles",
+      "edit_vehicle": "Editar Vehículo",
+      "change_step": "Cambiar Paso",
+      "add_note": "Agregar Nota",
+      "assign_technician": "Asignar Técnico",
+      "set_priority": "Establecer Prioridad",
+      "mark_complete": "Marcar Completo"
+    },
+    "work_orders": {
+      "title": "Órdenes de Trabajo",
+      "description": "Descripción",
+      "status": "Estado",
+      "completed_at": "Completado En",
+      "started_at": "Iniciado En",
+      "add_work_order": "Agregar Orden de Trabajo"
+    },
+    "messages": {
+      "no_vehicles": "No se encontraron vehículos",
+      "loading_vehicles": "Cargando vehículos...",
+      "vehicle_updated": "Vehículo actualizado exitosamente",
+      "step_changed": "Paso cambiado exitosamente",
+      "note_added": "Nota agregada exitosamente",
+      "error_loading": "Error cargando vehículos",
+      "error_updating": "Error actualizando vehículo"
+    },
+    "sidebar": {
+      "collapse": "Colapsar",
+      "expand": "Expandir",
+      "vehicle_count": "{{count}} vehículos"
+    },
+    "vehicle_list": {
+      "title": "Lista de Vehículos",
+      "vehicles": "vehículos"
     }
-  }
+  },
+  "wholesale": "[PT] Wholesale"
 }
