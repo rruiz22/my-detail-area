@@ -1187,6 +1187,62 @@ export type Database = {
         }
         Relationships: []
       }
+      entity_followers: {
+        Row: {
+          auto_added_reason: string | null
+          created_at: string | null
+          dealer_id: number
+          entity_id: string
+          entity_type: string
+          follow_type: Database["public"]["Enums"]["entity_follow_type"]
+          followed_at: string | null
+          followed_by: string | null
+          id: string
+          is_active: boolean | null
+          notification_level: Database["public"]["Enums"]["notification_level"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          auto_added_reason?: string | null
+          created_at?: string | null
+          dealer_id: number
+          entity_id: string
+          entity_type: string
+          follow_type?: Database["public"]["Enums"]["entity_follow_type"]
+          followed_at?: string | null
+          followed_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          notification_level?: Database["public"]["Enums"]["notification_level"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          auto_added_reason?: string | null
+          created_at?: string | null
+          dealer_id?: number
+          entity_id?: string
+          entity_type?: string
+          follow_type?: Database["public"]["Enums"]["entity_follow_type"]
+          followed_at?: string | null
+          followed_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          notification_level?: Database["public"]["Enums"]["notification_level"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_followers_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nfc_scans: {
         Row: {
           action_data: Json
@@ -1359,6 +1415,161 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      notification_log: {
+        Row: {
+          channel: string
+          created_at: string | null
+          data: Json | null
+          dealer_id: number | null
+          delivered_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          failed_reason: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          notification_type: string
+          phone_number: string | null
+          priority: Database["public"]["Enums"]["notification_priority"]
+          read_at: string | null
+          sent_at: string | null
+          sms_sid: string | null
+          sms_status: string | null
+          status: Database["public"]["Enums"]["notification_status"]
+          title: string
+          updated_at: string | null
+          user_id: string
+          workflow_id: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string | null
+          data?: Json | null
+          dealer_id?: number | null
+          delivered_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          failed_reason?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          notification_type: string
+          phone_number?: string | null
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          read_at?: string | null
+          sent_at?: string | null
+          sms_sid?: string | null
+          sms_status?: string | null
+          status?: Database["public"]["Enums"]["notification_status"]
+          title: string
+          updated_at?: string | null
+          user_id: string
+          workflow_id?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string | null
+          data?: Json | null
+          dealer_id?: number | null
+          delivered_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          failed_reason?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          notification_type?: string
+          phone_number?: string | null
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          read_at?: string | null
+          sent_at?: string | null
+          sms_sid?: string | null
+          sms_status?: string | null
+          status?: Database["public"]["Enums"]["notification_status"]
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_log_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_log_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "notification_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_workflows: {
+        Row: {
+          actions: Json
+          conditions: Json
+          created_at: string | null
+          created_by: string
+          dealer_id: number
+          description: string | null
+          entity_type: string
+          execution_count: number | null
+          id: string
+          is_active: boolean | null
+          last_executed_at: string | null
+          name: string
+          priority: number | null
+          trigger_event: string
+          updated_at: string | null
+        }
+        Insert: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string | null
+          created_by: string
+          dealer_id: number
+          description?: string | null
+          entity_type: string
+          execution_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          last_executed_at?: string | null
+          name: string
+          priority?: number | null
+          trigger_event: string
+          updated_at?: string | null
+        }
+        Update: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string | null
+          created_by?: string
+          dealer_id?: number
+          description?: string | null
+          entity_type?: string
+          execution_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          last_executed_at?: string | null
+          name?: string
+          priority?: number | null
+          trigger_event?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_workflows_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_activity_log: {
         Row: {
@@ -2682,6 +2893,124 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_conversations: {
+        Row: {
+          created_at: string | null
+          customer_name: string | null
+          dealer_id: number
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          is_automated: boolean | null
+          last_message_at: string | null
+          message_count: number | null
+          phone_number: string
+          status: Database["public"]["Enums"]["conversation_status"]
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_name?: string | null
+          dealer_id: number
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_automated?: boolean | null
+          last_message_at?: string | null
+          message_count?: number | null
+          phone_number: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_name?: string | null
+          dealer_id?: number
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_automated?: boolean | null
+          last_message_at?: string | null
+          message_count?: number | null
+          phone_number?: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_conversations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sms_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string | null
+          delivered_at: string | null
+          direction: Database["public"]["Enums"]["sms_direction"]
+          from_number: string
+          id: string
+          media_urls: Json | null
+          message_body: string
+          metadata: Json | null
+          read_at: string | null
+          sent_by: string | null
+          status: string
+          to_number: string
+          twilio_sid: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string | null
+          delivered_at?: string | null
+          direction: Database["public"]["Enums"]["sms_direction"]
+          from_number: string
+          id?: string
+          media_urls?: Json | null
+          message_body: string
+          metadata?: Json | null
+          read_at?: string | null
+          sent_by?: string | null
+          status?: string
+          to_number: string
+          twilio_sid?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string | null
+          delivered_at?: string | null
+          direction?: Database["public"]["Enums"]["sms_direction"]
+          from_number?: string
+          id?: string
+          media_urls?: Json | null
+          message_body?: string
+          metadata?: Json | null
+          read_at?: string | null
+          sent_by?: string | null
+          status?: string
+          to_number?: string
+          twilio_sid?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "sms_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_activity_log: {
         Row: {
           action_description: string | null
@@ -3155,6 +3484,62 @@ export type Database = {
         }
         Relationships: []
       }
+      user_status: {
+        Row: {
+          auto_status_enabled: boolean | null
+          created_at: string | null
+          current_location: string | null
+          custom_status: string | null
+          dealer_id: number
+          id: string
+          is_available_for_chat: boolean | null
+          last_seen_at: string | null
+          presence_status: Database["public"]["Enums"]["presence_status"]
+          status_emoji: string | null
+          status_expires_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          auto_status_enabled?: boolean | null
+          created_at?: string | null
+          current_location?: string | null
+          custom_status?: string | null
+          dealer_id: number
+          id?: string
+          is_available_for_chat?: boolean | null
+          last_seen_at?: string | null
+          presence_status?: Database["public"]["Enums"]["presence_status"]
+          status_emoji?: string | null
+          status_expires_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          auto_status_enabled?: boolean | null
+          created_at?: string | null
+          current_location?: string | null
+          custom_status?: string | null
+          dealer_id?: number
+          id?: string
+          is_available_for_chat?: boolean | null
+          last_seen_at?: string | null
+          presence_status?: Database["public"]["Enums"]["presence_status"]
+          status_emoji?: string | null
+          status_expires_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_status_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -3167,6 +3552,16 @@ export type Database = {
       assign_role: {
         Args: { expires_at?: string; role_name: string; target_user_id: string }
         Returns: boolean
+      }
+      auto_add_follower: {
+        Args: {
+          p_dealer_id: number
+          p_entity_id: string
+          p_entity_type: string
+          p_reason?: string
+          p_user_id: string
+        }
+        Returns: string
       }
       create_dealer_invitation: {
         Args: { p_dealer_id: number; p_email: string; p_role_name: string }
@@ -3290,6 +3685,23 @@ export type Database = {
           pending_invitations: number
           total_orders: number
           total_users: number
+        }[]
+      }
+      get_entity_followers: {
+        Args: {
+          p_dealer_id: number
+          p_entity_id: string
+          p_entity_type: string
+        }
+        Returns: {
+          follow_type: string
+          followed_at: string
+          id: string
+          notification_level: string
+          presence_status: string
+          user_email: string
+          user_id: string
+          user_name: string
         }[]
       }
       get_nfc_analytics: {
@@ -3611,6 +4023,7 @@ export type Database = {
       chat_message_type: "text" | "voice" | "file" | "image" | "system"
       chat_permission_level: "read" | "write" | "moderate" | "admin"
       contact_department: "sales" | "service" | "parts" | "management" | "other"
+      conversation_status: "active" | "closed" | "archived"
       dealer_role:
         | "salesperson"
         | "service_advisor"
@@ -3626,15 +4039,21 @@ export type Database = {
         | "detail_staff"
         | "quality_inspector"
         | "mobile_technician"
+      entity_follow_type: "manual" | "auto" | "assigned" | "creator"
       language_code: "en" | "es" | "pt-BR"
       notification_frequency: "all" | "mentions" | "none" | "scheduled"
+      notification_level: "all" | "important" | "mentions" | "none"
+      notification_priority: "low" | "normal" | "high" | "urgent"
+      notification_status: "pending" | "sent" | "delivered" | "failed" | "read"
       permission_level: "none" | "read" | "write" | "delete" | "admin"
+      presence_status: "online" | "away" | "busy" | "offline"
       recon_step_status:
         | "pending"
         | "in_progress"
         | "completed"
         | "blocked"
         | "skipped"
+      sms_direction: "inbound" | "outbound"
       subscription_plan: "basic" | "premium" | "enterprise"
       user_department: "detailing" | "wash" | "service"
       user_presence_status: "online" | "away" | "busy" | "offline" | "invisible"
@@ -3798,6 +4217,7 @@ export const Constants = {
       chat_message_type: ["text", "voice", "file", "image", "system"],
       chat_permission_level: ["read", "write", "moderate", "admin"],
       contact_department: ["sales", "service", "parts", "management", "other"],
+      conversation_status: ["active", "closed", "archived"],
       dealer_role: [
         "salesperson",
         "service_advisor",
@@ -3815,9 +4235,14 @@ export const Constants = {
         "quality_inspector",
         "mobile_technician",
       ],
+      entity_follow_type: ["manual", "auto", "assigned", "creator"],
       language_code: ["en", "es", "pt-BR"],
       notification_frequency: ["all", "mentions", "none", "scheduled"],
+      notification_level: ["all", "important", "mentions", "none"],
+      notification_priority: ["low", "normal", "high", "urgent"],
+      notification_status: ["pending", "sent", "delivered", "failed", "read"],
       permission_level: ["none", "read", "write", "delete", "admin"],
+      presence_status: ["online", "away", "busy", "offline"],
       recon_step_status: [
         "pending",
         "in_progress",
@@ -3825,6 +4250,7 @@ export const Constants = {
         "blocked",
         "skipped",
       ],
+      sms_direction: ["inbound", "outbound"],
       subscription_plan: ["basic", "premium", "enterprise"],
       user_department: ["detailing", "wash", "service"],
       user_presence_status: ["online", "away", "busy", "offline", "invisible"],
