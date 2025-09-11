@@ -338,7 +338,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
                   {/* Vehicle and Stock Row */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className={cn("p-2 rounded", getDuplicateCellBackground(duplicateData.vinDuplicates.get(order.id) || 0))}>
+                    <div className={cn("p-2 rounded", getDuplicateCellBackground([]))}>
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</label>
                       <div className="text-sm font-semibold text-foreground">
                         {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
@@ -359,10 +359,10 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                             {order.vehicleVin || 'No VIN'}
                           </div>
                         </DuplicateTooltip>
-                        <DuplicateBadge count={duplicateData.vinDuplicates.get(order.id) || 0} />
+                        <DuplicateBadge duplicates={[]} />
                       </div>
                     </div>
-                    <div className={cn("p-2 rounded", getDuplicateCellBackground(duplicateData.stockDuplicates.get(order.id) || 0))}>
+                    <div className={cn("p-2 rounded", getDuplicateCellBackground([]))}>
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Stock</label>
                       <div className="relative inline-block">
                         <DuplicateTooltip
@@ -376,7 +376,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                             {order.stockNumber || 'No Stock'}
                           </div>
                         </DuplicateTooltip>
-                        <DuplicateBadge count={duplicateData.stockDuplicates.get(order.id) || 0} />
+                        <DuplicateBadge duplicates={[]} />
                       </div>
                       <div className="flex items-center text-xs text-muted-foreground mt-1">
                         <User className="w-3 h-3 mr-1 text-green-600" />
@@ -518,7 +518,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 2: Stock & Assigned User */}
-                    <TableCell className={cn("py-4 text-center", getDuplicateCellBackground(duplicateData.stockDuplicates.get(order.id) || 0))}>
+                    <TableCell className={cn("py-4 text-center", getDuplicateCellBackground([]))}>
                       <div className="space-y-1">
                         <div className="relative inline-block">
                           <DuplicateTooltip
@@ -532,7 +532,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                               {order.stockNumber || t('data_table.no_stock')}
                             </div>
                           </DuplicateTooltip>
-                          <DuplicateBadge count={duplicateData.stockDuplicates.get(order.id) || 0} />
+                          <DuplicateBadge duplicates={[]} />
                         </div>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">
                           <User className="w-3 h-3 mr-1 text-green-600" />
@@ -542,7 +542,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 3: Vehicle & VIN */}
-                    <TableCell className={cn("py-4 text-center", getDuplicateCellBackground(duplicateData.vinDuplicates.get(order.id) || 0))}>
+                    <TableCell className={cn("py-4 text-center", getDuplicateCellBackground([]))}>
                       <div className="space-y-1">
                         <div className="text-base font-bold text-foreground">
                           {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
@@ -566,7 +566,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                                 {order.vehicleVin || t('data_table.vin_not_provided')}
                               </span>
                             </DuplicateTooltip>
-                            <DuplicateBadge count={duplicateData.vinDuplicates.get(order.id) || 0} />
+                            <DuplicateBadge duplicates={[]} />
                           </div>
                         </div>
                       </div>

@@ -8,6 +8,7 @@ export type AppModule =
   | 'service_orders'
   | 'recon_orders'
   | 'car_wash'
+  | 'stock'
   | 'chat'
   | 'reports'
   | 'settings'

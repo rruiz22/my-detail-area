@@ -37,7 +37,15 @@ export function AppSidebar() {
   }, {
     title: t('navigation.car_wash'),
     url: "/carwash",
-    icon: Car
+    icon: Droplets
+  }, {
+    title: t('navigation.stock'),
+    url: "/stock",
+    icon: Package
+  }, {
+    title: t('navigation.stock'),
+    url: "/stock",
+    icon: Package
   }, {
     title: t('chat.title'),
     url: "/chat",

@@ -188,7 +188,7 @@ export function DuplicateTooltip({
   const getOrderNumber = useCallback((order: Order): string => {
     try {
       if (typeof formatOrderNumber === 'function') {
-        return formatOrderNumber(order);
+        return formatOrderNumber(order.orderNumber || order.customOrderNumber || '');
       }
       
       // Fallback formatting

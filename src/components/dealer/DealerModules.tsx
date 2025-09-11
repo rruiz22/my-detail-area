@@ -18,7 +18,8 @@ import {
   Users,
   Building2,
   Shield,
-  MessageCircle
+  MessageCircle,
+  Package
 } from 'lucide-react';
 import type { AppModule } from '@/hooks/usePermissions';
 
@@ -39,6 +40,7 @@ const moduleConfig: Record<AppModule, { name: string; description: string; icon:
   service_orders: { name: 'Service Orders', description: 'manage_service_orders', icon: Wrench, category: 'Orders' },
   recon_orders: { name: 'Recon Orders', description: 'manage_recon_orders', icon: RotateCcw, category: 'Orders' },
   car_wash: { name: 'Car Wash', description: 'manage_car_wash_orders', icon: Car, category: 'Orders' },
+  stock: { name: 'Stock/Inventory', description: 'manage_vehicle_inventory', icon: Package, category: 'Orders' },
   chat: { name: 'Team Chat', description: 'team_communication', icon: MessageCircle, category: 'Communication' },
   reports: { name: 'Reports', description: 'access_reports_analytics', icon: BarChart3, category: 'Analytics' },
   settings: { name: 'Settings', description: 'system_configuration', icon: Shield, category: 'Administration' },
