@@ -27,6 +27,7 @@ import Management from "./pages/Management";
 import QRRedirect from "./pages/QRRedirect";
 import VinScanner from "./pages/VinScanner";
 import NFCTracking from "./pages/NFCTracking";
+import Phase3Dashboard from "./pages/Phase3Dashboard";
 import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import { InvitationAccept } from "./pages/InvitationAccept";
@@ -85,6 +86,7 @@ const App = () => (
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
                 <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
+                <Route path="/phase3" element={<ProtectedRoute><Phase3Dashboard /></ProtectedRoute>} />
                 <Route path="/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
                 <Route path="/debug/tooltips" element={<ProtectedRoute><TooltipTester /></ProtectedRoute>} />
                 <Route path="/debug/duplicate-tooltips" element={<ProtectedRoute><DuplicateTooltipTester /></ProtectedRoute>} />

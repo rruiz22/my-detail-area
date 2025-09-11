@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -72,6 +72,10 @@ export function AppSidebar() {
     title: t('navigation.management'),
     url: "/management",
     icon: Shield
+  }, {
+    title: 'Phase 3 Dashboard',
+    url: "/phase3",
+    icon: Sparkles
   }, {
     title: t('pages.user_management'),
     url: "/users",
