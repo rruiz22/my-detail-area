@@ -1187,6 +1187,341 @@ export type Database = {
         }
         Relationships: []
       }
+      detail_employees: {
+        Row: {
+          created_at: string | null
+          dealer_id: number
+          department: string | null
+          emergency_contact: Json | null
+          employee_number: string
+          face_data: Json | null
+          hire_date: string | null
+          hourly_rate: number | null
+          id: string
+          is_active: boolean | null
+          preferences: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: number
+          department?: string | null
+          emergency_contact?: Json | null
+          employee_number: string
+          face_data?: Json | null
+          hire_date?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean | null
+          preferences?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: number
+          department?: string | null
+          emergency_contact?: Json | null
+          employee_number?: string
+          face_data?: Json | null
+          hire_date?: string | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean | null
+          preferences?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_employees_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      detail_invoices: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string | null
+          dealer_id: number
+          due_date: string | null
+          id: string
+          invoice_date: string | null
+          invoice_number: string
+          notes: string | null
+          order_id: string | null
+          paid_date: string | null
+          payment_method: string | null
+          pdf_url: string | null
+          status: string | null
+          subtotal: number
+          tax_amount: number | null
+          total_amount: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          dealer_id: number
+          due_date?: string | null
+          id?: string
+          invoice_date?: string | null
+          invoice_number: string
+          notes?: string | null
+          order_id?: string | null
+          paid_date?: string | null
+          payment_method?: string | null
+          pdf_url?: string | null
+          status?: string | null
+          subtotal: number
+          tax_amount?: number | null
+          total_amount: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          dealer_id?: number
+          due_date?: string | null
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string
+          notes?: string | null
+          order_id?: string | null
+          paid_date?: string | null
+          payment_method?: string | null
+          pdf_url?: string | null
+          status?: string | null
+          subtotal?: number
+          tax_amount?: number | null
+          total_amount?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_invoices_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_invoices_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      detail_kiosk_stations: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_ping: string | null
+          location: string | null
+          mac_address: string | null
+          settings: Json | null
+          station_name: string
+          station_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id: number
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_ping?: string | null
+          location?: string | null
+          mac_address?: string | null
+          settings?: Json | null
+          station_name: string
+          station_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_ping?: string | null
+          location?: string | null
+          mac_address?: string | null
+          settings?: Json | null
+          station_name?: string
+          station_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_kiosk_stations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      detail_shifts: {
+        Row: {
+          break_minutes: number | null
+          created_at: string | null
+          dealer_id: number
+          employee_id: string
+          id: string
+          notes: string | null
+          overtime_hours: number | null
+          shift_date: string
+          shift_end: string | null
+          shift_start: string
+          status: string | null
+          total_hours: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          break_minutes?: number | null
+          created_at?: string | null
+          dealer_id: number
+          employee_id: string
+          id?: string
+          notes?: string | null
+          overtime_hours?: number | null
+          shift_date: string
+          shift_end?: string | null
+          shift_start: string
+          status?: string | null
+          total_hours?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          break_minutes?: number | null
+          created_at?: string | null
+          dealer_id?: number
+          employee_id?: string
+          id?: string
+          notes?: string | null
+          overtime_hours?: number | null
+          shift_date?: string
+          shift_end?: string | null
+          shift_start?: string
+          status?: string | null
+          total_hours?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_shifts_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_shifts_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "detail_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      detail_time_entries: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number
+          device_info: Json | null
+          employee_id: string
+          entry_type: string
+          face_confidence: number | null
+          id: string
+          location_address: string | null
+          location_lat: number | null
+          location_lng: number | null
+          photo_url: string | null
+          shift_id: string | null
+          timestamp: string | null
+          verification_method: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id: number
+          device_info?: Json | null
+          employee_id: string
+          entry_type: string
+          face_confidence?: number | null
+          id?: string
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          photo_url?: string | null
+          shift_id?: string | null
+          timestamp?: string | null
+          verification_method?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number
+          device_info?: Json | null
+          employee_id?: string
+          entry_type?: string
+          face_confidence?: number | null
+          id?: string
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          photo_url?: string | null
+          shift_id?: string | null
+          timestamp?: string | null
+          verification_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_time_entries_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_time_entries_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "detail_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_time_entries_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "detail_shifts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entity_followers: {
         Row: {
           auto_added_reason: string | null
@@ -2818,6 +3153,39 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_log: {
+        Row: {
+          created_at: string | null
+          event_details: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          success: boolean | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       security_policies: {
         Row: {
           created_at: string
@@ -3584,6 +3952,10 @@ export type Database = {
       }
       generate_custom_order_number: {
         Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_employee_number: {
+        Args: { p_dealer_id: number }
         Returns: string
       }
       generate_sales_order_number: {

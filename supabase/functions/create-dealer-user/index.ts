@@ -62,9 +62,87 @@ Deno.serve(async (req) => {
       )
     }
 
-    // For now, we'll skip auth validation to get the function working
-    // TODO: Add proper auth validation back after fixing boot error
-    console.log('⚠️ SKIPPING AUTH VALIDATION FOR DEBUGGING')
+    // Verify user is authenticated and has admin privileges
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('Missing or invalid authorization header')
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Unauthorized: Missing authentication token'
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 401,
+        }
+      )
+    }
+
+    // Create Supabase client to verify admin permissions
+    const tempSupabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
+
+    // Get the JWT token from the authorization header
+    const token = authHeader.replace('Bearer ', '')
+    
+    // Verify the user has admin role
+    const { data: userData, error: userError } = await tempSupabase.auth.getUser(token)
+    if (userError || !userData.user) {
+      console.error('Invalid authentication token:', userError)
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Unauthorized: Invalid authentication token'
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 401,
+        }
+      )
+    }
+
+    // Check if user has admin role
+    const { data: profile, error: profileError } = await tempSupabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userData.user.id)
+      .single()
+
+    if (profileError || !profile || profile.role !== 'admin') {
+      console.error('User does not have admin privileges:', profileError || 'Missing admin role')
+      
+      // Log security event
+      await tempSupabase
+        .from('security_audit_log')
+        .insert({
+          event_type: 'unauthorized_user_creation_attempt',
+          user_id: userData.user?.id,
+          event_details: {
+            attempted_email: requestBody?.email,
+            user_role: profile?.role || 'unknown'
+          },
+          ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+          user_agent: req.headers.get('user-agent') || 'unknown',
+          success: false
+        })
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Forbidden: Admin privileges required'
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 403,
+        }
+      )
+    }
+
+    console.log('✅ Admin authentication verified for user:', userData.user.id)
     
     // Parse and validate request body
     let requestBody: any
