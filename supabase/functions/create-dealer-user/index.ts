@@ -420,6 +420,29 @@ Deno.serve(async (req) => {
     }
 
     console.log('✅ Membership created successfully:', membershipData)
+
+    // Log successful user creation for security audit
+    try {
+      await supabase
+        .from('security_audit_log')
+        .insert({
+          event_type: 'user_created_successfully',
+          user_id: userData.user.id,
+          event_details: {
+            created_user_id: authUser.user.id,
+            created_user_email: email,
+            dealership_id: dealershipId,
+            user_type: userType,
+            role: role
+          },
+          ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+          user_agent: req.headers.get('user-agent') || 'unknown',
+          success: true
+        })
+      console.log('✅ Security audit logged')
+    } catch (auditError) {
+      console.warn('⚠️ Failed to log security audit:', auditError)
+    }
     
     // Step 3.1: Handle role assignment through dealer groups (optional for now)
     console.log('=== STEP 3.1: Role Assignment (Future Enhancement) ===')
