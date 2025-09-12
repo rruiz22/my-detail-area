@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { Bell, Search } from "lucide-react";
@@ -29,12 +29,14 @@ const getSavedSidebarState = (): boolean => {
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const { t } = useTranslation();
   const initialSidebarState = getSavedSidebarState();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarState);
   
   return (
     <SidebarProvider 
-      defaultOpen={initialSidebarState}
+      open={isSidebarOpen}
       onOpenChange={(open) => {
         try {
+          setIsSidebarOpen(open);
           localStorage.setItem('mda.ui.sidebar.open', JSON.stringify(open));
           console.log('💾 Sidebar state saved:', open);
           console.log('🔄 Sidebar toggled to:', open ? 'OPEN' : 'CLOSED');
