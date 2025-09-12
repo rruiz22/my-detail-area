@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
@@ -103,6 +103,7 @@ const transformOrder = (supabaseOrder: any): Order => {
 
 export const useOrderManagement = (activeTab: string) => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]); // Keep full dataset
   const [tabCounts, setTabCounts] = useState({
     today: 0,
     tomorrow: 0,
@@ -123,6 +124,11 @@ export const useOrderManagement = (activeTab: string) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const { generateQR } = useOrderActions();
+  
+  // Debug and call counting refs
+  const refreshCallCountRef = useRef(0);
+  const lastRefreshTimeRef = useRef(0);
+  const realtimeUpdateCountRef = useRef(0);
 
   const calculateTabCounts = useMemo(() => (allOrders: Order[]) => {
     const today = new Date();
@@ -238,9 +244,23 @@ export const useOrderManagement = (activeTab: string) => {
     return filtered;
   }, []);
 
-  const refreshData = useCallback(async () => {
+  const refreshData = useCallback(async (skipFiltering = false) => {
     if (!user) return;
     
+    // Debug logging and call counting
+    refreshCallCountRef.current += 1;
+    const now = Date.now();
+    const timeSinceLastRefresh = now - lastRefreshTimeRef.current;
+    
+    console.log(`🔄 refreshData called (${refreshCallCountRef.current}) - skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
+    
+    // Prevent excessive calls (less than 1 second apart)
+    if (timeSinceLastRefresh < 1000 && refreshCallCountRef.current > 1) {
+      console.warn('⚠️ refreshData called too frequently, skipping to prevent loop');
+      return;
+    }
+    
+    lastRefreshTimeRef.current = now;
     setLoading(true);
     
     try {
@@ -305,16 +325,21 @@ export const useOrderManagement = (activeTab: string) => {
         return transformedOrder;
       });
 
-      const filtered = filterOrders(allOrders, activeTab, filters);
-      
-      setOrders(filtered);
+      // Store full dataset and calculate tab counts
+      setAllOrders(allOrders);
       setTabCounts(calculateTabCounts(allOrders));
+      
+      // Apply filtering unless skipped
+      if (!skipFiltering) {
+        const filtered = filterOrders(allOrders, activeTab, filters);
+        setOrders(filtered);
+      }
     } catch (error) {
       console.error('Error in refreshData:', error);
     } finally {
       setLoading(false);
     }
-  }, [activeTab, filters, filterOrders, calculateTabCounts, user]);
+  }, [filterOrders, calculateTabCounts, user]);
 
   const updateFilters = useCallback((newFilters: any) => {
     setFilters(newFilters);
@@ -463,10 +488,19 @@ export const useOrderManagement = (activeTab: string) => {
     }
   }, [user, refreshData]);
 
-  // Initialize data on mount and when dependencies change
+  // Initialize data on mount
   useEffect(() => {
     refreshData();
   }, [refreshData]);
+
+  // Handle filtering when tab or filters change (without full refresh)
+  useEffect(() => {
+    if (allOrders.length > 0) {
+      // Apply filtering to full dataset
+      const filtered = filterOrders(allOrders, activeTab, filters);
+      setOrders(filtered);
+    }
+  }, [activeTab, filters, allOrders, filterOrders]);
 
   // Real-time subscription for orders
   useEffect(() => {
@@ -483,26 +517,72 @@ export const useOrderManagement = (activeTab: string) => {
           filter: 'order_type=eq.sales'
         },
         async (payload) => {
-          console.log('Real-time update received:', payload);
+          realtimeUpdateCountRef.current += 1;
+          console.log(`📡 Real-time update ${realtimeUpdateCountRef.current} received:`, payload.eventType, payload.new?.id || payload.old?.id);
           
-          if (payload.eventType === 'INSERT') {
-            const newOrder = transformOrder(payload.new as any);
-            setOrders(prevOrders => [newOrder, ...prevOrders]);
-          } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformOrder(payload.new as any);
-            setOrders(prevOrders => 
-              prevOrders.map(order => 
-                order.id === updatedOrder.id ? updatedOrder : order
-              )
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders => 
-              prevOrders.filter(order => order.id !== payload.old.id)
-            );
+          try {
+            if (payload.eventType === 'INSERT') {
+              const newOrder = transformOrder(payload.new as any);
+              
+              // Update allOrders state
+              setAllOrders(prevAllOrders => {
+                const exists = prevAllOrders.some(order => order.id === newOrder.id);
+                return exists ? prevAllOrders : [newOrder, ...prevAllOrders];
+              });
+              
+              // Update tab counts incrementally
+              setTabCounts(prevCounts => ({
+                ...prevCounts,
+                [newOrder.status]: (prevCounts[newOrder.status as keyof typeof prevCounts] || 0) + 1
+              }));
+              
+            } else if (payload.eventType === 'UPDATE') {
+              const updatedOrder = transformOrder(payload.new as any);
+              
+              // Update allOrders state
+              setAllOrders(prevAllOrders => 
+                prevAllOrders.map(order => 
+                  order.id === updatedOrder.id ? updatedOrder : order
+                )
+              );
+              
+              // Recalculate tab counts if status changed
+              if (payload.old?.status !== payload.new?.status) {
+                setTabCounts(prevCounts => {
+                  const newCounts = { ...prevCounts };
+                  // Decrease old status count
+                  if (payload.old?.status) {
+                    newCounts[payload.old.status as keyof typeof newCounts] = 
+                      Math.max(0, (newCounts[payload.old.status as keyof typeof newCounts] || 0) - 1);
+                  }
+                  // Increase new status count
+                  if (payload.new?.status) {
+                    newCounts[payload.new.status as keyof typeof newCounts] = 
+                      (newCounts[payload.new.status as keyof typeof newCounts] || 0) + 1;
+                  }
+                  return newCounts;
+                });
+              }
+              
+            } else if (payload.eventType === 'DELETE') {
+              // Update allOrders state
+              setAllOrders(prevAllOrders => 
+                prevAllOrders.filter(order => order.id !== payload.old.id)
+              );
+              
+              // Update tab counts decrementally
+              if (payload.old?.status) {
+                setTabCounts(prevCounts => ({
+                  ...prevCounts,
+                  [payload.old.status]: Math.max(0, (prevCounts[payload.old.status as keyof typeof prevCounts] || 0) - 1)
+                }));
+              }
+            }
+          } catch (error) {
+            console.error('Error handling real-time update:', error);
+            // Fallback to full refresh only on error
+            refreshData();
           }
-          
-          // Refresh tab counts after any change
-          refreshData();
         }
       )
       .subscribe();

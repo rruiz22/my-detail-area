@@ -21,8 +21,8 @@ interface EnhancedQRCodeBlockProps {
   orderId: string;
   orderNumber?: string;
   dealerId?: string;
-  qrSlug?: string;
-  shortUrl?: string;
+  qrCodeUrl?: string;
+  shortLink?: string;
 }
 
 // Memoized component to prevent unnecessary re-renders
@@ -30,8 +30,8 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   orderId, 
   orderNumber, 
   dealerId, 
-  qrSlug, 
-  shortUrl 
+  qrCodeUrl, 
+  shortLink 
 }: EnhancedQRCodeBlockProps) {
   const { t } = useTranslation();
   const [qrData, setQrData] = useState<ShortLinkData | null>(null);
@@ -39,11 +39,15 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   const [analytics, setAnalytics] = useState<ShortLinkData['analytics']>(null);
 
   useEffect(() => {
-    if (qrSlug && shortUrl) {
-      setQrData({ slug: qrSlug, shortUrl });
-      loadAnalytics(qrSlug);
+    if (qrCodeUrl && shortLink) {
+      // Extract slug from qrCodeUrl or shortLink
+      const slug = shortLink?.split('/').pop() || qrCodeUrl?.split('/').pop();
+      if (slug) {
+        setQrData({ slug, shortUrl: shortLink || qrCodeUrl });
+        loadAnalytics(slug);
+      }
     }
-  }, [qrSlug, shortUrl]);
+  }, [qrCodeUrl, shortLink, loadAnalytics]);
 
   // Memoize analytics loading function
   const loadAnalytics = useCallback(async (slug: string) => {

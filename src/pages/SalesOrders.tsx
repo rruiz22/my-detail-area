@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +37,9 @@ export default function SalesOrders() {
   const [previewOrder, setPreviewOrder] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [nextRefresh, setNextRefresh] = useState<number>(60);
+  const lastChangeTimeRef = useRef<number>(0);
+  const refreshIntervalRef = useRef<NodeJS.Timeout>();
+  const countdownIntervalRef = useRef<NodeJS.Timeout>();
 
   const {
     orders,
@@ -50,12 +53,14 @@ export default function SalesOrders() {
     deleteOrder,
   } = useOrderManagement(activeFilter);
 
-  // Auto-refresh with countdown timer
+  // Auto-refresh with countdown timer - optimized to prevent conflicts
   useEffect(() => {
-    let lastChangeTime = 0;
+    // Clear any existing intervals
+    if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     
     // Countdown timer (updates every second)
-    const countdownInterval = setInterval(() => {
+    countdownIntervalRef.current = setInterval(() => {
       setNextRefresh(prev => {
         if (prev <= 1) {
           return 60; // Reset to 60 seconds
@@ -64,10 +69,12 @@ export default function SalesOrders() {
       });
     }, 1000);
 
-    // Refresh timer (every 60 seconds)
-    const refreshInterval = setInterval(() => {
+    // Refresh timer (every 60 seconds) - with conflict prevention
+    refreshIntervalRef.current = setInterval(() => {
       const now = Date.now();
-      if (now - lastChangeTime > 10000) {
+      // Only refresh if no recent user activity and not currently loading
+      if (now - lastChangeTimeRef.current > 10000 && !loading) {
+        console.log('Auto-refresh triggered');
         refreshData();
         setLastRefresh(new Date());
         setNextRefresh(60); // Reset countdown
@@ -76,7 +83,7 @@ export default function SalesOrders() {
 
     // Track when status changes occur
     const handleStatusChangeEvent = () => {
-      lastChangeTime = Date.now();
+      lastChangeTimeRef.current = Date.now();
       setNextRefresh(60); // Reset countdown when user makes changes
     };
 
@@ -85,12 +92,12 @@ export default function SalesOrders() {
     window.addEventListener('orderStatusUpdated', handleStatusChangeEvent);
 
     return () => {
-      clearInterval(refreshInterval);
-      clearInterval(countdownInterval);
+      if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
+      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
       window.removeEventListener('orderStatusChanged', handleStatusChangeEvent);
       window.removeEventListener('orderStatusUpdated', handleStatusChangeEvent);
     };
-  }, [refreshData]);
+  }, [refreshData, loading]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -128,10 +135,11 @@ export default function SalesOrders() {
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
+    lastChangeTimeRef.current = Date.now(); // Update ref to prevent auto-refresh
+    
     await updateOrder(orderId, { status: newStatus });
     
-    // Immediately refresh data to show updated status
-    refreshData();
+    // Note: No need to manually refresh since real-time subscription handles it
     setLastRefresh(new Date());
     setNextRefresh(60); // Reset timer
     

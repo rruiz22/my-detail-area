@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { shortLinkService } from '@/services/shortLinkService';
+import { usePerformanceMonitor } from './usePerformanceMonitor';
 
 interface OrderAttachment {
   id: string;
@@ -56,11 +57,59 @@ interface OrderModalData {
 
 interface UseOrderModalDataProps {
   orderId: string | null;
-  qrSlug?: string;
+  qrCodeUrl?: string;
   enabled?: boolean; // Only fetch when modal is open
 }
 
-export function useOrderModalData({ orderId, qrSlug, enabled = true }: UseOrderModalDataProps) {
+// Enhanced cache implementation with TTL and memory management
+class OrderModalCache {
+  private cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+  private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes
+  private readonly MAX_CACHE_SIZE = 50; // Prevent memory leaks
+
+  set(key: string, data: any, ttl = this.DEFAULT_TTL) {
+    // Implement LRU-style eviction
+    if (this.cache.size >= this.MAX_CACHE_SIZE) {
+      const oldestKey = this.cache.keys().next().value;
+      this.cache.delete(oldestKey);
+    }
+    
+    this.cache.set(key, {
+      data: JSON.parse(JSON.stringify(data)), // Deep clone to prevent mutations
+      timestamp: Date.now(),
+      ttl
+    });
+  }
+
+  get(key: string): any | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    
+    // Check if expired
+    if (Date.now() - entry.timestamp > entry.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return entry.data;
+  }
+
+  clear() {
+    this.cache.clear();
+  }
+
+  getSize() {
+    return this.cache.size;
+  }
+}
+
+// Global cache instance
+const modalDataCache = new OrderModalCache();
+
+// Request deduplication
+const activeRequests = new Map<string, Promise<any>>();
+
+export function useOrderModalData({ orderId, qrCodeUrl, enabled = true }: UseOrderModalDataProps) {
   const [data, setData] = useState<OrderModalData>({
     attachments: [],
     activities: [],
@@ -72,6 +121,8 @@ export function useOrderModalData({ orderId, qrSlug, enabled = true }: UseOrderM
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { startMeasure, endMeasure, recordMetric } = usePerformanceMonitor();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Parallel data fetching function
   const fetchModalData = useCallback(async () => {
@@ -118,8 +169,11 @@ export function useOrderModalData({ orderId, qrSlug, enabled = true }: UseOrderM
           return profile?.user_type || 'regular';
         }),
         
-        // Fetch QR analytics if slug exists
-        qrSlug ? shortLinkService.getAnalytics(qrSlug).catch(() => null) : Promise.resolve(null)
+        // Fetch QR analytics if qrCodeUrl exists
+        qrCodeUrl ? (() => {
+          const slug = qrCodeUrl.split('/').pop();
+          return slug ? shortLinkService.getAnalytics(slug).catch(() => null) : null;
+        })() : Promise.resolve(null)
       ]);
 
       // Process results, handling any failures gracefully
@@ -168,7 +222,7 @@ export function useOrderModalData({ orderId, qrSlug, enabled = true }: UseOrderM
     } finally {
       setLoading(false);
     }
-  }, [orderId, qrSlug, enabled]);
+  }, [orderId, qrCodeUrl, enabled]);
 
   // Fetch data when dependencies change
   useEffect(() => {

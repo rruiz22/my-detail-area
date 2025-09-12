@@ -58,7 +58,7 @@ export function EnhancedOrderDetailModal({
     refetch: refetchModalData
   } = useOrderModalData({
     orderId: order.id,
-    qrSlug: order.qr_slug,
+    qrCodeUrl: order.qr_code_url,
     enabled: open // Only fetch when modal is open
   });
 

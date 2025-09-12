@@ -14,7 +14,14 @@
     "translation:fix-restore": "node scripts/translation-batch-fix.js restore",
     "translation:fix-cleanup": "node scripts/translation-batch-fix.js cleanup",
     "translation:coverage": "npm run translation:audit && echo 'Translation coverage check complete'",
-    "pre-commit": "npm run translation:coverage"
+    "pre-commit": "npm run translation:coverage",
+    "schema:start": "node scripts/schema-workflow-manager.js start",
+    "schema:stop": "node scripts/schema-workflow-manager.js stop",
+    "schema:status": "node scripts/schema-workflow-manager.js status",
+    "schema:check": "node scripts/hybrid-schema-monitor.js check",
+    "schema:types": "node scripts/auto-type-generator.js generate",
+    "schema:validate": "node scripts/auto-validation-commit.js validate",
+    "schema:dashboard": "node scripts/schema-dashboard.js start"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -59,6 +66,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
+    "express": "^5.1.0",
     "fabric": "^6.7.1",
     "framer-motion": "^12.23.12",
     "i18next": "^25.5.2",
@@ -78,6 +86,7 @@
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",
+    "socket.io": "^4.8.1",
     "sonner": "^1.7.4",
     "sweetalert2": "^11.23.0",
     "tailwind-merge": "^2.6.0",

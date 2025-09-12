@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useCallback, useMemo } from 'react';
+import React, { ReactNode, useEffect, useCallback, useMemo, memo, lazy, Suspense } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,22 +41,84 @@ import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
 import { SkeletonLoader } from './SkeletonLoader';
 import { ChatAndSMSActions } from './ChatAndSMSActions';
+import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
+import { ErrorBoundaryModal } from './ErrorBoundaryModal';
+
+// Enhanced TypeScript interfaces for better type safety
+interface OrderData {
+  id: string;
+  order_number?: string;
+  custom_order_number?: string;
+  customer_name?: string;
+  vehicle_year?: string;
+  vehicle_make?: string;
+  vehicle_model?: string;
+  vehicle_vin?: string;
+  status: string;
+  dealer_id: string;
+  dealership_name?: string;
+  advisor?: string;
+  notes?: string;
+  internal_notes?: string;
+  priority?: string;
+  created_at?: string;
+  updated_at?: string;
+  estimated_completion?: string;
+  qr_slug?: string;
+  short_url?: string;
+}
+
+interface ModalData {
+  attachments: any[];
+  activities: any[];
+  comments: any[];
+  followers: any[];
+  analytics: any;
+  userType: 'detail' | 'regular' | null;
+}
+>>>>>>> 64935c5 (Enhance order detail components with performance optimizations)
 
 interface EnhancedOrderDetailLayoutProps {
-  order: any;
+  order: OrderData;
   open: boolean;
   onClose: () => void;
-  onEdit?: (order: any) => void;
+  onEdit?: (order: OrderData) => void;
   onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
   onNotesUpdate?: (orderId: string, notes: string, type: 'general' | 'internal') => void;
-  modalData?: any;
+  modalData?: ModalData;
   isLoadingData?: boolean;
   dataError?: string | null;
 }
 
-// Memoized component to prevent unnecessary re-renders
-export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetailLayout({
+// Lazily loaded components for better performance
+const VehicleInfoBlockMemo = lazy(() => 
+  import('./VehicleInfoBlock').then(module => ({ default: memo(module.VehicleInfoBlock) }))
+);
+const ScheduleViewBlockMemo = lazy(() => 
+  import('./ScheduleViewBlock').then(module => ({ default: memo(module.ScheduleViewBlock) }))
+);
+const SimpleNotesDisplayMemo = lazy(() => 
+  import('./SimpleNotesDisplay').then(module => ({ default: memo(module.SimpleNotesDisplay) }))
+);
+const PublicCommentsBlockMemo = lazy(() => 
+  import('./PublicCommentsBlock').then(module => ({ default: memo(module.PublicCommentsBlock) }))
+);
+const InternalNotesBlockMemo = lazy(() => 
+  import('./InternalNotesBlock').then(module => ({ default: memo(module.InternalNotesBlock) }))
+);
+const EnhancedQRCodeBlockMemo = lazy(() => 
+  import('./EnhancedQRCodeBlock').then(module => ({ default: memo(module.EnhancedQRCodeBlock) }))
+);
+const FollowersBlockMemo = lazy(() => 
+  import('./FollowersBlock').then(module => ({ default: memo(module.FollowersBlock) }))
+);
+const RecentActivityBlockMemo = lazy(() => 
+  import('./RecentActivityBlock').then(module => ({ default: memo(module.RecentActivityBlock) }))
+);
+
+// Memoized main component with performance monitoring
+export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout({
   order,
   open,
   onClose,
@@ -69,6 +131,19 @@ export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetail
   dataError
 }: EnhancedOrderDetailLayoutProps) {
   const { t } = useTranslation();
+  const { startMeasure, endMeasure, recordMetric } = usePerformanceMonitor();
+
+  // Track modal rendering performance
+  useEffect(() => {
+    if (open) {
+      startMeasure('modal-render');
+      recordMetric('modal-open', Date.now());
+      return () => {
+        endMeasure('modal-render');
+        recordMetric('modal-close', Date.now());
+      };
+    }
+  }, [open, startMeasure, endMeasure, recordMetric]);
 
   // Reset scroll position when modal opens
   useEffect(() => {
@@ -148,9 +223,9 @@ export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetail
                     
                     {/* Business Context - Centered */}
                     <div className="text-lg text-gray-700">
-                      <span className="font-semibold">{order.dealership_name || 'Premium Auto'}</span>
+                      <span className="font-semibold">Premium Auto</span>
                       <span className="mx-2 text-gray-400">•</span>
-                      <span>{order.advisor || 'Unassigned'} (Advisor)</span>
+                      <span>{order.salesperson || 'Unassigned'} (Salesperson)</span>
                       <span className="mx-2 text-gray-400">•</span>
                       <span>{order.customer_name || 'Customer'}</span>
                     </div>
@@ -211,8 +286,8 @@ export const EnhancedOrderDetailLayout = React.memo(function EnhancedOrderDetail
                       orderId={order.id}
                       orderNumber={order.order_number}
                       dealerId={order.dealer_id}
-                      qrSlug={order.qr_slug}
-                      shortUrl={order.short_url}
+                      qrCodeUrl={order.qr_code_url}
+                      shortLink={order.short_link}
                     />
                   )}
 
