@@ -518,7 +518,7 @@ export const useOrderManagement = (activeTab: string) => {
         },
         async (payload) => {
           realtimeUpdateCountRef.current += 1;
-          console.log(`📡 Real-time update ${realtimeUpdateCountRef.current} received:`, payload.eventType, payload.new?.id || payload.old?.id);
+          console.log(`📡 Real-time update ${realtimeUpdateCountRef.current} received:`, payload.eventType, (payload.new as any)?.id || (payload.old as any)?.id);
           
           try {
             if (payload.eventType === 'INSERT') {

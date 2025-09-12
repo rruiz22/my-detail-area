@@ -27,14 +27,16 @@ interface OrderData {
   order_number?: string;
   custom_order_number?: string;
   customer_name?: string;
-  vehicle_year?: string;
+  customer_phone?: string;
+  vehicle_year?: string | number;
   vehicle_make?: string;
   vehicle_model?: string;
   vehicle_vin?: string;
-  status: string;
-  dealer_id: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
+  dealer_id: string | number;
   dealership_name?: string;
   advisor?: string;
+  salesperson?: string;
   notes?: string;
   internal_notes?: string;
   priority?: string;
@@ -43,6 +45,8 @@ interface OrderData {
   estimated_completion?: string;
   qr_slug?: string;
   short_url?: string;
+  qr_code_url?: string;
+  short_link?: string;
 }
 
 interface EnhancedOrderDetailModalProps {

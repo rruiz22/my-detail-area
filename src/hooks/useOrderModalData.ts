@@ -58,6 +58,7 @@ interface OrderModalData {
 interface UseOrderModalDataProps {
   orderId: string | null;
   qrCodeUrl?: string;
+  qrSlug?: string;
   enabled?: boolean; // Only fetch when modal is open
 }
 
@@ -265,11 +266,30 @@ export function useOrderModalData({ orderId, qrCodeUrl, enabled = true }: UseOrd
     }));
   }, []);
 
+  // Additional cache management functions
+  const forceRefresh = useCallback(async () => {
+    if (orderId) {
+      modalDataCache.clear();
+      await fetchModalData();
+    }
+  }, [orderId, fetchModalData]);
+
+  const clearCache = useCallback(() => {
+    modalDataCache.clear();
+  }, []);
+
+  const getCacheSize = useCallback(() => {
+    return modalDataCache.getSize();
+  }, []);
+
   return {
     data,
     loading,
     error,
     refetch: fetchModalData,
+    forceRefresh,
+    clearCache,
+    getCacheSize,
     // Optimistic update functions
     addAttachment,
     removeAttachment,

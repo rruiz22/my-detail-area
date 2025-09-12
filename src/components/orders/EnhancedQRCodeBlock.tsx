@@ -38,6 +38,17 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   const [loading, setLoading] = useState(false);
   const [analytics, setAnalytics] = useState<ShortLinkData['analytics']>(null);
 
+  
+  // Memoize analytics loading function
+  const loadAnalytics = useCallback(async (slug: string) => {
+    try {
+      const analyticsData = await shortLinkService.getAnalytics(slug);
+      setAnalytics(analyticsData);
+    } catch (error) {
+      console.warn('Failed to load analytics:', error);
+    }
+  }, []);
+
   useEffect(() => {
     if (qrCodeUrl && shortLink) {
       // Extract slug from qrCodeUrl or shortLink
@@ -48,16 +59,6 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
       }
     }
   }, [qrCodeUrl, shortLink, loadAnalytics]);
-
-  // Memoize analytics loading function
-  const loadAnalytics = useCallback(async (slug: string) => {
-    try {
-      const analyticsData = await shortLinkService.getAnalytics(slug);
-      setAnalytics(analyticsData);
-    } catch (error) {
-      console.warn('Failed to load analytics:', error);
-    }
-  }, []);
 
   // Memoize QR code generation function
   const generateQRCode = useCallback(async () => {

@@ -50,14 +50,16 @@ interface OrderData {
   order_number?: string;
   custom_order_number?: string;
   customer_name?: string;
-  vehicle_year?: string;
+  customer_phone?: string;
+  vehicle_year?: string | number;
   vehicle_make?: string;
   vehicle_model?: string;
   vehicle_vin?: string;
-  status: string;
-  dealer_id: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
+  dealer_id: string | number;
   dealership_name?: string;
   advisor?: string;
+  salesperson?: string;
   notes?: string;
   internal_notes?: string;
   priority?: string;
@@ -66,6 +68,8 @@ interface OrderData {
   estimated_completion?: string;
   qr_slug?: string;
   short_url?: string;
+  qr_code_url?: string;
+  short_link?: string;
 }
 
 interface ModalData {
@@ -245,9 +249,9 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                       <TimeRemaining order={order} size="lg" />
                       
                       <StatusBadgeInteractive
-                        status={order.status}
+                        status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
                         orderId={order.id}
-                        dealerId={order.dealer_id}
+                        dealerId={String(order.dealer_id)}
                         canUpdateStatus={true}
                         onStatusChange={handleStatusChange}
                       />
@@ -284,7 +288,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                     <EnhancedQRCodeBlock 
                       orderId={order.id}
                       orderNumber={order.order_number}
-                      dealerId={order.dealer_id}
+                      dealerId={String(order.dealer_id)}
                       qrCodeUrl={order.qr_code_url}
                       shortLink={order.short_link}
                     />
@@ -302,8 +306,8 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                       <ChatAndSMSActions
                         orderId={order.id}
                         orderNumber={order.order_number}
-                        customerPhone={order.customer_phone}
-                        dealerId={order.dealer_id}
+                        customerPhone={order.customer_phone || ''}
+                        dealerId={Number(order.dealer_id)}
                         variant="compact"
                       />
                     </CardContent>
@@ -315,7 +319,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   ) : (
                     <FollowersBlock 
                       orderId={order.id}
-                      dealerId={order.dealer_id}
+                      dealerId={String(order.dealer_id)}
                     />
                   )}
 

@@ -199,7 +199,7 @@ export default function SalesOrders() {
             <Button
               variant="outline"
               size="sm"
-              onClick={refreshData}
+              onClick={() => refreshData()}
               disabled={loading}
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
