@@ -2349,6 +2349,36 @@ export type Database = {
           },
         ]
       }
+      rate_limit_tracking: {
+        Row: {
+          created_at: string
+          id: string
+          identifier: string
+          request_count: number
+          resource_type: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identifier: string
+          request_count?: number
+          resource_type: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identifier?: string
+          request_count?: number
+          resource_type?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       recon_media: {
         Row: {
           category: string | null
@@ -3918,7 +3948,9 @@ export type Database = {
         Returns: boolean
       }
       assign_role: {
-        Args: { expires_at?: string; role_name: string; target_user_id: string }
+        Args:
+          | { expires_at?: string; role_name: string; target_user_id: string }
+          | { p_role_name: string; p_user_id: string }
         Returns: boolean
       }
       auto_add_follower: {
@@ -3930,6 +3962,15 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      check_rate_limit: {
+        Args: {
+          p_identifier: string
+          p_max_requests?: number
+          p_resource_type: string
+          p_window_minutes?: number
+        }
+        Returns: boolean
       }
       create_dealer_invitation: {
         Args: { p_dealer_id: number; p_email: string; p_role_name: string }
@@ -3991,6 +4032,10 @@ export type Database = {
           user_id: string
           user_name: string
         }[]
+      }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_dealer_categories_for_module: {
         Args: {
@@ -4329,6 +4374,16 @@ export type Database = {
         Args: { user_id?: string }
         Returns: boolean
       }
+      log_security_event: {
+        Args: {
+          p_dealer_id?: number
+          p_event_details?: Json
+          p_event_type: string
+          p_success?: boolean
+          p_target_user_id?: string
+        }
+        Returns: string
+      }
       set_membership_groups: {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
@@ -4363,7 +4418,7 @@ export type Database = {
         Returns: boolean
       }
       user_has_conversation_access: {
-        Args: { conversation_uuid: string; user_uuid: string }
+        Args: { conv_id: string; user_uuid: string }
         Returns: boolean
       }
       user_has_dealer_membership: {
