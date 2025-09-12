@@ -18,7 +18,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
-import { ThemeStudio } from '@/components/theme/ThemeStudio';
+
 import { OrderNumberMigrationTool } from '@/components/dev/OrderNumberMigrationTool';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { UserManagementSection } from '@/components/management/UserManagementSection';
@@ -55,7 +55,7 @@ const Management = () => {
 
         {/* Management Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-fit">
+          <TabsList className="grid w-full grid-cols-3 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               {t('management.overview')}
@@ -71,10 +71,6 @@ const Management = () => {
             <TabsTrigger value="permissions" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
               {t('management.permissions')}
-            </TabsTrigger>
-            <TabsTrigger value="theme" className="flex items-center gap-2">
-              <Palette className="h-4 w-4" />
-              {t('management.theme_studio')}
             </TabsTrigger>
             {import.meta.env.DEV && (
               <TabsTrigger value="migration" className="flex items-center gap-2">
@@ -145,11 +141,6 @@ const Management = () => {
             </PermissionGuard>
           </TabsContent>
 
-          <TabsContent value="theme" className="space-y-6">
-            <PermissionGuard module="management" permission="admin">
-              <ThemeStudio />
-            </PermissionGuard>
-          </TabsContent>
 
           {import.meta.env.DEV && (
             <TabsContent value="migration" className="space-y-6">
