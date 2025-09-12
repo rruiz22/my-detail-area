@@ -76,7 +76,6 @@ interface ModalData {
   analytics: any;
   userType: 'detail' | 'regular' | null;
 }
->>>>>>> 64935c5 (Enhance order detail components with performance optimizations)
 
 interface EnhancedOrderDetailLayoutProps {
   order: OrderData;
