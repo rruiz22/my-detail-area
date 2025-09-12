@@ -231,7 +231,7 @@ export class ModalPerformanceTester {
           modalDataCache.set(key, data);
           const retrieved = modalDataCache.get(key);
           
-          if (!retrieved || retrieved.workerId !== workerId) {
+          if (!retrieved || (retrieved as any).workerId !== workerId) {
             throw new Error(`Concurrent operation failed for ${key}`);
           }
 
@@ -466,7 +466,7 @@ export class ModalPerformanceTester {
         // Test retrieval
         const retrieved = modalDataCache.get(cacheKey);
         
-        if (!retrieved || retrieved.length !== size) {
+        if (!retrieved || !Array.isArray(retrieved) || retrieved.length !== size) {
           throw new Error(`Large dataset test failed for size ${size}`);
         }
 

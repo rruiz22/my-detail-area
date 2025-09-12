@@ -1790,7 +1790,7 @@
     "app_full_name": "My Detail Area"
   },
   "pages": {
-    "car_wash": "Car Wash",
+    "detail_hub": "Detail Hub",
     "car_wash_orders": "Car Wash Orders",
     "recon_orders": "Recon Orders", 
     "service_orders": "Service Orders",
