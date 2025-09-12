@@ -6,9 +6,10 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+COPY .npmrc ./
 
-# Install all dependencies (including devDependencies for build)
-RUN npm ci
+# Clean install with specific npm version to avoid rollup issues
+RUN npm install --no-optional --legacy-peer-deps
 
 # Copy source code
 COPY . .
