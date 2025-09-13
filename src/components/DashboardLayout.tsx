@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTranslation } from "react-i18next";
-import { SmartNotificationCenter } from "./notifications/SmartNotificationCenter";
+import { NotificationBell } from "./notifications/NotificationBell";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 
@@ -67,7 +67,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             <div className="flex items-center gap-4">
               <LanguageSwitcher />
               <ThemeToggle />
-              {currentDealership?.id ? <SmartNotificationCenter dealerId={currentDealership.id} /> : null}
+              {currentDealership?.id ? <NotificationBell dealerId={currentDealership.id} /> : null}
             </div>
           </header>
 
