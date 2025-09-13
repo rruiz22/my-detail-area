@@ -18,10 +18,11 @@ interface Dealership {
   subscription_plan: string;
 }
 
-type AppModule = 'dashboard' | 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'stock' | 'chat' | 'reports' | 'management' | 'settings' | 'users' | 'dealerships';
+type AppModule = 'dashboard' | 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'stock' | 'chat' | 'reports' | 'management' | 'settings' | 'users' | 'dealerships' | 'productivity';
 
 interface UseAccessibleDealershipsReturn {
   dealerships: Dealership[];
+  currentDealership: Dealership | null;
   loading: boolean;
   error: string | null;
   refreshDealerships: () => void;
@@ -30,6 +31,7 @@ interface UseAccessibleDealershipsReturn {
 
 export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
   const [dealerships, setDealerships] = useState<Dealership[]>([]);
+  const [currentDealership, setCurrentDealership] = useState<Dealership | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -55,6 +57,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
       }
 
       setDealerships(data || []);
+      setCurrentDealership(data?.[0] || null);
     } catch (err) {
       console.error('Error in fetchDealerships:', err);
       const errorMessage = t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships';
@@ -100,6 +103,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
 
   return {
     dealerships,
+    currentDealership,
     loading,
     error,
     refreshDealerships,

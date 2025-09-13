@@ -2305,6 +2305,201 @@ export type Database = {
         }
         Relationships: []
       }
+      productivity_calendars: {
+        Row: {
+          calendar_type: string
+          color: string | null
+          created_at: string
+          created_by: string
+          dealer_id: number
+          description: string | null
+          external_calendar_id: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          last_sync_at: string | null
+          name: string
+          sync_enabled: boolean | null
+          sync_settings: Json | null
+          updated_at: string
+        }
+        Insert: {
+          calendar_type?: string
+          color?: string | null
+          created_at?: string
+          created_by: string
+          dealer_id: number
+          description?: string | null
+          external_calendar_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          last_sync_at?: string | null
+          name: string
+          sync_enabled?: boolean | null
+          sync_settings?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          calendar_type?: string
+          color?: string | null
+          created_at?: string
+          created_by?: string
+          dealer_id?: number
+          description?: string | null
+          external_calendar_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          last_sync_at?: string | null
+          name?: string
+          sync_enabled?: boolean | null
+          sync_settings?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      productivity_events: {
+        Row: {
+          all_day: boolean | null
+          attendees: Json | null
+          calendar_id: string
+          created_at: string
+          created_by: string
+          dealer_id: number
+          description: string | null
+          end_time: string
+          event_type: string | null
+          external_event_id: string | null
+          id: string
+          location: string | null
+          metadata: Json | null
+          order_id: string | null
+          recurrence_rule: string | null
+          start_time: string
+          title: string
+          todo_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          all_day?: boolean | null
+          attendees?: Json | null
+          calendar_id: string
+          created_at?: string
+          created_by: string
+          dealer_id: number
+          description?: string | null
+          end_time: string
+          event_type?: string | null
+          external_event_id?: string | null
+          id?: string
+          location?: string | null
+          metadata?: Json | null
+          order_id?: string | null
+          recurrence_rule?: string | null
+          start_time: string
+          title: string
+          todo_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          all_day?: boolean | null
+          attendees?: Json | null
+          calendar_id?: string
+          created_at?: string
+          created_by?: string
+          dealer_id?: number
+          description?: string | null
+          end_time?: string
+          event_type?: string | null
+          external_event_id?: string | null
+          id?: string
+          location?: string | null
+          metadata?: Json | null
+          order_id?: string | null
+          recurrence_rule?: string | null
+          start_time?: string
+          title?: string
+          todo_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "productivity_events_calendar_id_fkey"
+            columns: ["calendar_id"]
+            isOneToOne: false
+            referencedRelation: "productivity_calendars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productivity_events_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "productivity_todos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      productivity_todos: {
+        Row: {
+          assigned_to: string | null
+          category: string | null
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          dealer_id: number
+          description: string | null
+          due_date: string | null
+          id: string
+          metadata: Json | null
+          order_id: string | null
+          priority: string
+          recurring_config: Json | null
+          status: string
+          tags: Json | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          category?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          dealer_id: number
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          priority?: string
+          recurring_config?: Json | null
+          status?: string
+          tags?: Json | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          dealer_id?: number
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          priority?: string
+          recurring_config?: Json | null
+          status?: string
+          tags?: Json | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -4476,6 +4671,7 @@ export type Database = {
         | "management"
         | "chat"
         | "stock"
+        | "productivity"
       chat_conversation_type: "direct" | "group" | "channel" | "announcement"
       chat_message_type: "text" | "voice" | "file" | "image" | "system"
       chat_permission_level: "read" | "write" | "moderate" | "admin"
@@ -4669,6 +4865,7 @@ export const Constants = {
         "management",
         "chat",
         "stock",
+        "productivity",
       ],
       chat_conversation_type: ["direct", "group", "channel", "announcement"],
       chat_message_type: ["text", "voice", "file", "image", "system"],

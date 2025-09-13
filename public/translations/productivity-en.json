@@ -1,0 +1,59 @@
+{
+  "productivity": {
+    "title": "Productivity",
+    "description": "Manage your todos, tasks, reminders and calendar",
+    "dashboard": "Dashboard",
+    "todos": "Todos",
+    "calendar": "Calendar",
+    "createTodo": "Create Todo",
+    "createEvent": "Create Event",
+    "createCalendar": "Create Calendar",
+    "title": "Title",
+    "description": "Description",
+    "priority": {
+      "label": "Priority",
+      "low": "Low",
+      "medium": "Medium", 
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "status": {
+      "label": "Status",
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "dueDate": "Due Date",
+    "noTodos": "No todos found",
+    "noTodosFound": "No todos found",
+    "noEventsToday": "No events today",
+    "searchTodos": "Search todos...",
+    "filters": {
+      "all": "All"
+    },
+    "stats": {
+      "totalTodos": "Total Todos",
+      "completed": "completed",
+      "todayEvents": "Today's Events",
+      "tomorrow": "tomorrow",
+      "overdue": "Overdue",
+      "urgent": "urgent",
+      "completion": "Completion Rate"
+    },
+    "recentTodos": "Recent Todos",
+    "todayEvents": "Today's Events",
+    "eventTypes": {
+      "meeting": "Meeting",
+      "reminder": "Reminder",
+      "task": "Task",
+      "appointment": "Appointment",
+      "other": "Other"
+    },
+    "calendarTypes": {
+      "internal": "Internal",
+      "google": "Google Calendar",
+      "outlook": "Outlook Calendar"
+    }
+  }
+}
