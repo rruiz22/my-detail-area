@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe, Calendar } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -17,7 +17,8 @@ export function AppSidebar() {
   const { t } = useTranslation();
   const location = useLocation();
 
-  const mainNavItems = [{
+  // Core Operations
+  const coreNavItems = [{
     title: t('navigation.dashboard'),
     url: "/dashboard",
     icon: LayoutDashboard
@@ -34,13 +35,16 @@ export function AppSidebar() {
     url: "/recon",
     icon: RefreshCw
   }, {
-    title: t('navigation.get_ready'),
-    url: "/get-ready",
-    icon: Zap
-  }, {
     title: t('navigation.car_wash'),
     url: "/carwash",
     icon: Droplets
+  }];
+
+  // Workflow Management
+  const workflowNavItems = [{
+    title: t('navigation.get_ready'),
+    url: "/get-ready",
+    icon: Zap
   }, {
     title: t('navigation.stock'),
     url: "/stock",
@@ -49,7 +53,10 @@ export function AppSidebar() {
     title: t('navigation.detail_hub'),
     url: "/detail-hub",
     icon: Clock
-  }, {
+  }];
+
+  // Tools & Communication
+  const toolsNavItems = [{
     title: t('chat.title'),
     url: "/chat",
     icon: MessageCircle
@@ -57,10 +64,6 @@ export function AppSidebar() {
     title: t('contacts.title'),
     url: "/contacts",
     icon: Users2
-  }, {
-    title: t('profile.title'),
-    url: "/profile",
-    icon: User
   }, {
     title: t('vin_scanner_hub.title'),
     url: "/vin-scanner",
@@ -71,7 +74,19 @@ export function AppSidebar() {
     icon: Nfc
   }];
 
-  const secondaryNavItems = [{
+  // Productivity
+  const productivityNavItems = [{
+    title: t('navigation.productivity'),
+    url: "/productivity",
+    icon: Calendar
+  }, {
+    title: t('profile.title'),
+    url: "/profile",
+    icon: User
+  }];
+
+  // Management & Reports
+  const managementNavItems = [{
     title: t('dealerships.title'),
     url: "/dealerships",
     icon: Building2
@@ -79,10 +94,6 @@ export function AppSidebar() {
     title: t('navigation.management'),
     url: "/management",
     icon: Shield
-  }, {
-    title: 'Phase 3 Dashboard',
-    url: "/phase3",
-    icon: Sparkles
   }, {
     title: t('pages.user_management'),
     url: "/users",
@@ -97,11 +108,15 @@ export function AppSidebar() {
     icon: Settings
   }];
 
-  // Admin-only navigation items
-  const adminNavItems = isSystemAdmin(roles) ? [{
+  // System Admin - only navigation items
+  const systemAdminNavItems = isSystemAdmin(roles) ? [{
     title: t('navigation.landing_page'),
     url: "/landing",
     icon: Globe
+  }, {
+    title: 'Phase 3 Dashboard',
+    url: "/phase3",
+    icon: Sparkles
   }] : [];
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
@@ -135,11 +150,12 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
+        {/* Core Operations */}
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.operations')}</SidebarGroupLabel>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.core_operations')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNavItems.map(item => (
+              {coreNavItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   {collapsed ? (
                     <Tooltip>
@@ -174,11 +190,12 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* Workflow Management */}
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.management')}</SidebarGroupLabel>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.workflow_management')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {secondaryNavItems.map(item => (
+              {workflowNavItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   {collapsed ? (
                     <Tooltip>
@@ -213,12 +230,133 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {adminNavItems.length > 0 && (
+        {/* Tools & Communication */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.tools_communication')}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {toolsNavItems.map(item => (
+                <SidebarMenuItem key={item.title}>
+                  {collapsed ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton asChild>
+                          <NavLink 
+                            to={item.url} 
+                            className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                          >
+                            <item.icon className="w-4 h-4" />
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>{item.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={getNavClasses(item.url)}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Productivity */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.productivity_section')}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {productivityNavItems.map(item => (
+                <SidebarMenuItem key={item.title}>
+                  {collapsed ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton asChild>
+                          <NavLink 
+                            to={item.url} 
+                            className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                          >
+                            <item.icon className="w-4 h-4" />
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>{item.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={getNavClasses(item.url)}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Management & Reports */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.management_reports')}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {managementNavItems.map(item => (
+                <SidebarMenuItem key={item.title}>
+                  {collapsed ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton asChild>
+                          <NavLink 
+                            to={item.url} 
+                            className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                          >
+                            <item.icon className="w-4 h-4" />
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>{item.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={getNavClasses(item.url)}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* System Administration */}
+        {systemAdminNavItems.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.admin')}</SidebarGroupLabel>
+            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.system_admin')}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {adminNavItems.map(item => (
+                {systemAdminNavItems.map(item => (
                   <SidebarMenuItem key={item.title}>
                     {collapsed ? (
                       <Tooltip>

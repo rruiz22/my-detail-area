@@ -1629,6 +1629,8 @@
     "get_ready": "Get Ready",
     "car_wash": "Lavado de Autos",
     "detail_hub": "Centro de Detalle",
+    "stock": "Stock",
+    "productivity": "Productividad",
     "dealerships": "Concesionarios",
     "contacts": "Contactos",
     "management": "Administración",
@@ -1637,7 +1639,13 @@
     "operations": "Operaciones",
     "admin": "Administrador", 
     "landing_page": "Página de Inicio",
-    "sign_out": "Cerrar Sesión"
+    "sign_out": "Cerrar Sesión",
+    "core_operations": "Operaciones Principales",
+    "workflow_management": "Gestión de Flujo",
+    "tools_communication": "Herramientas y Comunicación",
+    "productivity_section": "Productividad",
+    "management_reports": "Gestión y Reportes",
+    "system_admin": "Administración del Sistema"
   },
   "layout": {
     "search_placeholder": "Buscar órdenes...",

@@ -1,4 +1,45 @@
 {
+  "due_date": {
+    "title": "Due Date & Time",
+    "date_label": "Due Date",
+    "time_label": "Due Time",
+    "date_placeholder": "Select future date",
+    "time_placeholder": "Select time (8AM-6PM)",
+    "validation": {
+      "future_date_required": "Due date must be in the future",
+      "business_hours_only": "Time must be between 8:00 AM and 6:00 PM",
+      "minimum_advance": "Must be at least 1 hour from now",
+      "invalid_time_slot": "Selected time slot is not available",
+      "no_slots_available": "No time slots available for selected date",
+      "same_day_notice": "Same day scheduling available until 6:00 PM"
+    }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "sales_orders": "Sales Orders",
+    "service_orders": "Service Orders",
+    "recon_orders": "Recon Orders",
+    "get_ready": "Get Ready",
+    "car_wash": "Car Wash",
+    "detail_hub": "Detail Hub",
+    "stock": "Stock",
+    "productivity": "Productivity",
+    "dealerships": "Dealerships",
+    "contacts": "Contacts",
+    "management": "Management",
+    "reports": "Reports",
+    "settings": "Settings",
+    "operations": "Operations",
+    "admin": "Admin",
+    "landing_page": "Landing Page",
+    "sign_out": "Sign Out",
+    "core_operations": "Core Operations",
+    "workflow_management": "Workflow Management", 
+    "tools_communication": "Tools & Communication",
+    "productivity_section": "Productivity",
+    "management_reports": "Management & Reports",
+    "system_admin": "System Administration"
+  },
   "productivity": {
     "title": "Productivity",
     "description": "Manage your todos, tasks, reminders and calendar",
@@ -78,5 +119,26 @@
       "urgent": "urgent",
       "completion": "Completion Rate"
     }
+  },
+  "chat": {
+    "title": "Chat"
+  },
+  "contacts": {
+    "title": "Contacts"
+  },
+  "profile": {
+    "title": "Profile"
+  },
+  "vin_scanner_hub": {
+    "title": "VIN Scanner"
+  },
+  "nfc_tracking": {
+    "title": "NFC Tracking"
+  },
+  "dealerships": {
+    "title": "Dealerships"
+  },
+  "pages": {
+    "user_management": "User Management"
   }
 }

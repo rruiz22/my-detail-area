@@ -1729,6 +1729,8 @@
     "get_ready": "Get Ready",
     "car_wash": "Lavagem de Carros",
     "detail_hub": "Central de Detalhamento",
+    "stock": "Estoque",
+    "productivity": "Produtividade",
     "dealerships": "Concessionárias",
     "contacts": "Contatos",
     "management": "Administração",
@@ -1737,7 +1739,13 @@
     "operations": "Operações",
     "admin": "Administrador",
     "landing_page": "Página Inicial", 
-    "sign_out": "Sair"
+    "sign_out": "Sair",
+    "core_operations": "Operações Principais",
+    "workflow_management": "Gestão de Fluxo",
+    "tools_communication": "Ferramentas e Comunicação",
+    "productivity_section": "Produtividade",
+    "management_reports": "Gestão e Relatórios",
+    "system_admin": "Administração do Sistema"
   },
   "layout": {
     "search_placeholder": "Buscar pedidos...",
