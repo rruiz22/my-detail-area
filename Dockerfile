@@ -8,8 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Clean install with specific npm version to avoid rollup issues
-RUN npm install --no-optional --legacy-peer-deps
+# Clean install with optional dependencies for rollup
+RUN npm ci --include=optional --legacy-peer-deps
 
 # Copy source code
 COPY . .

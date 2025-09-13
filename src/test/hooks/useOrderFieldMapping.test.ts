@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '../utils/test-utils';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
