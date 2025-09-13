@@ -63,20 +63,30 @@ export function NotificationAnalyticsDashboard({ dealerId }: NotificationAnalyti
 
   // Process analytics data
   const channelStats = getChannelStats();
-  const totalSent = Object.values(channelStats).reduce((sum, stat) => sum + stat.sent, 0);
-  const totalDelivered = Object.values(channelStats).reduce((sum, stat) => sum + stat.delivered, 0);
-  const totalFailed = Object.values(channelStats).reduce((sum, stat) => sum + stat.failed, 0);
+  
+  // Type the channel stats properly
+  interface ChannelStat {
+    sent: number;
+    delivered: number;
+    failed: number;
+  }
+  
+  const typedChannelStats = channelStats as Record<string, ChannelStat>;
+  
+  const totalSent = Object.values(typedChannelStats).reduce((sum, stat) => sum + (stat?.sent || 0), 0);
+  const totalDelivered = Object.values(typedChannelStats).reduce((sum, stat) => sum + (stat?.delivered || 0), 0);
+  const totalFailed = Object.values(typedChannelStats).reduce((sum, stat) => sum + (stat?.failed || 0), 0);
 
   const deliveryRate = totalSent > 0 ? (totalDelivered / totalSent) * 100 : 0;
   const failureRate = totalSent > 0 ? (totalFailed / totalSent) * 100 : 0;
 
   // Channel performance data for charts
-  const channelPerformanceData = Object.entries(channelStats).map(([channel, stats]) => ({
+  const channelPerformanceData = Object.entries(typedChannelStats).map(([channel, stats]) => ({
     channel: t(`notifications.channels.${channel}`),
-    sent: stats.sent,
-    delivered: stats.delivered,
-    failed: stats.failed,
-    deliveryRate: stats.sent > 0 ? (stats.delivered / stats.sent) * 100 : 0,
+    sent: stats?.sent || 0,
+    delivered: stats?.delivered || 0,
+    failed: stats?.failed || 0,
+    deliveryRate: (stats?.sent || 0) > 0 ? ((stats?.delivered || 0) / (stats?.sent || 0)) * 100 : 0,
     color: channelColors[channel as keyof typeof channelColors]
   }));
 

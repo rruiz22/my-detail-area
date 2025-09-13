@@ -1198,6 +1198,53 @@
     "contacts_delete": "Excluir Contatos",
     "contacts_admin": "Administração de Contatos"
   },
+  "notifications": {
+    "analytics": {
+      "title": "Análise de Notificações",
+      "description": "Monitore o desempenho e entrega de notificações",
+      "totalSent": "Total Enviado",
+      "deliveryRate": "Taxa de Entrega",
+      "failureRate": "Taxa de Falha",
+      "avgResponseTime": "Tempo Médio de Resposta",
+      "volume": "Volume",
+      "performance": "Desempenho",
+      "distribution": "Distribuição",
+      "trends": "Tendências",
+      "volumeByChannel": "Volume por Canal",
+      "volumeByChannelDescription": "Número de notificações enviadas por cada canal",
+      "deliveryRateByChannel": "Taxa de Entrega por Canal",
+      "deliveryRateByChannelDescription": "Porcentagem de notificações entregues com sucesso",
+      "channelDistribution": "Distribuição por Canal",
+      "channelDistributionDescription": "Proporção de notificações por canal",
+      "channelBreakdown": "Detalhamento por Canal",
+      "channelBreakdownDescription": "Estatísticas detalhadas de cada canal",
+      "notificationTrends": "Tendências de Notificações",
+      "notificationTrendsDescription": "Volume de notificações ao longo do tempo",
+      "sent": "Enviado",
+      "delivered": "Entregue",
+      "failed": "Falhado"
+    },
+    "channels": {
+      "sms": "SMS",
+      "email": "Email",
+      "push": "Push",
+      "in_app": "No App"
+    },
+    "preferences": {
+      "title": "Preferências de Notificação",
+      "description": "Configure como você deseja receber notificações",
+      "orderUpdates": "Atualizações de Pedidos",
+      "marketing": "Marketing",
+      "systemAlerts": "Alertas do Sistema",
+      "chatMessages": "Mensagens de Chat",
+      "enablePush": "Ativar Notificações Push",
+      "testNotification": "Testar Notificação",
+      "permissionDenied": "Permissão de notificação negada",
+      "permissionGranted": "Permissão de notificação concedida",
+      "testSent": "Notificação de teste enviada",
+      "testFailed": "Falha ao enviar notificação de teste"
+    }
+  },
   "filters": {
     "global_filters": "Filtros Globais",
     "clear": "Limpar",

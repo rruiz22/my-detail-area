@@ -9,12 +9,9 @@ interface GlobalChatWrapperProps {
 export function GlobalChatWrapper({ children }: GlobalChatWrapperProps) {
   const { currentDealership } = useAccessibleDealerships();
 
-  if (!currentDealership?.id) {
-    return <>{children}</>;
-  }
-
+  // Always provide the context, but with null dealerId when no dealership
   return (
-    <GlobalChatProvider dealerId={currentDealership.id}>
+    <GlobalChatProvider dealerId={currentDealership?.id || undefined}>
       {children}
     </GlobalChatProvider>
   );

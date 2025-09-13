@@ -56,7 +56,10 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
   const { usersPresence, myPresence } = useUserPresence(dealerId);
 
   const openContextualChat = async (entityType: string, entityId: string, participantId?: string) => {
-    if (!dealerId || !user?.id) return;
+    if (!dealerId || !user?.id) {
+      console.warn('Cannot open contextual chat: Missing dealerId or user');
+      return;
+    }
 
     try {
       // Create or find existing conversation
@@ -108,7 +111,10 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
   };
 
   const openDirectMessage = async (userId: string) => {
-    if (!dealerId || !user?.id) return;
+    if (!dealerId || !user?.id) {
+      console.warn('Cannot open direct message: Missing dealerId or user');
+      return;
+    }
 
     try {
       // Get user profile for naming
@@ -154,7 +160,10 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     entityType?: string, 
     entityId?: string
   ) => {
-    if (!dealerId) throw new Error('Dealer ID required for SMS');
+    if (!dealerId) {
+      console.warn('Cannot send SMS: Missing dealerId');
+      throw new Error('Dealer ID required for SMS');
+    }
 
     try {
       const { data, error } = await supabase.functions.invoke('enhanced-sms', {
