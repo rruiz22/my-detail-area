@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
-import { GlobalChatProvider } from "@/contexts/GlobalChatProvider";
+import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import SalesOrders from "./pages/SalesOrders";
@@ -49,7 +49,7 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <PermissionProvider>
-          <GlobalChatProvider>
+          <GlobalChatWrapper>
             <NotificationProvider>
             <Toaster />
             <Sonner />
@@ -99,8 +99,8 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
-          </NotificationProvider>
-          </GlobalChatProvider>
+           </NotificationProvider>
+           </GlobalChatWrapper>
         </PermissionProvider>
       </AuthProvider>
     </TooltipProvider>

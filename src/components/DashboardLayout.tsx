@@ -10,6 +10,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { useTranslation } from "react-i18next";
 import { SmartNotificationCenter } from "./notifications/SmartNotificationCenter";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
+import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -28,6 +29,7 @@ const getSavedSidebarState = (): boolean => {
 
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
   const initialSidebarState = getSavedSidebarState();
   const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarState);
   
@@ -65,7 +67,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             <div className="flex items-center gap-4">
               <LanguageSwitcher />
               <ThemeToggle />
-              <SmartNotificationCenter />
+              <SmartNotificationCenter dealerId={currentDealership?.id} />
             </div>
           </header>
 
