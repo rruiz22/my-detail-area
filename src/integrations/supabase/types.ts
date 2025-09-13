@@ -728,6 +728,50 @@ export type Database = {
           },
         ]
       }
+      dealer_notification_configs: {
+        Row: {
+          channels: Json
+          created_at: string | null
+          dealer_id: number
+          id: string
+          integrations: Json
+          rate_limits: Json
+          templates: Json
+          updated_at: string | null
+          workflows: Json
+        }
+        Insert: {
+          channels?: Json
+          created_at?: string | null
+          dealer_id: number
+          id?: string
+          integrations?: Json
+          rate_limits?: Json
+          templates?: Json
+          updated_at?: string | null
+          workflows?: Json
+        }
+        Update: {
+          channels?: Json
+          created_at?: string | null
+          dealer_id?: number
+          id?: string
+          integrations?: Json
+          rate_limits?: Json
+          templates?: Json
+          updated_at?: string | null
+          workflows?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_notification_configs_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: true
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_service_groups: {
         Row: {
           created_at: string
@@ -1751,6 +1795,65 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_analytics: {
+        Row: {
+          batch_id: string | null
+          channel: string
+          created_at: string | null
+          dealer_id: number
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          notification_id: string | null
+          notification_type: string
+          response_time_ms: number | null
+          template_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          batch_id?: string | null
+          channel: string
+          created_at?: string | null
+          dealer_id: number
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          notification_id?: string | null
+          notification_type: string
+          response_time_ms?: number | null
+          template_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          batch_id?: string | null
+          channel?: string
+          created_at?: string | null
+          dealer_id?: number
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          notification_id?: string | null
+          notification_type?: string
+          response_time_ms?: number | null
+          template_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_analytics_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_log: {
         Row: {
           channel: string
@@ -1840,6 +1943,192 @@ export type Database = {
             columns: ["workflow_id"]
             isOneToOne: false
             referencedRelation: "notification_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_queue: {
+        Row: {
+          attempts: number | null
+          batch_id: string | null
+          channels: string[]
+          created_at: string | null
+          dealer_id: number
+          entity_id: string | null
+          entity_type: string | null
+          error_message: string | null
+          id: string
+          last_attempt_at: string | null
+          max_attempts: number | null
+          metadata: Json | null
+          notification_data: Json
+          notification_type: string
+          priority: string | null
+          processed_at: string | null
+          scheduled_for: string | null
+          status: string | null
+          template_id: string | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number | null
+          batch_id?: string | null
+          channels?: string[]
+          created_at?: string | null
+          dealer_id: number
+          entity_id?: string | null
+          entity_type?: string | null
+          error_message?: string | null
+          id?: string
+          last_attempt_at?: string | null
+          max_attempts?: number | null
+          metadata?: Json | null
+          notification_data: Json
+          notification_type: string
+          priority?: string | null
+          processed_at?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          template_id?: string | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number | null
+          batch_id?: string | null
+          channels?: string[]
+          created_at?: string | null
+          dealer_id?: number
+          entity_id?: string | null
+          entity_type?: string | null
+          error_message?: string | null
+          id?: string
+          last_attempt_at?: string | null
+          max_attempts?: number | null
+          metadata?: Json | null
+          notification_data?: Json
+          notification_type?: string
+          priority?: string | null
+          processed_at?: string | null
+          scheduled_for?: string | null
+          status?: string | null
+          template_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_queue_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_rate_limits: {
+        Row: {
+          channel: string
+          count: number | null
+          created_at: string | null
+          dealer_id: number
+          id: string
+          limit_exceeded: boolean | null
+          time_window: string
+          updated_at: string | null
+          user_id: string | null
+          window_start: string
+        }
+        Insert: {
+          channel: string
+          count?: number | null
+          created_at?: string | null
+          dealer_id: number
+          id?: string
+          limit_exceeded?: boolean | null
+          time_window: string
+          updated_at?: string | null
+          user_id?: string | null
+          window_start: string
+        }
+        Update: {
+          channel?: string
+          count?: number | null
+          created_at?: string | null
+          dealer_id?: number
+          id?: string
+          limit_exceeded?: boolean | null
+          time_window?: string
+          updated_at?: string | null
+          user_id?: string | null
+          window_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_rate_limits_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_templates: {
+        Row: {
+          category: string | null
+          channels: Json
+          conditions: Json | null
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_system_template: boolean | null
+          name: string
+          template_type: string
+          updated_at: string | null
+          variables: Json | null
+          version: number | null
+        }
+        Insert: {
+          category?: string | null
+          channels?: Json
+          conditions?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system_template?: boolean | null
+          name: string
+          template_type: string
+          updated_at?: string | null
+          variables?: Json | null
+          version?: number | null
+        }
+        Update: {
+          category?: string | null
+          channels?: Json
+          conditions?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system_template?: boolean | null
+          name?: string
+          template_type?: string
+          updated_at?: string | null
+          variables?: Json | null
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_templates_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
             referencedColumns: ["id"]
           },
         ]
@@ -3733,6 +4022,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_contact_permissions_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_notification_preferences: {
+        Row: {
+          channel_preferences: Json
+          created_at: string | null
+          dealer_id: number
+          entity_subscriptions: Json | null
+          id: string
+          notification_sound: Json | null
+          priority_filters: Json | null
+          quiet_hours: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          channel_preferences?: Json
+          created_at?: string | null
+          dealer_id: number
+          entity_subscriptions?: Json | null
+          id?: string
+          notification_sound?: Json | null
+          priority_filters?: Json | null
+          quiet_hours?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          channel_preferences?: Json
+          created_at?: string | null
+          dealer_id?: number
+          entity_subscriptions?: Json | null
+          id?: string
+          notification_sound?: Json | null
+          priority_filters?: Json | null
+          quiet_hours?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notification_preferences_dealer_id_fkey"
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
