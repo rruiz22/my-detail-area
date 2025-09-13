@@ -9,8 +9,12 @@ interface GlobalChatWrapperProps {
 export function GlobalChatWrapper({ children }: GlobalChatWrapperProps) {
   const { currentDealership } = useAccessibleDealerships();
 
+  if (!currentDealership?.id) {
+    return <>{children}</>;
+  }
+
   return (
-    <GlobalChatProvider dealerId={currentDealership?.id}>
+    <GlobalChatProvider dealerId={currentDealership.id}>
       {children}
     </GlobalChatProvider>
   );

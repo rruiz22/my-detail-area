@@ -4228,6 +4228,10 @@ export type Database = {
           user_name: string
         }[]
       }
+      get_current_user_dealership: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -4571,6 +4575,10 @@ export type Database = {
       }
       is_system_admin: {
         Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_user_member_of_dealer: {
+        Args: { p_dealer_id: number }
         Returns: boolean
       }
       log_security_event: {
