@@ -67,7 +67,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             <div className="flex items-center gap-4">
               <LanguageSwitcher />
               <ThemeToggle />
-              <SmartNotificationCenter dealerId={currentDealership?.id} />
+              {currentDealership?.id ? <SmartNotificationCenter dealerId={currentDealership.id} /> : null}
             </div>
           </header>
 
@@ -101,7 +101,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         </div>
         
         {/* Floating Chat Bubble */}
-        <FloatingChatBubble />
+        {currentDealership?.id ? <FloatingChatBubble /> : null}
       </div>
     </SidebarProvider>
   );
