@@ -4374,6 +4374,10 @@ export type Database = {
         Args: { user_id?: string }
         Returns: boolean
       }
+      is_system_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       log_security_event: {
         Args: {
           p_dealer_id?: number
