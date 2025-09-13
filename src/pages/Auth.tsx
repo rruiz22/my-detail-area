@@ -47,8 +47,8 @@ export default function Auth() {
   // Redirect if already authenticated
   if (user) {
     const redirectTo = searchParams.get('redirect');
-    // If redirect parameter exists and is a valid app route, use it; otherwise default to /app
-    const destination = redirectTo && redirectTo.startsWith('/app') ? redirectTo : '/app';
+    // If redirect parameter exists and is a valid route, use it; otherwise default to /dashboard
+    const destination = redirectTo && redirectTo.startsWith('/') ? redirectTo : '/dashboard';
     return <Navigate to={destination} replace />;
   }
 

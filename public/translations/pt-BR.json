@@ -1735,6 +1735,8 @@
     "reports": "Relatórios",
     "settings": "Configurações",
     "operations": "Operações",
+    "admin": "Administrador",
+    "landing_page": "Página Inicial", 
     "sign_out": "Sair"
   },
   "layout": {

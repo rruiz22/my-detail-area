@@ -15,6 +15,18 @@ export const canViewPricing = (roles: UserRole[]): boolean => {
 };
 
 /**
+ * Check if user is system administrator
+ * System admins can access special features like the landing page
+ */
+export const isSystemAdmin = (roles: UserRole[]): boolean => {
+  return roles.some(role => 
+    role.role_name === 'system_admin' ||
+    role.role_name === 'dealer_admin' || 
+    role.role_name === 'detail_super_manager'
+  );
+};
+
+/**
  * Check if user has specific permission level for a module
  */
 export const hasPermissionLevel = (

@@ -20,7 +20,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   if (!user) {
     // Store the intended destination for post-auth redirect
     const intendedPath = location.pathname + location.search;
-    return <Navigate to={`/auth?redirect=${encodeURIComponent(intendedPath)}`} replace />;
+    return <Navigate to={`/?redirect=${encodeURIComponent(intendedPath)}`} replace />;
   }
 
   return <>{children}</>;

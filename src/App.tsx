@@ -60,8 +60,8 @@ const App = () => (
             >
               <Routes>
                 {/* Public routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
+                <Route path="/" element={<Auth />} />
+                <Route path="/landing" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 
                 {/* QR Code redirect route - no auth required */}
                 <Route path="/s/:slug" element={<QRRedirect />} />

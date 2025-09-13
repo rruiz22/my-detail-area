@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -8,9 +8,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePermissions } from "@/hooks/usePermissions";
+import { isSystemAdmin } from "@/utils/permissions";
 export function AppSidebar() {
   const { state, open } = useSidebar();
   const { user, signOut } = useAuth();
+  const { roles } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
 
@@ -93,6 +96,13 @@ export function AppSidebar() {
     url: "/settings",
     icon: Settings
   }];
+
+  // Admin-only navigation items
+  const adminNavItems = isSystemAdmin(roles) ? [{
+    title: t('navigation.landing_page'),
+    url: "/landing",
+    icon: Globe
+  }] : [];
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
   const handleSignOut = async () => {
@@ -202,6 +212,47 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {adminNavItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.admin')}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminNavItems.map(item => (
+                  <SidebarMenuItem key={item.title}>
+                    {collapsed ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton asChild>
+                            <NavLink 
+                              to={item.url} 
+                              className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                            >
+                              <item.icon className="w-4 h-4" />
+                            </NavLink>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          <p>{item.title}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <SidebarMenuButton asChild>
+                        <NavLink 
+                          to={item.url} 
+                          className={getNavClasses(item.url)}
+                        >
+                          <item.icon className="w-4 h-4 flex-shrink-0" />
+                          <span>{item.title}</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    )}
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="p-4">

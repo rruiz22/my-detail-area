@@ -1635,6 +1635,8 @@
     "reports": "Reportes",
     "settings": "Configuración",
     "operations": "Operaciones",
+    "admin": "Administrador", 
+    "landing_page": "Página de Inicio",
     "sign_out": "Cerrar Sesión"
   },
   "layout": {

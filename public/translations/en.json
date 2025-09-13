@@ -1747,6 +1747,8 @@
     "reports": "Reports",
     "settings": "Settings",
     "operations": "Operations",
+    "admin": "Admin",
+    "landing_page": "Landing Page",
     "sign_out": "Sign Out"
   },
   "layout": {
