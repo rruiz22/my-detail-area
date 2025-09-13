@@ -3,46 +3,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { toast } from 'sonner';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface ProductivityCalendar {
-  id: string;
-  dealer_id: number;
-  name: string;
-  description?: string;
-  color: string;
-  is_default: boolean;
-  calendar_type: string;
-  external_calendar_id?: string;
-  sync_settings: any;
-  sync_enabled: boolean;
-  last_sync_at?: string;
-  created_by: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ProductivityEvent {
-  id: string;
-  calendar_id: string;
-  dealer_id: number;
-  title: string;
-  description?: string;
-  start_time: string;
-  end_time: string;
-  all_day: boolean;
-  location?: string;
-  attendees: any;
-  event_type: string;
-  external_event_id?: string;
-  order_id?: string;
-  todo_id?: string;
-  recurrence_rule?: string;
-  metadata: any;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-}
+export type ProductivityCalendar = Database['public']['Tables']['productivity_calendars']['Row'];
+export type ProductivityEvent = Database['public']['Tables']['productivity_events']['Row'];
 
 export const useProductivityCalendars = () => {
   const [calendars, setCalendars] = useState<ProductivityCalendar[]>([]);
@@ -65,10 +29,7 @@ export const useProductivityCalendars = () => {
         .order('name');
 
       if (error) throw error;
-      setCalendars(data?.map(cal => ({
-        ...cal,
-        attendees: Array.isArray(cal.attendees) ? cal.attendees : []
-      })) || []);
+      setCalendars(data || []);
     } catch (err: any) {
       setError(err.message);
       toast.error('Failed to fetch calendars');
@@ -88,17 +49,14 @@ export const useProductivityCalendars = () => {
         .order('start_time');
 
       if (error) throw error;
-      setEvents(data?.map(event => ({
-        ...event,
-        attendees: Array.isArray(event.attendees) ? event.attendees : []
-      })) || []);
+      setEvents(data || []);
     } catch (err: any) {
       setError(err.message);
       toast.error('Failed to fetch events');
     }
   };
 
-  const createCalendar = async (calendarData: Partial<ProductivityCalendar>) => {
+  const createCalendar = async (calendarData: Omit<Database['public']['Tables']['productivity_calendars']['Insert'], 'dealer_id' | 'created_by'>) => {
     if (!user || !currentDealership) return;
 
     try {
@@ -122,7 +80,7 @@ export const useProductivityCalendars = () => {
     }
   };
 
-  const createEvent = async (eventData: Partial<ProductivityEvent>) => {
+  const createEvent = async (eventData: Omit<Database['public']['Tables']['productivity_events']['Insert'], 'dealer_id' | 'created_by'>) => {
     if (!user || !currentDealership) return;
 
     try {
@@ -146,7 +104,7 @@ export const useProductivityCalendars = () => {
     }
   };
 
-  const updateCalendar = async (id: string, updates: Partial<ProductivityCalendar>) => {
+  const updateCalendar = async (id: string, updates: Database['public']['Tables']['productivity_calendars']['Update']) => {
     try {
       const { data, error } = await supabase
         .from('productivity_calendars')
@@ -165,7 +123,7 @@ export const useProductivityCalendars = () => {
     }
   };
 
-  const updateEvent = async (id: string, updates: Partial<ProductivityEvent>) => {
+  const updateEvent = async (id: string, updates: Database['public']['Tables']['productivity_events']['Update']) => {
     try {
       const { data, error } = await supabase
         .from('productivity_events')

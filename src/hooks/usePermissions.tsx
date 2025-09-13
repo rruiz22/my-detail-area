@@ -14,7 +14,8 @@ export type AppModule =
   | 'settings'
   | 'dealerships'
   | 'users'
-  | 'management';
+  | 'management'
+  | 'productivity';
 
 export type PermissionLevel = 'none' | 'read' | 'write' | 'delete' | 'admin';
 

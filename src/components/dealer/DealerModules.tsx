@@ -19,7 +19,8 @@ import {
   Building2,
   Shield,
   MessageCircle,
-  Package
+  Package,
+  Calendar
 } from 'lucide-react';
 import type { AppModule } from '@/hooks/usePermissions';
 
@@ -46,7 +47,8 @@ const moduleConfig: Record<AppModule, { name: string; description: string; icon:
   settings: { name: 'Settings', description: 'system_configuration', icon: Shield, category: 'Administration' },
   dealerships: { name: 'Dealerships', description: 'manage_multiple_dealerships', icon: Building2, category: 'Administration' },
   users: { name: 'Users', description: 'user_management', icon: Users, category: 'Administration' },
-  management: { name: 'Management', description: 'advanced_management_tools', icon: Shield, category: 'Administration' }
+  management: { name: 'Management', description: 'advanced_management_tools', icon: Shield, category: 'Administration' },
+  productivity: { name: 'Productivity', description: 'task_calendar_productivity_tools', icon: Calendar, category: 'Operations' }
 };
 
 export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {

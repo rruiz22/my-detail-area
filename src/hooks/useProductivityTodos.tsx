@@ -3,26 +3,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { toast } from 'sonner';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface ProductivityTodo {
-  id: string;
-  dealer_id: number;
-  title: string;
-  description?: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  due_date?: string;
-  completed_at?: string;
-  assigned_to?: string;
-  created_by: string;
-  order_id?: string;
-  category: string;
-  tags: string[];
-  recurring_config: any;
-  metadata: any;
-  created_at: string;
-  updated_at: string;
-}
+export type ProductivityTodo = Database['public']['Tables']['productivity_todos']['Row'];
 
 export const useProductivityTodos = () => {
   const [todos, setTodos] = useState<ProductivityTodo[]>([]);
@@ -52,7 +35,7 @@ export const useProductivityTodos = () => {
     }
   };
 
-  const createTodo = async (todoData: Partial<ProductivityTodo>) => {
+  const createTodo = async (todoData: Omit<Database['public']['Tables']['productivity_todos']['Insert'], 'dealer_id' | 'created_by'>) => {
     if (!user || !currentDealership) return;
 
     try {
@@ -76,7 +59,7 @@ export const useProductivityTodos = () => {
     }
   };
 
-  const updateTodo = async (id: string, updates: Partial<ProductivityTodo>) => {
+  const updateTodo = async (id: string, updates: Database['public']['Tables']['productivity_todos']['Update']) => {
     try {
       const { data, error } = await supabase
         .from('productivity_todos')
@@ -116,9 +99,9 @@ export const useProductivityTodos = () => {
     if (!todo) return;
 
     const newStatus = todo.status === 'completed' ? 'pending' : 'completed';
-    const updates: Partial<ProductivityTodo> = {
+    const updates: Database['public']['Tables']['productivity_todos']['Update'] = {
       status: newStatus,
-      completed_at: newStatus === 'completed' ? new Date().toISOString() : undefined,
+      completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
     };
 
     await updateTodo(id, updates);
