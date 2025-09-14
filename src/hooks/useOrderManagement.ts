@@ -254,8 +254,8 @@ export const useOrderManagement = (activeTab: string) => {
     
     console.log(`🔄 refreshData called (${refreshCallCountRef.current}) - skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
     
-    // Prevent excessive calls (less than 1 second apart)
-    if (timeSinceLastRefresh < 1000 && refreshCallCountRef.current > 1) {
+    // Prevent excessive calls (less than 2 seconds apart) - more lenient for manual calls
+    if (timeSinceLastRefresh < 2000 && refreshCallCountRef.current > 1) {
       console.warn('⚠️ refreshData called too frequently, skipping to prevent loop');
       return;
     }
@@ -392,7 +392,7 @@ export const useOrderManagement = (activeTab: string) => {
         // Don't fail the order creation if QR generation fails
       }
       
-      await refreshData();
+      // Real-time subscription will handle the data update automatically
     } catch (error) {
       console.error('Error in createOrder:', error);
       throw error;
@@ -479,7 +479,7 @@ export const useOrderManagement = (activeTab: string) => {
       }
 
       console.log('Order deleted successfully');
-      await refreshData();
+      // Real-time subscription will handle the data update automatically
     } catch (error) {
       console.error('Error in deleteOrder:', error);
       throw error;
@@ -502,19 +502,19 @@ export const useOrderManagement = (activeTab: string) => {
     }
   }, [activeTab, filters, allOrders, filterOrders]);
 
-  // Real-time subscription for orders
+  // Real-time subscription for all orders (not just sales)
   useEffect(() => {
     if (!user) return;
 
     const channel = supabase
-      .channel('sales_orders_realtime')
+      .channel('all_orders_realtime')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'orders',
-          filter: 'order_type=eq.sales'
+          table: 'orders'
+          // No filter - listen to all order types
         },
         async (payload) => {
           realtimeUpdateCountRef.current += 1;
@@ -522,66 +522,42 @@ export const useOrderManagement = (activeTab: string) => {
           
           try {
             if (payload.eventType === 'INSERT') {
-              const newOrder = transformOrder(payload.new as any);
+              // Enrich the new order data just like refreshData does
+              const order = payload.new as any;
+              const newOrder = await enrichOrderData(order);
               
               // Update allOrders state
               setAllOrders(prevAllOrders => {
-                const exists = prevAllOrders.some(order => order.id === newOrder.id);
-                return exists ? prevAllOrders : [newOrder, ...prevAllOrders];
+                const exists = prevAllOrders.some(existingOrder => existingOrder.id === newOrder.id);
+                if (exists) return prevAllOrders;
+                return [newOrder, ...prevAllOrders];
               });
               
-              // Update tab counts incrementally
-              setTabCounts(prevCounts => ({
-                ...prevCounts,
-                [newOrder.status]: (prevCounts[newOrder.status as keyof typeof prevCounts] || 0) + 1
-              }));
-              
             } else if (payload.eventType === 'UPDATE') {
-              const updatedOrder = transformOrder(payload.new as any);
+              // Enrich the updated order data
+              const order = payload.new as any;
+              const updatedOrder = await enrichOrderData(order);
               
               // Update allOrders state
               setAllOrders(prevAllOrders => 
-                prevAllOrders.map(order => 
-                  order.id === updatedOrder.id ? updatedOrder : order
+                prevAllOrders.map(existingOrder => 
+                  existingOrder.id === updatedOrder.id ? updatedOrder : existingOrder
                 )
               );
               
-              // Recalculate tab counts if status changed
-              if (payload.old?.status !== payload.new?.status) {
-                setTabCounts(prevCounts => {
-                  const newCounts = { ...prevCounts };
-                  // Decrease old status count
-                  if (payload.old?.status) {
-                    newCounts[payload.old.status as keyof typeof newCounts] = 
-                      Math.max(0, (newCounts[payload.old.status as keyof typeof newCounts] || 0) - 1);
-                  }
-                  // Increase new status count
-                  if (payload.new?.status) {
-                    newCounts[payload.new.status as keyof typeof newCounts] = 
-                      (newCounts[payload.new.status as keyof typeof newCounts] || 0) + 1;
-                  }
-                  return newCounts;
-                });
-              }
-              
             } else if (payload.eventType === 'DELETE') {
-              // Update allOrders state
-              setAllOrders(prevAllOrders => 
-                prevAllOrders.filter(order => order.id !== payload.old.id)
-              );
-              
-              // Update tab counts decrementally
-              if (payload.old?.status) {
-                setTabCounts(prevCounts => ({
-                  ...prevCounts,
-                  [payload.old.status]: Math.max(0, (prevCounts[payload.old.status as keyof typeof prevCounts] || 0) - 1)
-                }));
+              const deletedId = payload.old?.id;
+              if (deletedId) {
+                // Update allOrders state
+                setAllOrders(prevAllOrders => 
+                  prevAllOrders.filter(order => order.id !== deletedId)
+                );
               }
             }
           } catch (error) {
             console.error('Error handling real-time update:', error);
-            // Fallback to full refresh only on error
-            refreshData();
+            // Fallback to full refresh only on error, but with debouncing
+            setTimeout(() => refreshData(), 1000);
           }
         }
       )
@@ -591,6 +567,47 @@ export const useOrderManagement = (activeTab: string) => {
       supabase.removeChannel(channel);
     };
   }, [user]);
+
+  // Helper function to enrich order data with related information
+  const enrichOrderData = useCallback(async (order: any): Promise<Order> => {
+    try {
+      // Fetch related data in parallel
+      const [dealershipsResult, userProfilesResult, dealerGroupsResult] = await Promise.all([
+        supabase.from('dealerships').select('id, name').eq('id', order.dealer_id).single(),
+        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.from('dealer_groups').select('id, name')
+      ]);
+
+      // Create lookup maps
+      const dealershipName = dealershipsResult.data?.name || 'Unknown Dealer';
+      const userMap = new Map(userProfilesResult.data?.map((u: any) => [
+        u.id, 
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
+      const groupMap = new Map(dealerGroupsResult.data?.map((g: any) => [g.id, g.name]) || []);
+
+      // Transform and enrich the order
+      const transformedOrder = transformOrder(order);
+      transformedOrder.dealershipName = dealershipName;
+      transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+      transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+      transformedOrder.assignedTo = order.assigned_group_id ? 
+        userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+      
+      return transformedOrder;
+    } catch (error) {
+      console.error('Error enriching order data:', error);
+      // Fallback to basic transformation
+      return transformOrder(order);
+    }
+  }, []);
+
+  // Recalculate tab counts whenever allOrders changes
+  useEffect(() => {
+    if (allOrders.length > 0) {
+      setTabCounts(calculateTabCounts(allOrders));
+    }
+  }, [allOrders, calculateTabCounts]);
 
   return {
     orders,

@@ -315,7 +315,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         // Don't fail the order creation if QR generation fails
       }
       
-      await refreshData();
+      // Real-time subscription will handle the data update automatically
     } catch (error) {
       console.error('Error in createOrder:', error);
       throw error;
@@ -386,7 +386,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
       }
 
       console.log('Car wash order deleted successfully');
-      await refreshData();
+      // Real-time subscription will handle the data update automatically
     } catch (error) {
       console.error('Error in deleteOrder:', error);
       throw error;

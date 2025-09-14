@@ -576,8 +576,8 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
           table: 'recon_t2l_metrics'
         },
         () => {
-          console.log('T2L metrics updated, refreshing data');
-          refreshData();
+          console.log('T2L metrics updated, data will refresh automatically via main subscription');
+          // Let the main useOrderManagement hook handle the refresh to avoid conflicts
         }
       )
       .subscribe();
