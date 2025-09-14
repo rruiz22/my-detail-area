@@ -1,10 +1,9 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import { Bell, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTranslation } from "react-i18next";
@@ -17,36 +16,12 @@ interface DashboardLayoutProps {
   title?: string;
 }
 
-// Synchronously read sidebar state before rendering (no async, no useEffect)
-const getSavedSidebarState = (): boolean => {
-  try {
-    const saved = localStorage.getItem('mda.ui.sidebar.open');
-    return saved !== null ? JSON.parse(saved) : true;
-  } catch {
-    return true; // Default to open if error
-  }
-};
-
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const { t } = useTranslation();
   const { currentDealership } = useAccessibleDealerships();
-  const initialSidebarState = getSavedSidebarState();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarState);
   
   return (
-    <SidebarProvider 
-      open={isSidebarOpen}
-      onOpenChange={(open) => {
-        try {
-          setIsSidebarOpen(open);
-          localStorage.setItem('mda.ui.sidebar.open', JSON.stringify(open));
-          console.log('💾 Sidebar state saved:', open);
-          console.log('🔄 Sidebar toggled to:', open ? 'OPEN' : 'CLOSED');
-        } catch (error) {
-          console.warn('Failed to save sidebar state:', error);
-        }
-      }}
-    >
+    <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         

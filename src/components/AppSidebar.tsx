@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
 import { isSystemAdmin } from "@/utils/permissions";
 export function AppSidebar() {
-  const { state, open } = useSidebar();
+  const { state, open, setOpen } = useSidebar();
   const { user, signOut } = useAuth();
   const { roles } = usePermissions();
   const { t } = useTranslation();
@@ -120,6 +120,7 @@ export function AppSidebar() {
   }] : [];
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
+  
   const handleSignOut = async () => {
     await signOut();
   };
