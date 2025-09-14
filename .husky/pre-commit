@@ -3,7 +3,7 @@
 
 # Translation coverage check
 echo "🔍 Checking translation coverage..."
-node scripts/translation-scanner.js
+node scripts/translation-scanner.cjs
 
 # Check if coverage is acceptable (80% minimum)
 if [ $? -ne 0 ]; then
