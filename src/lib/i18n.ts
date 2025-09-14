@@ -64,9 +64,9 @@ export const changeLanguage = async (language: string) => {
 };
 
 export const supportedLanguages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'pt-BR', name: 'Português (BR)', flag: '🇧🇷' },
+  { code: 'en', name: 'English', flag: 'EN' },
+  { code: 'es', name: 'Español', flag: 'ES' },
+  { code: 'pt-BR', name: 'Português (BR)', flag: 'BR' },
 ];
 
 export default i18n;
