@@ -19,8 +19,8 @@ interface QuickFilterBarProps {
   onFilterChange: (filter: string) => void;
   searchTerm: string;
   onSearchChange: (term: string) => void;
-  viewMode: 'kanban' | 'table';
-  onViewModeChange: (mode: 'kanban' | 'table') => void;
+  viewMode: 'kanban' | 'table' | 'calendar';
+  onViewModeChange: (mode: 'kanban' | 'table' | 'calendar') => void;
   showFilters?: boolean;
   onToggleFilters?: () => void;
 }
@@ -114,19 +114,28 @@ export function QuickFilterBar({
                 size="sm"
                 variant={viewMode === 'kanban' ? 'default' : 'ghost'}
                 onClick={() => onViewModeChange('kanban')}
-                className="h-8 px-3"
+                className="h-8 px-2 sm:px-3"
               >
-                <Kanban className="w-4 h-4 mr-2" />
-                Kanban
+                <Kanban className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Kanban</span>
               </Button>
               <Button
                 size="sm"
                 variant={viewMode === 'table' ? 'default' : 'ghost'}
                 onClick={() => onViewModeChange('table')}
-                className="h-8 px-3"
+                className="h-8 px-2 sm:px-3"
               >
-                <List className="w-4 h-4 mr-2" />
-                Table
+                <List className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Table</span>
+              </Button>
+              <Button
+                size="sm"
+                variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                onClick={() => onViewModeChange('calendar')}
+                className="h-8 px-2 sm:px-3"
+              >
+                <Calendar className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{t('common.calendar')}</span>
               </Button>
             </div>
 

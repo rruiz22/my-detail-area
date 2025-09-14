@@ -17,6 +17,7 @@ import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderPreviewPanel } from '@/components/sales/OrderPreviewPanel';
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
+import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 // Removed TABS - now using QuickFilterBar instead
 
@@ -101,6 +102,13 @@ export default function SalesOrders() {
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
+    setShowModal(true);
+  };
+
+  const handleCreateOrderWithDate = (selectedDate?: Date) => {
+    setSelectedOrder(null);
+    // If date is provided from calendar, we could pre-populate the due_date
+    // For now, just open the modal
     setShowModal(true);
   };
 
@@ -283,7 +291,7 @@ export default function SalesOrders() {
                 )}
               </div>
 
-              {/* Table/Kanban Content */}
+              {/* Table/Kanban/Calendar Content */}
               {viewMode === 'kanban' ? (
                 <OrderKanbanBoard
                   orders={filteredOrders}
@@ -291,6 +299,16 @@ export default function SalesOrders() {
                   onView={handleViewOrder}
                   onDelete={handleDeleteOrder}
                   onStatusChange={handleStatusChange}
+                />
+              ) : viewMode === 'calendar' ? (
+                <OrderCalendarView
+                  orders={filteredOrders}
+                  loading={loading}
+                  onEdit={handleEditOrder}
+                  onView={handleViewOrder}
+                  onDelete={handleDeleteOrder}
+                  onStatusChange={handleStatusChange}
+                  onCreateOrder={handleCreateOrderWithDate}
                 />
               ) : (
                 <OrderDataTable

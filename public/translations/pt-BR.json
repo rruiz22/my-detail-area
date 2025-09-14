@@ -2846,5 +2846,20 @@
     "deleting": "Excluindo...",
     "updating": "Atualizando...",
     "saving": "Salvando..."
+  },
+  "calendar": {
+    "month": "Mês",
+    "week": "Semana", 
+    "day": "Dia",
+    "today": "Hoje",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "agenda": "Agenda", 
+    "date": "Data",
+    "time": "Hora",
+    "event": "Evento",
+    "noEventsInRange": "Nenhum pedido neste intervalo de datas",
+    "showMore": "Mostrar mais",
+    "clickToCreateOrder": "Clique em um espaço vazio para criar um novo pedido"
   }
 }
