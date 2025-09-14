@@ -171,7 +171,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
           .update({
             name: formData.name,
             description: formData.description || null,
-            color: formData.color,
+            color: formData.color || null,
             icon: formData.icon || null
           })
           .eq('id', editingCategory.id);
@@ -189,7 +189,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
           .insert({
             name: formData.name,
             description: formData.description || null,
-            color: formData.color,
+            color: formData.color || null,
             icon: formData.icon || null,
             dealer_id: parseInt(dealerId),
             is_system_category: false
@@ -443,7 +443,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
                   <div className="flex items-center space-x-3">
                     <div 
                       className="w-5 h-5 rounded-full border-2 border-white shadow-sm" 
-                      style={{ backgroundColor: category.color }}
+                      style={{ backgroundColor: category.color || undefined }}
                     />
                     <div>
                       <CardTitle className="text-lg flex items-center gap-2">
