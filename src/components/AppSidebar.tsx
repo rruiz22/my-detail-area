@@ -125,10 +125,13 @@ export function AppSidebar() {
     await signOut();
   };
 
-  const handleNavClick = () => {
+  const handleNavClick = (url?: string) => {
     // Close mobile sidebar on navigation
     if (window.innerWidth < 768) {
       setOpen(false);
+    }
+    if (url) {
+      console.log('[Sidebar] click ->', url);
     }
   };
   const isActive = (path: string) => {
@@ -172,7 +175,7 @@ export function AppSidebar() {
                          <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                            onClick={handleNavClick}
+                            onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -187,7 +190,7 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                        onClick={handleNavClick}
+                        onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -214,7 +217,7 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                            onClick={handleNavClick}
+                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -229,7 +232,7 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                        onClick={handleNavClick}
+                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -256,7 +259,7 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                            onClick={handleNavClick}
+                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -271,7 +274,7 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                        onClick={handleNavClick}
+                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -298,7 +301,7 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                            onClick={handleNavClick}
+                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -313,7 +316,7 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                        onClick={handleNavClick}
+                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -340,7 +343,7 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                            onClick={handleNavClick}
+                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -355,7 +358,7 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                        onClick={handleNavClick}
+                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -383,7 +386,7 @@ export function AppSidebar() {
                              <NavLink 
                               to={item.url} 
                               className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                              onClick={handleNavClick}
+                               onClick={() => handleNavClick(item.url)}
                             >
                               <item.icon className="w-4 h-4" />
                             </NavLink>
@@ -398,7 +401,7 @@ export function AppSidebar() {
                          <NavLink 
                           to={item.url} 
                           className={getNavClasses(item.url)}
-                          onClick={handleNavClick}
+                          onClick={() => handleNavClick(item.url)}
                         >
                           <item.icon className="w-4 h-4 flex-shrink-0" />
                           <span>{item.title}</span>

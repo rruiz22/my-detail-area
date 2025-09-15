@@ -26,6 +26,11 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 export default function SalesOrders() {
   const { t } = useTranslation();
   
+  useEffect(() => {
+    console.log('[RouteMount] SalesOrders mounted');
+    return () => console.log('[RouteUnmount] SalesOrders unmounted');
+  }, []);
+  
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('sales_orders');
   const [viewMode, setViewMode] = useViewModePersistence('sales_orders');

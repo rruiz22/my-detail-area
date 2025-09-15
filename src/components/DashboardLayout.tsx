@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { NotificationBell } from "./notifications/NotificationBell";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
+import { useLocation } from "react-router-dom";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -19,7 +20,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const { t } = useTranslation();
   const { currentDealership } = useAccessibleDealerships();
-  
+  const location = useLocation();
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-background">
