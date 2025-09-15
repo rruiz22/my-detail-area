@@ -121,7 +121,7 @@ const KioskManager = () => {
               Add Kiosk
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="z-50 max-w-2xl max-h-[90vh] overflow-y-auto bg-background">
             <DialogHeader>
               <DialogTitle>Add New Kiosk</DialogTitle>
             </DialogHeader>
@@ -333,12 +333,12 @@ const KioskManager = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Select time" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="15">15 minutes</SelectItem>
-                      <SelectItem value="30">30 minutes</SelectItem>
-                      <SelectItem value="60">1 hour</SelectItem>
-                      <SelectItem value="0">Never</SelectItem>
-                    </SelectContent>
+                     <SelectContent className="z-50 bg-popover border-border">
+                       <SelectItem value="15">15 minutes</SelectItem>
+                       <SelectItem value="30">30 minutes</SelectItem>
+                       <SelectItem value="60">1 hour</SelectItem>
+                       <SelectItem value="0">Never</SelectItem>
+                     </SelectContent>
                   </Select>
                 </div>
               </CardContent>
@@ -367,12 +367,12 @@ const KioskManager = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Select limit" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="3">3 attempts</SelectItem>
-                      <SelectItem value="5">5 attempts</SelectItem>
-                      <SelectItem value="10">10 attempts</SelectItem>
-                      <SelectItem value="0">Unlimited</SelectItem>
-                    </SelectContent>
+                     <SelectContent className="z-50 bg-popover border-border">
+                       <SelectItem value="3">3 attempts</SelectItem>
+                       <SelectItem value="5">5 attempts</SelectItem>
+                       <SelectItem value="10">10 attempts</SelectItem>
+                       <SelectItem value="0">Unlimited</SelectItem>
+                     </SelectContent>
                   </Select>
                 </div>
               </CardContent>
