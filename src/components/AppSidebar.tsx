@@ -143,7 +143,7 @@ export function AppSidebar() {
   };
   return (
     <TooltipProvider>
-      <Sidebar collapsible="icon" className="border-r" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
+      <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
       <SidebarHeader className="p-4">
         <div className="flex items-center justify-center">
           {collapsed ? (

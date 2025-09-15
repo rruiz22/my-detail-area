@@ -27,7 +27,7 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
         
         <div className="flex-1 flex flex-col">
           {/* Sticky Header */}
-          <header className="sticky top-0 z-50 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
+          <header className="sticky top-0 z-40 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
             <div className="flex items-center gap-4">
               <SidebarTrigger />
               <div className="relative max-w-sm">
