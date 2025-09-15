@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, XCircle, Shield } from 'lucide-react';
+import { XCircle } from 'lucide-react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 // Security utility functions
 const sanitizeInput = (input: string) => {
@@ -33,14 +35,10 @@ const validatePassword = (password: string) => {
 };
 
 export default function Auth() {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [passwordValidation, setPasswordValidation] = useState(validatePassword(''));
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn } = useAuth();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
 
@@ -52,18 +50,11 @@ export default function Auth() {
     return <Navigate to={destination} replace />;
   }
 
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-    setPasswordValidation(validatePassword(value));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate inputs before submission
     const sanitizedEmail = sanitizeInput(email);
-    const sanitizedFirstName = sanitizeInput(firstName);
-    const sanitizedLastName = sanitizeInput(lastName);
     
     if (!validateEmail(sanitizedEmail)) {
       toast({
@@ -74,32 +65,25 @@ export default function Auth() {
       return;
     }
     
-    if (isSignUp && !passwordValidation.isValid) {
-      toast({
-        title: "Weak Password",
-        description: "Password must meet security requirements.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setLoading(true);
 
     try {
-      const { error } = isSignUp 
-        ? await signUp(sanitizedEmail, password, sanitizedFirstName, sanitizedLastName)
-        : await signIn(sanitizedEmail, password);
+      const { error } = await signIn(sanitizedEmail, password);
 
       if (error) {
+        let errorMessage = error.message;
+        
+        // Provide helpful error messages
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = "Invalid email or password. If you don't have an account, please contact your dealer for an invitation.";
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = "Please check your email and click the confirmation link before signing in.";
+        }
+        
         toast({
-          title: "Authentication Error",
-          description: error.message,
+          title: "Sign In Error",
+          description: errorMessage,
           variant: "destructive",
-        });
-      } else if (isSignUp) {
-        toast({
-          title: "Account Created",
-          description: "Please check your email to verify your account.",
         });
       }
     } catch (error) {
@@ -114,139 +98,106 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mb-4">
-            <h1 className="text-3xl font-bold text-primary mb-2">My Detail Area</h1>
-            <p className="text-muted-foreground text-sm">Dealership Operations Hub</p>
+    <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
+      {/* Top right controls */}
+      <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+
+      <div className="w-full max-w-lg animate-fade-in">
+        {/* Logo and Brand Section */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-primary rounded-2xl mb-6 shadow-elegant">
+            <div className="text-white text-2xl font-bold">M</div>
           </div>
-          <CardTitle className="text-2xl font-bold">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
-          </CardTitle>
-          <CardDescription>
-            {isSignUp 
-              ? 'Enter your details to create a new account' 
-              : 'Enter your credentials to access your account'
-            }
-          </CardDescription>
-          {isSignUp && (
-            <Alert className="mt-4 text-left">
-              <AlertDescription>
-                <strong>Para pruebas de administrador:</strong><br/>
-                Use: <code>admin@company.com</code> con cualquier contraseña para obtener permisos completos de administrador automáticamente.
-              </AlertDescription>
-            </Alert>
-          )}
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isSignUp && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(sanitizeInput(e.target.value))}
-                    maxLength={50}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(sanitizeInput(e.target.value))}
-                    maxLength={50}
-                    required
-                  />
-                </div>
+          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight">
+            My Detail Area
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Dealership Operations Hub
+          </p>
+        </div>
+
+        <Card className="card-enhanced border-0 bg-card/80 backdrop-blur-sm">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-2xl font-semibold text-foreground mb-2">
+              Welcome back
+            </CardTitle>
+            <CardDescription className="text-base text-muted-foreground">
+              Sign in to your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                  Email address
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(sanitizeInput(e.target.value))}
+                  maxLength={100}
+                  required
+                  className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
+                  placeholder="Enter your email address"
+                />
+                {email && !validateEmail(email) && (
+                  <Alert variant="destructive" className="py-2">
+                    <XCircle className="h-4 w-4" />
+                    <AlertDescription className="text-sm">
+                      Please enter a valid email address
+                    </AlertDescription>
+                  </Alert>
+                )}
               </div>
-            )}
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(sanitizeInput(e.target.value))}
-                maxLength={100}
-                required
-              />
-              {email && !validateEmail(email) && (
-                <Alert variant="destructive">
-                  <XCircle className="h-4 w-4" />
-                  <AlertDescription>Please enter a valid email address</AlertDescription>
-                </Alert>
-              )}
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => handlePasswordChange(e.target.value)}
-                required
-                minLength={8}
-              />
-              {isSignUp && password && (
-                <div className="space-y-2">
+              
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
+                  placeholder="Enter your password"
+                />
+              </div>
+              
+              <Button 
+                type="submit" 
+                className="w-full h-11 button-enhanced bg-gradient-primary hover:bg-gradient-primary/90 text-primary-foreground font-medium text-base" 
+                disabled={loading}
+              >
+                {loading ? (
                   <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4" />
-                    <span className="text-sm font-medium">Password Strength</span>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in...
                   </div>
-                  <div className="space-y-1 text-sm">
-                    <div className={`flex items-center gap-2 ${passwordValidation.checks.length ? 'text-green-600' : 'text-red-600'}`}>
-                      {passwordValidation.checks.length ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                      At least 8 characters
-                    </div>
-                    <div className={`flex items-center gap-2 ${passwordValidation.checks.uppercase ? 'text-green-600' : 'text-red-600'}`}>
-                      {passwordValidation.checks.uppercase ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                      One uppercase letter
-                    </div>
-                    <div className={`flex items-center gap-2 ${passwordValidation.checks.lowercase ? 'text-green-600' : 'text-red-600'}`}>
-                      {passwordValidation.checks.lowercase ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                      One lowercase letter
-                    </div>
-                    <div className={`flex items-center gap-2 ${passwordValidation.checks.number ? 'text-green-600' : 'text-red-600'}`}>
-                      {passwordValidation.checks.number ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                      One number
-                    </div>
-                    <div className={`flex items-center gap-2 ${passwordValidation.checks.special ? 'text-green-600' : 'text-red-600'}`}>
-                      {passwordValidation.checks.special ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                      One special character
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            </form>
             
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
-            </Button>
-          </form>
-          
-          <div className="mt-4 text-center">
-            <Button
-              variant="link"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm"
-            >
-              {isSignUp 
-                ? 'Already have an account? Sign in' 
-                : "Don't have an account? Sign up"
-              }
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don't have access? Contact your dealer administrator.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="text-center mt-8 text-sm text-muted-foreground">
+          <p>© 2024 My Detail Area. Dealership operations platform.</p>
+        </div>
+      </div>
     </div>
   );
 }

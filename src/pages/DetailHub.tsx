@@ -13,12 +13,12 @@ const DetailHub = () => {
     <DashboardLayout>
       <Routes>
         <Route index element={<DetailHubDashboard />} />
-        <Route path="/employees" element={<EmployeePortal />} />
-        <Route path="/timecard" element={<TimecardSystem />} />
-        <Route path="/invoices" element={<InvoiceCenter />} />
-        <Route path="/reports" element={<ReportsCenter />} />
-        <Route path="/kiosk" element={<PunchClockKiosk />} />
-        <Route path="/kiosk-manager" element={<KioskManager />} />
+        <Route path="employees" element={<EmployeePortal />} />
+        <Route path="timecard" element={<TimecardSystem />} />
+        <Route path="invoices" element={<InvoiceCenter />} />
+        <Route path="reports" element={<ReportsCenter />} />
+        <Route path="kiosk" element={<PunchClockKiosk />} />
+        <Route path="kiosk-manager" element={<KioskManager />} />
       </Routes>
     </DashboardLayout>
   );

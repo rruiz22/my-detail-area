@@ -40,7 +40,9 @@ export function EnhancedOrderDetailModal({
   onStatusChange
 }: EnhancedOrderDetailModalProps) {
   // Early return MUST be before any hooks to avoid Rules of Hooks violation
-  if (!order) return null;
+  if (!order) {
+    return null;
+  }
   
   const { t } = useTranslation();
   const [editingNotes, setEditingNotes] = useState(false);

@@ -156,7 +156,7 @@ export function InvitationAccept() {
       });
 
       // Redirect to dealership dashboard
-      navigate('/app');
+      navigate('/dashboard');
     } catch (err: any) {
       console.error('Error accepting invitation:', err);
       toast({
@@ -248,7 +248,7 @@ export function InvitationAccept() {
           <CardContent>
             <Button 
               className="w-full" 
-              onClick={() => navigate('/app')}
+              onClick={() => navigate('/dashboard')}
             >
               Ir al Dashboard
             </Button>
@@ -362,7 +362,7 @@ export function InvitationAccept() {
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={() => navigate('/app')}
+                onClick={() => navigate('/dashboard')}
                 disabled={accepting}
               >
                 Declinar

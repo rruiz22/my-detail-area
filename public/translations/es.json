@@ -2848,5 +2848,20 @@
     "deleting": "Eliminando...",
     "updating": "Actualizando...",
     "saving": "Guardando..."
+  },
+  "calendar": {
+    "month": "Mes",
+    "week": "Semana", 
+    "day": "Día",
+    "today": "Hoy",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "agenda": "Agenda", 
+    "date": "Fecha",
+    "time": "Hora",
+    "event": "Evento",
+    "noEventsInRange": "No hay órdenes en este rango de fechas",
+    "showMore": "Mostrar más",
+    "clickToCreateOrder": "Haga clic en un espacio vacío para crear una nueva orden"
   }
 }

@@ -42,13 +42,13 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
       setLoading(true);
       setError(null);
 
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
         throw new Error('User not authenticated');
       }
 
       const { data, error: fetchError } = await supabase.rpc('get_user_accessible_dealers', {
-        user_uuid: user.user.id
+        user_uuid: session.user.id
       });
 
       if (fetchError) {
