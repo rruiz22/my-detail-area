@@ -76,6 +76,7 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     }
+  },
   "sweetalert": {
     "confirm_delete": "Are you sure?",
     "delete_warning": "This action cannot be undone",

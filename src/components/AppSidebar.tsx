@@ -124,6 +124,13 @@ export function AppSidebar() {
   const handleSignOut = async () => {
     await signOut();
   };
+
+  const handleNavClick = () => {
+    // Close mobile sidebar on navigation
+    if (window.innerWidth < 768) {
+      setOpen(false);
+    }
+  };
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return currentPath === "/dashboard";
@@ -162,9 +169,10 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                          <NavLink 
+                         <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                            onClick={handleNavClick}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -176,9 +184,10 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                      <NavLink 
+                       <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
+                        onClick={handleNavClick}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -202,9 +211,10 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                          <NavLink 
+                           <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                            onClick={handleNavClick}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -216,9 +226,10 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                      <NavLink 
+                       <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
+                        onClick={handleNavClick}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -242,9 +253,10 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                          <NavLink 
+                           <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                            onClick={handleNavClick}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -256,9 +268,10 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                      <NavLink 
+                       <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
+                        onClick={handleNavClick}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -282,9 +295,10 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                          <NavLink 
+                           <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                            onClick={handleNavClick}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -296,9 +310,10 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                      <NavLink 
+                       <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
+                        onClick={handleNavClick}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -322,9 +337,10 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                          <NavLink 
+                           <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                            onClick={handleNavClick}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -336,9 +352,10 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                      <NavLink 
+                       <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
+                        onClick={handleNavClick}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -363,9 +380,10 @@ export function AppSidebar() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <SidebarMenuButton asChild>
-                            <NavLink 
+                             <NavLink 
                               to={item.url} 
                               className={`${getNavClasses(item.url)} sidebar-icon-centered`}
+                              onClick={handleNavClick}
                             >
                               <item.icon className="w-4 h-4" />
                             </NavLink>
@@ -377,9 +395,10 @@ export function AppSidebar() {
                       </Tooltip>
                     ) : (
                       <SidebarMenuButton asChild>
-                        <NavLink 
+                         <NavLink 
                           to={item.url} 
                           className={getNavClasses(item.url)}
+                          onClick={handleNavClick}
                         >
                           <item.icon className="w-4 h-4 flex-shrink-0" />
                           <span>{item.title}</span>
