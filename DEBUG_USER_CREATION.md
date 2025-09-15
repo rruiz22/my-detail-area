@@ -23,7 +23,7 @@
 ### Step 1: Test the Application
 1. Go to: **http://localhost:8081/**
 2. Login to the application
-3. Navigate to: **Users** section (/app/users)
+3. Navigate to: **Users** section (/users)
 4. Click "Add New User"
 
 ### Step 2: Expected Behavior
@@ -33,7 +33,7 @@
 
 ### Step 3: Creating Dealerships First
 If you get "dealership not found" errors:
-1. Go to **Dealerships** section (/app/dealerships)
+1. Go to **Dealerships** section (/dealerships)
 2. Create at least one dealership
 3. Then retry user creation
 
