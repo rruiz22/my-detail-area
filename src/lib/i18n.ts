@@ -18,7 +18,7 @@ i18n
 // Dynamically load translation files
 const loadLanguage = async (language: string) => {
   try {
-    const response = await fetch(`/translations/${language}.json`);
+    const response = await fetch(`/translations/${language}.json?v=${Date.now()}` as string, { cache: 'no-store' });
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
