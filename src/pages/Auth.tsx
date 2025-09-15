@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, XCircle, Shield } from 'lucide-react';
+import { XCircle } from 'lucide-react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 // Security utility functions
 const sanitizeInput = (input: string) => {
@@ -97,6 +99,12 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
+      {/* Top right controls */}
+      <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-lg animate-fade-in">
         {/* Logo and Brand Section */}
         <div className="text-center mb-8">
@@ -116,19 +124,9 @@ export default function Auth() {
             <CardTitle className="text-2xl font-semibold text-foreground mb-2">
               Welcome back
             </CardTitle>
-            <CardDescription className="text-base text-muted-foreground mb-6">
+            <CardDescription className="text-base text-muted-foreground">
               Sign in to your account
             </CardDescription>
-            
-            <Alert className="text-left border-accent/20 bg-accent/5">
-              <div className="flex items-start space-x-2">
-                <Shield className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                <AlertDescription className="text-sm leading-relaxed">
-                  <strong className="text-accent">Access by invitation only</strong><br/>
-                  New users must be invited by a dealer administrator. Contact your dealer to request access to the system.
-                </AlertDescription>
-              </div>
-            </Alert>
           </CardHeader>
           <CardContent className="pt-0">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -189,7 +187,7 @@ export default function Auth() {
             
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Need access? Contact your dealer administrator to request an invitation.
+                Don't have access? Contact your dealer administrator.
               </p>
             </div>
           </CardContent>
@@ -197,7 +195,7 @@ export default function Auth() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-muted-foreground">
-          <p>© 2024 My Detail Area. Invitation-only access for dealership operations.</p>
+          <p>© 2024 My Detail Area. Dealership operations platform.</p>
         </div>
       </div>
     </div>
