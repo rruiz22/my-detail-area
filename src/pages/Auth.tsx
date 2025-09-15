@@ -33,14 +33,10 @@ const validatePassword = (password: string) => {
 };
 
 export default function Auth() {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [passwordValidation, setPasswordValidation] = useState(validatePassword(''));
-  const { user, signIn, signUp } = useAuth();
+  const { user, signIn } = useAuth();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
 
@@ -52,18 +48,11 @@ export default function Auth() {
     return <Navigate to={destination} replace />;
   }
 
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-    setPasswordValidation(validatePassword(value));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate inputs before submission
     const sanitizedEmail = sanitizeInput(email);
-    const sanitizedFirstName = sanitizeInput(firstName);
-    const sanitizedLastName = sanitizeInput(lastName);
     
     if (!validateEmail(sanitizedEmail)) {
       toast({
@@ -74,32 +63,25 @@ export default function Auth() {
       return;
     }
     
-    if (isSignUp && !passwordValidation.isValid) {
-      toast({
-        title: "Weak Password",
-        description: "Password must meet security requirements.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setLoading(true);
 
     try {
-      const { error } = isSignUp 
-        ? await signUp(sanitizedEmail, password, sanitizedFirstName, sanitizedLastName)
-        : await signIn(sanitizedEmail, password);
+      const { error } = await signIn(sanitizedEmail, password);
 
       if (error) {
+        let errorMessage = error.message;
+        
+        // Provide helpful error messages
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = "Invalid email or password. If you don't have an account, please contact your dealer for an invitation.";
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = "Please check your email and click the confirmation link before signing in.";
+        }
+        
         toast({
-          title: "Authentication Error",
-          description: error.message,
+          title: "Sign In Error",
+          description: errorMessage,
           variant: "destructive",
-        });
-      } else if (isSignUp) {
-        toast({
-          title: "Account Created",
-          description: "Please check your email to verify your account.",
         });
       }
     } catch (error) {
@@ -132,63 +114,24 @@ export default function Auth() {
         <Card className="card-enhanced border-0 bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-semibold text-foreground mb-2">
-              {isSignUp ? 'Create your account' : 'Welcome back'}
+              Welcome back
             </CardTitle>
-            <CardDescription className="text-base text-muted-foreground">
-              {isSignUp 
-                ? 'Get started with your new account' 
-                : 'Sign in to your account'
-              }
+            <CardDescription className="text-base text-muted-foreground mb-6">
+              Sign in to your account
             </CardDescription>
-            {isSignUp && (
-              <Alert className="mt-6 text-left border-accent/20 bg-accent/5">
-                <div className="flex items-start space-x-2">
-                  <Shield className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                  <AlertDescription className="text-sm leading-relaxed">
-                    <strong className="text-accent">Para pruebas de administrador:</strong><br/>
-                    Use <code className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">admin@company.com</code> con cualquier contraseña para obtener permisos completos de administrador automáticamente.
-                  </AlertDescription>
-                </div>
-              </Alert>
-            )}
+            
+            <Alert className="text-left border-accent/20 bg-accent/5">
+              <div className="flex items-start space-x-2">
+                <Shield className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                <AlertDescription className="text-sm leading-relaxed">
+                  <strong className="text-accent">Access by invitation only</strong><br/>
+                  New users must be invited by a dealer administrator. Contact your dealer to request access to the system.
+                </AlertDescription>
+              </div>
+            </Alert>
           </CardHeader>
           <CardContent className="pt-0">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {isSignUp && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
-                      First Name
-                    </Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(sanitizeInput(e.target.value))}
-                      maxLength={50}
-                      required
-                      className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
-                      placeholder="Enter your first name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
-                      Last Name
-                    </Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(sanitizeInput(e.target.value))}
-                      maxLength={50}
-                      required
-                      className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
-                      placeholder="Enter your last name"
-                    />
-                  </div>
-                </div>
-              )}
-              
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">
                   Email address
@@ -221,42 +164,11 @@ export default function Auth() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={8}
                   className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
-                  placeholder={isSignUp ? "Create a strong password" : "Enter your password"}
+                  placeholder="Enter your password"
                 />
-                {isSignUp && password && (
-                  <div className="space-y-3 mt-4 p-4 bg-muted/30 rounded-lg border border-border/50">
-                    <div className="flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-accent" />
-                      <span className="text-sm font-medium text-foreground">Password Requirements</span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-2 text-sm">
-                      <div className={`flex items-center gap-2 transition-colors ${passwordValidation.checks.length ? 'text-success' : 'text-muted-foreground'}`}>
-                        {passwordValidation.checks.length ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                        At least 8 characters
-                      </div>
-                      <div className={`flex items-center gap-2 transition-colors ${passwordValidation.checks.uppercase ? 'text-success' : 'text-muted-foreground'}`}>
-                        {passwordValidation.checks.uppercase ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                        One uppercase letter
-                      </div>
-                      <div className={`flex items-center gap-2 transition-colors ${passwordValidation.checks.lowercase ? 'text-success' : 'text-muted-foreground'}`}>
-                        {passwordValidation.checks.lowercase ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                        One lowercase letter
-                      </div>
-                      <div className={`flex items-center gap-2 transition-colors ${passwordValidation.checks.number ? 'text-success' : 'text-muted-foreground'}`}>
-                        {passwordValidation.checks.number ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                        One number
-                      </div>
-                      <div className={`flex items-center gap-2 transition-colors ${passwordValidation.checks.special ? 'text-success' : 'text-muted-foreground'}`}>
-                        {passwordValidation.checks.special ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                        One special character
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
               
               <Button 
@@ -267,32 +179,25 @@ export default function Auth() {
                 {loading ? (
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
+                    Signing in...
                   </div>
                 ) : (
-                  isSignUp ? 'Create Account' : 'Sign In'
+                  'Sign In'
                 )}
               </Button>
             </form>
             
             <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground mb-2">
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+              <p className="text-sm text-muted-foreground">
+                Need access? Contact your dealer administrator to request an invitation.
               </p>
-              <Button
-                variant="link"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-accent hover:text-accent/80 font-medium p-0 h-auto"
-              >
-                {isSignUp ? 'Sign in instead' : 'Create account'}
-              </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-muted-foreground">
-          <p>© 2024 My Detail Area. Secure dealership operations.</p>
+          <p>© 2024 My Detail Area. Invitation-only access for dealership operations.</p>
         </div>
       </div>
     </div>
