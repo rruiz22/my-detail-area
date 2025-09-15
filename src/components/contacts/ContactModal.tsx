@@ -72,7 +72,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
   const isEditing = !!contact;
 
   const [formData, setFormData] = useState<ContactFormData>({
-    dealership_id: dealerships.length > 0 ? dealerships[0]?.id || 0 : 0,
+    dealership_id: dealerships.length > 0 ? dealerships[0].id : 0,
     first_name: '',
     last_name: '',
     email: '',
@@ -108,7 +108,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
       });
     } else {
       setFormData({
-        dealership_id: dealerships.length > 0 ? dealerships[0]?.id || 0 : 0,
+        dealership_id: dealerships.length > 0 ? dealerships[0].id : 0,
         first_name: '',
         last_name: '',
         email: '',

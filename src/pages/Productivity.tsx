@@ -7,16 +7,11 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { ProductivityTodos } from "@/components/productivity/ProductivityTodos";
 import { ProductivityCalendar } from "@/components/productivity/ProductivityCalendar";
 import { ProductivityDashboard } from "@/components/productivity/ProductivityDashboard";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Productivity() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("dashboard");
-
-  useEffect(() => {
-    console.log('[RouteMount] Productivity mounted');
-    return () => console.log('[RouteUnmount] Productivity unmounted');
-  }, []);
 
   return (
     <DashboardLayout>

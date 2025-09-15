@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
@@ -36,62 +36,13 @@ import { InvitationAccept } from "./pages/InvitationAccept";
 import NotFound from "./pages/NotFound";
 import { TooltipTester } from "./components/debug/TooltipTester";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
-import { RouteLogger } from "@/components/debug/RouteLogger";
 
-    console.log('🚀 App starting up with improved navigation');
-    console.log('📱 Current URL:', window.location.href);
-    console.log('🔄 Router should handle navigation correctly');
+// Load order migration utility for development
+if (import.meta.env.DEV) {
+  import('@/utils/migrateOrders');
+}
 
 const queryClient = new QueryClient();
-
-const AppRoutes = () => {
-  const location = useLocation();
-  return (
-    <>
-      <RouteLogger />
-      <Routes location={location} key={location.pathname}>
-        {/* Add logging for route debugging */}
-        <Route path="/" element={<Auth />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/landing" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-        
-        {/* QR Code redirect route - no auth required */}
-        <Route path="/s/:slug" element={<QRRedirect />} />
-        
-        {/* Public invitation acceptance route */}
-        <Route path="/invitation/:token" element={<InvitationAccept />} />
-
-        {/* Protected application routes - Root level */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/sales" element={<ProtectedRoute><SalesOrders /></ProtectedRoute>} />
-        <Route path="/service" element={<ProtectedRoute><ServiceOrders /></ProtectedRoute>} />
-        <Route path="/recon" element={<ProtectedRoute><ReconOrders /></ProtectedRoute>} />
-        <Route path="/carwash" element={<ProtectedRoute><CarWash /></ProtectedRoute>} />
-        <Route path="/stock" element={<ProtectedRoute><Stock /></ProtectedRoute>} />
-        <Route path="/productivity" element={<ProtectedRoute><Productivity /></ProtectedRoute>} />
-        <Route path="/detail-hub/*" element={<ProtectedRoute><DetailHub /></ProtectedRoute>} />
-        <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
-        <Route path="/vin-scanner" element={<ProtectedRoute><VinScanner /></ProtectedRoute>} />
-        <Route path="/nfc-tracking" element={<ProtectedRoute><NFCTracking /></ProtectedRoute>} />
-        <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-        <Route path="/dealerships" element={<ProtectedRoute><Dealerships /></ProtectedRoute>} />
-        <Route path="/dealers/:id" element={<ProtectedRoute><DealerView /></ProtectedRoute>} />
-        <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
-        <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
-        <Route path="/phase3" element={<ProtectedRoute><Phase3Dashboard /></ProtectedRoute>} />
-        <Route path="/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
-        <Route path="/debug/tooltips" element={<ProtectedRoute><TooltipTester /></ProtectedRoute>} />
-        <Route path="/debug/duplicate-tooltips" element={<ProtectedRoute><DuplicateTooltipTester /></ProtectedRoute>} />
-        
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
-  );
-};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -108,7 +59,45 @@ const App = () => (
                 v7_relativeSplatPath: true
               }}
             >
-                <AppRoutes />
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Auth />} />
+                <Route path="/landing" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                
+                {/* QR Code redirect route - no auth required */}
+                <Route path="/s/:slug" element={<QRRedirect />} />
+                
+                {/* Public invitation acceptance route */}
+                <Route path="/invitation/:token" element={<InvitationAccept />} />
+                
+                {/* Protected application routes - Root level */}
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/sales" element={<ProtectedRoute><SalesOrders /></ProtectedRoute>} />
+                <Route path="/service" element={<ProtectedRoute><ServiceOrders /></ProtectedRoute>} />
+                <Route path="/recon" element={<ProtectedRoute><ReconOrders /></ProtectedRoute>} />
+                <Route path="/carwash" element={<ProtectedRoute><CarWash /></ProtectedRoute>} />
+                <Route path="/stock" element={<ProtectedRoute><Stock /></ProtectedRoute>} />
+                <Route path="/productivity" element={<ProtectedRoute><Productivity /></ProtectedRoute>} />
+                <Route path="/detail-hub/*" element={<ProtectedRoute><DetailHub /></ProtectedRoute>} />
+                <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                <Route path="/vin-scanner" element={<ProtectedRoute><VinScanner /></ProtectedRoute>} />
+                <Route path="/nfc-tracking" element={<ProtectedRoute><NFCTracking /></ProtectedRoute>} />
+                <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                <Route path="/dealerships" element={<ProtectedRoute><Dealerships /></ProtectedRoute>} />
+                <Route path="/dealers/:id" element={<ProtectedRoute><DealerView /></ProtectedRoute>} />
+                <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+                <Route path="/management" element={<ProtectedRoute><Management /></ProtectedRoute>} />
+                <Route path="/phase3" element={<ProtectedRoute><Phase3Dashboard /></ProtectedRoute>} />
+                <Route path="/get-ready/*" element={<ProtectedRoute><GetReady /></ProtectedRoute>} />
+                <Route path="/debug/tooltips" element={<ProtectedRoute><TooltipTester /></ProtectedRoute>} />
+                <Route path="/debug/duplicate-tooltips" element={<ProtectedRoute><DuplicateTooltipTester /></ProtectedRoute>} />
+                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </BrowserRouter>
            </NotificationProvider>
            </GlobalChatWrapper>

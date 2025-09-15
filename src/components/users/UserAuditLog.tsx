@@ -38,8 +38,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
   });
 
   const handleFilterChange = (key: string, value: string) => {
-    const normalizedValue = value === 'all' ? '' : value;
-    const newFilters = { ...filters, [key]: normalizedValue };
+    const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     fetchAuditEvents(newFilters);
   };
@@ -169,7 +168,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
                 <SelectValue placeholder="Event Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Events</SelectItem>
+                <SelectItem value="">All Events</SelectItem>
                 <SelectItem value="user_created">User Created</SelectItem>
                 <SelectItem value="user_updated">User Updated</SelectItem>
                 <SelectItem value="user_deleted">User Deleted</SelectItem>
@@ -183,7 +182,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
                 <SelectValue placeholder="Entity Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Entities</SelectItem>
+                <SelectItem value="">All Entities</SelectItem>
                 <SelectItem value="user">User</SelectItem>
                 <SelectItem value="invitation">Invitation</SelectItem>
                 <SelectItem value="membership">Membership</SelectItem>

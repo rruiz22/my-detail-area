@@ -23,11 +23,7 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2 px-3 py-2 h-auto">
-          <img 
-            src={currentLanguage.flag} 
-            alt={currentLanguage.name}
-            className="w-4 h-3 object-cover rounded-sm"
-          />
+          <span className="text-lg">{currentLanguage.flag}</span>
           <span className="text-sm font-medium hidden sm:block">{currentLanguage.code.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
@@ -38,11 +34,7 @@ export function LanguageSwitcher() {
             onClick={() => handleLanguageChange(language.code)}
             className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted transition-colors"
           >
-            <img 
-              src={language.flag} 
-              alt={language.name}
-              className="w-5 h-4 object-cover rounded-sm flex-shrink-0"
-            />
+            <span className="text-xl">{language.flag}</span>
             <span className="text-sm font-medium">{language.name}</span>
             {i18n.language === language.code && (
               <span className="ml-auto text-primary text-sm font-semibold">✓</span>

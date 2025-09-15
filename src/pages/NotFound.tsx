@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";
@@ -27,10 +27,10 @@ const NotFound = () => {
             Go Back
           </Button>
           <Button asChild>
-            <Link to="/dashboard">
+            <a href="/">
               <Home className="h-4 w-4 mr-2" />
               Back to Dashboard
-            </Link>
+            </a>
           </Button>
         </div>
       </div>

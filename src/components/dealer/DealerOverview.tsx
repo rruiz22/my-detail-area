@@ -67,7 +67,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
 
       if (error) throw error;
 
-      if (data && data.length > 0 && data[0]) {
+      if (data && data.length > 0) {
         setKpis(data[0]);
       }
     } catch (error: any) {

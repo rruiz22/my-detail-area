@@ -89,6 +89,14 @@ export function DepartmentOverview() {
     navigate(`/${departmentId}?action=create`);
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'text-warning';
+      case 'inProgress': return 'text-primary';
+      case 'completed': return 'text-success';
+      default: return 'text-muted-foreground';
+    }
+  };
 
   const getEfficiencyColor = (efficiency: number) => {
     if (efficiency >= 90) return 'text-success';

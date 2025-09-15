@@ -16,7 +16,6 @@ import { ReconCostingSystem } from '@/components/recon/ReconCostingSystem';
 import { ReconApprovalWorkflow } from '@/components/recon/ReconApprovalWorkflow';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
@@ -60,13 +59,6 @@ export default function ReconOrders() {
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
-    setShowModal(true);
-  };
-
-  const handleCreateOrderWithDate = (selectedDate?: Date) => {
-    setSelectedOrder(null);
-    // If date is provided from calendar, we could pre-populate the due_date
-    // For now, just open the modal
     setShowModal(true);
   };
 
@@ -229,16 +221,6 @@ export default function ReconOrders() {
                   onDelete={handleDeleteOrder}
                   onStatusChange={handleStatusChange}
                 />
-              ) : viewMode === 'calendar' ? (
-                <OrderCalendarView
-                  orders={filteredOrders as any[]}
-                  loading={loading}
-                  onEdit={(order: any) => handleEditOrder(orders.find(o => o.id === order.id)!)}
-                  onView={(order: any) => handleViewOrder(orders.find(o => o.id === order.id)!)}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                  onCreateOrder={handleCreateOrderWithDate}
-                />
               ) : (
                 <OrderDataTable
                   orders={filteredOrders as any[]}
@@ -265,16 +247,14 @@ export default function ReconOrders() {
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}
-        {previewOrder && (
-          <EnhancedOrderDetailModal
-            order={previewOrder}
-            open={true}
-            onClose={() => setPreviewOrder(null)}
-            onEdit={handleEditOrder}
-            onDelete={handleDeleteOrder}
-            onStatusChange={handleStatusChange}
-          />
-        )}
+        <EnhancedOrderDetailModal
+          order={previewOrder}
+          open={!!previewOrder}
+          onClose={() => setPreviewOrder(null)}
+          onEdit={handleEditOrder}
+          onDelete={handleDeleteOrder}
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </DashboardLayout>
   );

@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import { Badge } from '@/components/ui/badge';
 
 export default function CarWash() {
@@ -40,13 +39,6 @@ export default function CarWash() {
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
-    setShowModal(true);
-  };
-
-  const handleCreateOrderWithDate = (selectedDate?: Date) => {
-    setSelectedOrder(null);
-    // If date is provided from calendar, we could pre-populate the due_date
-    // For now, just open the modal
     setShowModal(true);
   };
 
@@ -156,28 +148,16 @@ export default function CarWash() {
           onViewModeChange={setViewMode}
         />
 
-        {/* Main Content - Orders Table/Calendar */}
+        {/* Main Content - Orders Table */}
         <div className="space-y-6">
-          {viewMode === 'calendar' ? (
-            <OrderCalendarView
-              orders={filteredOrders}
-              loading={loading}
-              onEdit={handleEditOrder}
-              onView={handleViewOrder}
-              onDelete={handleDeleteOrder}
-              onStatusChange={handleStatusChange}
-              onCreateOrder={handleCreateOrderWithDate}
-            />
-          ) : (
-            <OrderDataTable
-              orders={filteredOrders}
-              loading={loading}
-              onEdit={handleEditOrder}
-              onDelete={handleDeleteOrder}
-              onView={handleViewOrder}
-              tabType={activeFilter}
-            />
-          )}
+          <OrderDataTable
+            orders={filteredOrders}
+            loading={loading}
+            onEdit={handleEditOrder}
+            onDelete={handleDeleteOrder}
+            onView={handleViewOrder}
+            tabType={activeFilter}
+          />
         </div>
 
         {/* Modals */}
@@ -191,16 +171,14 @@ export default function CarWash() {
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}
-        {previewOrder && (
-          <EnhancedOrderDetailModal
-            order={previewOrder}
-            open={true}
-            onClose={() => setPreviewOrder(null)}
-            onEdit={handleEditOrder}
-            onDelete={handleDeleteOrder}
-            onStatusChange={handleStatusChange}
-          />
-        )}
+        <EnhancedOrderDetailModal
+          order={previewOrder}
+          open={!!previewOrder}
+          onClose={() => setPreviewOrder(null)}
+          onEdit={handleEditOrder}
+          onDelete={handleDeleteOrder}
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </DashboardLayout>
   );

@@ -318,7 +318,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
         // Don't fail the order creation if QR generation fails
       }
       
-      // Real-time subscription will handle the data update automatically
+      await refreshData();
     } catch (error) {
       console.error('Error in createOrder:', error);
       throw error;
@@ -380,7 +380,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
       }
 
       console.log('Service order deleted successfully');
-      // Real-time subscription will handle the data update automatically
+      await refreshData();
     } catch (error) {
       console.error('Error in deleteOrder:', error);
       throw error;

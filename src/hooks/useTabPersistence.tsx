@@ -72,13 +72,13 @@ export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableClo
 }
 
 /**
- * Hook for view mode persistence (kanban vs table vs calendar) with cloud sync
+ * Hook for view mode persistence (kanban vs table) with cloud sync
  */
 export function useViewModePersistence(pageKey: PageKey, enableCloudSync = false) {
   if (enableCloudSync) {
     const [viewMode, setViewMode] = useCloudSyncedState(
       `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
-      'kanban' as 'kanban' | 'table' | 'calendar',
+      'kanban' as 'kanban' | 'table',
       {
         priority: 'important',
         autoSync: true,
@@ -92,10 +92,10 @@ export function useViewModePersistence(pageKey: PageKey, enableCloudSync = false
   // Fallback to instant persistence without cloud sync
   const [viewMode, setViewMode] = useInstantPersistedState(
     `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
-    'kanban' as 'kanban' | 'table' | 'calendar',
+    'kanban' as 'kanban' | 'table',
     {
-      validateValue: (value): value is 'kanban' | 'table' | 'calendar' => 
-        value === 'kanban' || value === 'table' || value === 'calendar'
+      validateValue: (value): value is 'kanban' | 'table' => 
+        value === 'kanban' || value === 'table'
     }
   );
 

@@ -97,7 +97,7 @@ CMD serve -s dist -l $PORT
 
 - **Aplicación principal**: `https://your-app-name.up.railway.app`
 - **Landing page**: `https://your-app-name.up.railway.app/` (Index)
-- **Dashboard**: `https://your-app-name.up.railway.app/dashboard` (Protegido)
+- **Dashboard**: `https://your-app-name.up.railway.app/app` (Protegido)
 - **Autenticación**: `https://your-app-name.up.railway.app/auth`
 
 ---
@@ -106,7 +106,7 @@ CMD serve -s dist -l $PORT
 
 ### 🏢 **Professional Routing Structure**
 - `/` - Landing page profesional (Index)
-- `/dashboard/*` - Rutas protegidas de la aplicación
+- `/app/*` - Rutas protegidas de la aplicación
 - `/auth` - Sistema de autenticación
 - `/s/:slug` - Redirects de QR codes
 
@@ -156,7 +156,7 @@ Después del deployment, verificar:
 
 - [ ] Landing page carga correctamente en `/`
 - [ ] Autenticación funciona en `/auth` 
-- [ ] Dashboard protegido accesible en `/dashboard`
+- [ ] Dashboard protegido accesible en `/app`
 - [ ] Persistencia de tabs funciona
 - [ ] Traducciones se muestran correctamente
 - [ ] Theme Studio funciona en Settings

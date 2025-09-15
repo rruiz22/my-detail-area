@@ -468,13 +468,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       <SelectTrigger className="border-input bg-background">
                         <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
                       </SelectTrigger>
-                       <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
-                         {dealerships.map((dealer: any) => (
-                           <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                             {dealer.name} - {dealer.city}, {dealer.state}
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
+                      <SelectContent className="bg-popover border border-border max-h-[200px]">
+                        {dealerships.map((dealer: any) => (
+                          <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                            {dealer.name} - {dealer.city}, {dealer.state}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
 
@@ -494,13 +494,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                               : t('sales_orders.select_assignee')
                         } />
                       </SelectTrigger>
-                       <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
-                         {assignedUsers.map((user: any) => (
-                           <SelectItem key={user.id} value={user.id}>
-                             {user.name} - {user.email}
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
+                      <SelectContent className="bg-popover border border-border max-h-[200px]">
+                        {assignedUsers.map((user: any) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.name} - {user.email}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
 
@@ -530,11 +530,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         <SelectTrigger className="border-input bg-background">
                           <SelectValue />
                         </SelectTrigger>
-                         <SelectContent className="z-50 bg-popover border-border">
-                           <SelectItem value="normal">{t('orders.priority_normal')}</SelectItem>
-                           <SelectItem value="high">{t('orders.priority_high')}</SelectItem>
-                           <SelectItem value="urgent">{t('orders.priority_urgent')}</SelectItem>
-                         </SelectContent>
+                        <SelectContent className="bg-popover border border-border">
+                          <SelectItem value="normal">{t('orders.priority_normal')}</SelectItem>
+                          <SelectItem value="high">{t('orders.priority_high')}</SelectItem>
+                          <SelectItem value="urgent">{t('orders.priority_urgent')}</SelectItem>
+                        </SelectContent>
                       </Select>
                     </div>
                   </div>

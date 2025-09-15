@@ -18,7 +18,7 @@ i18n
 // Dynamically load translation files
 const loadLanguage = async (language: string) => {
   try {
-    const response = await fetch(`/translations/${language}.json?v=${Date.now()}` as string, { cache: 'no-store' });
+    const response = await fetch(`/translations/${language}.json`);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -64,9 +64,9 @@ export const changeLanguage = async (language: string) => {
 };
 
 export const supportedLanguages = [
-  { code: 'en', name: 'English', flag: 'https://flagcdn.com/w20/us.png' },
-  { code: 'es', name: 'Español', flag: 'https://flagcdn.com/w20/es.png' },
-  { code: 'pt-BR', name: 'Português (BR)', flag: 'https://flagcdn.com/w20/br.png' },
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'pt-BR', name: 'Português (BR)', flag: '🇧🇷' },
 ];
 
 export default i18n;

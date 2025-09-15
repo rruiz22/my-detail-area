@@ -89,13 +89,13 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
                   <SelectTrigger>
                     <SelectValue placeholder={t('filters.all_statuses')} />
                   </SelectTrigger>
-                   <SelectContent className="z-50 bg-popover border-border">
-                     <SelectItem value="all">{t('filters.all_statuses')}</SelectItem>
-                     <SelectItem value="pending">{t('filters.pending')}</SelectItem>
-                     <SelectItem value="in_progress">{t('filters.in_progress')}</SelectItem>
-                     <SelectItem value="completed">{t('filters.completed')}</SelectItem>
-                     <SelectItem value="cancelled">{t('filters.cancelled')}</SelectItem>
-                   </SelectContent>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="all">{t('filters.all_statuses')}</SelectItem>
+                    <SelectItem value="pending">{t('filters.pending')}</SelectItem>
+                    <SelectItem value="in_progress">{t('filters.in_progress')}</SelectItem>
+                    <SelectItem value="completed">{t('filters.completed')}</SelectItem>
+                    <SelectItem value="cancelled">{t('filters.cancelled')}</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -109,11 +109,11 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
                   <SelectTrigger>
                     <SelectValue placeholder={t('filters.all_clients')} />
                   </SelectTrigger>
-                   <SelectContent className="z-50 bg-popover border-border">
-                     <SelectItem value="all">{t('filters.all_clients')}</SelectItem>
-                     <SelectItem value="client1">Cliente 1</SelectItem>
-                     <SelectItem value="client2">Cliente 2</SelectItem>
-                   </SelectContent>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="all">{t('filters.all_clients')}</SelectItem>
+                    <SelectItem value="client1">Cliente 1</SelectItem>
+                    <SelectItem value="client2">Cliente 2</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -127,12 +127,12 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
                   <SelectTrigger>
                     <SelectValue placeholder={t('filters.all_services')} />
                   </SelectTrigger>
-                   <SelectContent className="z-50 bg-popover border-border">
-                     <SelectItem value="all">{t('filters.all_services')}</SelectItem>
-                     <SelectItem value="detail">{t('filters.detail')}</SelectItem>
-                     <SelectItem value="wash">{t('filters.wash')}</SelectItem>
-                     <SelectItem value="recon">{t('filters.recon')}</SelectItem>
-                   </SelectContent>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="all">{t('filters.all_services')}</SelectItem>
+                    <SelectItem value="detail">{t('filters.detail')}</SelectItem>
+                    <SelectItem value="wash">{t('filters.wash')}</SelectItem>
+                    <SelectItem value="recon">{t('filters.recon')}</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
             </div>
@@ -170,13 +170,13 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
                   <SelectTrigger>
                     <SelectValue placeholder={t('filters.all_makes')} />
                   </SelectTrigger>
-                   <SelectContent className="z-50 bg-popover border-border">
-                     <SelectItem value="all">{t('filters.all_makes')}</SelectItem>
-                     <SelectItem value="honda">Honda</SelectItem>
-                     <SelectItem value="toyota">Toyota</SelectItem>
-                     <SelectItem value="ford">Ford</SelectItem>
-                     <SelectItem value="chevrolet">Chevrolet</SelectItem>
-                   </SelectContent>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="all">{t('filters.all_makes')}</SelectItem>
+                    <SelectItem value="honda">Honda</SelectItem>
+                    <SelectItem value="toyota">Toyota</SelectItem>
+                    <SelectItem value="ford">Ford</SelectItem>
+                    <SelectItem value="chevrolet">Chevrolet</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -190,12 +190,12 @@ export function OrderFilters({ filters, onFiltersChange, onClose }: FilterProps)
                   <SelectTrigger>
                     <SelectValue placeholder={t('filters.all_models')} />
                   </SelectTrigger>
-                   <SelectContent className="z-50 bg-popover border-border">
-                     <SelectItem value="all">{t('filters.all_models')}</SelectItem>
-                     <SelectItem value="accord">Accord</SelectItem>
-                     <SelectItem value="camry">Camry</SelectItem>
-                     <SelectItem value="f150">F-150</SelectItem>
-                   </SelectContent>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="all">{t('filters.all_models')}</SelectItem>
+                    <SelectItem value="accord">Accord</SelectItem>
+                    <SelectItem value="camry">Camry</SelectItem>
+                    <SelectItem value="f150">F-150</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
             </div>
