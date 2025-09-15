@@ -39,11 +39,8 @@ export function EnhancedOrderDetailModal({
   onDelete,
   onStatusChange
 }: EnhancedOrderDetailModalProps) {
-  console.log('🔍 EnhancedOrderDetailModal render:', { order: !!order, open });
-  
   // Early return MUST be before any hooks to avoid Rules of Hooks violation
   if (!order) {
-    console.log('❌ No order provided to EnhancedOrderDetailModal');
     return null;
   }
   

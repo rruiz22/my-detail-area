@@ -191,14 +191,16 @@ export default function CarWash() {
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}
-        <EnhancedOrderDetailModal
-          order={previewOrder}
-          open={!!previewOrder}
-          onClose={() => setPreviewOrder(null)}
-          onEdit={handleEditOrder}
-          onDelete={handleDeleteOrder}
-          onStatusChange={handleStatusChange}
-        />
+        {previewOrder && (
+          <EnhancedOrderDetailModal
+            order={previewOrder}
+            open={true}
+            onClose={() => setPreviewOrder(null)}
+            onEdit={handleEditOrder}
+            onDelete={handleDeleteOrder}
+            onStatusChange={handleStatusChange}
+          />
+        )}
       </div>
     </DashboardLayout>
   );
