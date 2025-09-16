@@ -35,7 +35,7 @@ const validateEmail = (email: string) => {
 };
 
 const validatePhone = (phone: string) => {
-  const phoneRegex = /^[\+]?[1-9]?[\d\s\-\(\)]{7,15}$/;
+  const phoneRegex = /^[+]?[1-9]?[\d\s\-()]{7,15}$/;
   return phoneRegex.test(phone);
 };
 

@@ -5,6 +5,71 @@ import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import type { Database } from '@/integrations/supabase/types';
 
+// Enhanced database types
+type SupabaseOrderRow = Database['public']['Tables']['orders']['Row'];
+type SupabaseOrderInsert = Database['public']['Tables']['orders']['Insert'];
+type SupabaseOrderUpdate = Database['public']['Tables']['orders']['Update'];
+
+// Service item interface
+interface OrderService {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  category?: string;
+  duration?: number;
+}
+
+// Order form data for creation/updates
+interface OrderFormData {
+  customer_name: string;
+  customer_email?: string;
+  customer_phone?: string;
+  vehicle_year?: number;
+  vehicle_make?: string;
+  vehicle_model?: string;
+  vehicle_info?: string;
+  vehicle_vin?: string;
+  stock_number?: string;
+  order_type?: string;
+  priority?: string;
+  due_date?: string;
+  sla_deadline?: string;
+  scheduled_date?: string;
+  scheduled_time?: string;
+  assigned_group_id?: string;
+  assigned_contact_id?: string;
+  dealer_id?: number;
+  notes?: string;
+  internal_notes?: string;
+  salesperson?: string;
+  total_amount?: number;
+  services?: OrderService[];
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+}
+
+// Filter types
+interface DateRange {
+  from: Date | null;
+  to: Date | null;
+}
+
+interface OrderFilters {
+  search: string;
+  status: string;
+  make: string;
+  model: string;
+  dateRange: DateRange;
+}
+
+// Database error handling
+interface DatabaseError {
+  message: string;
+  details?: string;
+  hint?: string;
+  code?: string;
+}
+
 // Use Supabase types but create a unified interface for components
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
 
@@ -26,7 +91,7 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   totalAmount?: number;
-  services?: any[];
+  services?: OrderService[];
   orderType?: string;
   assignedTo?: string;
   notes?: string;
@@ -39,9 +104,9 @@ export interface Order {
 }
 
 // Transform Supabase order to component order
-const transformOrder = (supabaseOrder: any): Order => {
+const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
   // Helper function to safely get field values
-  const getFieldValue = (value: any, defaultValue?: any) => {
+  const getFieldValue = <T>(value: T | null | undefined, defaultValue?: T): T | undefined => {
     if (value === null || value === undefined) return defaultValue;
     return value;
   };
@@ -81,7 +146,7 @@ const transformOrder = (supabaseOrder: any): Order => {
     
     // Financial and services
     totalAmount: getFieldValue(supabaseOrder.total_amount),
-    services: Array.isArray(supabaseOrder.services) ? supabaseOrder.services : [],
+    services: Array.isArray(supabaseOrder.services) ? supabaseOrder.services as OrderService[] : [],
     
     // Assignment - will be populated by refreshData with proper names
     assignedTo: 'Unassigned', // Will be overwritten in refreshData
@@ -114,7 +179,7 @@ export const useOrderManagement = (activeTab: string) => {
     week: 0,
     services: 0,
   });
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<OrderFilters>({
     search: '',
     status: '',
     make: '',
@@ -158,7 +223,7 @@ export const useOrderManagement = (activeTab: string) => {
     };
   }, []);
 
-  const filterOrders = useMemo(() => (allOrders: Order[], tab: string, currentFilters: any) => {
+  const filterOrders = useMemo(() => (allOrders: Order[], tab: string, currentFilters: OrderFilters) => {
     let filtered = [...allOrders];
 
     // Apply tab-specific filtering
@@ -341,11 +406,11 @@ export const useOrderManagement = (activeTab: string) => {
     }
   }, [filterOrders, calculateTabCounts, user, activeTab, filters]);
 
-  const updateFilters = useCallback((newFilters: any) => {
-    setFilters(newFilters);
+  const updateFilters = useCallback((newFilters: Partial<OrderFilters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
   }, []);
 
-  const createOrder = useCallback(async (orderData: any) => {
+  const createOrder = useCallback(async (orderData: OrderFormData) => {
     if (!user) return;
     
     setLoading(true);
@@ -401,7 +466,7 @@ export const useOrderManagement = (activeTab: string) => {
     }
   }, [user, generateQR]);
 
-  const updateOrder = useCallback(async (orderId: string, orderData: any) => {
+  const updateOrder = useCallback(async (orderId: string, orderData: Partial<OrderFormData>) => {
     if (!user) return;
     
     setLoading(true);
@@ -524,12 +589,12 @@ export const useOrderManagement = (activeTab: string) => {
         },
         async (payload) => {
           realtimeUpdateCountRef.current += 1;
-          console.log(`📡 Real-time update ${realtimeUpdateCountRef.current} received:`, payload.eventType, (payload.new as any)?.id || (payload.old as any)?.id);
+          console.log(`📡 Real-time update ${realtimeUpdateCountRef.current} received:`, payload.eventType, (payload.new as SupabaseOrderRow)?.id || (payload.old as SupabaseOrderRow)?.id);
           
           try {
             if (payload.eventType === 'INSERT') {
               // Enrich the new order data just like refreshData does
-              const order = payload.new as any;
+              const order = payload.new as SupabaseOrderRow;
               const newOrder = await enrichOrderData(order);
               
               // Update allOrders state
@@ -541,7 +606,7 @@ export const useOrderManagement = (activeTab: string) => {
               
             } else if (payload.eventType === 'UPDATE') {
               // Enrich the updated order data
-              const order = payload.new as any;
+              const order = payload.new as SupabaseOrderRow;
               const updatedOrder = await enrichOrderData(order);
               
               // Update allOrders state
@@ -552,7 +617,7 @@ export const useOrderManagement = (activeTab: string) => {
               );
               
             } else if (payload.eventType === 'DELETE') {
-              const deletedId = payload.old?.id;
+              const deletedId = (payload.old as SupabaseOrderRow)?.id;
               if (deletedId) {
                 // Update allOrders state
                 setAllOrders(prevAllOrders => 
@@ -575,7 +640,7 @@ export const useOrderManagement = (activeTab: string) => {
   }, [user]);
 
   // Helper function to enrich order data with related information
-  const enrichOrderData = useCallback(async (order: any): Promise<Order> => {
+  const enrichOrderData = useCallback(async (order: SupabaseOrderRow): Promise<Order> => {
     try {
       // Fetch related data in parallel
       const [dealershipsResult, userProfilesResult, dealerGroupsResult] = await Promise.all([
@@ -586,11 +651,11 @@ export const useOrderManagement = (activeTab: string) => {
 
       // Create lookup maps
       const dealershipName = dealershipsResult.data?.name || 'Unknown Dealer';
-      const userMap = new Map(userProfilesResult.data?.map((u: any) => [
-        u.id, 
+      const userMap = new Map(userProfilesResult.data?.map((u) => [
+        u.id,
         `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
       ]) || []);
-      const groupMap = new Map(dealerGroupsResult.data?.map((g: any) => [g.id, g.name]) || []);
+      const groupMap = new Map(dealerGroupsResult.data?.map((g) => [g.id, g.name]) || []);
 
       // Transform and enrich the order
       const transformedOrder = transformOrder(order);

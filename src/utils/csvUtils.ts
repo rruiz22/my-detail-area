@@ -101,7 +101,7 @@ export function detectSeparator(csvContent: string): string {
           score += 1;
           
           // Bonus for common header patterns
-          if (index === 0 && /^[a-zA-Z][a-zA-Z\s\(\)0-9]*$/.test(trimmed)) {
+          if (index === 0 && /^[a-zA-Z][a-zA-Z\s()0-9]*$/.test(trimmed)) {
             score += 2;
           }
         }

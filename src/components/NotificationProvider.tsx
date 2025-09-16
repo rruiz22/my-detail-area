@@ -1,14 +1,6 @@
-import { createContext, useContext, useCallback, ReactNode } from 'react';
+import { useCallback, ReactNode } from 'react';
 import { toast } from '@/hooks/use-toast';
-
-interface NotificationContextType {
-  showSuccess: (message: string, title?: string) => void;
-  showError: (message: string, title?: string) => void;
-  showInfo: (message: string, title?: string) => void;
-  showWarning: (message: string, title?: string) => void;
-}
-
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+import { NotificationContext } from '@/hooks/useNotifications';
 
 interface NotificationProviderProps {
   children: ReactNode;
@@ -61,10 +53,4 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   );
 }
 
-export function useNotifications() {
-  const context = useContext(NotificationContext);
-  if (context === undefined) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
-  }
-  return context;
-}
+// Hook moved to @/hooks/useNotifications.ts for better separation

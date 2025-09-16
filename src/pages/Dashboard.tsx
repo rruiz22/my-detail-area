@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TrendingUp, Clock, CheckCircle, AlertCircle, DollarSign, Plus, Users, Settings, BarChart3, Zap } from "lucide-react";
 import { getDashboardMetrics, mockOrders } from "@/lib/mockData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { useNotifications } from "@/components/NotificationProvider";
+import { useNotifications } from "@/hooks/useNotifications";
 import dealershipHero from "@/assets/dealership-hero.jpg";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
