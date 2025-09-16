@@ -7,7 +7,7 @@ import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import { Badge } from '@/components/ui/badge';
 
@@ -191,7 +191,8 @@ export default function CarWash() {
 
         {/* Detail Modal - Enhanced Full Screen */}
         {previewOrder && (
-          <EnhancedOrderDetailModal
+          <UnifiedOrderDetailModal
+            orderType="carwash"
             order={previewOrder}
             open={true}
             onClose={() => setPreviewOrder(null)}

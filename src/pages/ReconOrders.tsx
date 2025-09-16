@@ -17,7 +17,7 @@ import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
-import { EnhancedOrderDetailModal } from '@/components/orders/EnhancedOrderDetailModal';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 
 export default function ReconOrders() {
@@ -264,7 +264,8 @@ export default function ReconOrders() {
 
         {/* Detail Modal - Enhanced Full Screen */}
         {previewOrder && (
-          <EnhancedOrderDetailModal
+          <UnifiedOrderDetailModal
+            orderType="recon"
             order={previewOrder}
             open={true}
             onClose={() => setPreviewOrder(null)}

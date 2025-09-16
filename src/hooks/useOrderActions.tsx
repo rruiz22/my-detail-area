@@ -28,30 +28,42 @@ export function useOrderActions(): OrderActionsResult {
   const generateQR = async (orderId: string, orderNumber: string, dealerId: number, regenerate = false) => {
     setLoading(true);
     try {
-      console.log(`🔗 ${regenerate ? 'Regenerating' : 'Generating'} QR for order:`, orderNumber);
-      
-      // Use our enhanced shortLinkService
-      const linkData = regenerate 
-        ? await shortLinkService.regenerateShortLink(orderId)
-        : await shortLinkService.createShortLink(orderId, orderNumber);
+      console.log(`🔗 ${regenerate ? 'Regenerating' : 'Auto-generating'} QR for order:`, orderNumber);
 
-      // Update order with QR data
+      // Update status to 'generating' before starting
+      await supabase.rpc('update_qr_status_only', {
+        p_order_id: orderId,
+        p_status: 'generating',
+        p_increment_attempts: true
+      });
+
+      // Use our enhanced shortLinkService with auto_generated flag
+      const linkData = regenerate
+        ? await shortLinkService.regenerateShortLink(orderId)
+        : await shortLinkService.createShortLink(orderId, orderNumber, dealerId);
+
+      // Update order with QR data and completed status
       const { error } = await supabase
         .from('orders')
         .update({
           short_link: linkData.shortUrl,
           qr_code_url: linkData.qrCodeUrl,
+          qr_generation_status: 'completed',
           updated_at: new Date().toISOString()
         })
         .eq('id', orderId);
 
       if (error) throw error;
 
-      const message = regenerate 
+      const message = regenerate
         ? t('order_detail.regenerate_qr')
-        : t('order_detail.short_link_created');
-      toast.success(message);
-      
+        : t('order_detail.qr_auto_generated');
+
+      // Only show toast if not auto-generated (to avoid spam during order creation)
+      if (regenerate) {
+        toast.success(message);
+      }
+
       return {
         qrCodeUrl: linkData.qrCodeUrl,
         shortLink: linkData.shortUrl,
@@ -63,10 +75,26 @@ export function useOrderActions(): OrderActionsResult {
           lastClickedAt: linkData.analytics?.lastClicked || null
         }
       };
-      
+
     } catch (error) {
       console.error('Error generating QR:', error);
-      toast.error(t('orders.error_generating_qr'));
+
+      // Update status to 'failed' on error
+      try {
+        await supabase.rpc('update_qr_status_only', {
+          p_order_id: orderId,
+          p_status: 'failed',
+          p_increment_attempts: false
+        });
+      } catch (statusError) {
+        console.error('Failed to update QR status:', statusError);
+      }
+
+      // Only show toast if regenerate (manual action)
+      if (regenerate) {
+        toast.error(t('orders.error_generating_qr'));
+      }
+
       return {};
     } finally {
       setLoading(false);
