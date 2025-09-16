@@ -38,16 +38,32 @@ import { ErrorBoundaryModal } from './ErrorBoundaryModal';
 import { OrderTasksSection } from './OrderTasksSection';
 
 // Enhanced TypeScript interfaces for better type safety
+// Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
 interface OrderData {
   id: string;
+  // Order identifiers (support both formats)
   order_number?: string;
   custom_order_number?: string;
+  customOrderNumber?: string;
+
+  // Customer information (support both formats)
   customer_name?: string;
   customer_phone?: string;
+  customerName?: string;
+  customerPhone?: string;
+
+  // Vehicle information (support both formats)
   vehicle_year?: string | number;
   vehicle_make?: string;
   vehicle_model?: string;
   vehicle_vin?: string;
+  stock_number?: string;
+  vehicleYear?: string | number;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleVin?: string;
+  stockNumber?: string;
+
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   dealer_id: string | number;
   dealership_name?: string;
@@ -183,8 +199,11 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
 
   // Memoize vehicle display name
   const vehicleDisplayName = useMemo(() => {
-    return `${order.vehicle_year || ''} ${order.vehicle_make || ''} ${order.vehicle_model || ''}`.trim() || 'Unknown Vehicle';
-  }, [order.vehicle_year, order.vehicle_make, order.vehicle_model]);
+    const year = order.vehicleYear || order.vehicle_year || '';
+    const make = order.vehicleMake || order.vehicle_make || '';
+    const model = order.vehicleModel || order.vehicle_model || '';
+    return `${year} ${make} ${model}`.trim() || 'Unknown Vehicle';
+  }, [order.vehicleYear, order.vehicle_year, order.vehicleMake, order.vehicle_make, order.vehicleModel, order.vehicle_model]);
 
   if (!order) return null;
 
@@ -196,12 +215,12 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
       >
         <div className="h-screen flex flex-col">
           <DialogTitle className="sr-only">
-            {t('orders.order_details')} - {order.custom_order_number || order.order_number}
+            {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            {t('orders.order_details_description', { 
-              customer: order.customer_name, 
-              vehicle: `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}` 
+            {t('orders.order_details_description', {
+              customer: order.customerName || order.customer_name,
+              vehicle: vehicleDisplayName
             })}
           </DialogDescription>
 
@@ -214,7 +233,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   <div className="space-y-2">
                     {/* Order Number - Prominent */}
                     <h1 className="text-3xl font-bold text-gray-900">
-                      {order.order_number || order.custom_order_number || 'New Order'}
+                      {order.customOrderNumber || order.order_number || order.custom_order_number || 'New Order'}
                     </h1>
                     
                     {/* Business Context - Centered */}
@@ -223,7 +242,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                       <span className="mx-2 text-gray-400">•</span>
                       <span>{order.salesperson || 'Unassigned'} (Salesperson)</span>
                       <span className="mx-2 text-gray-400">•</span>
-                      <span>{order.customer_name || 'Customer'}</span>
+                      <span>{order.customerName || order.customer_name || 'Customer'}</span>
                     </div>
                     
                     {/* Vehicle + Status Row - Centered */}
@@ -236,7 +255,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                       </div>
                       
                       <div className="font-mono text-sm bg-gray-200 px-3 py-1 rounded-md">
-                        VIN: {order.vehicle_vin || 'Not provided'}
+                        VIN: {order.vehicleVin || order.vehicle_vin || 'Not provided'}
                       </div>
                       
                       <TimeRemaining order={order} size="lg" />
@@ -291,7 +310,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                     <Suspense fallback={<SkeletonLoader variant="qr-code" />}>
                       <EnhancedQRCodeBlockMemo
                         orderId={order.id}
-                        orderNumber={order.order_number}
+                        orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number}
                         dealerId={String(order.dealer_id)}
                         qrCodeUrl={order.qr_code_url}
                         shortLink={order.short_link}
@@ -310,8 +329,8 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                     <CardContent>
                       <ChatAndSMSActions
                         orderId={order.id}
-                        orderNumber={order.order_number}
-                        customerPhone={order.customer_phone || ''}
+                        orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number}
+                        customerPhone={order.customerPhone || order.customer_phone || ''}
                         dealerId={Number(order.dealer_id)}
                         variant="compact"
                       />
@@ -334,8 +353,8 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   <Suspense fallback={<SkeletonLoader variant="notes" />}>
                     <OrderTasksSection
                       orderId={order.id}
-                      orderNumber={order.order_number || order.custom_order_number || order.id}
-                      customerName={order.customer_name}
+                      orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number || order.id}
+                      customerName={order.customerName || order.customer_name}
                     />
                   </Suspense>
 

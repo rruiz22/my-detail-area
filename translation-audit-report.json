@@ -29310,52 +29310,52 @@
         "hardcodedStrings": [
           {
             "text": "Premium Auto",
-            "line": 221,
-            "context": "220: <div className=\"text-lg text-gray-700\">\n221: <span className=\"font-semibold\">Premium Auto</span>\n222: <span className=\"mx-2 text-gray-400\">•</span>"
+            "line": 222,
+            "context": "221: <div className=\"text-lg text-gray-700\">\n222: <span className=\"font-semibold\">Premium Auto</span>\n223: <span className=\"mx-2 text-gray-400\">•</span>"
           },
           {
             "text": "Close",
-            "line": 355,
-            "context": "354: className=\"min-w-[120px]\"\n355: >\n356: Close"
+            "line": 365,
+            "context": "364: className=\"min-w-[120px]\"\n365: >\n366: Close"
           },
           {
             "text": "Close\r\n              ",
-            "line": 350,
-            "context": "349: <div className=\"flex justify-end\">\n350: <Button\n351: variant=\"destructive\""
+            "line": 360,
+            "context": "359: <div className=\"flex justify-end\">\n360: <Button\n361: variant=\"destructive\""
           }
         ],
         "translationCalls": [
           {
             "key": "orders.order_details",
-            "line": 198,
+            "line": 199,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 201,
+            "line": 202,
             "exists": false
           },
           {
             "key": "orders.communication_actions",
-            "line": 306,
+            "line": 307,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_details",
-            "line": 198,
-            "context": "197: <DialogTitle className=\"sr-only\">\n198: {t('orders.order_details')} - {order.custom_order_number || order.order_number}\n199: </DialogTitle>"
+            "line": 199,
+            "context": "198: <DialogTitle className=\"sr-only\">\n199: {t('orders.order_details')} - {order.custom_order_number || order.order_number}\n200: </DialogTitle>"
           },
           {
             "key": "orders.order_details_description",
-            "line": 201,
-            "context": "200: <DialogDescription className=\"sr-only\">\n201: {t('orders.order_details_description', {\n202: customer: order.customer_name,"
+            "line": 202,
+            "context": "201: <DialogDescription className=\"sr-only\">\n202: {t('orders.order_details_description', {\n203: customer: order.customer_name,"
           },
           {
             "key": "orders.communication_actions",
-            "line": 306,
-            "context": "305: <MessageSquare className=\"h-4 w-4\" />\n306: {t('orders.communication_actions', 'Team Communication')}\n307: </CardTitle>"
+            "line": 307,
+            "context": "306: <MessageSquare className=\"h-4 w-4\" />\n307: {t('orders.communication_actions', 'Team Communication')}\n308: </CardTitle>"
           }
         ],
         "coverage": 50,

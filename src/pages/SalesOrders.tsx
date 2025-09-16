@@ -191,10 +191,11 @@ export default function SalesOrders() {
     const searchLower = searchTerm.toLowerCase();
     return (
       order.id.toLowerCase().includes(searchLower) ||
-      order.vin?.toLowerCase().includes(searchLower) ||
-      order.stock?.toLowerCase().includes(searchLower) ||
-      order.description?.toLowerCase().includes(searchLower) ||
-      `${order.year} ${order.make} ${order.model}`.toLowerCase().includes(searchLower)
+      order.vehicleVin?.toLowerCase().includes(searchLower) ||
+      order.stockNumber?.toLowerCase().includes(searchLower) ||
+      order.notes?.toLowerCase().includes(searchLower) ||
+      order.customerName?.toLowerCase().includes(searchLower) ||
+      `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
     );
   });
 

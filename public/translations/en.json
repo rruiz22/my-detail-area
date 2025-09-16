@@ -64,6 +64,10 @@
     "unknown_error": "Unknown error",
     "toggle_theme": "Toggle theme",
     "due_date": "Due Date",
+    "year": "Year",
+    "make": "Make",
+    "model": "Model",
+    "color": "Color",
     "scheduled_date": "Scheduled Date",
     "created_at": "Created Date",
     "advisor": "Advisor",
@@ -466,5 +470,36 @@
       "back_to_all": "← Back to all tasks",
       "jump_to_order": "Jump to order details"
     }
+  },
+  "data_table": {
+    "no_stock": "No stock",
+    "vin_not_provided": "VIN not provided"
+  },
+  "vehicle_info": {
+    "vin_status": "VIN Status",
+    "manual_entry": "Manual entry",
+    "display_preview": "Display preview"
+  },
+  "schedule_view": {
+    "schedule_timeline": "Schedule Timeline",
+    "order_progress": "Order Progress",
+    "in_progress": "In Progress",
+    "timeline": "Timeline",
+    "no_due_date": "No due date",
+    "not_set": "Not set",
+    "most_recent_change": "Most recent change"
+  },
+  "order_detail": {
+    "simple_notes": "Notes",
+    "no_notes_provided": "No notes provided"
+  },
+  "orders": {
+    "vehicle_information": "Vehicle Information",
+    "created": "Created",
+    "due_date": "Due Date",
+    "updated": "Updated",
+    "qr_code_short_link": "QR Code & Short Link",
+    "no_qr_code": "No QR code",
+    "generate_qr": "Generate QR"
   }
 }

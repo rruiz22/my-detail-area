@@ -62,7 +62,11 @@
     "new_order": "Nueva Orden",
     "calendar": "Calendario",
     "unknown_error": "Error desconocido",
-    "toggle_theme": "Cambiar tema"
+    "toggle_theme": "Cambiar tema",
+    "year": "Año",
+    "make": "Marca",
+    "model": "Modelo",
+    "color": "Color"
   },
   "cloud_sync": {
     "title": "Panel de Sincronización en la Nube",
@@ -450,5 +454,36 @@
       "back_to_all": "← Volver a todas las tareas",
       "jump_to_order": "Ir a detalles de la orden"
     }
+  },
+  "data_table": {
+    "no_stock": "Sin stock",
+    "vin_not_provided": "VIN no proporcionado"
+  },
+  "vehicle_info": {
+    "vin_status": "Estado del VIN",
+    "manual_entry": "Entrada manual",
+    "display_preview": "Vista previa"
+  },
+  "schedule_view": {
+    "schedule_timeline": "Cronograma Programado",
+    "order_progress": "Progreso de la Orden",
+    "in_progress": "En Progreso",
+    "timeline": "Cronograma",
+    "no_due_date": "Sin fecha de vencimiento",
+    "not_set": "No establecido",
+    "most_recent_change": "Cambio más reciente"
+  },
+  "order_detail": {
+    "simple_notes": "Notas",
+    "no_notes_provided": "Sin notas proporcionadas"
+  },
+  "orders": {
+    "vehicle_information": "Información del Vehículo",
+    "created": "Creado",
+    "due_date": "Fecha de Vencimiento",
+    "updated": "Actualizado",
+    "qr_code_short_link": "Código QR y Enlace Corto",
+    "no_qr_code": "Sin código QR",
+    "generate_qr": "Generar QR"
   }
 }

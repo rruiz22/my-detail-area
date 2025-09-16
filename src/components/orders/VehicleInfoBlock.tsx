@@ -13,40 +13,59 @@ interface VehicleInfoBlockProps {
 export const VehicleInfoBlock = React.memo(function VehicleInfoBlock({ order }: VehicleInfoBlockProps) {
   const { t } = useTranslation();
 
+  // Debug logging to verify data mapping
+  console.log('VehicleInfoBlock - Order data received:', {
+    'Snake case fields': {
+      vehicle_year: order.vehicle_year,
+      vehicle_make: order.vehicle_make,
+      vehicle_model: order.vehicle_model,
+      vehicle_vin: order.vehicle_vin,
+      stock_number: order.stock_number
+    },
+    'Camel case fields': {
+      vehicleYear: order.vehicleYear,
+      vehicleMake: order.vehicleMake,
+      vehicleModel: order.vehicleModel,
+      vehicleVin: order.vehicleVin,
+      stockNumber: order.stockNumber
+    }
+  });
+
   // Memoize vehicle info array to prevent recreation on every render
+  // Support both camelCase (from useOrderManagement transform) and snake_case (direct from DB)
   const vehicleInfo = useMemo(() => [
     {
       icon: Calendar,
       label: t('common.year'),
-      value: order.vehicle_year || 'N/A'
+      value: order.vehicleYear || order.vehicle_year || 'N/A'
     },
     {
       icon: Car,
       label: t('common.make'),
-      value: order.vehicle_make || 'N/A'
+      value: order.vehicleMake || order.vehicle_make || 'N/A'
     },
     {
       icon: Car,
-      label: t('common.model'), 
-      value: order.vehicle_model || 'N/A'
+      label: t('common.model'),
+      value: order.vehicleModel || order.vehicle_model || 'N/A'
     },
     {
       icon: Hash,
       label: 'VIN',
-      value: order.vehicle_vin || t('data_table.vin_not_provided'),
+      value: order.vehicleVin || order.vehicle_vin || t('data_table.vin_not_provided'),
       mono: true
     },
     {
       icon: Hash,
       label: 'Stock#',
-      value: order.stock_number || t('data_table.no_stock')
+      value: order.stockNumber || order.stock_number || t('data_table.no_stock')
     },
     {
       icon: Palette,
       label: t('common.color'),
-      value: order.vehicle_color || 'N/A'
+      value: order.vehicleColor || order.vehicle_color || 'N/A'
     }
-  ], [order.vehicle_year, order.vehicle_make, order.vehicle_model, order.vehicle_vin, order.stock_number, order.vehicle_color, t]);
+  ], [order.vehicleYear, order.vehicle_year, order.vehicleMake, order.vehicle_make, order.vehicleModel, order.vehicle_model, order.vehicleVin, order.vehicle_vin, order.stockNumber, order.stock_number, order.vehicleColor, order.vehicle_color, t]);
 
   // Memoize decode status calculation
   const decodeStatus = useMemo(() => {
@@ -65,10 +84,17 @@ export const VehicleInfoBlock = React.memo(function VehicleInfoBlock({ order }: 
   }, [order.vin_decoded, t]);
 
   // Memoize vehicle summary for display preview
-  const vehicleSummary = useMemo(() => ({
-    displayName: `${order.vehicle_year || ''} ${order.vehicle_make || ''} ${order.vehicle_model || ''}`.trim() || 'Unknown Vehicle',
-    vinDisplay: order.vehicle_vin ? `${order.vehicle_vin.slice(0, 8)}...${order.vehicle_vin.slice(-4)}` : 'N/A'
-  }), [order.vehicle_year, order.vehicle_make, order.vehicle_model, order.vehicle_vin]);
+  const vehicleSummary = useMemo(() => {
+    const year = order.vehicleYear || order.vehicle_year || '';
+    const make = order.vehicleMake || order.vehicle_make || '';
+    const model = order.vehicleModel || order.vehicle_model || '';
+    const vin = order.vehicleVin || order.vehicle_vin;
+
+    return {
+      displayName: `${year} ${make} ${model}`.trim() || 'Unknown Vehicle',
+      vinDisplay: vin ? `${vin.slice(0, 8)}...${vin.slice(-4)}` : 'N/A'
+    };
+  }, [order.vehicleYear, order.vehicle_year, order.vehicleMake, order.vehicle_make, order.vehicleModel, order.vehicle_model, order.vehicleVin, order.vehicle_vin]);
 
   return (
     <Card className="h-full">
