@@ -35,23 +35,6 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchRecentActivity();
-    
-    // Listen for real-time activity updates
-    const handleActivityUpdate = () => {
-      fetchRecentActivity();
-    };
-    
-    window.addEventListener('orderStatusUpdated', handleActivityUpdate);
-    window.addEventListener('orderCommentAdded', handleActivityUpdate);
-    
-    return () => {
-      window.removeEventListener('orderStatusUpdated', handleActivityUpdate);
-      window.removeEventListener('orderCommentAdded', handleActivityUpdate);
-    };
-  }, [orderId, fetchRecentActivity]);
-
   const fetchRecentActivity = useCallback(async () => {
     try {
       setLoading(true);
@@ -109,6 +92,23 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       setLoading(false);
     }
   }, [orderId]);
+
+  useEffect(() => {
+    fetchRecentActivity();
+
+    // Listen for real-time activity updates
+    const handleActivityUpdate = () => {
+      fetchRecentActivity();
+    };
+
+    window.addEventListener('orderStatusUpdated', handleActivityUpdate);
+    window.addEventListener('orderCommentAdded', handleActivityUpdate);
+
+    return () => {
+      window.removeEventListener('orderStatusUpdated', handleActivityUpdate);
+      window.removeEventListener('orderCommentAdded', handleActivityUpdate);
+    };
+  }, [orderId, fetchRecentActivity]);
 
   const getActivityIcon = (type: string) => {
     switch (type) {

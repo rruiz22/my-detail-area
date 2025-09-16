@@ -1,8 +1,8 @@
 {
   "scannedFiles": 412,
-  "totalStrings": 4199,
+  "totalStrings": 4206,
   "hardcodedStrings": 943,
-  "translatedStrings": 3256,
+  "translatedStrings": 3263,
   "issues": {
     "critical": [
       {
@@ -14789,7 +14789,7 @@
           {
             "key": "common.created_at",
             "line": 308,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -14907,11 +14907,6 @@
             "key": "password_management.operation_details",
             "line": 293,
             "context": "292: <div className=\"text-sm text-muted-foreground mb-2\">\n293: {t('password_management.operation_details', {\n294: total: operation.total_users,"
-          },
-          {
-            "key": "common.created_at",
-            "line": 308,
-            "context": "307: <div className=\"text-xs text-muted-foreground mt-2\">\n308: {t('common.created_at')}: {new Date(operation.created_at).toLocaleString()}\n309: </div>"
           }
         ],
         "coverage": 100,
@@ -28658,285 +28653,220 @@
         "translationCalls": [
           {
             "key": "calendar.clickToCreateOrder",
-            "line": 73,
-            "exists": false
+            "line": 86,
+            "exists": true
           },
           {
             "key": "common.loading",
-            "line": 175,
+            "line": 199,
             "exists": false
           },
           {
             "key": "common.orders",
-            "line": 192,
-            "exists": false
+            "line": 216,
+            "exists": true
           },
           {
             "key": "calendar.month",
-            "line": 204,
-            "exists": false
+            "line": 228,
+            "exists": true
           },
           {
             "key": "calendar.week",
-            "line": 212,
-            "exists": false
+            "line": 236,
+            "exists": true
           },
           {
             "key": "calendar.day",
-            "line": 220,
-            "exists": false
+            "line": 244,
+            "exists": true
+          },
+          {
+            "key": "calendar.status_legend",
+            "line": 254,
+            "exists": true
           },
           {
             "key": "common.status.pending",
-            "line": 230,
+            "line": 258,
             "exists": true
           },
           {
             "key": "common.status.in_progress",
-            "line": 234,
+            "line": 262,
             "exists": true
           },
           {
             "key": "common.status.completed",
-            "line": 238,
+            "line": 266,
             "exists": true
           },
           {
             "key": "common.status.cancelled",
-            "line": 242,
+            "line": 270,
+            "exists": true
+          },
+          {
+            "key": "calendar.date_source_legend",
+            "line": 277,
+            "exists": true
+          },
+          {
+            "key": "calendar.due_date",
+            "line": 281,
+            "exists": true
+          },
+          {
+            "key": "calendar.scheduled_date",
+            "line": 285,
+            "exists": true
+          },
+          {
+            "key": "calendar.created_date",
+            "line": 289,
             "exists": true
           },
           {
             "key": "calendar.next",
-            "line": 268,
-            "exists": false
+            "line": 317,
+            "exists": true
           },
           {
             "key": "calendar.previous",
-            "line": 269,
-            "exists": false
+            "line": 318,
+            "exists": true
           },
           {
             "key": "calendar.today",
-            "line": 270,
-            "exists": false
+            "line": 319,
+            "exists": true
           },
           {
             "key": "calendar.month",
-            "line": 271,
-            "exists": false
+            "line": 320,
+            "exists": true
           },
           {
             "key": "calendar.week",
-            "line": 272,
-            "exists": false
+            "line": 321,
+            "exists": true
           },
           {
             "key": "calendar.day",
-            "line": 273,
-            "exists": false
+            "line": 322,
+            "exists": true
           },
           {
             "key": "calendar.agenda",
-            "line": 274,
-            "exists": false
+            "line": 323,
+            "exists": true
           },
           {
             "key": "calendar.date",
-            "line": 275,
-            "exists": false
+            "line": 324,
+            "exists": true
           },
           {
             "key": "calendar.time",
-            "line": 276,
-            "exists": false
+            "line": 325,
+            "exists": true
           },
           {
             "key": "calendar.event",
-            "line": 277,
-            "exists": false
+            "line": 326,
+            "exists": true
           },
           {
             "key": "calendar.noEventsInRange",
-            "line": 278,
-            "exists": false
+            "line": 327,
+            "exists": true
           },
           {
             "key": "calendar.showMore",
-            "line": 279,
-            "exists": false
+            "line": 328,
+            "exists": true
           },
           {
             "key": "common.status.${selectedOrder.status?.toLowerCase()}",
-            "line": 320,
+            "line": 369,
             "exists": false
           },
           {
             "key": "common.priority.${selectedOrder.priority}",
-            "line": 324,
+            "line": 373,
             "exists": false
           },
           {
             "key": "common.due_date",
-            "line": 335,
-            "exists": false
+            "line": 385,
+            "exists": true
+          },
+          {
+            "key": "common.scheduled_date",
+            "line": 397,
+            "exists": true
+          },
+          {
+            "key": "common.created_at",
+            "line": 409,
+            "exists": true
           },
           {
             "key": "common.advisor",
-            "line": 347,
-            "exists": false
+            "line": 421,
+            "exists": true
           },
           {
             "key": "common.price",
-            "line": 357,
-            "exists": false
+            "line": 431,
+            "exists": true
           },
           {
             "key": "common.description",
-            "line": 377,
+            "line": 451,
             "exists": false
           },
           {
             "key": "common.view_details",
-            "line": 391,
+            "line": 465,
             "exists": false
           },
           {
             "key": "common.edit",
-            "line": 398,
+            "line": 472,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "calendar.clickToCreateOrder",
-            "line": 73,
-            "context": "72: } else {\n73: toast.info(t('calendar.clickToCreateOrder'));\n74: }"
-          },
-          {
             "key": "common.loading",
-            "line": 175,
-            "context": "174: <Loader2 className=\"h-8 w-8 animate-spin text-muted-foreground\" />\n175: <span className=\"ml-2 text-muted-foreground\">{t('common.loading')}</span>\n176: </div>"
-          },
-          {
-            "key": "common.orders",
-            "line": 192,
-            "context": "191: <Badge variant=\"outline\" className=\"text-sm\">\n192: {calendarEvents.length} {t('common.orders')}\n193: </Badge>"
-          },
-          {
-            "key": "calendar.month",
-            "line": 204,
-            "context": "203: >\n204: {t('calendar.month')}\n205: </Button>"
-          },
-          {
-            "key": "calendar.week",
-            "line": 212,
-            "context": "211: >\n212: {t('calendar.week')}\n213: </Button>"
-          },
-          {
-            "key": "calendar.day",
-            "line": 220,
-            "context": "219: >\n220: {t('calendar.day')}\n221: </Button>"
-          },
-          {
-            "key": "calendar.next",
-            "line": 268,
-            "context": "267: messages={{\n268: next: t('calendar.next'),\n269: previous: t('calendar.previous'),"
-          },
-          {
-            "key": "calendar.previous",
-            "line": 269,
-            "context": "268: next: t('calendar.next'),\n269: previous: t('calendar.previous'),\n270: today: t('calendar.today'),"
-          },
-          {
-            "key": "calendar.today",
-            "line": 270,
-            "context": "269: previous: t('calendar.previous'),\n270: today: t('calendar.today'),\n271: month: t('calendar.month'),"
-          },
-          {
-            "key": "calendar.month",
-            "line": 271,
-            "context": "270: today: t('calendar.today'),\n271: month: t('calendar.month'),\n272: week: t('calendar.week'),"
-          },
-          {
-            "key": "calendar.week",
-            "line": 272,
-            "context": "271: month: t('calendar.month'),\n272: week: t('calendar.week'),\n273: day: t('calendar.day'),"
-          },
-          {
-            "key": "calendar.day",
-            "line": 273,
-            "context": "272: week: t('calendar.week'),\n273: day: t('calendar.day'),\n274: agenda: t('calendar.agenda'),"
-          },
-          {
-            "key": "calendar.agenda",
-            "line": 274,
-            "context": "273: day: t('calendar.day'),\n274: agenda: t('calendar.agenda'),\n275: date: t('calendar.date'),"
-          },
-          {
-            "key": "calendar.date",
-            "line": 275,
-            "context": "274: agenda: t('calendar.agenda'),\n275: date: t('calendar.date'),\n276: time: t('calendar.time'),"
-          },
-          {
-            "key": "calendar.time",
-            "line": 276,
-            "context": "275: date: t('calendar.date'),\n276: time: t('calendar.time'),\n277: event: t('calendar.event'),"
-          },
-          {
-            "key": "calendar.event",
-            "line": 277,
-            "context": "276: time: t('calendar.time'),\n277: event: t('calendar.event'),\n278: noEventsInRange: t('calendar.noEventsInRange'),"
-          },
-          {
-            "key": "calendar.noEventsInRange",
-            "line": 278,
-            "context": "277: event: t('calendar.event'),\n278: noEventsInRange: t('calendar.noEventsInRange'),\n279: showMore: (total: number) => `${t('calendar.showMore')} (${total})`"
-          },
-          {
-            "key": "calendar.showMore",
-            "line": 279,
-            "context": "278: noEventsInRange: t('calendar.noEventsInRange'),\n279: showMore: (total: number) => `${t('calendar.showMore')} (${total})`\n280: }}"
+            "line": 199,
+            "context": "198: <Loader2 className=\"h-8 w-8 animate-spin text-muted-foreground\" />\n199: <span className=\"ml-2 text-muted-foreground\">{t('common.loading')}</span>\n200: </div>"
           },
           {
             "key": "common.status.${selectedOrder.status?.toLowerCase()}",
-            "line": 320,
-            "context": "319: <Badge variant={getStatusBadgeVariant(selectedOrder.status)}>\n320: {t(`common.status.${selectedOrder.status?.toLowerCase()}`)}\n321: </Badge>"
+            "line": 369,
+            "context": "368: <Badge variant={getStatusBadgeVariant(selectedOrder.status)}>\n369: {t(`common.status.${selectedOrder.status?.toLowerCase()}`)}\n370: </Badge>"
           },
           {
             "key": "common.priority.${selectedOrder.priority}",
-            "line": 324,
-            "context": "323: <Badge variant={selectedOrder.priority === 'high' ? 'destructive' : 'outline'}>\n324: {t(`common.priority.${selectedOrder.priority}`)}\n325: </Badge>"
-          },
-          {
-            "key": "common.due_date",
-            "line": 335,
-            "context": "334: <Clock className=\"h-4 w-4\" />\n335: {t('common.due_date')}\n336: </div>"
-          },
-          {
-            "key": "common.advisor",
-            "line": 347,
-            "context": "346: <User className=\"h-4 w-4\" />\n347: {t('common.advisor')}\n348: </div>"
-          },
-          {
-            "key": "common.price",
-            "line": 357,
-            "context": "356: <DollarSign className=\"h-4 w-4\" />\n357: {t('common.price')}\n358: </div>"
+            "line": 373,
+            "context": "372: <Badge variant={selectedOrder.priority === 'high' ? 'destructive' : 'outline'}>\n373: {t(`common.priority.${selectedOrder.priority}`)}\n374: </Badge>"
           },
           {
             "key": "common.description",
-            "line": 377,
-            "context": "376: <div className=\"text-sm font-medium text-muted-foreground mb-2\">\n377: {t('common.description')}\n378: </div>"
+            "line": 451,
+            "context": "450: <div className=\"text-sm font-medium text-muted-foreground mb-2\">\n451: {t('common.description')}\n452: </div>"
           },
           {
             "key": "common.view_details",
-            "line": 391,
-            "context": "390: >\n391: {t('common.view_details')}\n392: </Button>"
+            "line": 465,
+            "context": "464: >\n465: {t('common.view_details')}\n466: </Button>"
           },
           {
             "key": "common.edit",
-            "line": 398,
-            "context": "397: >\n398: {t('common.edit')}\n399: </Button>"
+            "line": 472,
+            "context": "471: >\n472: {t('common.edit')}\n473: </Button>"
           }
         ],
         "coverage": 100,
@@ -39675,9 +39605,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3155 translation keys are referenced but missing",
+      "description": "3134 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "158 hours"
+      "estimatedEffort": "157 hours"
     }
   ],
   "coverage": 78
