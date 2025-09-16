@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,8 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { 
-  Plus, 
+import {
+  Plus,
   Calendar,
   AlertCircle,
   CheckCircle2,
@@ -18,21 +18,36 @@ import {
   Filter,
   MoreVertical,
   Edit,
-  Trash2
+  Trash2,
+  Car,
+  User2,
+  ExternalLink,
+  X
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useProductivityTodos, ProductivityTodo } from "@/hooks/useProductivityTodos";
+import { useOrderContext } from "@/hooks/useOrderContext";
 import { format } from "date-fns";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Link, useSearchParams } from "react-router-dom";
 
 export const ProductivityTodos = () => {
   const { t } = useTranslation();
   const { todos, loading, createTodo, updateTodo, deleteTodo, toggleTodoStatus } = useProductivityTodos();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingTodo, setEditingTodo] = useState<ProductivityTodo | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
+
+  // Order filter from URL params
+  const orderFilter = searchParams.get('order') || '';
+  const orderTodos = orderFilter ? todos.filter(todo => todo.order_id === orderFilter) : [];
+  const isOrderFiltered = !!orderFilter;
+
+  // Get order context for enriched display
+  const { orderData, loading: orderLoading } = useOrderContext(orderFilter || null);
 
   const [newTodo, setNewTodo] = useState({
     title: "",
@@ -42,19 +57,29 @@ export const ProductivityTodos = () => {
     category: "general",
   });
 
-  const filteredTodos = todos.filter(todo => {
+  const filteredTodos = (isOrderFiltered ? orderTodos : todos).filter(todo => {
     const matchesSearch = todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          todo.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || todo.status === statusFilter;
     const matchesPriority = priorityFilter === "all" || todo.priority === priorityFilter;
-    
+
     return matchesSearch && matchesStatus && matchesPriority;
   });
+
+  const clearOrderFilter = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('order');
+    setSearchParams(newParams);
+  };
 
   const handleCreateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createTodo(newTodo);
+      const todoData = {
+        ...newTodo,
+        ...(isOrderFiltered && { order_id: orderFilter })
+      };
+      await createTodo(todoData);
       setNewTodo({
         title: "",
         description: "",
@@ -119,6 +144,54 @@ export const ProductivityTodos = () => {
 
   return (
     <div className="space-y-6">
+      {/* Order Context Alert */}
+      {isOrderFiltered && (
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <Car className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900">
+                      Tasks for Order #{orderData?.customOrderNumber || orderFilter}
+                    </p>
+                    {orderData && (
+                      <div className="text-xs text-blue-700 space-y-1">
+                        <p>Customer: <strong>{orderData.customerName}</strong></p>
+                        {orderData.vehicleMake && orderData.vehicleModel && (
+                          <p>Vehicle: <strong>{orderData.vehicleYear} {orderData.vehicleMake} {orderData.vehicleModel}</strong></p>
+                        )}
+                      </div>
+                    )}
+                    <p className="text-xs text-blue-600 mt-1">
+                      {filteredTodos.length} task{filteredTodos.length !== 1 ? 's' : ''} •
+                      {filteredTodos.filter(t => t.status === 'completed').length} completed
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link to={`/orders`}>
+                    <Button variant="outline" size="sm" className="gap-2 text-blue-700 border-blue-300 hover:bg-blue-100">
+                      <ExternalLink className="w-4 h-4" />
+                      View Order
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearOrderFilter}
+                className="text-blue-700 hover:bg-blue-100"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Header with Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 flex-1">
@@ -168,9 +241,17 @@ export const ProductivityTodos = () => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{t('productivity.createTodo')}</DialogTitle>
+              <DialogTitle>
+                {isOrderFiltered
+                  ? `Create Task for Order #${orderFilter}`
+                  : t('productivity.createTodo')
+                }
+              </DialogTitle>
               <DialogDescription>
-                {t('productivity.createTodoDescription')}
+                {isOrderFiltered
+                  ? `This task will be linked to Order #${orderFilter}`
+                  : t('productivity.createTodoDescription')
+                }
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleCreateTodo} className="space-y-4">
@@ -282,6 +363,17 @@ export const ProductivityTodos = () => {
                         </div>
                       )}
                       <span>#{todo.category}</span>
+                      {todo.order_id && !isOrderFiltered && (
+                        <div className="flex items-center gap-1">
+                          <Car className="h-3 w-3" />
+                          <Link
+                            to={`/productivity?order=${todo.order_id}`}
+                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            Order #{todo.order_id}
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

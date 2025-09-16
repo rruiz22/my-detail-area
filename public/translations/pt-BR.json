@@ -421,5 +421,34 @@
     "noEventsInRange": "Nenhum pedido neste período",
     "showMore": "Mostrar mais",
     "clickToCreateOrder": "Clique em um espaço vazio para criar um novo pedido"
+  },
+  "productivity": {
+    "order_tasks": {
+      "title": "Tarefas e Lembretes",
+      "create_task": "Criar Tarefa",
+      "view_all_tasks": "Ver Todas as Tarefas",
+      "no_tasks": "Nenhuma tarefa para este pedido",
+      "pending_tasks": "{{count}} tarefa pendente",
+      "pending_tasks_plural": "{{count}} tarefas pendentes",
+      "completed_tasks": "{{count}} completada",
+      "add_task": "Adicionar Tarefa",
+      "quick_actions": "Ações Rápidas",
+      "task_templates": {
+        "follow_up": "Acompanhar com o cliente",
+        "schedule_delivery": "Programar entrega",
+        "process_payment": "Processar pagamento final",
+        "request_feedback": "Solicitar feedback do cliente",
+        "schedule_inspection": "Programar inspeção do veículo",
+        "prepare_docs": "Preparar documentação de entrega"
+      }
+    },
+    "order_context": {
+      "showing_tasks_for": "Mostrando tarefas para",
+      "order_number": "Pedido #{{number}}",
+      "customer": "Cliente: {{name}}",
+      "vehicle": "{{year}} {{make}} {{model}}",
+      "back_to_all": "← Voltar para todas as tarefas",
+      "jump_to_order": "Ir para detalhes do pedido"
+    }
   }
 }

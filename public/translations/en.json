@@ -437,5 +437,34 @@
     "due_date": "Due Date",
     "scheduled_date": "Scheduled Date",
     "created_date": "Created Date"
+  },
+  "productivity": {
+    "order_tasks": {
+      "title": "Tasks & Reminders",
+      "create_task": "Create Task",
+      "view_all_tasks": "View All Tasks",
+      "no_tasks": "No tasks for this order",
+      "pending_tasks": "{{count}} pending task",
+      "pending_tasks_plural": "{{count}} pending tasks",
+      "completed_tasks": "{{count}} completed",
+      "add_task": "Add Task",
+      "quick_actions": "Quick Actions",
+      "task_templates": {
+        "follow_up": "Follow up with customer",
+        "schedule_delivery": "Schedule delivery",
+        "process_payment": "Process final payment",
+        "request_feedback": "Request customer feedback",
+        "schedule_inspection": "Schedule vehicle inspection",
+        "prepare_docs": "Prepare delivery documentation"
+      }
+    },
+    "order_context": {
+      "showing_tasks_for": "Showing tasks for",
+      "order_number": "Order #{{number}}",
+      "customer": "Customer: {{name}}",
+      "vehicle": "{{year}} {{make}} {{model}}",
+      "back_to_all": "← Back to all tasks",
+      "jump_to_order": "Jump to order details"
+    }
   }
 }

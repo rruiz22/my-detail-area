@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Order } from '@/hooks/useOrderManagement';
+import { OrderTasksSection } from './OrderTasksSection';
 
 interface OrderDetailModalProps {
   order: Order | null;
@@ -356,6 +357,13 @@ export function OrderDetailModal({
                   </CardContent>
                 </Card>
               )}
+
+              {/* Tasks & Reminders Section */}
+              <OrderTasksSection
+                orderId={order.id}
+                orderNumber={order.customOrderNumber}
+                customerName={order.customerName}
+              />
             </div>
           </div>
         </div>

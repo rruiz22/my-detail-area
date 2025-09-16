@@ -421,5 +421,34 @@
     "noEventsInRange": "No hay órdenes en este rango de fechas",
     "showMore": "Mostrar más",
     "clickToCreateOrder": "Haga clic en un espacio vacío para crear una nueva orden"
+  },
+  "productivity": {
+    "order_tasks": {
+      "title": "Tareas y Recordatorios",
+      "create_task": "Crear Tarea",
+      "view_all_tasks": "Ver Todas las Tareas",
+      "no_tasks": "No hay tareas para esta orden",
+      "pending_tasks": "{{count}} tarea pendiente",
+      "pending_tasks_plural": "{{count}} tareas pendientes",
+      "completed_tasks": "{{count}} completada",
+      "add_task": "Agregar Tarea",
+      "quick_actions": "Acciones Rápidas",
+      "task_templates": {
+        "follow_up": "Seguimiento con el cliente",
+        "schedule_delivery": "Programar entrega",
+        "process_payment": "Procesar pago final",
+        "request_feedback": "Solicitar comentarios del cliente",
+        "schedule_inspection": "Programar inspección del vehículo",
+        "prepare_docs": "Preparar documentación de entrega"
+      }
+    },
+    "order_context": {
+      "showing_tasks_for": "Mostrando tareas para",
+      "order_number": "Orden #{{number}}",
+      "customer": "Cliente: {{name}}",
+      "vehicle": "{{year}} {{make}} {{model}}",
+      "back_to_all": "← Volver a todas las tareas",
+      "jump_to_order": "Ir a detalles de la orden"
+    }
   }
 }

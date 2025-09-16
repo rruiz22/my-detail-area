@@ -27,6 +27,12 @@
     "dueDate": "Due Date",
     "noTodos": "No todos found",
     "noTodosFound": "No todos found",
+    "noTodosWithFilters": "No todos match your current filters",
+    "createFirstTodo": "Create your first todo to get started",
+    "createTodoDescription": "Add a new task to track your work",
+    "editTodo": "Edit Todo",
+    "enterTitle": "Enter todo title",
+    "enterDescription": "Enter todo description",
     "noEventsToday": "No events today",
     "searchTodos": "Search todos...",
     "filters": {

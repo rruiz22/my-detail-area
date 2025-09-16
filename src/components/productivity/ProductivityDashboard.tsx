@@ -14,7 +14,9 @@ import {
 import { useTranslation } from "react-i18next";
 import { useProductivityTodos } from "@/hooks/useProductivityTodos";
 import { useProductivityCalendars } from "@/hooks/useProductivityCalendars";
+import { ProductivityMetrics } from "./ProductivityMetrics";
 import { format, isToday, isTomorrow } from "date-fns";
+import { Link } from "react-router-dom";
 
 export const ProductivityDashboard = () => {
   const { t } = useTranslation();
@@ -68,6 +70,9 @@ export const ProductivityDashboard = () => {
 
   return (
     <div className="space-y-6">
+      {/* Enhanced Metrics */}
+      <ProductivityMetrics todos={todos} />
+
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -152,11 +157,24 @@ export const ProductivityDashboard = () => {
                   }`} />
                   <div>
                     <p className="text-sm font-medium">{todo.title}</p>
-                    {todo.due_date && (
-                      <p className="text-xs text-muted-foreground">
-                        {format(new Date(todo.due_date), 'MMM dd, yyyy')}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      {todo.due_date && (
+                        <span>
+                          {format(new Date(todo.due_date), 'MMM dd, yyyy')}
+                        </span>
+                      )}
+                      {todo.order_id && (
+                        <>
+                          {todo.due_date && <span>•</span>}
+                          <Link
+                            to={`/productivity?order=${todo.order_id}`}
+                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            Order #{todo.order_id}
+                          </Link>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <Badge variant={
