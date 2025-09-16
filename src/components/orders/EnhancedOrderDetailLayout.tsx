@@ -35,6 +35,7 @@ import { SkeletonLoader } from './SkeletonLoader';
 import { ChatAndSMSActions } from './ChatAndSMSActions';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { ErrorBoundaryModal } from './ErrorBoundaryModal';
+import { OrderTasksSection } from './OrderTasksSection';
 
 // Enhanced TypeScript interfaces for better type safety
 interface OrderData {
@@ -328,6 +329,15 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                       />
                     </Suspense>
                   )}
+
+                  {/* Tasks & Reminders Section */}
+                  <Suspense fallback={<SkeletonLoader variant="notes" />}>
+                    <OrderTasksSection
+                      orderId={order.id}
+                      orderNumber={order.order_number || order.custom_order_number || order.id}
+                      customerName={order.customer_name}
+                    />
+                  </Suspense>
 
                   {/* Enhanced Recent Activity Block */}
                   {isLoadingData ? (
