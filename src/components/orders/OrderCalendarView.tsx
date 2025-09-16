@@ -50,18 +50,31 @@ export const OrderCalendarView = ({
   // Transform orders for react-big-calendar
   const calendarEvents = useMemo(() => {
     return orders
-      .filter(order => order.due_date) // Only show orders with due dates
+      .filter(order => order.due_date || order.scheduled_date || order.created_at) // Show orders with any available date
       .map(order => {
-        const dueDate = parseISO(order.due_date);
-        const endDate = new Date(dueDate.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
+        // Use fallback logic: due_date → scheduled_date → created_at
+        const displayDate = order.due_date || order.scheduled_date || order.created_at;
+        const eventDate = parseISO(displayDate);
+        const endDate = new Date(eventDate.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
+
+        // Determine the date source for title indication
+        let dateSource = '';
+        if (order.due_date) {
+          dateSource = 'DUE';
+        } else if (order.scheduled_date) {
+          dateSource = 'SCH';
+        } else {
+          dateSource = 'CRE';
+        }
 
         return {
           id: order.id,
-          title: `${order.id} - ${order.year} ${order.make} ${order.model}`.substring(0, 40),
-          start: dueDate,
+          title: `[${dateSource}] ${order.id} - ${order.year} ${order.make} ${order.model}`.substring(0, 45),
+          start: eventDate,
           end: endDate,
           allDay: false,
           resource: order,
+          dateSource: dateSource.toLowerCase(),
         };
       });
   }, [orders]);
@@ -113,6 +126,15 @@ export const OrderCalendarView = ({
         textColor = 'white';
     }
 
+    // Add visual indicators for date source type
+    if (event.dateSource === 'sch') {
+      // Scheduled dates get dashed border
+      borderColor = borderColor;
+    } else if (event.dateSource === 'cre') {
+      // Created dates get dotted border and slightly muted background
+      backgroundColor = backgroundColor + 'CC'; // Add transparency
+    }
+
     // Add priority indicators
     if (order.priority === 'high') {
       borderColor = '#DC2626';
@@ -124,9 +146,11 @@ export const OrderCalendarView = ({
       style: {
         backgroundColor,
         borderRadius: '4px',
-        opacity: 0.9,
+        opacity: event.dateSource === 'due' ? 0.9 : 0.7, // Less opacity for fallback dates
         color: textColor,
-        border: `2px solid ${borderColor}`,
+        border: event.dateSource === 'sch' ? `2px dashed ${borderColor}` :
+                event.dateSource === 'cre' ? `2px dotted ${borderColor}` :
+                `2px solid ${borderColor}`,
         display: 'block',
         fontSize: '12px',
         fontWeight: '500'
@@ -224,22 +248,47 @@ export const OrderCalendarView = ({
 
       {/* Legend - Mobile Responsive */}
       <Card className="p-4">
-        <div className="flex flex-wrap gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-warning"></div>
-            <span>{t('common.status.pending')}</span>
+        <div className="space-y-3">
+          {/* Status Colors */}
+          <div>
+            <h4 className="text-sm font-medium mb-2">{t('calendar.status_legend')}</h4>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded bg-warning"></div>
+                <span>{t('common.status.pending')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded bg-primary"></div>
+                <span>{t('common.status.in_progress')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded bg-success"></div>
+                <span>{t('common.status.completed')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded bg-destructive"></div>
+                <span>{t('common.status.cancelled')}</span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-primary"></div>
-            <span>{t('common.status.in_progress')}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-success"></div>
-            <span>{t('common.status.completed')}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-destructive"></div>
-            <span>{t('common.status.cancelled')}</span>
+
+          {/* Date Source Indicators */}
+          <div>
+            <h4 className="text-sm font-medium mb-2">{t('calendar.date_source_legend')}</h4>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-3 border-2 border-solid border-gray-500 bg-gray-400 rounded-sm"></div>
+                <span>[DUE] {t('calendar.due_date')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-3 border-2 border-dashed border-gray-500 bg-gray-400 rounded-sm opacity-70"></div>
+                <span>[SCH] {t('calendar.scheduled_date')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-3 border-2 border-dotted border-gray-500 bg-gray-400 rounded-sm opacity-70"></div>
+                <span>[CRE] {t('calendar.created_date')}</span>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
@@ -328,14 +377,39 @@ export const OrderCalendarView = ({
 
               {/* Key Information */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Display all available dates with indicators */}
                 {selectedOrder.due_date && (
                   <div>
                     <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      {t('common.due_date')}
+                      {t('common.due_date')} <Badge variant="default" className="text-xs">DUE</Badge>
                     </div>
                     <p className="text-sm mt-1">
                       {format(parseISO(selectedOrder.due_date), 'PPp')}
+                    </p>
+                  </div>
+                )}
+
+                {selectedOrder.scheduled_date && !selectedOrder.due_date && (
+                  <div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <Clock className="h-4 w-4" />
+                      {t('common.scheduled_date')} <Badge variant="secondary" className="text-xs">SCH</Badge>
+                    </div>
+                    <p className="text-sm mt-1">
+                      {format(parseISO(selectedOrder.scheduled_date), 'PPp')}
+                    </p>
+                  </div>
+                )}
+
+                {!selectedOrder.due_date && !selectedOrder.scheduled_date && selectedOrder.created_at && (
+                  <div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <Clock className="h-4 w-4" />
+                      {t('common.created_at')} <Badge variant="outline" className="text-xs">CRE</Badge>
+                    </div>
+                    <p className="text-sm mt-1">
+                      {format(parseISO(selectedOrder.created_at), 'PPp')}
                     </p>
                   </div>
                 )}

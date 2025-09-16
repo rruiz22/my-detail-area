@@ -1,8 +1,8 @@
 {
   "scannedFiles": 412,
-  "totalStrings": 4212,
+  "totalStrings": 4199,
   "hardcodedStrings": 943,
-  "translatedStrings": 3269,
+  "translatedStrings": 3256,
   "issues": {
     "critical": [
       {
@@ -2108,7 +2108,7 @@
           {
             "key": "common.refresh",
             "line": 167,
-            "exists": false
+            "exists": true
           },
           {
             "key": "performance.cpu_usage",
@@ -2221,11 +2221,6 @@
             "key": "performance.live",
             "line": 163,
             "context": "162: <div className=\"w-2 h-2 bg-green-500 rounded-full animate-pulse\" />\n163: {t('performance.live', 'Live')}\n164: </Badge>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 167,
-            "context": "166: <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />\n167: {t('common.refresh', 'Refresh')}\n168: </Button>"
           },
           {
             "key": "performance.cpu_usage",
@@ -4596,7 +4591,7 @@
           {
             "key": "dealerships.title",
             "line": 109,
-            "exists": false
+            "exists": true
           },
           {
             "key": "users.admin",
@@ -4689,11 +4684,6 @@
             "key": "invitations.accept.expired",
             "line": 90,
             "context": "89: if (expiresAt < now) {\n90: throw new Error(t('invitations.accept.expired'));\n91: }"
-          },
-          {
-            "key": "dealerships.title",
-            "line": 109,
-            "context": "108: ...invitationData,\n109: dealership_name: dealershipData?.name || t('dealerships.title'),\n110: inviter_email: inviterData?.email || t('users.admin'),"
           },
           {
             "key": "users.admin",
@@ -5390,16 +5380,10 @@
           {
             "key": "layout.search_placeholder",
             "line": 64,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "layout.search_placeholder",
-            "line": 64,
-            "context": "63: <Input\n64: placeholder={t('layout.search_placeholder')}\n65: className=\"pl-10 w-full\""
-          }
-        ],
+        "missingKeys": [],
         "coverage": 13,
         "severity": "medium"
       },
@@ -5446,16 +5430,10 @@
           {
             "key": "layout.search_placeholder",
             "line": 37,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "layout.search_placeholder",
-            "line": 37,
-            "context": "36: <Input\n37: placeholder={t('layout.search_placeholder')}\n38: className=\"pl-10 w-full\""
-          }
-        ],
+        "missingKeys": [],
         "coverage": 13,
         "severity": "medium"
       },
@@ -5547,7 +5525,7 @@
           {
             "key": "common.refresh",
             "line": 296,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.export_report",
@@ -5600,11 +5578,6 @@
             "key": "user_management.manage_description",
             "line": 285,
             "context": "284: <p className=\"text-muted-foreground\">\n285: {t('user_management.manage_description')}\n286: </p>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 296,
-            "context": "295: <Activity className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />\n296: {t('common.refresh')}\n297: </Button>"
           },
           {
             "key": "user_management.export_report",
@@ -5732,56 +5705,30 @@
           {
             "key": "orders.today_orders",
             "line": 19,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.tomorrow_orders",
             "line": 30,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.pending_orders",
             "line": 41,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.require_attention",
             "line": 47,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.week_orders",
             "line": 52,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "orders.today_orders",
-            "line": 19,
-            "context": "18: id: 'today',\n19: title: t('orders.today_orders'),\n20: value: tabCounts.today || 0,"
-          },
-          {
-            "key": "orders.tomorrow_orders",
-            "line": 30,
-            "context": "29: id: 'tomorrow',\n30: title: t('orders.tomorrow_orders'),\n31: value: tabCounts.tomorrow || 0,"
-          },
-          {
-            "key": "orders.pending_orders",
-            "line": 41,
-            "context": "40: id: 'pending',\n41: title: t('orders.pending_orders'),\n42: value: tabCounts.pending || 0,"
-          },
-          {
-            "key": "orders.require_attention",
-            "line": 47,
-            "context": "46: trend: '-3%',\n47: subtitle: t('orders.require_attention'),\n48: urgent: Math.floor((tabCounts.pending || 0) * 0.3)"
-          },
-          {
-            "key": "orders.week_orders",
-            "line": 52,
-            "context": "51: id: 'week',\n52: title: t('orders.week_orders'),\n53: value: tabCounts.week || 0,"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 42,
         "severity": "medium"
       },
@@ -6767,7 +6714,7 @@
           {
             "key": "vin_scanner_hub.title",
             "line": 23,
-            "exists": false
+            "exists": true
           },
           {
             "key": "vin_scanner_hub.subtitle",
@@ -6776,11 +6723,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "vin_scanner_hub.title",
-            "line": 23,
-            "context": "22: <h1 className=\"text-2xl md:text-3xl font-bold text-foreground\">\n23: {t('vin_scanner_hub.title', 'VIN Scanner')}\n24: </h1>"
-          },
           {
             "key": "vin_scanner_hub.subtitle",
             "line": 26,
@@ -6803,7 +6745,7 @@
           {
             "key": "pages.user_management",
             "line": 22,
-            "exists": false
+            "exists": true
           },
           {
             "key": "pages.user_management_desc",
@@ -6822,11 +6764,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "pages.user_management",
-            "line": 22,
-            "context": "21: <Users2 className=\"h-8 w-8 text-primary\" />\n22: {t('pages.user_management')}\n23: </h1>"
-          },
           {
             "key": "pages.user_management_desc",
             "line": 25,
@@ -7113,7 +7050,7 @@
           {
             "key": "messages.confirm_delete_order",
             "line": 76,
-            "exists": false
+            "exists": true
           },
           {
             "key": "pages.service_orders",
@@ -7123,174 +7060,19 @@
           {
             "key": "common.refresh",
             "line": 136,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.new_order",
             "line": 140,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
-          {
-            "key": "messages.confirm_delete_order",
-            "line": 76,
-            "context": "75: const handleDeleteOrder = async (orderId: string) => {\n76: if (confirm(t('messages.confirm_delete_order'))) {\n77: await deleteOrder(orderId);"
-          },
           {
             "key": "pages.service_orders",
             "line": 125,
             "context": "124: <div className=\"flex items-center gap-4\">\n125: <h1 className=\"text-2xl font-bold\">{t('pages.service_orders')}</h1>\n126: </div>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 136,
-            "context": "135: <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />\n136: {t('common.refresh')}\n137: </Button>"
-          },
-          {
-            "key": "common.new_order",
-            "line": 140,
-            "context": "139: <Plus className=\"h-4 w-4 mr-2\" />\n140: {t('common.new_order')}\n141: </Button>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\pages\\SalesOrders.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "messages.confirm_delete_order",
-            "line": 130,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.dashboard",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.today",
-            "line": 176,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.tomorrow",
-            "line": 177,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.pending",
-            "line": 178,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.in_process_orders",
-            "line": 179,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.week",
-            "line": 180,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.all",
-            "line": 181,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.services",
-            "line": 182,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.deleted",
-            "line": 183,
-            "exists": false
-          },
-          {
-            "key": "pages.sales_orders",
-            "line": 206,
-            "exists": false
-          },
-          {
-            "key": "common.refresh",
-            "line": 217,
-            "exists": false
-          },
-          {
-            "key": "common.new_order",
-            "line": 221,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "messages.confirm_delete_order",
-            "line": 130,
-            "context": "129: const handleDeleteOrder = async (orderId: string) => {\n130: if (confirm(t('messages.confirm_delete_order'))) {\n131: await deleteOrder(orderId);"
-          },
-          {
-            "key": "sales_orders.tabs.dashboard",
-            "line": 175,
-            "context": "174: const titleMap: Record<string, string> = {\n175: dashboard: t('sales_orders.tabs.dashboard'),\n176: today: t('sales_orders.tabs.today'),"
-          },
-          {
-            "key": "sales_orders.tabs.today",
-            "line": 176,
-            "context": "175: dashboard: t('sales_orders.tabs.dashboard'),\n176: today: t('sales_orders.tabs.today'),\n177: tomorrow: t('sales_orders.tabs.tomorrow'),"
-          },
-          {
-            "key": "sales_orders.tabs.tomorrow",
-            "line": 177,
-            "context": "176: today: t('sales_orders.tabs.today'),\n177: tomorrow: t('sales_orders.tabs.tomorrow'),\n178: pending: t('sales_orders.tabs.pending'),"
-          },
-          {
-            "key": "sales_orders.tabs.pending",
-            "line": 178,
-            "context": "177: tomorrow: t('sales_orders.tabs.tomorrow'),\n178: pending: t('sales_orders.tabs.pending'),\n179: in_process: t('sales_orders.in_process_orders'),"
-          },
-          {
-            "key": "sales_orders.in_process_orders",
-            "line": 179,
-            "context": "178: pending: t('sales_orders.tabs.pending'),\n179: in_process: t('sales_orders.in_process_orders'),\n180: week: t('sales_orders.tabs.week'),"
-          },
-          {
-            "key": "sales_orders.tabs.week",
-            "line": 180,
-            "context": "179: in_process: t('sales_orders.in_process_orders'),\n180: week: t('sales_orders.tabs.week'),\n181: all: t('sales_orders.tabs.all'),"
-          },
-          {
-            "key": "sales_orders.tabs.all",
-            "line": 181,
-            "context": "180: week: t('sales_orders.tabs.week'),\n181: all: t('sales_orders.tabs.all'),\n182: services: t('sales_orders.tabs.services'),"
-          },
-          {
-            "key": "sales_orders.tabs.services",
-            "line": 182,
-            "context": "181: all: t('sales_orders.tabs.all'),\n182: services: t('sales_orders.tabs.services'),\n183: deleted: t('sales_orders.tabs.deleted')"
-          },
-          {
-            "key": "sales_orders.tabs.deleted",
-            "line": 183,
-            "context": "182: services: t('sales_orders.tabs.services'),\n183: deleted: t('sales_orders.tabs.deleted')\n184: };"
-          },
-          {
-            "key": "pages.sales_orders",
-            "line": 206,
-            "context": "205: <div className=\"flex items-center gap-4\">\n206: <h1 className=\"text-2xl font-bold\">{t('pages.sales_orders')}</h1>\n207: </div>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 217,
-            "context": "216: <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />\n217: {t('common.refresh')}\n218: </Button>"
-          },
-          {
-            "key": "common.new_order",
-            "line": 221,
-            "context": "220: <Plus className=\"h-4 w-4 mr-2\" />\n221: {t('common.new_order')}\n222: </Button>"
           }
         ],
         "coverage": 100,
@@ -7313,7 +7095,7 @@
           {
             "key": "common.refresh",
             "line": 47,
-            "exists": false
+            "exists": true
           },
           {
             "key": "reports.tabs.operational",
@@ -7343,11 +7125,6 @@
             "context": "41: title={t('reports.title')}\n42: description={t('reports.overview')}\n43: actions={"
           },
           {
-            "key": "common.refresh",
-            "line": 47,
-            "context": "46: <RefreshCw className=\"h-4 w-4 mr-2\" />\n47: {t('common.refresh')}\n48: </Button>"
-          },
-          {
             "key": "reports.tabs.operational",
             "line": 65,
             "context": "64: <TabsTrigger value=\"operational\">\n65: {t('reports.tabs.operational')}\n66: </TabsTrigger>"
@@ -7373,7 +7150,7 @@
           {
             "key": "messages.confirm_delete_order",
             "line": 83,
-            "exists": false
+            "exists": true
           },
           {
             "key": "recon_defaults.default_customer",
@@ -7418,7 +7195,7 @@
           {
             "key": "common.refresh",
             "line": 181,
-            "exists": false
+            "exists": true
           },
           {
             "key": "recon.new_recon_order",
@@ -7427,11 +7204,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "messages.confirm_delete_order",
-            "line": 83,
-            "context": "82: const handleDeleteOrder = async (orderId: string) => {\n83: if (confirm(t('messages.confirm_delete_order'))) {\n84: await deleteOrder(orderId);"
-          },
           {
             "key": "recon_defaults.default_customer",
             "line": 118,
@@ -7471,11 +7243,6 @@
             "key": "pages.recon_orders",
             "line": 170,
             "context": "169: <div className=\"flex items-center gap-4\">\n170: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n171: </div>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 181,
-            "context": "180: <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />\n181: {t('common.refresh')}\n182: </Button>"
           },
           {
             "key": "recon.new_recon_order",
@@ -7769,7 +7536,7 @@
           {
             "key": "nfc_tracking.title",
             "line": 31,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.subtitle",
@@ -7803,11 +7570,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "nfc_tracking.title",
-            "line": 31,
-            "context": "30: <h1 className=\"text-2xl md:text-3xl font-bold text-foreground\">\n31: {t('nfc_tracking.title')}\n32: </h1>"
-          },
           {
             "key": "nfc_tracking.subtitle",
             "line": 34,
@@ -8951,7 +8713,7 @@
           {
             "key": "dealerships.title",
             "line": 217,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.manage_description",
@@ -9109,11 +8871,6 @@
             "key": "messages.deleted",
             "line": 152,
             "context": "151: \n152: toast.success(t('messages.deleted'));\n153: fetchDealerships();"
-          },
-          {
-            "key": "dealerships.title",
-            "line": 217,
-            "context": "216: <div>\n217: <h1 className=\"text-3xl font-bold tracking-tight\">{t('dealerships.title')}</h1>\n218: <p className=\"text-muted-foreground\">"
           },
           {
             "key": "dealerships.manage_description",
@@ -9291,7 +9048,7 @@
           {
             "key": "contacts.title",
             "line": 222,
-            "exists": false
+            "exists": true
           },
           {
             "key": "contacts.manage_description",
@@ -9356,7 +9113,7 @@
           {
             "key": "dealerships.title",
             "line": 276,
-            "exists": false
+            "exists": true
           },
           {
             "key": "contacts.all_dealerships",
@@ -9431,7 +9188,7 @@
           {
             "key": "dealerships.title",
             "line": 408,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.loading",
@@ -9484,11 +9241,6 @@
             "key": "messages.deleted",
             "line": 156,
             "context": "155: \n156: toast.success(t('messages.deleted'));\n157: fetchContacts();"
-          },
-          {
-            "key": "contacts.title",
-            "line": 222,
-            "context": "221: <Users2 className=\"h-8 w-8 text-secondary\" />\n222: {t('contacts.title')}\n223: </h1>"
           },
           {
             "key": "contacts.manage_description",
@@ -9549,11 +9301,6 @@
             "key": "contacts.other",
             "line": 270,
             "context": "269: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>\n270: <SelectItem value=\"other\">{t('contacts.other')}</SelectItem>\n271: </SelectContent>"
-          },
-          {
-            "key": "dealerships.title",
-            "line": 276,
-            "context": "275: <SelectTrigger>\n276: <SelectValue placeholder={t('dealerships.title')} />\n277: </SelectTrigger>"
           },
           {
             "key": "contacts.all_dealerships",
@@ -9626,11 +9373,6 @@
             "context": "406: <TableHead>{t('contacts.position')}</TableHead>\n407: <TableHead>{t('contacts.department')}</TableHead>\n408: <TableHead>{t('dealerships.title')}</TableHead>"
           },
           {
-            "key": "dealerships.title",
-            "line": 408,
-            "context": "407: <TableHead>{t('contacts.department')}</TableHead>\n408: <TableHead>{t('dealerships.title')}</TableHead>\n409: <TableHead className=\"w-12\"></TableHead>"
-          },
-          {
             "key": "common.loading",
             "line": 416,
             "context": "415: <TableCell colSpan={7} className=\"h-24 text-center\">\n416: {t('common.loading')}\n417: </TableCell>"
@@ -9701,7 +9443,7 @@
           {
             "key": "chat.title",
             "line": 73,
-            "exists": false
+            "exists": true
           },
           {
             "key": "chat.subtitle",
@@ -9761,11 +9503,6 @@
             "context": "56: <CardDescription>\n57: {t('chat.no_dealership_access_desc')}\n58: </CardDescription>"
           },
           {
-            "key": "chat.title",
-            "line": 73,
-            "context": "72: <h1 className=\"text-3xl font-bold text-foreground\">\n73: {t('chat.title')}\n74: </h1>"
-          },
-          {
             "key": "chat.subtitle",
             "line": 76,
             "context": "75: <p className=\"text-muted-foreground mt-2\">\n76: {t('chat.subtitle', { dealership: activeDealership.name })}\n77: </p>"
@@ -9811,7 +9548,7 @@
           {
             "key": "messages.confirm_delete_order",
             "line": 63,
-            "exists": false
+            "exists": true
           },
           {
             "key": "car_wash_orders.waiter",
@@ -9831,7 +9568,7 @@
           {
             "key": "common.refresh",
             "line": 138,
-            "exists": false
+            "exists": true
           },
           {
             "key": "car_wash_orders.quick_order",
@@ -9840,11 +9577,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "messages.confirm_delete_order",
-            "line": 63,
-            "context": "62: const handleDeleteOrder = async (orderId: string) => {\n63: if (confirm(t('messages.confirm_delete_order'))) {\n64: await deleteOrder(orderId);"
-          },
           {
             "key": "car_wash_orders.waiter",
             "line": 110,
@@ -9859,11 +9591,6 @@
             "key": "car_wash_orders.waiting",
             "line": 125,
             "context": "124: <Clock className=\"w-3 h-3 mr-1\" />\n125: {tabCounts.waiter} {t('car_wash_orders.waiting')}\n126: </Badge>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 138,
-            "context": "137: <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />\n138: {t('common.refresh')}\n139: </Button>"
           },
           {
             "key": "car_wash_orders.quick_order",
@@ -11946,7 +11673,7 @@
           {
             "key": "pages.user_management",
             "line": 89,
-            "exists": false
+            "exists": true
           },
           {
             "key": "app.logout",
@@ -11996,11 +11723,6 @@
             "context": "74: <p className=\"w-[200px] truncate text-sm text-muted-foreground\">\n75: {user.user_metadata?.full_name || t('auth.user')}\n76: </p>"
           },
           {
-            "key": "pages.user_management",
-            "line": 89,
-            "context": "88: <User className=\"h-4 w-4\" />\n89: {t('pages.user_management')}\n90: </Link>"
-          },
-          {
             "key": "app.logout",
             "line": 98,
             "context": "97: <LogOut className=\"h-4 w-4\" />\n98: {t('app.logout')}\n99: </DropdownMenuItem>"
@@ -12042,87 +11764,87 @@
           {
             "key": "navigation.sales_orders",
             "line": 26,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.service_orders",
             "line": 30,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.recon_orders",
             "line": 34,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.car_wash",
             "line": 38,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.get_ready",
             "line": 45,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.stock",
             "line": 49,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.detail_hub",
             "line": 53,
-            "exists": false
+            "exists": true
           },
           {
             "key": "chat.title",
             "line": 60,
-            "exists": false
+            "exists": true
           },
           {
             "key": "contacts.title",
             "line": 64,
-            "exists": false
+            "exists": true
           },
           {
             "key": "vin_scanner_hub.title",
             "line": 68,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.title",
             "line": 72,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.productivity",
             "line": 79,
-            "exists": false
+            "exists": true
           },
           {
             "key": "profile.title",
             "line": 83,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.title",
             "line": 90,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.management",
             "line": 94,
-            "exists": false
+            "exists": true
           },
           {
             "key": "pages.user_management",
             "line": 98,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.reports",
             "line": 102,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.settings",
@@ -12132,181 +11854,50 @@
           {
             "key": "navigation.landing_page",
             "line": 113,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.core_operations",
             "line": 169,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.workflow_management",
             "line": 209,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.tools_communication",
             "line": 249,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.productivity_section",
             "line": 289,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.management_reports",
             "line": 329,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.system_admin",
             "line": 370,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.sign_out",
             "line": 425,
-            "exists": false
+            "exists": true
           },
           {
             "key": "navigation.sign_out",
             "line": 456,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "navigation.sales_orders",
-            "line": 26,
-            "context": "25: }, {\n26: title: t('navigation.sales_orders'),\n27: url: \"/sales\","
-          },
-          {
-            "key": "navigation.service_orders",
-            "line": 30,
-            "context": "29: }, {\n30: title: t('navigation.service_orders'),\n31: url: \"/service\","
-          },
-          {
-            "key": "navigation.recon_orders",
-            "line": 34,
-            "context": "33: }, {\n34: title: t('navigation.recon_orders'),\n35: url: \"/recon\","
-          },
-          {
-            "key": "navigation.car_wash",
-            "line": 38,
-            "context": "37: }, {\n38: title: t('navigation.car_wash'),\n39: url: \"/carwash\","
-          },
-          {
-            "key": "navigation.get_ready",
-            "line": 45,
-            "context": "44: const workflowNavItems = [{\n45: title: t('navigation.get_ready'),\n46: url: \"/get-ready\","
-          },
-          {
-            "key": "navigation.stock",
-            "line": 49,
-            "context": "48: }, {\n49: title: t('navigation.stock'),\n50: url: \"/stock\","
-          },
-          {
-            "key": "navigation.detail_hub",
-            "line": 53,
-            "context": "52: }, {\n53: title: t('navigation.detail_hub'),\n54: url: \"/detail-hub\","
-          },
-          {
-            "key": "chat.title",
-            "line": 60,
-            "context": "59: const toolsNavItems = [{\n60: title: t('chat.title'),\n61: url: \"/chat\","
-          },
-          {
-            "key": "contacts.title",
-            "line": 64,
-            "context": "63: }, {\n64: title: t('contacts.title'),\n65: url: \"/contacts\","
-          },
-          {
-            "key": "vin_scanner_hub.title",
-            "line": 68,
-            "context": "67: }, {\n68: title: t('vin_scanner_hub.title'),\n69: url: \"/vin-scanner\","
-          },
-          {
-            "key": "nfc_tracking.title",
-            "line": 72,
-            "context": "71: }, {\n72: title: t('nfc_tracking.title'),\n73: url: \"/nfc-tracking\","
-          },
-          {
-            "key": "navigation.productivity",
-            "line": 79,
-            "context": "78: const productivityNavItems = [{\n79: title: t('navigation.productivity'),\n80: url: \"/productivity\","
-          },
-          {
-            "key": "profile.title",
-            "line": 83,
-            "context": "82: }, {\n83: title: t('profile.title'),\n84: url: \"/profile\","
-          },
-          {
-            "key": "dealerships.title",
-            "line": 90,
-            "context": "89: const managementNavItems = [{\n90: title: t('dealerships.title'),\n91: url: \"/dealerships\","
-          },
-          {
-            "key": "navigation.management",
-            "line": 94,
-            "context": "93: }, {\n94: title: t('navigation.management'),\n95: url: \"/management\","
-          },
-          {
-            "key": "pages.user_management",
-            "line": 98,
-            "context": "97: }, {\n98: title: t('pages.user_management'),\n99: url: \"/users\","
-          },
-          {
-            "key": "navigation.reports",
-            "line": 102,
-            "context": "101: }, {\n102: title: t('navigation.reports'),\n103: url: \"/reports\","
-          },
-          {
-            "key": "navigation.landing_page",
-            "line": 113,
-            "context": "112: const systemAdminNavItems = isSystemAdmin(roles) ? [{\n113: title: t('navigation.landing_page'),\n114: url: \"/landing\","
-          },
-          {
-            "key": "navigation.core_operations",
-            "line": 169,
-            "context": "168: <SidebarGroup>\n169: <SidebarGroupLabel className={collapsed ? \"sr-only\" : \"\"}>{t('navigation.core_operations')}</SidebarGroupLabel>\n170: <SidebarGroupContent>"
-          },
-          {
-            "key": "navigation.workflow_management",
-            "line": 209,
-            "context": "208: <SidebarGroup>\n209: <SidebarGroupLabel className={collapsed ? \"sr-only\" : \"\"}>{t('navigation.workflow_management')}</SidebarGroupLabel>\n210: <SidebarGroupContent>"
-          },
-          {
-            "key": "navigation.tools_communication",
-            "line": 249,
-            "context": "248: <SidebarGroup>\n249: <SidebarGroupLabel className={collapsed ? \"sr-only\" : \"\"}>{t('navigation.tools_communication')}</SidebarGroupLabel>\n250: <SidebarGroupContent>"
-          },
-          {
-            "key": "navigation.productivity_section",
-            "line": 289,
-            "context": "288: <SidebarGroup>\n289: <SidebarGroupLabel className={collapsed ? \"sr-only\" : \"\"}>{t('navigation.productivity_section')}</SidebarGroupLabel>\n290: <SidebarGroupContent>"
-          },
-          {
-            "key": "navigation.management_reports",
-            "line": 329,
-            "context": "328: <SidebarGroup>\n329: <SidebarGroupLabel className={collapsed ? \"sr-only\" : \"\"}>{t('navigation.management_reports')}</SidebarGroupLabel>\n330: <SidebarGroupContent>"
-          },
-          {
-            "key": "navigation.system_admin",
-            "line": 370,
-            "context": "369: <SidebarGroup>\n370: <SidebarGroupLabel className={collapsed ? \"sr-only\" : \"\"}>{t('navigation.system_admin')}</SidebarGroupLabel>\n371: <SidebarGroupContent>"
-          },
-          {
-            "key": "navigation.sign_out",
-            "line": 425,
-            "context": "424: className=\"w-8 h-8 p-0 flex items-center justify-center\"\n425: title={t('navigation.sign_out')}\n426: >"
-          },
-          {
-            "key": "navigation.sign_out",
-            "line": 456,
-            "context": "455: <LogOut className=\"w-4 h-4\" />\n456: {t('navigation.sign_out')}\n457: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 93,
         "severity": "low"
       },
@@ -17450,7 +17041,7 @@
           {
             "key": "vin_scanner_hub.title",
             "line": 145,
-            "exists": false
+            "exists": true
           },
           {
             "key": "vin_scanner_hub.subtitle",
@@ -17608,11 +17199,6 @@
             "key": "vin_scanner_hub.desktop_optimized",
             "line": 122,
             "context": "121: if (width < 1024) return t('vin_scanner_hub.tablet_optimized');\n122: return t('vin_scanner_hub.desktop_optimized');\n123: };"
-          },
-          {
-            "key": "vin_scanner_hub.title",
-            "line": 145,
-            "context": "144: <div>\n145: <CardTitle className=\"text-xl\">{t('vin_scanner_hub.title')}</CardTitle>\n146: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "key": "vin_scanner_hub.subtitle",
@@ -18938,26 +18524,15 @@
           {
             "key": "layout.search_placeholder",
             "line": 102,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.calendar",
             "line": 138,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "layout.search_placeholder",
-            "line": 102,
-            "context": "101: <Input\n102: placeholder={t('layout.search_placeholder')}\n103: value={searchTerm}"
-          },
-          {
-            "key": "common.calendar",
-            "line": 138,
-            "context": "137: <Calendar className=\"w-4 h-4 sm:mr-2\" />\n138: <span className=\"hidden sm:inline\">{t('common.calendar')}</span>\n139: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 33,
         "severity": "low"
       },
@@ -35208,7 +34783,7 @@
           {
             "key": "common.refresh",
             "line": 105,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.print",
@@ -35296,11 +34871,6 @@
             "key": "get_ready.vehicle_list.vehicles",
             "line": 98,
             "context": "97: <Badge variant=\"outline\" className=\"text-xs\">\n98: {vehicles?.length || 0} {t('get_ready.vehicle_list.vehicles', 'vehicles')}\n99: </Badge>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 105,
-            "context": "104: <RefreshCw className=\"h-4 w-4 mr-2\" />\n105: {t('common.refresh', 'Refresh')}\n106: </Button>"
           },
           {
             "key": "common.print",
@@ -38205,7 +37775,7 @@
           {
             "key": "dealerships.title",
             "line": 266,
-            "exists": false
+            "exists": true
           },
           {
             "key": "contacts.first_name",
@@ -38368,11 +37938,6 @@
             "key": "contacts.add_new",
             "line": 242,
             "context": "241: <User className=\"h-5 w-5\" />\n242: {isEditing ? t('contacts.edit_contact') : t('contacts.add_new')}\n243: </DialogTitle>"
-          },
-          {
-            "key": "dealerships.title",
-            "line": 266,
-            "context": "265: <Building2 className=\"h-4 w-4\" />\n266: {t('dealerships.title')} *\n267: </Label>"
           },
           {
             "key": "contacts.first_name",
@@ -39240,7 +38805,7 @@
           {
             "key": "common.refresh",
             "line": 85,
-            "exists": false
+            "exists": true
           },
           {
             "key": "analytics.total_messages",
@@ -39373,11 +38938,6 @@
             "key": "analytics.real_time_insights",
             "line": 81,
             "context": "80: <h2 className=\"text-2xl font-bold\">{t('analytics.communication_dashboard', 'Communication Analytics')}</h2>\n81: <p className=\"text-muted-foreground\">{t('analytics.real_time_insights', 'Real-time insights into your communication performance')}</p>\n82: </div>"
-          },
-          {
-            "key": "common.refresh",
-            "line": 85,
-            "context": "84: <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />\n85: {t('common.refresh', 'Refresh')}\n86: </Button>"
           },
           {
             "key": "analytics.total_messages",
@@ -39872,7 +39432,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "236 Component components need translation",
+      "description": "235 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -39998,7 +39558,6 @@
         "src\\pages\\VinScanner.tsx",
         "src\\pages\\Settings.tsx",
         "src\\pages\\ServiceOrders.tsx",
-        "src\\pages\\SalesOrders.tsx",
         "src\\pages\\Reports.tsx",
         "src\\pages\\ReconOrders.tsx",
         "src\\pages\\Profile.tsx",
@@ -40116,9 +39675,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3227 translation keys are referenced but missing",
+      "description": "3155 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "162 hours"
+      "estimatedEffort": "158 hours"
     }
   ],
   "coverage": 78

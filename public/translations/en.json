@@ -1,5 +1,6 @@
 {
   "common": {
+    "orders": "Orders",
     "status": {
       "online": "Online",
       "offline": "Offline",
@@ -61,7 +62,18 @@
     "new_order": "New Order",
     "calendar": "Calendar",
     "unknown_error": "Unknown error",
-    "toggle_theme": "Toggle theme"
+    "toggle_theme": "Toggle theme",
+    "due_date": "Due Date",
+    "scheduled_date": "Scheduled Date",
+    "created_at": "Created Date",
+    "advisor": "Advisor",
+    "price": "Price",
+    "priority": {
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority",
+      "urgent": "Urgent"
+    }
   },
   "cloud_sync": {
     "title": "Cloud Sync Dashboard",
@@ -405,5 +417,25 @@
   },
   "profile": {
     "title": "Profile"
+  },
+  "calendar": {
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "today": "Today",
+    "previous": "Previous",
+    "next": "Next",
+    "agenda": "Agenda",
+    "date": "Date",
+    "time": "Time",
+    "event": "Event",
+    "noEventsInRange": "No orders in this date range",
+    "showMore": "Show more",
+    "clickToCreateOrder": "Click on an empty slot to create a new order",
+    "status_legend": "Status Colors",
+    "date_source_legend": "Date Sources",
+    "due_date": "Due Date",
+    "scheduled_date": "Scheduled Date",
+    "created_date": "Created Date"
   }
 }

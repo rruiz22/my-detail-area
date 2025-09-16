@@ -1,5 +1,6 @@
 {
   "common": {
+    "orders": "Pedidos",
     "status": {
       "online": "Online",
       "offline": "Offline",
@@ -405,5 +406,20 @@
   },
   "profile": {
     "title": "Perfil"
+  },
+  "calendar": {
+    "month": "Mês",
+    "week": "Semana",
+    "day": "Dia",
+    "today": "Hoje",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "agenda": "Agenda",
+    "date": "Data",
+    "time": "Hora",
+    "event": "Evento",
+    "noEventsInRange": "Nenhum pedido neste período",
+    "showMore": "Mostrar mais",
+    "clickToCreateOrder": "Clique em um espaço vazio para criar um novo pedido"
   }
 }
