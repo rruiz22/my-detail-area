@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,7 +62,7 @@ export const UserDashboard: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   // Data fetching
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -109,7 +109,7 @@ export const UserDashboard: React.FC = () => {
 
       // Calculate stats
       const activeUsers = users.filter(user => 
-        user.dealer_memberships?.some((m: any) => m.is_active)
+        user.dealer_memberships?.some((m: { is_active: boolean }) => m.is_active)
       );
 
       const recentlyJoined = users.filter(user => {
@@ -132,7 +132,7 @@ export const UserDashboard: React.FC = () => {
       const dealershipDistribution = dealerships.map(dealer => ({
         dealership: dealer.name,
         userCount: users.filter(user => 
-          user.dealer_memberships?.some((m: any) => m.dealer_id === dealer.id)
+          user.dealer_memberships?.some((m: { dealer_id: number }) => m.dealer_id === dealer.id)
         ).length
       }));
 
@@ -175,17 +175,18 @@ export const UserDashboard: React.FC = () => {
 
       setRecentActivity(mockActivity);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching dashboard data:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error loading dashboard data';
       toast({
         title: t('common.error'),
-        description: error.message || 'Error loading dashboard data',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -224,7 +225,7 @@ export const UserDashboard: React.FC = () => {
           user.last_name || '',
           user.user_type,
           new Date(user.created_at).toLocaleDateString(),
-          user.dealer_memberships?.some((m: any) => m.is_active) ? 'Yes' : 'No'
+          user.dealer_memberships?.some((m: { is_active: boolean }) => m.is_active) ? 'Yes' : 'No'
         ].join(','))
       ].join('\n');
 
@@ -241,10 +242,11 @@ export const UserDashboard: React.FC = () => {
         title: t('common.success'),
         description: 'Users exported successfully',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error exporting users';
       toast({
         title: t('common.error'),
-        description: error.message || 'Error exporting users',
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -252,7 +254,7 @@ export const UserDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
 
   if (loading) {
     return (

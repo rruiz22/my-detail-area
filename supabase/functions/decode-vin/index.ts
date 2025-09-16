@@ -15,6 +15,11 @@ interface VehicleInfo {
   bodyClass?: string;
 }
 
+interface NHTSAApiItem {
+  Variable: string;
+  Value: string | null;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -76,7 +81,7 @@ serve(async (req) => {
     };
 
     // Map NHTSA fields to our structure
-    results.forEach((item: any) => {
+    results.forEach((item: NHTSAApiItem) => {
       switch (item.Variable) {
         case 'Model Year':
           vehicleInfo.year = item.Value || '';

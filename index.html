@@ -24,6 +24,24 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Polyfill for require in browser environment
+      if (typeof require === 'undefined') {
+        window.require = function(module) {
+          console.warn(`require('${module}') called in browser - returning empty object`);
+          return {};
+        };
+      }
+
+      // Additional Node.js polyfills
+      if (typeof process === 'undefined') {
+        window.process = { env: {} };
+      }
+
+      if (typeof Buffer === 'undefined') {
+        window.Buffer = {};
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export const UnifiedUserManagement: React.FC = () => {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
   // Data fetching functions
-  const fetchUsersWithRoles = async () => {
+  const fetchUsersWithRoles = useCallback(async () => {
     try {
       setIsLoading(true);
 
@@ -88,7 +88,7 @@ export const UnifiedUserManagement: React.FC = () => {
             .rpc('get_user_roles', { user_uuid: profile.id });
 
           // Get the dealership_id from profile first, then from active membership
-          const activeMembership = profile.dealer_memberships?.find((m: any) => m.is_active);
+          const activeMembership = profile.dealer_memberships?.find((m: { is_active: boolean; dealer_id: number }) => m.is_active);
           const dealershipId = profile.dealership_id || activeMembership?.dealer_id;
           
           return {
@@ -115,17 +115,18 @@ export const UnifiedUserManagement: React.FC = () => {
 
 
       setUsers(sortedUsers);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching users:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error al cargar usuarios';
       toast({
         title: t('common.error'),
-        description: error.message || 'Error al cargar usuarios',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const fetchDealerships = async () => {
     try {
@@ -138,7 +139,7 @@ export const UnifiedUserManagement: React.FC = () => {
 
       if (error) throw error;
       setDealerships(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching dealerships:', error);
     }
   };
@@ -147,14 +148,14 @@ export const UnifiedUserManagement: React.FC = () => {
   useEffect(() => {
     fetchUsersWithRoles();
     fetchDealerships();
-  }, []);
+  }, [fetchUsersWithRoles]);
 
   useEffect(() => {
     filterUsers();
-  }, [users, searchQuery, selectedDealership]);
+  }, [filterUsers]);
 
   // Filter function
-  const filterUsers = () => {
+  const filterUsers = useCallback(() => {
     let filtered = users;
 
     if (searchQuery) {
@@ -169,15 +170,15 @@ export const UnifiedUserManagement: React.FC = () => {
     }
 
     setFilteredUsers(filtered);
-  };
+  }, [users, searchQuery, selectedDealership, getDisplayName]);
 
   // Helper functions
-  const getDisplayName = (user: User) => {
+  const getDisplayName = useCallback((user: User) => {
     if (user.first_name || user.last_name) {
       return `${user.first_name || ''} ${user.last_name || ''}`.trim();
     }
     return user.email.split('@')[0];
-  };
+  }, []);
 
   const getInitials = (user: User) => {
     const name = getDisplayName(user);

@@ -2,12 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🔒 PUERTO 8080 EXCLUSIVO - CONFIGURACIÓN CRÍTICA
+
+**IMPORTANTE**: Este proyecto DEBE usar ÚNICAMENTE el puerto 8080 para desarrollo.
+
+- **Configuración Vite**: `strictPort: true` - No permite otros puertos
+- **Resolución de Conflictos**: Si el puerto 8080 está ocupado, se debe liberar antes de iniciar
+- **Comando verificación**: `netstat -ano | findstr :8080` (Windows)
+- **Comando liberación**: Identificar y terminar el proceso que usa el puerto
+- **URL de desarrollo**: http://localhost:8080 (FIJO - no cambia)
+
+Esta configuración asegura consistencia en el desarrollo y evita conflictos de puerto entre sesiones.
+
 ## Essential Development Commands
 
 ```bash
 # Development
-npm run dev              # Start development server (localhost:8080)
-npm run build           # Production build  
+npm run dev              # Start development server (localhost:8080 - STRICT PORT)
+npm run build           # Production build
 npm run build:dev       # Development build
 npm run lint            # ESLint code quality check
 npm run preview         # Preview production build

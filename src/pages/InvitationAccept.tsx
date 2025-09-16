@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,9 +54,9 @@ export function InvitationAccept() {
       setError('Token de invitación no válido');
       setLoading(false);
     }
-  }, [token]);
+  }, [token, fetchInvitationDetails]);
 
-  const fetchInvitationDetails = async () => {
+  const fetchInvitationDetails = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -85,7 +85,7 @@ export function InvitationAccept() {
       // Check if invitation is expired
       const expiresAt = new Date(invitationData.expires_at);
       const now = new Date();
-      
+
       if (expiresAt < now) {
         throw new Error(t('invitations.accept.expired'));
       }
@@ -115,7 +115,7 @@ export function InvitationAccept() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, t]);
 
   const handleAcceptInvitation = async () => {
     if (!user) {

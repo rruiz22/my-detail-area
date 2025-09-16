@@ -67,7 +67,7 @@ export function QuickScanMode({
     } catch (err) {
       console.error('Quick scan camera access error:', err);
     }
-  }, [autoScanInterval]);
+  }, [autoScanInterval, captureAndScan]);
 
   // Stop camera and scanning
   const stopQuickScan = useCallback(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
   const [isInvitationModalOpen, setIsInvitationModalOpen] = useState(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
-  const fetchUsersWithRoles = async () => {
+  const fetchUsersWithRoles = useCallback(async () => {
     try {
       setIsLoading(true);
 
@@ -88,7 +88,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const fetchDealerships = async () => {
     try {
@@ -108,19 +108,15 @@ export const EnhancedUserManagementSection: React.FC = () => {
   useEffect(() => {
     fetchUsersWithRoles();
     fetchDealerships();
-  }, []);
+  }, [fetchUsersWithRoles]);
 
-  useEffect(() => {
-    filterUsers();
-  }, [users, searchQuery, userTypeFilter, selectedDealership]);
-
-  const filterUsers = () => {
+  const filterUsers = useCallback(() => {
     let filtered = users;
 
     if (searchQuery) {
       filtered = filtered.filter(user =>
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.toLowerCase())
+        getDisplayName(user).toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -133,7 +129,12 @@ export const EnhancedUserManagementSection: React.FC = () => {
     }
 
     setFilteredUsers(filtered);
-  };
+  }, [users, searchQuery, userTypeFilter, selectedDealership]);
+
+  useEffect(() => {
+    filterUsers();
+  }, [filterUsers]);
+
 
   const getDisplayName = (user: User) => {
     if (user.first_name || user.last_name) {

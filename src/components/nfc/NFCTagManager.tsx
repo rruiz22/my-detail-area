@@ -94,7 +94,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
 
   useEffect(() => {
     loadTags();
-  }, []);
+  }, [loadTags]);
 
   // Filter tags based on search and filters
   const filteredTags = tags.filter(tag => {

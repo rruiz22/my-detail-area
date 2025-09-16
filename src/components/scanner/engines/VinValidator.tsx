@@ -70,7 +70,7 @@ export function useVinValidator() {
     
     const checkDigit = sum % 11;
     return checkDigit === 10 ? 'X' : checkDigit.toString();
-  }, []);
+  }, [vinValues, vinWeights]);
 
   const validateBasicFormat = useCallback((vin: string): { valid: boolean; errors: string[] } => {
     const errors: string[] = [];
@@ -116,14 +116,14 @@ export function useVinValidator() {
     } else {
       return year2;
     }
-  }, []);
+  }, [yearCodes]);
 
   const getManufacturer = useCallback((vin: string): string | undefined => {
     const wmi = vin.substring(0, 3);
     const firstChar = wmi[0];
-    
+
     return manufacturerCodes[firstChar];
-  }, []);
+  }, [manufacturerCodes]);
 
   const validateVin = useCallback((vin: string): VinValidationResult => {
     const cleanVin = vin.toUpperCase().trim();

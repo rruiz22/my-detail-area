@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -48,9 +48,9 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
     updateSyncStats();
     const interval = setInterval(updateSyncStats, 5000);
     return () => clearInterval(interval);
-  }, [syncStatuses]);
+  }, [syncStatuses, updateSyncStats]);
 
-  const updateSyncStats = () => {
+  const updateSyncStats = useCallback(() => {
     const stats = {
       totalItems: syncStatuses.size,
       syncedItems: Array.from(syncStatuses.values()).filter(s => s.status === 'synced').length,
@@ -59,7 +59,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
     };
     setSyncStats(stats);
     setStorageInfo(storage.getStorageInfo());
-  };
+  }, [syncStatuses]);
 
   const handleForceSyncAll = async () => {
     try {

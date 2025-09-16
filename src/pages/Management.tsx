@@ -1,4 +1,3 @@
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,8 +30,7 @@ const Management = () => {
   const [activeTab, setActiveTab] = useTabPersistence('management');
 
   return (
-    <DashboardLayout title={t('management.title')}>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header */}
         <div className="border-b pb-6">
           <div className="flex items-center justify-between">
@@ -150,8 +148,7 @@ const Management = () => {
             </TabsContent>
           )}
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 };
 

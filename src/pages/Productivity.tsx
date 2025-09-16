@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Plus, Calendar, CheckSquare, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import { ProductivityTodos } from "@/components/productivity/ProductivityTodos";
 import { ProductivityCalendar } from "@/components/productivity/ProductivityCalendar";
 import { ProductivityDashboard } from "@/components/productivity/ProductivityDashboard";
@@ -19,8 +18,7 @@ export default function Productivity() {
   }, []);
 
   return (
-    <DashboardLayout>
-      <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto py-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{t('productivity.title')}</h1>
@@ -58,7 +56,6 @@ export default function Productivity() {
             <ProductivityCalendar />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

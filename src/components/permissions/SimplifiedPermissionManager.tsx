@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -70,12 +70,12 @@ export const SimplifiedPermissionManager: React.FC<SimplifiedPermissionManagerPr
     if (user && dealerId) {
       fetchMemberships();
     }
-  }, [user, dealerId]);
+  }, [user, dealerId, fetchMemberships]);
 
-  const fetchMemberships = async () => {
+  const fetchMemberships = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('dealer_memberships')
         .select(`
@@ -145,7 +145,7 @@ export const SimplifiedPermissionManager: React.FC<SimplifiedPermissionManagerPr
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, toast]);
 
   const handleToggleMembership = async (membershipId: string, isActive: boolean) => {
     try {

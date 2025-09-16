@@ -127,13 +127,20 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
     setValidationErrors([]);
   }, [contact, dealerships]);
 
-  const handleInputChange = (field: keyof ContactFormData, value: any) => {
-    // Sanitize string inputs
-    if (typeof value === 'string' && ['first_name', 'last_name', 'email', 'phone', 'mobile_phone', 'position', 'notes'].includes(field)) {
-      value = sanitizeInput(value);
+  const handleInputChange = <K extends keyof ContactFormData>(
+    field: K,
+    value: ContactFormData[K]
+  ): void => {
+    // Sanitization específica por tipo
+    let sanitizedValue: ContactFormData[K] = value;
+
+    if (typeof value === 'string' &&
+        ['first_name', 'last_name', 'email', 'phone', 'mobile_phone', 'position', 'notes'].includes(field as string)) {
+      sanitizedValue = sanitizeInput(value) as ContactFormData[K];
     }
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+
+    setFormData(prev => ({ ...prev, [field]: sanitizedValue }));
+
     // Clear validation errors when user starts typing
     if (validationErrors.length > 0) {
       setValidationErrors([]);

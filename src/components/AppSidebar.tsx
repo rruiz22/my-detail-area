@@ -131,7 +131,11 @@ export function AppSidebar() {
       setOpen(false);
     }
     if (url) {
-      console.log('[Sidebar] click ->', url);
+      console.log('[Sidebar] navigating to ->', url);
+      // Force a small delay to ensure state updates properly
+      setTimeout(() => {
+        console.log('[Sidebar] navigation completed to ->', url);
+      }, 100);
     }
   };
   const isActive = (path: string) => {
@@ -145,8 +149,7 @@ export function AppSidebar() {
     return active ? "bg-primary text-primary-foreground font-medium shadow-sm" : "hover:bg-muted/50 transition-colors";
   };
   return (
-    <TooltipProvider>
-      <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
+    <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
       <SidebarHeader className="p-4">
         <div className="flex items-center justify-center">
           {collapsed ? (
@@ -172,10 +175,9 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                         <NavLink 
-                            to={item.url} 
+                         <NavLink
+                            to={item.url}
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                            onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -187,10 +189,9 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                       <NavLink 
-                        to={item.url} 
+                       <NavLink
+                        to={item.url}
                         className={getNavClasses(item.url)}
-                        onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -217,7 +218,6 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -232,7 +232,6 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -259,7 +258,6 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -274,7 +272,6 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -301,7 +298,6 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -316,7 +312,6 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -343,7 +338,6 @@ export function AppSidebar() {
                            <NavLink 
                             to={item.url} 
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                             onClick={() => handleNavClick(item.url)}
                           >
                             <item.icon className="w-4 h-4" />
                           </NavLink>
@@ -358,7 +352,6 @@ export function AppSidebar() {
                        <NavLink 
                         to={item.url} 
                         className={getNavClasses(item.url)}
-                         onClick={() => handleNavClick(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
                         <span>{item.title}</span>
@@ -386,7 +379,6 @@ export function AppSidebar() {
                              <NavLink 
                               to={item.url} 
                               className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                               onClick={() => handleNavClick(item.url)}
                             >
                               <item.icon className="w-4 h-4" />
                             </NavLink>
@@ -401,7 +393,6 @@ export function AppSidebar() {
                          <NavLink 
                           to={item.url} 
                           className={getNavClasses(item.url)}
-                          onClick={() => handleNavClick(item.url)}
                         >
                           <item.icon className="w-4 h-4 flex-shrink-0" />
                           <span>{item.title}</span>
@@ -468,7 +459,6 @@ export function AppSidebar() {
           )}
         </div>
       </SidebarFooter>
-      </Sidebar>
-    </TooltipProvider>
+    </Sidebar>
   );
 }

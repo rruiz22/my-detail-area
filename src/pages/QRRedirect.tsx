@@ -58,7 +58,7 @@ export default function QRRedirect() {
     };
 
     trackClickAndRedirect();
-  }, [slug]);
+  }, [slug, t]);
 
   // Auto-redirect once we have the deep link
   useEffect(() => {

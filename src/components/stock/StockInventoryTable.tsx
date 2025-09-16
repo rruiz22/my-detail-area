@@ -69,7 +69,7 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const filteredInventory = useMemo(() => {
     if (!inventory) return [];
 
-    let filtered = inventory.filter(item => {
+    const filtered = inventory.filter(item => {
       const matchesSearch = 
         item.stock_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.vin?.toLowerCase().includes(searchTerm.toLowerCase()) ||

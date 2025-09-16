@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Clock, Zap, Target, TrendingUp, Wrench } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -82,9 +82,9 @@ export function BottleneckAnalysis({ dealerId, orders, loading = false }: Bottle
     });
 
     return bottlenecks.sort((a, b) => b.impactScore - a.impactScore);
-  }, [orders, t]);
+  }, [orders, getStepDisplayName]);
 
-  function getStepDisplayName(stepType: WorkflowStepType): string {
+  const getStepDisplayName = useCallback((stepType: WorkflowStepType): string => {
     const stepNames: Record<WorkflowStepType, string> = {
       'created': t('reconHub.workflow.steps.created', 'Created'),
       'bring_to_recon': t('reconHub.workflow.steps.bringToRecon', 'Bring to Recon'),
@@ -100,7 +100,7 @@ export function BottleneckAnalysis({ dealerId, orders, loading = false }: Bottle
       'cant_find_keys': t('reconHub.workflow.steps.cantFindKeys', 'Can\'t Find Keys')
     };
     return stepNames[stepType] || stepType;
-  }
+  }, [t]);
 
   // Recommendations based on analysis
   const recommendations = useMemo(() => {

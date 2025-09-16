@@ -26,6 +26,16 @@ import { UserPresenceIndicator } from '../presence/UserPresenceIndicator';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
+type PresenceStatus = 'online' | 'away' | 'busy' | 'offline';
+
+const getValidPresenceStatus = (status: unknown): PresenceStatus => {
+  if (typeof status === 'string' &&
+      ['online', 'away', 'busy', 'offline'].includes(status)) {
+    return status as PresenceStatus;
+  }
+  return 'offline'; // fallback seguro
+};
+
 interface FloatingChatBubbleProps {
   className?: string;
 }
@@ -255,7 +265,7 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
                         onClick={() => openDirectMessage(member.user_id)}
                       >
                         <UserPresenceIndicator
-                          status={member.presence_status as any}
+                          status={getValidPresenceStatus(member.presence_status)}
                           size="sm"
                           showRing
                         >

@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import Tesseract from 'tesseract.js';
 
 interface UseVinScannerReturn {
   scanVin: (imageFile: File | string) => Promise<string[]>;
@@ -18,31 +17,39 @@ export function useVinScanner(): UseVinScannerReturn {
     setError(null);
 
     try {
-      const { data: { text } } = await Tesseract.recognize(
-        imageFile,
-        'eng',
-        {
-          logger: () => {} // Disable logging
+      // Dynamic import - only load tesseract.js when actually needed
+      const Tesseract = await import('tesseract.js');
+      const worker = await Tesseract.createWorker('eng');
+
+      try {
+        const { data: { text } } = await worker.recognize(
+          imageFile,
+          'eng',
+          {
+            logger: () => {} // Disable logging
+          }
+        );
+
+        // VIN regex pattern - 17 characters, excluding I, O, Q
+        const vinPattern = /[A-HJ-NPR-Z0-9]{17}/g;
+        const matches = text.match(vinPattern) || [];
+
+        // Filter out duplicates and validate
+        const uniqueVins = [...new Set(matches)].filter(vin =>
+          vin.length === 17 &&
+          !/[IOQ]/.test(vin) // Ensure no invalid characters
+        );
+
+        if (uniqueVins.length === 0) {
+          setError(t('vin_scanner_errors.no_vin_found'));
+        } else {
+          console.log('VINs detectados:', uniqueVins);
         }
-      );
 
-      // VIN regex pattern - 17 characters, excluding I, O, Q
-      const vinPattern = /[A-HJ-NPR-Z0-9]{17}/g;
-      const matches = text.match(vinPattern) || [];
-      
-      // Filter out duplicates and validate
-      const uniqueVins = [...new Set(matches)].filter(vin => 
-        vin.length === 17 && 
-        !/[IOQ]/.test(vin) // Ensure no invalid characters
-      );
-
-      if (uniqueVins.length === 0) {
-        setError(t('vin_scanner_errors.no_vin_found'));
-      } else {
-        console.log('VINs detectados:', uniqueVins);
+        return uniqueVins;
+      } finally {
+        await worker.terminate();
       }
-
-      return uniqueVins;
     } catch (err) {
       console.error('VIN scanning error:', err);
       setError(t('vin_scanner_errors.processing_error'));
@@ -50,7 +57,7 @@ export function useVinScanner(): UseVinScannerReturn {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   return {
     scanVin,

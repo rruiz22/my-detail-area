@@ -54,7 +54,7 @@ export function NFCLocationHeatmap({ className }: NFCLocationHeatmapProps) {
 
   useEffect(() => {
     loadTags();
-  }, []);
+  }, [loadTags]);
 
   // Mock location data - in real app this would be calculated from NFC scans
   const mockLocationData: LocationData[] = [

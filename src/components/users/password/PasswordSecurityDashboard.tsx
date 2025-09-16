@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -34,10 +34,10 @@ export const PasswordSecurityDashboard = ({ dealerId }: PasswordSecurityDashboar
   });
   const [loading, setLoading] = useState(true);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const [resetRequests, bulkOps] = await Promise.all([
         getPasswordResetRequests(dealerId),
         getBulkOperations(dealerId)
@@ -72,13 +72,13 @@ export const PasswordSecurityDashboard = ({ dealerId }: PasswordSecurityDashboar
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, getPasswordResetRequests, getBulkOperations, passwordPolicy]);
 
   useEffect(() => {
     if (dealerId) {
       fetchDashboardData();
     }
-  }, [dealerId]);
+  }, [dealerId, fetchDashboardData]);
 
   const getSecurityScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';

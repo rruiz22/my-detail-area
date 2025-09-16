@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -32,9 +32,9 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
 
   useEffect(() => {
     loadComments();
-  }, [orderId]);
+  }, [orderId, loadComments]);
 
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('order_comments')
@@ -67,7 +67,7 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
       console.error('Error loading comments:', error);
       toast.error(t('messages.error_loading_comments'));
     }
-  };
+  }, [orderId, t]);
 
   const addComment = async () => {
     if (!newComment.trim()) return;

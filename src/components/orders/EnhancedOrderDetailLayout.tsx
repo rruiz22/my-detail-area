@@ -27,15 +27,7 @@ import { QRCodeDisplay } from './QRCodeDisplay';
 import { CommunicationActions } from './CommunicationActions';
 import { AttachmentUploader } from './AttachmentUploader';
 import { RecentActivity } from './RecentActivity';
-import { VehicleInfoBlock } from './VehicleInfoBlock';
-import { ScheduleViewBlock } from './ScheduleViewBlock';
-import { SimpleNotesDisplay } from './SimpleNotesDisplay';
-import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
-import { PublicCommentsBlock } from './PublicCommentsBlock';
-import { InternalNotesBlock } from './InternalNotesBlock';
 import { OrderStatusBadges } from './OrderStatusBadges';
-import { FollowersBlock } from './FollowersBlock';
-import { RecentActivityBlock } from './RecentActivityBlock';
 import { TimeRemaining } from './TimeRemaining';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
@@ -265,17 +257,27 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                 <div className="space-y-6">
                   {/* Row 1: Vehicle Info + Schedule View (Two blocks side by side) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <VehicleInfoBlock order={order} />
-                    <ScheduleViewBlock order={order} />
+                    <Suspense fallback={<SkeletonLoader variant="vehicle-info" />}>
+                      <VehicleInfoBlockMemo order={order} />
+                    </Suspense>
+                    <Suspense fallback={<SkeletonLoader variant="schedule" />}>
+                      <ScheduleViewBlockMemo order={order} />
+                    </Suspense>
                   </div>
 
                   {/* Row 2: Simple Notes Display (Full width) */}
-                  <SimpleNotesDisplay order={order} />
+                  <Suspense fallback={<SkeletonLoader variant="notes" />}>
+                    <SimpleNotesDisplayMemo order={order} />
+                  </Suspense>
 
                   {/* Row 3: Team Communication (Full width like order notes) */}
                   <div className="space-y-4">
-                    <PublicCommentsBlock orderId={order.id} />
-                    <InternalNotesBlock orderId={order.id} />
+                    <Suspense fallback={<SkeletonLoader variant="comments" />}>
+                      <PublicCommentsBlockMemo orderId={order.id} />
+                    </Suspense>
+                    <Suspense fallback={<SkeletonLoader variant="notes" />}>
+                      <InternalNotesBlockMemo orderId={order.id} />
+                    </Suspense>
                   </div>
                 </div>
 
@@ -285,13 +287,15 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />
                   ) : (
-                    <EnhancedQRCodeBlock 
-                      orderId={order.id}
-                      orderNumber={order.order_number}
-                      dealerId={String(order.dealer_id)}
-                      qrCodeUrl={order.qr_code_url}
-                      shortLink={order.short_link}
-                    />
+                    <Suspense fallback={<SkeletonLoader variant="qr-code" />}>
+                      <EnhancedQRCodeBlockMemo
+                        orderId={order.id}
+                        orderNumber={order.order_number}
+                        dealerId={String(order.dealer_id)}
+                        qrCodeUrl={order.qr_code_url}
+                        shortLink={order.short_link}
+                      />
+                    </Suspense>
                   )}
 
                   {/* Chat and Communication Actions */}
@@ -317,19 +321,23 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   {isLoadingData ? (
                     <SkeletonLoader variant="notes" />
                   ) : (
-                    <FollowersBlock 
-                      orderId={order.id}
-                      dealerId={String(order.dealer_id)}
-                    />
+                    <Suspense fallback={<SkeletonLoader variant="notes" />}>
+                      <FollowersBlockMemo
+                        orderId={order.id}
+                        dealerId={String(order.dealer_id)}
+                      />
+                    </Suspense>
                   )}
 
                   {/* Enhanced Recent Activity Block */}
                   {isLoadingData ? (
                     <SkeletonLoader variant="activity" />
                   ) : (
-                    <RecentActivityBlock 
-                      orderId={order.id}
-                    />
+                    <Suspense fallback={<SkeletonLoader variant="activity" />}>
+                      <RecentActivityBlockMemo
+                        orderId={order.id}
+                      />
+                    </Suspense>
                   )}
                 </div>
               </div>

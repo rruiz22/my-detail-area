@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import DetailHubDashboard from "@/components/detail-hub/DetailHubDashboard";
 import EmployeePortal from "@/components/detail-hub/EmployeePortal";
 import TimecardSystem from "@/components/detail-hub/TimecardSystem";
@@ -10,7 +9,7 @@ import KioskManager from "@/components/detail-hub/KioskManager";
 
 const DetailHub = () => {
   return (
-    <DashboardLayout>
+    <div>
       <Routes>
         <Route index element={<DetailHubDashboard />} />
         <Route path="employees" element={<EmployeePortal />} />
@@ -20,7 +19,7 @@ const DetailHub = () => {
         <Route path="kiosk" element={<PunchClockKiosk />} />
         <Route path="kiosk-manager" element={<KioskManager />} />
       </Routes>
-    </DashboardLayout>
+    </div>
   );
 };
 

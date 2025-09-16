@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCw } from 'lucide-react';
 import { OrderFilters } from '@/components/orders/OrderFilters';
@@ -18,13 +17,14 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
 
 export default function ServiceOrders() {
+  console.log('🔵 ServiceOrders component is RENDERING');
   const { t } = useTranslation();
-  
+
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('service_orders');
   const [viewMode, setViewMode] = useViewModePersistence('service_orders');
   const [searchTerm, setSearchTerm] = useSearchPersistence('service_orders');
-  
+
   // Non-persistent UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -45,10 +45,10 @@ export default function ServiceOrders() {
   } = useServiceOrderManagement(activeFilter);
 
   // Real-time updates are handled by useServiceOrderManagement hook
-  // Keep lastRefresh for UI purposes  
-  useEffect(() => {
-    setLastRefresh(new Date());
-  }, [orders]);
+  // Keep lastRefresh for UI purposes
+ // useEffect(() => {
+   // setLastRefresh(new Date());
+  //}, [orders]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -118,14 +118,13 @@ export default function ServiceOrders() {
   });
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold">{t('pages.service_orders')}</h1>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -168,8 +167,8 @@ export default function ServiceOrders() {
         {/* Main Content Area */}
         <div className="space-y-6">
           {activeFilter === 'dashboard' ? (
-            <SmartDashboard 
-              tabCounts={tabCounts} 
+            <SmartDashboard
+              tabCounts={tabCounts}
               onCardClick={handleCardClick}
             />
           ) : (
@@ -227,7 +226,6 @@ export default function ServiceOrders() {
             onStatusChange={handleStatusChange}
           />
         )}
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

@@ -28,37 +28,37 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
     try {
       setEnrollmentStep('capturing');
       setProgress(0);
-      
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
           facingMode: 'user',
           width: { ideal: 640 },
           height: { ideal: 480 }
-        } 
+        }
       });
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
       }
-      
+
       // Simulate enrollment process with multiple captures
       await performEnrollmentCaptures();
-      
+
     } catch (error) {
       console.error('Error starting enrollment:', error);
       setErrorMessage('Unable to access camera. Please check permissions.');
       setEnrollmentStep('error');
     }
-  }, []);
+  }, [performEnrollmentCaptures]);
 
-  const performEnrollmentCaptures = async () => {
+  const performEnrollmentCaptures = useCallback(async () => {
     const totalCaptures = 5;
     const captures: string[] = [];
-    
+
     for (let i = 0; i < totalCaptures; i++) {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Wait between captures
-      
+
       // Capture frame
       const imageData = captureFrame();
       if (imageData) {
@@ -67,16 +67,16 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
         setProgress(((i + 1) / totalCaptures) * 60); // 60% for capture phase
       }
     }
-    
+
     // Processing phase
     setEnrollmentStep('processing');
     setProgress(70);
-    
+
     // Simulate AWS Rekognition enrollment
     await simulateEnrollment(captures);
-  };
+  }, [captureFrame, simulateEnrollment]);
 
-  const captureFrame = (): string | null => {
+  const captureFrame = useCallback((): string | null => {
     if (!videoRef.current || !canvasRef.current) return null;
     
     const video = videoRef.current;
@@ -90,9 +90,9 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
     context.drawImage(video, 0, 0);
     
     return canvas.toDataURL('image/jpeg', 0.8);
-  };
+  }, []);
 
-  const simulateEnrollment = async (images: string[]) => {
+  const simulateEnrollment = useCallback(async (images: string[]) => {
     try {
       // Simulate API call to AWS Rekognition
       setProgress(80);
@@ -122,7 +122,7 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
       setErrorMessage('Enrollment failed. Please try again.');
       setEnrollmentStep('error');
     }
-  };
+  }, [employeeId, onComplete]);
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,10 +55,10 @@ export const DealershipManagementSection = () => {
   const [editingDealership, setEditingDealership] = useState(null);
   const { toast } = useToast();
 
-  const fetchDealerships = async () => {
+  const fetchDealerships = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('dealerships')
         .select('*')
@@ -101,11 +101,11 @@ export const DealershipManagementSection = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchDealerships();
-  }, []);
+  }, [fetchDealerships]);
 
   const filteredDealerships = dealerships.filter(dealership =>
     dealership.name.toLowerCase().includes(search.toLowerCase()) ||

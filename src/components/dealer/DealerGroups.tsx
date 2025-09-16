@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,12 +43,30 @@ interface DealerGroupsProps {
   dealerId: string;
 }
 
+interface Permission {
+  read: boolean;
+  write: boolean;
+  delete: boolean;
+  admin?: boolean;
+}
+
+interface GroupPermissions {
+  orders?: Permission;
+  contacts?: Permission;
+  analytics?: Permission;
+  settings?: Permission;
+  users?: Permission;
+  dealerships?: Permission;
+  chat?: Permission;
+  nfc?: Permission;
+}
+
 interface DealerGroup {
   id: string;
   name: string;
   slug: string;
   description: string | null;
-  permissions: any; // Json type from Supabase
+  permissions: GroupPermissions;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -90,11 +108,7 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
     permissions: []
   });
 
-  useEffect(() => {
-    fetchGroups();
-  }, [dealerId]);
-
-  const fetchGroups = async () => {
+  const fetchGroups = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dealer_groups')
@@ -104,7 +118,7 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
 
       if (error) throw error;
       setGroups(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching groups:', error);
       toast({
         title: t('common.error'),
@@ -114,7 +128,11 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, t, toast]);
+
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
 
   const handleCreateGroup = () => {
     setEditingGroup(null);
@@ -155,7 +173,7 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
       });
 
       fetchGroups();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error deleting group:', error);
       toast({
         title: t('common.error'),
@@ -231,7 +249,7 @@ export const DealerGroups: React.FC<DealerGroupsProps> = ({ dealerId }) => {
 
       setShowModal(false);
       fetchGroups();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error saving group:', error);
       toast({
         title: t('common.error'),

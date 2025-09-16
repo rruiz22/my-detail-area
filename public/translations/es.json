@@ -1,7 +1,7 @@
 {
   "stock": {
     "title": "Gestión de Inventario",
-    "subtitle": "Administra tu inventario de vehículos", 
+    "subtitle": "Administra tu inventario de vehículos",
     "description": "Gestión integral de inventario de vehículos y análisis",
     "inventory": {
       "title": "Inventario de Vehículos",
@@ -15,13 +15,16 @@
       "no_access_description": "No tienes acceso a concesionarios con inventario habilitado. Contacta a tu administrador para habilitar la gestión de inventario."
     },
     "actions": {
-      "refresh": "Actualizar"
+      "view_details": "Ver Detalles",
+      "export": "Exportar",
+      "edit": "Editar",
+      "delete": "Eliminar"
     },
     "tabs": {
       "inventory": "Inventario",
       "upload": "Subir",
       "analytics": "Análisis",
-      "dms_config": "Config DMS", 
+      "dms_config": "Config DMS",
       "sync_history": "Historial Sync"
     },
     "upload": {
@@ -62,7 +65,7 @@
       "vehicle": "Vehículo",
       "year": "Año",
       "make": "Marca",
-      "model": "Modelo", 
+      "model": "Modelo",
       "trim": "Versión",
       "mileage": "Kilometraje",
       "price": "Precio",
@@ -81,14 +84,8 @@
     "status": {
       "available": "Disponible",
       "sold": "Vendido",
-      "pending": "Pendiente", 
+      "pending": "Pendiente",
       "unknown": "Desconocido"
-    },
-    "actions": {
-      "view_details": "Ver Detalles",
-      "export": "Exportar",
-      "edit": "Editar",
-      "delete": "Eliminar"
     },
     "details": {
       "title": "Detalles del Vehículo",
@@ -960,7 +957,7 @@
     "delete": "Eliminar",
     "search": "Buscar",
     "filter": "Filtrar",
-    "refresh": "Actualizar",
+    "refresh": "[PT] Refresh",
     "print": "Imprimir",
     "loading": "Cargando...",
     "optional": "Opcional",
@@ -1006,7 +1003,6 @@
     "please_fix_errors": "[PT] Please fix the errors above",
     "previous": "[PT] Previous",
     "recently": "[PT] recently",
-    "refresh": "[PT] Refresh",
     "regenerating": "[PT] Regenerating...",
     "retry": "[PT] Retry",
     "select_client": "[PT] Select client...",
@@ -1637,7 +1633,7 @@
     "reports": "Reportes",
     "settings": "Configuración",
     "operations": "Operaciones",
-    "admin": "Administrador", 
+    "admin": "Administrador",
     "landing_page": "Página de Inicio",
     "sign_out": "Cerrar Sesión",
     "core_operations": "Operaciones Principales",
@@ -1935,7 +1931,7 @@
       "orders_processed": "Órdenes Procesadas",
       "orders_processed_value": "25,000+",
       "avg_time": "Tiempo Promedio",
-      "avg_time_value": "45min", 
+      "avg_time_value": "45min",
       "customer_satisfaction": "Satisfacción del Cliente",
       "customer_satisfaction_value": "98%",
       "team_efficiency": "Eficiencia del Equipo",
@@ -1946,14 +1942,14 @@
       "description": "Concesionarios líderes confían en My Detail Area para optimizar sus operaciones",
       "testimonial1": {
         "name": "Carlos Mendoza",
-        "role": "Gerente de Servicio", 
+        "role": "Gerente de Servicio",
         "company": "AutoMax Dealership",
         "content": "MDA ha transformado completamente nuestras operaciones de detailing. La coordinación entre departamentos nunca había sido tan fluida."
       },
       "testimonial2": {
         "name": "Ana Rodriguez",
         "role": "Coordinadora de Detailing",
-        "company": "Premium Motors", 
+        "company": "Premium Motors",
         "content": "El sistema de comunicación en tiempo real nos ha permitido reducir los tiempos de entrega en un 40%. Increíble plataforma."
       },
       "testimonial3": {
@@ -1965,7 +1961,7 @@
     },
     "navigation": {
       "features": "Características",
-      "benefits": "Beneficios", 
+      "benefits": "Beneficios",
       "testimonials": "Testimonios",
       "learn_more": "Saber Más",
       "start_trial": "Prueba Gratuita"
@@ -1973,7 +1969,7 @@
     "cta": {
       "title": "¿Listo para Transformar tu Concesionario?",
       "description": "Únete a cientos de concesionarios que ya optimizan sus operaciones con My Detail Area",
-      "get_started": "Inicia Tu Prueba Gratuita", 
+      "get_started": "Inicia Tu Prueba Gratuita",
       "schedule_demo": "Programar Demo"
     },
     "footer": {
@@ -1983,14 +1979,14 @@
       "pricing": "Precios",
       "integrations": "Integraciones",
       "api": "API",
-      "company": "Empresa", 
+      "company": "Empresa",
       "about": "Acerca de",
       "blog": "Blog",
       "careers": "Carreras",
       "contact": "Contacto",
       "support": "Soporte",
       "help_center": "Centro de Ayuda",
-      "documentation": "Documentación", 
+      "documentation": "Documentación",
       "status": "Estado",
       "privacy": "Privacidad"
     }
@@ -2498,129 +2494,6 @@
   },
   "get_ready": {
     "title": "Get Ready",
-    "tabs": {
-      "overview": "Vista General",
-      "details_view": "Vista de Detalles",
-      "approvals": "Aprobaciones",
-      "forms": "Formularios",
-      "vendors": "Proveedores",
-      "reports": "Reportes",
-      "integrations": "Integraciones",
-      "setup": "Configuración",
-      "help": "Ayuda"
-    },
-    "overview": {
-      "title": "Vista General",
-      "description": "Vista general de todos los vehículos en proceso",
-      "search_placeholder": "Buscar por stock, VIN o vehículo...",
-      "priority_filter": "Filtrar por prioridad",
-      "status_filter": "Filtrar por estado",
-      "no_vehicle_selected": "Seleccione un vehículo para ver los detalles",
-      "select_vehicle_details": "Seleccione un vehículo de la tabla para ver información detallada aquí",
-      "loading_vehicles": "Cargando vehículos...",
-      "no_vehicles": "No se encontraron vehículos"
-    },
-    "details_view": {
-      "title": "Vista de Detalles",
-      "description": "Vista detallada por step seleccionado",
-      "no_step_selected": "Seleccione un step para ver la vista de detalles"
-    },
-    "approvals": {
-      "title": "Aprobaciones",
-      "description": "Gestionar aprobaciones de vehículos y work items",
-      "view_by": "Ver por:",
-      "vehicle": "Vehículo",
-      "work_item": "Work Item",
-      "step": "Step",
-      "vendor_team": "Proveedor/Equipo",
-      "quick_filters": "Filtros Rápidos:",
-      "needs_approval": "Necesita Aprobación",
-      "no_vendor": "Sin Proveedor",
-      "priority": "Prioridad",
-      "qc_recheck": "Revisión QC",
-      "unrepairable": "No Reparable",
-      "bulk_actions": "Acciones Masivas",
-      "select_all": "Seleccionar Todo",
-      "approve_selected": "Aprobar Seleccionados",
-      "reject_selected": "Rechazar Seleccionados"
-    },
-    "forms": {
-      "title": "Formularios",
-      "description": "Gestionar formularios y templates de inspección",
-      "inspection_forms": "Formularios de Inspección",
-      "checklists": "Checklists",
-      "templates": "Templates",
-      "create_new": "Crear Nuevo"
-    },
-    "vendors": {
-      "title": "Proveedores",
-      "description": "Gestionar proveedores y asignaciones",
-      "vendor_list": "Lista de Proveedores",
-      "assignments": "Asignaciones",
-      "performance": "Rendimiento",
-      "add_vendor": "Agregar Proveedor"
-    },
-    "reports": {
-      "title": "Reportes",
-      "description": "Reportes y análisis de rendimiento",
-      "favorites": "Favoritos",
-      "featured_reports": "Reportes Destacados",
-      "recon_performance": "Rendimiento Recon",
-      "t2l_adr": "T2L/ADR",
-      "star_favorite": "Marcar como Favorito",
-      "view_report": "Ver Reporte"
-    },
-    "integrations": {
-      "title": "Integraciones",
-      "description": "Configurar conexiones y APIs externas",
-      "dms_connections": "Conexiones DMS",
-      "external_apis": "APIs Externas",
-      "sync_settings": "Configuración de Sincronización"
-    },
-    "setup": {
-      "title": "Configuración",
-      "description": "Configurar steps, work items y notificaciones",
-      "steps_config": "Configuración de Steps",
-      "work_items": "Work Items",
-      "notifications": "Notificaciones"
-    },
-    "help": {
-      "title": "Ayuda",
-      "description": "Documentación y recursos de ayuda",
-      "documentation": "Documentación",
-      "tutorials": "Tutoriales",
-      "faqs": "Preguntas Frecuentes",
-      "support": "Soporte"
-    },
-    "steps_sidebar": {
-      "toggle_collapse": "Alternar colapso",
-      "loading_steps": "Cargando steps...",
-      "no_steps": "No se encontraron steps"
-    },
-    "vehicle_table": {
-      "stock_number": "# Stock",
-      "vin": "VIN",
-      "vehicle": "Vehículo",
-      "current_step": "Step Actual",
-      "status": "Estado",
-      "priority": "Prioridad",
-      "days_in_step": "Días en Step",
-      "retail_value": "Valor Retail",
-      "actions": "Acciones"
-    },
-    "vehicle_detail": {
-      "overview": "Vista General",
-      "work_items": "Work Items",
-      "vendors": "Proveedores",
-      "timeline": "Timeline",
-      "appraisal": "Avalúo",
-      "media": "Media",
-      "notes": "Notas",
-      "loading": "Cargando detalles del vehículo..."
-    }
-  },
-  "get_ready": {
-    "title": "Get Ready",
     "description": "Gestión de flujo de trabajo de reacondicionamiento de vehículos",
     "search_placeholder": "Buscar vehículos por stock, VIN o año/marca/modelo...",
     "tabs": {
@@ -2851,12 +2724,12 @@
   },
   "calendar": {
     "month": "Mes",
-    "week": "Semana", 
+    "week": "Semana",
     "day": "Día",
     "today": "Hoy",
     "previous": "Anterior",
     "next": "Siguiente",
-    "agenda": "Agenda", 
+    "agenda": "Agenda",
     "date": "Fecha",
     "time": "Hora",
     "event": "Evento",

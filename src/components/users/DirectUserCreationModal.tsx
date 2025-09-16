@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -75,9 +75,9 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
         sendWelcomeEmail: true
       });
     }
-  }, [open]);
+  }, [open, fetchDealerships]);
 
-  const fetchDealerships = async () => {
+  const fetchDealerships = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dealerships')
@@ -87,7 +87,7 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
 
       if (error) throw error;
       setDealerships(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching dealerships:', error);
       toast({
         title: 'Error',
@@ -95,7 +95,7 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
         variant: 'destructive'
       });
     }
-  };
+  }, [toast, t]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -173,14 +173,17 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
       onSuccess?.();
       onClose();
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('=== FRONTEND ERROR HANDLING ===');
       console.error('Error type:', typeof error);
-      console.error('Error name:', error?.name);
-      console.error('Error message:', error?.message);
-      console.error('Error status:', error?.status);
-      console.error('Error context:', error?.context);
-      console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      if (error && typeof error === 'object') {
+        const errorObj = error as Record<string, unknown>;
+        console.error('Error name:', errorObj.name);
+        console.error('Error message:', errorObj.message);
+        console.error('Error status:', errorObj.status);
+        console.error('Error context:', errorObj.context);
+        console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      }
       
       // Extract meaningful error message
       let errorMessage = t('user_creation.failed_create_user');

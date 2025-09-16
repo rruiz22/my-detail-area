@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
@@ -112,7 +112,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     if (vehicleDisplay !== formData.vehicleInfo) {
       setFormData(prev => ({ ...prev, vehicleInfo: vehicleDisplay }));
     }
-  }, [formData.vehicleYear, formData.vehicleMake, formData.vehicleModel]);
+  }, [formData.vehicleYear, formData.vehicleMake, formData.vehicleModel, formData.vehicleInfo]);
 
   useEffect(() => {
     if (open) {
@@ -181,9 +181,9 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
         setSelectedDealership('');
       }
     }
-  }, [order, open]);
+  }, [order, open, fetchDealerships]);
 
-  const fetchDealerships = async () => {
+  const fetchDealerships = useCallback(async () => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return;
@@ -203,7 +203,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     } catch (error) {
       console.error('Error fetching dealerships:', error);
     }
-  };
+  }, []);
 
   const fetchDealerServices = async (dealershipId: string) => {
     if (!dealershipId) return;

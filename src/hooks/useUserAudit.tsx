@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -28,7 +28,7 @@ export const useUserAudit = (dealerId?: number) => {
     total: 0
   });
 
-  const fetchAuditEvents = async (filters?: {
+  const fetchAuditEvents = useCallback(async (filters?: {
     eventType?: string;
     entityType?: string;
     userId?: string;
@@ -37,7 +37,7 @@ export const useUserAudit = (dealerId?: number) => {
   }) => {
     try {
       setLoading(true);
-      
+
       let query = supabase
         .from('user_audit_log')
         .select(`
@@ -109,7 +109,7 @@ export const useUserAudit = (dealerId?: number) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination, dealerId, toast, t]);
 
   const logAuditEvent = async (event: Omit<AuditEvent, 'id' | 'created_at' | 'user_email' | 'affected_user_email'>) => {
     try {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export function NFCGeolocationMap({ className }: NFCGeolocationMapProps) {
   useEffect(() => {
     loadTags();
     loadScans();
-  }, []);
+  }, [loadTags, loadScans]);
 
   useEffect(() => {
     // Generate mock locations with real-looking data

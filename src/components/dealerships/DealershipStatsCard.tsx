@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -44,9 +44,9 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
 
   useEffect(() => {
     fetchStats();
-  }, [dealerId]);
+  }, [dealerId, fetchStats]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -65,7 +65,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId]);
 
   if (loading) {
     return (

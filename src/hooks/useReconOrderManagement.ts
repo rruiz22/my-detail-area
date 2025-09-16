@@ -529,7 +529,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
   // Load data on mount and tab change
   useEffect(() => {
     refreshData();
-  }, []);
+  }, [refreshData]);
 
   // Real-time subscription for recon orders
   useEffect(() => {

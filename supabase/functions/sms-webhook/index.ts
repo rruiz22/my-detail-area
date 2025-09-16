@@ -37,7 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
     const cleanToNumber = cleanPhoneNumber(toNumber as string);
 
     // Find or create conversation
-    let conversation = await findOrCreateConversation(
+    const conversation = await findOrCreateConversation(
       cleanFromNumber,
       cleanToNumber,
       messageBody as string

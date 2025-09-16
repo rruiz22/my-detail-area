@@ -184,7 +184,7 @@ export function useNFCManagement() {
       if (tagError) throw tagError;
 
       // Get scan stats
-      let scanQuery = supabase
+      const scanQuery = supabase
         .from('nfc_scans')
         .select('id, is_unique_scan, scanned_at')
         .gte('scanned_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -41,7 +41,7 @@ export const useUserProfile = () => {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
@@ -97,7 +97,7 @@ export const useUserProfile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const updateProfile = async (updates: Partial<UserProfile>) => {
     try {
@@ -231,7 +231,7 @@ export const useUserProfile = () => {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [fetchProfile]);
 
   return {
     profile,

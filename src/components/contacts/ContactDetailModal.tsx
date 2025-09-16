@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  X, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Building2, 
-  User, 
-  Users, 
+import {
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  Building2,
+  User,
+  Users,
   MessageSquare,
   PhoneCall,
   Copy,
@@ -23,12 +23,29 @@ import { useTranslation } from 'react-i18next';
 import { QRCodeCanvas } from 'qrcode.react';
 import { vCardService } from '@/services/vCardService';
 import { toast } from 'sonner';
+import { DealershipContact } from '@/types/database';
+
+interface ContactGroup {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+interface ContactWithRelations extends DealershipContact {
+  dealerships?: {
+    name: string;
+  };
+  dealership?: {
+    name: string;
+  };
+  contact_groups?: ContactGroup[];
+}
 
 interface ContactDetailModalProps {
-  contact: any;
+  contact: ContactWithRelations;
   open: boolean;
   onClose: () => void;
-  onEdit?: (contact: any) => void;
+  onEdit?: (contact: ContactWithRelations) => void;
 }
 
 export function ContactDetailModal({ contact, open, onClose, onEdit }: ContactDetailModalProps) {
@@ -36,15 +53,15 @@ export function ContactDetailModal({ contact, open, onClose, onEdit }: ContactDe
 
   if (!contact) return null;
 
-  const getDisplayName = (contact: any) => {
+  const getDisplayName = (contact: ContactWithRelations): string => {
     return `${contact.first_name} ${contact.last_name}`.trim();
   };
 
-  const getInitials = (contact: any) => {
+  const getInitials = (contact: ContactWithRelations): string => {
     return `${contact.first_name?.[0] || ''}${contact.last_name?.[0] || ''}`.toUpperCase();
   };
 
-  const getDealershipName = (contact: any) => {
+  const getDealershipName = (contact: ContactWithRelations): string => {
     // Handle multiple possible data structures from Supabase
     if (contact.dealerships?.name) return contact.dealerships.name;
     if (contact.dealership?.name) return contact.dealership.name;
@@ -249,7 +266,7 @@ toast.error(t('contacts.download_failed'));
                     <label className="text-sm font-medium text-muted-foreground">Groups</label>
                     <div className="mt-1 flex flex-wrap gap-1">
                       {contact.contact_groups?.length > 0 ? (
-                        contact.contact_groups.map((group: any, index: number) => (
+                        contact.contact_groups.map((group: ContactGroup, index: number) => (
                           <Badge key={group.id || index} variant="secondary" className="text-xs">
                             {group.name}
                           </Badge>

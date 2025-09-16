@@ -19,7 +19,7 @@ interface DuplicateTooltipProps {
 const MAX_DISPLAY_ORDERS = 5;
 
 // Simple error logging for development (only for events, not render cycles)
-const logError = (message: string, error?: any) => {
+const logError = (message: string, error?: unknown) => {
   if (import.meta.env.DEV) {
     console.error(`❌ [DuplicateTooltip] ${message}`, error || '');
   }
@@ -74,7 +74,7 @@ export function DuplicateTooltip({
       logError('Tooltip validation error', error);
       return { shouldShow: false, error: errorMsg };
     }
-  }, [orders, value, field, debug]);
+  }, [orders, value]);
   
   // Memoize expensive calculations - always called regardless of shouldShow
   const { displayOrders, remainingCount, fieldLabel } = useMemo(() => {
@@ -107,7 +107,7 @@ export function DuplicateTooltip({
       setTooltipError(errorMsg);
       logError('Tooltip open error', error);
     }
-  }, [field, value, orders.length]);
+  }, []);
 
   const handleTooltipClose = useCallback(() => {
     try {
@@ -115,7 +115,7 @@ export function DuplicateTooltip({
     } catch (error) {
       logError('Tooltip close error', error);
     }
-  }, [field, value]);
+  }, []);
 
   const handleOrderClick = useCallback((order: Order) => {
     try {
@@ -126,7 +126,7 @@ export function DuplicateTooltip({
       setTooltipError(errorMsg);
       logError('Order click error', { error, orderId: order.id });
     }
-  }, [onOrderClick, field]);
+  }, [onOrderClick]);
   
   // Utility functions - always defined
   const formatDate = useCallback((dateString: string) => {
@@ -297,7 +297,7 @@ export function DuplicateTooltip({
         </div>
       );
     }
-  }, [displayOrders, remainingCount, fieldLabel, value, orders.length, tooltipError, debug, formatDate, getOrderNumber, getStatusColor, handleOrderClick]);
+  }, [displayOrders, remainingCount, fieldLabel, value, orders.length, tooltipError, debug, formatDate, getOrderNumber, getStatusColor, formatStatusText, handleOrderClick]);
   
   // Enhanced mobile touch handling - always defined
   const handleTouchStart = useCallback((e: React.TouchEvent) => {

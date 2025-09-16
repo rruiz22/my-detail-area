@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -200,8 +199,7 @@ export default function SalesOrders() {
   });
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
@@ -351,7 +349,6 @@ export default function SalesOrders() {
             onStatusChange={handleStatusChange}
           />
         )}
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

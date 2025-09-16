@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
@@ -37,14 +37,18 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  const fetchDealerships = async () => {
+  const fetchDealerships = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        throw new Error('User not authenticated');
+        // Gracefully handle no authenticated user - don't throw error
+        setDealerships([]);
+        setCurrentDealership(null);
+        setLoading(false);
+        return;
       }
 
       const { data, error: fetchError } = await supabase.rpc('get_user_accessible_dealers', {
@@ -70,7 +74,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const filterByModule = async (moduleName: AppModule): Promise<Dealership[]> => {
     const filteredDealerships: Dealership[] = [];
@@ -99,7 +103,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
 
   useEffect(() => {
     fetchDealerships();
-  }, []);
+  }, [fetchDealerships]);
 
   return {
     dealerships,

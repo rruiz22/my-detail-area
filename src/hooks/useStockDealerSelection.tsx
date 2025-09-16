@@ -44,7 +44,7 @@ export const useStockDealerSelection = (): UseStockDealerSelectionReturn => {
     }
     
     setLoading(false);
-  }, [dealerships, dealershipsLoading]);
+  }, [dealerships, dealershipsLoading, selectedDealerId]);
 
   return {
     stockDealerships,

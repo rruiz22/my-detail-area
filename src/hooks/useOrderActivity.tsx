@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -25,7 +25,7 @@ export function useOrderActivity(orderId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchActivities = async () => {
+  const fetchActivities = useCallback(async () => {
     if (!orderId) return;
 
     try {
@@ -46,7 +46,7 @@ export function useOrderActivity(orderId: string) {
       // Get unique user IDs to fetch profiles
       const userIds = [...new Set(data?.filter(a => a.user_id).map(a => a.user_id) || [])];
       let profiles: any[] = [];
-      
+
       if (userIds.length > 0) {
         const { data: profilesData } = await supabase
           .from('profiles')
@@ -58,7 +58,7 @@ export function useOrderActivity(orderId: string) {
       // Combine activities with profile data
       const activitiesWithProfiles = data?.map(activity => ({
         ...activity,
-        profiles: activity.user_id 
+        profiles: activity.user_id
           ? profiles.find(p => p.id === activity.user_id) || null
           : null
       })) || [];
@@ -71,11 +71,11 @@ export function useOrderActivity(orderId: string) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
 
   useEffect(() => {
     fetchActivities();
-  }, [orderId]);
+  }, [fetchActivities]);
 
   // Set up real-time subscription for activity updates
   useEffect(() => {

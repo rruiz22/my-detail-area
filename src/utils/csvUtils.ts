@@ -275,8 +275,8 @@ export function processVehicleData(
 
     let hasRequiredFields = 0;
     let hasMissingRequired = false;
-    let modelParts: string[] = [];
-    let trimParts: string[] = [];
+    const modelParts: string[] = [];
+    const trimParts: string[] = [];
 
     // Process each column
     headers.forEach((header, columnIndex) => {

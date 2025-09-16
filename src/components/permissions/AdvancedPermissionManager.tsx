@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -131,7 +131,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
   const [expandedModules, setExpandedModules] = useState<string[]>(['dashboard']);
 
   // Fetch roles and permissions
-  const fetchRolesAndPermissions = async () => {
+  const fetchRolesAndPermissions = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -180,7 +180,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
     } finally {
       setLoading(false);
     }
-  };
+  }, [roleId, t, toast]);
 
   // Update permission level for a module
   const updatePermissionLevel = (module: string, level: Permission['permission_level']) => {
@@ -269,7 +269,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
 
   useEffect(() => {
     fetchRolesAndPermissions();
-  }, [roleId, userId]);
+  }, [roleId, userId, fetchRolesAndPermissions]);
 
   if (loading) {
     return (

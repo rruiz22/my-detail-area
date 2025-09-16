@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,7 +44,6 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { ContactModal } from '@/components/contacts/ContactModal';
 import { ContactDetailModal } from '@/components/contacts/ContactDetailModal';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
@@ -83,10 +82,10 @@ export default function Contacts() {
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  const fetchContacts = async () => {
+  const fetchContacts = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       let query = supabase
         .from('dealership_contacts')
         .select(`
@@ -118,9 +117,9 @@ export default function Contacts() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [departmentFilter, dealershipFilter, search, t]);
 
-  const fetchDealerships = async () => {
+  const fetchDealerships = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dealerships')
@@ -133,7 +132,7 @@ export default function Contacts() {
     } catch (error) {
       console.error('Error fetching dealerships:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchDealerships();
@@ -141,7 +140,7 @@ export default function Contacts() {
 
   useEffect(() => {
     fetchContacts();
-  }, [search, departmentFilter, dealershipFilter]);
+  }, [fetchContacts]);
 
   const handleDelete = async (contact: Contact) => {
     if (!confirm(t('messages.confirm_delete'))) return;
@@ -213,8 +212,8 @@ export default function Contacts() {
   };
 
   return (
-    <DashboardLayout title={t('contacts.title')}>
-        <div className="space-y-6">
+    <>
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -523,25 +522,25 @@ export default function Contacts() {
             </Table>
           </CardContent>
         </Card>
-        </div>
 
-      <ContactModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onSuccess={handleModalSuccess}
-        contact={editingContact}
-        dealerships={dealerships}
-      />
+        <ContactModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+          contact={editingContact}
+          dealerships={dealerships}
+        />
 
-      <ContactDetailModal
-        contact={viewingContact}
-        open={isDetailModalOpen}
-        onClose={() => {
-          setIsDetailModalOpen(false);
-          setViewingContact(null);
-        }}
-        onEdit={handleEditFromDetail}
-      />
-    </DashboardLayout>
+        <ContactDetailModal
+          contact={viewingContact}
+          open={isDetailModalOpen}
+          onClose={() => {
+            setIsDetailModalOpen(false);
+            setViewingContact(null);
+          }}
+          onEdit={handleEditFromDetail}
+        />
+      </div>
+    </>
   );
 }

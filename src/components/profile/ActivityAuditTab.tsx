@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,11 +38,11 @@ export function ActivityAuditTab() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
 
-  const fetchActivities = async () => {
+  const fetchActivities = useCallback(async () => {
     try {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) return;
 
       let query = supabase
@@ -67,7 +67,7 @@ export function ActivityAuditTab() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterType]);
 
   const exportActivities = async () => {
     try {
@@ -148,7 +148,7 @@ export function ActivityAuditTab() {
 
   useEffect(() => {
     fetchActivities();
-  }, [filterType]);
+  }, [filterType, fetchActivities]);
 
   return (
     <div className="space-y-6">

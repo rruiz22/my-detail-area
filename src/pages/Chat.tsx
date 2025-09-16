@@ -5,7 +5,6 @@ import { ChatLayout } from '@/components/chat/ChatLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageCircle, Users, Shield, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DashboardLayout } from '@/components/DashboardLayout';
 
 const Chat: React.FC = () => {
   const { t } = useTranslation();
@@ -16,17 +15,17 @@ const Chat: React.FC = () => {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
   if (!user) {
     return (
-      <DashboardLayout>
+      <>
         <div className="container mx-auto px-4 py-8">
           <Card className="max-w-md mx-auto">
             <CardHeader className="text-center">
@@ -40,13 +39,13 @@ const Chat: React.FC = () => {
             </CardHeader>
           </Card>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
   if (!activeDealership) {
     return (
-      <DashboardLayout>
+      <>
         <div className="container mx-auto px-4 py-8">
           <Card className="max-w-md mx-auto">
             <CardHeader className="text-center">
@@ -60,12 +59,12 @@ const Chat: React.FC = () => {
             </CardHeader>
           </Card>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Page Header */}
         <div className="flex items-center justify-between">
@@ -130,7 +129,7 @@ const Chat: React.FC = () => {
           data-testid="chat-layout"
         />
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

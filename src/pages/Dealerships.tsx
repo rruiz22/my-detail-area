@@ -47,7 +47,6 @@ import { DealershipModal } from '@/components/dealerships/DealershipModal';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { DealershipStatsCard } from '@/components/dealerships/DealershipStatsCard';
 import { toast } from 'sonner';
-import { DashboardLayout } from '@/components/DashboardLayout';
 
 export function Dealerships() {
   const { t } = useTranslation();
@@ -127,7 +126,7 @@ export function Dealerships() {
 
   useEffect(() => {
     fetchDealerships();
-  }, [search, statusFilter, planFilter]);
+  }, [fetchDealerships]);
 
   const handleEdit = (dealership: Dealership) => {
     setEditingDealership(dealership);
@@ -210,7 +209,7 @@ export function Dealerships() {
   };
 
   return (
-    <DashboardLayout title={t('dealerships.title')}>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -443,6 +442,6 @@ export function Dealerships() {
           onInvitationSent={handleInvitationSent}
         />
       )}
-    </DashboardLayout>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2, Settings, DollarSign, Clock, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -82,9 +82,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     fetchServices();
     fetchGroups();
     fetchCategories();
-  }, [dealerId]);
+  }, [dealerId, fetchServices, fetchGroups, fetchCategories]);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealerId) });
@@ -101,9 +101,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, t, toast]);
 
-  const fetchGroups = async () => {
+  const fetchGroups = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dealer_groups')
@@ -116,9 +116,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     } catch (error) {
       console.error('Error fetching groups:', error);
     }
-  };
+  }, [dealerId]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       // Fetch categories available for all modules (for services management)
       const { data, error } = await supabase
@@ -131,7 +131,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
       if (error) throw error;
       setCategories(data || []);
-      
+
       // Set default category_id to the first available category
       if (data && data.length > 0 && !formData.category_id) {
         setFormData(prev => ({ ...prev, category_id: data[0].id }));
@@ -139,7 +139,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
-  };
+  }, [dealerId, formData.category_id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

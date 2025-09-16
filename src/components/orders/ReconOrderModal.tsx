@@ -178,7 +178,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
     };
     
     loadReconDealerships();
-  }, [dealerships, loadingDealerships, filterByModule]);
+  }, [dealerships, loadingDealerships, filterByModule, formData.dealerId]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));

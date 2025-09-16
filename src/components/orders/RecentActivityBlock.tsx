@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -50,9 +50,9 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       window.removeEventListener('orderStatusUpdated', handleActivityUpdate);
       window.removeEventListener('orderCommentAdded', handleActivityUpdate);
     };
-  }, [orderId]);
+  }, [orderId, fetchRecentActivity]);
 
-  const fetchRecentActivity = async () => {
+  const fetchRecentActivity = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -108,7 +108,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
 
   const getActivityIcon = (type: string) => {
     switch (type) {

@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { ReportsLayout } from '@/components/reports/ReportsLayout';
 import { ReportFilters } from '@/components/reports/ReportFilters';
 import { OperationalReports } from '@/components/reports/sections/OperationalReports';
@@ -37,7 +36,7 @@ export default function Reports() {
   };
 
   return (
-    <DashboardLayout title={t('pages.reports')}>
+    <div>
       <ReportsLayout
         title={t('reports.title')}
         description={t('reports.overview')}
@@ -87,6 +86,6 @@ export default function Reports() {
           </Tabs>
         </div>
       </ReportsLayout>
-    </DashboardLayout>
+    </div>
   );
 }

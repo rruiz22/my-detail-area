@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -77,7 +77,7 @@ export const VisualWorkflowBuilder: React.FC<VisualWorkflowBuilderProps> = ({
   const [draggedNodeType, setDraggedNodeType] = useState<string | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const nodeTypes = [
+  const nodeTypes = useMemo(() => [
     {
       type: 'trigger',
       title: t('workflows.triggers', 'Triggers'),
@@ -118,7 +118,7 @@ export const VisualWorkflowBuilder: React.FC<VisualWorkflowBuilderProps> = ({
         { id: 'wait_days', title: t('workflows.wait_days', 'Wait Days'), icon: Clock }
       ]
     }
-  ];
+  ], [t]);
 
   const handleDragStart = useCallback((event: React.DragEvent, nodeType: string, nodeId: string) => {
     setDraggedNodeType(`${nodeType}:${nodeId}`);

@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +13,7 @@ export default function Settings() {
   const { t } = useTranslation();
   
   return (
-    <DashboardLayout title={t('pages.settings')}>
-      <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl">
         {/* General Settings */}
         <Card>
           <CardHeader>
@@ -140,7 +138,6 @@ export default function Settings() {
             Save Settings
           </Button>
         </div>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

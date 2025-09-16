@@ -65,6 +65,37 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
   
   const activeDealerId = dealerId || dealerships[0]?.id;
 
+  // Start heartbeat to maintain online status
+  const startHeartbeat = useCallback(() => {
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+    }
+
+    heartbeatIntervalRef.current = setInterval(async () => {
+      if (!user?.id || !activeDealerId) return;
+
+      try {
+        await supabase
+          .from('user_presence')
+          .update({
+            last_activity_at: new Date().toISOString()
+          })
+          .eq('user_id', user.id)
+          .eq('dealer_id', activeDealerId);
+      } catch (err) {
+        console.error('Heartbeat error:', err);
+      }
+    }, 30000); // Update every 30 seconds
+  }, [user?.id, activeDealerId]);
+
+  // Stop heartbeat
+  const stopHeartbeat = useCallback(() => {
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = undefined;
+    }
+  }, []);
+
   // Initialize user presence
   const initializePresence = useCallback(async () => {
     if (!user?.id || !activeDealerId) return;
@@ -133,7 +164,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       console.error('Error initializing presence:', err);
       setError(err instanceof Error ? err.message : t('user_presence.error_initializing'));
     }
-  }, [user?.id, activeDealerId]);
+  }, [user?.id, activeDealerId, startHeartbeat, t]);
 
   // Fetch all users presence in the dealer
   const fetchUsersPresence = useCallback(async () => {
@@ -163,38 +194,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       console.error('Error fetching users presence:', err);
       setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));
     }
-  }, [activeDealerId, user?.id]);
-
-  // Start heartbeat to maintain online status
-  const startHeartbeat = useCallback(() => {
-    if (heartbeatIntervalRef.current) {
-      clearInterval(heartbeatIntervalRef.current);
-    }
-
-    heartbeatIntervalRef.current = setInterval(async () => {
-      if (!user?.id || !activeDealerId) return;
-
-      try {
-        await supabase
-          .from('user_presence')
-          .update({
-            last_activity_at: new Date().toISOString()
-          })
-          .eq('user_id', user.id)
-          .eq('dealer_id', activeDealerId);
-      } catch (err) {
-        console.error('Heartbeat error:', err);
-      }
-    }, 30000); // Update every 30 seconds
-  }, [user?.id, activeDealerId]);
-
-  // Stop heartbeat
-  const stopHeartbeat = useCallback(() => {
-    if (heartbeatIntervalRef.current) {
-      clearInterval(heartbeatIntervalRef.current);
-      heartbeatIntervalRef.current = undefined;
-    }
-  }, []);
+  }, [activeDealerId, user?.id, t]);
 
   // Set user status
   const setStatus = useCallback(async (status: PresenceStatus) => {
@@ -218,7 +218,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       console.error('Error setting status:', err);
       setError(err instanceof Error ? err.message : t('user_presence.error_setting_status'));
     }
-  }, [user?.id, activeDealerId]);
+  }, [user?.id, activeDealerId, t]);
 
   // Set custom status message
   const setCustomStatus = useCallback(async (message: string, emoji?: string) => {
@@ -243,7 +243,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       console.error('Error setting custom status:', err);
       setError(err instanceof Error ? err.message : t('user_presence.error_custom_status'));
     }
-  }, [user?.id, activeDealerId]);
+  }, [user?.id, activeDealerId, t]);
 
   // Clear custom status
   const clearCustomStatus = useCallback(async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface VinStickerDetectorProps {
@@ -108,10 +108,10 @@ export function VinStickerDetector({ onRegionDetected }: VinStickerDetectorProps
   };
 
   // Process image to detect VIN sticker regions
-  const processImage = async (imageBlob: Blob): Promise<Array<{x: number, y: number, width: number, height: number}>> => {
+  const processImage = useCallback(async (imageBlob: Blob): Promise<Array<{x: number, y: number, width: number, height: number}>> => {
     return new Promise((resolve) => {
       setIsProcessing(true);
-      
+
       const img = new Image();
       img.onload = () => {
         const canvas = canvasRef.current;
@@ -119,52 +119,52 @@ export function VinStickerDetector({ onRegionDetected }: VinStickerDetectorProps
           resolve([]);
           return;
         }
-        
+
         const ctx = canvas.getContext('2d');
         if (!ctx) {
           resolve([]);
           return;
         }
-        
+
         // Set canvas size to image size
         canvas.width = img.width;
         canvas.height = img.height;
-        
+
         // Draw image to canvas
         ctx.drawImage(img, 0, 0);
-        
+
         // Get image data
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        
+
         // Preprocess image
         const processedData = preprocessImage(imageData);
-        
+
         // Detect edges
         const edges = detectEdges(processedData);
-        
+
         // Find VIN regions
         const regions = findVinRegions(edges);
-        
+
         setIsProcessing(false);
         resolve(regions);
       };
-      
+
       img.src = URL.createObjectURL(imageBlob);
     });
-  };
+  }, []);
 
   // Expose processImage function to parent components
   useEffect(() => {
     // Add global reference for other components to use
-    (window as any).vinStickerDetector = {
+    (window as Window & { vinStickerDetector?: { processImage: typeof processImage; isProcessing: boolean } }).vinStickerDetector = {
       processImage,
       isProcessing
     };
-    
+
     return () => {
-      delete (window as any).vinStickerDetector;
+      delete (window as Window & { vinStickerDetector?: { processImage: typeof processImage; isProcessing: boolean } }).vinStickerDetector;
     };
-  }, []);
+  }, [processImage, isProcessing]);
 
   return (
     <>

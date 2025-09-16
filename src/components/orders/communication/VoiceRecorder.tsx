@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -43,13 +43,7 @@ export function VoiceRecorder({
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  useEffect(() => {
-    return () => {
-      cleanup();
-    };
-  }, []);
-
-  const cleanup = () => {
+  const cleanup = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -62,7 +56,14 @@ export function VoiceRecorder({
     if (audioUrl) {
       URL.revokeObjectURL(audioUrl);
     }
-  };
+  }, [audioUrl]);
+
+  useEffect(() => {
+    return () => {
+      cleanup();
+    };
+  }, [cleanup]);
+
 
   const startRecording = async () => {
     try {

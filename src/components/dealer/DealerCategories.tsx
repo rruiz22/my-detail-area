@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -77,7 +77,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
     modules: [] as string[]
   });
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('service_categories')
@@ -93,9 +93,9 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
       console.error('Error fetching categories:', error);
       toast.error(t('categories.error_fetching'));
     }
-  };
+  }, [dealerId, t]);
 
-  const fetchMappings = async () => {
+  const fetchMappings = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('category_module_mappings')
@@ -108,17 +108,17 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
     } catch (error) {
       console.error('Error fetching mappings:', error);
     }
-  };
+  }, [dealerId]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     await Promise.all([fetchCategories(), fetchMappings()]);
     setLoading(false);
-  };
+  }, [fetchCategories, fetchMappings]);
 
   useEffect(() => {
     loadData();
-  }, [dealerId]);
+  }, [loadData]);
 
   const resetForm = () => {
     setFormData({

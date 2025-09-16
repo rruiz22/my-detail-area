@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
@@ -57,7 +57,7 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
 
-  const fetchModules = async () => {
+  const fetchModules = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase.rpc('get_dealership_modules', {
@@ -88,7 +88,7 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, t, toast]);
 
   const toggleModule = async (module: AppModule, currentEnabled: boolean) => {
     try {
@@ -128,7 +128,7 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
 
   useEffect(() => {
     fetchModules();
-  }, [dealerId]);
+  }, [fetchModules]);
 
   if (loading) {
     return (

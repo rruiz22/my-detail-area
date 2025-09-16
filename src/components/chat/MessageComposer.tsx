@@ -15,10 +15,21 @@ import {
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
+interface MessageSendResult {
+  id: string;
+  success: boolean;
+  error?: string;
+  message?: {
+    id: string;
+    content: string;
+    created_at: string;
+  };
+}
+
 interface MessageComposerProps {
-  onSendMessage: (content: string, mentions?: string[]) => Promise<any>;
-  onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<any>;
-  onSendFileMessage: (file: File, description?: string) => Promise<any>;
+  onSendMessage: (content: string, mentions?: string[]) => Promise<MessageSendResult>;
+  onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;
+  onSendFileMessage: (file: File, description?: string) => Promise<MessageSendResult>;
   onTyping: (typing: boolean) => void;
   disabled?: boolean;
   placeholder?: string;

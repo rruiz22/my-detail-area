@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCw, Clock } from 'lucide-react';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
@@ -114,7 +113,7 @@ export default function CarWash() {
   }));
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -202,6 +201,6 @@ export default function CarWash() {
           />
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

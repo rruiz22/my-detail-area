@@ -40,7 +40,7 @@ export function NFCDashboard({ className }: NFCDashboardProps) {
 
   useEffect(() => {
     loadStats();
-  }, []);
+  }, [loadStats]);
 
   const MetricCard = ({ 
     title, 

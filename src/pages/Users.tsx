@@ -1,4 +1,3 @@
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { UserDashboard } from '@/components/users/UserDashboard';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { Button } from '@/components/ui/button';
@@ -14,8 +13,7 @@ const Users = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   
   return (
-    <DashboardLayout title={t('pages.user_management')}>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="border-b pb-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -76,8 +74,7 @@ const Users = () => {
             // Trigger refresh of UserDashboard
           }}
         />
-      </div>
-    </DashboardLayout>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
@@ -16,7 +16,7 @@ export const useProductivityCalendars = () => {
   const { user } = useAuth();
   const { currentDealership } = useAccessibleDealerships();
 
-  const fetchCalendars = async () => {
+  const fetchCalendars = useCallback(async () => {
     if (!user || !currentDealership) return;
 
     try {
@@ -36,9 +36,9 @@ export const useProductivityCalendars = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, currentDealership]);
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     if (!user || !currentDealership) return;
 
     try {
@@ -54,7 +54,7 @@ export const useProductivityCalendars = () => {
       setError(err.message);
       toast.error('Failed to fetch events');
     }
-  };
+  }, [user, currentDealership]);
 
   const createCalendar = async (calendarData: Omit<Database['public']['Tables']['productivity_calendars']['Insert'], 'dealer_id' | 'created_by'>) => {
     if (!user || !currentDealership) return;

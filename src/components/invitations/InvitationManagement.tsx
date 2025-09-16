@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,7 +62,7 @@ export const InvitationManagement: React.FC = () => {
   const [selectedDealership, setSelectedDealership] = useState<number | null>(null);
 
   // Data fetching
-  const fetchInvitations = async () => {
+  const fetchInvitations = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -94,7 +94,7 @@ export const InvitationManagement: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
 
   // Filter invitations by status
   const getFilteredInvitations = () => {
@@ -156,7 +156,7 @@ export const InvitationManagement: React.FC = () => {
   };
 
   // Resend invitation
-  const handleResendInvitation = async (invitation: Invitation) => {
+  const handleResendInvitation = useCallback(async (invitation: Invitation) => {
     try {
       // For now, we'll just extend the expiration date
       // In a real implementation, you'd want to call an edge function to resend the email
@@ -165,7 +165,7 @@ export const InvitationManagement: React.FC = () => {
 
       const { error } = await supabase
         .from('dealer_invitations')
-        .update({ 
+        .update({
           expires_at: newExpirationDate.toISOString(),
           updated_at: new Date().toISOString()
         })
@@ -186,16 +186,16 @@ export const InvitationManagement: React.FC = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [t, toast, fetchInvitations]);
 
   // Cancel invitation
-  const handleCancelInvitation = async (invitation: Invitation) => {
+  const handleCancelInvitation = useCallback(async (invitation: Invitation) => {
     if (!confirm('Are you sure you want to cancel this invitation?')) return;
 
     try {
       const { error } = await supabase
         .from('dealer_invitations')
-        .update({ 
+        .update({
           expires_at: new Date().toISOString(), // Set to now to expire it
           updated_at: new Date().toISOString()
         })
@@ -216,7 +216,7 @@ export const InvitationManagement: React.FC = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [t, toast, fetchInvitations]);
 
   // Get invitation stats
   const getInvitationStats = () => {
@@ -238,7 +238,7 @@ export const InvitationManagement: React.FC = () => {
 
   useEffect(() => {
     fetchInvitations();
-  }, []);
+  }, [fetchInvitations]);
 
   if (loading) {
     return (

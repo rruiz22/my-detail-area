@@ -259,7 +259,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
       mentions,
       message_type: 'text'
     });
-  }, []);
+  }, [sendMessageWithOptions]);
 
   // Generic send message function
   const sendMessageWithOptions = useCallback(async (options: SendMessageOptions): Promise<ChatMessage | null> => {
@@ -338,7 +338,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
       setError(err instanceof Error ? err.message : 'Error sending voice message');
       return null;
     }
-  }, [user?.id, conversationId, sendMessageWithOptions]);
+  }, [sendMessageWithOptions]);
 
   // Send file message
   const sendFileMessage = useCallback(async (file: File, description?: string): Promise<ChatMessage | null> => {
@@ -372,7 +372,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
       setError(err instanceof Error ? err.message : 'Error sending file message');
       return null;
     }
-  }, [user?.id, conversationId, sendMessageWithOptions]);
+  }, [sendMessageWithOptions]);
 
   // Reply to message
   const replyToMessage = useCallback(async (parentId: string, content: string): Promise<ChatMessage | null> => {

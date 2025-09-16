@@ -67,16 +67,13 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
   onDelete,
   onStatusChange
 }: EnhancedOrderDetailModalProps) {
-  // Early return MUST be before any hooks to avoid Rules of Hooks violation
-  if (!order) return null;
-  
   const { t } = useTranslation();
   const { startMeasure, endMeasure, recordMetric } = usePerformanceMonitor();
   
   const [editingNotes, setEditingNotes] = useState(false);
   const [editingInternalNotes, setEditingInternalNotes] = useState(false);
-  const [notes, setNotes] = useState(order.notes || '');
-  const [internalNotes, setInternalNotes] = useState(order.internal_notes || '');
+  const [notes, setNotes] = useState(order?.notes || '');
+  const [internalNotes, setInternalNotes] = useState(order?.internal_notes || '');
 
   // Track modal performance
   useEffect(() => {
@@ -102,9 +99,9 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
     clearCache,
     getCacheSize
   } = useOrderModalData({
-    orderId: order.id,
-    qrSlug: order.qr_slug,
-    enabled: open // Only fetch when modal is open
+    orderId: order?.id || '',
+    qrSlug: order?.qr_slug || '',
+    enabled: open && !!order // Only fetch when modal is open and order exists
   });
 
   // Memoize modal data for performance
@@ -121,16 +118,16 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 
   // Optimized effect with proper dependency tracking
   useEffect(() => {
-    if (order) {
+    if (order?.id) {
       setNotes(order.notes || '');
       setInternalNotes(order.internal_notes || '');
     }
-  }, [order.id, order.notes, order.internal_notes]); // More specific dependencies
+  }, [order?.id, order?.notes, order?.internal_notes]); // More specific dependencies
 
   // Enhanced memoized handlers with performance tracking
   const handleStatusChange = useCallback(async (newStatus: string) => {
-    if (!onStatusChange) return;
-    
+    if (!onStatusChange || !order?.id) return;
+
     const measureId = startMeasure('status-change-operation');
     try {
       await onStatusChange(order.id, newStatus);
@@ -141,19 +138,21 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
     } finally {
       endMeasure(measureId);
     }
-  }, [onStatusChange, order.id, startMeasure, endMeasure, recordMetric]);
+  }, [onStatusChange, order?.id, startMeasure, endMeasure, recordMetric]);
 
   // Enhanced notes update handler with performance tracking and optimistic updates
   const handleNotesUpdate = useCallback(async (field: 'notes' | 'internal_notes', value: string) => {
+    if (!order?.id) return;
+
     const measureId = startMeasure('notes-update-operation');
-    
+
     // Optimistic update
     if (field === 'notes') {
       setNotes(value);
     } else {
       setInternalNotes(value);
     }
-    
+
     try {
       const { error } = await supabase
         .from('orders')
@@ -164,7 +163,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 
       toast.success(t('messages.notes_updated_successfully'));
       recordMetric('notes-update-success', 1);
-      
+
       if (field === 'notes') {
         setEditingNotes(false);
       } else {
@@ -177,14 +176,14 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
       } else {
         setInternalNotes(order.internal_notes || '');
       }
-      
+
       console.error('Error updating notes:', error);
       toast.error(t('messages.error_updating_notes'));
       recordMetric('notes-update-error', 1);
     } finally {
       endMeasure(measureId);
     }
-  }, [order.id, order.notes, order.internal_notes, t, startMeasure, endMeasure, recordMetric]);
+  }, [order?.id, order?.notes, order?.internal_notes, t, startMeasure, endMeasure, recordMetric]);
 
   // Enhanced attachment handlers with performance tracking
   const handleAttachmentUploadedOptimistic = useCallback((newAttachment: OrderAttachment) => {
@@ -256,6 +255,9 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
     }
     onClose();
   }, [onClose, recordMetric, clearCache, getCacheSize]);
+
+  // Early return after all hooks - prevents Rules of Hooks violation
+  if (!order) return null;
 
   // Show loading state for critical data
   if (shouldShowLoadingState) {

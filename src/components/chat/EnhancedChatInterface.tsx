@@ -78,7 +78,7 @@ interface EnhancedChatInterfaceProps {
   messages: ChatMessage[];
   participants: ChatParticipant[];
   currentUserId: string;
-  onSendMessage: (content: string, type?: string, metadata?: any) => void;
+  onSendMessage: (content: string, type?: 'text' | 'image' | 'file' | 'voice' | 'system', metadata?: ChatMessage['metadata']) => void;
   onEditMessage?: (messageId: string, content: string) => void;
   onDeleteMessage?: (messageId: string) => void;
   onReaction?: (messageId: string, emoji: string) => void;

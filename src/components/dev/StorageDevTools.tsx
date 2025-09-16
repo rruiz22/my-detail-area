@@ -13,19 +13,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+interface StorageInfo {
+  totalKeys: number;
+  totalSize: number;
+  usedPercentage: number;
+  [key: string]: unknown;
+}
+
 export const StorageDevTools: React.FC = () => {
-  const [storageInfo, setStorageInfo] = useState<any>(null);
+  const [storageInfo, setStorageInfo] = useState<StorageInfo | null>(null);
   const [keys, setKeys] = useState<string[]>([]);
   const [testKey, setTestKey] = useState('dev-test');
   const [testValue, setTestValue] = useState('{"test": true, "timestamp": ' + Date.now() + '}');
   const [retrieveKey, setRetrieveKey] = useState('');
-  const [retrievedValue, setRetrievedValue] = useState<any>(null);
+  const [retrievedValue, setRetrievedValue] = useState<unknown>(null);
   const [testResults, setTestResults] = useState<string[]>([]);
-
-  // Only show in development
-  if (!developmentConfig.features.enableStorageDebug) {
-    return null;
-  }
 
   const refreshInfo = () => {
     const info = storage.getStorageInfo();
@@ -37,6 +39,11 @@ export const StorageDevTools: React.FC = () => {
   useEffect(() => {
     refreshInfo();
   }, []);
+
+  // Only show in development
+  if (!developmentConfig.features.enableStorageDebug) {
+    return null;
+  }
 
   const runQuickTest = () => {
     const results: string[] = [];

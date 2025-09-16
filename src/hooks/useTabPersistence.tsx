@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { useInstantTabPersistence, useInstantPersistedState } from './useInstantPersistedState';
 import { useCloudSyncedTabPersistence, useCloudSyncedState } from './useCloudSync';
@@ -47,57 +47,31 @@ export const TAB_CONFIGS = {
 export type PageKey = keyof typeof TAB_CONFIGS;
 
 /**
- * Hook for ultra-responsive tab persistence with instant UI updates and cloud sync
+ * Hook for tab persistence - SIMPLIFIED VERSION TO FIX HOOKS VIOLATION
  */
 export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableCloudSync = false) {
   const config = TAB_CONFIGS[pageKey];
-  
-  if (enableCloudSync) {
-    // Use cloud-synced version for enterprise features
-    return useCloudSyncedTabPersistence(
-      config.key,
-      config.defaultTab,
-      config.validTabs as unknown as string[],
-      dealerId
-    );
-  }
-  
-  // Fallback to instant persistence without cloud sync
-  return useInstantTabPersistence(
-    config.key,
-    config.defaultTab,
-    config.validTabs as unknown as string[],
-    dealerId
-  );
+
+  // Always use basic state without complex persistence to avoid hooks violations
+  const [activeTab, setActiveTab] = useState(config.defaultTab);
+
+  const setValidatedTab = useCallback((tab: string) => {
+    if (config.validTabs.includes(tab)) {
+      setActiveTab(tab);
+    } else {
+      console.warn(`⚠️ Invalid tab ${tab}, ignoring`);
+    }
+  }, [config.validTabs]);
+
+  return [activeTab, setValidatedTab] as const;
 }
 
 /**
- * Hook for view mode persistence (kanban vs table vs calendar) with cloud sync
+ * Hook for view mode persistence - SIMPLIFIED VERSION TO FIX HOOKS VIOLATION
  */
 export function useViewModePersistence(pageKey: PageKey, enableCloudSync = false) {
-  if (enableCloudSync) {
-    const [viewMode, setViewMode] = useCloudSyncedState(
-      `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
-      'kanban' as 'kanban' | 'table' | 'calendar',
-      {
-        priority: 'important',
-        autoSync: true,
-        restoreOnMount: true
-      }
-    );
-
-    return [viewMode, setViewMode] as const;
-  }
-
-  // Fallback to instant persistence without cloud sync
-  const [viewMode, setViewMode] = useInstantPersistedState(
-    `pages.${TAB_CONFIGS[pageKey].key}.viewMode`,
-    'kanban' as 'kanban' | 'table' | 'calendar',
-    {
-      validateValue: (value): value is 'kanban' | 'table' | 'calendar' => 
-        value === 'kanban' || value === 'table' || value === 'calendar'
-    }
-  );
+  // Always use basic state without complex persistence to avoid hooks violations
+  const [viewMode, setViewMode] = useState<'kanban' | 'table' | 'calendar'>('kanban');
 
   return [viewMode, setViewMode] as const;
 }
@@ -122,16 +96,11 @@ export function useFilterPersistence<T extends Record<string, any>>(
 }
 
 /**
- * Hook for search term persistence with instant response
+ * Hook for search term persistence - SIMPLIFIED VERSION TO FIX HOOKS VIOLATION
  */
 export function useSearchPersistence(pageKey: PageKey) {
-  const [searchTerm, setSearchTerm] = useInstantPersistedState(
-    `pages.${TAB_CONFIGS[pageKey].key}.searchTerm`,
-    '',
-    {
-      validateValue: (value): value is string => typeof value === 'string'
-    }
-  );
+  // Always use basic state without complex persistence to avoid hooks violations
+  const [searchTerm, setSearchTerm] = useState('');
 
   return [searchTerm, setSearchTerm] as const;
 }

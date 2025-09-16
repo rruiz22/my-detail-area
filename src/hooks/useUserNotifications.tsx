@@ -40,7 +40,7 @@ export const useUserNotifications = (dealerId?: number) => {
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -106,9 +106,9 @@ export const useUserNotifications = (dealerId?: number) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast, t]);
 
-  const fetchNotificationSettings = async () => {
+  const fetchNotificationSettings = useCallback(async () => {
     try {
       // In a real implementation, this would fetch from user settings
       const mockSettings: NotificationSettings = {
@@ -131,7 +131,7 @@ export const useUserNotifications = (dealerId?: number) => {
     } catch (error: any) {
       console.error('Error fetching notification settings:', error);
     }
-  };
+  }, []);
 
   const markAsRead = async (notificationId: string) => {
     try {
@@ -283,7 +283,7 @@ export const useUserNotifications = (dealerId?: number) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [dealerId]);
+  }, [dealerId, fetchNotifications, fetchNotificationSettings]);
 
   return {
     notifications,

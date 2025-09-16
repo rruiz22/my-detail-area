@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,7 +62,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('last_6_months');
 
-  const fetchAnalyticsData = async () => {
+  const fetchAnalyticsData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -113,17 +113,18 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setAnalyticsData(mockData);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching analytics data:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error loading analytics data';
       toast({
         title: t('common.error'),
-        description: error.message || 'Error loading analytics data',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const exportAnalytics = async () => {
     if (!analyticsData) return;
@@ -155,10 +156,11 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
         description: 'Analytics report exported successfully',
       });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error exporting analytics';
       toast({
         title: t('common.error'),
-        description: error.message || 'Error exporting analytics',
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -166,7 +168,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [timeRange, dealerId]);
+  }, [timeRange, dealerId, fetchAnalyticsData]);
 
   if (loading) {
     return (

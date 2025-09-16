@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -88,9 +88,9 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   useEffect(() => {
     fetchUsers();
     fetchGroups();
-  }, [dealerId]);
+  }, [dealerId, fetchUsers, fetchGroups]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dealer_memberships')
@@ -119,9 +119,9 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, t, toast]);
 
-  const fetchGroups = async () => {
+  const fetchGroups = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dealer_groups')
@@ -135,7 +135,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
     } catch (error: any) {
       console.error('Error fetching groups:', error);
     }
-  };
+  }, [dealerId]);
 
   const handleToggleUserStatus = async (user: DealerMembership) => {
     try {

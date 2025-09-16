@@ -4,7 +4,7 @@ import { MessageBubble } from './MessageBubble';
 import { MessageComposer } from './MessageComposer';
 import { TypingIndicator } from './TypingIndicator';
 import { DateSeparator } from './DateSeparator';
-import { UseChatMessagesReturn } from '@/hooks/useChatMessages';
+import { UseChatMessagesReturn, ChatMessage } from '@/hooks/useChatMessages';
 import { useTranslation } from 'react-i18next';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 import { MessageCircle } from 'lucide-react';
@@ -68,7 +68,7 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
     }
   };
 
-  const shouldShowDateSeparator = (currentMessage: any, previousMessage: any) => {
+  const shouldShowDateSeparator = (currentMessage: ChatMessage, previousMessage: ChatMessage | null) => {
     if (!previousMessage) return true;
     
     const currentDate = new Date(currentMessage.created_at);

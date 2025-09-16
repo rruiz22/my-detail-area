@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -53,9 +53,9 @@ export const RoleAssignmentModal: React.FC<RoleAssignmentModalProps> = ({
     if (isOpen && user) {
       fetchRolesAndUserRoles();
     }
-  }, [isOpen, user]);
+  }, [isOpen, user, fetchRolesAndUserRoles]);
 
-  const fetchRolesAndUserRoles = async () => {
+  const fetchRolesAndUserRoles = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -86,7 +86,7 @@ export const RoleAssignmentModal: React.FC<RoleAssignmentModalProps> = ({
     } catch (error) {
       console.error('Error in fetchRolesAndUserRoles:', error);
     }
-  };
+  }, [user]);
 
   const handleAssignRole = async () => {
     if (!user || !selectedRole) return;

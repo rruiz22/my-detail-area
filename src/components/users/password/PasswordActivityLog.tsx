@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,16 +30,29 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
   const { t } = useTranslation();
   const { getPasswordResetRequests, getBulkOperations } = usePasswordManagement();
   
-  const [activities, setActivities] = useState<any[]>([]);
+  const [activities, setActivities] = useState<Array<{
+    id: string;
+    type: string;
+    subtype: string;
+    status: string;
+    admin_email: string;
+    admin_name: string;
+    created_at: string;
+    completed_at?: string;
+    total_users?: number;
+    successful_operations?: number;
+    failed_operations?: number;
+    metadata?: Record<string, unknown>;
+  }>>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
 
-  const fetchActivities = async () => {
+  const fetchActivities = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const [resetRequests, bulkOps] = await Promise.all([
         getPasswordResetRequests(dealerId),
         getBulkOperations(dealerId)
@@ -47,7 +60,7 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
 
       // Combine and format activities
       const allActivities = [
-        ...resetRequests.map((req: any) => ({
+        ...resetRequests.map((req: { id: string; status: string; admin_email: string; admin_name: string; created_at: string; completed_at?: string }) => ({
           id: req.id,
           type: 'password_reset',
           subtype: req.request_type,
@@ -61,7 +74,7 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
           expires_at: req.expires_at,
           metadata: req.metadata
         })),
-        ...bulkOps.map((op: any) => ({
+        ...bulkOps.map((op: { id: string; operation_type: string; status: string; created_at: string; completed_at?: string; total_users: number; successful_operations: number; failed_operations: number; profiles?: { email: string; first_name?: string; last_name?: string } }) => ({
           id: op.id,
           type: 'bulk_operation',
           subtype: op.operation_type,
@@ -79,7 +92,7 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
 
       // Sort by creation date, newest first
       allActivities.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      
+
       setActivities(allActivities);
 
     } catch (error) {
@@ -87,13 +100,13 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId, getBulkOperations, getPasswordResetRequests]);
 
   useEffect(() => {
     if (dealerId) {
       fetchActivities();
     }
-  }, [dealerId]);
+  }, [dealerId, fetchActivities]);
 
   const filteredActivities = activities.filter(activity => {
     const matchesSearch = !searchTerm || 

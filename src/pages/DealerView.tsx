@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -60,7 +59,7 @@ const DealerView = () => {
 
   if (!id) {
     return (
-      <DashboardLayout title={t('dealer.view.not_found')}>
+      <div>
         <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
           <Building2 className="h-12 w-12 text-muted-foreground" />
           <h1 className="text-2xl font-bold">{t('dealer.view.not_found')}</h1>
@@ -72,12 +71,12 @@ const DealerView = () => {
             </Link>
           </Button>
         </div>
-      </DashboardLayout>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -231,7 +230,7 @@ const DealerView = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

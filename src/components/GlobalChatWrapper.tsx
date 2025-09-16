@@ -9,13 +9,15 @@ interface GlobalChatWrapperProps {
 
 export function GlobalChatWrapper({ children }: GlobalChatWrapperProps) {
   const { user } = useAuth();
-  
-  // Only fetch dealerships if user is authenticated
-  const { currentDealership } = user ? useAccessibleDealerships() : { currentDealership: null };
+
+  // Always call the hook to avoid Rules of Hooks violation
+  const { currentDealership } = useAccessibleDealerships();
 
   // Always provide the context, but with null dealerId when no dealership or user
+  const dealerId = user && currentDealership ? currentDealership.id : undefined;
+
   return (
-    <GlobalChatProvider dealerId={currentDealership?.id || undefined}>
+    <GlobalChatProvider dealerId={dealerId}>
       {children}
     </GlobalChatProvider>
   );

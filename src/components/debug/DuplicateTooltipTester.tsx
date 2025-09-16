@@ -5,7 +5,7 @@
  * DuplicateTooltip functionality with real-time debugging and validation.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,15 +38,15 @@ export function DuplicateTooltipTester() {
   // Auto-generate quick test data on mount
   useEffect(() => {
     generateQuickTestData();
-  }, []);
+  }, [generateQuickTestData]);
 
-  const generateQuickTestData = () => {
+  const generateQuickTestData = useCallback(() => {
     console.log('🚀 Generating quick test data...');
     const quickData = duplicateTestDataGenerator.createQuickTestData();
     setTestOrders(quickData);
     validateTestResults(quickData);
     toast.success('Quick test data generated with guaranteed duplicates');
-  };
+  }, []);
 
   const generateComprehensiveTestData = () => {
     setIsLoading(true);

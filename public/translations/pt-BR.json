@@ -1,12 +1,12 @@
 {
   "stock": {
-    "title": "Gestão de Estoque", 
+    "title": "Gestão de Estoque",
     "subtitle": "Gerencie seu inventário de veículos",
     "description": "Gestão abrangente de inventário de veículos e análise",
     "inventory": {
       "title": "Inventário de Veículos",
       "no_vehicles": "Nenhum veículo encontrado",
-      "upload_csv": "Enviar CSV", 
+      "upload_csv": "Enviar CSV",
       "last_sync": "Última sincronização",
       "total_vehicles": "Total de veículos"
     },
@@ -15,7 +15,10 @@
       "no_access_description": "Você não tem acesso a concessionárias com estoque habilitado. Contate seu administrador para habilitar a gestão de estoque."
     },
     "actions": {
-      "refresh": "Atualizar"
+      "view_details": "Ver Detalhes",
+      "export": "Exportar",
+      "edit": "Editar",
+      "delete": "Excluir"
     },
     "tabs": {
       "inventory": "Inventário",
@@ -50,7 +53,7 @@
     },
     "dashboard": {
       "avg_price": "Preço Médio",
-      "avg_age_days": "Idade Média", 
+      "avg_age_days": "Idade Média",
       "inventory_value": "Valor do Inventário"
     },
     "metrics": {
@@ -83,12 +86,6 @@
       "sold": "Vendido",
       "pending": "Pendente",
       "unknown": "Desconhecido"
-    },
-    "actions": {
-      "view_details": "Ver Detalhes",
-      "export": "Exportar",
-      "edit": "Editar",
-      "delete": "Excluir"
     },
     "details": {
       "title": "Detalhes do Veículo",
@@ -127,9 +124,11 @@
   },
   "get_ready": {
     "title": "Get Ready",
+    "description": "Gestão de fluxo de trabalho de recondicionamento de veículos",
+    "search_placeholder": "Buscar veículos por estoque, VIN ou ano/marca/modelo...",
     "tabs": {
       "overview": "Visão Geral",
-      "details_view": "Vista de Detalhes",
+      "details_view": "Vista Detalhada",
       "approvals": "Aprovações",
       "forms": "Formulários",
       "vendors": "Fornecedores",
@@ -138,114 +137,90 @@
       "setup": "Configuração",
       "help": "Ajuda"
     },
-    "overview": {
-      "title": "Visão Geral",
-      "description": "Visão geral de todos os veículos em processo",
-      "search_placeholder": "Buscar por estoque, VIN ou veículo...",
-      "priority_filter": "Filtrar por prioridade",
-      "status_filter": "Filtrar por status",
-      "no_vehicle_selected": "Selecione um veículo para ver os detalhes",
-      "select_vehicle_details": "Selecione um veículo da tabela para ver informações detalhadas aqui",
-      "loading_vehicles": "Carregando veículos...",
-      "no_vehicles": "Nenhum veículo encontrado"
+    "steps": {
+      "title": "Passos",
+      "all": "Todos os Veículos",
+      "inspection": "Inspeção",
+      "mechanical": "Mecânica",
+      "body_work": "Carroceria",
+      "detailing": "Detalhamento",
+      "ready": "Pronto para Venda",
+      "dis": "DEP",
+      "dtf": "DPL",
+      "dis_tooltip": "Dias no Passo - Média de dias que os veículos passam neste passo",
+      "dtf_tooltip": "Dias até Primeira Linha - Média de dias até os veículos estarem prontos para venda"
     },
-    "details_view": {
-      "title": "Vista de Detalhes",
-      "description": "Vista detalhada por step selecionado",
-      "no_step_selected": "Selecione um step para ver a vista de detalhes"
-    },
-    "approvals": {
-      "title": "Aprovações",
-      "description": "Gerenciar aprovações de veículos e work items",
-      "view_by": "Ver por:",
-      "vehicle": "Veículo",
-      "work_item": "Work Item",
-      "step": "Step",
-      "vendor_team": "Fornecedor/Equipe",
-      "quick_filters": "Filtros Rápidos:",
-      "needs_approval": "Precisa de Aprovação",
-      "no_vendor": "Sem Fornecedor",
-      "priority": "Prioridade",
-      "qc_recheck": "Revisão QC",
-      "unrepairable": "Não Reparável",
-      "bulk_actions": "Ações em Massa",
-      "select_all": "Selecionar Tudo",
-      "approve_selected": "Aprovar Selecionados",
-      "reject_selected": "Rejeitar Selecionados"
-    },
-    "forms": {
-      "title": "Formulários",
-      "description": "Gerenciar formulários e templates de inspeção",
-      "inspection_forms": "Formulários de Inspeção",
-      "checklists": "Checklists",
-      "templates": "Templates",
-      "create_new": "Criar Novo"
-    },
-    "vendors": {
-      "title": "Fornecedores",
-      "description": "Gerenciar fornecedores e atribuições",
-      "vendor_list": "Lista de Fornecedores",
-      "assignments": "Atribuições",
-      "performance": "Desempenho",
-      "add_vendor": "Adicionar Fornecedor"
-    },
-    "reports": {
-      "title": "Relatórios",
-      "description": "Relatórios e análise de desempenho",
-      "favorites": "Favoritos",
-      "featured_reports": "Relatórios em Destaque",
-      "recon_performance": "Desempenho Recon",
-      "t2l_adr": "T2L/ADR",
-      "star_favorite": "Marcar como Favorito",
-      "view_report": "Ver Relatório"
-    },
-    "integrations": {
-      "title": "Integrações",
-      "description": "Configurar conexões e APIs externas",
-      "dms_connections": "Conexões DMS",
-      "external_apis": "APIs Externas",
-      "sync_settings": "Configurações de Sincronização"
-    },
-    "setup": {
-      "title": "Configuração",
-      "description": "Configurar steps, work items e notificações",
-      "steps_config": "Configuração de Steps",
-      "work_items": "Work Items",
-      "notifications": "Notificações"
-    },
-    "help": {
-      "title": "Ajuda",
-      "description": "Documentação e recursos de ajuda",
-      "documentation": "Documentação",
-      "tutorials": "Tutoriais",
-      "faqs": "Perguntas Frequentes",
-      "support": "Suporte"
-    },
-    "steps_sidebar": {
-      "toggle_collapse": "Alternar colapso",
-      "loading_steps": "Carregando steps...",
-      "no_steps": "Nenhum step encontrado"
-    },
-    "vehicle_table": {
+    "vehicle": {
       "stock_number": "# Estoque",
       "vin": "VIN",
-      "vehicle": "Veículo",
-      "current_step": "Step Atual",
-      "status": "Status",
+      "short_vin": "VIN Curto",
+      "year": "Ano",
+      "make": "Marca",
+      "model": "Modelo",
+      "trim": "Versão",
+      "mileage": "Quilometragem",
+      "color": "Cor",
+      "location": "Localização",
+      "technician": "Técnico",
       "priority": "Prioridade",
-      "days_in_step": "Dias no Step",
-      "retail_value": "Valor Varejo",
-      "actions": "Ações"
+      "status": "Status",
+      "step": "Passo Atual",
+      "days_in_inventory": "Dias no Estoque",
+      "estimated_completion": "Conclusão Est.",
+      "notes": "Notas"
     },
-    "vehicle_detail": {
-      "overview": "Visão Geral",
-      "work_items": "Work Items",
-      "vendors": "Fornecedores", 
-      "timeline": "Timeline",
-      "appraisal": "Avaliação",
-      "media": "Mídia",
-      "notes": "Notas",
-      "loading": "Carregando detalhes do veículo..."
+    "priority": {
+      "high": "Alta",
+      "medium": "Média",
+      "low": "Baixa"
+    },
+    "status": {
+      "pending": "Pendente",
+      "in_progress": "Em Andamento",
+      "completed": "Concluído",
+      "on_hold": "Em Espera"
+    },
+    "filters": {
+      "all_priorities": "Todas as Prioridades",
+      "all_statuses": "Todos os Status",
+      "filter_by_priority": "Filtrar por Prioridade",
+      "filter_by_status": "Filtrar por Status",
+      "clear_filters": "Limpar Filtros"
+    },
+    "actions": {
+      "view_details": "Ver Detalhes",
+      "edit_vehicle": "Editar Veículo",
+      "change_step": "Alterar Passo",
+      "add_note": "Adicionar Nota",
+      "assign_technician": "Atribuir Técnico",
+      "set_priority": "Definir Prioridade",
+      "mark_complete": "Marcar Completo"
+    },
+    "work_orders": {
+      "title": "Ordens de Trabalho",
+      "description": "Descrição",
+      "status": "Status",
+      "completed_at": "Concluído Em",
+      "started_at": "Iniciado Em",
+      "add_work_order": "Adicionar Ordem de Trabalho"
+    },
+    "messages": {
+      "no_vehicles": "Nenhum veículo encontrado",
+      "loading_vehicles": "Carregando veículos...",
+      "vehicle_updated": "Veículo atualizado com sucesso",
+      "step_changed": "Passo alterado com sucesso",
+      "note_added": "Nota adicionada com sucesso",
+      "error_loading": "Erro ao carregar veículos",
+      "error_updating": "Erro ao atualizar veículo"
+    },
+    "sidebar": {
+      "collapse": "Recolher",
+      "expand": "Expandir",
+      "vehicle_count": "{{count}} veículos"
+    },
+    "vehicle_list": {
+      "title": "Lista de Veículos",
+      "vehicles": "veículos"
     }
   },
   "due_date": {
@@ -1075,7 +1050,7 @@
     "delete": "Excluir",
     "search": "Buscar",
     "filter": "Filtrar",
-    "refresh": "Atualizar",
+    "refresh": "[PT] Refresh",
     "print": "Imprimir",
     "loading": "Carregando...",
     "optional": "Opcional",
@@ -1121,7 +1096,6 @@
     "please_fix_errors": "[PT] Please fix the errors above",
     "previous": "[PT] Previous",
     "recently": "[PT] recently",
-    "refresh": "[PT] Refresh",
     "regenerating": "[PT] Regenerating...",
     "retry": "[PT] Retry",
     "select_client": "[PT] Select client...",
@@ -1785,7 +1759,7 @@
     "settings": "Configurações",
     "operations": "Operações",
     "admin": "Administrador",
-    "landing_page": "Página Inicial", 
+    "landing_page": "Página Inicial",
     "sign_out": "Sair",
     "core_operations": "Operações Principais",
     "workflow_management": "Gestão de Fluxo",
@@ -2080,7 +2054,7 @@
     },
     "stats": {
       "orders_processed": "Pedidos Processados",
-      "orders_processed_value": "25,000+", 
+      "orders_processed_value": "25,000+",
       "avg_time": "Tempo Médio",
       "avg_time_value": "45min",
       "customer_satisfaction": "Satisfação do Cliente",
@@ -2092,7 +2066,7 @@
       "title": "O Que Dizem Nossos Clientes",
       "description": "Concessionárias líderes confiam no My Detail Area para otimizar suas operações",
       "testimonial1": {
-        "name": "Carlos Mendoza", 
+        "name": "Carlos Mendoza",
         "role": "Gerente de Serviço",
         "company": "AutoMax Dealership",
         "content": "O MDA transformou completamente nossas operações de detalhamento. A coordenação entre departamentos nunca foi tão suave."
@@ -2106,7 +2080,7 @@
       "testimonial3": {
         "name": "Miguel Torres",
         "role": "Diretor de Operações",
-        "company": "Elite Auto Group", 
+        "company": "Elite Auto Group",
         "content": "A análise nos deu insights valiosos para otimizar nossos processos. ROI positivo desde o primeiro mês."
       }
     },
@@ -2114,7 +2088,7 @@
       "features": "Recursos",
       "benefits": "Benefícios",
       "testimonials": "Depoimentos",
-      "learn_more": "Saber Mais", 
+      "learn_more": "Saber Mais",
       "start_trial": "Teste Gratuito"
     },
     "cta": {
@@ -2128,12 +2102,12 @@
       "tagline": "Otimize Suas Operações de Detalhamento",
       "product": "Produto",
       "pricing": "Preços",
-      "integrations": "Integrações", 
+      "integrations": "Integrações",
       "api": "API",
       "company": "Empresa",
       "about": "Sobre",
       "blog": "Blog",
-      "careers": "Carreiras", 
+      "careers": "Carreiras",
       "contact": "Contato",
       "support": "Suporte",
       "help_center": "Central de Ajuda",
@@ -2617,107 +2591,6 @@
     "vehicle_info": "[PT] Vehicle Information",
     "year": "[PT] Year"
   },
-  "get_ready": {
-    "title": "Get Ready",
-    "description": "Gestão de fluxo de trabalho de recondicionamento de veículos",
-    "search_placeholder": "Buscar veículos por estoque, VIN ou ano/marca/modelo...",
-    "tabs": {
-      "overview": "Visão Geral",
-      "details_view": "Vista Detalhada",
-      "approvals": "Aprovações",
-      "forms": "Formulários",
-      "vendors": "Fornecedores",
-      "reports": "Relatórios",
-      "integrations": "Integrações",
-      "setup": "Configuração",
-      "help": "Ajuda"
-    },
-    "steps": {
-      "title": "Passos",
-      "all": "Todos os Veículos",
-      "inspection": "Inspeção",
-      "mechanical": "Mecânica",
-      "body_work": "Carroceria",
-      "detailing": "Detalhamento",
-      "ready": "Pronto para Venda",
-      "dis": "DEP",
-      "dtf": "DPL",
-      "dis_tooltip": "Dias no Passo - Média de dias que os veículos passam neste passo",
-      "dtf_tooltip": "Dias até Primeira Linha - Média de dias até os veículos estarem prontos para venda"
-    },
-    "vehicle": {
-      "stock_number": "# Estoque",
-      "vin": "VIN",
-      "short_vin": "VIN Curto",
-      "year": "Ano",
-      "make": "Marca",
-      "model": "Modelo",
-      "trim": "Versão",
-      "mileage": "Quilometragem",
-      "color": "Cor",
-      "location": "Localização",
-      "technician": "Técnico",
-      "priority": "Prioridade",
-      "status": "Status",
-      "step": "Passo Atual",
-      "days_in_inventory": "Dias no Estoque",
-      "estimated_completion": "Conclusão Est.",
-      "notes": "Notas"
-    },
-    "priority": {
-      "high": "Alta",
-      "medium": "Média",
-      "low": "Baixa"
-    },
-    "status": {
-      "pending": "Pendente",
-      "in_progress": "Em Andamento",
-      "completed": "Concluído",
-      "on_hold": "Em Espera"
-    },
-    "filters": {
-      "all_priorities": "Todas as Prioridades",
-      "all_statuses": "Todos os Status",
-      "filter_by_priority": "Filtrar por Prioridade",
-      "filter_by_status": "Filtrar por Status",
-      "clear_filters": "Limpar Filtros"
-    },
-    "actions": {
-      "view_details": "Ver Detalhes",
-      "edit_vehicle": "Editar Veículo",
-      "change_step": "Alterar Passo",
-      "add_note": "Adicionar Nota",
-      "assign_technician": "Atribuir Técnico",
-      "set_priority": "Definir Prioridade",
-      "mark_complete": "Marcar Completo"
-    },
-    "work_orders": {
-      "title": "Ordens de Trabalho",
-      "description": "Descrição",
-      "status": "Status",
-      "completed_at": "Concluído Em",
-      "started_at": "Iniciado Em",
-      "add_work_order": "Adicionar Ordem de Trabalho"
-    },
-    "messages": {
-      "no_vehicles": "Nenhum veículo encontrado",
-      "loading_vehicles": "Carregando veículos...",
-      "vehicle_updated": "Veículo atualizado com sucesso",
-      "step_changed": "Passo alterado com sucesso",
-      "note_added": "Nota adicionada com sucesso",
-      "error_loading": "Erro ao carregar veículos",
-      "error_updating": "Erro ao atualizar veículo"
-    },
-    "sidebar": {
-      "collapse": "Recolher",
-      "expand": "Expandir",
-      "vehicle_count": "{{count}} veículos"
-    },
-    "vehicle_list": {
-      "title": "Lista de Veículos",
-      "vehicles": "veículos"
-    }
-  },
   "profile": {
     "title": "Perfil do Usuário",
     "personal_info": "Pessoal",
@@ -2849,12 +2722,12 @@
   },
   "calendar": {
     "month": "Mês",
-    "week": "Semana", 
+    "week": "Semana",
     "day": "Dia",
     "today": "Hoje",
     "previous": "Anterior",
     "next": "Próximo",
-    "agenda": "Agenda", 
+    "agenda": "Agenda",
     "date": "Data",
     "time": "Hora",
     "event": "Evento",

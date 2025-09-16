@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,27 @@ import {
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface AIAssistantData {
+  insights?: {
+    confidence_score: number;
+    data_sources: string[];
+    recommendations: string[];
+  };
+  order_info?: {
+    order_id: string;
+    status: string;
+    next_milestone?: string;
+  };
+  analytics?: {
+    metrics: Record<string, number>;
+    trends: Array<{ metric: string; change: number; period: string }>;
+  };
+  communication?: {
+    template_type: 'status_update' | 'completion' | 'delay';
+    suggested_message: string;
+  };
+}
+
 interface AIMessage {
   id: string;
   type: 'user' | 'assistant' | 'suggestion' | 'insight';
@@ -33,7 +54,7 @@ interface AIMessage {
     confidence?: number;
     sources?: string[];
     action?: string;
-    data?: any;
+    data?: AIAssistantData;
   };
 }
 
@@ -60,26 +81,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize with contextual welcome message and suggestions
-  useEffect(() => {
-    const initializeAssistant = () => {
-      const welcomeMessage: AIMessage = {
-        id: `welcome-${Date.now()}`,
-        type: 'assistant',
-        content: getWelcomeMessage(context),
-        timestamp: new Date(),
-        metadata: { confidence: 100 }
-      };
-
-      const suggestions = getContextualSuggestions(context);
-      
-      setMessages([welcomeMessage, ...suggestions]);
-    };
-
-    initializeAssistant();
-  }, [context, orderId]);
-
-  const getWelcomeMessage = (ctx: string): string => {
+  const getWelcomeMessage = useCallback((ctx: string): string => {
     switch (ctx) {
       case 'order':
         return t('ai.welcome_order', 'Hi! I can help you with this order. Ask me about status updates, customer communication, or next steps.');
@@ -90,9 +92,9 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
       default:
         return t('ai.welcome_general', 'Hello! I\'m your AI assistant. I can help with orders, analytics, customer communication, and more.');
     }
-  };
+  }, [t]);
 
-  const getContextualSuggestions = (ctx: string): AIMessage[] => {
+  const getContextualSuggestions = useCallback((ctx: string): AIMessage[] => {
     const suggestions = {
       order: [
         t('ai.suggest_order_status', 'What\'s the current status of this order?'),
@@ -123,7 +125,27 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
       timestamp: new Date(),
       metadata: { action: 'suggestion' }
     }));
-  };
+  }, [t]);
+
+  // Initialize with contextual welcome message and suggestions
+  useEffect(() => {
+    const initializeAssistant = () => {
+      const welcomeMessage: AIMessage = {
+        id: `welcome-${Date.now()}`,
+        type: 'assistant',
+        content: getWelcomeMessage(context),
+        timestamp: new Date(),
+        metadata: { confidence: 100 }
+      };
+
+      const suggestions = getContextualSuggestions(context);
+
+      setMessages([welcomeMessage, ...suggestions]);
+    };
+
+    initializeAssistant();
+  }, [context, orderId, getWelcomeMessage, getContextualSuggestions]);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

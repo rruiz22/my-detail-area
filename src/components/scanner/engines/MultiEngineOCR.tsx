@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import Tesseract from 'tesseract.js';
 
 interface OCRResult {
   text: string;
@@ -22,27 +21,35 @@ export function useMultiEngineOCR() {
     onProgress?: (progress: number) => void
   ): Promise<OCRResult> => {
     const startTime = Date.now();
-    
-    const { data } = await Tesseract.recognize(
-      imageData,
-      'eng',
-      {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            onProgress?.(m.progress * 0.4); // Tesseract gets 40% of progress
+
+    // Dynamic import - only load tesseract.js when actually needed
+    const Tesseract = await import('tesseract.js');
+    const worker = await Tesseract.createWorker('eng');
+
+    try {
+      const { data } = await worker.recognize(
+        imageData,
+        'eng',
+        {
+          logger: (m) => {
+            if (m.status === 'recognizing text') {
+              onProgress?.(m.progress * 0.4); // Tesseract gets 40% of progress
+            }
           }
         }
-      }
-    );
+      );
 
-    const processingTime = Date.now() - startTime;
-    
-    return {
-      text: data.text,
-      confidence: data.confidence / 100,
-      engine: 'tesseract',
-      processingTime
-    };
+      const processingTime = Date.now() - startTime;
+
+      return {
+        text: data.text,
+        confidence: data.confidence / 100,
+        engine: 'tesseract',
+        processingTime
+      };
+    } finally {
+      await worker.terminate();
+    }
   }, []);
 
   const processWithMLKit = useCallback(async (

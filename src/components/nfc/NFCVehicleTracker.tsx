@@ -70,7 +70,7 @@ export function NFCVehicleTracker({ className }: NFCVehicleTrackerProps) {
   useEffect(() => {
     loadTags();
     loadScans();
-  }, []);
+  }, [loadTags, loadScans]);
 
   // Mock vehicle location data - in real app this would come from NFC scan aggregation
   const mockVehicleLocations: VehicleLocation[] = vehicleTags

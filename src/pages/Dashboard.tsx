@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import { DashboardMetrics } from '@/components/dashboard/DashboardMetrics';
 import { DepartmentOverview } from '@/components/dashboard/DepartmentOverview';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 export default function Dashboard() {
+  console.log('🟢 Dashboard component is RENDERING');
   const { t } = useTranslation();
   const navigate = useNavigate();
   const metrics = getDashboardMetrics();
@@ -27,8 +27,7 @@ export default function Dashboard() {
     }
   };
   return (
-    <DashboardLayout title={t('navigation.dashboard')}>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Hero Section */}
         <div className="relative overflow-hidden rounded-xl bg-gradient-primary p-8 text-primary-foreground">
           <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{
@@ -135,7 +134,6 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

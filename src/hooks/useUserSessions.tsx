@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -22,11 +22,11 @@ export const useUserSessions = () => {
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     try {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) throw new Error('No authenticated user');
 
       const { data, error } = await supabase
@@ -49,7 +49,7 @@ export const useUserSessions = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
 
   const terminateSession = async (sessionId: string) => {
     try {
@@ -140,7 +140,7 @@ export const useUserSessions = () => {
 
   useEffect(() => {
     fetchSessions();
-  }, []);
+  }, [fetchSessions]);
 
   return {
     sessions,

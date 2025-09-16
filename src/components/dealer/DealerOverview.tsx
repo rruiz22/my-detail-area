@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -57,9 +57,9 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
     fetchKPIs();
     fetchOrdersByType();
     fetchTopServices();
-  }, [dealerId]);
+  }, [dealerId, fetchKPIs, fetchOrdersByType, fetchTopServices]);
 
-  const fetchKPIs = async () => {
+  const fetchKPIs = useCallback(async () => {
     try {
       const { data, error } = await supabase.rpc('get_dealer_kpis', {
         p_dealer_id: parseInt(dealerId)
@@ -78,9 +78,9 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
         variant: 'destructive'
       });
     }
-  };
+  }, [dealerId, t, toast]);
 
-  const fetchOrdersByType = async () => {
+  const fetchOrdersByType = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -98,9 +98,9 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
     } catch (error: any) {
       console.error('Error fetching orders by type:', error);
     }
-  };
+  }, [dealerId]);
 
-  const fetchTopServices = async () => {
+  const fetchTopServices = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -111,7 +111,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
       if (error) throw error;
 
       const serviceCounts: Record<string, number> = {};
-      
+
       data.forEach(order => {
         if (order.services && Array.isArray(order.services)) {
           order.services.forEach((service: string) => {
@@ -131,7 +131,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dealerId]);
 
   if (loading) {
     return (

@@ -254,8 +254,8 @@ export const useOrderManagement = (activeTab: string) => {
     
     console.log(`🔄 refreshData called (${refreshCallCountRef.current}) - skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
     
-    // Prevent excessive calls (less than 2 seconds apart) - more lenient for manual calls
-    if (timeSinceLastRefresh < 2000 && refreshCallCountRef.current > 1) {
+    // Prevent excessive calls (less than 1 second apart) - more aggressive throttling
+    if (timeSinceLastRefresh < 1000 && refreshCallCountRef.current > 1) {
       console.warn('⚠️ refreshData called too frequently, skipping to prevent loop');
       return;
     }
@@ -339,7 +339,7 @@ export const useOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [filterOrders, calculateTabCounts, user]);
+  }, [filterOrders, calculateTabCounts, user, activeTab, filters]);
 
   const updateFilters = useCallback((newFilters: any) => {
     setFilters(newFilters);
@@ -399,7 +399,7 @@ export const useOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [user, refreshData]);
+  }, [user, generateQR]);
 
   const updateOrder = useCallback(async (orderId: string, orderData: any) => {
     if (!user) return;
@@ -486,12 +486,18 @@ export const useOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [user, refreshData]);
+  }, [user]);
 
-  // Initialize data on mount
+  // Initialize data on mount with debouncing to prevent multiple calls
   useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+    if (user) {
+      const timer = setTimeout(() => {
+        refreshData();
+      }, 100); // Small delay to batch multiple rapid effect calls
+
+      return () => clearTimeout(timer);
+    }
+  }, [user]); // Only depend on user, not refreshData to avoid infinite loops
 
   // Handle filtering when tab or filters change (without full refresh)
   useEffect(() => {

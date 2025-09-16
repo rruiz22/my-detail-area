@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -29,14 +29,14 @@ export const BulkPasswordOperations = ({ dealerId }: BulkPasswordOperationsProps
   
   const [operationType, setOperationType] = useState<'bulk_reset' | 'bulk_force_change' | 'bulk_temp_password'>('bulk_reset');
   const [targetUsers, setTargetUsers] = useState<string[]>([]);
-  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
-  const [recentOperations, setRecentOperations] = useState<any[]>([]);
+  const [availableUsers, setAvailableUsers] = useState<Array<{ user_id: string; profiles: { id: string; email: string; first_name?: string; last_name?: string } }>>([]);
+  const [recentOperations, setRecentOperations] = useState<Array<{ id: string; operation_type: string; created_at: string; user_count: number }>>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoadingUsers(true);
-      
+
       const { data, error } = await supabase
         .from('dealer_memberships')
         .select(`
@@ -54,23 +54,23 @@ export const BulkPasswordOperations = ({ dealerId }: BulkPasswordOperationsProps
     } finally {
       setLoadingUsers(false);
     }
-  };
+  }, [dealerId]);
 
-  const fetchRecentOperations = async () => {
+  const fetchRecentOperations = useCallback(async () => {
     try {
       const operations = await getBulkOperations(dealerId);
       setRecentOperations(operations.slice(0, 5)); // Show last 5 operations
     } catch (error) {
       console.error('Error fetching operations:', error);
     }
-  };
+  }, [dealerId, getBulkOperations]);
 
   useEffect(() => {
     if (dealerId) {
       fetchUsers();
       fetchRecentOperations();
     }
-  }, [dealerId]);
+  }, [dealerId, fetchUsers, fetchRecentOperations]);
 
   const handleUserToggle = (userId: string, checked: boolean) => {
     if (checked) {

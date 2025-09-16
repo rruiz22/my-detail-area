@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
@@ -14,7 +14,7 @@ export const useProductivityTodos = () => {
   const { user } = useAuth();
   const { currentDealership } = useAccessibleDealerships();
 
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     if (!user || !currentDealership) return;
 
     try {
@@ -33,7 +33,7 @@ export const useProductivityTodos = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, currentDealership]);
 
   const createTodo = async (todoData: Omit<Database['public']['Tables']['productivity_todos']['Insert'], 'dealer_id' | 'created_by'>) => {
     if (!user || !currentDealership) return;
@@ -109,7 +109,7 @@ export const useProductivityTodos = () => {
 
   useEffect(() => {
     fetchTodos();
-  }, [user, currentDealership]);
+  }, [fetchTodos]);
 
   return {
     todos,

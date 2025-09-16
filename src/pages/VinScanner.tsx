@@ -1,5 +1,4 @@
 import { VinScannerHub } from '@/components/scanner/VinScannerHub';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { useTranslation } from 'react-i18next';
 import { QrCode } from 'lucide-react';
 
@@ -13,8 +12,7 @@ export default function VinScanner() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="container mx-auto p-4 md:p-6 lg:p-8">
+    <div className="container mx-auto p-4 md:p-6 lg:p-8">
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center">
@@ -35,7 +33,6 @@ export default function VinScanner() {
           onVinSelected={handleVinSelected}
           className="w-full"
         />
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

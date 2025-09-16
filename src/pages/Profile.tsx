@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -53,8 +52,7 @@ export default function Profile() {
   };
 
   return (
-    <DashboardLayout title={t('profile.title')}>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Profile Header */}
         <Card>
           <CardContent className="pt-6">
@@ -162,7 +160,6 @@ export default function Profile() {
             <DataPrivacyTab />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

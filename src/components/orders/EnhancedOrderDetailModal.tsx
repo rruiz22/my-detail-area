@@ -39,16 +39,11 @@ export function EnhancedOrderDetailModal({
   onDelete,
   onStatusChange
 }: EnhancedOrderDetailModalProps) {
-  // Early return MUST be before any hooks to avoid Rules of Hooks violation
-  if (!order) {
-    return null;
-  }
-  
   const { t } = useTranslation();
   const [editingNotes, setEditingNotes] = useState(false);
   const [editingInternalNotes, setEditingInternalNotes] = useState(false);
-  const [notes, setNotes] = useState(order.notes || '');
-  const [internalNotes, setInternalNotes] = useState(order.internal_notes || '');
+  const [notes, setNotes] = useState(order?.notes || '');
+  const [internalNotes, setInternalNotes] = useState(order?.internal_notes || '');
 
   // Use parallel data fetching hook for optimal performance
   const { 
@@ -59,9 +54,9 @@ export function EnhancedOrderDetailModal({
     removeAttachment: handleAttachmentDeleted,
     refetch: refetchModalData
   } = useOrderModalData({
-    orderId: order.id,
-    qrCodeUrl: order.qr_code_url,
-    enabled: open // Only fetch when modal is open
+    orderId: order?.id || '',
+    qrCodeUrl: order?.qr_code_url || '',
+    enabled: open && !!order // Only fetch when modal is open and order exists
   });
 
   useEffect(() => {
@@ -73,13 +68,15 @@ export function EnhancedOrderDetailModal({
 
   // Memoize status change handler
   const handleStatusChange = useCallback(async (newStatus: string) => {
-    if (onStatusChange) {
+    if (onStatusChange && order?.id) {
       await onStatusChange(order.id, newStatus);
     }
-  }, [onStatusChange, order.id]);
+  }, [onStatusChange, order?.id]);
 
   // Memoize notes update handler
   const handleNotesUpdate = useCallback(async (field: 'notes' | 'internal_notes', value: string) => {
+    if (!order?.id) return;
+
     try {
       const { error } = await supabase
         .from('orders')
@@ -89,7 +86,7 @@ export function EnhancedOrderDetailModal({
       if (error) throw error;
 
       toast.success(t('messages.notes_updated_successfully'));
-      
+
       if (field === 'notes') {
         setEditingNotes(false);
       } else {
@@ -99,7 +96,7 @@ export function EnhancedOrderDetailModal({
       console.error('Error updating notes:', error);
       toast.error(t('messages.error_updating_notes'));
     }
-  }, [order.id, t]);
+  }, [order?.id, t]);
 
   // Enhanced attachment handlers with optimistic updates
   const handleAttachmentUploadedOptimistic = useCallback((newAttachment: OrderAttachment) => {
@@ -129,6 +126,9 @@ export function EnhancedOrderDetailModal({
       default: return 'outline';
     }
   }, []);
+
+  // Early return after all hooks - prevents Rules of Hooks violation
+  if (!order) return null;
 
   // Show loading state for critical data
   if (dataLoading && !modalData.attachments.length) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,13 +46,13 @@ export const UserRoleManager: React.FC = () => {
 
   useEffect(() => {
     fetchUsersWithRoles();
-  }, []);
+  }, [fetchUsersWithRoles]);
 
   useEffect(() => {
     filterUsers();
-  }, [users, searchQuery, userTypeFilter]);
+  }, [filterUsers, users, searchQuery, userTypeFilter]);
 
-  const fetchUsersWithRoles = async () => {
+  const fetchUsersWithRoles = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -105,9 +105,9 @@ export const UserRoleManager: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const filterUsers = () => {
+  const filterUsers = useCallback(() => {
     let filtered = users;
 
     // Filter by search query
@@ -124,7 +124,7 @@ export const UserRoleManager: React.FC = () => {
     }
 
     setFilteredUsers(filtered);
-  };
+  }, [users, searchQuery, userTypeFilter]);
 
   const handleManageRoles = (user: User) => {
     setSelectedUser(user);

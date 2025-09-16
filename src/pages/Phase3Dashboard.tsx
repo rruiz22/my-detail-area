@@ -16,7 +16,6 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DashboardLayout } from '@/components/DashboardLayout';
 import { CommunicationAnalyticsDashboard } from '@/components/analytics/CommunicationAnalyticsDashboard';
 import { AIAssistant } from '@/components/ai/AIAssistant';
 import { VisualWorkflowBuilder } from '@/components/workflows/VisualWorkflowBuilder';
@@ -90,8 +89,7 @@ export default function Phase3Dashboard() {
   };
 
   return (
-    <DashboardLayout title={t('phase3.title', 'Advanced Communication & AI Dashboard')}>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -355,7 +353,6 @@ export default function Phase3Dashboard() {
             <PerformanceMonitor dealerId={1} />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }
