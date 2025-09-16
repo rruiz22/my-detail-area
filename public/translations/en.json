@@ -57,6 +57,9 @@
       "undo": "Undo",
       "redo": "Redo"
     },
+    "refresh": "Refresh",
+    "new_order": "New Order",
+    "calendar": "Calendar",
     "unknown_error": "Unknown error",
     "toggle_theme": "Toggle theme"
   },
@@ -132,7 +135,8 @@
     "descriptions": {
       "network_error": "Check your internet connection and try again",
       "server_error": "Our servers are experiencing issues. Please try again later."
-    }
+    },
+    "confirm_delete_order": "Are you sure you want to delete this order?"
   },
   "forms": {
     "labels": {
@@ -181,6 +185,24 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
+    "sales_orders": "Sales Orders",
+    "service_orders": "Service Orders",
+    "recon_orders": "Recon Orders",
+    "car_wash": "Car Wash",
+    "get_ready": "Get Ready",
+    "stock": "Stock",
+    "detail_hub": "Detail Hub",
+    "productivity": "Productivity",
+    "management": "Management",
+    "reports": "Reports",
+    "core_operations": "Core Operations",
+    "workflow_management": "Workflow Management",
+    "tools_communication": "Tools & Communication",
+    "productivity_section": "Productivity",
+    "management_reports": "Management & Reports",
+    "system_admin": "System Administration",
+    "landing_page": "Landing Page",
+    "sign_out": "Sign Out",
     "settings": "Settings",
     "profile": "Profile",
     "account": "Account",
@@ -310,5 +332,78 @@
       "chat": "Team Chat",
       "settings": "Settings"
     }
+  },
+  "pages": {
+    "sales_orders": "Sales Orders",
+    "user_management": "User Management"
+  },
+  "sales": {
+    "views": {
+      "kanban": "Kanban",
+      "table": "Table",
+      "calendar": "Calendar"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "dashboard": "Dashboard",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "pending": "Pending",
+      "in_process": "In Process",
+      "week": "Week",
+      "all_orders": "All Orders",
+      "all": "All Orders",
+      "services": "Services",
+      "deleted": "Deleted"
+    },
+    "metrics": {
+      "completion_rate": "Completion Rate",
+      "progress": "Progress",
+      "revenue_potential": "Revenue Potential",
+      "avg_processing_time": "Avg Processing Time",
+      "orders_this_month": "Orders This Month",
+      "sla_compliance": "SLA Compliance"
+    }
+  },
+  "sales_orders": {
+    "tabs": {
+      "dashboard": "Dashboard",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "pending": "Pending",
+      "week": "Week",
+      "all": "All Orders",
+      "services": "Services",
+      "deleted": "Deleted"
+    },
+    "in_process_orders": "In Process Orders"
+  },
+  "orders": {
+    "today_orders": "Today's Orders",
+    "tomorrow_orders": "Tomorrow's Orders",
+    "pending_orders": "Pending Orders",
+    "week_orders": "This Week's Orders",
+    "require_attention": "Require attention"
+  },
+  "layout": {
+    "search_placeholder": "Search orders..."
+  },
+  "chat": {
+    "title": "Team Chat"
+  },
+  "contacts": {
+    "title": "Contacts"
+  },
+  "vin_scanner_hub": {
+    "title": "VIN Scanner"
+  },
+  "nfc_tracking": {
+    "title": "NFC Tracking"
+  },
+  "dealerships": {
+    "title": "Dealerships"
+  },
+  "profile": {
+    "title": "Profile"
   }
 }

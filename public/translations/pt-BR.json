@@ -57,6 +57,9 @@
       "undo": "Desfazer",
       "redo": "Refazer"
     },
+    "refresh": "Atualizar",
+    "new_order": "Novo Pedido",
+    "calendar": "Calendário",
     "unknown_error": "Erro desconhecido",
     "toggle_theme": "Alternar tema"
   },
@@ -132,7 +135,8 @@
     "descriptions": {
       "network_error": "Verifique sua conexão com a internet e tente novamente",
       "server_error": "Nossos servidores estão enfrentando problemas. Por favor, tente novamente mais tarde."
-    }
+    },
+    "confirm_delete_order": "Tem certeza que deseja excluir este pedido?"
   },
   "forms": {
     "labels": {
@@ -181,6 +185,24 @@
   },
   "navigation": {
     "dashboard": "Painel",
+    "sales_orders": "Pedidos de Vendas",
+    "service_orders": "Pedidos de Serviço",
+    "recon_orders": "Pedidos de Recondicionamento",
+    "car_wash": "Lavagem de Carros",
+    "get_ready": "Preparar",
+    "stock": "Estoque",
+    "detail_hub": "Central de Detalhes",
+    "productivity": "Produtividade",
+    "management": "Gerenciamento",
+    "reports": "Relatórios",
+    "core_operations": "Operações Principais",
+    "workflow_management": "Gerenciamento de Fluxo de Trabalho",
+    "tools_communication": "Ferramentas e Comunicação",
+    "productivity_section": "Produtividade",
+    "management_reports": "Gerenciamento e Relatórios",
+    "system_admin": "Administração do Sistema",
+    "landing_page": "Página Inicial",
+    "sign_out": "Sair",
     "settings": "Configurações",
     "profile": "Perfil",
     "account": "Conta",
@@ -310,5 +332,78 @@
       "chat": "Chat da Equipe",
       "settings": "Configurações"
     }
+  },
+  "pages": {
+    "sales_orders": "Pedidos de Vendas",
+    "user_management": "Gerenciamento de Usuários"
+  },
+  "sales": {
+    "views": {
+      "kanban": "Kanban",
+      "table": "Tabela",
+      "calendar": "Calendário"
+    },
+    "tabs": {
+      "overview": "Visão Geral",
+      "dashboard": "Painel",
+      "today": "Hoje",
+      "tomorrow": "Amanhã",
+      "pending": "Pendentes",
+      "in_process": "Em Processo",
+      "week": "Semana",
+      "all_orders": "Todos os Pedidos",
+      "all": "Todos os Pedidos",
+      "services": "Serviços",
+      "deleted": "Excluídos"
+    },
+    "metrics": {
+      "completion_rate": "Taxa de Conclusão",
+      "progress": "Progresso",
+      "revenue_potential": "Potencial de Receita",
+      "avg_processing_time": "Tempo Médio de Processamento",
+      "orders_this_month": "Pedidos Este Mês",
+      "sla_compliance": "Conformidade SLA"
+    }
+  },
+  "sales_orders": {
+    "tabs": {
+      "dashboard": "Painel",
+      "today": "Hoje",
+      "tomorrow": "Amanhã",
+      "pending": "Pendentes",
+      "week": "Semana",
+      "all": "Todos os Pedidos",
+      "services": "Serviços",
+      "deleted": "Excluídos"
+    },
+    "in_process_orders": "Pedidos em Processo"
+  },
+  "orders": {
+    "today_orders": "Pedidos de Hoje",
+    "tomorrow_orders": "Pedidos de Amanhã",
+    "pending_orders": "Pedidos Pendentes",
+    "week_orders": "Pedidos da Semana",
+    "require_attention": "Requerem atenção"
+  },
+  "layout": {
+    "search_placeholder": "Pesquisar pedidos..."
+  },
+  "chat": {
+    "title": "Chat da Equipe"
+  },
+  "contacts": {
+    "title": "Contatos"
+  },
+  "vin_scanner_hub": {
+    "title": "Scanner VIN"
+  },
+  "nfc_tracking": {
+    "title": "Rastreamento NFC"
+  },
+  "dealerships": {
+    "title": "Concessionárias"
+  },
+  "profile": {
+    "title": "Perfil"
   }
 }
