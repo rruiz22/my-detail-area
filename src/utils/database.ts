@@ -27,6 +27,15 @@ export interface QueryOptions {
   orderBy?: { column: string; ascending?: boolean };
 }
 
+export type TableName = keyof Database['public']['Tables'];
+export type TableRow<T extends TableName> = Database['public']['Tables'][T]['Row'];
+export type TableInsert<T extends TableName> = Database['public']['Tables'][T]['Insert'];
+export type TableUpdate<T extends TableName> = Database['public']['Tables'][T]['Update'];
+
+export interface DatabaseFilters {
+  [key: string]: string | number | boolean | null;
+}
+
 /**
  * Enhanced Database Utility Class with improved error handling and type safety
  */
@@ -40,10 +49,10 @@ export class DatabaseUtils {
   /**
    * Generic select operation with enhanced error handling
    */
-  async select<T extends keyof Database['public']['Tables']>(
+  async select<T extends TableName>(
     table: T,
     options?: QueryOptions
-  ): Promise<DatabaseResultWithCount<any[]>> {
+  ): Promise<DatabaseResultWithCount<TableRow<T>[]>> {
     try {
       let query = this.supabase
         .from(table)
@@ -66,7 +75,7 @@ export class DatabaseUtils {
       const result = await query
 
       return {
-        data: result.data || [],
+        data: (result.data as TableRow<T>[]) || [],
         count: result.count,
         error: result.error ? { message: result.error.message, code: result.error.code } : null
       }
@@ -82,18 +91,18 @@ export class DatabaseUtils {
   /**
    * Generic insert operation
    */
-  async insert<T extends keyof Database['public']['Tables']>(
+  async insert<T extends TableName>(
     table: T,
-    data: any | any[]
-  ): Promise<DatabaseResult<any | any[]>> {
+    data: TableInsert<T> | TableInsert<T>[]
+  ): Promise<DatabaseResult<TableRow<T> | TableRow<T>[]>> {
     try {
       const result = await this.supabase
         .from(table)
-        .insert(data as any)
+        .insert(data as TableInsert<T> | TableInsert<T>[])
         .select()
 
       return {
-        data: result.data,
+        data: result.data as TableRow<T> | TableRow<T>[],
         error: result.error ? { message: result.error.message, code: result.error.code } : null
       }
     } catch (error) {
@@ -107,26 +116,26 @@ export class DatabaseUtils {
   /**
    * Generic update operation
    */
-  async update<T extends keyof Database['public']['Tables']>(
+  async update<T extends TableName>(
     table: T,
-    data: any,
-    filters: Record<string, any>
-  ): Promise<DatabaseResult<any[]>> {
+    data: TableUpdate<T>,
+    filters: DatabaseFilters
+  ): Promise<DatabaseResult<TableRow<T>[]>> {
     try {
       let query = this.supabase
         .from(table)
-        .update(data as any)
+        .update(data)
         .select()
 
       // Apply filters
       Object.entries(filters).forEach(([key, value]) => {
-        query = (query as any).eq(key, value)
+        query = query.eq(key as keyof TableRow<T>, value)
       })
 
       const result = await query
 
       return {
-        data: result.data,
+        data: result.data as TableRow<T>[],
         error: result.error ? { message: result.error.message, code: result.error.code } : null
       }
     } catch (error) {
@@ -140,10 +149,10 @@ export class DatabaseUtils {
   /**
    * Generic delete operation
    */
-  async delete<T extends keyof Database['public']['Tables']>(
+  async delete<T extends TableName>(
     table: T,
-    filters: Record<string, any>
-  ): Promise<DatabaseResult<any[]>> {
+    filters: DatabaseFilters
+  ): Promise<DatabaseResult<TableRow<T>[]>> {
     try {
       let query = this.supabase
         .from(table)
@@ -152,13 +161,13 @@ export class DatabaseUtils {
 
       // Apply filters
       Object.entries(filters).forEach(([key, value]) => {
-        query = (query as any).eq(key, value)
+        query = query.eq(key as keyof TableRow<T>, value)
       })
 
       const result = await query
 
       return {
-        data: result.data,
+        data: result.data as TableRow<T>[],
         error: result.error ? { message: result.error.message, code: result.error.code } : null
       }
     } catch (error) {
@@ -172,19 +181,19 @@ export class DatabaseUtils {
   /**
    * Get single record by ID
    */
-  async getById<T extends keyof Database['public']['Tables']>(
+  async getById<T extends TableName>(
     table: T,
     id: string | number
-  ): Promise<DatabaseResult<any>> {
+  ): Promise<DatabaseResult<TableRow<T>>> {
     try {
       const result = await this.supabase
         .from(table)
         .select('*')
-        .eq('id', id as any)
+        .eq('id', id)
         .single()
 
       return {
-        data: result.data,
+        data: result.data as TableRow<T>,
         error: result.error ? { message: result.error.message, code: result.error.code } : null
       }
     } catch (error) {
@@ -198,16 +207,16 @@ export class DatabaseUtils {
   /**
    * Execute custom query with RPC
    */
-  async rpc<T = any>(
+  async rpc<T = unknown>(
     functionName: string,
-    params?: any
+    params?: Record<string, unknown>
   ): Promise<DatabaseResult<T>> {
     try {
       // Use client method to bypass strict typing
-      const result = await (this.supabase as any).rpc(functionName, params);
+      const result = await this.supabase.rpc(functionName, params);
 
       return {
-        data: result.data,
+        data: result.data as T,
         error: result.error ? { message: result.error.message, code: result.error.code } : null
       }
     } catch (error) {

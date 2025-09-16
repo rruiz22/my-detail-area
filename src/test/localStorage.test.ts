@@ -295,4 +295,4 @@ export const runLocalStorageTests = () => {
 };
 
 // Export for manual testing in browser console
-(window as any).testLocalStorage = runLocalStorageTests;
+(window as Record<string, unknown>).testLocalStorage = runLocalStorageTests;

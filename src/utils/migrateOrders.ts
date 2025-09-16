@@ -90,7 +90,7 @@ export async function migrateOrderNumbers() {
 }
 
 // Make available globally for console access
-(window as any).migrateOrderNumbers = migrateOrderNumbers;
+(window as Record<string, unknown>).migrateOrderNumbers = migrateOrderNumbers;
 
 console.log('🔧 Order migration utility loaded');
 console.log('📋 Run: migrateOrderNumbers() in browser console to migrate orders');

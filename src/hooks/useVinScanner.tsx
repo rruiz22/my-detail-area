@@ -1,32 +1,54 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+// VIN scan result interface
+interface VinScanResult {
+  vins: string[];
+  confidence?: number;
+  processingTime?: number;
+}
+
+// Scanner options
+interface VinScanOptions {
+  language?: string;
+  enableLogging?: boolean;
+  timeout?: number;
+}
+
+// Hook return interface
 interface UseVinScannerReturn {
-  scanVin: (imageFile: File | string) => Promise<string[]>;
+  scanVin: (imageFile: File | string, options?: VinScanOptions) => Promise<string[]>;
   loading: boolean;
   error: string | null;
+  lastScanResult?: VinScanResult;
 }
 
 export function useVinScanner(): UseVinScannerReturn {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastScanResult, setLastScanResult] = useState<VinScanResult>();
 
-  const scanVin = useCallback(async (imageFile: File | string): Promise<string[]> => {
+  const scanVin = useCallback(async (
+    imageFile: File | string,
+    options: VinScanOptions = {}
+  ): Promise<string[]> => {
     setLoading(true);
     setError(null);
+
+    const startTime = Date.now();
 
     try {
       // Dynamic import - only load tesseract.js when actually needed
       const Tesseract = await import('tesseract.js');
-      const worker = await Tesseract.createWorker('eng');
+      const worker = await Tesseract.createWorker(options.language || 'eng');
 
       try {
-        const { data: { text } } = await worker.recognize(
+        const { data: { text, confidence } } = await worker.recognize(
           imageFile,
-          'eng',
+          options.language || 'eng',
           {
-            logger: () => {} // Disable logging
+            logger: options.enableLogging ? console.log : () => {} // Conditional logging
           }
         );
 
@@ -40,6 +62,16 @@ export function useVinScanner(): UseVinScannerReturn {
           !/[IOQ]/.test(vin) // Ensure no invalid characters
         );
 
+        const processingTime = Date.now() - startTime;
+
+        // Store scan result
+        const scanResult: VinScanResult = {
+          vins: uniqueVins,
+          confidence,
+          processingTime
+        };
+        setLastScanResult(scanResult);
+
         if (uniqueVins.length === 0) {
           setError(t('vin_scanner_errors.no_vin_found'));
         } else {
@@ -52,7 +84,8 @@ export function useVinScanner(): UseVinScannerReturn {
       }
     } catch (err) {
       console.error('VIN scanning error:', err);
-      setError(t('vin_scanner_errors.processing_error'));
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(t('vin_scanner_errors.processing_error') + ': ' + errorMessage);
       return [];
     } finally {
       setLoading(false);
@@ -62,6 +95,7 @@ export function useVinScanner(): UseVinScannerReturn {
   return {
     scanVin,
     loading,
-    error
+    error,
+    lastScanResult
   };
 }

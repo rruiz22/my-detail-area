@@ -10,7 +10,7 @@ import { Camera, CheckCircle, AlertCircle, RotateCcw, User, Loader2 } from "luci
 interface FacialEnrollmentProps {
   employeeId: string;
   employeeName: string;
-  onComplete: (enrollmentData: any) => void;
+  onComplete: (enrollmentData: Record<string, unknown>) => void;
   onCancel: () => void;
 }
 

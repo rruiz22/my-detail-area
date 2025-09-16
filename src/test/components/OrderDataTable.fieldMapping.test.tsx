@@ -175,9 +175,10 @@ describe('OrderDataTable Field Mapping Tests', () => {
   });
 
   describe('Mobile Card Layout', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       // Mock mobile hook to return true
-      vi.mocked(require('@/hooks/use-mobile').useIsMobile).mockReturnValue(true);
+      const { useIsMobile } = await import('@/hooks/use-mobile');
+      vi.mocked(useIsMobile).mockReturnValue(true);
     });
 
     it('should display correct dealership name in mobile layout', () => {

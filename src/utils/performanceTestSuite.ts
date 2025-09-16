@@ -137,8 +137,8 @@ export class ModalPerformanceTester {
 
     try {
       // Measure initial memory if available
-      if ((performance as any).memory) {
-        memoryBefore = (performance as any).memory.usedJSHeapSize;
+      if ('memory' in performance) {
+        memoryBefore = (performance as Record<string, unknown>).memory?.usedJSHeapSize as number || 0;
       }
 
       // Create large dataset
@@ -167,8 +167,8 @@ export class ModalPerformanceTester {
       const duration = performance.now() - startTime;
 
       // Measure final memory if available
-      if ((performance as any).memory) {
-        memoryAfter = (performance as any).memory.usedJSHeapSize;
+      if ('memory' in performance) {
+        memoryAfter = (performance as Record<string, unknown>).memory?.usedJSHeapSize as number || 0;
       }
 
       const memoryUsed = memoryAfter - memoryBefore;

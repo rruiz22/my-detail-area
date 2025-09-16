@@ -6,7 +6,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 // Mock the usePermissions hook
 vi.mock('@/hooks/usePermissions');
 
-const mockUsePermissions = usePermissions as any;
+const mockUsePermissions = usePermissions as vi.MockedFunction<typeof usePermissions>;
 
 describe('PermissionGuard Component', () => {
   beforeEach(() => {

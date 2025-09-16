@@ -50,7 +50,7 @@ interface PermissionModule {
   permissions: Array<{
     level: Permission['permission_level'];
     description: string;
-    icon: React.ComponentType<any>;
+    icon: React.ComponentType<{ className?: string }>;
   }>;
 }
 

@@ -14,7 +14,7 @@ export interface PasswordResetRequest {
   completed_at?: string;
   temp_password?: string;
   force_change_on_login: boolean;
-  metadata: any;
+  metadata: PasswordResetMetadata;
   created_at: string;
   updated_at: string;
 }
@@ -24,7 +24,7 @@ export interface BulkPasswordOperation {
   operation_type: 'bulk_reset' | 'bulk_force_change' | 'bulk_temp_password';
   initiated_by: string;
   dealer_id: number;
-  target_filters: any;
+  target_filters: BulkOperationFilters;
   total_users: number;
   processed_users: number;
   successful_operations: number;
@@ -32,7 +32,7 @@ export interface BulkPasswordOperation {
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
   started_at?: string;
   completed_at?: string;
-  error_details: any[];
+  error_details: OperationError[];
   created_at: string;
 }
 
@@ -43,6 +43,53 @@ export interface PasswordHistory {
   created_at: string;
   created_by?: string;
   change_reason: string;
+}
+
+interface PasswordResetMetadata {
+  dealer_id?: number;
+  admin_notes?: string;
+  email_sent?: boolean;
+  temp_password_generated?: boolean;
+  [key: string]: unknown;
+}
+
+interface BulkOperationFilters {
+  user_ids?: string[];
+  roles?: string[];
+  departments?: string[];
+  last_login_before?: string;
+  status?: 'active' | 'inactive';
+  [key: string]: unknown;
+}
+
+interface OperationError {
+  user_id: string;
+  error_code: string;
+  error_message: string;
+  timestamp: string;
+}
+
+interface BulkOperationOptions {
+  temp_password_pattern?: string;
+  force_change_on_login?: boolean;
+  send_email_notifications?: boolean;
+  expiry_days?: number;
+  [key: string]: unknown;
+}
+
+interface PasswordResetResponse {
+  success: boolean;
+  message: string;
+  temp_password?: string;
+  reset_token?: string;
+}
+
+interface BulkOperationResponse {
+  success: boolean;
+  message: string;
+  operation_id: string;
+  total_users: number;
+  estimated_completion: string;
 }
 
 export const usePasswordManagement = () => {
@@ -81,11 +128,11 @@ export const usePasswordManagement = () => {
 
       return data;
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error resetting password:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('password_management.reset_error'),
+        description: (error instanceof Error ? error.message : String(error)) || t('password_management.reset_error'),
         variant: 'destructive',
       });
       throw error;
@@ -97,8 +144,8 @@ export const usePasswordManagement = () => {
   const bulkPasswordOperation = async (
     operationType: 'bulk_reset' | 'bulk_force_change' | 'bulk_temp_password',
     dealerId: number,
-    targetFilters: any,
-    options?: any
+    targetFilters: BulkOperationFilters,
+    options?: BulkOperationOptions
   ) => {
     try {
       setLoading(true);
@@ -121,11 +168,11 @@ export const usePasswordManagement = () => {
 
       return data;
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error in bulk operation:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('password_management.bulk_operation_error'),
+        description: (error instanceof Error ? error.message : String(error)) || t('password_management.bulk_operation_error'),
         variant: 'destructive',
       });
       throw error;
@@ -147,18 +194,18 @@ export const usePasswordManagement = () => {
       let filteredData = data || [];
       if (dealerId) {
         filteredData = filteredData.filter(req => {
-          const metadata = req.metadata as any;
+          const metadata = req.metadata as PasswordResetMetadata;
           return metadata && metadata.dealer_id === dealerId;
         });
       }
       
       return filteredData;
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching password reset requests:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('password_management.fetch_requests_error'),
+        description: (error instanceof Error ? error.message : String(error)) || t('password_management.fetch_requests_error'),
         variant: 'destructive',
       });
       return [];
@@ -176,11 +223,11 @@ export const usePasswordManagement = () => {
       if (error) throw error;
       return data || [];
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching bulk operations:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('password_management.fetch_operations_error'),
+        description: (error instanceof Error ? error.message : String(error)) || t('password_management.fetch_operations_error'),
         variant: 'destructive',
       });
       return [];
@@ -199,11 +246,11 @@ export const usePasswordManagement = () => {
       if (error) throw error;
       return data || [];
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching password history:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('password_management.fetch_history_error'),
+        description: (error instanceof Error ? error.message : String(error)) || t('password_management.fetch_history_error'),
         variant: 'destructive',
       });
       return [];
@@ -227,11 +274,11 @@ export const usePasswordManagement = () => {
         description: t('password_management.reset_cancelled'),
       });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error cancelling reset:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('password_management.cancel_error'),
+        description: (error instanceof Error ? error.message : String(error)) || t('password_management.cancel_error'),
         variant: 'destructive',
       });
       throw error;

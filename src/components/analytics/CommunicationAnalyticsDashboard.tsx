@@ -332,7 +332,7 @@ export const CommunicationAnalyticsDashboard: React.FC<CommunicationAnalyticsDas
 interface MetricCardProps {
   title: string;
   value: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   trend: number;
   color: string;
 }

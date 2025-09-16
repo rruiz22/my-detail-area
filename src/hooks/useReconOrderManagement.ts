@@ -4,6 +4,42 @@ import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
+import type { Database } from '@/integrations/supabase/types';
+
+// Supabase type definitions
+type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
+type SupabaseOrderInsert = Database['public']['Tables']['orders']['Insert'];
+type SupabaseOrderUpdate = Database['public']['Tables']['orders']['Update'];
+
+// Recon-specific service item type
+interface ReconServiceItem {
+  type: 'acquisition_cost' | 'recon_cost' | 'acquisition_source' | 'condition_grade' | 'recon_category' | string;
+  value: string | number | null;
+  description?: string;
+}
+
+// Recon order creation data
+interface ReconOrderData {
+  stockNumber?: string;
+  vehicleYear?: number | string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleVin?: string;
+  vehicleInfo?: string;
+  status?: string;
+  priority?: string;
+  services?: ReconServiceItem[];
+  totalAmount?: number;
+  notes?: string;
+  internalNotes?: string;
+  dealerId: number | string;
+  assignedContactId?: string | number;
+  acquisitionCost?: number;
+  reconCost?: number;
+  acquisitionSource?: string;
+  conditionGrade?: string;
+  reconCategory?: string;
+}
 
 // Recon Order interface - specific for reconditioning workflow
 export interface ReconOrder {
@@ -18,7 +54,7 @@ export interface ReconOrder {
   orderType: string;
   status: string;
   priority?: string;
-  services: any[];
+  services: ReconServiceItem[];
   totalAmount?: number;
   notes?: string;
   internalNotes?: string;
@@ -73,7 +109,7 @@ interface TabCounts {
 }
 
 // Transform Supabase order to ReconOrder interface
-const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
+const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
   id: supabaseOrder.id,
   orderNumber: supabaseOrder.order_number || supabaseOrder.custom_order_number,
   stockNumber: supabaseOrder.stock_number,
@@ -85,7 +121,7 @@ const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
   orderType: supabaseOrder.order_type || 'recon',
   status: supabaseOrder.status,
   priority: supabaseOrder.priority,
-  services: supabaseOrder.services || [],
+  services: (supabaseOrder.services as ReconServiceItem[]) || [],
   totalAmount: supabaseOrder.total_amount,
   notes: supabaseOrder.notes,
   internalNotes: supabaseOrder.internal_notes,
@@ -101,11 +137,11 @@ const transformReconOrder = (supabaseOrder: any): ReconOrder => ({
   createdByGroupId: supabaseOrder.created_by_group_id,
   assignedGroupId: supabaseOrder.assigned_group_id,
   // Extract recon-specific data from services/metadata if available
-  acquisitionCost: supabaseOrder.services?.find((s: any) => s.type === 'acquisition_cost')?.value,
-  reconCost: supabaseOrder.services?.find((s: any) => s.type === 'recon_cost')?.value,
-  acquisitionSource: supabaseOrder.services?.find((s: any) => s.type === 'acquisition_source')?.value || 'trade-in',
-  conditionGrade: supabaseOrder.services?.find((s: any) => s.type === 'condition_grade')?.value || 'good',
-  reconCategory: supabaseOrder.services?.find((s: any) => s.type === 'recon_category')?.value || 'full-recon',
+  acquisitionCost: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'acquisition_cost')?.value as number,
+  reconCost: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'recon_cost')?.value as number,
+  acquisitionSource: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'acquisition_source')?.value as string || 'trade-in',
+  conditionGrade: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'condition_grade')?.value as string || 'good',
+  reconCategory: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'recon_category')?.value as string || 'full-recon',
   // Enhanced fields from manual JOINs (will be set in refreshData)
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
@@ -326,7 +362,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
   };
 
   // Create new recon order
-  const createOrder = async (orderData: any) => {
+  const createOrder = async (orderData: ReconOrderData) => {
     try {
       console.log('Creating recon order with data:', orderData);
 
@@ -350,36 +386,44 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       }
 
       // Prepare services array with recon-specific data
-      const services = [
+      const services: ReconServiceItem[] = [
         ...(orderData.services || []),
         { type: 'acquisition_cost', value: orderData.acquisitionCost },
         { type: 'recon_cost', value: orderData.reconCost },
         { type: 'acquisition_source', value: orderData.acquisitionSource },
         { type: 'condition_grade', value: orderData.conditionGrade },
         { type: 'recon_category', value: orderData.reconCategory },
-      ].filter(service => service.value !== undefined && service.value !== null);
+      ].filter((service): service is ReconServiceItem =>
+        service.value !== undefined && service.value !== null
+      );
+
+      const insertData: SupabaseOrderInsert = {
+        customer_name: orderData.stockNumber || 'Recon Vehicle',
+        stock_number: orderData.stockNumber,
+        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
+        vehicle_make: orderData.vehicleMake,
+        vehicle_model: orderData.vehicleModel,
+        vehicle_vin: orderData.vehicleVin,
+        vehicle_info: orderData.vehicleInfo,
+        order_type: 'recon',
+        order_number: orderNumberData,
+        status: orderData.status || 'pending',
+        priority: orderData.priority || 'normal',
+        services: services,
+        total_amount: orderData.totalAmount || orderData.reconCost,
+        notes: orderData.notes,
+        internal_notes: orderData.internalNotes,
+        dealer_id: dealerIdNumber,
+        assigned_contact_id: orderData.assignedContactId &&
+          orderData.assignedContactId !== "1" &&
+          orderData.assignedContactId !== 1
+            ? orderData.assignedContactId.toString()
+            : null
+      };
 
       const { data, error } = await supabase
         .from('orders')
-        .insert({
-          customer_name: orderData.stockNumber || 'Recon Vehicle',
-          stock_number: orderData.stockNumber,
-          vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
-          vehicle_make: orderData.vehicleMake,
-          vehicle_model: orderData.vehicleModel,
-          vehicle_vin: orderData.vehicleVin,
-          vehicle_info: orderData.vehicleInfo,
-          order_type: 'recon',
-          order_number: orderNumberData,
-          status: orderData.status || 'pending',
-          priority: orderData.priority || 'normal',
-          services: services,
-          total_amount: orderData.totalAmount || orderData.reconCost,
-          notes: orderData.notes,
-          internal_notes: orderData.internalNotes,
-          dealer_id: dealerIdNumber,
-          assigned_contact_id: orderData.assignedContactId && orderData.assignedContactId !== "1" && orderData.assignedContactId !== 1 ? orderData.assignedContactId : null
-        })
+        .insert(insertData)
         .select()
         .single();
 
@@ -423,36 +467,40 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
   };
 
   // Update existing recon order
-  const updateOrder = async (orderId: string, orderData: any) => {
+  const updateOrder = async (orderId: string, orderData: Partial<ReconOrderData>) => {
     try {
       // Prepare services array with recon-specific data
-      const services = [
+      const services: ReconServiceItem[] = [
         ...(orderData.services || []),
         { type: 'acquisition_cost', value: orderData.acquisitionCost },
         { type: 'recon_cost', value: orderData.reconCost },
         { type: 'acquisition_source', value: orderData.acquisitionSource },
         { type: 'condition_grade', value: orderData.conditionGrade },
         { type: 'recon_category', value: orderData.reconCategory },
-      ].filter(service => service.value !== undefined && service.value !== null);
+      ].filter((service): service is ReconServiceItem =>
+        service.value !== undefined && service.value !== null
+      );
+
+      const updateData: SupabaseOrderUpdate = {
+        customer_name: orderData.stockNumber || 'Recon Vehicle',
+        stock_number: orderData.stockNumber,
+        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : undefined,
+        vehicle_make: orderData.vehicleMake,
+        vehicle_model: orderData.vehicleModel,
+        vehicle_vin: orderData.vehicleVin,
+        vehicle_info: orderData.vehicleInfo,
+        status: orderData.status,
+        priority: orderData.priority,
+        services: services,
+        total_amount: orderData.totalAmount || orderData.reconCost,
+        notes: orderData.notes,
+        internal_notes: orderData.internalNotes,
+        assigned_contact_id: orderData.assignedContactId?.toString()
+      };
 
       const { data, error } = await supabase
         .from('orders')
-        .update({
-          customer_name: orderData.stockNumber || 'Recon Vehicle',
-          stock_number: orderData.stockNumber,
-          vehicle_year: orderData.vehicleYear,
-          vehicle_make: orderData.vehicleMake,
-          vehicle_model: orderData.vehicleModel,
-          vehicle_vin: orderData.vehicleVin,
-          vehicle_info: orderData.vehicleInfo,
-          status: orderData.status,
-          priority: orderData.priority,
-          services: services,
-          total_amount: orderData.totalAmount || orderData.reconCost,
-          notes: orderData.notes,
-          internal_notes: orderData.internalNotes,
-          assigned_contact_id: orderData.assignedContactId
-        })
+        .update(updateData)
         .eq('id', orderId)
         .select()
         .single();
@@ -547,18 +595,18 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
           console.log('Recon order real-time update:', payload);
           
           if (payload.eventType === 'INSERT') {
-            const newOrder = transformReconOrder(payload.new as any);
+            const newOrder = transformReconOrder(payload.new as SupabaseOrder);
             setOrders(prevOrders => [newOrder, ...prevOrders]);
           } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformReconOrder(payload.new as any);
-            setOrders(prevOrders => 
-              prevOrders.map(order => 
+            const updatedOrder = transformReconOrder(payload.new as SupabaseOrder);
+            setOrders(prevOrders =>
+              prevOrders.map(order =>
                 order.id === updatedOrder.id ? updatedOrder : order
               )
             );
           } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders => 
-              prevOrders.filter(order => order.id !== payload.old.id)
+            setOrders(prevOrders =>
+              prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
             );
           }
         }

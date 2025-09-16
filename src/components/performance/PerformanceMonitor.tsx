@@ -443,7 +443,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
 interface MetricCardProps {
   title: string;
   value: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   progress: number;
   status: React.ReactNode;
   trend: number;

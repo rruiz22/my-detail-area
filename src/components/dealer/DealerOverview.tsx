@@ -70,7 +70,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
       if (data && data.length > 0 && data[0]) {
         setKpis(data[0]);
       }
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error fetching KPIs:', error);
       toast({
         title: t('common.error'),
@@ -95,7 +95,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
       }, { sales: 0, service: 0, recon: 0, carwash: 0 });
 
       setOrdersByType(counts);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error fetching orders by type:', error);
     }
   }, [dealerId]);
@@ -126,7 +126,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
         .map(([name, count]) => ({ name, count }));
 
       setTopServices(topThree);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error fetching top services:', error);
     } finally {
       setLoading(false);

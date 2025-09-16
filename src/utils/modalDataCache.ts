@@ -1,5 +1,5 @@
 // Enhanced caching system for modal data with advanced features
-interface CacheEntry<T = any> {
+interface CacheEntry<T = unknown> {
   data: T;
   timestamp: number;
   ttl: number;

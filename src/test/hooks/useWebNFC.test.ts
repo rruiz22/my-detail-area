@@ -19,7 +19,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   
   // Mock window.NDEFReader
-  (global as any).window = {
+  (global as Record<string, unknown>).window = {
     ...global.window,
     NDEFReader: vi.fn(() => mockNDEFReader),
     location: {
@@ -41,7 +41,7 @@ describe('useWebNFC', () => {
   });
 
   it('should handle unsupported browsers', () => {
-    delete (global as any).window.NDEFReader;
+    delete (global as Record<string, unknown>).window.NDEFReader;
     
     const { result } = renderHook(() => useWebNFC());
     expect(result.current.isSupported).toBe(false);
@@ -197,8 +197,9 @@ describe('useWebNFC', () => {
       
       try {
         await dataPromise;
-      } catch (error: any) {
-        expect(error.message).toContain('timeout');
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        expect(errorMessage).toContain('timeout');
       }
     });
   });

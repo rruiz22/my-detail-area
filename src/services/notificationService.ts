@@ -5,6 +5,109 @@ export type NotificationChannel = 'sms' | 'email' | 'push' | 'in_app';
 export type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent' | 'critical';
 export type NotificationEventType = 'sent' | 'delivered' | 'read' | 'clicked' | 'failed' | 'bounced';
 
+export interface NotificationData {
+  title?: string;
+  content?: string;
+  message?: string;
+  subject?: string;
+  html?: string;
+  body?: string;
+  order_number?: string;
+  status?: string;
+  customer_name?: string;
+  sender_name?: string;
+  message_preview?: string;
+  alert_title?: string;
+  alert_message?: string;
+  [key: string]: unknown;
+}
+
+export interface TemplateContent {
+  title?: string;
+  content?: string;
+  subject?: string;
+  html?: string;
+  body?: string;
+  [key: string]: unknown;
+}
+
+export interface IntegrationConfig {
+  sms?: {
+    provider: string;
+    api_key?: string;
+    webhook_url?: string;
+  };
+  email?: {
+    provider: string;
+    api_key?: string;
+    from_address?: string;
+  };
+  push?: {
+    provider: string;
+    server_key?: string;
+  };
+  [key: string]: unknown;
+}
+
+export interface WorkflowConfig {
+  id: string;
+  name: string;
+  trigger: {
+    event_type: string;
+    entity_type?: string;
+    conditions?: Record<string, unknown>;
+  };
+  actions: Array<{
+    type: string;
+    channel: NotificationChannel;
+    template_id?: string;
+    delay?: number;
+  }>;
+  is_active: boolean;
+}
+
+export interface AnalyticsRecord {
+  dealer_id: number;
+  user_id?: string;
+  notification_id?: string;
+  batch_id?: string;
+  channel: string;
+  event_type: string;
+  notification_type: string;
+  entity_type?: string;
+  entity_id?: string;
+  metadata: Record<string, unknown>;
+  created_at?: string;
+}
+
+export interface ChannelHandler {
+  send(notification: NotificationData, config?: IntegrationConfig): Promise<boolean>;
+  validate?(config: IntegrationConfig): boolean;
+}
+
+export interface ChannelPreference {
+  enabled: boolean;
+  frequency: string;
+}
+
+export interface OrderData {
+  id: string;
+  order_number: string;
+  status: string;
+  customer_name: string;
+}
+
+export interface MessageData {
+  id: string;
+  sender_name: string;
+  content: string;
+}
+
+export interface AlertData {
+  title: string;
+  message: string;
+}
+
 export interface NotificationRequest {
   dealerId: number;
   userId?: string;
@@ -13,7 +116,7 @@ export interface NotificationRequest {
   entityId?: string;
   channels: NotificationChannel[];
   templateId?: string;
-  data: Record<string, any>;
+  data: NotificationData;
   priority?: NotificationPriority;
   scheduledFor?: Date;
   batchId?: string;
@@ -36,7 +139,7 @@ export interface NotificationTemplate {
   dealer_id?: number;
   template_type: 'system' | 'custom' | 'module_specific';
   category: string;
-  channels: Record<NotificationChannel, any>;
+  channels: Record<NotificationChannel, TemplateContent>;
   variables: Array<{ name: string; type: string; required?: boolean }>;
   is_active: boolean;
 }
@@ -46,16 +149,16 @@ export interface DealerNotificationConfig {
   dealer_id: number;
   channels: Record<NotificationChannel, boolean>;
   rate_limits: Record<NotificationChannel, { per_hour: number; per_day: number }>;
-  integrations: Record<string, any>;
-  workflows: any[];
-  templates: Record<string, any>;
+  integrations: IntegrationConfig;
+  workflows: WorkflowConfig[];
+  templates: Record<string, TemplateContent>;
 }
 
 export interface UserNotificationPreferences {
   id: string;
   user_id: string;
   dealer_id: number;
-  channel_preferences: Record<NotificationChannel, { enabled: boolean; frequency: string }>;
+  channel_preferences: Record<NotificationChannel, ChannelPreference>;
   entity_subscriptions: Record<string, { enabled: boolean; events: string[] }>;
   quiet_hours: {
     enabled: boolean;
@@ -72,7 +175,7 @@ export interface UserNotificationPreferences {
 
 export class NotificationService {
   private static instance: NotificationService;
-  private registeredChannels: Map<NotificationChannel, any> = new Map();
+  private registeredChannels: Map<NotificationChannel, ChannelHandler> = new Map();
 
   static getInstance(): NotificationService {
     if (!NotificationService.instance) {
@@ -82,7 +185,7 @@ export class NotificationService {
   }
 
   // Channel Registration
-  registerChannel(channel: NotificationChannel, handler: any) {
+  registerChannel(channel: NotificationChannel, handler: ChannelHandler) {
     this.registeredChannels.set(channel, handler);
   }
 
@@ -140,21 +243,22 @@ export class NotificationService {
 
       return result;
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Send error', error);
-      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
       await this.trackAnalytics({
         dealerId: request.dealerId,
         userId: request.userId,
         channels: request.channels,
         eventType: 'failed',
         notificationType: request.notificationType,
-        metadata: { error: error.message }
+        metadata: { error: errorMessage }
       });
 
       return {
         success: false,
-        errors: request.channels.map(channel => ({ channel, error: error.message }))
+        errors: request.channels.map(channel => ({ channel, error: errorMessage }))
       };
     }
   }
@@ -186,13 +290,13 @@ export class NotificationService {
 
       if (error) throw error;
       return (data || []) as unknown as NotificationTemplate[];
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Get templates error', error);
       return [];
     }
   }
 
-  async renderTemplate(templateId: string, data: Record<string, any>): Promise<Record<NotificationChannel, any>> {
+  async renderTemplate(templateId: string, data: NotificationData): Promise<Record<NotificationChannel, TemplateContent>> {
     try {
       const { data: template, error } = await supabase
         .from('notification_templates')
@@ -202,7 +306,7 @@ export class NotificationService {
 
       if (error) throw error;
 
-      const rendered: Partial<Record<NotificationChannel, any>> = {};
+      const rendered: Partial<Record<NotificationChannel, TemplateContent>> = {};
       
       if (template.channels && typeof template.channels === 'object') {
         for (const [channel, content] of Object.entries(template.channels)) {
@@ -210,10 +314,10 @@ export class NotificationService {
         }
       }
 
-      return rendered as Record<NotificationChannel, any>;
-    } catch (error) {
+      return rendered as Record<NotificationChannel, TemplateContent>;
+    } catch (error: unknown) {
       console.error('NotificationService: Render template error', error);
-      return {} as Record<NotificationChannel, any>;
+      return {} as Record<NotificationChannel, TemplateContent>;
     }
   }
 
@@ -228,7 +332,7 @@ export class NotificationService {
 
       if (error) throw error;
       return data as unknown as DealerNotificationConfig;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Get dealer config error', error);
       return null;
     }
@@ -245,7 +349,7 @@ export class NotificationService {
 
       if (error) throw error;
       return data as unknown as UserNotificationPreferences;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Get user preferences error', error);
       return null;
     }
@@ -267,7 +371,7 @@ export class NotificationService {
 
       if (error) throw error;
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Update user preferences error', error);
       return false;
     }
@@ -284,7 +388,7 @@ export class NotificationService {
     notificationType: string;
     entityType?: string;
     entityId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   }): Promise<void> {
     try {
       const records = event.channels.map(channel => ({
@@ -305,7 +409,7 @@ export class NotificationService {
         .insert(records);
 
       if (error) throw error;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Track analytics error', error);
     }
   }
@@ -315,7 +419,7 @@ export class NotificationService {
     endDate?: Date;
     channel?: NotificationChannel;
     eventType?: NotificationEventType;
-  } = {}): Promise<any> {
+  } = {}): Promise<AnalyticsRecord[]> {
     try {
       let query = supabase
         .from('notification_analytics')
@@ -339,7 +443,7 @@ export class NotificationService {
       
       if (error) throw error;
       return data || [];
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('NotificationService: Get analytics error', error);
       return [];
     }
@@ -368,25 +472,22 @@ export class NotificationService {
     // Filter based on user preferences and dealer config
     return request.channels.filter(channel => {
       // Check if channel is enabled in dealer config
-      const dealerChannels = dealerConfig.channels as any;
-      if (!dealerChannels || !dealerChannels[channel]) {
+      if (!dealerConfig.channels || !dealerConfig.channels[channel]) {
         return false;
       }
 
       // Check if user has enabled this channel
-      const userChannels = userPrefs.channel_preferences as any;
-      if (!userChannels || !userChannels[channel]?.enabled) {
+      if (!userPrefs.channel_preferences || !userPrefs.channel_preferences[channel]?.enabled) {
         return false;
       }
 
       // Check priority filters
-      const priorityFilters = userPrefs.priority_filters as any;
-      if (request.priority && priorityFilters && !priorityFilters[request.priority]) {
+      if (request.priority && userPrefs.priority_filters && !userPrefs.priority_filters[request.priority]) {
         return false;
       }
 
       // Check quiet hours (simplified)
-      const quietHours = userPrefs.quiet_hours as any;
+      const quietHours = userPrefs.quiet_hours;
       if (quietHours?.enabled) {
         const now = new Date();
         const currentHour = now.getHours();
@@ -457,7 +558,7 @@ export class NotificationService {
     };
   }
 
-  private interpolateTemplate(template: any, data: Record<string, any>): any {
+  private interpolateTemplate(template: TemplateContent | string, data: NotificationData): TemplateContent | string {
     if (typeof template === 'string') {
       return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
         return data[key] || match;
@@ -465,7 +566,7 @@ export class NotificationService {
     }
 
     if (typeof template === 'object' && template !== null) {
-      const result: any = {};
+      const result: TemplateContent = {};
       for (const [key, value] of Object.entries(template)) {
         result[key] = this.interpolateTemplate(value, data);
       }
@@ -476,7 +577,7 @@ export class NotificationService {
   }
 
   // Quick notification methods for easy integration
-  async notifyOrderUpdate(dealerId: number, userId: string, orderData: any): Promise<void> {
+  async notifyOrderUpdate(dealerId: number, userId: string, orderData: OrderData): Promise<void> {
     await this.send({
       dealerId,
       userId,
@@ -493,7 +594,7 @@ export class NotificationService {
     });
   }
 
-  async notifyNewMessage(dealerId: number, userId: string, messageData: any): Promise<void> {
+  async notifyNewMessage(dealerId: number, userId: string, messageData: MessageData): Promise<void> {
     await this.send({
       dealerId,
       userId,
@@ -509,7 +610,7 @@ export class NotificationService {
     });
   }
 
-  async notifySystemAlert(dealerId: number, alertData: any): Promise<void> {
+  async notifySystemAlert(dealerId: number, alertData: AlertData): Promise<void> {
     // Get all active users for this dealer
     const { data: users } = await supabase
       .from('dealer_memberships')

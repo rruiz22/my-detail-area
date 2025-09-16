@@ -38,7 +38,7 @@ export class TooltipDebugger {
     console.log('🐛 Tooltip Debug Mode DISABLED');
   }
 
-  log(message: string, data?: any) {
+  log(message: string, data?: unknown) {
     if (this.debugMode) {
       console.log(`🔍 [TOOLTIP DEBUG] ${message}`, data || '');
     }

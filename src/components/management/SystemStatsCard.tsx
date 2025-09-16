@@ -104,9 +104,9 @@ export const SystemStatsCard: React.FC<SystemStatsCardProps> = ({ className }) =
       if (data && data.length > 0) {
         setStats(data[0]);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching system stats:', err);
-      setError(err.message);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }

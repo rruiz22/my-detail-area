@@ -66,7 +66,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [editingTag, setEditingTag] = useState<any>(null);
+  const [editingTag, setEditingTag] = useState<NFCTag | null>(null);
   const [isWriterDialogOpen, setIsWriterDialogOpen] = useState(false);
   const [isReaderDialogOpen, setIsReaderDialogOpen] = useState(false);
   const [writingTag, setWritingTag] = useState<NFCTag | null>(null);
@@ -159,7 +159,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
     });
   };
 
-  const openEditDialog = (tag: any) => {
+  const openEditDialog = (tag: NFCTag) => {
     setEditingTag(tag);
     setFormData({
       name: tag.name || '',

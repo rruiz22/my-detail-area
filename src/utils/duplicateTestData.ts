@@ -358,12 +358,12 @@ export const duplicateTestDataGenerator = DuplicateTestDataGenerator.getInstance
 
 // Export utility functions for browser console
 if (typeof window !== 'undefined') {
-  (window as any).generateTestData = (config?: TestDataConfig) => 
+  (window as Record<string, unknown>).generateTestData = (config?: TestDataConfig) =>
     duplicateTestDataGenerator.generateTestData(config);
-  
-  (window as any).createQuickTestData = () => 
+
+  (window as Record<string, unknown>).createQuickTestData = () =>
     duplicateTestDataGenerator.createQuickTestData();
-  
-  (window as any).validateTestData = (orders: Order[]) => 
+
+  (window as Record<string, unknown>).validateTestData = (orders: Order[]) =>
     duplicateTestDataGenerator.validateTestData(orders);
 }

@@ -18,12 +18,41 @@ export interface CSVParseResult {
 export interface ProcessingLog {
   step: string;
   message: string;
-  data?: any;
+  data?: Record<string, unknown> | string | number | boolean;
   timestamp: Date;
 }
 
+export interface VehicleData {
+  dealer_id: number;
+  is_active: boolean;
+  year?: number;
+  make?: string;
+  model?: string;
+  trim?: string;
+  objective?: string;
+  drivetrain?: string;
+  segment?: string;
+  stock_number?: string;
+  vin?: string;
+  color?: string;
+  mileage?: number;
+  is_certified?: boolean;
+  certified_program?: string;
+  dms_status?: string;
+  age_days?: number;
+  price?: number;
+  msrp?: number;
+  photo_count?: number;
+  key_photo_url?: string;
+  leads_last_7_days?: number;
+  leads_total?: number;
+  risk_light?: string;
+  lot_location?: string;
+  raw_data: Record<string, unknown>;
+}
+
 export interface VehicleProcessingResult {
-  vehicles: any[];
+  vehicles: VehicleData[];
   logs: ProcessingLog[];
   stats: {
     processed: number;
@@ -237,7 +266,7 @@ export function processVehicleData(
   dealerId: number
 ): VehicleProcessingResult {
   const logs: ProcessingLog[] = [];
-  const vehicles: any[] = [];
+  const vehicles: VehicleData[] = [];
   
   const stats = {
     processed: 0,
@@ -247,7 +276,7 @@ export function processVehicleData(
     missingOptional: 0
   };
 
-  const addLog = (step: string, message: string, data?: any) => {
+  const addLog = (step: string, message: string, data?: Record<string, unknown> | string | number | boolean) => {
     logs.push({ step, message, data, timestamp: new Date() });
   };
 
@@ -267,7 +296,7 @@ export function processVehicleData(
       continue;
     }
 
-    const vehicle: any = {
+    const vehicle: VehicleData = {
       dealer_id: dealerId,
       is_active: true,
       raw_data: {}
@@ -288,12 +317,13 @@ export function processVehicleData(
       if (mappedField) {
         // Process known fields
         switch (mappedField) {
-          case 'year':
+          case 'year': {
             const year = parseInt(value);
             if (!isNaN(year) && year > 1900 && year < 2100) {
               vehicle.year = year;
             }
             break;
+          }
           case 'make':
             vehicle.make = value;
             break;

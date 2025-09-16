@@ -98,8 +98,8 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
     }
   };
 
-  const NotificationItem = ({ notification, showEntity = false }: { 
-    notification: any; 
+  const NotificationItem = ({ notification, showEntity = false }: {
+    notification: Record<string, unknown>;
     showEntity?: boolean;
   }) => (
     <div

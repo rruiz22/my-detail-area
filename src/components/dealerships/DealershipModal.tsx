@@ -96,7 +96,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
     }
   }, [dealership]);
 
-  const handleInputChange = (field: keyof DealershipFormData, value: any) => {
+  const handleInputChange = (field: keyof DealershipFormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

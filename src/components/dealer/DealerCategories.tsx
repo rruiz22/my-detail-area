@@ -226,7 +226,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
     if (moduleNames.length > 0) {
       const mappingsToInsert = moduleNames.map(module => ({
         category_id: categoryId,
-        module: module as any,
+        module: module as string,
         dealer_id: parseInt(dealerId)
       }));
 

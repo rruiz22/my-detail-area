@@ -52,7 +52,7 @@ export function FollowersAvatarStack({
                   style={{ zIndex: visibleFollowers.length - index }}
                 >
                   <UserPresenceIndicator
-                    status={follower.presence_status as any}
+                    status={follower.presence_status as 'online' | 'away' | 'busy' | 'offline'}
                     size={size}
                     showRing
                   >

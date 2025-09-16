@@ -5,8 +5,54 @@ import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
 import type { Database } from '@/integrations/supabase/types';
 
-// Use Supabase types but create a unified interface for components
+// Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
+type SupabaseOrderInsert = Database['public']['Tables']['orders']['Insert'];
+type SupabaseOrderUpdate = Database['public']['Tables']['orders']['Update'];
+
+// CarWash-specific service item type
+interface CarWashServiceItem {
+  type: string;
+  name?: string;
+  price?: number;
+  description?: string;
+}
+
+// CarWash order creation data
+interface CarWashOrderData {
+  vehicleYear?: number | string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleInfo?: string;
+  vehicleVin?: string;
+  stockNumber?: string;
+  tag?: string;
+  isWaiter?: boolean;
+  services?: CarWashServiceItem[];
+  totalAmount?: number;
+  notes?: string;
+  dealerId: number | string;
+}
+
+// CarWash filters interface
+interface CarWashOrderFilters {
+  search: string;
+  status: string;
+  dealership: string;
+  dateRange: { from: Date | null; to: Date | null };
+}
+
+// CarWash tab counts
+interface CarWashTabCounts {
+  today: number;
+  week: number;
+  all: number;
+  pending: number;
+  in_progress: number;
+  completed: number;
+  cancelled: number;
+  waiter: number;
+}
 
 // Unified CarWash Order type for components
 export interface CarWashOrder {
@@ -23,7 +69,7 @@ export interface CarWashOrder {
   createdAt: string;
   updatedAt: string;
   totalAmount?: number;
-  services?: any[];
+  services?: CarWashServiceItem[];
   notes?: string;
   customOrderNumber?: string;
   dealerId: number;
@@ -38,7 +84,7 @@ export interface CarWashOrder {
 }
 
 // Transform Supabase order to component order
-const transformCarWashOrder = (supabaseOrder: any): CarWashOrder => ({
+const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
   id: supabaseOrder.id,
   vehicleYear: supabaseOrder.vehicle_year || undefined,
   vehicleMake: supabaseOrder.vehicle_make || undefined,
@@ -52,7 +98,7 @@ const transformCarWashOrder = (supabaseOrder: any): CarWashOrder => ({
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
   totalAmount: supabaseOrder.total_amount || undefined,
-  services: supabaseOrder.services as any[] || [],
+  services: (supabaseOrder.services as CarWashServiceItem[]) || [],
   notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
   dealerId: supabaseOrder.dealer_id,
@@ -72,7 +118,7 @@ const transformCarWashOrder = (supabaseOrder: any): CarWashOrder => ({
 
 export const useCarWashOrderManagement = (activeTab: string) => {
   const [orders, setOrders] = useState<CarWashOrder[]>([]);
-  const [tabCounts, setTabCounts] = useState({
+  const [tabCounts, setTabCounts] = useState<CarWashTabCounts>({
     today: 0,
     week: 0,
     all: 0,
@@ -82,7 +128,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     cancelled: 0,
     waiter: 0,
   });
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<CarWashOrderFilters>({
     search: '',
     status: '',
     dealership: '',
@@ -92,7 +138,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
   const { user } = useAuth();
   const { generateQR } = useOrderActions();
 
-  const calculateTabCounts = useMemo(() => (allOrders: CarWashOrder[]) => {
+  const calculateTabCounts = useMemo(() => (allOrders: CarWashOrder[]): CarWashTabCounts => {
     const today = new Date();
     const weekFromNow = new Date(today);
     weekFromNow.setDate(weekFromNow.getDate() + 7);
@@ -115,7 +161,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     };
   }, []);
 
-  const filterOrders = useMemo(() => (allOrders: CarWashOrder[], tab: string, currentFilters: any) => {
+  const filterOrders = useMemo(() => (allOrders: CarWashOrder[], tab: string, currentFilters: CarWashOrderFilters) => {
     let filtered = [...allOrders];
 
     // Apply tab-specific filtering
@@ -251,11 +297,11 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     }
   }, [activeTab, filters, filterOrders, calculateTabCounts, user]);
 
-  const updateFilters = useCallback((newFilters: any) => {
-    setFilters(newFilters);
+  const updateFilters = useCallback((newFilters: Partial<CarWashOrderFilters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
   }, []);
 
-  const createOrder = useCallback(async (orderData: any) => {
+  const createOrder = useCallback(async (orderData: CarWashOrderData) => {
     if (!user) return;
     
     setLoading(true);
@@ -272,7 +318,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         throw new Error('Failed to generate order number');
       }
 
-      const newOrder = {
+      const insertData: SupabaseOrderInsert = {
         order_number: orderNumberData, // Use sequential CW-1001, CW-1002, etc.
         customer_name: 'Car Wash Service', // Default for car wash orders
         vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
@@ -291,11 +337,11 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
       };
 
-      console.log('Inserting car wash order to DB:', newOrder);
+      console.log('Inserting car wash order to DB:', insertData);
 
       const { data, error } = await supabase
         .from('orders')
-        .insert(newOrder)
+        .insert(insertData)
         .select()
         .single();
 
@@ -324,20 +370,35 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     }
   }, [user, refreshData]);
 
-  const updateOrder = useCallback(async (orderId: string, orderData: any) => {
+  const updateOrder = useCallback(async (orderId: string, orderData: Partial<CarWashOrderData> & { status?: string }) => {
     if (!user) return;
     
     setLoading(true);
     
     try {
-      // Map waiter checkbox to priority
-      const updateData = {
+      // Map waiter checkbox to priority and prepare update data
+      const updateDataRaw = {
         ...orderData,
-        priority: orderData.isWaiter ? 'urgent' : (orderData.priority || 'normal')
+        priority: orderData.isWaiter ? 'urgent' : 'normal'
       };
-      
+
       // Remove isWaiter from update data as it's not a DB field
-      delete updateData.isWaiter;
+      delete updateDataRaw.isWaiter;
+
+      const updateData: SupabaseOrderUpdate = {
+        vehicle_year: updateDataRaw.vehicleYear ? parseInt(updateDataRaw.vehicleYear.toString()) : undefined,
+        vehicle_make: updateDataRaw.vehicleMake,
+        vehicle_model: updateDataRaw.vehicleModel,
+        vehicle_vin: updateDataRaw.vehicleVin,
+        vehicle_info: updateDataRaw.vehicleInfo,
+        stock_number: updateDataRaw.stockNumber,
+        tag: updateDataRaw.tag,
+        status: updateDataRaw.status,
+        priority: updateDataRaw.priority,
+        services: updateDataRaw.services,
+        total_amount: updateDataRaw.totalAmount,
+        notes: updateDataRaw.notes,
+      };
 
       const { data, error } = await supabase
         .from('orders')
@@ -352,10 +413,15 @@ export const useCarWashOrderManagement = (activeTab: string) => {
       }
 
       // Update local state immediately for better UX
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === orderId 
-            ? { ...order, ...updateData, updatedAt: new Date().toISOString(), isWaiter: updateData.priority === 'urgent' }
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId
+            ? {
+                ...order,
+                ...updateDataRaw,
+                updatedAt: new Date().toISOString(),
+                isWaiter: updateData.priority === 'urgent'
+              }
             : order
         )
       );
@@ -418,18 +484,18 @@ export const useCarWashOrderManagement = (activeTab: string) => {
           console.log('Car wash order real-time update:', payload);
           
           if (payload.eventType === 'INSERT') {
-            const newOrder = transformCarWashOrder(payload.new as any);
+            const newOrder = transformCarWashOrder(payload.new as SupabaseOrder);
             setOrders(prevOrders => [newOrder, ...prevOrders]);
           } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformCarWashOrder(payload.new as any);
-            setOrders(prevOrders => 
-              prevOrders.map(order => 
+            const updatedOrder = transformCarWashOrder(payload.new as SupabaseOrder);
+            setOrders(prevOrders =>
+              prevOrders.map(order =>
                 order.id === updatedOrder.id ? updatedOrder : order
               )
             );
           } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders => 
-              prevOrders.filter(order => order.id !== payload.old.id)
+            setOrders(prevOrders =>
+              prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
             );
           }
           

@@ -101,9 +101,9 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ classNam
       if (error) throw error;
 
       setActivities(data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching recent activity:', err);
-      setError(err.message);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }

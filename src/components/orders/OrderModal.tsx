@@ -52,11 +52,82 @@ interface OrderFormData {
   scheduledTime?: string;
 }
 
+interface DealershipInfo {
+  id: number;
+  name: string;
+  subdomain?: string;
+}
+
+interface AssignedUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface DealerService {
+  id: string;
+  name: string;
+  description?: string;
+  price?: number;
+}
+
+interface OrderData {
+  id?: string;
+  orderNumber?: string;
+  order_number?: string;
+  orderType?: string;
+  order_type?: string;
+  status?: string;
+  priority?: string;
+  customerName?: string;
+  customer_name?: string;
+  vehicleVin?: string;
+  vehicle_vin?: string;
+  vehicleYear?: string | number;
+  vehicle_year?: string | number;
+  vehicleMake?: string;
+  vehicle_make?: string;
+  vehicleModel?: string;
+  vehicle_model?: string;
+  vehicleInfo?: string;
+  vehicle_info?: string;
+  stockNumber?: string;
+  stock_number?: string;
+  assignedGroupId?: string;
+  assigned_group_id?: string;
+  assignedContactId?: string;
+  assigned_contact_id?: string;
+  salesperson?: string;
+  notes?: string;
+  internalNotes?: string;
+  internal_notes?: string;
+  dueDate?: string | Date;
+  due_date?: string | Date;
+  slaDeadline?: string | Date;
+  sla_deadline?: string | Date;
+  scheduledDate?: string | Date;
+  scheduled_date?: string | Date;
+  scheduledTime?: string;
+  scheduled_time?: string;
+  dealerId?: number;
+  dealer_id?: number;
+  services?: string[];
+}
+
+interface DealerMembership {
+  profiles: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}
+
 interface OrderModalProps {
-  order?: any;
+  order?: OrderData;
   open: boolean;
   onClose: () => void;
-  onSave: (orderData: any) => void;
+  onSave: (orderData: OrderData) => void;
 }
 
 export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, onSave }) => {
@@ -90,9 +161,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const [selectedDealership, setSelectedDealership] = useState('');
   const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
-  const [dealerships, setDealerships] = useState([]);
-  const [assignedUsers, setAssignedUsers] = useState([]);
-  const [services, setServices] = useState([]);
+  const [dealerships, setDealerships] = useState<DealershipInfo[]>([]);
+  const [assignedUsers, setAssignedUsers] = useState<AssignedUser[]>([]);
+  const [services, setServices] = useState<DealerService[]>([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
@@ -106,12 +177,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       
       if (order) {
         // Helper function to safely extract field values with fallbacks
-        const getFieldValue = (camelCase: any, snakeCase: any, defaultValue = '') => {
+        const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = '') => {
           return camelCase ?? snakeCase ?? defaultValue;
         };
 
         // Helper function to safely parse dates
-        const parseDateField = (camelCaseDate: any, snakeCaseDate: any) => {
+        const parseDateField = (camelCaseDate: unknown, snakeCaseDate: unknown) => {
           const dateValue = camelCaseDate || snakeCaseDate;
           if (!dateValue) return undefined;
           const parsed = safeParseDate(dateValue);
@@ -119,9 +190,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         };
 
         // Helper function to safely convert to string
-        const toStringValue = (value: any) => {
+        const toStringValue = (value: unknown) => {
           if (value === null || value === undefined) return '';
-          return value.toString();
+          return String(value);
         };
 
         setFormData({
@@ -233,7 +304,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       ]);
 
       if (usersResult.data) {
-        setAssignedUsers(usersResult.data.map((membership: any) => ({
+        setAssignedUsers(usersResult.data.map((membership: DealerMembership) => ({
           id: membership.profiles.id,
           name: `${membership.profiles.first_name || ''} ${membership.profiles.last_name || ''}`.trim() || membership.profiles.email,
           email: membership.profiles.email
@@ -302,7 +373,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     }
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: keyof OrderFormData, value: string | Date | undefined) => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
       

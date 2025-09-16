@@ -5,8 +5,51 @@ import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
 import type { Database } from '@/integrations/supabase/types';
 
-// Use Supabase types but create a unified interface for components
+// Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
+type SupabaseOrderInsert = Database['public']['Tables']['orders']['Insert'];
+type SupabaseOrderUpdate = Database['public']['Tables']['orders']['Update'];
+
+// Service-specific service item type
+interface ServiceItem {
+  id?: string;
+  name: string;
+  description?: string;
+  price?: number;
+  quantity?: number;
+  category?: string;
+}
+
+// Service order creation data
+interface ServiceOrderData {
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  vehicleYear?: number | string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleInfo?: string;
+  vehicleVin?: string;
+  po?: string;
+  ro?: string;
+  tag?: string;
+  services: ServiceItem[];
+  totalAmount?: number;
+  notes?: string;
+  dueDate?: string;
+  dealerId: number | string;
+}
+
+// Service order tab counts
+interface ServiceTabCounts {
+  all: number;
+  today: number;
+  tomorrow: number;
+  pending: number;
+  inProgress: number;
+  completed: number;
+  cancelled: number;
+}
 
 // Service Order specific interface
 export interface ServiceOrder {
@@ -24,7 +67,7 @@ export interface ServiceOrder {
   ro?: string;
   tag?: string;
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  services: any[];
+  services: ServiceItem[];
   totalAmount?: number;
   createdAt: string;
   updatedAt: string;
@@ -44,11 +87,11 @@ export interface ServiceOrderFilters {
   status: string;
   make: string;
   model: string;
-  dateRange: { from: any; to: any };
+  dateRange: { from: Date | null; to: Date | null };
 }
 
 // Transform Supabase order to ServiceOrder
-const transformServiceOrder = (supabaseOrder: any): ServiceOrder => ({
+const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   id: supabaseOrder.id,
   orderNumber: supabaseOrder.order_number,
   customerName: supabaseOrder.customer_name,
@@ -63,7 +106,7 @@ const transformServiceOrder = (supabaseOrder: any): ServiceOrder => ({
   ro: supabaseOrder.ro || undefined,
   tag: supabaseOrder.tag || undefined,
   status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
-  services: supabaseOrder.services as any[] || [],
+  services: (supabaseOrder.services as ServiceItem[]) || [],
   totalAmount: supabaseOrder.total_amount || undefined,
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
@@ -95,7 +138,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
   const { user } = useAuth();
   const { generateQR } = useOrderActions();
 
-  const tabCounts = useMemo(() => {
+  const tabCounts = useMemo((): ServiceTabCounts => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -255,7 +298,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
   }, []);
 
-  const createOrder = useCallback(async (orderData: any) => {
+  const createOrder = useCallback(async (orderData: ServiceOrderData) => {
     if (!user) return;
     
     setLoading(true);
@@ -272,7 +315,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
         throw new Error('Failed to generate service order number');
       }
 
-      const newOrder = {
+      const insertData: SupabaseOrderInsert = {
         order_number: orderNumberData, // Use sequential SV-1001, SV-1002, etc.
         customer_name: orderData.customerName,
         customer_email: orderData.customerEmail,
@@ -294,11 +337,11 @@ export const useServiceOrderManagement = (activeTab: string) => {
         notes: orderData.notes,
       };
 
-      console.log('Inserting service order to DB:', newOrder);
+      console.log('Inserting service order to DB:', insertData);
 
       const { data, error } = await supabase
         .from('orders')
-        .insert(newOrder)
+        .insert(insertData)
         .select()
         .single();
 
@@ -327,15 +370,34 @@ export const useServiceOrderManagement = (activeTab: string) => {
     }
   }, [user, refreshData, generateQR]);
 
-  const updateOrder = useCallback(async (orderId: string, orderData: any) => {
+  const updateOrder = useCallback(async (orderId: string, orderData: Partial<ServiceOrderData> & { status?: string }) => {
     if (!user) return;
     
     setLoading(true);
     
     try {
+      const updateData: SupabaseOrderUpdate = {
+        customer_name: orderData.customerName,
+        customer_email: orderData.customerEmail,
+        customer_phone: orderData.customerPhone,
+        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : undefined,
+        vehicle_make: orderData.vehicleMake,
+        vehicle_model: orderData.vehicleModel,
+        vehicle_vin: orderData.vehicleVin,
+        vehicle_info: orderData.vehicleInfo,
+        po: orderData.po,
+        ro: orderData.ro,
+        tag: orderData.tag,
+        status: orderData.status,
+        services: orderData.services,
+        total_amount: orderData.totalAmount,
+        sla_deadline: orderData.dueDate,
+        notes: orderData.notes,
+      };
+
       const { data, error } = await supabase
         .from('orders')
-        .update(orderData)
+        .update(updateData)
         .eq('id', orderId)
         .select()
         .single();
@@ -346,9 +408,9 @@ export const useServiceOrderManagement = (activeTab: string) => {
       }
 
       // Update local state immediately for better UX
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === orderId 
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId
             ? { ...order, ...orderData, updatedAt: new Date().toISOString() }
             : order
         )
@@ -412,18 +474,18 @@ export const useServiceOrderManagement = (activeTab: string) => {
           console.log('Service order real-time update:', payload);
           
           if (payload.eventType === 'INSERT') {
-            const newOrder = transformServiceOrder(payload.new as any);
+            const newOrder = transformServiceOrder(payload.new as SupabaseOrder);
             setOrders(prevOrders => [newOrder, ...prevOrders]);
           } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformServiceOrder(payload.new as any);
-            setOrders(prevOrders => 
-              prevOrders.map(order => 
+            const updatedOrder = transformServiceOrder(payload.new as SupabaseOrder);
+            setOrders(prevOrders =>
+              prevOrders.map(order =>
                 order.id === updatedOrder.id ? updatedOrder : order
               )
             );
           } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders => 
-              prevOrders.filter(order => order.id !== payload.old.id)
+            setOrders(prevOrders =>
+              prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
             );
           }
         }

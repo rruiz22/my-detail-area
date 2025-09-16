@@ -66,10 +66,10 @@ export function NFCPhysicalWriter({ isOpen, onClose, tag, onSuccess }: NFCPhysic
         setWriteStatus('error');
         setWriteError(error || t('nfc.errors.write_failed'));
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Write error:', err);
       setWriteStatus('error');
-      setWriteError(err.message || t('nfc.errors.write_failed'));
+      setWriteError(err instanceof Error ? err.message : t('nfc.errors.write_failed'));
     }
   };
 

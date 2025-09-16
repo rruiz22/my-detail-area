@@ -135,7 +135,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       setSelectedDealerId(dealerId || null);
       onInvitationSent?.();
       onClose();
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error sending invitation:', error);
       toast({
         title: t('common.error'),

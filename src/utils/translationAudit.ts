@@ -221,7 +221,7 @@ export class TranslationAuditService {
   /**
    * Check if translation key exists (supports nested keys like 'user.profile.name')
    */
-  private hasTranslationKey(obj: any, keyPath: string): boolean {
+  private hasTranslationKey(obj: Record<string, unknown>, keyPath: string): boolean {
     const keys = keyPath.split('.');
     let current = obj;
     

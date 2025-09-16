@@ -31,7 +31,7 @@ import { toast } from 'sonner';
 export function DuplicateTooltipTester() {
   const [testOrders, setTestOrders] = useState<Order[]>([]);
   const [debugMode, setDebugMode] = useState(true);
-  const [testResults, setTestResults] = useState<any>(null);
+  const [testResults, setTestResults] = useState<Record<string, unknown> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTest, setSelectedTest] = useState<'quick' | 'comprehensive' | 'edge-cases'>('quick');
 

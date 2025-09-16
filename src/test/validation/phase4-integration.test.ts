@@ -74,7 +74,7 @@ const expectedDbFormat = {
 };
 
 // Mock transform function (extracted from OrderModal)
-const transformToDbFormat = (formData: any) => ({
+const transformToDbFormat = (formData: Record<string, unknown>) => ({
   // Map frontend camelCase to backend snake_case
   order_number: formData.orderNumber,
   customer_name: formData.customerName,

@@ -76,9 +76,9 @@ export const DealershipPerformanceTable: React.FC<DealershipPerformanceTableProp
       if (error) throw error;
 
       setPerformance(data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching performance stats:', err);
-      setError(err.message);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }

@@ -33,7 +33,7 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
-const mockUseAuth = useAuth as any;
+const mockUseAuth = useAuth as vi.MockedFunction<typeof useAuth>;
 
 describe('InvitationAccept Page', () => {
   const mockUser = {

@@ -2,6 +2,85 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "../_shared/cors.ts";
 
+interface NotificationData {
+  title?: string;
+  content?: string;
+  message?: string;
+  subject?: string;
+  html?: string;
+  body?: string;
+  data?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface UserNotificationPreferences {
+  user_id: string;
+  dealer_id: number;
+  channel_preferences: {
+    sms?: { enabled: boolean };
+    email?: { enabled: boolean };
+    push?: { enabled: boolean };
+    in_app?: { enabled: boolean };
+  };
+}
+
+interface DealerNotificationConfig {
+  dealer_id: number;
+  channels: {
+    sms?: boolean;
+    email?: boolean;
+    push?: boolean;
+    in_app?: boolean;
+  };
+}
+
+interface NotificationTemplate {
+  id: string;
+  channels: {
+    [channel: string]: string | {
+      title?: string;
+      content?: string;
+      subject?: string;
+      html?: string;
+      body?: string;
+    };
+  };
+}
+
+interface ProcessChannelResult {
+  success: boolean;
+  channel: string;
+  error?: string;
+  responseTime?: number;
+}
+
+interface ProcessNotificationResult {
+  success: boolean;
+  error?: string;
+  channels?: ProcessChannelResult[];
+}
+
+interface UserProfile {
+  id: string;
+  phone?: string;
+  email?: string;
+}
+
+interface AnalyticsEvent {
+  dealer_id: number;
+  user_id?: string;
+  notification_id?: string;
+  batch_id?: string;
+  channel: string;
+  event_type: string;
+  notification_type: string;
+  entity_type?: string;
+  entity_id?: string;
+  template_id?: string;
+  response_time_ms?: number;
+  metadata?: Record<string, unknown>;
+}
+
 interface NotificationQueueItem {
   id: string;
   batch_id?: string;
@@ -11,7 +90,7 @@ interface NotificationQueueItem {
   entity_type?: string;
   entity_id?: string;
   channels: string[];
-  notification_data: Record<string, any>;
+  notification_data: NotificationData;
   template_id?: string;
   priority: string;
   scheduled_for: string;
@@ -85,10 +164,10 @@ serve(async (req: Request) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Enhanced notification engine error:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message 
+    return new Response(JSON.stringify({
+      error: error instanceof Error ? error.message : 'Unknown error'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -96,7 +175,7 @@ serve(async (req: Request) => {
   }
 });
 
-async function processNotification(notification: NotificationQueueItem): Promise<{ success: boolean; error?: string; channels?: any[] }> {
+async function processNotification(notification: NotificationQueueItem): Promise<ProcessNotificationResult> {
   try {
     console.log(`Processing notification ${notification.id} for user ${notification.user_id}`);
 
@@ -171,32 +250,33 @@ async function processNotification(notification: NotificationQueueItem): Promise
       channels: channelResults
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Error processing notification ${notification.id}:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     // Mark as failed if max attempts reached
     const finalStatus = notification.attempts >= notification.max_attempts ? 'failed' : 'queued';
-    
+
     await supabase
       .from('notification_queue')
-      .update({ 
+      .update({
         status: finalStatus,
-        error_message: error.message,
+        error_message: errorMessage,
         last_attempt_at: new Date().toISOString()
       })
       .eq('id', notification.id);
 
-    return { success: false, error: error.message };
+    return { success: false, error: errorMessage };
   }
 }
 
 async function processChannel(
-  channel: string, 
+  channel: string,
   notification: NotificationQueueItem,
-  userPrefs: any,
-  dealerConfig: any,
-  template: any
-): Promise<{ success: boolean; channel: string; error?: string; responseTime?: number }> {
+  userPrefs: UserNotificationPreferences | null,
+  dealerConfig: DealerNotificationConfig | null,
+  template: NotificationTemplate | null
+): Promise<ProcessChannelResult> {
   const startTime = Date.now();
 
   try {
@@ -240,18 +320,18 @@ async function processChannel(
       responseTime: Date.now() - startTime
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Error processing channel ${channel}:`, error);
     return {
       success: false,
       channel,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       responseTime: Date.now() - startTime
     };
   }
 }
 
-async function sendSMS(notification: NotificationQueueItem, content: any, dealerConfig: any): Promise<boolean> {
+async function sendSMS(notification: NotificationQueueItem, content: NotificationData, dealerConfig: DealerNotificationConfig | null): Promise<boolean> {
   try {
     // Get user's phone number
     const { data: profile } = await supabase
@@ -276,13 +356,13 @@ async function sendSMS(notification: NotificationQueueItem, content: any, dealer
 
     if (error) throw error;
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('SMS send error:', error);
     return false;
   }
 }
 
-async function sendEmail(notification: NotificationQueueItem, content: any, dealerConfig: any): Promise<boolean> {
+async function sendEmail(notification: NotificationQueueItem, content: NotificationData, dealerConfig: DealerNotificationConfig | null): Promise<boolean> {
   try {
     // Get user's email
     const { data: profile } = await supabase
@@ -308,13 +388,13 @@ async function sendEmail(notification: NotificationQueueItem, content: any, deal
 
     if (error) throw error;
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Email send error:', error);
     return false;
   }
 }
 
-async function sendPushNotification(notification: NotificationQueueItem, content: any, dealerConfig: any): Promise<boolean> {
+async function sendPushNotification(notification: NotificationQueueItem, content: NotificationData, dealerConfig: DealerNotificationConfig | null): Promise<boolean> {
   try {
     // This would integrate with Firebase Cloud Messaging or similar
     // For now, we'll just log it and return success
@@ -325,13 +405,13 @@ async function sendPushNotification(notification: NotificationQueueItem, content
       data: content.data || notification.notification_data
     });
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Push notification error:', error);
     return false;
   }
 }
 
-async function sendInAppNotification(notification: NotificationQueueItem, content: any): Promise<boolean> {
+async function sendInAppNotification(notification: NotificationQueueItem, content: NotificationData): Promise<boolean> {
   try {
     // Insert into existing notification_log table
     const { error } = await supabase
@@ -353,13 +433,13 @@ async function sendInAppNotification(notification: NotificationQueueItem, conten
 
     if (error) throw error;
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('In-app notification error:', error);
     return false;
   }
 }
 
-async function getUserPreferences(userId: string, dealerId: number): Promise<any> {
+async function getUserPreferences(userId: string, dealerId: number): Promise<UserNotificationPreferences | null> {
   try {
     const { data, error } = await supabase
       .from('user_notification_preferences')
@@ -379,7 +459,7 @@ async function getUserPreferences(userId: string, dealerId: number): Promise<any
   }
 }
 
-async function getDealerConfig(dealerId: number): Promise<any> {
+async function getDealerConfig(dealerId: number): Promise<DealerNotificationConfig | null> {
   try {
     const { data, error } = await supabase
       .from('dealer_notification_configs')
@@ -398,7 +478,7 @@ async function getDealerConfig(dealerId: number): Promise<any> {
   }
 }
 
-async function getTemplate(templateId: string): Promise<any> {
+async function getTemplate(templateId: string): Promise<NotificationTemplate | null> {
   try {
     const { data, error } = await supabase
       .from('notification_templates')
@@ -418,7 +498,7 @@ async function getTemplate(templateId: string): Promise<any> {
   }
 }
 
-function isChannelEnabled(channel: string, userPrefs: any, dealerConfig: any): boolean {
+function isChannelEnabled(channel: string, userPrefs: UserNotificationPreferences | null, dealerConfig: DealerNotificationConfig | null): boolean {
   // Check dealer config
   if (dealerConfig?.channels && !dealerConfig.channels[channel]) {
     return false;
@@ -432,7 +512,7 @@ function isChannelEnabled(channel: string, userPrefs: any, dealerConfig: any): b
   return true;
 }
 
-function renderTemplate(template: any, channel: string, data: Record<string, any>): any {
+function renderTemplate(template: NotificationTemplate, channel: string, data: NotificationData): NotificationData {
   try {
     if (!template.channels || !template.channels[channel]) {
       return data;
@@ -441,9 +521,9 @@ function renderTemplate(template: any, channel: string, data: Record<string, any
     const channelTemplate = template.channels[channel];
     
     // Simple template interpolation
-    const interpolate = (text: string, data: Record<string, any>): string => {
+    const interpolate = (text: string, data: NotificationData): string => {
       return text.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-        return data[key] || match;
+        return (data[key] ? String(data[key]) : match);
       });
     };
 
@@ -452,7 +532,7 @@ function renderTemplate(template: any, channel: string, data: Record<string, any
     }
 
     if (typeof channelTemplate === 'object') {
-      const result: any = {};
+      const result: NotificationData = {};
       for (const [key, value] of Object.entries(channelTemplate)) {
         if (typeof value === 'string') {
           result[key] = interpolate(value, data);
@@ -470,20 +550,7 @@ function renderTemplate(template: any, channel: string, data: Record<string, any
   }
 }
 
-async function trackAnalytics(event: {
-  dealer_id: number;
-  user_id?: string;
-  notification_id?: string;
-  batch_id?: string;
-  channel: string;
-  event_type: string;
-  notification_type: string;
-  entity_type?: string;
-  entity_id?: string;
-  template_id?: string;
-  response_time_ms?: number;
-  metadata?: Record<string, any>;
-}): Promise<void> {
+async function trackAnalytics(event: AnalyticsEvent): Promise<void> {
   try {
     await supabase
       .from('notification_analytics')

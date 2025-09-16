@@ -93,18 +93,18 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     );
   }
 
-  const vehicle = vehicleDetail as any;
-  const workItems = (vehicleDetail.work_orders as any[]) || [];
-  const media: any[] = []; // Empty for now since attachments property doesn't exist
-  const notes: any[] = []; // Empty for now since comments property doesn't exist
+  const vehicle = vehicleDetail as Record<string, unknown>;
+  const workItems = (vehicleDetail.work_orders as Record<string, unknown>[]) || [];
+  const media: Record<string, unknown>[] = []; // Empty for now since attachments property doesn't exist
+  const notes: Record<string, unknown>[] = []; // Empty for now since comments property doesn't exist
 
   // Calculate work item counters
-  const workItemCounters = workItems.reduce((acc: Record<string, number>, item: any) => {
+  const workItemCounters = workItems.reduce((acc: Record<string, number>, item: Record<string, unknown>) => {
     acc[item.status] = (acc[item.status] || 0) + 1;
     return acc;
   }, {});
 
-  const needAttention = (workItemCounters.pending || 0) + (workItems.filter((item: any) => item.approval_required).length || 0);
+  const needAttention = (workItemCounters.pending || 0) + (workItems.filter((item: Record<string, unknown>) => item.approval_required).length || 0);
   const inProgress = workItemCounters.in_progress || 0;
   const declined = workItemCounters.declined || 0;
   const completed = workItemCounters.completed || 0;

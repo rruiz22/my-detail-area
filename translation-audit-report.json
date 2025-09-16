@@ -1,5 +1,5 @@
 {
-  "scannedFiles": 411,
+  "scannedFiles": 412,
   "totalStrings": 3991,
   "hardcodedStrings": 1032,
   "translatedStrings": 2959,
@@ -10009,23 +10009,23 @@
         "hardcodedStrings": [
           {
             "text": "Success",
-            "line": 18,
-            "context": "17: export function NotificationProvider({ children }: NotificationProviderProps) {\n18: const showSuccess = useCallback((message: string, title = 'Success') => {\n19: toast({"
+            "line": 10,
+            "context": "9: export function NotificationProvider({ children }: NotificationProviderProps) {\n10: const showSuccess = useCallback((message: string, title = 'Success') => {\n11: toast({"
           },
           {
             "text": "Error",
-            "line": 26,
-            "context": "25: \n26: const showError = useCallback((message: string, title = 'Error') => {\n27: toast({"
+            "line": 18,
+            "context": "17: \n18: const showError = useCallback((message: string, title = 'Error') => {\n19: toast({"
           },
           {
             "text": "Info",
-            "line": 34,
-            "context": "33: \n34: const showInfo = useCallback((message: string, title = 'Info') => {\n35: toast({"
+            "line": 26,
+            "context": "25: \n26: const showInfo = useCallback((message: string, title = 'Info') => {\n27: toast({"
           },
           {
             "text": "Warning",
-            "line": 42,
-            "context": "41: \n42: const showWarning = useCallback((message: string, title = 'Warning') => {\n43: toast({"
+            "line": 34,
+            "context": "33: \n34: const showWarning = useCallback((message: string, title = 'Warning') => {\n35: toast({"
           }
         ],
         "translationCalls": [],

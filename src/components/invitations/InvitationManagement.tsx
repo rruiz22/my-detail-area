@@ -84,11 +84,11 @@ export const InvitationManagement: React.FC = () => {
       if (error) throw error;
 
       setInvitations(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching invitations:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Error loading invitations',
+        description: error instanceof Error ? error.message : 'Error loading invitations',
         variant: 'destructive',
       });
     } finally {
@@ -179,10 +179,10 @@ export const InvitationManagement: React.FC = () => {
       });
 
       fetchInvitations();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: t('common.error'),
-        description: error.message || 'Error resending invitation',
+        description: error instanceof Error ? error.message : 'Error resending invitation',
         variant: 'destructive',
       });
     }
@@ -209,10 +209,10 @@ export const InvitationManagement: React.FC = () => {
       });
 
       fetchInvitations();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: t('common.error'),
-        description: error.message || 'Error cancelling invitation',
+        description: error instanceof Error ? error.message : 'Error cancelling invitation',
         variant: 'destructive',
       });
     }

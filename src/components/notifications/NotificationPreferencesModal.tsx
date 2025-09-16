@@ -13,14 +13,14 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Bell, 
-  Mail, 
-  MessageSquare, 
-  Smartphone, 
-  Volume2, 
-  VolumeX, 
-  Clock, 
+import {
+  Bell,
+  Mail,
+  MessageSquare,
+  Smartphone,
+  Volume2,
+  VolumeX,
+  Clock,
   AlertTriangle,
   CheckCircle,
   Info,
@@ -30,6 +30,43 @@ import { useNotificationPreferences } from '@/hooks/useEnhancedNotifications';
 import { pushNotificationService } from '@/services/pushNotificationService';
 import { toast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+
+type NotificationChannel = 'sms' | 'email' | 'push' | 'in_app';
+type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent' | 'critical';
+type NotificationFrequency = 'all' | 'mentions' | 'important' | 'none';
+
+interface ChannelPreference {
+  enabled: boolean;
+  frequency: NotificationFrequency;
+}
+
+interface QuietHours {
+  enabled: boolean;
+  start: string;
+  end: string;
+  timezone: string;
+}
+
+interface EntitySubscription {
+  enabled: boolean;
+  events: string[];
+}
+
+interface NotificationSound {
+  enabled: boolean;
+  soundId: string;
+}
+
+interface NotificationPreferences {
+  id?: string;
+  user_id: string;
+  dealer_id: number;
+  channel_preferences: Record<NotificationChannel, ChannelPreference>;
+  entity_subscriptions: Record<string, EntitySubscription>;
+  quiet_hours: QuietHours;
+  priority_filters: Record<NotificationPriority, boolean>;
+  notification_sound: NotificationSound;
+}
 
 interface NotificationPreferencesModalProps {
   open: boolean;
@@ -44,7 +81,7 @@ export function NotificationPreferencesModal({
 }: NotificationPreferencesModalProps) {
   const { t } = useTranslation();
   const { preferences, loading, updatePreferences } = useNotificationPreferences(dealerId);
-  const [localPrefs, setLocalPrefs] = useState(preferences);
+  const [localPrefs, setLocalPrefs] = useState<NotificationPreferences | null>(preferences);
   const [pushSupported, setPushSupported] = useState(false);
   const [pushPermission, setPushPermission] = useState<NotificationPermission>('default');
   const [saving, setSaving] = useState(false);
@@ -65,10 +102,10 @@ export function NotificationPreferencesModal({
     }
   }, []);
 
-  const handleChannelToggle = (channel: string, enabled: boolean) => {
+  const handleChannelToggle = (channel: NotificationChannel, enabled: boolean) => {
     if (!localPrefs) return;
 
-    const channelPrefs = localPrefs.channel_preferences as any;
+    const channelPrefs = localPrefs.channel_preferences;
     setLocalPrefs({
       ...localPrefs,
       channel_preferences: {
@@ -81,10 +118,10 @@ export function NotificationPreferencesModal({
     });
   };
 
-  const handleFrequencyChange = (channel: string, frequency: string) => {
+  const handleFrequencyChange = (channel: NotificationChannel, frequency: NotificationFrequency) => {
     if (!localPrefs) return;
 
-    const channelPrefs = localPrefs.channel_preferences as any;
+    const channelPrefs = localPrefs.channel_preferences;
     setLocalPrefs({
       ...localPrefs,
       channel_preferences: {
@@ -97,10 +134,10 @@ export function NotificationPreferencesModal({
     });
   };
 
-  const handlePriorityToggle = (priority: string, enabled: boolean) => {
+  const handlePriorityToggle = (priority: NotificationPriority, enabled: boolean) => {
     if (!localPrefs) return;
 
-    const priorityFilters = localPrefs.priority_filters as any;
+    const priorityFilters = localPrefs.priority_filters;
     setLocalPrefs({
       ...localPrefs,
       priority_filters: {
@@ -113,7 +150,7 @@ export function NotificationPreferencesModal({
   const handleQuietHoursToggle = (enabled: boolean) => {
     if (!localPrefs) return;
 
-    const quietHours = localPrefs.quiet_hours as any;
+    const quietHours = localPrefs.quiet_hours;
     setLocalPrefs({
       ...localPrefs,
       quiet_hours: {
@@ -126,7 +163,7 @@ export function NotificationPreferencesModal({
   const handleQuietHoursChange = (field: 'start' | 'end', value: string) => {
     if (!localPrefs) return;
 
-    const quietHours = localPrefs.quiet_hours as any;
+    const quietHours = localPrefs.quiet_hours;
     setLocalPrefs({
       ...localPrefs,
       quiet_hours: {
@@ -139,7 +176,7 @@ export function NotificationPreferencesModal({
   const handleEntitySubscriptionToggle = (entityType: string, enabled: boolean) => {
     if (!localPrefs) return;
 
-    const entitySubs = localPrefs.entity_subscriptions as any;
+    const entitySubs = localPrefs.entity_subscriptions;
     setLocalPrefs({
       ...localPrefs,
       entity_subscriptions: {
@@ -241,11 +278,11 @@ export function NotificationPreferencesModal({
     return null;
   }
 
-  const channelPrefs = localPrefs.channel_preferences as any;
-  const priorityFilters = localPrefs.priority_filters as any;
-  const quietHours = localPrefs.quiet_hours as any;
-  const entitySubs = localPrefs.entity_subscriptions as any;
-  const notificationSound = localPrefs.notification_sound as any;
+  const channelPrefs = localPrefs.channel_preferences;
+  const priorityFilters = localPrefs.priority_filters;
+  const quietHours = localPrefs.quiet_hours;
+  const entitySubs = localPrefs.entity_subscriptions;
+  const notificationSound = localPrefs.notification_sound;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -267,7 +304,7 @@ export function NotificationPreferencesModal({
 
           <TabsContent value="channels" className="space-y-6">
             <div className="grid gap-6">
-              {Object.entries(channelPrefs).map(([channel, config]: [string, any]) => {
+              {Object.entries(channelPrefs).map(([channel, config]: [string, ChannelPreference]) => {
                 const Icon = channelIcons[channel as keyof typeof channelIcons];
                 const isPushChannel = channel === 'push';
                 const needsPermission = isPushChannel && pushPermission !== 'granted';
@@ -292,7 +329,7 @@ export function NotificationPreferencesModal({
                         </div>
                         <Switch
                           checked={config.enabled && (!needsPermission || pushSupported)}
-                          onCheckedChange={(checked) => handleChannelToggle(channel, checked)}
+                          onCheckedChange={(checked) => handleChannelToggle(channel as NotificationChannel, checked)}
                           disabled={needsPermission || (isPushChannel && !pushSupported)}
                         />
                       </CardTitle>
@@ -307,7 +344,7 @@ export function NotificationPreferencesModal({
                             <Label>{t('notifications.frequency')}:</Label>
                             <Select
                               value={config.frequency}
-                              onValueChange={(value) => handleFrequencyChange(channel, value)}
+                              onValueChange={(value) => handleFrequencyChange(channel as NotificationChannel, value as NotificationFrequency)}
                             >
                               <SelectTrigger className="w-40">
                                 <SelectValue />
@@ -353,7 +390,7 @@ export function NotificationPreferencesModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {Object.entries(priorityFilters).map(([priority, enabled]: [string, any]) => {
+                  {Object.entries(priorityFilters).map(([priority, enabled]: [string, boolean]) => {
                     const Icon = priorityIcons[priority as keyof typeof priorityIcons];
                     
                     return (
@@ -369,7 +406,7 @@ export function NotificationPreferencesModal({
                         </div>
                         <Switch
                           checked={enabled}
-                          onCheckedChange={(checked) => handlePriorityToggle(priority, checked)}
+                          onCheckedChange={(checked) => handlePriorityToggle(priority as NotificationPriority, checked)}
                         />
                       </div>
                     );
@@ -487,7 +524,7 @@ export function NotificationPreferencesModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {Object.entries(entitySubs).map(([entityType, config]: [string, any]) => (
+                  {Object.entries(entitySubs).map(([entityType, config]: [string, EntitySubscription]) => (
                     <div key={entityType} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
                         <Label className="text-base">{t(`notifications.entities.${entityType}`)}</Label>

@@ -78,11 +78,11 @@ export const EnhancedUserManagementSection: React.FC = () => {
       );
 
       setUsers(usersWithRoles);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching users:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Error al cargar usuarios',
+        description: error instanceof Error ? error.message : 'Error al cargar usuarios',
         variant: 'destructive',
       });
     } finally {
@@ -100,7 +100,7 @@ export const EnhancedUserManagementSection: React.FC = () => {
 
       if (error) throw error;
       setDealerships(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching dealerships:', error);
     }
   };

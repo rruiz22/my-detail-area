@@ -109,7 +109,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
 
       if (error) throw error;
       setUsers(data || []);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error fetching users:', error);
       toast({
         title: t('common.error'),
@@ -132,7 +132,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
 
       if (error) throw error;
       setGroups(data || []);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error fetching groups:', error);
     }
   }, [dealerId]);
@@ -154,7 +154,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       });
 
       fetchUsers();
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error updating user status:', error);
       toast({
         title: t('common.error'),
@@ -190,7 +190,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
 
       setShowManageGroupsModal(false);
       fetchUsers();
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Error updating user groups:', error);
       toast({
         title: t('common.error'),

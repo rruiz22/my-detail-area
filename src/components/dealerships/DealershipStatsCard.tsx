@@ -59,7 +59,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
       if (data && data.length > 0) {
         setStats(data[0]);
       }
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error('Error fetching dealership stats:', err);
       setError(err.message);
     } finally {

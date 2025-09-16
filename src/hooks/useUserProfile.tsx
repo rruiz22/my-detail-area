@@ -87,11 +87,12 @@ export const useUserProfile = () => {
         time_format: '12h'
       });
 
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error loading profile';
       console.error('Error fetching profile:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Error loading profile',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -130,11 +131,12 @@ export const useUserProfile = () => {
         description: t('profile.profile_updated'),
       });
 
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error updating profile';
       console.error('Error updating profile:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Error updating profile',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -176,11 +178,12 @@ export const useUserProfile = () => {
         description: t('profile.preferences_updated'),
       });
 
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error updating preferences';
       console.error('Error updating preferences:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Error updating preferences',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -216,11 +219,12 @@ export const useUserProfile = () => {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error changing password';
       console.error('Error changing password:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Error changing password',
+        description: errorMessage,
         variant: 'destructive',
       });
       return false;

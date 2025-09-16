@@ -11,7 +11,7 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
-const mockUseAuth = useAuth as any;
+const mockUseAuth = useAuth as vi.MockedFunction<typeof useAuth>;
 const mockSupabase = require('@/integrations/supabase/client').supabase;
 
 describe('DealerInvitationModal Component', () => {

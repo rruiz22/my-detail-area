@@ -43,7 +43,7 @@ const mockTestOrders = [
 ];
 
 export function TooltipTester() {
-  const handleOrderClick = (order: any) => {
+  const handleOrderClick = (order: Record<string, unknown>) => {
     console.log('Order clicked:', order);
     alert(`Clicked order: ${order.orderNumber}`);
   };

@@ -46,11 +46,11 @@ export default function SimpleServiceOrders() {
   };
 
   // Handlers for OrderKanbanBoard
-  const handleEditOrder = (order: any) => {
+  const handleEditOrder = (order: Record<string, unknown>) => {
     console.log('Edit order:', order);
   };
 
-  const handleViewOrder = (order: any) => {
+  const handleViewOrder = (order: Record<string, unknown>) => {
     console.log('View order:', order);
   };
 
