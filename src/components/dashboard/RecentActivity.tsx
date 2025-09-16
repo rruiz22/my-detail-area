@@ -215,7 +215,7 @@ export function RecentActivity() {
                         
                         <div className="flex items-center gap-2 mt-2">
                           <Badge className={getDepartmentColor(activity.department)} variant="secondary">
-                            {activity.department}
+                            {t(`dashboard.departments.${activity.department.toLowerCase().replace(' ', '_')}`)}
                           </Badge>
                           
                           {activity.orderId && (

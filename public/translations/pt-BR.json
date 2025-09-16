@@ -128,6 +128,187 @@
       "loading": "Carregando...",
       "no_data": "Nenhum dado disponível",
       "processing": "Processando..."
+    },
+    "descriptions": {
+      "network_error": "Verifique sua conexão com a internet e tente novamente",
+      "server_error": "Nossos servidores estão enfrentando problemas. Por favor, tente novamente mais tarde."
+    }
+  },
+  "forms": {
+    "labels": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "address": "Endereço",
+      "city": "Cidade",
+      "state": "Estado",
+      "country": "País",
+      "zip_code": "CEP",
+      "postal_code": "Código Postal",
+      "date": "Data",
+      "time": "Hora",
+      "description": "Descrição",
+      "notes": "Notas",
+      "comments": "Comentários",
+      "message": "Mensagem",
+      "subject": "Assunto",
+      "title": "Título",
+      "category": "Categoria",
+      "type": "Tipo",
+      "status": "Status",
+      "priority": "Prioridade",
+      "tags": "Tags",
+      "password": "Senha",
+      "confirm_password": "Confirmar Senha",
+      "username": "Nome de Usuário",
+      "first_name": "Primeiro Nome",
+      "last_name": "Sobrenome",
+      "full_name": "Nome Completo",
+      "company": "Empresa",
+      "organization": "Organização",
+      "department": "Departamento",
+      "position": "Posição",
+      "role": "Função"
+    },
+    "placeholders": {
+      "enter_name": "Digite o nome",
+      "enter_email": "Digite o endereço de e-mail",
+      "enter_phone": "Digite o número de telefone",
+      "select_option": "Selecione uma opção",
+      "search_placeholder": "Pesquisar...",
+      "type_message": "Digite sua mensagem..."
+    }
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "settings": "Configurações",
+    "profile": "Perfil",
+    "account": "Conta",
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato",
+    "help": "Ajuda",
+    "support": "Suporte",
+    "documentation": "Documentação",
+    "faq": "FAQ",
+    "terms": "Termos",
+    "privacy": "Privacidade",
+    "legal": "Legal"
+  },
+  "ui": {
+    "headers": {
+      "welcome": "Bem-vindo",
+      "overview": "Visão Geral",
+      "details": "Detalhes",
+      "settings": "Configurações",
+      "advanced": "Avançado",
+      "summary": "Resumo"
+    },
+    "buttons": {
+      "get_started": "Começar",
+      "learn_more": "Saiba Mais",
+      "try_again": "Tentar Novamente",
+      "go_back": "Voltar",
+      "view_details": "Ver Detalhes",
+      "show_more": "Mostrar Mais",
+      "show_less": "Mostrar Menos"
+    }
+  },
+  "time": {
+    "today": "Hoje",
+    "yesterday": "Ontem",
+    "tomorrow": "Amanhã",
+    "this_week": "Esta Semana",
+    "last_week": "Semana Passada",
+    "next_week": "Próxima Semana",
+    "this_month": "Este Mês",
+    "last_month": "Mês Passado",
+    "next_month": "Próximo Mês",
+    "this_year": "Este Ano",
+    "last_year": "Ano Passado",
+    "next_year": "Próximo Ano"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "email_invalid": "Por favor, digite um e-mail válido",
+    "phone_invalid": "Por favor, digite um número de telefone válido",
+    "password_too_short": "A senha é muito curta",
+    "passwords_no_match": "As senhas não coincidem",
+    "option_required": "Por favor, selecione uma opção",
+    "file_too_large": "O arquivo é muito grande",
+    "file_type_not_supported": "Tipo de arquivo não suportado",
+    "max_length_exceeded": "Comprimento máximo excedido",
+    "min_length_not_met": "Comprimento mínimo não atingido"
+  },
+  "dashboard": {
+    "hero": {
+      "welcome": "Bem-vindo ao MyDetailArea",
+      "subtitle": "Otimize as operações da sua concessionária com ferramentas e insights poderosos"
+    },
+    "actions": {
+      "create_order": "Criar Pedido",
+      "view_reports": "Ver Relatórios",
+      "manage_users": "Gerenciar Usuários",
+      "success": "{{action}} iniciado com sucesso",
+      "started": "Ação Iniciada"
+    },
+    "metrics": {
+      "total_orders": "Pedidos Totais",
+      "pending_orders": "Pedidos Pendentes",
+      "completed_today": "Concluídos Hoje",
+      "revenue": "Receita",
+      "active_vehicles": "Veículos Ativos",
+      "avg_processing": "Tempo Médio de Processamento",
+      "satisfaction": "Satisfação do Cliente",
+      "efficiency": "Eficiência da Equipe",
+      "orders_this_month": "Pedidos este mês",
+      "awaiting_processing": "Aguardando processamento",
+      "finished_today": "Finalizados hoje",
+      "monthly_revenue": "Receita mensal",
+      "in_process": "Em processo",
+      "per_order": "Por pedido",
+      "customer_rating": "Avaliação do cliente",
+      "team_performance": "Desempenho da equipe",
+      "of_target": "da meta",
+      "from_last_month": "do mês passado"
+    },
+    "departments": {
+      "sales": "Vendas",
+      "service": "Serviços",
+      "recon": "Recondicionamento",
+      "car_wash": "Lavagem"
+    },
+    "department_overview": {
+      "title": "Visão Geral dos Departamentos",
+      "live_data": "Dados ao Vivo",
+      "revenue": "receita",
+      "pending": "Pendente",
+      "in_progress": "Em Andamento",
+      "completed": "Concluído",
+      "efficiency": "Eficiência",
+      "total_orders": "Pedidos Totais"
+    },
+    "activity": {
+      "recent_activity": "Atividade Recente",
+      "filter": "Filtrar",
+      "all": "Todas",
+      "vehicle": "Veículo",
+      "order_created": "Pedido Criado",
+      "order_updated": "Pedido Atualizado",
+      "order_completed": "Pedido Concluído",
+      "user_login": "Login do Usuário",
+      "new_sales_order_desc": "Novo pedido de vendas criado para cliente",
+      "status_changed_desc": "Status do pedido alterado para Em Andamento",
+      "recon_completed_desc": "Trabalho de recondicionamento concluído com sucesso",
+      "car_wash_created_desc": "Pedido de serviço de lavagem criado",
+      "user_logged_in_desc": "Usuário fez login no sistema"
+    },
+    "quick_tools": {
+      "title": "Ferramentas de Acesso Rápido",
+      "vin_scanner": "Scanner VIN",
+      "nfc_tracking": "Rastreamento NFC",
+      "chat": "Chat da Equipe",
+      "settings": "Configurações"
     }
   }
 }

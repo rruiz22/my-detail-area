@@ -72,7 +72,7 @@ const MetricCard = ({
         {progress !== undefined && (
           <div className="mt-3">
             <Progress value={progress} className="h-2" />
-            <p className="text-xs text-muted-foreground mt-1">{progress}% of target</p>
+            <p className="text-xs text-muted-foreground mt-1">{progress}% {t('dashboard.metrics.of_target')}</p>
           </div>
         )}
         
@@ -83,7 +83,7 @@ const MetricCard = ({
               "text-xs font-medium",
               trend === 'up' ? 'text-success' : trend === 'down' ? 'text-destructive' : 'text-muted-foreground'
             )}>
-              {change > 0 ? '+' : ''}{change}% from last month
+              {change > 0 ? '+' : ''}{change}% {t('dashboard.metrics.from_last_month')}
             </span>
           </div>
         )}
@@ -93,7 +93,21 @@ const MetricCard = ({
 };
 
 export function DashboardMetrics() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const formatCurrency = (amount: number) => {
+    const currencyMap = {
+      'en': 'USD',
+      'es': 'USD', // Assuming US Spanish
+      'pt-BR': 'BRL'
+    };
+    const currency = currencyMap[i18n.language as keyof typeof currencyMap] || 'USD';
+
+    return new Intl.NumberFormat(i18n.language, {
+      style: 'currency',
+      currency: currency
+    }).format(amount);
+  };
 
   // Mock data - in real app this would come from API/database
   const metrics = {
@@ -141,7 +155,7 @@ export function DashboardMetrics() {
       
       <MetricCard
         title={t('dashboard.metrics.revenue')}
-        value={`$${metrics.revenue.toLocaleString()}`}
+        value={formatCurrency(metrics.revenue)}
         change={15}
         trend="up"
         icon={<DollarSign className="w-4 h-4" />}

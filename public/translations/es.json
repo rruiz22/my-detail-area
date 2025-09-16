@@ -128,6 +128,187 @@
       "loading": "Cargando...",
       "no_data": "No hay datos disponibles",
       "processing": "Procesando..."
+    },
+    "descriptions": {
+      "network_error": "Verifique su conexión a internet e intente de nuevo",
+      "server_error": "Nuestros servidores están experimentando problemas. Por favor intente más tarde."
+    }
+  },
+  "forms": {
+    "labels": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "state": "Estado",
+      "country": "País",
+      "zip_code": "Código Postal",
+      "postal_code": "Código Postal",
+      "date": "Fecha",
+      "time": "Hora",
+      "description": "Descripción",
+      "notes": "Notas",
+      "comments": "Comentarios",
+      "message": "Mensaje",
+      "subject": "Asunto",
+      "title": "Título",
+      "category": "Categoría",
+      "type": "Tipo",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "tags": "Etiquetas",
+      "password": "Contraseña",
+      "confirm_password": "Confirmar Contraseña",
+      "username": "Nombre de Usuario",
+      "first_name": "Primer Nombre",
+      "last_name": "Apellido",
+      "full_name": "Nombre Completo",
+      "company": "Empresa",
+      "organization": "Organización",
+      "department": "Departamento",
+      "position": "Posición",
+      "role": "Rol"
+    },
+    "placeholders": {
+      "enter_name": "Ingrese nombre",
+      "enter_email": "Ingrese dirección de correo",
+      "enter_phone": "Ingrese número de teléfono",
+      "select_option": "Seleccione una opción",
+      "search_placeholder": "Buscar...",
+      "type_message": "Escriba su mensaje..."
+    }
+  },
+  "navigation": {
+    "dashboard": "Panel de Control",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "account": "Cuenta",
+    "home": "Inicio",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "help": "Ayuda",
+    "support": "Soporte",
+    "documentation": "Documentación",
+    "faq": "Preguntas Frecuentes",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "legal": "Legal"
+  },
+  "ui": {
+    "headers": {
+      "welcome": "Bienvenido",
+      "overview": "Resumen",
+      "details": "Detalles",
+      "settings": "Configuración",
+      "advanced": "Avanzado",
+      "summary": "Resumen"
+    },
+    "buttons": {
+      "get_started": "Comenzar",
+      "learn_more": "Aprender Más",
+      "try_again": "Intentar de Nuevo",
+      "go_back": "Regresar",
+      "view_details": "Ver Detalles",
+      "show_more": "Mostrar Más",
+      "show_less": "Mostrar Menos"
+    }
+  },
+  "time": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana",
+    "this_week": "Esta Semana",
+    "last_week": "Semana Pasada",
+    "next_week": "Próxima Semana",
+    "this_month": "Este Mes",
+    "last_month": "Mes Pasado",
+    "next_month": "Próximo Mes",
+    "this_year": "Este Año",
+    "last_year": "Año Pasado",
+    "next_year": "Próximo Año"
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "email_invalid": "Por favor ingrese un correo válido",
+    "phone_invalid": "Por favor ingrese un número de teléfono válido",
+    "password_too_short": "La contraseña es muy corta",
+    "passwords_no_match": "Las contraseñas no coinciden",
+    "option_required": "Por favor seleccione una opción",
+    "file_too_large": "El archivo es muy grande",
+    "file_type_not_supported": "Tipo de archivo no soportado",
+    "max_length_exceeded": "Longitud máxima excedida",
+    "min_length_not_met": "Longitud mínima no alcanzada"
+  },
+  "dashboard": {
+    "hero": {
+      "welcome": "Bienvenido a MyDetailArea",
+      "subtitle": "Optimice las operaciones de su concesionario con herramientas e insights poderosos"
+    },
+    "actions": {
+      "create_order": "Crear Orden",
+      "view_reports": "Ver Reportes",
+      "manage_users": "Gestionar Usuarios",
+      "success": "{{action}} iniciado exitosamente",
+      "started": "Acción Iniciada"
+    },
+    "metrics": {
+      "total_orders": "Órdenes Totales",
+      "pending_orders": "Órdenes Pendientes",
+      "completed_today": "Completadas Hoy",
+      "revenue": "Ingresos",
+      "active_vehicles": "Vehículos Activos",
+      "avg_processing": "Tiempo Promedio de Procesamiento",
+      "satisfaction": "Satisfacción del Cliente",
+      "efficiency": "Eficiencia del Equipo",
+      "orders_this_month": "Órdenes este mes",
+      "awaiting_processing": "Esperando procesamiento",
+      "finished_today": "Terminadas hoy",
+      "monthly_revenue": "Ingresos mensuales",
+      "in_process": "En proceso",
+      "per_order": "Por orden",
+      "customer_rating": "Calificación del cliente",
+      "team_performance": "Rendimiento del equipo",
+      "of_target": "del objetivo",
+      "from_last_month": "del mes pasado"
+    },
+    "departments": {
+      "sales": "Ventas",
+      "service": "Servicio",
+      "recon": "Reacondicionamiento",
+      "car_wash": "Lavado de Autos"
+    },
+    "department_overview": {
+      "title": "Resumen de Departamentos",
+      "live_data": "Datos en Vivo",
+      "revenue": "ingresos",
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completado",
+      "efficiency": "Eficiencia",
+      "total_orders": "Órdenes Totales"
+    },
+    "activity": {
+      "recent_activity": "Actividad Reciente",
+      "filter": "Filtrar",
+      "all": "Todas",
+      "vehicle": "Vehículo",
+      "order_created": "Orden Creada",
+      "order_updated": "Orden Actualizada",
+      "order_completed": "Orden Completada",
+      "user_login": "Inicio de Sesión",
+      "new_sales_order_desc": "Nueva orden de ventas creada para cliente",
+      "status_changed_desc": "Estado de orden cambiado a En Progreso",
+      "recon_completed_desc": "Trabajo de reacondicionamiento completado exitosamente",
+      "car_wash_created_desc": "Orden de servicio de lavado de autos creada",
+      "user_logged_in_desc": "Usuario ingresó al sistema"
+    },
+    "quick_tools": {
+      "title": "Herramientas de Acceso Rápido",
+      "vin_scanner": "Escáner VIN",
+      "nfc_tracking": "Seguimiento NFC",
+      "chat": "Chat del Equipo",
+      "settings": "Configuración"
     }
   }
 }

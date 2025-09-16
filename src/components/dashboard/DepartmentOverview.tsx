@@ -34,8 +34,22 @@ interface DepartmentData {
 }
 
 export function DepartmentOverview() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const formatCurrency = (amount: number) => {
+    const currencyMap = {
+      'en': 'USD',
+      'es': 'USD', // Assuming US Spanish
+      'pt-BR': 'BRL'
+    };
+    const currency = currencyMap[i18n.language as keyof typeof currencyMap] || 'USD';
+
+    return new Intl.NumberFormat(i18n.language, {
+      style: 'currency',
+      currency: currency
+    }).format(amount);
+  };
 
   const departments: DepartmentData[] = [
     {
@@ -118,7 +132,7 @@ export function DepartmentOverview() {
                   <div>
                     <CardTitle className="text-base">{dept.name}</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      ${dept.revenue.toLocaleString()} {t('dashboard.department_overview.revenue')}
+                      {formatCurrency(dept.revenue)} {t('dashboard.department_overview.revenue')}
                     </p>
                   </div>
                 </div>
