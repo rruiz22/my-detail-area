@@ -252,15 +252,6 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
     }
   }, [user?.id, conversationId, messages]);
 
-  // Send text message
-  const sendMessage = useCallback(async (content: string, mentions: string[] = []): Promise<ChatMessage | null> => {
-    return sendMessageWithOptions({
-      content,
-      mentions,
-      message_type: 'text'
-    });
-  }, [sendMessageWithOptions]);
-
   // Generic send message function
   const sendMessageWithOptions = useCallback(async (options: SendMessageOptions): Promise<ChatMessage | null> => {
     if (!user?.id || !conversationId) return null;
@@ -307,6 +298,15 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
       return null;
     }
   }, [user?.id, conversationId]);
+
+  // Send text message
+  const sendMessage = useCallback(async (content: string, mentions: string[] = []): Promise<ChatMessage | null> => {
+    return sendMessageWithOptions({
+      content,
+      mentions,
+      message_type: 'text'
+    });
+  }, [sendMessageWithOptions]);
 
   // Send voice message
   const sendVoiceMessage = useCallback(async (audioBlob: Blob, transcription?: string): Promise<ChatMessage | null> => {

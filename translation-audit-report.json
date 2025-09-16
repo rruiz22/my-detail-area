@@ -5422,44 +5422,44 @@
         "hardcodedStrings": [
           {
             "text": "Enterprise Dealership Management",
-            "line": 79,
-            "context": "78: <span>•</span>\n79: <span>Enterprise Dealership Management</span>\n80: </div>"
+            "line": 96,
+            "context": "95: <span>•</span>\n96: <span>Enterprise Dealership Management</span>\n97: </div>"
           },
           {
             "text": "Privacy Policy",
-            "line": 83,
-            "context": "82: <div className=\"flex items-center gap-4 text-sm\">\n83: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n84: Privacy Policy"
+            "line": 100,
+            "context": "99: <div className=\"flex items-center gap-4 text-sm\">\n100: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n101: Privacy Policy"
           },
           {
             "text": "Terms of Service",
-            "line": 86,
-            "context": "85: </Button>\n86: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n87: Terms of Service"
+            "line": 103,
+            "context": "102: </Button>\n103: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n104: Terms of Service"
           },
           {
             "text": "Support",
-            "line": 89,
-            "context": "88: </Button>\n89: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n90: Support"
+            "line": 106,
+            "context": "105: </Button>\n106: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n107: Support"
           },
           {
             "text": "Privacy Policy\r\n                ",
-            "line": 83,
-            "context": "82: <div className=\"flex items-center gap-4 text-sm\">\n83: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n84: Privacy Policy"
+            "line": 100,
+            "context": "99: <div className=\"flex items-center gap-4 text-sm\">\n100: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n101: Privacy Policy"
           },
           {
             "text": "Terms of Service\r\n                ",
-            "line": 86,
-            "context": "85: </Button>\n86: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n87: Terms of Service"
+            "line": 103,
+            "context": "102: </Button>\n103: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n104: Terms of Service"
           },
           {
             "text": "Support\r\n                ",
-            "line": 89,
-            "context": "88: </Button>\n89: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n90: Support"
+            "line": 106,
+            "context": "105: </Button>\n106: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n107: Support"
           }
         ],
         "translationCalls": [
           {
             "key": "layout.search_placeholder",
-            "line": 55,
+            "line": 64,
             "exists": true
           }
         ],
