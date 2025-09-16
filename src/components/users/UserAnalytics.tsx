@@ -153,11 +153,11 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
 
       toast({
         title: t('common.success'),
-        description: 'Analytics report exported successfully',
+        description: t('users.analytics.messages.export_success'),
       });
 
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Error exporting analytics';
+      const errorMessage = error instanceof Error ? error.message : t('users.analytics.messages.export_error');
       toast({
         title: t('common.error'),
         description: errorMessage,
@@ -195,8 +195,8 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
       {/* Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold">User Analytics</h2>
-          <p className="text-muted-foreground">Comprehensive user insights and metrics</p>
+          <h2 className="text-2xl font-bold">{t('users.analytics.title')}</h2>
+          <p className="text-muted-foreground">{t('users.analytics.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <Select value={timeRange} onValueChange={setTimeRange}>
@@ -204,15 +204,15 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="last_30_days">Last 30 Days</SelectItem>
-              <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-              <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-              <SelectItem value="last_year">Last Year</SelectItem>
+              <SelectItem value="last_30_days">{t('users.analytics.time_ranges.last_30_days')}</SelectItem>
+              <SelectItem value="last_3_months">{t('users.analytics.time_ranges.last_3_months')}</SelectItem>
+              <SelectItem value="last_6_months">{t('users.analytics.time_ranges.last_6_months')}</SelectItem>
+              <SelectItem value="last_year">{t('users.analytics.time_ranges.last_year')}</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" onClick={exportAnalytics} className="flex items-center gap-2">
             <Download className="h-4 w-4" />
-            Export
+            {t('users.analytics.actions.export')}
           </Button>
         </div>
       </div>
@@ -223,15 +223,15 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Users</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('users.analytics.metrics.total_users')}</p>
                 <p className="text-3xl font-bold">{analyticsData.userGrowth[analyticsData.userGrowth.length - 1]?.total}</p>
               </div>
               <Users className="h-8 w-8 text-blue-500" />
             </div>
             <div className="flex items-center mt-2 text-sm">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-              <span className="text-green-500">+12%</span>
-              <span className="text-muted-foreground ml-1">vs last period</span>
+              <span className="text-green-500">{t('users.analytics.metrics.growth_indicator')}</span>
+              <span className="text-muted-foreground ml-1">{t('users.analytics.metrics.vs_last_period')}</span>
             </div>
           </CardContent>
         </Card>
@@ -240,7 +240,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Active This Month</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('users.analytics.metrics.active_this_month')}</p>
                 <p className="text-3xl font-bold">{analyticsData.activityMetrics.activeThisMonth}</p>
               </div>
               <UserCheck className="h-8 w-8 text-green-500" />
@@ -248,7 +248,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
             <div className="flex items-center mt-2 text-sm">
               <Activity className="h-4 w-4 text-blue-500 mr-1" />
               <span className="text-muted-foreground">
-                {Math.round((analyticsData.activityMetrics.activeThisMonth / analyticsData.userGrowth[analyticsData.userGrowth.length - 1]?.total) * 100)}% of total
+                {Math.round((analyticsData.activityMetrics.activeThisMonth / analyticsData.userGrowth[analyticsData.userGrowth.length - 1]?.total) * 100)}% {t('users.analytics.metrics.of_total')}
               </span>
             </div>
           </CardContent>
@@ -258,14 +258,14 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">New This Month</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('users.analytics.metrics.new_this_month')}</p>
                 <p className="text-3xl font-bold">{analyticsData.userGrowth[analyticsData.userGrowth.length - 1]?.new}</p>
               </div>
               <UserPlus className="h-8 w-8 text-purple-500" />
             </div>
             <div className="flex items-center mt-2 text-sm">
               <Calendar className="h-4 w-4 text-purple-500 mr-1" />
-              <span className="text-muted-foreground">Growth rate</span>
+              <span className="text-muted-foreground">{t('users.analytics.metrics.growth_rate')}</span>
             </div>
           </CardContent>
         </Card>
@@ -274,13 +274,13 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Avg Session</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('users.analytics.metrics.avg_session')}</p>
                 <p className="text-3xl font-bold">{analyticsData.activityMetrics.avgSessionTime}m</p>
               </div>
               <Clock className="h-8 w-8 text-orange-500" />
             </div>
             <div className="flex items-center mt-2 text-sm">
-              <span className="text-muted-foreground">Per user session</span>
+              <span className="text-muted-foreground">{t('users.analytics.metrics.per_user_session')}</span>
             </div>
           </CardContent>
         </Card>
@@ -289,13 +289,13 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Retention Rate</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('users.analytics.metrics.retention_rate')}</p>
                 <p className="text-3xl font-bold">{analyticsData.activityMetrics.retentionRate}%</p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-500" />
             </div>
             <div className="flex items-center mt-2 text-sm">
-              <Badge variant="outline" className="text-xs">Excellent</Badge>
+              <Badge variant="outline" className="text-xs">{t('users.analytics.metrics.excellent')}</Badge>
             </div>
           </CardContent>
         </Card>
@@ -304,16 +304,16 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
       {/* Charts */}
       <Tabs defaultValue="growth" className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="growth">User Growth</TabsTrigger>
-          <TabsTrigger value="roles">Role Distribution</TabsTrigger>
-          <TabsTrigger value="departments">Departments</TabsTrigger>
-          <TabsTrigger value="comparison">Comparison</TabsTrigger>
+          <TabsTrigger value="growth">{t('users.analytics.tabs.user_growth')}</TabsTrigger>
+          <TabsTrigger value="roles">{t('users.analytics.tabs.role_distribution')}</TabsTrigger>
+          <TabsTrigger value="departments">{t('users.analytics.tabs.departments')}</TabsTrigger>
+          <TabsTrigger value="comparison">{t('users.analytics.tabs.comparison')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="growth" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>User Growth Trends</CardTitle>
+              <CardTitle>{t('users.analytics.charts.user_growth_trends')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
@@ -323,9 +323,9 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={2} name="Total Users" />
-                  <Line type="monotone" dataKey="active" stroke="#10B981" strokeWidth={2} name="Active Users" />
-                  <Line type="monotone" dataKey="new" stroke="#F59E0B" strokeWidth={2} name="New Users" />
+                  <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={2} name={t('users.analytics.charts.total_users_legend')} />
+                  <Line type="monotone" dataKey="active" stroke="#10B981" strokeWidth={2} name={t('users.analytics.charts.active_users_legend')} />
+                  <Line type="monotone" dataKey="new" stroke="#F59E0B" strokeWidth={2} name={t('users.analytics.charts.new_users_legend')} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -336,7 +336,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Role Distribution</CardTitle>
+                <CardTitle>{t('users.analytics.charts.role_distribution')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -363,7 +363,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Role Statistics</CardTitle>
+                <CardTitle>{t('users.analytics.charts.role_statistics')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -377,7 +377,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
                         <span className="font-medium">{role.role}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">{role.count} users</Badge>
+                        <Badge variant="outline">{role.count} {t('users.analytics.labels.users')}</Badge>
                         <span className="text-sm text-muted-foreground">{role.percentage}%</span>
                       </div>
                     </div>
@@ -391,7 +391,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
         <TabsContent value="departments" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Department Distribution</CardTitle>
+              <CardTitle>{t('users.analytics.charts.department_distribution')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
@@ -412,7 +412,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building2 className="h-5 w-5" />
-                Dealership Comparison
+                {t('users.analytics.charts.dealership_comparison')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -425,7 +425,7 @@ export const UserAnalytics: React.FC<UserAnalyticsProps> = ({ dealerId }) => {
                       </div>
                       <div>
                         <h4 className="font-medium">{dealer.dealership}</h4>
-                        <p className="text-sm text-muted-foreground">{dealer.users} users</p>
+                        <p className="text-sm text-muted-foreground">{dealer.users} {t('users.analytics.labels.users')}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

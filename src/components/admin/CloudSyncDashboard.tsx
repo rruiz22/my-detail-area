@@ -64,10 +64,10 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
   const handleForceSyncAll = async () => {
     try {
       await forceSyncAll();
-      toast.success('All data synced successfully');
+      toast.success(t('cloud_sync.all_data_synced_successfully'));
     } catch (error) {
-      toast.error('Sync failed', {
-        description: error instanceof Error ? error.message : 'Unknown error'
+      toast.error(t('cloud_sync.sync_failed'), {
+        description: error instanceof Error ? error.message : t('common.unknown_error')
       });
     }
   };
@@ -75,10 +75,10 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
   const handleClearCache = () => {
     try {
       storage.cleanup();
-      toast.success('Cache cleared successfully');
+      toast.success(t('cloud_sync.cache_cleared_successfully'));
       updateSyncStats();
     } catch (error) {
-      toast.error('Failed to clear cache');
+      toast.error(t('cloud_sync.failed_to_clear_cache'));
     }
   };
 
@@ -93,12 +93,12 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
     try {
       const success = await sessionRecovery.createSessionSnapshot();
       if (success) {
-        toast.success('Session snapshot created');
+        toast.success(t('cloud_sync.session_snapshot_created'));
       } else {
-        toast.error('Failed to create snapshot');
+        toast.error(t('cloud_sync.failed_to_create_snapshot'));
       }
     } catch (error) {
-      toast.error('Snapshot creation failed');
+      toast.error(t('cloud_sync.snapshot_creation_failed'));
     }
   };
 
@@ -126,10 +126,10 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
             ) : (
               <CloudOff className="h-5 w-5 text-gray-400" />
             )}
-            <h2 className="text-2xl font-semibold">Cloud Sync Dashboard</h2>
+            <h2 className="text-2xl font-semibold">{t('cloud_sync.title')}</h2>
           </div>
           <Badge variant={isOnline ? "default" : "secondary"}>
-            {isOnline ? 'Online' : 'Offline'}
+            {isOnline ? t('cloud_sync.online') : t('cloud_sync.offline')}
           </Badge>
         </div>
         
@@ -141,7 +141,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
             disabled={!isOnline}
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Force Sync All
+            {t('cloud_sync.force_sync_all')}
           </Button>
         </div>
       </div>
@@ -152,7 +152,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Items</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('cloud_sync.total_items')}</p>
                 <p className="text-2xl font-bold">{syncStats.totalItems}</p>
               </div>
               <Database className="h-8 w-8 text-blue-500" />
@@ -164,7 +164,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Synced</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('cloud_sync.synced')}</p>
                 <p className="text-2xl font-bold text-green-600">{syncStats.syncedItems}</p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-500" />
@@ -176,7 +176,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('cloud_sync.pending')}</p>
                 <p className="text-2xl font-bold text-yellow-600">{syncStats.pendingItems}</p>
               </div>
               <Clock className="h-8 w-8 text-yellow-500" />
@@ -188,7 +188,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Errors</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('cloud_sync.errors')}</p>
                 <p className="text-2xl font-bold text-red-600">{syncStats.errorItems}</p>
               </div>
               <AlertCircle className="h-8 w-8 text-red-500" />
@@ -202,29 +202,29 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
-            Sync Progress
+            {t('cloud_sync.sync_progress')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between text-sm">
-              <span>Overall Sync Status</span>
-              <span>{Math.round(syncProgress)}% Complete</span>
+              <span>{t('cloud_sync.overall_sync_status')}</span>
+              <span>{Math.round(syncProgress)}% {t('cloud_sync.complete')}</span>
             </div>
             <Progress value={syncProgress} className="w-full" />
             
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>{syncStats.syncedItems} Synced</span>
+                <span>{syncStats.syncedItems} {t('cloud_sync.synced')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-yellow-500" />
-                <span>{syncStats.pendingItems} Pending</span>
+                <span>{syncStats.pendingItems} {t('cloud_sync.pending')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-red-500" />
-                <span>{syncStats.errorItems} Errors</span>
+                <span>{syncStats.errorItems} {t('cloud_sync.errors')}</span>
               </div>
             </div>
           </div>
@@ -236,20 +236,20 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Session Recovery
+            {t('cloud_sync.session_recovery')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Recovery Available</p>
+                <p className="font-medium">{t('cloud_sync.recovery_available')}</p>
                 <p className="text-sm text-muted-foreground">
-                  {recoveryAvailable ? 'Session backup found in cloud' : 'No recovery data available'}
+                  {recoveryAvailable ? t('cloud_sync.session_backup_found') : t('cloud_sync.no_recovery_data')}
                 </p>
               </div>
               <Badge variant={recoveryAvailable ? "default" : "secondary"}>
-                {recoveryAvailable ? 'Available' : 'None'}
+                {recoveryAvailable ? t('cloud_sync.available') : t('cloud_sync.none')}
               </Badge>
             </div>
             
@@ -261,7 +261,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
                 disabled={!recoveryAvailable || isRecovering}
               >
                 <Download className="h-4 w-4 mr-2" />
-                {isRecovering ? 'Recovering...' : 'Restore Session'}
+                {isRecovering ? t('cloud_sync.recovering') : t('cloud_sync.restore_session')}
               </Button>
               
               <Button 
@@ -270,7 +270,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
                 onClick={handleCreateSnapshot}
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Create Snapshot
+                {t('cloud_sync.create_snapshot')}
               </Button>
             </div>
           </div>
@@ -282,18 +282,18 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Database className="h-5 w-5" />
-            Storage Information
+            {t('cloud_sync.storage_information')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="font-medium">Total Keys</p>
+                <p className="font-medium">{t('cloud_sync.total_keys')}</p>
                 <p className="text-muted-foreground">{storageInfo.keys}</p>
               </div>
               <div>
-                <p className="font-medium">Storage Size</p>
+                <p className="font-medium">{t('cloud_sync.storage_size')}</p>
                 <p className="text-muted-foreground">{storageInfo.totalSizeKB} KB</p>
               </div>
             </div>
@@ -305,7 +305,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
                 onClick={handleClearCache}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Clear Cache
+                {t('cloud_sync.clear_cache')}
               </Button>
             </div>
           </div>
@@ -317,16 +317,16 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
-            Sync Settings
+            {t('cloud_sync.sync_settings')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <Label htmlFor="auto-sync">Automatic Sync</Label>
+                <Label htmlFor="auto-sync">{t('cloud_sync.automatic_sync')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Automatically sync changes to cloud
+                  {t('cloud_sync.automatic_sync_description')}
                 </p>
               </div>
               <Switch
@@ -343,7 +343,7 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
       {syncStatuses.size > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Sync Status Details</CardTitle>
+            <CardTitle>{t('cloud_sync.sync_status_details')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2 max-h-60 overflow-y-auto">

@@ -182,7 +182,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
     const errors = validateForm();
     if (errors.length > 0) {
       setValidationErrors(errors);
-      toast.error('Please fix the validation errors');
+      toast.error(t('messages.error.fix_validation_errors'));
       return;
     }
 

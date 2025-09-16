@@ -77,19 +77,22 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
   };
 
   const formatEventDescription = (event: AuditEvent) => {
+    const email = event.affected_user_email || t('users.audit.metadata.unknown_email');
+    const role = event.metadata?.role || t('users.audit.metadata.unknown_role');
+
     switch (event.event_type) {
       case 'user_created':
-        return `User ${event.affected_user_email || 'Unknown'} was created`;
+        return t('users.audit.descriptions.user_created', { email });
       case 'user_updated':
-        return `User ${event.affected_user_email || 'Unknown'} was updated`;
+        return t('users.audit.descriptions.user_updated', { email });
       case 'user_deleted':
-        return `User ${event.affected_user_email || 'Unknown'} was deleted`;
+        return t('users.audit.descriptions.user_deleted', { email });
       case 'role_assigned':
-        return `Role ${event.metadata?.role || 'Unknown'} was assigned to ${event.affected_user_email || 'Unknown'}`;
+        return t('users.audit.descriptions.role_assigned', { role, email });
       case 'invitation_sent':
-        return `Invitation sent to ${event.metadata?.email || 'Unknown'}`;
+        return t('users.audit.descriptions.invitation_sent', { email: event.metadata?.email || email });
       default:
-        return `${event.event_type} occurred`;
+        return t('users.audit.descriptions.default_event', { eventType: event.event_type });
     }
   };
 
@@ -133,7 +136,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
-            User Activity Audit Log
+            {t('users.audit.title')}
           </CardTitle>
           <Button
             variant="outline"
@@ -141,7 +144,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
             className="flex items-center gap-2"
           >
             <Download className="h-4 w-4" />
-            Export Log
+            {t('users.audit.export_log')}
           </Button>
         </div>
       </CardHeader>
@@ -150,14 +153,14 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
-            <span className="text-sm font-medium">Filters</span>
+            <span className="text-sm font-medium">{t('users.audit.filters.title')}</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search..."
+                placeholder={t('users.audit.filters.search_placeholder')}
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
                 className="pl-10"
@@ -166,28 +169,28 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
             
             <Select value={filters.eventType} onValueChange={(value) => handleFilterChange('eventType', value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Event Type" />
+                <SelectValue placeholder={t('users.audit.filters.event_type')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Events</SelectItem>
-                <SelectItem value="user_created">User Created</SelectItem>
-                <SelectItem value="user_updated">User Updated</SelectItem>
-                <SelectItem value="user_deleted">User Deleted</SelectItem>
-                <SelectItem value="role_assigned">Role Assigned</SelectItem>
-                <SelectItem value="invitation_sent">Invitation Sent</SelectItem>
+                <SelectItem value="all">{t('users.audit.event_types.all_events')}</SelectItem>
+                <SelectItem value="user_created">{t('users.audit.event_types.user_created')}</SelectItem>
+                <SelectItem value="user_updated">{t('users.audit.event_types.user_updated')}</SelectItem>
+                <SelectItem value="user_deleted">{t('users.audit.event_types.user_deleted')}</SelectItem>
+                <SelectItem value="role_assigned">{t('users.audit.event_types.role_assigned')}</SelectItem>
+                <SelectItem value="invitation_sent">{t('users.audit.event_types.invitation_sent')}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={filters.entityType} onValueChange={(value) => handleFilterChange('entityType', value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Entity Type" />
+                <SelectValue placeholder={t('users.audit.filters.entity_type')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Entities</SelectItem>
-                <SelectItem value="user">User</SelectItem>
-                <SelectItem value="invitation">Invitation</SelectItem>
-                <SelectItem value="membership">Membership</SelectItem>
-                <SelectItem value="role">Role</SelectItem>
+                <SelectItem value="all">{t('users.audit.entity_types.all_entities')}</SelectItem>
+                <SelectItem value="user">{t('users.audit.entity_types.user')}</SelectItem>
+                <SelectItem value="invitation">{t('users.audit.entity_types.invitation')}</SelectItem>
+                <SelectItem value="membership">{t('users.audit.entity_types.membership')}</SelectItem>
+                <SelectItem value="role">{t('users.audit.entity_types.role')}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -195,7 +198,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
               <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="date"
-                placeholder="From Date"
+                placeholder={t('users.audit.filters.from_date')}
                 value={filters.dateFrom}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
                 className="pl-10"
@@ -206,7 +209,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
               <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="date"
-                placeholder="To Date"
+                placeholder={t('users.audit.filters.to_date')}
                 value={filters.dateTo}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
                 className="pl-10"
@@ -216,10 +219,10 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
 
           <div className="flex justify-between items-center">
             <Button variant="outline" onClick={clearFilters} size="sm">
-              Clear Filters
+              {t('users.audit.filters.clear_filters')}
             </Button>
             <span className="text-sm text-muted-foreground">
-              {auditEvents.length} events found
+              {auditEvents.length} {t('users.audit.messages.events_found')}
             </span>
           </div>
         </div>
@@ -231,7 +234,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
           {auditEvents.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No audit events found</p>
+              <p>{t('users.audit.messages.no_events_found')}</p>
             </div>
           ) : (
             auditEvents.map((event) => (
@@ -255,7 +258,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
                   </div>
                   
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>By: {event.user_email || 'System'}</span>
+                    <span>{event.user_email ? t('users.audit.metadata.by_user', { user: event.user_email }) : t('users.audit.metadata.by_system')}</span>
                     {event.ip_address && (
                       <div className="flex items-center gap-1">
                         <Globe className="h-3 w-3" />
@@ -267,7 +270,7 @@ export const UserAuditLog: React.FC<UserAuditLogProps> = ({ dealerId }) => {
                   {Object.keys(event.metadata).length > 0 && (
                     <details className="text-xs">
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-                        View Details
+                        {t('users.audit.messages.view_details')}
                       </summary>
                       <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-auto">
                         {JSON.stringify(event.metadata, null, 2)}

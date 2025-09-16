@@ -17,21 +17,21 @@ export default function Settings() {
         {/* General Settings */}
         <Card>
           <CardHeader>
-            <CardTitle>General Settings</CardTitle>
+            <CardTitle>{t('settings.general_settings')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="dealership">Dealership Name</Label>
+                <Label htmlFor="dealership">{t('settings.dealership_name')}</Label>
                 <Input id="dealership" placeholder={t('placeholders.enter_dealership_name')} defaultValue="Premium Auto Group" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">{t('settings.location')}</Label>
                 <Input id="location" placeholder={t('placeholders.enter_location')} defaultValue="Miami, FL" />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address">{t('settings.address')}</Label>
               <Input id="address" placeholder={t('placeholders.enter_full_address')} defaultValue="123 Auto Plaza Blvd, Miami, FL 33101" />
             </div>
           </CardContent>
@@ -42,15 +42,15 @@ export default function Settings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Mail className="h-5 w-5" />
-              Notification Settings
+              {t('settings.notification_settings')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Email Notifications</Label>
+                <Label>{t('settings.email_notifications')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Receive email alerts for order status changes
+                  {t('settings.email_alerts_description')}
                 </p>
               </div>
               <Switch defaultChecked />
@@ -58,9 +58,9 @@ export default function Settings() {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>SMS Notifications</Label>
+                <Label>{t('settings.sms_notifications')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Send SMS when orders are completed (requires Twilio integration)
+                  {t('settings.sms_description')}
                 </p>
               </div>
               <Switch />
@@ -68,9 +68,9 @@ export default function Settings() {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>In-App Alerts</Label>
+                <Label>{t('settings.in_app_alerts')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Show toast notifications in the application
+                  {t('settings.toast_description')}
                 </p>
               </div>
               <Switch defaultChecked />
@@ -83,44 +83,43 @@ export default function Settings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Database className="h-5 w-5" />
-              Integrations
+              {t('settings.integrations')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="p-4 border rounded-lg bg-muted/50">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">Database & Backend</h4>
+                <h4 className="font-medium">{t('settings.database_backend')}</h4>
                 <Button variant="outline" size="sm">
-                  Connect Supabase
+                  {t('settings.connect_supabase')}
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                Connect to Supabase for full database functionality, user authentication, 
-                and advanced features like SMS notifications and file storage.
+                {t('settings.supabase_description')}
               </p>
             </div>
             
             <div className="p-4 border rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">VIN Decoding API</h4>
+                <h4 className="font-medium">{t('settings.vin_decoding_api')}</h4>
                 <Button variant="outline" size="sm" disabled>
-                  Configure
+                  {t('settings.configure')}
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                MarketCheck API integration for automatic VIN decoding
+                {t('settings.vin_api_description')}
               </p>
             </div>
             
             <div className="p-4 border rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">Photo Management</h4>
+                <h4 className="font-medium">{t('settings.photo_management')}</h4>
                 <Button variant="outline" size="sm" disabled>
-                  Configure
+                  {t('settings.configure')}
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                CarCutter / Amazon S3 integration for photo management
+                {t('settings.photo_description')}
               </p>
             </div>
           </CardContent>
@@ -135,7 +134,7 @@ export default function Settings() {
         <div className="flex justify-end">
           <Button>
             <Save className="h-4 w-4 mr-2" />
-            Save Settings
+            {t('settings.save_settings')}
           </Button>
         </div>
     </div>
