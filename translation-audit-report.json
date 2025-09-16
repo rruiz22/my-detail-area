@@ -1,8 +1,8 @@
 {
   "scannedFiles": 412,
-  "totalStrings": 4258,
+  "totalStrings": 4212,
   "hardcodedStrings": 943,
-  "translatedStrings": 3315,
+  "translatedStrings": 3269,
   "issues": {
     "critical": [
       {
@@ -9262,206 +9262,6 @@
           }
         ],
         "coverage": 97,
-        "severity": "low"
-      },
-      {
-        "file": "src\\pages\\Dashboard.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "dashboard.actions.success",
-            "line": 24,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.started",
-            "line": 24,
-            "exists": false
-          },
-          {
-            "key": "dashboard.hero.welcome",
-            "line": 37,
-            "exists": false
-          },
-          {
-            "key": "dashboard.hero.subtitle",
-            "line": 38,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.create_order",
-            "line": 42,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.create_order",
-            "line": 46,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.view_reports",
-            "line": 51,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.view_reports",
-            "line": 54,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.manage_users",
-            "line": 59,
-            "exists": false
-          },
-          {
-            "key": "dashboard.actions.manage_users",
-            "line": 62,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.title",
-            "line": 86,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.vin_scanner",
-            "line": 94,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.vin_scanner",
-            "line": 99,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.nfc_tracking",
-            "line": 105,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.nfc_tracking",
-            "line": 110,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.chat",
-            "line": 116,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.chat",
-            "line": 121,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.settings",
-            "line": 127,
-            "exists": false
-          },
-          {
-            "key": "dashboard.quick_tools.settings",
-            "line": 132,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "dashboard.actions.success",
-            "line": 24,
-            "context": "23: const handleQuickAction = (action: string, route?: string) => {\n24: notifications.showSuccess(t('dashboard.actions.success', { action }), t('dashboard.actions.started'));\n25: if (route) {"
-          },
-          {
-            "key": "dashboard.actions.started",
-            "line": 24,
-            "context": "23: const handleQuickAction = (action: string, route?: string) => {\n24: notifications.showSuccess(t('dashboard.actions.success', { action }), t('dashboard.actions.started'));\n25: if (route) {"
-          },
-          {
-            "key": "dashboard.hero.welcome",
-            "line": 37,
-            "context": "36: <div className=\"relative z-10\">\n37: <h1 className=\"text-3xl font-bold mb-2\">{t('dashboard.hero.welcome')}</h1>\n38: <p className=\"text-xl opacity-90\">{t('dashboard.hero.subtitle')}</p>"
-          },
-          {
-            "key": "dashboard.hero.subtitle",
-            "line": 38,
-            "context": "37: <h1 className=\"text-3xl font-bold mb-2\">{t('dashboard.hero.welcome')}</h1>\n38: <p className=\"text-xl opacity-90\">{t('dashboard.hero.subtitle')}</p>\n39: <div className=\"mt-6 flex flex-wrap gap-3\">"
-          },
-          {
-            "key": "dashboard.actions.create_order",
-            "line": 42,
-            "context": "41: variant=\"secondary\"\n42: onClick={() => handleQuickAction(t('dashboard.actions.create_order'), '/vin-scanner')}\n43: className=\"button-enhanced\""
-          },
-          {
-            "key": "dashboard.actions.create_order",
-            "line": 46,
-            "context": "45: <Plus className=\"h-4 w-4 mr-2\" />\n46: {t('dashboard.actions.create_order')}\n47: </Button>"
-          },
-          {
-            "key": "dashboard.actions.view_reports",
-            "line": 51,
-            "context": "50: className=\"border-white/20 text-primary-foreground hover:bg-white/10\"\n51: onClick={() => handleQuickAction(t('dashboard.actions.view_reports'), '/reports')}\n52: >"
-          },
-          {
-            "key": "dashboard.actions.view_reports",
-            "line": 54,
-            "context": "53: <BarChart3 className=\"h-4 w-4 mr-2\" />\n54: {t('dashboard.actions.view_reports')}\n55: </Button>"
-          },
-          {
-            "key": "dashboard.actions.manage_users",
-            "line": 59,
-            "context": "58: className=\"border-white/20 text-primary-foreground hover:bg-white/10\"\n59: onClick={() => handleQuickAction(t('dashboard.actions.manage_users'), '/users')}\n60: >"
-          },
-          {
-            "key": "dashboard.actions.manage_users",
-            "line": 62,
-            "context": "61: <Users className=\"h-4 w-4 mr-2\" />\n62: {t('dashboard.actions.manage_users')}\n63: </Button>"
-          },
-          {
-            "key": "dashboard.quick_tools.title",
-            "line": 86,
-            "context": "85: <Zap className=\"w-5 h-5 text-primary\" />\n86: {t('dashboard.quick_tools.title')}\n87: </CardTitle>"
-          },
-          {
-            "key": "dashboard.quick_tools.vin_scanner",
-            "line": 94,
-            "context": "93: className=\"h-24 flex flex-col gap-3 hover:shadow-md transition-all\"\n94: onClick={() => handleQuickAction(t('dashboard.quick_tools.vin_scanner'), '/vin-scanner')}\n95: >"
-          },
-          {
-            "key": "dashboard.quick_tools.vin_scanner",
-            "line": 99,
-            "context": "98: </div>\n99: <span className=\"text-sm font-medium\">{t('dashboard.quick_tools.vin_scanner')}</span>\n100: </Button>"
-          },
-          {
-            "key": "dashboard.quick_tools.nfc_tracking",
-            "line": 105,
-            "context": "104: className=\"h-24 flex flex-col gap-3 hover:shadow-md transition-all\"\n105: onClick={() => handleQuickAction(t('dashboard.quick_tools.nfc_tracking'), '/nfc-tracking')}\n106: >"
-          },
-          {
-            "key": "dashboard.quick_tools.nfc_tracking",
-            "line": 110,
-            "context": "109: </div>\n110: <span className=\"text-sm font-medium\">{t('dashboard.quick_tools.nfc_tracking')}</span>\n111: </Button>"
-          },
-          {
-            "key": "dashboard.quick_tools.chat",
-            "line": 116,
-            "context": "115: className=\"h-24 flex flex-col gap-3 hover:shadow-md transition-all\"\n116: onClick={() => handleQuickAction(t('dashboard.quick_tools.chat'), '/chat')}\n117: >"
-          },
-          {
-            "key": "dashboard.quick_tools.chat",
-            "line": 121,
-            "context": "120: </div>\n121: <span className=\"text-sm font-medium\">{t('dashboard.quick_tools.chat')}</span>\n122: </Button>"
-          },
-          {
-            "key": "dashboard.quick_tools.settings",
-            "line": 127,
-            "context": "126: className=\"h-24 flex flex-col gap-3 hover:shadow-md transition-all\"\n127: onClick={() => handleQuickAction(t('dashboard.quick_tools.settings'), '/settings')}\n128: >"
-          },
-          {
-            "key": "dashboard.quick_tools.settings",
-            "line": 132,
-            "context": "131: </div>\n132: <span className=\"text-sm font-medium\">{t('dashboard.quick_tools.settings')}</span>\n133: </Button>"
-          }
-        ],
-        "coverage": 100,
         "severity": "low"
       },
       {
@@ -38259,484 +38059,104 @@
           {
             "key": "dashboard.activity.order_created",
             "line": 53,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.new_sales_order_desc",
             "line": 54,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.order_updated",
             "line": 65,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.status_changed_desc",
             "line": 66,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.order_completed",
             "line": 77,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.recon_completed_desc",
             "line": 78,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.order_created",
             "line": 89,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.car_wash_created_desc",
             "line": 90,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.user_login",
             "line": 101,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.user_logged_in_desc",
             "line": 102,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.recent_activity",
             "line": 142,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.filter",
             "line": 146,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.all",
             "line": 161,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.departments.sales",
             "line": 168,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.departments.service",
             "line": 175,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.departments.recon",
             "line": 182,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.departments.car_wash",
             "line": 189,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dashboard.activity.vehicle",
             "line": 212,
+            "exists": true
+          },
+          {
+            "key": "dashboard.departments.${activity.department.toLowerCase().replace(",
+            "line": 218,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "dashboard.activity.order_created",
-            "line": 53,
-            "context": "52: type: 'order_created',\n53: title: t('dashboard.activity.order_created'),\n54: description: t('dashboard.activity.new_sales_order_desc'),"
-          },
-          {
-            "key": "dashboard.activity.new_sales_order_desc",
-            "line": 54,
-            "context": "53: title: t('dashboard.activity.order_created'),\n54: description: t('dashboard.activity.new_sales_order_desc'),\n55: user: 'John Smith',"
-          },
-          {
-            "key": "dashboard.activity.order_updated",
-            "line": 65,
-            "context": "64: type: 'order_updated',\n65: title: t('dashboard.activity.order_updated'),\n66: description: t('dashboard.activity.status_changed_desc'),"
-          },
-          {
-            "key": "dashboard.activity.status_changed_desc",
-            "line": 66,
-            "context": "65: title: t('dashboard.activity.order_updated'),\n66: description: t('dashboard.activity.status_changed_desc'),\n67: user: 'Maria Garcia',"
-          },
-          {
-            "key": "dashboard.activity.order_completed",
-            "line": 77,
-            "context": "76: type: 'order_completed',\n77: title: t('dashboard.activity.order_completed'),\n78: description: t('dashboard.activity.recon_completed_desc'),"
-          },
-          {
-            "key": "dashboard.activity.recon_completed_desc",
-            "line": 78,
-            "context": "77: title: t('dashboard.activity.order_completed'),\n78: description: t('dashboard.activity.recon_completed_desc'),\n79: user: 'Alex Johnson',"
-          },
-          {
-            "key": "dashboard.activity.order_created",
-            "line": 89,
-            "context": "88: type: 'order_created',\n89: title: t('dashboard.activity.order_created'),\n90: description: t('dashboard.activity.car_wash_created_desc'),"
-          },
-          {
-            "key": "dashboard.activity.car_wash_created_desc",
-            "line": 90,
-            "context": "89: title: t('dashboard.activity.order_created'),\n90: description: t('dashboard.activity.car_wash_created_desc'),\n91: user: 'Lisa Chen',"
-          },
-          {
-            "key": "dashboard.activity.user_login",
-            "line": 101,
-            "context": "100: type: 'user_action',\n101: title: t('dashboard.activity.user_login'),\n102: description: t('dashboard.activity.user_logged_in_desc'),"
-          },
-          {
-            "key": "dashboard.activity.user_logged_in_desc",
-            "line": 102,
-            "context": "101: title: t('dashboard.activity.user_login'),\n102: description: t('dashboard.activity.user_logged_in_desc'),\n103: user: 'Roberto Silva',"
-          },
-          {
-            "key": "dashboard.activity.recent_activity",
-            "line": 142,
-            "context": "141: <div className=\"flex items-center justify-between\">\n142: <CardTitle className=\"text-lg\">{t('dashboard.activity.recent_activity')}</CardTitle>\n143: <div className=\"flex items-center gap-2\">"
-          },
-          {
-            "key": "dashboard.activity.filter",
-            "line": 146,
-            "context": "145: <Filter className=\"w-4 h-4 mr-2\" />\n146: {t('dashboard.activity.filter')}\n147: </Button>"
-          },
-          {
-            "key": "dashboard.activity.all",
-            "line": 161,
-            "context": "160: >\n161: {t('dashboard.activity.all')}\n162: </Badge>"
-          },
-          {
-            "key": "dashboard.departments.sales",
-            "line": 168,
-            "context": "167: >\n168: {t('dashboard.departments.sales')}\n169: </Badge>"
-          },
-          {
-            "key": "dashboard.departments.service",
-            "line": 175,
-            "context": "174: >\n175: {t('dashboard.departments.service')}\n176: </Badge>"
-          },
-          {
-            "key": "dashboard.departments.recon",
-            "line": 182,
-            "context": "181: >\n182: {t('dashboard.departments.recon')}\n183: </Badge>"
-          },
-          {
-            "key": "dashboard.departments.car_wash",
-            "line": 189,
-            "context": "188: >\n189: {t('dashboard.departments.car_wash')}\n190: </Badge>"
-          },
-          {
-            "key": "dashboard.activity.vehicle",
-            "line": 212,
-            "context": "211: <p className=\"text-xs text-muted-foreground mt-1\">\n212: {t('dashboard.activity.vehicle')}: {activity.vehicle}\n213: </p>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\dashboard\\DepartmentOverview.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "dashboard.departments.sales",
-            "line": 43,
-            "exists": false
-          },
-          {
-            "key": "dashboard.departments.service",
-            "line": 53,
-            "exists": false
-          },
-          {
-            "key": "dashboard.departments.recon",
-            "line": 63,
-            "exists": false
-          },
-          {
-            "key": "dashboard.departments.car_wash",
-            "line": 73,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.title",
-            "line": 102,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.live_data",
-            "line": 105,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.revenue",
-            "line": 121,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.pending",
-            "line": 152,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.in_progress",
-            "line": 160,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.completed",
-            "line": 168,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.efficiency",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "dashboard.department_overview.total_orders",
-            "line": 185,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "dashboard.departments.sales",
-            "line": 43,
-            "context": "42: id: 'sales',\n43: name: t('dashboard.departments.sales'),\n44: icon: <Car className=\"w-5 h-5\" />,"
-          },
-          {
-            "key": "dashboard.departments.service",
-            "line": 53,
-            "context": "52: id: 'service',\n53: name: t('dashboard.departments.service'),\n54: icon: <Wrench className=\"w-5 h-5\" />,"
-          },
-          {
-            "key": "dashboard.departments.recon",
-            "line": 63,
-            "context": "62: id: 'recon',\n63: name: t('dashboard.departments.recon'),\n64: icon: <RefreshCw className=\"w-5 h-5\" />,"
-          },
-          {
-            "key": "dashboard.departments.car_wash",
-            "line": 73,
-            "context": "72: id: 'carwash',\n73: name: t('dashboard.departments.car_wash'),\n74: icon: <Droplets className=\"w-5 h-5\" />,"
-          },
-          {
-            "key": "dashboard.department_overview.title",
-            "line": 102,
-            "context": "101: <div className=\"flex items-center justify-between\">\n102: <h3 className=\"text-lg font-semibold\">{t('dashboard.department_overview.title')}</h3>\n103: <Badge variant=\"outline\" className=\"flex items-center gap-1\">"
-          },
-          {
-            "key": "dashboard.department_overview.live_data",
-            "line": 105,
-            "context": "104: <TrendingUp className=\"w-3 h-3\" />\n105: {t('dashboard.department_overview.live_data')}\n106: </Badge>"
-          },
-          {
-            "key": "dashboard.department_overview.revenue",
-            "line": 121,
-            "context": "120: <p className=\"text-sm text-muted-foreground\">\n121: ${dept.revenue.toLocaleString()} {t('dashboard.department_overview.revenue')}\n122: </p>"
-          },
-          {
-            "key": "dashboard.department_overview.pending",
-            "line": 152,
-            "context": "151: </div>\n152: <p className=\"text-xs text-muted-foreground\">{t('dashboard.department_overview.pending')}</p>\n153: </div>"
-          },
-          {
-            "key": "dashboard.department_overview.in_progress",
-            "line": 160,
-            "context": "159: </div>\n160: <p className=\"text-xs text-muted-foreground\">{t('dashboard.department_overview.in_progress')}</p>\n161: </div>"
-          },
-          {
-            "key": "dashboard.department_overview.completed",
-            "line": 168,
-            "context": "167: </div>\n168: <p className=\"text-xs text-muted-foreground\">{t('dashboard.department_overview.completed')}</p>\n169: </div>"
-          },
-          {
-            "key": "dashboard.department_overview.efficiency",
-            "line": 175,
-            "context": "174: <div className=\"flex items-center justify-between\">\n175: <span className=\"text-sm font-medium\">{t('dashboard.department_overview.efficiency')}</span>\n176: <span className={cn(\"text-sm font-bold\", getEfficiencyColor(dept.efficiency))}>"
-          },
-          {
-            "key": "dashboard.department_overview.total_orders",
-            "line": 185,
-            "context": "184: <div className=\"flex items-center justify-between pt-2 border-t\">\n185: <span className=\"text-sm text-muted-foreground\">{t('dashboard.department_overview.total_orders')}</span>\n186: <span className=\"font-semibold\">{dept.orders.total}</span>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\dashboard\\DashboardMetrics.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "dashboard.metrics.total_orders",
-            "line": 113,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.orders_this_month",
-            "line": 119,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.pending_orders",
-            "line": 123,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.awaiting_processing",
-            "line": 129,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.completed_today",
-            "line": 133,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.finished_today",
-            "line": 139,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.revenue",
-            "line": 143,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.monthly_revenue",
-            "line": 149,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.active_vehicles",
-            "line": 153,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.in_process",
-            "line": 157,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.avg_processing",
-            "line": 162,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.per_order",
-            "line": 168,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.satisfaction",
-            "line": 172,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.customer_rating",
-            "line": 178,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.efficiency",
-            "line": 183,
-            "exists": false
-          },
-          {
-            "key": "dashboard.metrics.team_performance",
-            "line": 189,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "dashboard.metrics.total_orders",
-            "line": 113,
-            "context": "112: <MetricCard\n113: title={t('dashboard.metrics.total_orders')}\n114: value={metrics.totalOrders}"
-          },
-          {
-            "key": "dashboard.metrics.orders_this_month",
-            "line": 119,
-            "context": "118: color=\"primary\"\n119: subtitle={t('dashboard.metrics.orders_this_month')}\n120: />"
-          },
-          {
-            "key": "dashboard.metrics.pending_orders",
-            "line": 123,
-            "context": "122: <MetricCard\n123: title={t('dashboard.metrics.pending_orders')}\n124: value={metrics.pendingOrders}"
-          },
-          {
-            "key": "dashboard.metrics.awaiting_processing",
-            "line": 129,
-            "context": "128: color=\"warning\"\n129: subtitle={t('dashboard.metrics.awaiting_processing')}\n130: />"
-          },
-          {
-            "key": "dashboard.metrics.completed_today",
-            "line": 133,
-            "context": "132: <MetricCard\n133: title={t('dashboard.metrics.completed_today')}\n134: value={metrics.completedToday}"
-          },
-          {
-            "key": "dashboard.metrics.finished_today",
-            "line": 139,
-            "context": "138: color=\"success\"\n139: subtitle={t('dashboard.metrics.finished_today')}\n140: />"
-          },
-          {
-            "key": "dashboard.metrics.revenue",
-            "line": 143,
-            "context": "142: <MetricCard\n143: title={t('dashboard.metrics.revenue')}\n144: value={`$${metrics.revenue.toLocaleString()}`}"
-          },
-          {
-            "key": "dashboard.metrics.monthly_revenue",
-            "line": 149,
-            "context": "148: color=\"success\"\n149: subtitle={t('dashboard.metrics.monthly_revenue')}\n150: />"
-          },
-          {
-            "key": "dashboard.metrics.active_vehicles",
-            "line": 153,
-            "context": "152: <MetricCard\n153: title={t('dashboard.metrics.active_vehicles')}\n154: value={metrics.activeVehicles}"
-          },
-          {
-            "key": "dashboard.metrics.in_process",
-            "line": 157,
-            "context": "156: color=\"secondary\"\n157: subtitle={t('dashboard.metrics.in_process')}\n158: progress={74}"
-          },
-          {
-            "key": "dashboard.metrics.avg_processing",
-            "line": 162,
-            "context": "161: <MetricCard\n162: title={t('dashboard.metrics.avg_processing')}\n163: value={metrics.avgProcessingTime}"
-          },
-          {
-            "key": "dashboard.metrics.per_order",
-            "line": 168,
-            "context": "167: color=\"primary\"\n168: subtitle={t('dashboard.metrics.per_order')}\n169: />"
-          },
-          {
-            "key": "dashboard.metrics.satisfaction",
-            "line": 172,
-            "context": "171: <MetricCard\n172: title={t('dashboard.metrics.satisfaction')}\n173: value={`${metrics.customerSatisfaction}%`}"
-          },
-          {
-            "key": "dashboard.metrics.customer_rating",
-            "line": 178,
-            "context": "177: color=\"success\"\n178: subtitle={t('dashboard.metrics.customer_rating')}\n179: progress={metrics.customerSatisfaction}"
-          },
-          {
-            "key": "dashboard.metrics.efficiency",
-            "line": 183,
-            "context": "182: <MetricCard\n183: title={t('dashboard.metrics.efficiency')}\n184: value={`${metrics.teamEfficiency}%`}"
-          },
-          {
-            "key": "dashboard.metrics.team_performance",
-            "line": 189,
-            "context": "188: color=\"primary\"\n189: subtitle={t('dashboard.metrics.team_performance')}\n190: progress={metrics.teamEfficiency}"
+            "key": "dashboard.departments.${activity.department.toLowerCase().replace(",
+            "line": 218,
+            "context": "217: <Badge className={getDepartmentColor(activity.department)} variant=\"secondary\">\n218: {t(`dashboard.departments.${activity.department.toLowerCase().replace(' ', '_')}`)}\n219: </Badge>"
           }
         ],
         "coverage": 100,
@@ -40452,7 +39872,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "239 Component components need translation",
+      "description": "236 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -40584,7 +40004,6 @@
         "src\\pages\\Profile.tsx",
         "src\\pages\\Productivity.tsx",
         "src\\pages\\Index.tsx",
-        "src\\pages\\Dashboard.tsx",
         "src\\pages\\Contacts.tsx",
         "src\\pages\\Chat.tsx",
         "src\\pages\\CarWash.tsx",
@@ -40684,8 +40103,6 @@
         "src\\components\\dealer\\DealerGroups.tsx",
         "src\\components\\dealer\\DealerCategories.tsx",
         "src\\components\\dashboard\\RecentActivity.tsx",
-        "src\\components\\dashboard\\DepartmentOverview.tsx",
-        "src\\components\\dashboard\\DashboardMetrics.tsx",
         "src\\components\\chat\\TypingIndicator.tsx",
         "src\\components\\chat\\MessageThread.tsx",
         "src\\components\\chat\\MessageBubble.tsx",
@@ -40694,14 +40111,14 @@
         "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx"
       ],
-      "estimatedEffort": "120 hours"
+      "estimatedEffort": "118 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3291 translation keys are referenced but missing",
+      "description": "3227 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "165 hours"
+      "estimatedEffort": "162 hours"
     }
   ],
   "coverage": 78

@@ -27,16 +27,17 @@ interface MetricCardProps {
   progress?: number;
 }
 
-const MetricCard = ({ 
-  title, 
-  value, 
-  change, 
-  trend, 
-  icon, 
-  color = 'primary', 
+const MetricCard = ({
+  title,
+  value,
+  change,
+  trend,
+  icon,
+  color = 'primary',
   subtitle,
-  progress 
+  progress
 }: MetricCardProps) => {
+  const { t } = useTranslation();
   const getColorClasses = (color: string) => {
     const colors = {
       primary: 'text-primary',
