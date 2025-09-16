@@ -61,22 +61,6 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
     { id: 'dealer_admin', name: t('roles.dealership_admin'), description: t('roles.dealership_admin_desc') }
   ];
 
-  useEffect(() => {
-    if (open) {
-      fetchDealerships();
-      setStep(1);
-      setFormData({
-        email: '',
-        firstName: '',
-        lastName: '',
-        dealershipId: '',
-        userType: 'dealer',
-        role: '',
-        sendWelcomeEmail: true
-      });
-    }
-  }, [open, fetchDealerships]);
-
   const fetchDealerships = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -96,6 +80,22 @@ export function DirectUserCreationModal({ open, onClose, onSuccess }: DirectUser
       });
     }
   }, [toast, t]);
+
+  useEffect(() => {
+    if (open) {
+      fetchDealerships();
+      setStep(1);
+      setFormData({
+        email: '',
+        firstName: '',
+        lastName: '',
+        dealershipId: '',
+        userType: 'dealer',
+        role: '',
+        sendWelcomeEmail: true
+      });
+    }
+  }, [open, fetchDealerships]);
 
   const handleSubmit = async () => {
     setLoading(true);
