@@ -24,8 +24,17 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
   const { t } = useTranslation();
   const { currentDealership } = useAccessibleDealerships();
 
+  // Debug navigation rendering
+  console.log('🏗️ [PROTECTED LAYOUT] Rendering for:', {
+    pathname: location.pathname,
+    hasUser: !!user,
+    loading,
+    hasDealership: !!currentDealership,
+    timestamp: new Date().toISOString()
+  });
 
   if (loading) {
+    console.log('⏳ [PROTECTED LAYOUT] Auth loading - showing spinner');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -61,13 +70,21 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
             <div className="flex items-center gap-4">
               <LanguageSwitcher />
               <ThemeToggle />
-              {currentDealership?.id ? <NotificationBell dealerId={currentDealership.id} /> : null}
+              {currentDealership?.id && <NotificationBell dealerId={currentDealership.id} />}
             </div>
           </header>
 
           {/* Main Content */}
           <main className="flex-1 p-6">
-           {children || <Outlet />}
+           {(() => {
+             console.log('🎯 [OUTLET DEBUG] Rendering content for:', {
+               pathname: location.pathname,
+               hasChildren: !!children,
+               usingOutlet: !children,
+               timestamp: new Date().toISOString()
+             });
+             return children || <Outlet />;
+           })()}
           </main>
 
           {/* Footer */}
@@ -95,7 +112,7 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
         </div>
 
         {/* Floating Chat Bubble */}
-        {currentDealership?.id ? <FloatingChatBubble /> : null}
+        {currentDealership?.id && <FloatingChatBubble />}
       </div>
     </SidebarProvider>
   );
