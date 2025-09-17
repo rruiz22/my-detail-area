@@ -12,7 +12,7 @@ interface VinCorrectionResult {
 
 interface VinPatternRule {
   pattern: RegExp;
-  replacement: string;
+  replacement: string | ((match: string, ...args: string[]) => string);
   confidence: number;
   description: string;
 }
@@ -75,7 +75,7 @@ export class VinAutoCorrection {
         replacement: (match: string) => this.suggestFirstCharacter(match),
         confidence: 0.8,
         description: 'First character must be letter (World Manufacturer Identifier)'
-      } as any,
+      } as VinPatternRule,
 
       // Check digit validation-based corrections
       {
@@ -86,7 +86,7 @@ export class VinAutoCorrection {
         },
         confidence: 0.95,
         description: 'Check digit correction based on VIN algorithm'
-      } as any,
+      } as VinPatternRule,
 
       // Model year character validation (position 10)
       {

@@ -84,10 +84,10 @@ function suggestCorrections(detectedText: string): string[] {
   };
 
   // Try different correction combinations
-  let corrected = detectedText.toUpperCase();
+  const baseText = detectedText.toUpperCase();
   for (const [wrong, right] of Object.entries(corrections)) {
-    const candidate = corrected.replace(new RegExp(wrong, 'g'), right);
-    if (candidate !== corrected && validateVin(candidate).isValid) {
+    const candidate = baseText.replace(new RegExp(wrong, 'g'), right);
+    if (candidate !== baseText && validateVin(candidate).isValid) {
       suggestions.push(candidate);
     }
   }

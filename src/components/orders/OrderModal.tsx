@@ -504,9 +504,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl max-h-[95vh] w-[95vw] p-0" aria-describedby="order-modal-description">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl font-semibold">
+      <DialogContent className="max-w-7xl max-h-[95vh] w-[95vw] sm:w-[90vw] md:w-[85vw] p-0 mx-2 sm:mx-4" aria-describedby="order-modal-description">
+        <DialogHeader className="p-4 sm:p-6 pb-0">
+          <DialogTitle className="text-lg sm:text-xl font-semibold">
             {order ? t('orders.edit') : t('orders.create')}
           </DialogTitle>
           <div id="order-modal-description" className="sr-only">
@@ -514,20 +514,22 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           </div>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
+        <ScrollArea className="max-h-[calc(95vh-100px)] sm:max-h-[calc(95vh-120px)] px-4 sm:px-6">
           <form onSubmit={handleSubmit} className="space-y-6 pb-6">
             {/* Single Responsive Container */}
             <Card className="border-border">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg">{order ? t('orders.edit') : t('orders.create')}</CardTitle>
+              <CardHeader className="pb-3 px-4 sm:px-6">
+                <CardTitle className="text-base sm:text-lg">{order ? t('orders.edit') : t('orders.create')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              <CardContent className="px-4 sm:px-6">
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
               
                   {/* Column 1: Dealership & Assignment Information */}
                   <div className="space-y-4">
-                    <div className="border-b border-border pb-3 mb-4">
-                      <h3 className="text-base font-medium text-foreground">{t('sales_orders.dealership')} & {t('sales_orders.assignment')}</h3>
+                    <div className="border-b border-border pb-2 mb-3">
+                      <h3 className="text-sm sm:text-base font-medium text-foreground">
+                        {t('sales_orders.dealership')} & {t('sales_orders.assignment')}
+                      </h3>
                     </div>
                   <div>
                     <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
@@ -613,10 +615,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   {/* Column 2: Vehicle Information */}
                   <div className="space-y-4">
-                    <div className="border-b border-border pb-3 mb-4">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-base font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
-                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground">
+                    <div className="border-b border-border pb-2 mb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
+                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto">
                           <Zap className="w-3 h-3 mr-1" />
                           {t('sales_orders.vin_decoded_successfully')}
                         </Badge>}
@@ -692,9 +694,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   {/* Column 3: Services & Notes */}
-                  <div className="space-y-4 xl:col-span-1 lg:col-span-2">
-                    <div className="border-b border-border pb-3 mb-4">
-                      <h3 className="text-base font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
+                  <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-1">
+                    <div className="border-b border-border pb-2 mb-3">
+                      <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
                     </div>
                   <div>
                     <Label className="text-sm font-medium">
@@ -716,7 +718,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         <div className="text-sm text-muted-foreground">{t('common.loading')}</div>
                       </div>
                     ) : (
-                      <ScrollArea className="h-64 border border-border rounded-lg p-3 bg-background">
+                      <ScrollArea className="h-48 sm:h-64 border border-border rounded-lg p-3 bg-background">
                         <div className="space-y-3">
                           {services.length === 0 ? (
                             <div className="text-center text-muted-foreground py-8">
@@ -838,19 +840,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-end gap-3">
-              <Button 
-                type="button" 
-                variant="outline" 
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-border">
+              <Button
+                type="button"
+                variant="outline"
                 onClick={onClose}
-                className="border-border hover:bg-accent hover:text-accent-foreground"
+                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
               >
                 {t('common.cancel')}
               </Button>
-              <Button 
+              <Button
                 type="submit"
                 disabled={!selectedDealership || !formData.customerName || selectedServices.length === 0}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
               >
                 {order ? t('common.update') : t('common.create')}
               </Button>
