@@ -47,33 +47,72 @@ export const TAB_CONFIGS = {
 export type PageKey = keyof typeof TAB_CONFIGS;
 
 /**
- * Hook for tab persistence - SIMPLIFIED VERSION TO FIX HOOKS VIOLATION
+ * Hook for tab persistence with real localStorage support
  */
 export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableCloudSync = false) {
   const config = TAB_CONFIGS[pageKey];
+  const storageKey = `${pageKey}_activeTab`;
 
-  // Always use basic state without complex persistence to avoid hooks violations
-  const [activeTab, setActiveTab] = useState(config.defaultTab);
+  // Initialize from localStorage or default
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored && config.validTabs.includes(stored)) {
+        return stored;
+      }
+    } catch (error) {
+      console.warn('Failed to read tab from localStorage:', error);
+    }
+    return config.defaultTab;
+  });
 
   const setValidatedTab = useCallback((tab: string) => {
     if (config.validTabs.includes(tab)) {
       setActiveTab(tab);
+      // Save to localStorage
+      try {
+        localStorage.setItem(storageKey, tab);
+      } catch (error) {
+        console.warn('Failed to save tab to localStorage:', error);
+      }
     } else {
       console.warn(`⚠️ Invalid tab ${tab}, ignoring`);
     }
-  }, [config.validTabs]);
+  }, [config.validTabs, storageKey]);
 
   return [activeTab, setValidatedTab] as const;
 }
 
 /**
- * Hook for view mode persistence - SIMPLIFIED VERSION TO FIX HOOKS VIOLATION
+ * Hook for view mode persistence with real localStorage support
  */
 export function useViewModePersistence(pageKey: PageKey, enableCloudSync = false) {
-  // Always use basic state without complex persistence to avoid hooks violations
-  const [viewMode, setViewMode] = useState<'kanban' | 'table' | 'calendar'>('kanban');
+  const storageKey = `${pageKey}_viewMode`;
 
-  return [viewMode, setViewMode] as const;
+  // Initialize from localStorage or default to table
+  const [viewMode, setViewMode] = useState<'kanban' | 'table' | 'calendar'>(() => {
+    try {
+      const stored = localStorage.getItem(storageKey) as 'kanban' | 'table' | 'calendar';
+      if (stored && ['kanban', 'table', 'calendar'].includes(stored)) {
+        return stored;
+      }
+    } catch (error) {
+      console.warn('Failed to read view mode from localStorage:', error);
+    }
+    return 'table'; // Default to table for better UX
+  });
+
+  const setPersistedViewMode = useCallback((mode: 'kanban' | 'table' | 'calendar') => {
+    setViewMode(mode);
+    // Save to localStorage
+    try {
+      localStorage.setItem(storageKey, mode);
+    } catch (error) {
+      console.warn('Failed to save view mode to localStorage:', error);
+    }
+  }, [storageKey]);
+
+  return [viewMode, setPersistedViewMode] as const;
 }
 
 /**
@@ -96,11 +135,50 @@ export function useFilterPersistence<T extends Record<string, any>>(
 }
 
 /**
- * Hook for search term persistence - SIMPLIFIED VERSION TO FIX HOOKS VIOLATION
+ * Hook for search term persistence with TTL (1 hour expiration)
  */
 export function useSearchPersistence(pageKey: PageKey) {
-  // Always use basic state without complex persistence to avoid hooks violations
-  const [searchTerm, setSearchTerm] = useState('');
+  const storageKey = `${pageKey}_searchTerm`;
+  const TTL = 60 * 60 * 1000; // 1 hour in milliseconds
 
-  return [searchTerm, setSearchTerm] as const;
+  // Initialize from localStorage with TTL check
+  const [searchTerm, setSearchTerm] = useState(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        const data = JSON.parse(stored);
+        const now = Date.now();
+        if (data.timestamp && (now - data.timestamp) < TTL) {
+          return data.value || '';
+        } else {
+          // Expired, remove from storage
+          localStorage.removeItem(storageKey);
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to read search term from localStorage:', error);
+    }
+    return '';
+  });
+
+  const setPersistedSearchTerm = useCallback((term: string) => {
+    setSearchTerm(term);
+    // Save to localStorage with timestamp
+    try {
+      if (term.trim()) {
+        const data = {
+          value: term,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      } else {
+        // Remove if empty
+        localStorage.removeItem(storageKey);
+      }
+    } catch (error) {
+      console.warn('Failed to save search term to localStorage:', error);
+    }
+  }, [storageKey]);
+
+  return [searchTerm, setPersistedSearchTerm] as const;
 }

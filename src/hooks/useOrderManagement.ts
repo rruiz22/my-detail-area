@@ -448,14 +448,15 @@ export const useOrderManagement = (activeTab: string) => {
 
       console.log('Order created successfully:', data);
       
-      // Auto-generate QR code and shortlink
-      try {
-        await generateQR(data.id, data.order_number, data.dealer_id);
-        console.log('QR code and shortlink generated for order:', data.order_number);
-      } catch (qrError) {
-        console.error('Failed to generate QR code:', qrError);
-        // Don't fail the order creation if QR generation fails
-      }
+      // Auto-generate QR code and shortlink in background (non-blocking)
+      generateQR(data.id, data.order_number, data.dealer_id)
+        .then(() => {
+          console.log('QR code and shortlink generated for order:', data.order_number);
+        })
+        .catch((qrError) => {
+          console.error('Failed to generate QR code:', qrError);
+          // QR generation failure doesn't affect order creation
+        });
       
       // Real-time subscription will handle the data update automatically
     } catch (error) {

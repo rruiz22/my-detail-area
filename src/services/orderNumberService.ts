@@ -32,8 +32,8 @@ export class OrderNumberService {
       const lastSequence = await this.getLastSequenceNumber(orderType);
       const nextSequence = lastSequence + 1;
       
-      // Format: SA-000001, SE-000001, CW-000001, RC-000001
-      const formattedNumber = `${prefix}-${nextSequence.toString().padStart(6, '0')}`;
+      // Format: SA-21, SE-22, CW-23, RC-24 (simple format without padding)
+      const formattedNumber = `${prefix}-${nextSequence}`;
       
       console.log(`🔢 Generated order number: ${formattedNumber} (type: ${orderType}, sequence: ${nextSequence})`);
       
@@ -66,7 +66,7 @@ export class OrderNumberService {
 
       if (error) {
         console.warn('Error querying last sequence:', error);
-        return 0;
+        return 20; // Start from 21 (20 + 1 = 21)
       }
 
       if (data && data.length > 0 && data[0].order_number) {
@@ -79,11 +79,11 @@ export class OrderNumberService {
         }
       }
 
-      return 0;
+      return 20; // Start from 21 (20 + 1 = 21)
       
     } catch (error) {
       console.error('Error getting last sequence:', error);
-      return 0;
+      return 20; // Start from 21 (20 + 1 = 21)
     }
   }
 
@@ -92,7 +92,7 @@ export class OrderNumberService {
    */
   validateOrderNumber(orderNumber: string, orderType: OrderType): boolean {
     const prefix = this.prefixes[orderType];
-    const regex = new RegExp(`^${prefix}-\\d{6}$`);
+    const regex = new RegExp(`^${prefix}-\\d+$`); // Accept any number of digits
     return regex.test(orderNumber);
   }
 
@@ -172,7 +172,7 @@ export class OrderNumberService {
         console.log(`📋 Migrating ${typeOrders.length} ${orderType} orders...`);
         
         const prefix = this.prefixes[orderType as OrderType];
-        let sequenceCounter = 1;
+        let sequenceCounter = 21; // Start from 21
         
         for (const order of typeOrders) {
           // Skip if already has correct format
@@ -185,7 +185,7 @@ export class OrderNumberService {
             continue;
           }
 
-          const newOrderNumber = `${prefix}-${sequenceCounter.toString().padStart(6, '0')}`;
+          const newOrderNumber = `${prefix}-${sequenceCounter}`;
           
           const { error: updateError } = await supabase
             .from('orders')

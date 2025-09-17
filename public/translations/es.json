@@ -270,7 +270,17 @@
     "min_length_not_met": "Longitud mínima no alcanzada",
     "customerNameRequired": "El nombre del cliente es obligatorio",
     "vinInvalidLength": "El VIN debe tener exactamente 17 caracteres",
-    "dealershipRequired": "Por favor selecciona un concesionario"
+    "dealershipRequired": "Por favor selecciona un concesionario",
+    "dueDateRequired": "La fecha y hora de vencimiento son obligatorias",
+    "dueDateTooFar": "Las citas solo se pueden programar dentro de la próxima semana",
+    "dueDateTooSoon": "Las citas requieren al menos 1 hora de tiempo de preparación",
+    "slotNotAvailable": "El horario seleccionado ({{time}}) no está disponible",
+    "failedToReserveSlot": "Error al reservar el horario. Por favor intenta con una hora diferente.",
+    "capacityCheckFailed": "No se pudo verificar la capacidad de la cita. La orden se creará de todos modos.",
+    "slotReservationWarning": "El horario de la cita no se pudo reservar automáticamente",
+    "vinRequired": "El VIN es obligatorio para la identificación del vehículo",
+    "stockNumberRequired": "El número de stock es obligatorio para el seguimiento",
+    "assignedToRequired": "Por favor asigna esta orden a un miembro del equipo"
   },
   "dashboard": {
     "hero": {
@@ -426,7 +436,13 @@
   },
   "due_date": {
     "title": "Fecha y Hora de Vencimiento",
-    "date_placeholder": "Seleccionar fecha de vencimiento"
+    "date_placeholder": "Seleccionar fecha de vencimiento",
+    "time_placeholder": "Seleccionar hora",
+    "validation": {
+      "no_slots_available": "No hay horarios disponibles",
+      "closed_sundays": "Cerrado los domingos",
+      "same_day_notice": "Las citas del mismo día requieren procesamiento inmediato"
+    }
   },
   "services": {
     "categories": {
@@ -636,6 +652,14 @@
     "total": "Total",
     "servicesSelected": "servicios seleccionados",
     "notes": "Notas",
-    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden..."
+    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden...",
+    "customerNamePlaceholder": "Ingresa el nombre completo del cliente (obligatorio)",
+    "creating_order": "Creando orden...",
+    "creation_failed": "Error al crear la orden",
+    "updating": "Actualizando...",
+    "creating": "Creando...",
+    "created_successfully": "Orden creada exitosamente",
+    "updated_successfully": "Orden actualizada exitosamente",
+    "save_failed": "Error al guardar la orden"
   }
 }

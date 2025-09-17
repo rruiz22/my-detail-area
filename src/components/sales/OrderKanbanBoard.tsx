@@ -195,20 +195,18 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                     draggable={true}
                     onDragStart={(e) => handleDragStart(e, order)}
                     onDragEnd={() => setDraggedOrder(null)}
+                    onDoubleClick={() => onView(order)}
                     className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 ${getStatusBorder(order.status)} ${getStatusRowColor(order.status)} group ${
                       draggedOrder?.id === order.id ? 'opacity-50 scale-95' : ''
                     }`}
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       {/* Order Header */}
-                      <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start justify-between mb-2">
                         <div>
                            <div className="font-medium text-sm text-foreground">
                              #{order.customOrderNumber || order.id}
                            </div>
-                          <div className="text-xs text-muted-foreground">
-                            {order.stockNumber && `Stock: ${order.stockNumber}`}
-                          </div>
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -240,59 +238,97 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                         </DropdownMenu>
                       </div>
 
-                      {/* Customer & Vehicle Info */}
-                      <div className="space-y-2 mb-3">
-                        {order.customerName && (
+                      {/* Assigned & Customer Info */}
+                      <div className="space-y-1 mb-2">
+                        {order.assignedTo && order.assignedTo !== 'Unassigned' ? (
                           <div className="text-sm font-medium text-foreground">
-                            {order.customerName}
+                            {order.assignedTo}
+                          </div>
+                        ) : (
+                          <div className="text-sm font-medium text-muted-foreground">
+                            Unassigned
                           </div>
                         )}
-                        {order.vehicleInfo ? (
+                        {order.customerName && (
+                          <div className="text-xs text-muted-foreground">
+                            Customer: {order.customerName}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Stock & Vehicle Info */}
+                      <div className="space-y-1 mb-2">
+                        {order.stockNumber && (
+                          <div className="text-xs font-medium text-foreground">
+                            Stock: {order.stockNumber}
+                          </div>
+                        )}
+                        {order.vehicleInfo && (
                           <div className="text-xs text-muted-foreground">
                             {order.vehicleInfo}
                           </div>
-                        ) : order.vehicleVin && (
-                          <div className="text-xs text-muted-foreground">
+                        )}
+                        {order.vehicleVin && (
+                          <div className="text-xs text-muted-foreground font-mono">
                             VIN: {order.vehicleVin.slice(-8)}
                           </div>
                         )}
                       </div>
 
-                      {/* Due Date & Amount */}
+                      {/* Due Date, Time & Priority */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {dueInfo && (
-                            <Badge 
-                              variant={dueInfo.variant === 'warning' ? 'secondary' : dueInfo.variant} 
+                            <Badge
+                              variant={dueInfo.variant === 'warning' ? 'secondary' : dueInfo.variant}
                               className={`text-xs px-2 py-0 h-5 ${dueInfo.variant === 'warning' ? 'bg-warning/20 text-warning border-warning' : ''}`}
                             >
                               {dueInfo.text}
                             </Badge>
                           )}
                           {order.priority && order.priority !== 'normal' && (
-                            <Badge 
-                              variant={order.priority === 'urgent' ? 'destructive' : 'outline'} 
+                            <Badge
+                              variant={order.priority === 'urgent' ? 'destructive' : 'outline'}
                               className="text-xs px-2 py-0 h-5"
                             >
                               {order.priority}
                             </Badge>
                           )}
                         </div>
-                        {order.totalAmount && (
-                          <div className="text-xs font-medium text-success">
-                            ${order.totalAmount.toLocaleString()}
+
+                        {/* Due Time Highlighted */}
+                        {order.dueDate && (
+                          <div className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
+                            {new Date(order.dueDate).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true
+                            })}
                           </div>
                         )}
                       </div>
 
-                      {/* Avatar */}
-                      <div className="flex items-center mt-3 pt-3 border-t border-border">
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                            {order.customerName?.charAt(0) || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="text-xs text-muted-foreground ml-2">
+                      {/* Quick Actions */}
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
+                        <div className="flex items-center gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => onView(order)}
+                            className="h-6 w-6 p-0 hover:bg-primary/10"
+                          >
+                            <Eye className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => onEdit(order)}
+                            className="h-6 w-6 p-0 hover:bg-primary/10"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
                           {safeFormatDateOnly(order.createdAt)}
                         </div>
                       </div>

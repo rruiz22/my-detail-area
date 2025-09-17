@@ -1,8 +1,8 @@
 {
   "scannedFiles": 432,
-  "totalStrings": 4410,
-  "hardcodedStrings": 996,
-  "translatedStrings": 3414,
+  "totalStrings": 4411,
+  "hardcodedStrings": 998,
+  "translatedStrings": 3413,
   "issues": {
     "critical": [
       {
@@ -18084,26 +18084,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\scanner\\modern\\VinStickerDetector.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "modern_vin_scanner.analyzing_image",
-            "line": 185,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "modern_vin_scanner.analyzing_image",
-            "line": 185,
-            "context": "184: <span className=\"text-sm font-medium\">\n185: {t('modern_vin_scanner.analyzing_image')}\n186: </span>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\scanner\\modern\\VinConfidenceIndicator.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -18210,93 +18190,93 @@
             "text": ", err);\r\n    }\r\n  }, []);\r\n\r\n  const stopCamera = useCallback(() => {\r\n    if (streamRef.current) {\r\n      streamRef.current.getTracks().forEach(track => track.stop());\r\n      streamRef.current = null;\r\n    }\r\n    setCameraActive(false);\r\n  }, []);\r\n\r\n  // Image capture and processing\r\n  const captureImage = useCallback(async () => {\r\n    if (!videoRef.current || !cameraActive) return;\r\n\r\n    setIsCapturing(true);\r\n    const canvas = document.createElement(",
             "line": 53,
             "context": "52: } catch (err) {\n53: console.error('Camera access error:', err);\n54: }"
+          },
+          {
+            "text": ", error);\r\n        }\r\n      }\r\n      setIsCapturing(false);\r\n    }, ",
+            "line": 90,
+            "context": "89: } catch (error) {\n90: console.error('Camera scan error:', error);\n91: }"
+          },
+          {
+            "text": ", error);\r\n    }\r\n  }, [scanVin, onVinDetected, onClose]);\r\n\r\n  // Cleanup on close\r\n  useEffect(() => {\r\n    if (!open) {\r\n      stopCamera();\r\n      setMode(",
+            "line": 111,
+            "context": "110: } catch (error) {\n111: console.error('VIN scan error:', error);\n112: }"
           }
         ],
         "translationCalls": [
           {
             "key": "modern_vin_scanner.title",
-            "line": 135,
-            "exists": false
+            "line": 132,
+            "exists": true
           },
           {
             "key": "modern_vin_scanner.subtitle",
-            "line": 138,
-            "exists": false
+            "line": 135,
+            "exists": true
           },
           {
             "key": "modern_vin_scanner.scan_camera",
-            "line": 151,
+            "line": 148,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.upload_image",
-            "line": 162,
+            "line": 159,
             "exists": false
           },
           {
             "key": "common.back",
-            "line": 212,
+            "line": 209,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.processing",
-            "line": 232,
+            "line": 229,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.capture",
-            "line": 237,
+            "line": 234,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.dialog_title",
-            "line": 252,
+            "line": 249,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "modern_vin_scanner.title",
-            "line": 135,
-            "context": "134: <h3 className=\"text-2xl font-semibold text-foreground\">\n135: {t('modern_vin_scanner.title')}\n136: </h3>"
-          },
-          {
-            "key": "modern_vin_scanner.subtitle",
-            "line": 138,
-            "context": "137: <p className=\"text-muted-foreground max-w-md\">\n138: {t('modern_vin_scanner.subtitle')}\n139: </p>"
-          },
-          {
             "key": "modern_vin_scanner.scan_camera",
-            "line": 151,
-            "context": "150: <Camera className=\"w-5 h-5 mr-3\" />\n151: {t('modern_vin_scanner.scan_camera')}\n152: </Button>"
+            "line": 148,
+            "context": "147: <Camera className=\"w-5 h-5 mr-3\" />\n148: {t('modern_vin_scanner.scan_camera')}\n149: </Button>"
           },
           {
             "key": "modern_vin_scanner.upload_image",
-            "line": 162,
-            "context": "161: <Upload className=\"w-5 h-5 mr-3\" />\n162: {t('modern_vin_scanner.upload_image')}\n163: </Button>"
+            "line": 159,
+            "context": "158: <Upload className=\"w-5 h-5 mr-3\" />\n159: {t('modern_vin_scanner.upload_image')}\n160: </Button>"
           },
           {
             "key": "common.back",
-            "line": 212,
-            "context": "211: <X className=\"w-4 h-4 mr-2\" />\n212: {t('common.back')}\n213: </Button>"
+            "line": 209,
+            "context": "208: <X className=\"w-4 h-4 mr-2\" />\n209: {t('common.back')}\n210: </Button>"
           },
           {
             "key": "modern_vin_scanner.processing",
-            "line": 232,
-            "context": "231: <div className=\"animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mr-2\" />\n232: {t('modern_vin_scanner.processing')}\n233: </div>"
+            "line": 229,
+            "context": "228: <div className=\"animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mr-2\" />\n229: {t('modern_vin_scanner.processing')}\n230: </div>"
           },
           {
             "key": "modern_vin_scanner.capture",
-            "line": 237,
-            "context": "236: <Zap className=\"w-5 h-5 mr-2\" />\n237: {t('modern_vin_scanner.capture')}\n238: </>"
+            "line": 234,
+            "context": "233: <Zap className=\"w-5 h-5 mr-2\" />\n234: {t('modern_vin_scanner.capture')}\n235: </>"
           },
           {
             "key": "modern_vin_scanner.dialog_title",
-            "line": 252,
-            "context": "251: <Target className=\"w-6 h-6 mr-3 text-primary\" />\n252: {t('modern_vin_scanner.dialog_title')}\n253: </DialogTitle>"
+            "line": 249,
+            "context": "248: <Target className=\"w-6 h-6 mr-3 text-primary\" />\n249: {t('modern_vin_scanner.dialog_title')}\n250: </DialogTitle>"
           }
         ],
-        "coverage": 89,
+        "coverage": 73,
         "severity": "low"
       },
       {
@@ -40265,7 +40245,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "249 Component components need translation",
+      "description": "248 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -40339,6 +40319,7 @@
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\sidebar.tsx",
         "src\\components\\scanner\\specialized\\DealershipStickerScanner.tsx",
+        "src\\components\\scanner\\modern\\ModernVinScanner.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\productivity\\ProductivityTodos.tsx",
         "src\\components\\orders\\FollowersBlock.tsx",
@@ -40382,7 +40363,6 @@
         "src\\components\\stock\\StockInventoryTable.tsx",
         "src\\components\\stock\\StockDMSConfig.tsx",
         "src\\components\\scanner\\VinOrderIntegration.tsx",
-        "src\\components\\scanner\\modern\\ModernVinScanner.tsx",
         "src\\components\\scanner\\enhanced\\BatchVinProcessor.tsx",
         "src\\components\\scanner\\engines\\StickerTemplateEngine.tsx",
         "src\\components\\scanner\\engines\\StickerImageProcessor.tsx",
@@ -40435,7 +40415,6 @@
         "src\\components\\stock\\StockAnalytics.tsx",
         "src\\components\\scanner\\VinScannerHub.tsx",
         "src\\components\\scanner\\modern\\VinTargetingGuides.tsx",
-        "src\\components\\scanner\\modern\\VinStickerDetector.tsx",
         "src\\components\\scanner\\modern\\VinConfidenceIndicator.tsx",
         "src\\components\\scanner\\modern\\ScannerOverlay.tsx",
         "src\\components\\scanner\\engines\\VinValidator.tsx",
@@ -40517,12 +40496,12 @@
         "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx"
       ],
-      "estimatedEffort": "125 hours"
+      "estimatedEffort": "124 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3079 translation keys are referenced but missing",
+      "description": "3076 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "154 hours"
     }

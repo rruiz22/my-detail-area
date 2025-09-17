@@ -281,7 +281,17 @@
     "min_length_not_met": "Minimum length not met",
     "customerNameRequired": "Customer name is required",
     "vinInvalidLength": "VIN must be exactly 17 characters",
-    "dealershipRequired": "Please select a dealership"
+    "dealershipRequired": "Please select a dealership",
+    "dueDateRequired": "Due date and time are required",
+    "dueDateTooFar": "Appointments can only be scheduled within the next week",
+    "dueDateTooSoon": "Appointments require at least 1 hour preparation time",
+    "slotNotAvailable": "The selected time slot ({{time}}) is not available",
+    "failedToReserveSlot": "Failed to reserve appointment slot. Please try a different time.",
+    "capacityCheckFailed": "Could not verify appointment capacity. Order will be created anyway.",
+    "slotReservationWarning": "Appointment slot could not be reserved automatically",
+    "vinRequired": "VIN is required for vehicle identification",
+    "stockNumberRequired": "Stock number is required for tracking",
+    "assignedToRequired": "Please assign this order to a team member"
   },
   "dashboard": {
     "hero": {
@@ -437,7 +447,13 @@
   },
   "due_date": {
     "title": "Due Date & Time",
-    "date_placeholder": "Select due date"
+    "date_placeholder": "Select due date",
+    "time_placeholder": "Select time",
+    "validation": {
+      "no_slots_available": "No time slots available",
+      "closed_sundays": "Closed on Sundays",
+      "same_day_notice": "Same-day appointments require immediate processing"
+    }
   },
   "services": {
     "categories": {
@@ -756,6 +772,14 @@
     "total": "Total",
     "servicesSelected": "services selected",
     "notes": "Notes",
-    "notesPlaceholder": "Add any special instructions or details about this order..."
+    "notesPlaceholder": "Add any special instructions or details about this order...",
+    "customerNamePlaceholder": "Enter customer full name (required)",
+    "creating_order": "Creating order...",
+    "creation_failed": "Failed to create order",
+    "updating": "Updating...",
+    "creating": "Creating...",
+    "created_successfully": "Order created successfully",
+    "updated_successfully": "Order updated successfully",
+    "save_failed": "Failed to save order"
   }
 }

@@ -9,6 +9,7 @@ import { OrderModal } from '@/components/orders/OrderModal';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
+import { toast } from 'sonner';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -41,10 +42,6 @@ export default function SalesOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
-  const [nextRefresh, setNextRefresh] = useState<number>(60);
-  const lastChangeTimeRef = useRef<number>(0);
-  const refreshIntervalRef = useRef<NodeJS.Timeout>();
-  const countdownIntervalRef = useRef<NodeJS.Timeout>();
 
   const {
     orders,
@@ -58,51 +55,8 @@ export default function SalesOrders() {
     deleteOrder,
   } = useOrderManagement(activeFilter);
 
-  // Auto-refresh with countdown timer - optimized to prevent conflicts
-  useEffect(() => {
-    // Clear any existing intervals
-    if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
-    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
-    
-    // Countdown timer (updates every second)
-    countdownIntervalRef.current = setInterval(() => {
-      setNextRefresh(prev => {
-        if (prev <= 1) {
-          return 60; // Reset to 60 seconds
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    // Refresh timer (every 60 seconds) - with conflict prevention
-    refreshIntervalRef.current = setInterval(() => {
-      const now = Date.now();
-      // Only refresh if no recent user activity and not currently loading
-      if (now - lastChangeTimeRef.current > 10000 && !loading) {
-        console.log('Auto-refresh triggered');
-        refreshData();
-        setLastRefresh(new Date());
-        setNextRefresh(60); // Reset countdown
-      }
-    }, 60000);
-
-    // Track when status changes occur
-    const handleStatusChangeEvent = () => {
-      lastChangeTimeRef.current = Date.now();
-      setNextRefresh(60); // Reset countdown when user makes changes
-    };
-
-    // Listen for status changes (both old and new events)
-    window.addEventListener('orderStatusChanged', handleStatusChangeEvent);
-    window.addEventListener('orderStatusUpdated', handleStatusChangeEvent);
-
-    return () => {
-      if (refreshIntervalRef.current) clearInterval(refreshIntervalRef.current);
-      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
-      window.removeEventListener('orderStatusChanged', handleStatusChangeEvent);
-      window.removeEventListener('orderStatusUpdated', handleStatusChangeEvent);
-    };
-  }, [refreshData, loading]);
+  // Real-time updates handle most data changes automatically
+  // Only manual refresh needed for initial load and special cases
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -136,25 +90,30 @@ export default function SalesOrders() {
     try {
       if (selectedOrder) {
         await updateOrder(selectedOrder.id, orderData);
+        toast.success(t('orders.updated_successfully'));
       } else {
         await createOrder(orderData);
+        toast.success(t('orders.created_successfully'));
       }
+
+      // Close modal immediately for better UX
       setShowModal(false);
-      refreshData();
+
+      // Refresh data in background (real-time subscription handles most updates)
+      setTimeout(() => refreshData(), 100); // Slight delay to let real-time update first
+
     } catch (error) {
       console.error('Error saving order:', error);
+      toast.error(t('orders.save_failed'));
     }
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    lastChangeTimeRef.current = Date.now(); // Update ref to prevent auto-refresh
-    
     await updateOrder(orderId, { status: newStatus });
-    
-    // Note: No need to manually refresh since real-time subscription handles it
+
+    // Update last refresh timestamp for UI
     setLastRefresh(new Date());
-    setNextRefresh(60); // Reset timer
-    
+
     // Dispatch event to notify other components
     window.dispatchEvent(new CustomEvent('orderStatusChanged'));
     window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
@@ -267,15 +226,13 @@ export default function SalesOrders() {
                   </Badge>
                 </div>
                 
-                {/* Timer and Last Update - Mobile Responsive */}
+                {/* Last Update Info */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <div className="flex flex-col gap-1 text-xs text-muted-foreground">
+                  <div className="text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      <span>Next update: {nextRefresh}s</span>
-                    </div>
-                    <div className="text-xs">
-                      Last updated: {lastRefresh.toLocaleTimeString()}
+                      <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
+                      <span className="text-success">• Real-time</span>
                     </div>
                   </div>
                   

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { safeParseDate } from '@/utils/dateUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,8 @@ import { canViewPricing } from '@/utils/permissions';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { useAppointmentCapacity } from '@/hooks/useAppointmentCapacity';
+import { toast } from 'sonner';
 
 interface OrderFormData {
   // Order identification
@@ -134,6 +136,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const { t } = useTranslation();
   const { roles } = usePermissionContext();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
+  const { checkSlotAvailability, reserveSlot } = useAppointmentCapacity();
 
   // Form state
   const [formData, setFormData] = useState<OrderFormData>({
@@ -161,21 +164,75 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const [selectedDealership, setSelectedDealership] = useState('');
   const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
+
+  // Refs to prevent double-setting in Strict Mode
+  const editModeInitialized = useRef(false);
+  const currentOrderId = useRef<string | null>(null);
   const [dealerships, setDealerships] = useState<DealershipInfo[]>([]);
   const [assignedUsers, setAssignedUsers] = useState<AssignedUser[]>([]);
   const [services, setServices] = useState<DealerService[]>([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const canViewPrices = canViewPricing(roles);
+
+  // Custom setters with logging
+  const setSelectedDealershipWithLog = (value: string) => {
+    console.log('🔧 setSelectedDealership called with:', value);
+    console.trace('🔍 Stack trace for setSelectedDealership:');
+    setSelectedDealershipWithLog(value);
+  };
+
+  const setSelectedAssignedToWithLog = (value: string) => {
+    console.log('🔧 setSelectedAssignedTo called with:', value);
+    console.trace('🔍 Stack trace for setSelectedAssignedTo:');
+    setSelectedAssignedToWithLog(value);
+  };
+
+  // Debug effect to monitor state changes
+  useEffect(() => {
+    console.log('🔧 State changed - selectedDealership:', selectedDealership);
+    console.log('🔧 State changed - selectedAssignedTo:', selectedAssignedTo);
+    console.log('🔧 State changed - dealerships count:', dealerships.length);
+    console.log('🔧 State changed - assignedUsers count:', assignedUsers.length);
+  }, [selectedDealership, selectedAssignedTo, dealerships.length, assignedUsers.length]);
 
   useEffect(() => {
     if (open) {
       fetchDealerships();
       
       if (order) {
+        // Prevent double initialization in React Strict Mode
+        if (currentOrderId.current === order.id && editModeInitialized.current) {
+          console.log('🔧 Edit mode already initialized for order:', order.id);
+          return;
+        }
+
+        console.log('🔧 Initializing edit mode for order:', order.id);
+        currentOrderId.current = order.id;
+        editModeInitialized.current = true;
+
+        // Comprehensive ID field investigation
+        console.log('🔍 All order fields:', Object.keys(order));
+        console.log('🔍 Dealership fields:', {
+          dealer_id: order.dealer_id,
+          dealerId: order.dealerId,
+          dealership_id: order.dealership_id,
+          dealer: order.dealer,
+          dealershipId: order.dealershipId
+        });
+        console.log('🔍 Assignment fields:', {
+          assigned_user_id: order.assigned_user_id,
+          assigned_group_id: order.assigned_group_id,
+          assignedUserId: order.assignedUserId,
+          assignedGroupId: order.assignedGroupId,
+          assignedContactId: order.assignedContactId,
+          assigned_contact_id: order.assigned_contact_id
+        });
+
         // Helper function to safely extract field values with fallbacks
         const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = '') => {
           return camelCase ?? snakeCase ?? defaultValue;
@@ -195,16 +252,29 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           return String(value);
         };
 
+        // Debug logging for field mapping
+        console.log('🔧 VIN mapping:', {
+          vehicleVin: order.vehicleVin,
+          vehicle_vin: order.vehicle_vin,
+          result: getFieldValue(order.vehicleVin, order.vehicle_vin)
+        });
+
+        console.log('🔧 Stock mapping:', {
+          stockNumber: order.stockNumber,
+          stock_number: order.stock_number,
+          result: getFieldValue(order.stockNumber, order.stock_number)
+        });
+
         setFormData({
           // Basic order info
           orderNumber: getFieldValue(order.orderNumber, order.order_number),
           orderType: getFieldValue(order.orderType, order.order_type, 'sales'),
           status: getFieldValue(order.status, order.status, 'pending'),
           priority: getFieldValue(order.priority, order.priority, 'normal'),
-          
+
           // Customer information
           customerName: getFieldValue(order.customerName, order.customer_name),
-          
+
           // Vehicle information - handle both individual and consolidated fields
           vehicleVin: getFieldValue(order.vehicleVin, order.vehicle_vin),
           vehicleYear: toStringValue(getFieldValue(order.vehicleYear, order.vehicle_year)),
@@ -230,11 +300,28 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         });
 
         // Set related data with proper fallbacks
-        setSelectedServices(Array.isArray(order.services) ? order.services : []);
-        setSelectedDealership(toStringValue(getFieldValue(order.dealerId, order.dealer_id)));
-        setSelectedAssignedTo(toStringValue(getFieldValue(order.assignedGroupId, order.assigned_group_id)));
-      } else {
-        // Reset form for new order
+        const servicesData = Array.isArray(order.services) ? order.services : [];
+
+        // For dealership, we need to find ID by name since we only have dealershipName
+        // This will be set after fetchDealerships() completes
+        const dealershipName = order.dealershipName;
+
+        // For assigned to, we have the name directly
+        const assignedToName = order.assignedTo;
+
+        console.log('🔧 Edit mode - Services:', servicesData);
+        console.log('🔧 Edit mode - Dealership Name:', dealershipName);
+        console.log('🔧 Edit mode - Assigned To Name:', assignedToName);
+
+        setSelectedServices(servicesData);
+
+        // We'll set dealership after fetchDealerships() finds the ID
+        // We'll set assignedTo after fetchDealerData() loads the users and finds the ID
+      } else if (!order) {
+        // Only reset form for new order when order is explicitly null/undefined
+        console.log('🔧 Resetting form for new order');
+        editModeInitialized.current = false;
+        currentOrderId.current = null;
         setFormData({
           orderNumber: '',
           customerName: '',
@@ -258,11 +345,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           scheduledTime: ''
         });
         setSelectedServices([]);
-        setSelectedDealership('');
-        setSelectedAssignedTo('');
+        setSelectedDealershipWithLog('');
+        setSelectedAssignedToWithLog('');
       }
     }
-  }, [order, open]);
+  }, [order?.id, open]); // Only re-run if order ID changes or modal opens
 
   const fetchDealerships = async () => {
     try {
@@ -274,7 +361,21 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       });
 
       if (error) throw error;
-      setDealerships(data || []);
+      const dealerships = data || [];
+      setDealerships(dealerships);
+
+      // If in edit mode, find dealership by name and set it
+      if (order && order.dealershipName) {
+        const matchingDealer = dealerships.find(d => d.name === order.dealershipName);
+        if (matchingDealer) {
+          console.log('🔧 Found matching dealership:', matchingDealer);
+          setSelectedDealershipWithLog(matchingDealer.id.toString());
+          // Auto-fetch dealer data to get users for assigned selection
+          await fetchDealerData(matchingDealer.id.toString());
+        } else {
+          console.warn('⚠️ Could not find dealership:', order.dealershipName, 'in', dealerships.map(d => d.name));
+        }
+      }
     } catch (error) {
       console.error('Error fetching dealerships:', error);
     }
@@ -304,11 +405,25 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       ]);
 
       if (usersResult.data) {
-        setAssignedUsers(usersResult.data.map((membership: DealerMembership) => ({
+        const users = usersResult.data.map((membership: DealerMembership) => ({
           id: membership.profiles.id,
           name: `${membership.profiles.first_name || ''} ${membership.profiles.last_name || ''}`.trim() || membership.profiles.email,
           email: membership.profiles.email
-        })));
+        }));
+
+        setAssignedUsers(users);
+
+        // If in edit mode, find and select the assigned user by name
+        if (order && order.assignedTo && order.assignedTo !== 'Unassigned') {
+          const matchingUser = users.find(user => user.name === order.assignedTo);
+          if (matchingUser) {
+            console.log('🔧 Found matching assigned user:', matchingUser);
+            setSelectedAssignedToWithLog(matchingUser.id);
+            console.log('🔧 Set selectedAssignedTo to:', matchingUser.id);
+          } else {
+            console.warn('⚠️ Could not find assigned user:', order.assignedTo, 'in users:', users.map(u => u.name));
+          }
+        }
       }
 
       if (servicesResult.data) {
@@ -322,19 +437,22 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   };
 
   const handleDealershipChange = (dealershipId: string) => {
-    setSelectedDealership(dealershipId);
-    setSelectedAssignedTo('');
+    console.log('🔧 handleDealershipChange called with:', dealershipId);
+    console.trace('🔍 Stack trace for handleDealershipChange:');
+
+    setSelectedDealershipWithLog(dealershipId);
+    setSelectedAssignedToWithLog('');
     setAssignedUsers([]);
     setServices([]);
     setSelectedServices([]);
-    
+
     if (dealershipId) {
       fetchDealerData(dealershipId);
     }
   };
 
   const handleAssignedToChange = (groupId: string) => {
-    setSelectedAssignedTo(groupId);
+    setSelectedAssignedToWithLog(groupId);
     // Update assignment in form data - do NOT touch customerName
     setFormData(prev => ({
       ...prev,
@@ -459,42 +577,138 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     };
   };
 
-  const validateForm = (): boolean => {
-    const errors: Record<string, string> = {};
-    
-    // Validate required fields
+  const validateForm = async (): Promise<boolean> => {
+    // Validate required fields with immediate toast feedback
     if (!formData.customerName.trim()) {
-      errors.customerName = t('validation.customerNameRequired');
+      toast.error(t('validation.customerNameRequired'));
+      return false;
     }
-    
-    // Validate VIN if provided
-    if (formData.vehicleVin && formData.vehicleVin.length !== 17) {
-      errors.vehicleVin = t('validation.vinInvalidLength');
+
+    // Validate VIN (always required)
+    if (!formData.vehicleVin.trim()) {
+      toast.error(t('validation.vinRequired'));
+      return false;
     }
-    
-    // Validate email format if provided (remove this check since customerEmail doesn't exist)
-    // if (formData.customerEmail && !formData.customerEmail.includes('@')) {
-    //   errors.customerEmail = t('validation.emailInvalid');
-    // }
-    
+    if (formData.vehicleVin.length !== 17) {
+      toast.error(t('validation.vinInvalidLength'));
+      return false;
+    }
+
     // Validate dealership selection
     if (!selectedDealership) {
-      errors.dealership = t('validation.dealershipRequired');
+      toast.error(t('validation.dealershipRequired'));
+      return false;
     }
-    
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+
+    // Validate stock number (always required)
+    if (!formData.stockNumber.trim()) {
+      toast.error(t('validation.stockNumberRequired'));
+      return false;
+    }
+
+    // Validate assigned to (always required)
+    if (!selectedAssignedTo) {
+      toast.error(t('validation.assignedToRequired'));
+      return false;
+    }
+
+    // Validate due date and time
+    if (!formData.dueDate) {
+      toast.error(t('validation.dueDateRequired'));
+      return false;
+    }
+
+    // Check if date is within 1 week limit
+    const today = new Date();
+    const oneWeekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    if (formData.dueDate > oneWeekFromNow) {
+      toast.error(t('validation.dueDateTooFar'));
+      return false;
+    }
+
+    // Check minimum 1 hour preparation time
+    const now = new Date();
+    const minimumTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
+
+    if (formData.dueDate < minimumTime) {
+      toast.error(t('validation.dueDateTooSoon'));
+      return false;
+    }
+
+    // Check appointment capacity if dealership and time are selected
+    if (selectedDealership && formData.dueDate) {
+      try {
+        const slot = await checkSlotAvailability(
+          parseInt(selectedDealership),
+          formData.dueDate,
+          formData.dueDate.getHours()
+        );
+
+        if (slot && !slot.is_available) {
+          toast.error(t('validation.slotNotAvailable', {
+            time: formData.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }));
+          return false;
+        }
+      } catch (capacityError) {
+        console.warn('Capacity check failed:', capacityError);
+        // Continue with order creation even if capacity check fails
+        toast.warning(t('validation.capacityCheckFailed'));
+      }
+    }
+
+    return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
+
+    setSubmitting(true);
+
+    try {
+      // Validate form first
+      const isValid = await validateForm();
+      if (!isValid) {
+        setSubmitting(false);
+        return;
+      }
+
+      // Reserve appointment slot before creating order
+      if (formData.dueDate && selectedDealership) {
+        try {
+          const slotReserved = await reserveSlot(
+            parseInt(selectedDealership),
+            formData.dueDate,
+            formData.dueDate.getHours()
+          );
+
+          if (!slotReserved) {
+            toast.error(t('validation.failedToReserveSlot'));
+            setSubmitting(false);
+            return;
+          }
+        } catch (slotError) {
+          console.warn('Slot reservation failed:', slotError);
+          toast.warning(t('validation.slotReservationWarning'));
+          // Continue with order creation even if slot reservation fails
+        }
+      }
+
+      // Proceed directly to order creation without confirmation
+      const dbData = transformToDbFormat(formData);
+
+      // Show immediate success feedback
+      toast.success(t('orders.creating_order'));
+
+      onSave(dbData);
+
+    } catch (error) {
+      console.error('Submit error:', error);
+      toast.error(t('orders.creation_failed'));
+    } finally {
+      setSubmitting(false);
     }
-    
-    const dbData = transformToDbFormat(formData);
-    onSave(dbData);
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
@@ -590,7 +804,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         value={formData.customerName}
                         onChange={(e) => handleInputChange('customerName', e.target.value)}
                         className="border-input bg-background"
-                        placeholder={t('common.optional')}
+                        placeholder={t('orders.customerNamePlaceholder')}
                       />
                     </div>
 
@@ -689,6 +903,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                          value={formData.dueDate}
                          onChange={(date) => handleInputChange('dueDate', date)}
                          placeholder={t('due_date.date_placeholder')}
+                         dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
                        />
                      </div>
                    </div>
@@ -852,10 +1067,26 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               </Button>
               <Button
                 type="submit"
-                disabled={!selectedDealership || !formData.customerName || selectedServices.length === 0}
+                disabled={
+                  submitting ||
+                  !selectedDealership ||
+                  !formData.customerName ||
+                  !formData.vehicleVin ||
+                  !formData.stockNumber ||
+                  !selectedAssignedTo ||
+                  !formData.dueDate ||
+                  selectedServices.length === 0
+                }
                 className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
               >
-                {order ? t('common.update') : t('common.create')}
+                {submitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {order ? t('orders.updating') : t('orders.creating')}
+                  </>
+                ) : (
+                  order ? t('common.update') : t('common.create')
+                )}
               </Button>
             </div>
           </form>

@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Clock, AlertCircle, BarChart3, List, Kanban, Filter, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
 
 interface FilterOption {
   id: string;
@@ -37,6 +38,25 @@ export function QuickFilterBar({
   onToggleFilters
 }: QuickFilterBarProps) {
   const { t } = useTranslation();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Auto-switch to table if on mobile and kanban is selected
+  useEffect(() => {
+    if (isMobile && viewMode === 'kanban') {
+      onViewModeChange('table');
+    }
+  }, [isMobile, viewMode, onViewModeChange]);
 
   const filterOptions: FilterOption[] = [
     {
@@ -110,15 +130,7 @@ export function QuickFilterBar({
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
             <div className="flex items-center bg-muted/50 rounded-lg p-1">
-              <Button
-                size="sm"
-                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                onClick={() => onViewModeChange('kanban')}
-                className="h-8 px-2 sm:px-3"
-              >
-                <Kanban className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Kanban</span>
-              </Button>
+              {/* Table - Always first and available */}
               <Button
                 size="sm"
                 variant={viewMode === 'table' ? 'default' : 'ghost'}
@@ -128,6 +140,19 @@ export function QuickFilterBar({
                 <List className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Table</span>
               </Button>
+
+              {/* Kanban - Only on desktop */}
+              {!isMobile && (
+                <Button
+                  size="sm"
+                  variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                  onClick={() => onViewModeChange('kanban')}
+                  className="h-8 px-2 sm:px-3"
+                >
+                  <Kanban className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Kanban</span>
+                </Button>
+              )}
               <Button
                 size="sm"
                 variant={viewMode === 'calendar' ? 'default' : 'ghost'}

@@ -270,7 +270,17 @@
     "min_length_not_met": "Comprimento mínimo não atingido",
     "customerNameRequired": "O nome do cliente é obrigatório",
     "vinInvalidLength": "O VIN deve ter exatamente 17 caracteres",
-    "dealershipRequired": "Por favor, selecione uma concessionária"
+    "dealershipRequired": "Por favor, selecione uma concessionária",
+    "dueDateRequired": "Data e hora de vencimento são obrigatórias",
+    "dueDateTooFar": "Agendamentos só podem ser feitos na próxima semana",
+    "dueDateTooSoon": "Agendamentos requerem pelo menos 1 hora de tempo de preparação",
+    "slotNotAvailable": "O horário selecionado ({{time}}) não está disponível",
+    "failedToReserveSlot": "Falha ao reservar horário. Tente um horário diferente.",
+    "capacityCheckFailed": "Não foi possível verificar a capacidade do agendamento. O pedido será criado mesmo assim.",
+    "slotReservationWarning": "O horário do agendamento não pôde ser reservado automaticamente",
+    "vinRequired": "O VIN é obrigatório para identificação do veículo",
+    "stockNumberRequired": "O número do estoque é obrigatório para rastreamento",
+    "assignedToRequired": "Por favor atribua este pedido a um membro da equipe"
   },
   "dashboard": {
     "hero": {
@@ -426,7 +436,13 @@
   },
   "due_date": {
     "title": "Data e Hora de Vencimento",
-    "date_placeholder": "Selecionar data de vencimento"
+    "date_placeholder": "Selecionar data de vencimento",
+    "time_placeholder": "Selecionar horário",
+    "validation": {
+      "no_slots_available": "Não há horários disponíveis",
+      "closed_sundays": "Fechado aos domingos",
+      "same_day_notice": "Agendamentos no mesmo dia requerem processamento imediato"
+    }
   },
   "services": {
     "categories": {
@@ -636,6 +652,14 @@
     "total": "Total",
     "servicesSelected": "serviços selecionados",
     "notes": "Notas",
-    "notesPlaceholder": "Adicione instruções especiais ou detalhes sobre este pedido..."
+    "notesPlaceholder": "Adicione instruções especiais ou detalhes sobre este pedido...",
+    "customerNamePlaceholder": "Digite o nome completo do cliente (obrigatório)",
+    "creating_order": "Criando pedido...",
+    "creation_failed": "Falha ao criar pedido",
+    "updating": "Atualizando...",
+    "creating": "Criando...",
+    "created_successfully": "Pedido criado com sucesso",
+    "updated_successfully": "Pedido atualizado com sucesso",
+    "save_failed": "Falha ao salvar pedido"
   }
 }

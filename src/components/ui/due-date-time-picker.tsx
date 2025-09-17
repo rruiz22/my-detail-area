@@ -1,6 +1,6 @@
 import React from 'react';
 import { format, addDays, setHours, setMinutes, isToday, addHours } from 'date-fns';
-import { CalendarIcon, ClockIcon } from 'lucide-react';
+import { CalendarIcon, ClockIcon, Users, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { safeParseDate } from '@/utils/dateUtils';
 import { cn } from '@/lib/utils';
@@ -8,6 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { useAppointmentCapacity } from '@/hooks/useAppointmentCapacity';
+
+interface AppointmentSlot {
+  date_slot: string;
+  hour_slot: number;
+  available_slots: number;
+  max_capacity: number;
+  is_available: boolean;
+}
 
 interface DueDateTimePickerProps {
   value?: Date;
@@ -15,6 +25,7 @@ interface DueDateTimePickerProps {
   className?: string;
   placeholder?: string;
   disabled?: boolean;
+  dealerId?: number;
 }
 
 export function DueDateTimePicker({
@@ -22,10 +33,13 @@ export function DueDateTimePicker({
   onChange,
   className,
   placeholder,
-  disabled
+  disabled,
+  dealerId
 }: DueDateTimePickerProps) {
   const { t } = useTranslation();
+  const { getAvailableSlots } = useAppointmentCapacity();
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
+  const [availableSlots, setAvailableSlots] = React.useState<AppointmentSlot[]>([]);
 
   // Generate time slots based on business hours
   const generateTimeSlots = (selectedDate?: Date) => {
@@ -48,30 +62,59 @@ export function DueDateTimePicker({
     }
     
     for (let hour = 8; hour <= endHour; hour++) {
-      // If it's today, only show times that are at least 1 hour from now
-      if (isSelectedToday && hour <= currentHour) {
-        continue;
+      // If it's today, ensure minimum 1 hour preparation time
+      if (isSelectedToday) {
+        const currentMinutes = now.getMinutes();
+        const minimumHour = Math.ceil(currentHour + currentMinutes / 60) + 1;
+
+        if (hour < minimumHour) {
+          continue;
+        }
       }
       
       const time = setMinutes(setHours(new Date(), hour), 0);
       const timeString = format(time, 'h:mm a');
-      
+
+      // Check capacity for this hour slot
+      const slotCapacity = availableSlots.find(slot => slot.hour_slot === hour);
+      const availableCount = slotCapacity?.available_slots ?? 3;
+      const isSlotFull = availableCount <= 0;
+
       slots.push({
         value: hour.toString(),
         label: timeString,
-        disabled: isSelectedToday && hour <= currentHour
+        disabled: isSlotFull,
+        availableSlots: availableCount,
+        maxCapacity: slotCapacity?.max_capacity ?? 3
       });
     }
     
     return slots;
   };
 
+  // Load available slots when date changes
+  const loadAvailableSlots = React.useCallback(async (date: Date) => {
+    if (!dealerId || !date) return;
+
+    try {
+      const slots = await getAvailableSlots(dealerId, date);
+      setAvailableSlots(slots);
+    } catch (error) {
+      console.error('Error loading available slots:', error);
+      setAvailableSlots([]);
+    }
+  }, [dealerId, getAvailableSlots]);
+
   const handleDateChange = (date: Date | undefined) => {
     if (!date) {
       onChange(undefined);
+      setAvailableSlots([]);
       setIsCalendarOpen(false);
       return;
     }
+
+    // Load capacity information for the selected date
+    loadAvailableSlots(date);
 
     if (value) {
       // Keep existing time if available
@@ -118,21 +161,27 @@ export function DueDateTimePicker({
   const timeSlots = generateTimeSlots(value);
   const selectedHour = value ? value.getHours().toString() : "";
 
-  // Disable past dates and Sundays
+  // Disable past dates, Sundays, and dates beyond 1 week
   const isDateDisabled = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Disable past dates
     if (date < today) {
       return true;
     }
-    
+
+    // Disable dates more than 1 week in the future
+    const oneWeekFromNow = addDays(today, 7);
+    if (date > oneWeekFromNow) {
+      return true;
+    }
+
     // Disable Sundays (day 0)
     if (date.getDay() === 0) {
       return true;
     }
-    
+
     return false;
   };
 
@@ -179,8 +228,8 @@ export function DueDateTimePicker({
           <SelectContent className="bg-popover border border-border z-50">
             {timeSlots.length === 0 ? (
               <SelectItem value="no-slots" disabled>
-                {value?.getDay() === 0 
-                  ? "Cerrado los domingos" 
+                {value?.getDay() === 0
+                  ? t('due_date.validation.closed_sundays')
                   : t('due_date.validation.no_slots_available')
                 }
               </SelectItem>
@@ -190,8 +239,22 @@ export function DueDateTimePicker({
                   key={slot.value}
                   value={slot.value}
                   disabled={slot.disabled}
+                  className={cn(
+                    "flex items-center justify-between",
+                    slot.disabled && "opacity-50"
+                  )}
                 >
-                  {slot.label}
+                  <div className="flex items-center justify-between w-full">
+                    <span>{slot.label}</span>
+                    {dealerId && (
+                      <Badge
+                        variant={slot.availableSlots > 0 ? "secondary" : "destructive"}
+                        className="ml-2 text-xs"
+                      >
+                        {slot.availableSlots}/{slot.maxCapacity}
+                      </Badge>
+                    )}
+                  </div>
                 </SelectItem>
               ))
             )}
