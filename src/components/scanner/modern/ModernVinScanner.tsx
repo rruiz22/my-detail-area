@@ -7,7 +7,7 @@ import { ScannerOverlay } from './ScannerOverlay';
 import { VinTargetingGuides } from './VinTargetingGuides';
 import { VinConfidenceIndicator } from './VinConfidenceIndicator';
 import { VinStickerDetector } from './VinStickerDetector';
-import { useAdvancedVinScanner } from '@/hooks/useAdvancedVinScanner';
+import { useVinScanner } from '@/hooks/useVinScanner';
 import { cn } from '@/lib/utils';
 
 interface ModernVinScannerProps {
@@ -30,7 +30,7 @@ export function ModernVinScanner({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const { scanVin, loading, error } = useAdvancedVinScanner();
+  const { scanVin, loading, error } = useVinScanner();
 
   // Camera controls
   const startCamera = useCallback(async () => {
@@ -78,18 +78,16 @@ export function ModernVinScanner({
 
     canvas.toBlob(async (blob) => {
       if (blob) {
-        const results = await scanVin(blob, (conf) => setConfidence(conf));
-        
-        if (results.length > 0) {
-          // Use the highest confidence result
-          const bestResult = results.reduce((prev, current) => 
-            prev.confidence > current.confidence ? prev : current
-          );
-          
-          if (bestResult.confidence > 0.8) {
-            onVinDetected(bestResult.vin);
+        try {
+          const vins = await scanVin(blob, { enableLogging: true });
+
+          if (vins.length > 0) {
+            const detectedVin = vins[0]; // Take first valid VIN
+            onVinDetected(detectedVin);
             onClose();
           }
+        } catch (error) {
+          console.error('Camera scan error:', error);
         }
       }
       setIsCapturing(false);
@@ -101,17 +99,16 @@ export function ModernVinScanner({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const results = await scanVin(file, (conf) => setConfidence(conf));
-    
-    if (results.length > 0) {
-      const bestResult = results.reduce((prev, current) => 
-        prev.confidence > current.confidence ? prev : current
-      );
-      
-      if (bestResult.confidence > 0.7) {
-        onVinDetected(bestResult.vin);
+    try {
+      const vins = await scanVin(file, { enableLogging: true });
+
+      if (vins.length > 0) {
+        const detectedVin = vins[0]; // Take first valid VIN
+        onVinDetected(detectedVin);
         onClose();
       }
+    } catch (error) {
+      console.error('VIN scan error:', error);
     }
   }, [scanVin, onVinDetected, onClose]);
 

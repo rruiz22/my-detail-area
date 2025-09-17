@@ -29,6 +29,9 @@ export default defineConfig(({ mode }) => ({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     'process.env': '{}'
   },
+  worker: {
+    format: 'es'
+  },
   build: {
     rollupOptions: {
       output: {
@@ -113,7 +116,6 @@ export default defineConfig(({ mode }) => ({
       'recharts'
     ],
     exclude: [
-      'tesseract.js',
       'fabric',
       'opencv.js',
       '@huggingface/transformers'

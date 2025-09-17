@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 429,
-  "totalStrings": 4372,
-  "hardcodedStrings": 991,
-  "translatedStrings": 3381,
+  "scannedFiles": 432,
+  "totalStrings": 4410,
+  "hardcodedStrings": 996,
+  "translatedStrings": 3414,
   "issues": {
     "critical": [
       {
@@ -17873,6 +17873,187 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\scanner\\specialized\\DealershipStickerScanner.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      toast.error(t(",
+            "line": 106,
+            "context": "105: } catch (error) {\n106: console.error('Camera error:', error);\n107: toast.error(t('sticker_scanner.camera_error'));"
+          },
+          {
+            "text": ", error);\r\n      }\r\n    }, 2000); // Check every 2 seconds\r\n  }, [cameraActive, processing]);\r\n\r\n  const stopAutoDetection = useCallback(() => {\r\n    if (autoScanRef.current) {\r\n      clearInterval(autoScanRef.current);\r\n      autoScanRef.current = null;\r\n    }\r\n  }, []);\r\n\r\n  // Detect sticker in current video frame\r\n  const detectStickerInFrame = useCallback(async () => {\r\n    if (!videoRef.current || !canvasRef.current || !processorRef.current) return;\r\n\r\n    const video = videoRef.current;\r\n    const canvas = canvasRef.current;\r\n    const ctx = canvas.getContext(",
+            "line": 132,
+            "context": "131: } catch (error) {\n132: console.error('Auto-detection error:', error);\n133: }"
+          },
+          {
+            "text": ", error);\r\n      toast.error(t(",
+            "line": 249,
+            "context": "248: } catch (error) {\n249: console.error('Sticker scan error:', error);\n250: toast.error(t('sticker_scanner.scan_failed'));"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "sticker_scanner.camera_error",
+            "line": 107,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.vin_detected",
+            "line": 233,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.confidence",
+            "line": 234,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.scan_failed",
+            "line": 250,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.title",
+            "line": 297,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.subtitle",
+            "line": 299,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.sticker_mode",
+            "line": 307,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.processing_sticker",
+            "line": 320,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.auto_detect",
+            "line": 336,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.detect_sticker",
+            "line": 346,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.attempts",
+            "line": 351,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.templates",
+            "line": 354,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.barcode_area",
+            "line": 385,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.vin_area",
+            "line": 391,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.info_area",
+            "line": 397,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.sticker_detected",
+            "line": 419,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.camera_starting",
+            "line": 449,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.position_sticker",
+            "line": 451,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.start_camera",
+            "line": 456,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.template",
+            "line": 475,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.processing_time",
+            "line": 476,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.sticker_detected",
+            "line": 494,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.looking_for_sticker",
+            "line": 501,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.optimized_for_dealership",
+            "line": 508,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.processing",
+            "line": 523,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.scan_sticker",
+            "line": 528,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.ready_to_scan",
+            "line": 536,
+            "exists": true
+          },
+          {
+            "key": "common.close",
+            "line": 543,
+            "exists": false
+          },
+          {
+            "key": "sticker_scanner.supported_formats",
+            "line": 550,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.generic",
+            "line": 550,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.close",
+            "line": 543,
+            "context": "542: <Button variant=\"outline\" onClick={onClose}>\n543: {t('common.close')}\n544: </Button>"
+          }
+        ],
+        "coverage": 91,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\scanner\\modern\\VinTargetingGuides.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -18152,140 +18333,155 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n      setError(t(",
-            "line": 91,
-            "context": "90: } catch (error) {\n91: console.error('Camera access error:', error);\n92: setError(t('vin_scanner.camera_access_denied'));"
+            "line": 93,
+            "context": "92: } catch (error) {\n93: console.error('Camera access error:', error);\n94: setError(t('vin_scanner.camera_access_denied'));"
           },
           {
             "text": ", error);\r\n      }\r\n    }, 1000); // Check every second\r\n  }, [cameraActive, loading, autoZoomEnabled, detectVinRegions]);\r\n\r\n  // Capture and scan current frame\r\n  const captureAndScan = useCallback(async () => {\r\n    if (!videoRef.current || !canvasRef.current) return;\r\n\r\n    setScanAttempts(prev => prev + 1);\r\n\r\n    try {\r\n      const video = videoRef.current;\r\n      const canvas = canvasRef.current;\r\n      const ctx = canvas.getContext(",
-            "line": 278,
-            "context": "277: } catch (error) {\n278: console.error('Auto-detection error:', error);\n279: }"
+            "line": 280,
+            "context": "279: } catch (error) {\n280: console.error('Auto-detection error:', error);\n281: }"
           },
           {
             "text": ", error);\r\n          setError(error instanceof Error ? error.message : ",
-            "line": 323,
-            "context": "322: } catch (error) {\n323: console.error('Scan error:', error);\n324: setError(error instanceof Error ? error.message : 'Scan failed');"
+            "line": 325,
+            "context": "324: } catch (error) {\n325: console.error('Scan error:', error);\n326: setError(error instanceof Error ? error.message : 'Scan failed');"
           },
           {
             "text": ", error);\r\n      setError(t(",
-            "line": 329,
-            "context": "328: } catch (error) {\n329: console.error('Capture error:', error);\n330: setError(t('vin_scanner.capture_failed'));"
+            "line": 331,
+            "context": "330: } catch (error) {\n331: console.error('Capture error:', error);\n332: setError(t('vin_scanner.capture_failed'));"
           }
         ],
         "translationCalls": [
           {
             "key": "vin_scanner.camera_access_denied",
-            "line": 92,
+            "line": 94,
             "exists": false
           },
           {
             "key": "vin_scanner.capture_failed",
-            "line": 330,
+            "line": 332,
             "exists": true
           },
           {
             "key": "vin_scanner.smart_focus_title",
-            "line": 392,
-            "exists": true
-          },
-          {
-            "key": "vin_scanner.smart_focus_description",
             "line": 394,
             "exists": true
           },
           {
+            "key": "vin_scanner.smart_focus_description",
+            "line": 396,
+            "exists": true
+          },
+          {
             "key": "vin_scanner.auto_focus_on",
-            "line": 402,
+            "line": 404,
             "exists": true
           },
           {
             "key": "vin_scanner.auto_focus_off",
-            "line": 402,
+            "line": 404,
             "exists": true
           },
           {
             "key": "vin_scanner.processing",
-            "line": 415,
+            "line": 417,
             "exists": true
           },
           {
             "key": "vin_scanner.auto_focus",
-            "line": 431,
+            "line": 433,
             "exists": true
           },
           {
             "key": "vin_scanner.reset_zoom",
-            "line": 441,
+            "line": 443,
             "exists": true
           },
           {
             "key": "vin_scanner.attempts",
-            "line": 467,
+            "line": 469,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.barcode_area",
+            "line": 509,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.vin_area",
+            "line": 515,
+            "exists": true
+          },
+          {
+            "key": "sticker_scanner.info_area",
+            "line": 521,
             "exists": true
           },
           {
             "key": "vin_scanner.align_vin_here",
-            "line": 505,
+            "line": 531,
             "exists": true
           },
           {
             "key": "vin_scanner.detected_region",
-            "line": 527,
+            "line": 554,
             "exists": true
           },
           {
             "key": "vin_scanner.camera_starting",
-            "line": 541,
+            "line": 568,
             "exists": true
           },
           {
             "key": "vin_scanner.allow_camera_access",
-            "line": 543,
+            "line": 570,
             "exists": true
           },
           {
             "key": "vin_scanner.start_camera",
-            "line": 548,
+            "line": 575,
             "exists": true
           },
           {
             "key": "vin_scanner.last_scan",
-            "line": 563,
+            "line": 590,
             "exists": true
           },
           {
             "key": "vin_scanner.ready_to_scan",
-            "line": 571,
+            "line": 598,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 588,
+            "line": 615,
             "exists": false
           },
           {
             "key": "vin_scanner.scanning",
-            "line": 596,
+            "line": 623,
             "exists": true
           },
           {
             "key": "vin_scanner.scan_now",
-            "line": 596,
+            "line": 623,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "vin_scanner.camera_access_denied",
-            "line": 92,
-            "context": "91: console.error('Camera access error:', error);\n92: setError(t('vin_scanner.camera_access_denied'));\n93: }"
+            "line": 94,
+            "context": "93: console.error('Camera access error:', error);\n94: setError(t('vin_scanner.camera_access_denied'));\n95: }"
           },
           {
             "key": "common.cancel",
-            "line": 588,
-            "context": "587: >\n588: {t('common.cancel')}\n589: </Button>"
+            "line": 615,
+            "context": "614: >\n615: {t('common.cancel')}\n616: </Button>"
           }
         ],
-        "coverage": 83,
+        "coverage": 85,
         "severity": "low"
       },
       {
@@ -18562,6 +18758,34 @@
           }
         ],
         "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\scanner\\engines\\StickerTemplateEngine.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      throw error;\r\n    }\r\n  }, [detectStickerTemplate, processWithTemplate]);\r\n\r\n  // Get available templates\r\n  const getAvailableTemplates = useCallback((): StickerTemplate[] => {\r\n    return templates;\r\n  }, []);\r\n\r\n  // Add custom template (for learning new sticker types)\r\n  const addCustomTemplate = useCallback((template: StickerTemplate): void => {\r\n    templates.push(template);\r\n    // Save to localStorage for persistence\r\n    try {\r\n      localStorage.setItem(",
+            "line": 306,
+            "context": "305: } catch (error) {\n306: console.error('Sticker template processing error:', error);\n307: throw error;"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\scanner\\engines\\StickerImageProcessor.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      throw new Error(`Failed to process sticker: ${error instanceof Error ? error.message : ",
+            "line": 66,
+            "context": "65: } catch (error) {\n66: console.error('Sticker processing error:', error);\n67: throw new Error(`Failed to process sticker: ${error instanceof Error ? error.message : 'Unknown error'}`);"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -28660,97 +28884,97 @@
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 666,
+            "line": 667,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 676,
+            "line": 677,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 685,
+            "line": 686,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 690,
+            "line": 691,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 699,
+            "line": 700,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 703,
+            "line": 704,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 706,
+            "line": 707,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 713,
+            "line": 714,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 718,
+            "line": 719,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 725,
+            "line": 726,
             "exists": true
           },
           {
             "key": "services.categories.${service.category}",
-            "line": 746,
+            "line": 747,
             "exists": false
           },
           {
             "key": "services.minutes",
-            "line": 749,
+            "line": 750,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 777,
+            "line": 778,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 783,
+            "line": 784,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 791,
+            "line": 792,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 798,
+            "line": 799,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 850,
+            "line": 851,
             "exists": false
           },
           {
             "key": "common.update",
-            "line": 857,
+            "line": 858,
             "exists": false
           },
           {
             "key": "common.create",
-            "line": 857,
+            "line": 858,
             "exists": false
           }
         ],
@@ -28762,23 +28986,23 @@
           },
           {
             "key": "services.categories.${service.category}",
-            "line": 746,
-            "context": "745: <Badge variant=\"outline\" className=\"text-xs px-2 py-0\">\n746: {t(`services.categories.${service.category}`)}\n747: </Badge>"
+            "line": 747,
+            "context": "746: <Badge variant=\"outline\" className=\"text-xs px-2 py-0\">\n747: {t(`services.categories.${service.category}`)}\n748: </Badge>"
           },
           {
             "key": "common.cancel",
-            "line": 850,
-            "context": "849: >\n850: {t('common.cancel')}\n851: </Button>"
+            "line": 851,
+            "context": "850: >\n851: {t('common.cancel')}\n852: </Button>"
           },
           {
             "key": "common.update",
-            "line": 857,
-            "context": "856: >\n857: {order ? t('common.update') : t('common.create')}\n858: </Button>"
+            "line": 858,
+            "context": "857: >\n858: {order ? t('common.update') : t('common.create')}\n859: </Button>"
           },
           {
             "key": "common.create",
-            "line": 857,
-            "context": "856: >\n857: {order ? t('common.update') : t('common.create')}\n858: </Button>"
+            "line": 858,
+            "context": "857: >\n858: {order ? t('common.update') : t('common.create')}\n859: </Button>"
           }
         ],
         "coverage": 98,
@@ -40041,7 +40265,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "246 Component components need translation",
+      "description": "249 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -40114,6 +40338,7 @@
         "src\\contexts\\PermissionContext.tsx",
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\sidebar.tsx",
+        "src\\components\\scanner\\specialized\\DealershipStickerScanner.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\productivity\\ProductivityTodos.tsx",
         "src\\components\\orders\\FollowersBlock.tsx",
@@ -40159,6 +40384,8 @@
         "src\\components\\scanner\\VinOrderIntegration.tsx",
         "src\\components\\scanner\\modern\\ModernVinScanner.tsx",
         "src\\components\\scanner\\enhanced\\BatchVinProcessor.tsx",
+        "src\\components\\scanner\\engines\\StickerTemplateEngine.tsx",
+        "src\\components\\scanner\\engines\\StickerImageProcessor.tsx",
         "src\\components\\reports\\sections\\ExportCenter.tsx",
         "src\\components\\recon-hub\\analytics\\BottleneckAnalysis.tsx",
         "src\\components\\qr\\QRCodeCard.tsx",
@@ -40290,12 +40517,12 @@
         "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx"
       ],
-      "estimatedEffort": "123 hours"
+      "estimatedEffort": "125 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3078 translation keys are referenced but missing",
+      "description": "3079 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "154 hours"
     }
