@@ -647,6 +647,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       onChange={(e) => handleVinChange(e.target.value)}
                       onVinScanned={handleVinChange}
                       className="border-input bg-background font-mono"
+                      stickerMode={true}
                     />
                     {vinError && (
                       <div className="flex items-center gap-1 text-sm text-destructive mt-1">

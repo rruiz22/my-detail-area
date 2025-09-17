@@ -25,6 +25,7 @@ interface SmartFocusVinScannerProps {
   onVinDetected: (vin: string, confidence: number) => void;
   autoFocus?: boolean;
   showTargetingGuides?: boolean;
+  stickerMode?: boolean;
 }
 
 interface DetectedRegion {
@@ -40,7 +41,8 @@ export function SmartFocusVinScanner({
   onClose,
   onVinDetected,
   autoFocus = true,
-  showTargetingGuides = true
+  showTargetingGuides = true,
+  stickerMode = false
 }: SmartFocusVinScannerProps) {
   const { t } = useTranslation();
   const { scanVin, loading, progress, error, cancelScan } = useOptimizedVinScanner();
@@ -496,17 +498,42 @@ export function SmartFocusVinScanner({
                   {/* Targeting Guides */}
                   {showTargetingGuides && cameraActive && (
                     <div className="absolute inset-0 pointer-events-none">
-                      {/* Center crosshair */}
+                      {/* Targeting guides - different for sticker mode */}
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-64 h-32 border-2 border-primary/50 rounded-lg">
-                          <div className="w-full h-full border border-primary/30 rounded-lg m-1">
-                            <div className="w-full h-full flex items-center justify-center">
-                              <span className="text-primary/70 text-xs font-medium bg-background/80 px-2 py-1 rounded">
-                                {t('vin_scanner.align_vin_here')}
-                              </span>
+                        {stickerMode ? (
+                          <div className="w-80 h-32 border-2 border-primary/60 rounded-lg bg-primary/5">
+                            <div className="w-full h-full border border-primary/40 rounded-lg m-1 flex flex-col">
+                              {/* Barcode area */}
+                              <div className="flex-1 border-b border-primary/30 flex items-center justify-center">
+                                <span className="text-primary/70 text-xs font-medium bg-background/80 px-2 py-1 rounded">
+                                  {t('sticker_scanner.barcode_area')}
+                                </span>
+                              </div>
+                              {/* VIN area */}
+                              <div className="flex-2 border-b border-primary/30 flex items-center justify-center">
+                                <span className="text-primary/70 text-sm font-bold bg-background/80 px-2 py-1 rounded">
+                                  {t('sticker_scanner.vin_area')}
+                                </span>
+                              </div>
+                              {/* Info area */}
+                              <div className="flex-1 flex items-center justify-center">
+                                <span className="text-primary/70 text-xs font-medium bg-background/80 px-2 py-1 rounded">
+                                  {t('sticker_scanner.info_area')}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div className="w-64 h-32 border-2 border-primary/50 rounded-lg">
+                            <div className="w-full h-full border border-primary/30 rounded-lg m-1">
+                              <div className="w-full h-full flex items-center justify-center">
+                                <span className="text-primary/70 text-xs font-medium bg-background/80 px-2 py-1 rounded">
+                                  {t('vin_scanner.align_vin_here')}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* Detected regions highlight */}

@@ -8,12 +8,14 @@ import { cn } from '@/lib/utils';
 
 interface VinInputWithScannerProps extends React.ComponentProps<typeof Input> {
   onVinScanned?: (vin: string) => void;
+  stickerMode?: boolean;
 }
 
-export function VinInputWithScanner({ 
-  onVinScanned, 
-  className, 
-  ...props 
+export function VinInputWithScanner({
+  onVinScanned,
+  className,
+  stickerMode = false,
+  ...props
 }: VinInputWithScannerProps) {
   const { t } = useTranslation();
   const [scannerOpen, setScannerOpen] = useState(false);
@@ -57,6 +59,7 @@ export function VinInputWithScanner({
         onVinDetected={(vin, confidence) => handleVinDetected(vin)}
         autoFocus={true}
         showTargetingGuides={true}
+        stickerMode={stickerMode}
       />
     </>
   );
