@@ -315,4 +315,102 @@ All colors MUST be HSL.
   [data-radix-dialog-content] {
     z-index: 1051;
   }
+
+  /* Kanban Board Enhanced Animations */
+  .kanban-card {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .kanban-card:hover {
+    transform: scale(1.02);
+  }
+
+  .kanban-card.dragging {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 1000;
+  }
+
+  /* Shake animation for validation errors */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* Success pulse animation */
+  @keyframes success-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-success-pulse {
+    animation: success-pulse 0.3s ease-in-out;
+  }
+
+  /* Column highlight animations */
+  .kanban-column-valid {
+    animation: valid-glow 0.3s ease-in-out;
+    border: 2px solid hsl(142 76% 36%);
+    background: hsl(142 76% 36% / 0.05);
+  }
+
+  .kanban-column-invalid {
+    animation: invalid-glow 0.3s ease-in-out;
+    border: 2px solid hsl(0 84% 60%);
+    background: hsl(0 84% 60% / 0.05);
+  }
+
+  @keyframes valid-glow {
+    0% { box-shadow: 0 0 0 0 hsl(142 76% 36% / 0.4); }
+    70% { box-shadow: 0 0 0 10px hsl(142 76% 36% / 0); }
+    100% { box-shadow: 0 0 0 0 hsl(142 76% 36% / 0); }
+  }
+
+  @keyframes invalid-glow {
+    0% { box-shadow: 0 0 0 0 hsl(0 84% 60% / 0.4); }
+    70% { box-shadow: 0 0 0 10px hsl(0 84% 60% / 0); }
+    100% { box-shadow: 0 0 0 0 hsl(0 84% 60% / 0); }
+  }
+
+  /* Smooth scrolling for kanban columns */
+  .kanban-scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+  }
+
+  .kanban-scroll-area::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .kanban-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .kanban-scroll-area::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground));
+    border-radius: 3px;
+  }
+
+  .kanban-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground));
+  }
+
+  /* Drop zone feedback */
+  .drop-zone-active {
+    background: linear-gradient(135deg, hsl(142 76% 36% / 0.1) 0%, hsl(142 76% 36% / 0.05) 100%);
+    border: 2px dashed hsl(142 76% 36%);
+    border-radius: 8px;
+  }
+
+  .drop-zone-invalid {
+    background: linear-gradient(135deg, hsl(0 84% 60% / 0.1) 0%, hsl(0 84% 60% / 0.05) 100%);
+    border: 2px dashed hsl(0 84% 60%);
+    border-radius: 8px;
+  }
 }

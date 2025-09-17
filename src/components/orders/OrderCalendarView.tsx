@@ -49,27 +49,67 @@ export const OrderCalendarView = ({
 
   // Transform orders for react-big-calendar
   const calendarEvents = useMemo(() => {
+    console.log('📅 OrderCalendarView received orders:', orders.length);
+    console.log('📅 Sample order fields:', orders[0] ? Object.keys(orders[0]) : 'No orders');
+
     return orders
-      .filter(order => order.due_date || order.scheduled_date || order.created_at) // Show orders with any available date
+      .filter(order => {
+        // Support both camelCase and snake_case
+        const dueDate = order.dueDate || order.due_date;
+        const scheduledDate = order.scheduledDate || order.scheduled_date;
+        const createdAt = order.createdAt || order.created_at;
+
+        console.log('📅 Order date check:', {
+          id: order.id,
+          dueDate,
+          scheduledDate,
+          createdAt,
+          hasValidDate: !!(dueDate || scheduledDate || createdAt)
+        });
+
+        return dueDate || scheduledDate || createdAt;
+      })
       .map(order => {
-        // Use fallback logic: due_date → scheduled_date → created_at
-        const displayDate = order.due_date || order.scheduled_date || order.created_at;
-        const eventDate = parseISO(displayDate);
+        // Use fallback logic with both naming conventions
+        const dueDate = order.dueDate || order.due_date;
+        const scheduledDate = order.scheduledDate || order.scheduled_date;
+        const createdAt = order.createdAt || order.created_at;
+
+        const displayDate = dueDate || scheduledDate || createdAt;
+
+        let eventDate;
+        try {
+          eventDate = new Date(displayDate);
+          if (isNaN(eventDate.getTime())) {
+            eventDate = parseISO(displayDate);
+          }
+        } catch (error) {
+          console.warn('Failed to parse date:', displayDate, error);
+          eventDate = new Date(); // Fallback to today
+        }
+
         const endDate = new Date(eventDate.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
 
         // Determine the date source for title indication
         let dateSource = '';
-        if (order.due_date) {
+        if (dueDate) {
           dateSource = 'DUE';
-        } else if (order.scheduled_date) {
+        } else if (scheduledDate) {
           dateSource = 'SCH';
         } else {
           dateSource = 'CRE';
         }
 
+        // Better title with customer name and vehicle info
+        const customerName = order.customerName || order.customer_name || 'Unknown';
+        const vehicleInfo = order.vehicleInfo || order.vehicle_info ||
+          `${order.vehicleYear || order.vehicle_year || ''} ${order.vehicleMake || order.vehicle_make || ''} ${order.vehicleModel || order.vehicle_model || ''}`.trim();
+
+        const title = `${customerName} - ${vehicleInfo || 'Vehicle'}`.substring(0, 40);
+
         return {
           id: order.id,
-          title: `[${dateSource}] ${order.id} - ${order.year} ${order.make} ${order.model}`.substring(0, 45),
+          title: `[${dateSource}] ${title}`,
           start: eventDate,
           end: endDate,
           allDay: false,
@@ -349,14 +389,24 @@ export const OrderCalendarView = ({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {getStatusIcon(selectedOrder?.status)}
-              {selectedOrder?.id}
+              {t('orders.order_details', 'Order Details')}
             </DialogTitle>
             <DialogDescription>
               {selectedOrder && (
-                <span className="flex items-center gap-2">
-                  <Car className="h-4 w-4" />
-                  {selectedOrder.year} {selectedOrder.make} {selectedOrder.model}
-                </span>
+                <div className="space-y-1">
+                  <div className="font-medium">
+                    #{selectedOrder.orderNumber || selectedOrder.order_number || selectedOrder.id?.slice(0, 8)}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Car className="h-4 w-4" />
+                    {selectedOrder.vehicleInfo || selectedOrder.vehicle_info ||
+                      `${selectedOrder.vehicleYear || selectedOrder.vehicle_year || ''} ${selectedOrder.vehicleMake || selectedOrder.vehicle_make || ''} ${selectedOrder.vehicleModel || selectedOrder.vehicle_model || ''}`.trim() ||
+                      'Vehicle Information'}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Customer: {selectedOrder.customerName || selectedOrder.customer_name || 'Unknown'}
+                  </div>
+                </div>
               )}
             </DialogDescription>
           </DialogHeader>
@@ -366,11 +416,18 @@ export const OrderCalendarView = ({
               {/* Status and Priority */}
               <div className="flex flex-wrap gap-2">
                 <Badge variant={getStatusBadgeVariant(selectedOrder.status)}>
-                  {t(`common.status.${selectedOrder.status?.toLowerCase()}`)}
+                  {selectedOrder.status === 'pending' ? t('common.status.pending', 'Pending') :
+                   selectedOrder.status === 'in_progress' ? t('common.status.in_progress', 'In Progress') :
+                   selectedOrder.status === 'completed' ? t('common.status.completed', 'Completed') :
+                   selectedOrder.status === 'cancelled' ? t('common.status.cancelled', 'Cancelled') :
+                   selectedOrder.status}
                 </Badge>
                 {selectedOrder.priority && (
-                  <Badge variant={selectedOrder.priority === 'high' ? 'destructive' : 'outline'}>
-                    {t(`common.priority.${selectedOrder.priority}`)}
+                  <Badge variant={selectedOrder.priority === 'urgent' ? 'destructive' : 'outline'}>
+                    {selectedOrder.priority === 'normal' ? t('common.priority.normal', 'Normal') :
+                     selectedOrder.priority === 'high' ? t('common.priority.high', 'High') :
+                     selectedOrder.priority === 'urgent' ? t('common.priority.urgent', 'Urgent') :
+                     selectedOrder.priority}
                   </Badge>
                 )}
               </div>
@@ -378,14 +435,14 @@ export const OrderCalendarView = ({
               {/* Key Information */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Display all available dates with indicators */}
-                {selectedOrder.due_date && (
+                {(selectedOrder.dueDate || selectedOrder.due_date) && (
                   <div>
                     <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      {t('common.due_date')} <Badge variant="default" className="text-xs">DUE</Badge>
+                      {t('common.due_date', 'Due Date')} <Badge variant="default" className="text-xs">DUE</Badge>
                     </div>
                     <p className="text-sm mt-1">
-                      {format(parseISO(selectedOrder.due_date), 'PPp')}
+                      {format(parseISO(selectedOrder.dueDate || selectedOrder.due_date), 'PPp')}
                     </p>
                   </div>
                 )}
@@ -458,18 +515,18 @@ export const OrderCalendarView = ({
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
-                <Button 
+                <Button
                   onClick={() => onView(selectedOrder)}
                   className="flex-1"
                 >
-                  {t('common.view_details')}
+                  {t('common.view_details', 'View Details')}
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={() => onEdit(selectedOrder)}
                   className="flex-1"
                 >
-                  {t('common.edit')}
+                  {t('common.edit', 'Edit')}
                 </Button>
               </div>
             </div>

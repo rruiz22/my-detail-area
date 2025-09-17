@@ -75,9 +75,17 @@ export class ShortLinkService {
   }
 
   /**
-   * Get analytics for existing short link
+   * Get analytics for existing short link (temporarily disabled)
    */
   async getAnalytics(slug: string): Promise<ShortLinkData['analytics']> {
+    // Temporarily disabled - track-qr-click function not deployed
+    console.log('📊 Analytics disabled for slug:', slug);
+    return {
+      totalClicks: 0,
+      uniqueVisitors: 0
+    };
+
+    /* TODO: Re-enable when track-qr-click function is deployed
     try {
       const { data, error } = await supabase.functions.invoke('track-qr-click', {
         body: {
@@ -93,7 +101,7 @@ export class ShortLinkService {
         uniqueVisitors: data?.uniqueVisitors || 0,
         lastClicked: data?.lastClicked
       };
-      
+
     } catch (error) {
       console.error('❌ Failed to get analytics for slug:', slug, error);
       return {
@@ -101,6 +109,7 @@ export class ShortLinkService {
         uniqueVisitors: 0
       };
     }
+    */
   }
 
   /**

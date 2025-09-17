@@ -130,9 +130,10 @@ interface OrderModalProps {
   open: boolean;
   onClose: () => void;
   onSave: (orderData: OrderData) => void;
+  preSelectedDate?: Date | null;
 }
 
-export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, onSave }) => {
+export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, onSave, preSelectedDate }) => {
   const { t } = useTranslation();
   const { roles } = usePermissionContext();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
@@ -176,20 +177,23 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [submitting, setSubmitting] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [currentLocation, setCurrentLocation] = useState<{
+    lat?: number;
+    lng?: number;
+    address?: string;
+  }>({});
 
   const canViewPrices = canViewPricing(roles);
 
   // Custom setters with logging
   const setSelectedDealershipWithLog = (value: string) => {
     console.log('🔧 setSelectedDealership called with:', value);
-    console.trace('🔍 Stack trace for setSelectedDealership:');
-    setSelectedDealershipWithLog(value);
+    setSelectedDealership(value);
   };
 
   const setSelectedAssignedToWithLog = (value: string) => {
     console.log('🔧 setSelectedAssignedTo called with:', value);
-    console.trace('🔍 Stack trace for setSelectedAssignedTo:');
-    setSelectedAssignedToWithLog(value);
+    setSelectedAssignedTo(value);
   };
 
   // Debug effect to monitor state changes
@@ -339,7 +343,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           notes: '',
           internalNotes: '',
           priority: 'normal',
-          dueDate: undefined,
+          dueDate: preSelectedDate || undefined,
           slaDeadline: undefined,
           scheduledDate: undefined,
           scheduledTime: ''
@@ -364,16 +368,35 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       const dealerships = data || [];
       setDealerships(dealerships);
 
-      // If in edit mode, find dealership by name and set it
-      if (order && order.dealershipName) {
-        const matchingDealer = dealerships.find(d => d.name === order.dealershipName);
-        if (matchingDealer) {
-          console.log('🔧 Found matching dealership:', matchingDealer);
-          setSelectedDealershipWithLog(matchingDealer.id.toString());
+      // If in edit mode, find dealership by ID or name
+      if (order) {
+        let dealershipId = null;
+
+        // Try to find by dealer_id first (most reliable)
+        if (order.dealer_id || order.dealerId) {
+          dealershipId = (order.dealer_id || order.dealerId).toString();
+          console.log('🔧 Found dealership by ID:', dealershipId);
+        }
+        // Fallback to finding by name
+        else if (order.dealershipName) {
+          const matchingDealer = dealerships.find(d => d.name === order.dealershipName);
+          if (matchingDealer) {
+            dealershipId = matchingDealer.id.toString();
+            console.log('🔧 Found dealership by name:', order.dealershipName, '→', dealershipId);
+          }
+        }
+
+        if (dealershipId) {
+          setSelectedDealershipWithLog(dealershipId);
           // Auto-fetch dealer data to get users for assigned selection
-          await fetchDealerData(matchingDealer.id.toString());
+          await fetchDealerData(dealershipId);
         } else {
-          console.warn('⚠️ Could not find dealership:', order.dealershipName, 'in', dealerships.map(d => d.name));
+          console.warn('⚠️ Could not find dealership for order:', {
+            dealer_id: order.dealer_id,
+            dealerId: order.dealerId,
+            dealershipName: order.dealershipName,
+            availableDealerships: dealerships.map(d => ({ id: d.id, name: d.name }))
+          });
         }
       }
     } catch (error) {
@@ -573,7 +596,20 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       
       // Related data
       dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
-      services: selectedServices || []
+      services: selectedServices || [],
+
+      // Financial data - CRITICAL for reports
+      total_amount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
+        const service = services.find((s: any) => s.id === serviceId);
+        return total + (service?.price || 0);
+      }, 0) : 0,
+
+      // Location data - for new orders only
+      ...(currentLocation.lat && currentLocation.lng ? {
+        created_location_lat: currentLocation.lat,
+        created_location_lng: currentLocation.lng,
+        created_location_address: currentLocation.address
+      } : {})
     };
   };
 

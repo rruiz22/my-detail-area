@@ -1,6 +1,21 @@
 /**
  * Safe date parsing utility to prevent "Invalid time value" errors
+ * All date operations should use consistent timezone
  */
+
+// System-wide timezone configuration
+export const SYSTEM_TIMEZONE = 'America/New_York';
+
+/**
+ * Get system timezone (user's local timezone or fallback to Eastern)
+ */
+export const getSystemTimezone = (): string => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || SYSTEM_TIMEZONE;
+  } catch (error) {
+    return SYSTEM_TIMEZONE;
+  }
+};
 
 /**
  * Safely parses a date string and returns a Date object or null
@@ -26,17 +41,21 @@ export const safeParseDate = (dateString?: string | null): Date | null => {
 };
 
 /**
- * Safely formats a date string to a localized string
+ * Safely formats a date string to a localized string with consistent timezone
  */
 export const safeFormatDate = (dateString?: string | null, options?: Intl.DateTimeFormatOptions): string => {
   const date = safeParseDate(dateString);
-  
+
   if (!date) {
     return 'N/A';
   }
-  
+
   try {
-    return date.toLocaleString(undefined, options);
+    const formatOptions: Intl.DateTimeFormatOptions = {
+      timeZone: getSystemTimezone(),
+      ...options
+    };
+    return date.toLocaleString('en-US', formatOptions);
   } catch (error) {
     console.warn('Error formatting date:', error);
     return 'N/A';
@@ -44,17 +63,22 @@ export const safeFormatDate = (dateString?: string | null, options?: Intl.DateTi
 };
 
 /**
- * Safely formats a date string to a localized date string
+ * Safely formats a date string to a localized date string with consistent timezone
  */
 export const safeFormatDateOnly = (dateString?: string | null): string => {
   const date = safeParseDate(dateString);
-  
+
   if (!date) {
     return 'N/A';
   }
-  
+
   try {
-    return date.toLocaleDateString();
+    return date.toLocaleDateString('en-US', {
+      timeZone: getSystemTimezone(),
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   } catch (error) {
     console.warn('Error formatting date:', error);
     return 'N/A';
@@ -62,17 +86,24 @@ export const safeFormatDateOnly = (dateString?: string | null): string => {
 };
 
 /**
- * Calculates days between a date string and today
+ * Calculates days between a date string and today using consistent timezone
  */
 export const calculateDaysFromNow = (dateString?: string | null): number | null => {
   const date = safeParseDate(dateString);
-  
+
   if (!date) {
     return null;
   }
-  
+
+  // Get current date in the same timezone as the target date
   const today = new Date();
-  const diffTime = date.getTime() - today.getTime();
+  const timezone = getSystemTimezone();
+
+  // Format both dates to same timezone for accurate comparison
+  const todayInTimezone = new Date(today.toLocaleString('en-US', { timeZone: timezone }));
+  const dateInTimezone = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+
+  const diffTime = dateInTimezone.getTime() - todayInTimezone.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 

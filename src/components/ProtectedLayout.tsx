@@ -12,6 +12,7 @@ import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NotificationBell } from "./notifications/NotificationBell";
 import { ThemeToggle } from "./ThemeToggle";
+import { UserDropdown } from "./ui/user-dropdown";
 
 interface ProtectedLayoutProps {
   children?: ReactNode;
@@ -67,10 +68,11 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <LanguageSwitcher />
               <ThemeToggle />
               {currentDealership?.id && <NotificationBell dealerId={currentDealership.id} />}
+              <UserDropdown />
             </div>
           </header>
 

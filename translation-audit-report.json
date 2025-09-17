@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 432,
-  "totalStrings": 4411,
-  "hardcodedStrings": 998,
-  "translatedStrings": 3413,
+  "scannedFiles": 433,
+  "totalStrings": 4426,
+  "hardcodedStrings": 1004,
+  "translatedStrings": 3422,
   "issues": {
     "critical": [
       {
@@ -5907,6 +5907,45 @@
         "severity": "medium"
       },
       {
+        "file": "src\\components\\sales\\OrderKanbanBoard.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "View",
+            "line": 223,
+            "context": "222: <DropdownMenuItem onClick={() => onView(order)}>\n223: <Eye className=\"w-4 h-4 mr-2\" />\n224: View"
+          },
+          {
+            "text": "Edit",
+            "line": 227,
+            "context": "226: <DropdownMenuItem onClick={() => onEdit(order)}>\n227: <Edit className=\"w-4 h-4 mr-2\" />\n228: Edit"
+          },
+          {
+            "text": "Delete",
+            "line": 234,
+            "context": "233: >\n234: <Trash className=\"w-4 h-4 mr-2\" />\n235: Delete"
+          },
+          {
+            "text": "Unassigned",
+            "line": 248,
+            "context": "247: ) : (\n248: <div className=\"text-sm font-medium text-muted-foreground\">\n249: Unassigned"
+          },
+          {
+            "text": "No orders",
+            "line": 342,
+            "context": "341: <div className=\"text-center py-8 text-muted-foreground\">\n342: <div className=\"text-sm\">No orders</div>\n343: <div className=\"text-xs\">Drag orders here</div>"
+          },
+          {
+            "text": "Drag orders here",
+            "line": 343,
+            "context": "342: <div className=\"text-sm\">No orders</div>\n343: <div className=\"text-xs\">Drag orders here</div>\n344: </div>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "medium"
+      },
+      {
         "file": "src\\components\\permissions\\RoleAssignmentModal.tsx",
         "hardcodedStrings": [
           {
@@ -11654,6 +11693,35 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useAppointmentCapacity.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 14,
+            "context": "13: interface UseAppointmentCapacityReturn {\n14: checkSlotAvailability: (dealerId: number, date: Date, hour: number) => Promise<AppointmentSlot | null>;\n15: getAvailableSlots: (dealerId: number, date: Date) => Promise<AppointmentSlot[]>;"
+          },
+          {
+            "text": "Promise",
+            "line": 15,
+            "context": "14: checkSlotAvailability: (dealerId: number, date: Date, hour: number) => Promise<AppointmentSlot | null>;\n15: getAvailableSlots: (dealerId: number, date: Date) => Promise<AppointmentSlot[]>;\n16: reserveSlot: (dealerId: number, date: Date, hour: number) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 16,
+            "context": "15: getAvailableSlots: (dealerId: number, date: Date) => Promise<AppointmentSlot[]>;\n16: reserveSlot: (dealerId: number, date: Date, hour: number) => Promise<boolean>;\n17: releaseSlot: (dealerId: number, date: Date, hour: number) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 17,
+            "context": "16: reserveSlot: (dealerId: number, date: Date, hour: number) => Promise<boolean>;\n17: releaseSlot: (dealerId: number, date: Date, hour: number) => Promise<boolean>;\n18: loading: boolean;"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useAdvancedVinScanner.tsx",
         "hardcodedStrings": [
           {
@@ -15487,51 +15555,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\ui\\due-date-time-picker.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "due_date.date_placeholder",
-            "line": 154,
-            "exists": true
-          },
-          {
-            "key": "due_date.time_placeholder",
-            "line": 177,
-            "exists": false
-          },
-          {
-            "key": "due_date.validation.no_slots_available",
-            "line": 184,
-            "exists": false
-          },
-          {
-            "key": "due_date.validation.same_day_notice",
-            "line": 206,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "due_date.time_placeholder",
-            "line": 177,
-            "context": "176: <ClockIcon className=\"mr-2 h-4 w-4\" />\n177: <SelectValue placeholder={t('due_date.time_placeholder')} />\n178: </SelectTrigger>"
-          },
-          {
-            "key": "due_date.validation.no_slots_available",
-            "line": 184,
-            "context": "183: ? \"Cerrado los domingos\"\n184: : t('due_date.validation.no_slots_available')\n185: }"
-          },
-          {
-            "key": "due_date.validation.same_day_notice",
-            "line": 206,
-            "context": "205: <p className=\"text-amber-600 dark:text-amber-400\">\n206: {t('due_date.validation.same_day_notice')}\n207: </p>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\ui\\dialog.tsx",
         "hardcodedStrings": [
           {
@@ -19242,74 +19265,40 @@
         "file": "src\\components\\sales\\QuickFilterBar.tsx",
         "hardcodedStrings": [
           {
-            "text": "Kanban",
-            "line": 120,
-            "context": "119: <Kanban className=\"w-4 h-4 sm:mr-2\" />\n120: <span className=\"hidden sm:inline\">Kanban</span>\n121: </Button>"
+            "text": "Table",
+            "line": 141,
+            "context": "140: <List className=\"w-4 h-4 sm:mr-2\" />\n141: <span className=\"hidden sm:inline\">Table</span>\n142: </Button>"
           },
           {
-            "text": "Table",
-            "line": 129,
-            "context": "128: <List className=\"w-4 h-4 sm:mr-2\" />\n129: <span className=\"hidden sm:inline\">Table</span>\n130: </Button>"
+            "text": "Kanban",
+            "line": 153,
+            "context": "152: <Kanban className=\"w-4 h-4 sm:mr-2\" />\n153: <span className=\"hidden sm:inline\">Kanban</span>\n154: </Button>"
           },
           {
             "text": "Filters",
-            "line": 150,
-            "context": "149: >\n150: <Filter className=\"w-4 h-4 mr-2\" />\n151: Filters"
+            "line": 175,
+            "context": "174: >\n175: <Filter className=\"w-4 h-4 mr-2\" />\n176: Filters"
           },
           {
             "text": "Clear",
-            "line": 210,
-            "context": "209: className=\"h-auto p-1 text-xs text-muted-foreground hover:text-foreground\"\n210: >\n211: Clear"
+            "line": 235,
+            "context": "234: className=\"h-auto p-1 text-xs text-muted-foreground hover:text-foreground\"\n235: >\n236: Clear"
           }
         ],
         "translationCalls": [
           {
             "key": "layout.search_placeholder",
-            "line": 102,
+            "line": 122,
             "exists": true
           },
           {
             "key": "common.calendar",
-            "line": 138,
+            "line": 163,
             "exists": true
           }
         ],
         "missingKeys": [],
         "coverage": 33,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\sales\\OrderKanbanBoard.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "View",
-            "line": 225,
-            "context": "224: <DropdownMenuItem onClick={() => onView(order)}>\n225: <Eye className=\"w-4 h-4 mr-2\" />\n226: View"
-          },
-          {
-            "text": "Edit",
-            "line": 229,
-            "context": "228: <DropdownMenuItem onClick={() => onEdit(order)}>\n229: <Edit className=\"w-4 h-4 mr-2\" />\n230: Edit"
-          },
-          {
-            "text": "Delete",
-            "line": 236,
-            "context": "235: >\n236: <Trash className=\"w-4 h-4 mr-2\" />\n237: Delete"
-          },
-          {
-            "text": "No orders",
-            "line": 306,
-            "context": "305: <div className=\"text-center py-8 text-muted-foreground\">\n306: <div className=\"text-sm\">No orders</div>\n307: <div className=\"text-xs\">Drag orders here</div>"
-          },
-          {
-            "text": "Drag orders here",
-            "line": 307,
-            "context": "306: <div className=\"text-sm\">No orders</div>\n307: <div className=\"text-xs\">Drag orders here</div>\n308: </div>"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
         "severity": "low"
       },
       {
@@ -28707,285 +28696,350 @@
         "hardcodedStrings": [
           {
             "text": "ST-2025-001",
-            "line": 634,
-            "context": "633: className=\"border-input bg-background\"\n634: placeholder=\"ST-2025-001\"\n635: />"
+            "line": 848,
+            "context": "847: className=\"border-input bg-background\"\n848: placeholder=\"ST-2025-001\"\n849: />"
+          },
+          {
+            "text": ", error);\r\n      toast.error(t(",
+            "line": 707,
+            "context": "706: } catch (error) {\n707: console.error('Submit error:', error);\n708: toast.error(t('orders.creation_failed'));"
           }
         ],
         "translationCalls": [
           {
             "key": "validation.customerNameRequired",
-            "line": 467,
+            "line": 583,
+            "exists": true
+          },
+          {
+            "key": "validation.vinRequired",
+            "line": 589,
             "exists": true
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 472,
-            "exists": true
-          },
-          {
-            "key": "validation.emailInvalid",
-            "line": 477,
-            "exists": false
-          },
-          {
-            "key": "validation.dealershipRequired",
-            "line": 482,
-            "exists": true
-          },
-          {
-            "key": "orders.edit",
-            "line": 510,
-            "exists": true
-          },
-          {
-            "key": "orders.create",
-            "line": 510,
-            "exists": true
-          },
-          {
-            "key": "orders.edit",
-            "line": 513,
-            "exists": true
-          },
-          {
-            "key": "orders.create",
-            "line": 513,
-            "exists": true
-          },
-          {
-            "key": "orders.edit",
-            "line": 522,
-            "exists": true
-          },
-          {
-            "key": "orders.create",
-            "line": 522,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.dealership",
-            "line": 531,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.assignment",
-            "line": 531,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.dealership",
-            "line": 535,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
-            "line": 542,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.select_dealership",
-            "line": 542,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.assigned_to",
-            "line": 555,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.select_dealership_first",
-            "line": 564,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
-            "line": 566,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.select_assignee",
-            "line": 567,
-            "exists": true
-          },
-          {
-            "key": "orders.customer_information",
-            "line": 584,
-            "exists": true
-          },
-          {
-            "key": "orders.customerName",
-            "line": 587,
-            "exists": true
-          },
-          {
-            "key": "common.optional",
             "line": 593,
             "exists": true
           },
           {
-            "key": "orders.priority",
-            "line": 598,
+            "key": "validation.dealershipRequired",
+            "line": 599,
             "exists": true
           },
           {
-            "key": "orders.priority_normal",
-            "line": 607,
+            "key": "validation.stockNumberRequired",
+            "line": 605,
             "exists": true
           },
           {
-            "key": "orders.priority_high",
-            "line": 608,
+            "key": "validation.assignedToRequired",
+            "line": 611,
             "exists": true
           },
           {
-            "key": "orders.priority_urgent",
-            "line": 609,
+            "key": "validation.dueDateRequired",
+            "line": 617,
             "exists": true
           },
           {
-            "key": "orders.vehicleInfo",
-            "line": 620,
+            "key": "validation.dueDateTooFar",
+            "line": 626,
             "exists": true
           },
           {
-            "key": "sales_orders.vin_decoded_successfully",
-            "line": 623,
+            "key": "validation.dueDateTooSoon",
+            "line": 635,
             "exists": true
           },
           {
-            "key": "sales_orders.stock_number",
-            "line": 628,
+            "key": "validation.slotNotAvailable",
+            "line": 649,
             "exists": true
           },
           {
-            "key": "orders.vin",
-            "line": 640,
+            "key": "validation.capacityCheckFailed",
+            "line": 657,
             "exists": true
           },
           {
-            "key": "sales_orders.vehicle",
-            "line": 667,
+            "key": "validation.failedToReserveSlot",
+            "line": 687,
             "exists": true
           },
           {
-            "key": "sales_orders.manual_vehicle_entry",
-            "line": 677,
+            "key": "validation.slotReservationWarning",
+            "line": 693,
             "exists": true
           },
           {
-            "key": "due_date.title",
-            "line": 686,
+            "key": "orders.creating_order",
+            "line": 702,
             "exists": true
           },
           {
-            "key": "due_date.date_placeholder",
-            "line": 691,
+            "key": "orders.creation_failed",
+            "line": 708,
             "exists": true
           },
           {
-            "key": "orders.servicesAndNotes",
-            "line": 700,
+            "key": "orders.edit",
+            "line": 724,
             "exists": true
           },
           {
-            "key": "orders.services",
-            "line": 704,
+            "key": "orders.create",
+            "line": 724,
             "exists": true
           },
           {
-            "key": "orders.available",
-            "line": 707,
+            "key": "orders.edit",
+            "line": 727,
             "exists": true
           },
           {
-            "key": "orders.selectDealershipFirst",
-            "line": 714,
+            "key": "orders.create",
+            "line": 727,
+            "exists": true
+          },
+          {
+            "key": "orders.edit",
+            "line": 736,
+            "exists": true
+          },
+          {
+            "key": "orders.create",
+            "line": 736,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.dealership",
+            "line": 745,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.assignment",
+            "line": 745,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.dealership",
+            "line": 749,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 719,
+            "line": 756,
             "exists": true
           },
           {
-            "key": "orders.noServicesAvailable",
-            "line": 726,
+            "key": "sales_orders.select_dealership",
+            "line": 756,
             "exists": true
           },
           {
-            "key": "services.categories.${service.category}",
-            "line": 747,
-            "exists": false
-          },
-          {
-            "key": "services.minutes",
-            "line": 750,
+            "key": "sales_orders.assigned_to",
+            "line": 769,
             "exists": true
           },
           {
-            "key": "orders.total",
+            "key": "sales_orders.select_dealership_first",
             "line": 778,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 780,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.select_assignee",
+            "line": 781,
+            "exists": true
+          },
+          {
+            "key": "orders.customer_information",
+            "line": 798,
+            "exists": true
+          },
+          {
+            "key": "orders.customerName",
+            "line": 801,
+            "exists": true
+          },
+          {
+            "key": "orders.customerNamePlaceholder",
+            "line": 807,
+            "exists": true
+          },
+          {
+            "key": "orders.priority",
+            "line": 812,
+            "exists": true
+          },
+          {
+            "key": "orders.priority_normal",
+            "line": 821,
+            "exists": true
+          },
+          {
+            "key": "orders.priority_high",
+            "line": 822,
+            "exists": true
+          },
+          {
+            "key": "orders.priority_urgent",
+            "line": 823,
+            "exists": true
+          },
+          {
+            "key": "orders.vehicleInfo",
+            "line": 834,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.vin_decoded_successfully",
+            "line": 837,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.stock_number",
+            "line": 842,
+            "exists": true
+          },
+          {
+            "key": "orders.vin",
+            "line": 854,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.vehicle",
+            "line": 881,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.manual_vehicle_entry",
+            "line": 891,
+            "exists": true
+          },
+          {
+            "key": "due_date.title",
+            "line": 900,
+            "exists": true
+          },
+          {
+            "key": "due_date.date_placeholder",
+            "line": 905,
+            "exists": true
+          },
+          {
+            "key": "orders.servicesAndNotes",
+            "line": 915,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 919,
+            "exists": true
+          },
+          {
+            "key": "orders.available",
+            "line": 922,
+            "exists": true
+          },
+          {
+            "key": "orders.selectDealershipFirst",
+            "line": 929,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 934,
+            "exists": true
+          },
+          {
+            "key": "orders.noServicesAvailable",
+            "line": 941,
+            "exists": true
+          },
+          {
+            "key": "services.categories.${service.category}",
+            "line": 962,
+            "exists": false
+          },
+          {
+            "key": "services.minutes",
+            "line": 965,
+            "exists": true
+          },
+          {
+            "key": "orders.total",
+            "line": 993,
+            "exists": true
+          },
+          {
             "key": "orders.servicesSelected",
-            "line": 784,
+            "line": 999,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 792,
+            "line": 1007,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 799,
+            "line": 1014,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 851,
+            "line": 1066,
             "exists": false
           },
           {
+            "key": "orders.updating",
+            "line": 1085,
+            "exists": true
+          },
+          {
+            "key": "orders.creating",
+            "line": 1085,
+            "exists": true
+          },
+          {
             "key": "common.update",
-            "line": 858,
+            "line": 1088,
             "exists": false
           },
           {
             "key": "common.create",
-            "line": 858,
+            "line": 1088,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "validation.emailInvalid",
-            "line": 477,
-            "context": "476: // if (formData.customerEmail && !formData.customerEmail.includes('@')) {\n477: //   errors.customerEmail = t('validation.emailInvalid');\n478: // }"
-          },
-          {
             "key": "services.categories.${service.category}",
-            "line": 747,
-            "context": "746: <Badge variant=\"outline\" className=\"text-xs px-2 py-0\">\n747: {t(`services.categories.${service.category}`)}\n748: </Badge>"
+            "line": 962,
+            "context": "961: <Badge variant=\"outline\" className=\"text-xs px-2 py-0\">\n962: {t(`services.categories.${service.category}`)}\n963: </Badge>"
           },
           {
             "key": "common.cancel",
-            "line": 851,
-            "context": "850: >\n851: {t('common.cancel')}\n852: </Button>"
+            "line": 1066,
+            "context": "1065: >\n1066: {t('common.cancel')}\n1067: </Button>"
           },
           {
             "key": "common.update",
-            "line": 858,
-            "context": "857: >\n858: {order ? t('common.update') : t('common.create')}\n859: </Button>"
+            "line": 1088,
+            "context": "1087: ) : (\n1088: order ? t('common.update') : t('common.create')\n1089: )}"
           },
           {
             "key": "common.create",
-            "line": 858,
-            "context": "857: >\n858: {order ? t('common.update') : t('common.create')}\n859: </Button>"
+            "line": 1088,
+            "context": "1087: ) : (\n1088: order ? t('common.update') : t('common.create')\n1089: )}"
           }
         ],
-        "coverage": 98,
+        "coverage": 97,
         "severity": "low"
       },
       {
@@ -40214,9 +40268,9 @@
         "src\\components\\users\\DirectUserCreationModal.tsx",
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
+        "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
-        "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\OrderDetailModal.tsx",
         "src\\components\\orders\\OptimizedEnhancedOrderDetailModal.tsx",
         "src\\components\\notifications\\NotificationPreferencesModal.tsx",
@@ -40292,17 +40346,18 @@
         "src\\lib\\cloudSync.ts",
         "src\\hooks\\useNFCWorkflows.tsx",
         "src\\hooks\\useEnhancedNotifications.tsx",
+        "src\\components\\sales\\OrderKanbanBoard.tsx",
         "src\\components\\orders\\OrderFilters.tsx",
         "src\\pages\\NFCTracking.tsx",
         "src\\hooks\\useUserPresence.tsx",
         "src\\hooks\\useSmartNotifications.tsx",
         "src\\components\\users\\UserActivityFeed.tsx",
         "src\\components\\ui\\pagination.tsx",
-        "src\\components\\sales\\OrderKanbanBoard.tsx",
         "src\\components\\productivity\\ProductivityMetrics.tsx",
         "src\\components\\chat\\FloatingChatBubble.tsx",
         "src\\hooks\\useEntityFollowers.tsx",
         "src\\hooks\\useChatConversations.tsx",
+        "src\\hooks\\useAppointmentCapacity.tsx",
         "src\\components\\NotificationProvider.tsx",
         "src\\components\\ui\\duplicate-tooltip.tsx",
         "src\\components\\scanner\\enhanced\\VinHistory.tsx",
@@ -40408,7 +40463,6 @@
         "src\\components\\users\\password\\PasswordResetActions.tsx",
         "src\\components\\users\\password\\BulkPasswordOperations.tsx",
         "src\\components\\ui\\vehicle-search-input.tsx",
-        "src\\components\\ui\\due-date-time-picker.tsx",
         "src\\components\\stock\\StockSyncHistory.tsx",
         "src\\components\\stock\\StockDashboard.tsx",
         "src\\components\\stock\\StockCSVUploader.tsx",
@@ -40501,7 +40555,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3076 translation keys are referenced but missing",
+      "description": "3072 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "154 hours"
     }

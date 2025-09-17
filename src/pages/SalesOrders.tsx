@@ -10,6 +10,7 @@ import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { toast } from 'sonner';
+import { getSystemTimezone } from '@/utils/dateUtils';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -42,6 +43,7 @@ export default function SalesOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [preSelectedDate, setPreSelectedDate] = useState<Date | null>(null);
 
   const {
     orders,
@@ -65,8 +67,18 @@ export default function SalesOrders() {
 
   const handleCreateOrderWithDate = (selectedDate?: Date) => {
     setSelectedOrder(null);
-    // If date is provided from calendar, we could pre-populate the due_date
-    // For now, just open the modal
+
+    // Pre-populate the due_date with the selected calendar date
+    if (selectedDate) {
+      console.log('📅 Calendar date selected for new order:', selectedDate);
+      // Set to 9 AM on the selected date (business hours)
+      const prePopulatedDate = new Date(selectedDate);
+      prePopulatedDate.setHours(9, 0, 0, 0);
+      setPreSelectedDate(prePopulatedDate);
+    } else {
+      setPreSelectedDate(null);
+    }
+
     setShowModal(true);
   };
 
@@ -109,16 +121,99 @@ export default function SalesOrders() {
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    await updateOrder(orderId, { status: newStatus });
+    try {
+      // Find the order being updated
+      const order = orders.find(o => o.id === orderId);
 
-    // Update last refresh timestamp for UI
-    setLastRefresh(new Date());
+      let updateData: any = { status: newStatus };
 
-    // Dispatch event to notify other components
-    window.dispatchEvent(new CustomEvent('orderStatusChanged'));
-    window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-      detail: { orderId, newStatus, timestamp: Date.now() }
-    }));
+      // If order has a due_date that might be causing validation issues, fix it
+      if (order?.dueDate) {
+        const dueDate = new Date(order.dueDate);
+        const now = new Date();
+
+        // Check if due_date is in the past or outside business hours
+        const hour = dueDate.getHours();
+        const isPast = dueDate < now;
+        const outsideBusinessHours = hour < 8 || hour >= 18;
+
+        if (isPast || outsideBusinessHours) {
+          console.log('🕐 Due date issue detected, auto-fixing for status change');
+
+          // Get system timezone for accurate calculations
+          const systemTimezone = getSystemTimezone();
+          console.log('🌍 System timezone detected:', systemTimezone);
+
+          // Create date in system timezone
+          const now = new Date();
+          const currentLocalTime = new Date(now.toLocaleString('en-US', { timeZone: systemTimezone }));
+
+          console.log('🕐 Current times:', {
+            utc: now.toISOString(),
+            local: currentLocalTime.toLocaleString(),
+            timezone: systemTimezone
+          });
+
+          // Set to tomorrow 9 AM in local timezone
+          const targetLocal = new Date(currentLocalTime);
+          targetLocal.setDate(targetLocal.getDate() + 1);
+          targetLocal.setHours(9, 0, 0, 0);
+
+          // Skip Sunday
+          if (targetLocal.getDay() === 0) {
+            targetLocal.setDate(targetLocal.getDate() + 1);
+          }
+
+          // Convert back to UTC for database storage
+          const targetUTC = new Date(targetLocal.toLocaleString('en-US', { timeZone: 'UTC' }));
+
+          updateData.due_date = targetUTC.toISOString();
+
+          console.log('🔧 TIMEZONE-AWARE Auto-corrected due_date:', {
+            original: order.dueDate,
+            targetLocal: targetLocal.toLocaleString(),
+            targetUTC: targetUTC.toISOString(),
+            systemTimezone: systemTimezone,
+            localHour: targetLocal.getHours(),
+            utcHour: targetUTC.getUTCHours()
+          });
+
+          toast.info(t('orders.due_date_auto_corrected', 'Due date automatically adjusted to next business day'));
+        }
+      }
+
+      await updateOrder(orderId, updateData);
+
+      // Update last refresh timestamp for UI
+      setLastRefresh(new Date());
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
+      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+        detail: { orderId, newStatus, timestamp: Date.now() }
+      }));
+
+      toast.success(t('orders.status_updated_successfully'));
+    } catch (error) {
+      console.error('Status change failed:', error);
+
+      // Handle specific business validation errors
+      if (error?.message?.includes('Invalid due date')) {
+        toast.error(t('orders.status_change_failed_due_date', {
+          message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'
+        }));
+      } else if (error?.message?.includes('business hours')) {
+        toast.error(t('orders.status_change_failed_business_hours'));
+      } else {
+        toast.error(t('orders.status_change_failed'));
+      }
+
+      // Trigger refresh to revert any optimistic UI updates
+      setTimeout(() => refreshData(), 100);
+
+      // Re-throw error so kanban can handle rollback if needed
+      throw error;
+    }
   };
 
   const handleCardClick = (filter: string) => {
@@ -291,8 +386,12 @@ export default function SalesOrders() {
           <OrderModal
             order={selectedOrder}
             open={showModal}
-            onClose={() => setShowModal(false)}
+            onClose={() => {
+              setShowModal(false);
+              setPreSelectedDate(null); // Clear pre-selected date
+            }}
             onSave={handleSaveOrder}
+            preSelectedDate={preSelectedDate}
           />
         )}
 

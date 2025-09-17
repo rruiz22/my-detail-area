@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, LogOut, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe, Calendar } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe, Calendar } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
 import { isSystemAdmin } from "@/utils/permissions";
+import { LiveClock } from "@/components/ui/live-clock";
+import { getSystemTimezone } from "@/utils/dateUtils";
 export function AppSidebar() {
   const { state, open, setOpen } = useSidebar();
-  const { user, signOut } = useAuth();
   const { roles } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
@@ -121,9 +119,6 @@ export function AppSidebar() {
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
   
-  const handleSignOut = async () => {
-    await signOut();
-  };
 
   const handleNavClick = (url?: string) => {
     // Close mobile sidebar on navigation
@@ -150,7 +145,7 @@ export function AppSidebar() {
   };
   return (
     <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
-      <SidebarHeader className="p-4">
+      <SidebarHeader className="p-4 space-y-3">
         <div className="flex items-center justify-center">
           {collapsed ? (
             <div className="font-bold text-lg text-primary">MDA</div>
@@ -160,6 +155,17 @@ export function AppSidebar() {
               <p className="text-[10px] text-muted-foreground">Enterprise Dealership Management</p>
             </div>
           )}
+        </div>
+
+        {/* Live Clock - Eastern Time */}
+        <div className="flex justify-center">
+          <LiveClock
+            className={collapsed ? "scale-75" : ""}
+            showIcon={!collapsed}
+            showDate={true}
+            timezone={getSystemTimezone()}
+            format24h={false}
+          />
         </div>
       </SidebarHeader>
 
@@ -406,59 +412,6 @@ export function AppSidebar() {
           </SidebarGroup>
         )}
       </SidebarContent>
-
-      <SidebarFooter className="p-4">
-        <div className="space-y-2">
-          {collapsed ? (
-            <div className="flex flex-col items-center gap-2">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback>
-                  {user?.email?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleSignOut} 
-                className="w-8 h-8 p-0 flex items-center justify-center"
-                title={t('navigation.sign_out')}
-              >
-                <LogOut className="w-4 h-4" />
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="flex items-center gap-3">
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback>
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
-                    {user?.email?.split('@')[0] || 'User'}
-                  </p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {user?.email || ''}
-                  </p>
-                </div>
-              </div>
-              
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleSignOut} 
-                className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
-              >
-                <LogOut className="w-4 h-4" />
-                {t('navigation.sign_out')}
-              </Button>
-            </>
-          )}
-        </div>
-      </SidebarFooter>
     </Sidebar>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -39,15 +39,28 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   const [qrData, setQrData] = useState<ShortLinkData | null>(null);
   const [loading, setLoading] = useState(false);
   const [analytics, setAnalytics] = useState<ShortLinkData['analytics']>(null);
+  const isMountedRef = useRef(true);
 
   
-  // Memoize analytics loading function
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Memoize analytics loading function with cleanup
   const loadAnalytics = useCallback(async (slug: string) => {
     try {
       const analyticsData = await shortLinkService.getAnalytics(slug);
-      setAnalytics(analyticsData);
+      // Only set state if component is still mounted
+      if (isMountedRef.current) {
+        setAnalytics(analyticsData);
+      }
     } catch (error) {
-      console.warn('Failed to load analytics:', error);
+      if (isMountedRef.current) {
+        console.warn('Failed to load analytics:', error);
+      }
     }
   }, []);
 
@@ -144,7 +157,14 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
 
   // Memoize QR URL calculation - use shortLink prop directly
   const qrUrl = useMemo(() => {
-    return qrData?.shortUrl || shortLink || '';
+    const url = qrData?.shortUrl || shortLink || '';
+    console.log('🔍 QR URL for canvas:', {
+      qrDataUrl: qrData?.shortUrl,
+      shortLinkProp: shortLink,
+      finalUrl: url,
+      willShowQR: !!url
+    });
+    return url;
   }, [qrData?.shortUrl, shortLink]);
 
   // Memoize analytics display formatting

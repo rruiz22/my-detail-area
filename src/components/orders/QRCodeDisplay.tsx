@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { supabase } from '@/integrations/supabase/client';
+import QRCodeReact from 'qrcode.react';
 
 interface QRCodeDisplayProps {
   orderId: string;
@@ -25,13 +26,13 @@ interface LinkAnalytics {
   lastClickedAt: string | null;
 }
 
-export function QRCodeDisplay({ 
-  orderId, 
-  orderNumber, 
-  dealerId, 
-  qrCodeUrl, 
-  shortLink, 
-  onUpdate 
+export function QRCodeDisplay({
+  orderId,
+  orderNumber,
+  dealerId,
+  qrCodeUrl,
+  shortLink,
+  onUpdate
 }: QRCodeDisplayProps) {
   const { t } = useTranslation();
   const { generateQR, loading } = useOrderActions();
@@ -39,6 +40,7 @@ export function QRCodeDisplay({
   const [currentShortLink, setCurrentShortLink] = useState(shortLink);
   const [analytics, setAnalytics] = useState<LinkAnalytics | null>(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const qrRef = useRef<HTMLCanvasElement>(null);
 
   // Load analytics on mount
   useEffect(() => {
@@ -101,12 +103,14 @@ export function QRCodeDisplay({
   };
 
   const downloadQR = () => {
-    if (!currentQRUrl) return;
-    
-    const link = document.createElement('a');
-    link.href = currentQRUrl;
-    link.download = `QR-${orderNumber}.png`;
-    link.click();
+    // Download from local QR canvas instead of URL
+    if (qrRef.current && currentShortLink) {
+      const canvas = qrRef.current;
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `QR-${orderNumber}.png`;
+      link.click();
+    }
   };
 
   const shareQR = async () => {
@@ -181,14 +185,18 @@ export function QRCodeDisplay({
           </div>
         )}
 
-        {currentQRUrl ? (
+        {currentShortLink ? (
           <div className="space-y-3">
-            {/* QR Code Image */}
+            {/* QR Code Generated Locally */}
             <div className="flex justify-center p-4 bg-white rounded-lg border">
-              <img 
-                src={currentQRUrl} 
-                alt={`QR Code for order ${orderNumber}`}
-                className="w-32 h-32"
+              <QRCodeReact
+                ref={qrRef}
+                value={currentShortLink}
+                size={128}
+                level="M"
+                includeMargin={true}
+                fgColor="#000000"
+                bgColor="#FFFFFF"
               />
             </div>
 
@@ -250,7 +258,10 @@ export function QRCodeDisplay({
             <div className="p-8 border-2 border-dashed border-muted rounded-lg">
               <QrCode className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">
-                {t('orders.no_qr_code')}
+                {t('orders.no_short_link')}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Generate a short link to create QR code
               </p>
             </div>
             <Button
@@ -258,7 +269,7 @@ export function QRCodeDisplay({
               disabled={loading}
               className="w-full"
             >
-              {loading ? t('common.generating') : t('orders.generate_qr')}
+              {loading ? t('common.generating') : t('orders.generate_short_link')}
             </Button>
           </div>
         )}

@@ -95,7 +95,12 @@ export interface Order {
   orderType?: string;
   assignedTo?: string;
   notes?: string;
-  customOrderNumber?: string;
+
+  // QR Code and Short Link fields
+  shortLink?: string;
+  qrCodeUrl?: string;
+  qrGenerationStatus?: 'pending' | 'generating' | 'completed' | 'failed';
+  orderNumber?: string;
   // Enhanced fields from JOINs
   dealershipName?: string;
   assignedGroupName?: string;
@@ -117,7 +122,7 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
   return {
     // Core identifiers
     id: supabaseOrder.id,
-    customOrderNumber: getFieldValue(supabaseOrder.order_number) || getFieldValue(supabaseOrder.custom_order_number) || supabaseOrder.id,
+    orderNumber: getFieldValue(supabaseOrder.order_number) || supabaseOrder.id,
     
     // Customer information
     customerName: getFieldValue(supabaseOrder.customer_name, ''),
@@ -147,6 +152,11 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
     // Financial and services
     totalAmount: getFieldValue(supabaseOrder.total_amount),
     services: Array.isArray(supabaseOrder.services) ? supabaseOrder.services as OrderService[] : [],
+
+    // QR Code and Short Link
+    shortLink: getFieldValue(supabaseOrder.short_link),
+    qrCodeUrl: getFieldValue(supabaseOrder.qr_code_url),
+    qrGenerationStatus: getFieldValue(supabaseOrder.qr_generation_status),
     
     // Assignment - will be populated by refreshData with proper names
     assignedTo: 'Unassigned', // Will be overwritten in refreshData
@@ -556,14 +566,14 @@ export const useOrderManagement = (activeTab: string) => {
 
   // Initialize data on mount with debouncing to prevent multiple calls
   useEffect(() => {
-    if (user) {
+    if (user && refreshCallCountRef.current === 0) {
       const timer = setTimeout(() => {
         refreshData();
       }, 100); // Small delay to batch multiple rapid effect calls
 
       return () => clearTimeout(timer);
     }
-  }, [user]); // Only depend on user, not refreshData to avoid infinite loops
+  }, [user, refreshData]); // Include refreshData in deps but guard with call count
 
   // Handle filtering when tab or filters change (without full refresh)
   useEffect(() => {

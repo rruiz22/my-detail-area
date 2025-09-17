@@ -107,8 +107,17 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Using app URL: ${appUrl}`);
     console.log(`Redirect URL will be: ${redirectUrl}`);
 
-    // Generate short link using mda.to API (fallback to redirectUrl if unavailable)
-    let shortLink = redirectUrl;
+    // Generate short link using mda.to API (fallback to mda.to direct if unavailable)
+    let shortLink = `https://mda.to/${slug.toLowerCase()}`;
+
+    console.log(`🔗 Attempting to register shortlink with mda.to API`);
+    console.log(`🔑 API Key available: ${mdaApiKey ? 'Yes' : 'No'}`);
+    console.log(`📝 Registration payload:`, {
+      url: redirectUrl,
+      title: `Order ${orderNumber}`,
+      alias: slug.toLowerCase()
+    });
+
     try {
       const shortLinkResponse = await fetch("https://mda.to/api/v1/shorten", {
         method: "POST",
@@ -124,22 +133,31 @@ const handler = async (req: Request): Promise<Response> => {
         }),
       });
 
+      console.log(`📡 mda.to API Response Status: ${shortLinkResponse.status}`);
+      console.log(`📡 mda.to API Response Headers:`, Object.fromEntries(shortLinkResponse.headers.entries()));
+
       if (shortLinkResponse.ok) {
         const contentType = shortLinkResponse.headers.get("content-type") || "";
         if (contentType.includes("application/json")) {
           const shortLinkData = await shortLinkResponse.json();
-          shortLink = shortLinkData.shortUrl || redirectUrl;
+          console.log(`✅ mda.to API Success Response:`, shortLinkData);
+          shortLink = shortLinkData.shortUrl || `https://mda.to/${slug.toLowerCase()}`;
         } else {
           const errorText = await shortLinkResponse.text();
-          console.warn("MDA API returned non-JSON response; using fallback:", errorText);
+          console.warn("❌ MDA API returned non-JSON response:", errorText);
+          console.warn("🔄 Using direct mda.to URL as fallback");
         }
       } else {
         const errorText = await shortLinkResponse.text();
-        console.warn("MDA API Error (shorten); using fallback:", errorText);
+        console.error(`❌ MDA API Error (${shortLinkResponse.status}):`, errorText);
+        console.warn("🔄 Using direct mda.to URL as fallback");
       }
     } catch (err) {
-      console.warn("Shorten API call failed; using fallback redirectUrl:", err);
+      console.error("❌ mda.to API call completely failed:", err);
+      console.warn("🔄 Using direct mda.to URL as fallback");
     }
+
+    console.log(`🎯 Final shortLink will be: ${shortLink}`);
 
     // Skip QR image generation - will be generated locally in frontend
     const qrCodeUrl: string | null = null;

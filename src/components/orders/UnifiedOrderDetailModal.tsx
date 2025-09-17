@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useCallback, useMemo, memo, lazy, Suspense } from 'react';
+import React, { ReactNode, useEffect, useCallback, useMemo, memo } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,14 +43,22 @@ import { ServiceOrderFields } from './ServiceOrderFields';
 import { ReconOrderFields } from './ReconOrderFields';
 import { CarWashOrderFields } from './CarWashOrderFields';
 
+// Direct imports instead of lazy loading for better performance
+import { ScheduleViewBlock } from './ScheduleViewBlock';
+import { SimpleNotesDisplay } from './SimpleNotesDisplay';
+import { PublicCommentsBlock } from './PublicCommentsBlock';
+import { InternalNotesBlock } from './InternalNotesBlock';
+import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
+import { FollowersBlock } from './FollowersBlock';
+import { RecentActivityBlock } from './RecentActivityBlock';
+
 // Enhanced TypeScript interfaces for better type safety
 // Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
 interface OrderData {
   id: string;
   // Order identifiers (support both formats)
   order_number?: string;
-  custom_order_number?: string;
-  customOrderNumber?: string;
+  orderNumber?: string;
 
   // Customer information (support both formats)
   customer_name?: string;
@@ -122,27 +130,7 @@ interface UnifiedOrderDetailModalProps {
   dataError?: string | null;
 }
 
-const ScheduleViewBlockMemo = lazy(() =>
-  import('./ScheduleViewBlock').then(module => ({ default: memo(module.ScheduleViewBlock) }))
-);
-const SimpleNotesDisplayMemo = lazy(() =>
-  import('./SimpleNotesDisplay').then(module => ({ default: memo(module.SimpleNotesDisplay) }))
-);
-const PublicCommentsBlockMemo = lazy(() =>
-  import('./PublicCommentsBlock').then(module => ({ default: memo(module.PublicCommentsBlock) }))
-);
-const InternalNotesBlockMemo = lazy(() =>
-  import('./InternalNotesBlock').then(module => ({ default: memo(module.InternalNotesBlock) }))
-);
-const EnhancedQRCodeBlockMemo = lazy(() =>
-  import('./EnhancedQRCodeBlock').then(module => ({ default: memo(module.EnhancedQRCodeBlock) }))
-);
-const FollowersBlockMemo = lazy(() =>
-  import('./FollowersBlock').then(module => ({ default: memo(module.FollowersBlock) }))
-);
-const RecentActivityBlockMemo = lazy(() =>
-  import('./RecentActivityBlock').then(module => ({ default: memo(module.RecentActivityBlock) }))
-);
+// Removed lazy loading for better performance - direct imports above
 
 // Header Components
 interface UnifiedOrderHeaderProps {
@@ -161,7 +149,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
   const { t } = useTranslation();
 
   const headerData = useMemo(() => {
-    const orderNumber = order.customOrderNumber || order.order_number || order.custom_order_number || 'New Order';
+    const orderNumber = order.orderNumber || order.order_number || 'New Order';
     const dealershipName = order.dealership_name || 'Premium Auto';
 
     if (orderType === 'sales' || orderType === 'service') {
@@ -180,11 +168,52 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
     }
   }, [order, orderType]);
 
+  // Get status background class
+  const getStatusBackgroundClass = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'pending':
+        return 'bg-yellow-50 border-l-4 border-yellow-500';
+      case 'in_progress':
+        return 'bg-blue-50 border-l-4 border-blue-500';
+      case 'completed':
+        return 'bg-green-50 border-l-4 border-green-500';
+      case 'cancelled':
+        return 'bg-red-50 border-l-4 border-red-500';
+      default:
+        return 'bg-gray-50 border-l-4 border-gray-500';
+    }
+  };
+
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-6 shadow-sm">
-      <div className="relative text-center">
-        {/* Status Dropdown - Top Right */}
-        <div className="absolute top-0 right-0">
+    <div className={`${getStatusBackgroundClass(order.status)} rounded-lg p-4 mb-6 shadow-sm`}>
+      <div className="grid grid-cols-3 items-center gap-4">
+        {/* Left: Order Number */}
+        <div className="text-left">
+          <h2 className="text-lg font-bold text-gray-900">
+            #{headerData.orderNumber}
+          </h2>
+        </div>
+
+        {/* Center: Main Information */}
+        <div className="text-center space-y-1">
+          {/* Vehicle Info as Title */}
+          <h1 className="text-xl font-bold text-gray-900">
+            {order.vehicleInfo || order.vehicle_info || vehicleDisplayName}
+          </h1>
+
+          {/* Stock + VIN */}
+          <div className="text-sm text-muted-foreground">
+            {order.stockNumber || order.stock_number} - {(order.vehicleVin || order.vehicle_vin)?.slice(-8)}
+          </div>
+
+          {/* Assigned To */}
+          <div className="text-sm font-medium text-gray-700">
+            {order.assignedTo || order.salesperson || order.service_performer || 'Unassigned'}
+          </div>
+        </div>
+
+        {/* Right: Status Dropdown */}
+        <div className="text-right">
           <StatusBadgeInteractive
             status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
             orderId={order.id}
@@ -192,24 +221,6 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
             canUpdateStatus={true}
             onStatusChange={onStatusChange}
           />
-        </div>
-
-        {/* Centered Header Content */}
-        <div className="space-y-1">
-          {/* Line 1: Order Number */}
-          <h1 className="text-3xl font-bold text-gray-900">
-            {headerData.orderNumber}
-          </h1>
-
-          {/* Line 2: Dealership - User/Service Performer */}
-          <div className="text-lg text-gray-700">
-            {headerData.line2}
-          </div>
-
-          {/* Line 3: Vehicle - VIN - Date */}
-          <div className="text-lg text-gray-700">
-            {headerData.line3}
-          </div>
         </div>
       </div>
     </div>
@@ -332,7 +343,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
       >
         <div className="h-screen flex flex-col">
           <DialogTitle className="sr-only">
-            {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}
+            {t('orders.order_details')} - {order.orderNumber || order.order_number}
           </DialogTitle>
           <DialogDescription className="sr-only">
             {t('orders.order_details_description', {
@@ -359,24 +370,16 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   {/* Row 1: Type-specific fields + Schedule View (Two blocks side by side) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <OrderTypeFields orderType={orderType} order={order} />
-                    <Suspense fallback={<SkeletonLoader variant="schedule" />}>
-                      <ScheduleViewBlockMemo order={order} />
-                    </Suspense>
+                    <ScheduleViewBlock order={order} />
                   </div>
 
                   {/* Row 2: Simple Notes Display (Full width) */}
-                  <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                    <SimpleNotesDisplayMemo order={order} />
-                  </Suspense>
+                  <SimpleNotesDisplay order={order} />
 
                   {/* Row 3: Team Communication (Full width like order notes) */}
                   <div className="space-y-4">
-                    <Suspense fallback={<SkeletonLoader variant="comments" />}>
-                      <PublicCommentsBlockMemo orderId={order.id} />
-                    </Suspense>
-                    <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                      <InternalNotesBlockMemo orderId={order.id} />
-                    </Suspense>
+                    <PublicCommentsBlock orderId={order.id} />
+                    <InternalNotesBlock orderId={order.id} />
                   </div>
                 </div>
 
@@ -386,16 +389,26 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />
                   ) : (
-                    <Suspense fallback={<SkeletonLoader variant="qr-code" />}>
-                      <EnhancedQRCodeBlockMemo
-                        orderId={order.id}
-                        orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number}
-                        dealerId={String(order.dealer_id)}
-                        qrCodeUrl={order.qr_code_url}
-                        shortLink={order.short_link}
-                        qrGenerationStatus={order.qr_generation_status}
-                      />
-                    </Suspense>
+                    (() => {
+                      console.log('📊 UnifiedOrderDetailModal QR props:', {
+                        orderId: order.id,
+                        orderNumber: order.orderNumber || order.order_number,
+                        shortLink: order.short_link,
+                        qrCodeUrl: order.qr_code_url,
+                        qrStatus: order.qr_generation_status,
+                        hasShortLink: !!order.short_link
+                      });
+                      return (
+                        <EnhancedQRCodeBlock
+                          orderId={order.id}
+                          orderNumber={order.orderNumber || order.order_number}
+                          dealerId={String(order.dealer_id)}
+                          qrCodeUrl={order.qr_code_url}
+                          shortLink={order.short_link}
+                          qrGenerationStatus={order.qr_generation_status}
+                        />
+                      );
+                    })()
                   )}
 
                   {/* Chat and Communication Actions */}
@@ -409,7 +422,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                     <CardContent>
                       <ChatAndSMSActions
                         orderId={order.id}
-                        orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number}
+                        orderNumber={order.orderNumber || order.order_number}
                         customerPhone={order.customerPhone || order.customer_phone || ''}
                         dealerId={Number(order.dealer_id)}
                         variant="compact"
@@ -421,32 +434,26 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   {isLoadingData ? (
                     <SkeletonLoader variant="notes" />
                   ) : (
-                    <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                      <FollowersBlockMemo
-                        orderId={order.id}
-                        dealerId={String(order.dealer_id)}
-                      />
-                    </Suspense>
+                    <FollowersBlock
+                      orderId={order.id}
+                      dealerId={String(order.dealer_id)}
+                    />
                   )}
 
                   {/* Tasks & Reminders Section */}
-                  <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                    <OrderTasksSection
-                      orderId={order.id}
-                      orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number || order.id}
-                      customerName={order.customerName || order.customer_name}
-                    />
-                  </Suspense>
+                  <OrderTasksSection
+                    orderId={order.id}
+                    orderNumber={order.orderNumber || order.order_number || order.id}
+                    customerName={order.customerName || order.customer_name}
+                  />
 
                   {/* Enhanced Recent Activity Block */}
                   {isLoadingData ? (
                     <SkeletonLoader variant="activity" />
                   ) : (
-                    <Suspense fallback={<SkeletonLoader variant="activity" />}>
-                      <RecentActivityBlockMemo
-                        orderId={order.id}
-                      />
-                    </Suspense>
+                    <RecentActivityBlock
+                      orderId={order.id}
+                    />
                   )}
                 </div>
               </div>

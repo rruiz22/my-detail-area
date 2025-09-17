@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
 import { Order } from '@/hooks/useOrderManagement';
-import { safeFormatDateOnly, calculateDaysFromNow } from '@/utils/dateUtils';
+import { safeFormatDateOnly, calculateDaysFromNow, getSystemTimezone } from '@/utils/dateUtils';
 import { getStatusRowColor, getStatusBorder } from '@/utils/statusUtils';
 
 interface OrderKanbanBoardProps {
@@ -135,10 +135,10 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
 
   const formatDueDate = (dueDate?: string) => {
     if (!dueDate) return null;
-    
+
     const diffDays = calculateDaysFromNow(dueDate);
     if (diffDays === null) return null;
-    
+
     if (diffDays < 0) {
       return { text: 'Overdue', variant: 'destructive' as const, days: Math.abs(diffDays) };
     } else if (diffDays === 0) {
@@ -147,6 +147,32 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
       return { text: 'Due tomorrow', variant: 'secondary' as const, days: 1 };
     } else {
       return { text: `${diffDays}d`, variant: 'outline' as const, days: diffDays };
+    }
+  };
+
+  // Format due date for time/date display
+  const formatDueDateTimeDisplay = (dueDate?: string) => {
+    if (!dueDate) return null;
+
+    try {
+      const date = new Date(dueDate);
+      const timezone = getSystemTimezone();
+
+      return {
+        time: date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+          timeZone: timezone
+        }),
+        date: date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          timeZone: timezone
+        })
+      };
+    } catch (error) {
+      return null;
     }
   };
 
@@ -188,7 +214,8 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
             >
               {columnOrders.map((order) => {
                 const dueInfo = formatDueDate(order.dueDate);
-                
+                const dueDateTimeDisplay = formatDueDateTimeDisplay(order.dueDate);
+
                 return (
                   <Card
                     key={order.id}
@@ -200,88 +227,108 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                       draggedOrder?.id === order.id ? 'opacity-50 scale-95' : ''
                     }`}
                   >
-                    <CardContent className="p-3">
-                      {/* Order Header */}
+                    <CardContent className="p-2">
+                      {/* Header: Order Number + Due Time */}
                       <div className="flex items-start justify-between mb-2">
-                        <div>
-                           <div className="font-medium text-sm text-foreground">
-                             #{order.customOrderNumber || order.id}
-                           </div>
-                        </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button 
-                              size="sm" 
-                              variant="ghost" 
-                              className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <MoreHorizontal className="h-3 w-3" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-popover border border-border">
-                            <DropdownMenuItem onClick={() => onView(order)}>
-                              <Eye className="w-4 h-4 mr-2" />
-                              View
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onEdit(order)}>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => onDelete(order.id)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash className="w-4 h-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-
-                      {/* Assigned & Customer Info */}
-                      <div className="space-y-1 mb-2">
-                        {order.assignedTo && order.assignedTo !== 'Unassigned' ? (
-                          <div className="text-sm font-medium text-foreground">
-                            {order.assignedTo}
-                          </div>
-                        ) : (
-                          <div className="text-sm font-medium text-muted-foreground">
-                            Unassigned
-                          </div>
-                        )}
-                        {order.customerName && (
-                          <div className="text-xs text-muted-foreground">
-                            Customer: {order.customerName}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Stock & Vehicle Info */}
-                      <div className="space-y-1 mb-2">
-                        {order.stockNumber && (
-                          <div className="text-xs font-medium text-foreground">
-                            Stock: {order.stockNumber}
-                          </div>
-                        )}
-                        {order.vehicleInfo && (
-                          <div className="text-xs text-muted-foreground">
-                            {order.vehicleInfo}
-                          </div>
-                        )}
-                        {order.vehicleVin && (
-                          <div className="text-xs text-muted-foreground font-mono">
-                            VIN: {order.vehicleVin.slice(-8)}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Due Date, Time & Priority */}
-                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
+                          <div className="font-medium text-sm text-foreground">
+                            #{order.orderNumber || order.order_number || order.id}
+                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <MoreHorizontal className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-popover border border-border">
+                              <DropdownMenuItem onClick={() => onView(order)}>
+                                <Eye className="w-4 h-4 mr-2" />
+                                View
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => onEdit(order)}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => onDelete(order.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash className="w-4 h-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+
+                        {/* Due Time - Prominent */}
+                        <div className="text-right">
+                          {dueDateTimeDisplay ? (
+                            <>
+                              <div className="text-sm font-bold text-primary">
+                                {dueDateTimeDisplay.time}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {dueDateTimeDisplay.date}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-xs text-muted-foreground">
+                              No due date
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Main Content: 2 Column Layout */}
+                      <div className="grid grid-cols-3 gap-2 mb-2">
+                        {/* Left Column: Names & Info */}
+                        <div className="col-span-2 space-y-1">
+                          {/* Assigned To */}
+                          <div className="text-sm font-medium text-foreground truncate">
+                            {order.assignedTo && order.assignedTo !== 'Unassigned' ? order.assignedTo : 'Unassigned'}
+                          </div>
+
+                          {/* Customer */}
+                          {order.customerName && (
+                            <div className="text-xs text-muted-foreground truncate">
+                              Customer: {order.customerName}
+                            </div>
+                          )}
+
+                          {/* Vehicle Info */}
+                          {order.vehicleInfo && (
+                            <div className="text-xs text-muted-foreground truncate" title={order.vehicleInfo}>
+                              {order.vehicleInfo}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Right Column: Stock & VIN */}
+                        <div className="space-y-1 text-right">
+                          {order.stockNumber && (
+                            <div className="text-xs font-medium text-foreground">
+                              {order.stockNumber}
+                            </div>
+                          )}
+                          {order.vehicleVin && (
+                            <div className="text-xs text-muted-foreground font-mono">
+                              {order.vehicleVin.slice(-8)}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Footer: Badges + Actions */}
+                      <div className="flex items-center justify-between pt-1 border-t border-border">
+                        <div className="flex items-center gap-1">
                           {dueInfo && (
                             <Badge
                               variant={dueInfo.variant === 'warning' ? 'secondary' : dueInfo.variant}
-                              className={`text-xs px-2 py-0 h-5 ${dueInfo.variant === 'warning' ? 'bg-warning/20 text-warning border-warning' : ''}`}
+                              className={`text-xs px-1 py-0 h-4 ${dueInfo.variant === 'warning' ? 'bg-warning/20 text-warning border-warning' : ''}`}
                             >
                               {dueInfo.text}
                             </Badge>
@@ -289,33 +336,20 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                           {order.priority && order.priority !== 'normal' && (
                             <Badge
                               variant={order.priority === 'urgent' ? 'destructive' : 'outline'}
-                              className="text-xs px-2 py-0 h-5"
+                              className="text-xs px-1 py-0 h-4"
                             >
                               {order.priority}
                             </Badge>
                           )}
                         </div>
 
-                        {/* Due Time Highlighted */}
-                        {order.dueDate && (
-                          <div className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
-                            {new Date(order.dueDate).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              hour12: true
-                            })}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Quick Actions */}
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
+                        {/* Quick Actions */}
                         <div className="flex items-center gap-1">
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => onView(order)}
-                            className="h-6 w-6 p-0 hover:bg-primary/10"
+                            className="h-5 w-5 p-0 hover:bg-primary/10"
                           >
                             <Eye className="w-3 h-3" />
                           </Button>
@@ -323,13 +357,10 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                             size="sm"
                             variant="ghost"
                             onClick={() => onEdit(order)}
-                            className="h-6 w-6 p-0 hover:bg-primary/10"
+                            className="h-5 w-5 p-0 hover:bg-primary/10"
                           >
                             <Edit className="w-3 h-3" />
                           </Button>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {safeFormatDateOnly(order.createdAt)}
                         </div>
                       </div>
                     </CardContent>
