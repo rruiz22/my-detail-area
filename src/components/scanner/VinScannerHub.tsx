@@ -27,6 +27,9 @@ import { VinAnalyzer } from './enhanced/VinAnalyzer';
 import { QuickScanMode } from './QuickScanMode';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 import { VinOrderIntegration } from './VinOrderIntegration';
+import { SmartFocusVinScanner } from './enhanced/SmartFocusVinScanner';
+import { BatchVinProcessor } from './enhanced/BatchVinProcessor';
+import { VinScannerSettings } from './enhanced/VinScannerSettings';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -190,11 +193,23 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-6">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 mb-6">
           <TabsTrigger value="scanner" className="flex items-center gap-2">
             <QrCode className="w-4 h-4" />
             <span className="hidden sm:inline">{t('vin_scanner_hub.scanner')}</span>
             <span className="sm:hidden">{t('vin_scanner_hub.scan')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="smart" className="flex items-center gap-2">
+            <Target className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('vin_scanner_hub.smart_focus')}</span>
+            <span className="sm:hidden">{t('vin_scanner_hub.smart')}</span>
+            <Badge variant="secondary" className="ml-1 text-xs">NEW</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="batch" className="flex items-center gap-2">
+            <Upload className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('vin_scanner_hub.batch_processing')}</span>
+            <span className="sm:hidden">{t('vin_scanner_hub.batch')}</span>
+            <Badge variant="secondary" className="ml-1 text-xs">NEW</Badge>
           </TabsTrigger>
           <TabsTrigger value="quick" className="flex items-center gap-2">
             <Zap className="w-4 h-4" />
@@ -206,10 +221,11 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
             <span className="hidden sm:inline">{t('vin_scanner_hub.history')}</span>
             <span className="sm:hidden">{t('vin_scanner_hub.hist')}</span>
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('vin_scanner_hub.analytics')}</span>
-            <span className="sm:hidden">{t('vin_scanner_hub.stats')}</span>
+          <TabsTrigger value="settings" className="flex items-center gap-2">
+            <Settings className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('vin_scanner_hub.settings')}</span>
+            <span className="sm:hidden">{t('vin_scanner_hub.config')}</span>
+            <Badge variant="secondary" className="ml-1 text-xs">NEW</Badge>
           </TabsTrigger>
         </TabsList>
 
@@ -265,19 +281,64 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
           <VinScannerHistory />
         </TabsContent>
 
+        <TabsContent value="smart" className="space-y-6">
+          <div className="text-center">
+            <Button
+              onClick={() => setScannerOpen(true)}
+              size="lg"
+              className="button-enhanced"
+            >
+              <Target className="w-5 h-5 mr-2" />
+              {t('vin_scanner_hub.start_smart_scan')}
+            </Button>
+            <p className="text-sm text-muted-foreground mt-2">
+              {t('vin_scanner_hub.smart_scan_description')}
+            </p>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="batch" className="space-y-6">
+          <BatchVinProcessor
+            onVinsProcessed={(results) => {
+              console.log('Batch processing completed:', results);
+              const totalVins = results.reduce((sum, r) => sum + r.validVins.length, 0);
+              toast.success(`${totalVins} VINs processed successfully`);
+            }}
+          />
+        </TabsContent>
+
+        <TabsContent value="quick" className="space-y-6">
+          <div className="flex justify-center">
+            <QuickScanMode
+              onVinDetected={handleVinDetected}
+              className="w-full max-w-2xl"
+            />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="history" className="space-y-6">
+          <VinScannerHistory />
+        </TabsContent>
+
         <TabsContent value="analytics" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <VinStatistics />
             <VinHistory onVinSelect={setSelectedVin} />
           </div>
         </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <VinScannerSettings />
+        </TabsContent>
       </Tabs>
 
-      {/* Modern VIN Scanner Modal */}
-      <ModernVinScanner
+      {/* Smart Focus VIN Scanner Modal */}
+      <SmartFocusVinScanner
         open={scannerOpen}
         onClose={() => setScannerOpen(false)}
         onVinDetected={handleVinDetected}
+        autoFocus={true}
+        showTargetingGuides={true}
       />
     </div>
   );

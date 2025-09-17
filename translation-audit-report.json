@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 416,
-  "totalStrings": 4237,
-  "hardcodedStrings": 974,
-  "translatedStrings": 3263,
+  "scannedFiles": 423,
+  "totalStrings": 4310,
+  "hardcodedStrings": 983,
+  "translatedStrings": 3327,
   "issues": {
     "critical": [
       {
@@ -2553,12 +2553,12 @@
           {
             "key": "data_table.no_stock",
             "line": 533,
-            "exists": false
+            "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
             "line": 567,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -2571,16 +2571,6 @@
             "key": "common.loading",
             "line": 284,
             "context": "283: <Loader2 className=\"w-6 h-6 animate-spin mr-2\" />\n284: <span>{t('common.loading')}</span>\n285: </div>"
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 533,
-            "context": "532: <div className=\"text-base font-bold text-foreground cursor-pointer hover:text-blue-600 transition-colors\">\n533: {order.stockNumber || t('data_table.no_stock')}\n534: </div>"
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 567,
-            "context": "566: >\n567: {order.vehicleVin || t('data_table.vin_not_provided')}\n568: </span>"
           }
         ],
         "coverage": 18,
@@ -5829,30 +5819,56 @@
           {
             "key": "orders.today_orders",
             "line": 19,
-            "exists": true
+            "exists": false
           },
           {
             "key": "orders.tomorrow_orders",
             "line": 30,
-            "exists": true
+            "exists": false
           },
           {
             "key": "orders.pending_orders",
             "line": 41,
-            "exists": true
+            "exists": false
           },
           {
             "key": "orders.require_attention",
             "line": 47,
-            "exists": true
+            "exists": false
           },
           {
             "key": "orders.week_orders",
             "line": 52,
-            "exists": true
+            "exists": false
           }
         ],
-        "missingKeys": [],
+        "missingKeys": [
+          {
+            "key": "orders.today_orders",
+            "line": 19,
+            "context": "18: id: 'today',\n19: title: t('orders.today_orders'),\n20: value: tabCounts.today || 0,"
+          },
+          {
+            "key": "orders.tomorrow_orders",
+            "line": 30,
+            "context": "29: id: 'tomorrow',\n30: title: t('orders.tomorrow_orders'),\n31: value: tabCounts.tomorrow || 0,"
+          },
+          {
+            "key": "orders.pending_orders",
+            "line": 41,
+            "context": "40: id: 'pending',\n41: title: t('orders.pending_orders'),\n42: value: tabCounts.pending || 0,"
+          },
+          {
+            "key": "orders.require_attention",
+            "line": 47,
+            "context": "46: trend: '-3%',\n47: subtitle: t('orders.require_attention'),\n48: urgent: Math.floor((tabCounts.pending || 0) * 0.3)"
+          },
+          {
+            "key": "orders.week_orders",
+            "line": 52,
+            "context": "51: id: 'week',\n52: title: t('orders.week_orders'),\n53: value: tabCounts.week || 0,"
+          }
+        ],
         "coverage": 42,
         "severity": "medium"
       },
@@ -5947,6 +5963,60 @@
             "text": "Role",
             "line": 225,
             "context": "224: <div>\n225: <Label htmlFor=\"role-select\">Role</Label>\n226: <Select value={selectedRole} onValueChange={setSelectedRole}>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\components\\orders\\UnifiedModalTest.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Unified Order Detail Modal Test",
+            "line": 98,
+            "context": "97: <CardHeader>\n98: <CardTitle>Unified Order Detail Modal Test</CardTitle>\n99: </CardHeader>"
+          },
+          {
+            "text": "Sales Order",
+            "line": 107,
+            "context": "106: >\n107: <span className=\"font-semibold\">Sales Order</span>\n108: <span className=\"text-xs text-muted-foreground\">Stock + VIN</span>"
+          },
+          {
+            "text": "Service Order",
+            "line": 116,
+            "context": "115: >\n116: <span className=\"font-semibold\">Service Order</span>\n117: <span className=\"text-xs text-muted-foreground\">PO + RO + TAG</span>"
+          },
+          {
+            "text": "Recon Order",
+            "line": 125,
+            "context": "124: >\n125: <span className=\"font-semibold\">Recon Order</span>\n126: <span className=\"text-xs text-muted-foreground\">Stock + Service Performer</span>"
+          },
+          {
+            "text": "Car Wash",
+            "line": 134,
+            "context": "133: >\n134: <span className=\"font-semibold\">Car Wash</span>\n135: <span className=\"text-xs text-muted-foreground\">TAG + Service Performer</span>"
+          },
+          {
+            "text": "2023 Toyota Camry XLE - Decoded from VIN",
+            "line": 19,
+            "context": "18: customer_name: 'Jane Doe',\n19: vehicle_info: '2023 Toyota Camry XLE - Decoded from VIN',\n20: vehicle_vin: '1HGBH41JXMN109186',"
+          },
+          {
+            "text": "2022 Honda Accord LX - Decoded from VIN",
+            "line": 34,
+            "context": "33: customer_name: 'Bob Wilson',\n34: vehicle_info: '2022 Honda Accord LX - Decoded from VIN',\n35: vehicle_vin: '1HGCY2F53NA123456',"
+          },
+          {
+            "text": "2021 BMW 3 Series - Decoded from VIN",
+            "line": 51,
+            "context": "50: customer_name: 'Alice Brown',\n51: vehicle_info: '2021 BMW 3 Series - Decoded from VIN',\n52: vehicle_vin: 'WBA5A5C50MD123456',"
+          },
+          {
+            "text": "2020 Mercedes C-Class - Decoded from VIN",
+            "line": 67,
+            "context": "66: customer_name: 'Tom Green',\n67: vehicle_info: '2020 Mercedes C-Class - Decoded from VIN',\n68: vehicle_vin: 'WDDWF4HB8LR123456',"
           }
         ],
         "translationCalls": [],
@@ -11229,75 +11299,75 @@
         "translationCalls": [
           {
             "key": "order_detail.regenerate_qr",
-            "line": 51,
+            "line": 59,
             "exists": false
           },
           {
-            "key": "order_detail.short_link_created",
-            "line": 52,
+            "key": "order_detail.qr_auto_generated",
+            "line": 60,
             "exists": false
           },
           {
             "key": "orders.error_generating_qr",
-            "line": 69,
+            "line": 95,
             "exists": false
           },
           {
             "key": "orders.sms_sent_successfully",
-            "line": 86,
+            "line": 114,
             "exists": false
           },
           {
             "key": "orders.error_sending_sms",
-            "line": 93,
+            "line": 121,
             "exists": false
           },
           {
             "key": "orders.email_sent_successfully",
-            "line": 116,
+            "line": 144,
             "exists": false
           },
           {
             "key": "orders.error_sending_email",
-            "line": 123,
+            "line": 151,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "order_detail.regenerate_qr",
-            "line": 51,
-            "context": "50: const message = regenerate\n51: ? t('order_detail.regenerate_qr')\n52: : t('order_detail.short_link_created');"
+            "line": 59,
+            "context": "58: const message = regenerate\n59: ? t('order_detail.regenerate_qr')\n60: : t('order_detail.qr_auto_generated');"
           },
           {
-            "key": "order_detail.short_link_created",
-            "line": 52,
-            "context": "51: ? t('order_detail.regenerate_qr')\n52: : t('order_detail.short_link_created');\n53: toast.success(message);"
+            "key": "order_detail.qr_auto_generated",
+            "line": 60,
+            "context": "59: ? t('order_detail.regenerate_qr')\n60: : t('order_detail.qr_auto_generated');\n61: "
           },
           {
             "key": "orders.error_generating_qr",
-            "line": 69,
-            "context": "68: console.error('Error generating QR:', error);\n69: toast.error(t('orders.error_generating_qr'));\n70: return {};"
+            "line": 95,
+            "context": "94: if (regenerate) {\n95: toast.error(t('orders.error_generating_qr'));\n96: }"
           },
           {
             "key": "orders.sms_sent_successfully",
-            "line": 86,
-            "context": "85: if (data.success) {\n86: toast.success(t('orders.sms_sent_successfully'));\n87: return true;"
+            "line": 114,
+            "context": "113: if (data.success) {\n114: toast.success(t('orders.sms_sent_successfully'));\n115: return true;"
           },
           {
             "key": "orders.error_sending_sms",
-            "line": 93,
-            "context": "92: console.error('Error sending SMS:', error);\n93: toast.error(t('orders.error_sending_sms'));\n94: return false;"
+            "line": 121,
+            "context": "120: console.error('Error sending SMS:', error);\n121: toast.error(t('orders.error_sending_sms'));\n122: return false;"
           },
           {
             "key": "orders.email_sent_successfully",
-            "line": 116,
-            "context": "115: if (data.success) {\n116: toast.success(t('orders.email_sent_successfully'));\n117: return true;"
+            "line": 144,
+            "context": "143: if (data.success) {\n144: toast.success(t('orders.email_sent_successfully'));\n145: return true;"
           },
           {
             "key": "orders.error_sending_email",
-            "line": 123,
-            "context": "122: console.error('Error sending email:', error);\n123: toast.error(t('orders.error_sending_email'));\n124: return false;"
+            "line": 151,
+            "context": "150: console.error('Error sending email:', error);\n151: toast.error(t('orders.error_sending_email'));\n152: return false;"
           }
         ],
         "coverage": 70,
@@ -26242,135 +26312,85 @@
         "translationCalls": [
           {
             "key": "common.year",
-            "line": 20,
-            "exists": false
+            "line": 39,
+            "exists": true
           },
           {
             "key": "common.make",
-            "line": 25,
-            "exists": false
+            "line": 44,
+            "exists": true
           },
           {
             "key": "common.model",
-            "line": 30,
-            "exists": false
+            "line": 49,
+            "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 36,
-            "exists": false
+            "line": 55,
+            "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 42,
-            "exists": false
+            "line": 61,
+            "exists": true
           },
           {
             "key": "common.color",
-            "line": 46,
-            "exists": false
+            "line": 65,
+            "exists": true
           },
           {
             "key": "car_wash_orders.decoded",
-            "line": 56,
+            "line": 75,
             "exists": false
           },
           {
             "key": "car_wash_orders.auto_populated",
-            "line": 57,
+            "line": 76,
             "exists": false
           },
           {
             "key": "vehicle_info.manual_entry",
-            "line": 62,
-            "exists": false
+            "line": 81,
+            "exists": true
           },
           {
             "key": "vehicle_info.manually_entered",
-            "line": 63,
+            "line": 82,
             "exists": false
           },
           {
             "key": "orders.vehicle_information",
-            "line": 78,
-            "exists": false
+            "line": 104,
+            "exists": true
           },
           {
             "key": "vehicle_info.vin_status",
-            "line": 108,
-            "exists": false
+            "line": 134,
+            "exists": true
           },
           {
             "key": "vehicle_info.display_preview",
-            "line": 126,
-            "exists": false
+            "line": 152,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "common.year",
-            "line": 20,
-            "context": "19: icon: Calendar,\n20: label: t('common.year'),\n21: value: order.vehicle_year || 'N/A'"
-          },
-          {
-            "key": "common.make",
-            "line": 25,
-            "context": "24: icon: Car,\n25: label: t('common.make'),\n26: value: order.vehicle_make || 'N/A'"
-          },
-          {
-            "key": "common.model",
-            "line": 30,
-            "context": "29: icon: Car,\n30: label: t('common.model'),\n31: value: order.vehicle_model || 'N/A'"
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 36,
-            "context": "35: label: 'VIN',\n36: value: order.vehicle_vin || t('data_table.vin_not_provided'),\n37: mono: true"
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 42,
-            "context": "41: label: 'Stock#',\n42: value: order.stock_number || t('data_table.no_stock')\n43: },"
-          },
-          {
-            "key": "common.color",
-            "line": 46,
-            "context": "45: icon: Palette,\n46: label: t('common.color'),\n47: value: order.vehicle_color || 'N/A'"
-          },
-          {
             "key": "car_wash_orders.decoded",
-            "line": 56,
-            "context": "55: status: 'success',\n56: text: t('car_wash_orders.decoded'),\n57: desc: t('car_wash_orders.auto_populated')"
+            "line": 75,
+            "context": "74: status: 'success',\n75: text: t('car_wash_orders.decoded'),\n76: desc: t('car_wash_orders.auto_populated')"
           },
           {
             "key": "car_wash_orders.auto_populated",
-            "line": 57,
-            "context": "56: text: t('car_wash_orders.decoded'),\n57: desc: t('car_wash_orders.auto_populated')\n58: };"
-          },
-          {
-            "key": "vehicle_info.manual_entry",
-            "line": 62,
-            "context": "61: status: 'manual',\n62: text: t('vehicle_info.manual_entry'),\n63: desc: t('vehicle_info.manually_entered')"
+            "line": 76,
+            "context": "75: text: t('car_wash_orders.decoded'),\n76: desc: t('car_wash_orders.auto_populated')\n77: };"
           },
           {
             "key": "vehicle_info.manually_entered",
-            "line": 63,
-            "context": "62: text: t('vehicle_info.manual_entry'),\n63: desc: t('vehicle_info.manually_entered')\n64: };"
-          },
-          {
-            "key": "orders.vehicle_information",
-            "line": 78,
-            "context": "77: <Car className=\"h-5 w-5 text-primary\" />\n78: {t('orders.vehicle_information')}\n79: </CardTitle>"
-          },
-          {
-            "key": "vehicle_info.vin_status",
-            "line": 108,
-            "context": "107: <Shield className=\"h-4 w-4 text-muted-foreground\" />\n108: <span className=\"text-sm font-medium\">{t('vehicle_info.vin_status')}</span>\n109: </div>"
-          },
-          {
-            "key": "vehicle_info.display_preview",
-            "line": 126,
-            "context": "125: <Eye className=\"h-4 w-4 text-muted-foreground\" />\n126: <span className=\"text-sm font-medium\">{t('vehicle_info.display_preview')}</span>\n127: </div>"
+            "line": 82,
+            "context": "81: text: t('vehicle_info.manual_entry'),\n82: desc: t('vehicle_info.manually_entered')\n83: };"
           }
         ],
         "coverage": 100,
@@ -26457,18 +26477,69 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Close",
+            "line": 464,
+            "context": "463: className=\"min-w-[120px]\"\n464: >\n465: Close"
+          },
+          {
+            "text": "Close\r\n              ",
+            "line": 459,
+            "context": "458: <div className=\"flex justify-end\">\n459: <Button\n460: variant=\"destructive\""
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "orders.order_details",
+            "line": 335,
+            "exists": false
+          },
+          {
+            "key": "orders.order_details_description",
+            "line": 338,
+            "exists": false
+          },
+          {
+            "key": "orders.communication_actions",
+            "line": 406,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "orders.order_details",
+            "line": 335,
+            "context": "334: <DialogTitle className=\"sr-only\">\n335: {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}\n336: </DialogTitle>"
+          },
+          {
+            "key": "orders.order_details_description",
+            "line": 338,
+            "context": "337: <DialogDescription className=\"sr-only\">\n338: {t('orders.order_details_description', {\n339: customer: order.customerName || order.customer_name,"
+          },
+          {
+            "key": "orders.communication_actions",
+            "line": 406,
+            "context": "405: <MessageSquare className=\"h-4 w-4\" />\n406: {t('orders.communication_actions', 'Team Communication')}\n407: </CardTitle>"
+          }
+        ],
+        "coverage": 60,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\SimpleNotesDisplay.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "order_detail.simple_notes",
             "line": 18,
-            "exists": false
+            "exists": true
           },
           {
             "key": "order_detail.no_notes_provided",
             "line": 33,
-            "exists": false
+            "exists": true
           },
           {
             "key": "qr_block.words_in_general",
@@ -26482,16 +26553,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "order_detail.simple_notes",
-            "line": 18,
-            "context": "17: <FileText className=\"h-5 w-5 text-primary\" />\n18: {t('order_detail.simple_notes')}\n19: </CardTitle>"
-          },
-          {
-            "key": "order_detail.no_notes_provided",
-            "line": 33,
-            "context": "32: <p className=\"text-sm text-muted-foreground italic\">\n33: {t('order_detail.no_notes_provided')}\n34: </p>"
-          },
           {
             "key": "qr_block.words_in_general",
             "line": 45,
@@ -26923,6 +26984,106 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\ServiceOrderFields.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "service_orders.purchase_order",
+            "line": 30,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 31,
+            "exists": false
+          },
+          {
+            "key": "service_orders.repair_order",
+            "line": 37,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 38,
+            "exists": false
+          },
+          {
+            "key": "service_orders.tag",
+            "line": 44,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 45,
+            "exists": false
+          },
+          {
+            "key": "service_orders.service_information",
+            "line": 64,
+            "exists": false
+          },
+          {
+            "key": "common.assigned",
+            "line": 91,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 91,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "service_orders.purchase_order",
+            "line": 30,
+            "context": "29: label: 'PO',\n30: fullLabel: t('service_orders.purchase_order'),\n31: value: order.po || order.purchase_order || t('common.not_assigned'),"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 31,
+            "context": "30: fullLabel: t('service_orders.purchase_order'),\n31: value: order.po || order.purchase_order || t('common.not_assigned'),\n32: hasValue: !!(order.po || order.purchase_order)"
+          },
+          {
+            "key": "service_orders.repair_order",
+            "line": 37,
+            "context": "36: label: 'RO',\n37: fullLabel: t('service_orders.repair_order'),\n38: value: order.ro || order.repair_order || t('common.not_assigned'),"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 38,
+            "context": "37: fullLabel: t('service_orders.repair_order'),\n38: value: order.ro || order.repair_order || t('common.not_assigned'),\n39: hasValue: !!(order.ro || order.repair_order)"
+          },
+          {
+            "key": "service_orders.tag",
+            "line": 44,
+            "context": "43: label: 'TAG',\n44: fullLabel: t('service_orders.tag'),\n45: value: order.tag || t('common.not_assigned'),"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 45,
+            "context": "44: fullLabel: t('service_orders.tag'),\n45: value: order.tag || t('common.not_assigned'),\n46: hasValue: !!order.tag"
+          },
+          {
+            "key": "service_orders.service_information",
+            "line": 64,
+            "context": "63: <Wrench className=\"h-5 w-5 text-primary\" />\n64: {t('service_orders.service_information')}\n65: </CardTitle>"
+          },
+          {
+            "key": "common.assigned",
+            "line": 91,
+            "context": "90: >\n91: {info.hasValue ? t('common.assigned') : t('common.not_assigned')}\n92: </Badge>"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 91,
+            "context": "90: >\n91: {info.hasValue ? t('common.assigned') : t('common.not_assigned')}\n92: </Badge>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\ScheduleViewBlock.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -26949,42 +27110,42 @@
           {
             "key": "orders.created",
             "line": 95,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.due_date",
             "line": 101,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.not_set",
             "line": 102,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.no_due_date",
             "line": 103,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.updated",
             "line": 107,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.most_recent_change",
             "line": 109,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.schedule_timeline",
             "line": 118,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.order_progress",
             "line": 138,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.order_completed",
@@ -26994,12 +27155,12 @@
           {
             "key": "schedule_view.in_progress",
             "line": 149,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.timeline",
             "line": 158,
-            "exists": false
+            "exists": true
           },
           {
             "key": "schedule_view.sla_compliance",
@@ -27044,59 +27205,9 @@
             "context": "58: status: 'future',\n59: text: t('schedule_view.due_in_days', { days: daysLeft }),\n60: color: 'text-muted-foreground',"
           },
           {
-            "key": "orders.created",
-            "line": 95,
-            "context": "94: icon: Calendar,\n95: label: t('orders.created'),\n96: value: safeFormatDate(order.created_at),"
-          },
-          {
-            "key": "orders.due_date",
-            "line": 101,
-            "context": "100: icon: Target,\n101: label: t('orders.due_date'),\n102: value: order.due_date ? safeFormatDate(order.due_date) : t('schedule_view.not_set'),"
-          },
-          {
-            "key": "schedule_view.not_set",
-            "line": 102,
-            "context": "101: label: t('orders.due_date'),\n102: value: order.due_date ? safeFormatDate(order.due_date) : t('schedule_view.not_set'),\n103: subtitle: dueDateStatus?.text || t('schedule_view.no_due_date')"
-          },
-          {
-            "key": "schedule_view.no_due_date",
-            "line": 103,
-            "context": "102: value: order.due_date ? safeFormatDate(order.due_date) : t('schedule_view.not_set'),\n103: subtitle: dueDateStatus?.text || t('schedule_view.no_due_date')\n104: },"
-          },
-          {
-            "key": "orders.updated",
-            "line": 107,
-            "context": "106: icon: Clock,\n107: label: t('orders.updated'),\n108: value: safeFormatDate(order.updated_at),"
-          },
-          {
-            "key": "schedule_view.most_recent_change",
-            "line": 109,
-            "context": "108: value: safeFormatDate(order.updated_at),\n109: subtitle: t('schedule_view.most_recent_change')\n110: }"
-          },
-          {
-            "key": "schedule_view.schedule_timeline",
-            "line": 118,
-            "context": "117: <Calendar className=\"h-5 w-5 text-primary\" />\n118: {t('schedule_view.schedule_timeline')}\n119: </CardTitle>"
-          },
-          {
-            "key": "schedule_view.order_progress",
-            "line": 138,
-            "context": "137: <div className=\"flex items-center justify-between\">\n138: <span className=\"text-sm font-medium\">{t('schedule_view.order_progress')}</span>\n139: <span className=\"text-sm text-muted-foreground\">{progress}%</span>"
-          },
-          {
             "key": "schedule_view.order_completed",
             "line": 149,
             "context": "148: <span className=\"text-xs text-muted-foreground\">\n149: {order.status === 'completed' ? t('schedule_view.order_completed') : t('schedule_view.in_progress')}\n150: </span>"
-          },
-          {
-            "key": "schedule_view.in_progress",
-            "line": 149,
-            "context": "148: <span className=\"text-xs text-muted-foreground\">\n149: {order.status === 'completed' ? t('schedule_view.order_completed') : t('schedule_view.in_progress')}\n150: </span>"
-          },
-          {
-            "key": "schedule_view.timeline",
-            "line": 158,
-            "context": "157: <Clock className=\"h-4 w-4\" />\n158: {t('schedule_view.timeline')}\n159: </h4>"
           },
           {
             "key": "schedule_view.sla_compliance",
@@ -27117,6 +27228,61 @@
             "key": "schedule_view.target_completion",
             "line": 196,
             "context": "195: <p className=\"text-xs text-muted-foreground\">\n196: {t('schedule_view.target_completion', { hours: order.sla_hours })}\n197: </p>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\orders\\SalesOrderFields.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "data_table.no_stock",
+            "line": 24,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.stock_information",
+            "line": 35,
+            "exists": false
+          },
+          {
+            "key": "common.stock_number",
+            "line": 44,
+            "exists": false
+          },
+          {
+            "key": "common.available",
+            "line": 54,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 54,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "sales_orders.stock_information",
+            "line": 35,
+            "context": "34: <Package className=\"h-5 w-5 text-primary\" />\n35: {t('sales_orders.stock_information')}\n36: </CardTitle>"
+          },
+          {
+            "key": "common.stock_number",
+            "line": 44,
+            "context": "43: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n44: {t('common.stock_number')}\n45: </p>"
+          },
+          {
+            "key": "common.available",
+            "line": 54,
+            "context": "53: >\n54: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n55: </Badge>"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 54,
+            "context": "53: >\n54: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n55: </Badge>"
           }
         ],
         "coverage": 100,
@@ -27215,7 +27381,7 @@
           {
             "key": "orders.vehicle_information",
             "line": 322,
-            "exists": false
+            "exists": true
           },
           {
             "key": "recon.stock_number",
@@ -27525,11 +27691,6 @@
             "context": "310: <DialogDescription className=\"sr-only\">\n311: {mode === 'create' ? t('recon.create_recon_order') : t('recon.edit_recon_order')}\n312: </DialogDescription>"
           },
           {
-            "key": "orders.vehicle_information",
-            "line": 322,
-            "context": "321: <Car className=\"h-4 w-4\" />\n322: {t('orders.vehicle_information')}\n323: </CardTitle>"
-          },
-          {
             "key": "recon.stock_number",
             "line": 327,
             "context": "326: <div>\n327: <Label htmlFor=\"stockNumber\">{t('recon.stock_number')} *</Label>\n328: <Input"
@@ -27759,6 +27920,121 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\ReconOrderFields.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "data_table.no_stock",
+            "line": 29,
+            "exists": true
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 34,
+            "exists": false
+          },
+          {
+            "key": "common.not_specified",
+            "line": 35,
+            "exists": false
+          },
+          {
+            "key": "recon_orders.recon_information",
+            "line": 52,
+            "exists": false
+          },
+          {
+            "key": "recon_orders.service_performer",
+            "line": 62,
+            "exists": false
+          },
+          {
+            "key": "common.assigned",
+            "line": 72,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 72,
+            "exists": false
+          },
+          {
+            "key": "common.stock_number",
+            "line": 83,
+            "exists": false
+          },
+          {
+            "key": "common.available",
+            "line": 93,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 93,
+            "exists": false
+          },
+          {
+            "key": "recon_orders.recon_type",
+            "line": 104,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.not_assigned",
+            "line": 34,
+            "context": "33: const reconInfo = React.useMemo(() => ({\n34: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n35: reconType: order.recon_type || order.reconType || t('common.not_specified'),"
+          },
+          {
+            "key": "common.not_specified",
+            "line": 35,
+            "context": "34: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n35: reconType: order.recon_type || order.reconType || t('common.not_specified'),\n36: hasServicePerformer: !!(order.service_performer || order.servicePerformer)"
+          },
+          {
+            "key": "recon_orders.recon_information",
+            "line": 52,
+            "context": "51: <RefreshCw className=\"h-5 w-5 text-primary\" />\n52: {t('recon_orders.recon_information')}\n53: </CardTitle>"
+          },
+          {
+            "key": "recon_orders.service_performer",
+            "line": 62,
+            "context": "61: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n62: {t('recon_orders.service_performer')}\n63: </p>"
+          },
+          {
+            "key": "common.assigned",
+            "line": 72,
+            "context": "71: >\n72: {reconInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n73: </Badge>"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 72,
+            "context": "71: >\n72: {reconInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n73: </Badge>"
+          },
+          {
+            "key": "common.stock_number",
+            "line": 83,
+            "context": "82: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n83: {t('common.stock_number')}\n84: </p>"
+          },
+          {
+            "key": "common.available",
+            "line": 93,
+            "context": "92: >\n93: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n94: </Badge>"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 93,
+            "context": "92: >\n93: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n94: </Badge>"
+          },
+          {
+            "key": "recon_orders.recon_type",
+            "line": 104,
+            "context": "103: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n104: {t('recon_orders.recon_type')}\n105: </p>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\RecentActivityBlock.tsx",
         "hardcodedStrings": [
           {
@@ -27939,7 +28215,7 @@
           {
             "key": "orders.no_qr_code",
             "line": 253,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.generating",
@@ -27949,7 +28225,7 @@
           {
             "key": "orders.generate_qr",
             "line": 261,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -28019,17 +28295,7 @@
             "context": "244: <RefreshCw className=\"w-3 h-3 mr-1\" />\n245: {loading ? t('common.regenerating') : t('orders.regenerate_qr')}\n246: </Button>"
           },
           {
-            "key": "orders.no_qr_code",
-            "line": 253,
-            "context": "252: <p className=\"text-sm text-muted-foreground\">\n253: {t('orders.no_qr_code')}\n254: </p>"
-          },
-          {
             "key": "common.generating",
-            "line": 261,
-            "context": "260: >\n261: {loading ? t('common.generating') : t('orders.generate_qr')}\n262: </Button>"
-          },
-          {
-            "key": "orders.generate_qr",
             "line": 261,
             "context": "260: >\n261: {loading ? t('common.generating') : t('orders.generate_qr')}\n262: </Button>"
           }
@@ -29111,6 +29377,121 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\ModifiedVehicleInfoBlock.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "vehicle_info.vehicle_information",
+            "line": 37,
+            "exists": false
+          },
+          {
+            "key": "vehicle_info.decoded_from_vin",
+            "line": 39,
+            "exists": false
+          },
+          {
+            "key": "data_table.vin_not_provided",
+            "line": 44,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_stock",
+            "line": 51,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.decoded",
+            "line": 68,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.auto_populated",
+            "line": 69,
+            "exists": false
+          },
+          {
+            "key": "vehicle_info.manual_entry",
+            "line": 74,
+            "exists": true
+          },
+          {
+            "key": "vehicle_info.manually_entered",
+            "line": 75,
+            "exists": false
+          },
+          {
+            "key": "vehicle_info.no_image_available",
+            "line": 87,
+            "exists": false
+          },
+          {
+            "key": "orders.vehicle_information",
+            "line": 96,
+            "exists": true
+          },
+          {
+            "key": "vehicle_info.vin_status",
+            "line": 136,
+            "exists": true
+          },
+          {
+            "key": "vehicle_info.vehicle_image",
+            "line": 154,
+            "exists": false
+          },
+          {
+            "key": "vehicle_info.vehicle_image_alt",
+            "line": 162,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "vehicle_info.vehicle_information",
+            "line": 37,
+            "context": "36: icon: Car,\n37: label: t('vehicle_info.vehicle_information'),\n38: value: order.vehicle_info || order.vehicleInfo || 'Vehicle information not available',"
+          },
+          {
+            "key": "vehicle_info.decoded_from_vin",
+            "line": 39,
+            "context": "38: value: order.vehicle_info || order.vehicleInfo || 'Vehicle information not available',\n39: description: t('vehicle_info.decoded_from_vin')\n40: },"
+          },
+          {
+            "key": "car_wash_orders.decoded",
+            "line": 68,
+            "context": "67: status: 'success',\n68: text: t('car_wash_orders.decoded'),\n69: desc: t('car_wash_orders.auto_populated')"
+          },
+          {
+            "key": "car_wash_orders.auto_populated",
+            "line": 69,
+            "context": "68: text: t('car_wash_orders.decoded'),\n69: desc: t('car_wash_orders.auto_populated')\n70: };"
+          },
+          {
+            "key": "vehicle_info.manually_entered",
+            "line": 75,
+            "context": "74: text: t('vehicle_info.manual_entry'),\n75: desc: t('vehicle_info.manually_entered')\n76: };"
+          },
+          {
+            "key": "vehicle_info.no_image_available",
+            "line": 87,
+            "context": "86: imageUrl,\n87: fallbackText: t('vehicle_info.no_image_available')\n88: };"
+          },
+          {
+            "key": "vehicle_info.vehicle_image",
+            "line": 154,
+            "context": "153: <Image className=\"h-4 w-4 text-muted-foreground\" />\n154: <span className=\"text-sm font-medium\">{t('vehicle_info.vehicle_image')}</span>\n155: </div>"
+          },
+          {
+            "key": "vehicle_info.vehicle_image_alt",
+            "line": 162,
+            "context": "161: src={vehicleImageData.imageUrl}\n162: alt={t('vehicle_info.vehicle_image_alt')}\n163: className=\"w-full h-auto max-h-32 object-cover rounded-md\""
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\FollowersBlock.tsx",
         "hardcodedStrings": [
           {
@@ -29136,123 +29517,227 @@
       },
       {
         "file": "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Scan for Quick Access",
-            "line": 189,
-            "context": "188: </div>\n189: <p className=\"text-sm text-muted-foreground font-medium\">\n190: Scan for Quick Access"
-          },
-          {
-            "text": "Regenerate",
-            "line": 262,
-            "context": "261: >\n262: <RefreshCw className=\"h-3 w-3 mr-2\" />\n263: Regenerate"
-          }
-        ],
+        "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "order_detail.short_link_created",
-            "line": 90,
+            "line": 92,
             "exists": false
           },
           {
             "key": "order_detail.regenerate_qr",
-            "line": 121,
+            "line": 123,
             "exists": false
           },
           {
             "key": "order_detail.copy_link",
-            "line": 137,
+            "line": 139,
             "exists": false
           },
           {
             "key": "orders.qr_code",
-            "line": 164,
+            "line": 166,
             "exists": false
           },
           {
             "key": "orders.short_link",
-            "line": 164,
+            "line": 166,
+            "exists": false
+          },
+          {
+            "key": "orders.qr_generating",
+            "line": 177,
+            "exists": false
+          },
+          {
+            "key": "orders.qr_generating_desc",
+            "line": 180,
+            "exists": false
+          },
+          {
+            "key": "orders.qr_generation_failed",
+            "line": 192,
+            "exists": false
+          },
+          {
+            "key": "orders.qr_retry_desc",
+            "line": 195,
+            "exists": false
+          },
+          {
+            "key": "orders.retrying",
+            "line": 206,
+            "exists": false
+          },
+          {
+            "key": "orders.retry_qr_generation",
+            "line": 211,
+            "exists": false
+          },
+          {
+            "key": "orders.scan_for_quick_access",
+            "line": 244,
+            "exists": false
+          },
+          {
+            "key": "orders.short_link",
+            "line": 252,
             "exists": false
           },
           {
             "key": "order_detail.qr_analytics",
-            "line": 220,
+            "line": 274,
             "exists": false
           },
           {
             "key": "order_detail.total_scans",
-            "line": 227,
+            "line": 281,
             "exists": false
           },
           {
             "key": "order_detail.unique_visitors",
-            "line": 237,
+            "line": 291,
+            "exists": false
+          },
+          {
+            "key": "order_detail.last_accessed",
+            "line": 301,
+            "exists": false
+          },
+          {
+            "key": "orders.regenerate_qr",
+            "line": 317,
             "exists": false
           },
           {
             "key": "orders.no_qr_code",
-            "line": 271,
+            "line": 329,
+            "exists": true
+          },
+          {
+            "key": "orders.legacy_order_qr_desc",
+            "line": 332,
             "exists": false
           },
           {
-            "key": "orders.generate_qr",
-            "line": 286,
+            "key": "orders.generating",
+            "line": 343,
+            "exists": false
+          },
+          {
+            "key": "orders.generate_qr_legacy",
+            "line": 348,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "order_detail.short_link_created",
-            "line": 90,
-            "context": "89: \n90: toast.success(t('order_detail.short_link_created'));\n91: "
+            "line": 92,
+            "context": "91: \n92: toast.success(t('order_detail.short_link_created'));\n93: "
           },
           {
             "key": "order_detail.regenerate_qr",
-            "line": 121,
-            "context": "120: \n121: toast.success(t('order_detail.regenerate_qr'));\n122: "
+            "line": 123,
+            "context": "122: \n123: toast.success(t('order_detail.regenerate_qr'));\n124: "
           },
           {
             "key": "order_detail.copy_link",
-            "line": 137,
-            "context": "136: if (success) {\n137: toast.success(t('order_detail.copy_link'));\n138: } else {"
+            "line": 139,
+            "context": "138: if (success) {\n139: toast.success(t('order_detail.copy_link'));\n140: } else {"
           },
           {
             "key": "orders.qr_code",
-            "line": 164,
-            "context": "163: <QrCode className=\"h-5 w-5 text-primary\" />\n164: <h3 className=\"font-semibold text-base\">{t('orders.qr_code')} & {t('orders.short_link')}</h3>\n165: </div>"
+            "line": 166,
+            "context": "165: <QrCode className=\"h-5 w-5 text-primary\" />\n166: <h3 className=\"font-semibold text-base\">{t('orders.qr_code')} & {t('orders.short_link')}</h3>\n167: </div>"
           },
           {
             "key": "orders.short_link",
-            "line": 164,
-            "context": "163: <QrCode className=\"h-5 w-5 text-primary\" />\n164: <h3 className=\"font-semibold text-base\">{t('orders.qr_code')} & {t('orders.short_link')}</h3>\n165: </div>"
+            "line": 166,
+            "context": "165: <QrCode className=\"h-5 w-5 text-primary\" />\n166: <h3 className=\"font-semibold text-base\">{t('orders.qr_code')} & {t('orders.short_link')}</h3>\n167: </div>"
+          },
+          {
+            "key": "orders.qr_generating",
+            "line": 177,
+            "context": "176: <p className=\"text-sm font-medium text-primary mb-2\">\n177: {t('orders.qr_generating')}\n178: </p>"
+          },
+          {
+            "key": "orders.qr_generating_desc",
+            "line": 180,
+            "context": "179: <p className=\"text-xs text-muted-foreground\">\n180: {t('orders.qr_generating_desc')}\n181: </p>"
+          },
+          {
+            "key": "orders.qr_generation_failed",
+            "line": 192,
+            "context": "191: <p className=\"text-sm text-destructive mb-2\">\n192: {t('orders.qr_generation_failed')}\n193: </p>"
+          },
+          {
+            "key": "orders.qr_retry_desc",
+            "line": 195,
+            "context": "194: <p className=\"text-xs text-muted-foreground mb-4\">\n195: {t('orders.qr_retry_desc')}\n196: </p>"
+          },
+          {
+            "key": "orders.retrying",
+            "line": 206,
+            "context": "205: <RefreshCw className=\"h-4 w-4 mr-2 animate-spin\" />\n206: {t('orders.retrying')}\n207: </>"
+          },
+          {
+            "key": "orders.retry_qr_generation",
+            "line": 211,
+            "context": "210: <RefreshCw className=\"h-4 w-4 mr-2\" />\n211: {t('orders.retry_qr_generation')}\n212: </>"
+          },
+          {
+            "key": "orders.scan_for_quick_access",
+            "line": 244,
+            "context": "243: <p className=\"text-sm text-muted-foreground font-medium\">\n244: {t('orders.scan_for_quick_access')}\n245: </p>"
+          },
+          {
+            "key": "orders.short_link",
+            "line": 252,
+            "context": "251: <ExternalLink className=\"h-4 w-4 text-muted-foreground\" />\n252: <span className=\"text-sm font-medium\">{t('orders.short_link')}:</span>\n253: </div>"
           },
           {
             "key": "order_detail.qr_analytics",
-            "line": 220,
-            "context": "219: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />\n220: <span className=\"text-sm font-medium\">{t('order_detail.qr_analytics')}</span>\n221: </div>"
+            "line": 274,
+            "context": "273: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />\n274: <span className=\"text-sm font-medium\">{t('order_detail.qr_analytics')}</span>\n275: </div>"
           },
           {
             "key": "order_detail.total_scans",
-            "line": 227,
-            "context": "226: <Eye className=\"h-3 w-3 text-primary\" />\n227: <span className=\"text-xs text-muted-foreground\">{t('order_detail.total_scans')}</span>\n228: </div>"
+            "line": 281,
+            "context": "280: <Eye className=\"h-3 w-3 text-primary\" />\n281: <span className=\"text-xs text-muted-foreground\">{t('order_detail.total_scans')}</span>\n282: </div>"
           },
           {
             "key": "order_detail.unique_visitors",
-            "line": 237,
-            "context": "236: <Users className=\"h-3 w-3 text-secondary\" />\n237: <span className=\"text-xs text-muted-foreground\">{t('order_detail.unique_visitors')}</span>\n238: </div>"
+            "line": 291,
+            "context": "290: <Users className=\"h-3 w-3 text-secondary\" />\n291: <span className=\"text-xs text-muted-foreground\">{t('order_detail.unique_visitors')}</span>\n292: </div>"
           },
           {
-            "key": "orders.no_qr_code",
-            "line": 271,
-            "context": "270: <p className=\"text-sm text-muted-foreground mb-4\">\n271: {t('orders.no_qr_code')}\n272: </p>"
+            "key": "order_detail.last_accessed",
+            "line": 301,
+            "context": "300: <p className=\"text-xs text-muted-foreground text-center\">\n301: {t('order_detail.last_accessed')}: {formattedAnalytics.lastClickedFormatted}\n302: </p>"
           },
           {
-            "key": "orders.generate_qr",
-            "line": 286,
-            "context": "285: <QrCode className=\"h-4 w-4 mr-2\" />\n286: {t('orders.generate_qr')}\n287: </>"
+            "key": "orders.regenerate_qr",
+            "line": 317,
+            "context": "316: <RefreshCw className=\"h-3 w-3 mr-2\" />\n317: {t('orders.regenerate_qr')}\n318: </Button>"
+          },
+          {
+            "key": "orders.legacy_order_qr_desc",
+            "line": 332,
+            "context": "331: <p className=\"text-xs text-muted-foreground mb-4\">\n332: {t('orders.legacy_order_qr_desc')}\n333: </p>"
+          },
+          {
+            "key": "orders.generating",
+            "line": 343,
+            "context": "342: <RefreshCw className=\"h-4 w-4 mr-2 animate-spin\" />\n343: {t('orders.generating')}\n344: </>"
+          },
+          {
+            "key": "orders.generate_qr_legacy",
+            "line": 348,
+            "context": "347: <QrCode className=\"h-4 w-4 mr-2\" />\n348: {t('orders.generate_qr_legacy')}\n349: </>"
           }
         ],
-        "coverage": 83,
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -29310,52 +29795,52 @@
         "hardcodedStrings": [
           {
             "text": "Premium Auto",
-            "line": 222,
-            "context": "221: <div className=\"text-lg text-gray-700\">\n222: <span className=\"font-semibold\">Premium Auto</span>\n223: <span className=\"mx-2 text-gray-400\">•</span>"
+            "line": 241,
+            "context": "240: <div className=\"text-lg text-gray-700\">\n241: <span className=\"font-semibold\">Premium Auto</span>\n242: <span className=\"mx-2 text-gray-400\">•</span>"
           },
           {
             "text": "Close",
-            "line": 365,
-            "context": "364: className=\"min-w-[120px]\"\n365: >\n366: Close"
+            "line": 384,
+            "context": "383: className=\"min-w-[120px]\"\n384: >\n385: Close"
           },
           {
             "text": "Close\r\n              ",
-            "line": 360,
-            "context": "359: <div className=\"flex justify-end\">\n360: <Button\n361: variant=\"destructive\""
+            "line": 379,
+            "context": "378: <div className=\"flex justify-end\">\n379: <Button\n380: variant=\"destructive\""
           }
         ],
         "translationCalls": [
           {
             "key": "orders.order_details",
-            "line": 199,
+            "line": 218,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 202,
+            "line": 221,
             "exists": false
           },
           {
             "key": "orders.communication_actions",
-            "line": 307,
+            "line": 326,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_details",
-            "line": 199,
-            "context": "198: <DialogTitle className=\"sr-only\">\n199: {t('orders.order_details')} - {order.custom_order_number || order.order_number}\n200: </DialogTitle>"
+            "line": 218,
+            "context": "217: <DialogTitle className=\"sr-only\">\n218: {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}\n219: </DialogTitle>"
           },
           {
             "key": "orders.order_details_description",
-            "line": 202,
-            "context": "201: <DialogDescription className=\"sr-only\">\n202: {t('orders.order_details_description', {\n203: customer: order.customer_name,"
+            "line": 221,
+            "context": "220: <DialogDescription className=\"sr-only\">\n221: {t('orders.order_details_description', {\n222: customer: order.customerName || order.customer_name,"
           },
           {
             "key": "orders.communication_actions",
-            "line": 307,
-            "context": "306: <MessageSquare className=\"h-4 w-4\" />\n307: {t('orders.communication_actions', 'Team Communication')}\n308: </CardTitle>"
+            "line": 326,
+            "context": "325: <MessageSquare className=\"h-4 w-4\" />\n326: {t('orders.communication_actions', 'Team Communication')}\n327: </CardTitle>"
           }
         ],
         "coverage": 50,
@@ -29880,6 +30365,126 @@
           }
         ],
         "coverage": 92,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\orders\\CarWashOrderFields.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.not_assigned",
+            "line": 30,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 32,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.standard_wash",
+            "line": 35,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.car_wash_information",
+            "line": 54,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.service_performer",
+            "line": 64,
+            "exists": false
+          },
+          {
+            "key": "common.assigned",
+            "line": 74,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 74,
+            "exists": false
+          },
+          {
+            "key": "common.assigned",
+            "line": 95,
+            "exists": false
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 95,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.service_type",
+            "line": 106,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.waiter",
+            "line": 114,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.not_assigned",
+            "line": 30,
+            "context": "29: const carWashInfo = React.useMemo(() => ({\n30: tag: order.tag || t('common.not_assigned'),\n31: hasTag: !!order.tag,"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 32,
+            "context": "31: hasTag: !!order.tag,\n32: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n33: hasServicePerformer: !!(order.service_performer || order.servicePerformer),"
+          },
+          {
+            "key": "car_wash_orders.standard_wash",
+            "line": 35,
+            "context": "34: isWaiter: order.is_waiter || order.isWaiter || false,\n35: serviceType: order.service_type || order.serviceType || t('car_wash_orders.standard_wash')\n36: }), ["
+          },
+          {
+            "key": "car_wash_orders.car_wash_information",
+            "line": 54,
+            "context": "53: <Droplets className=\"h-5 w-5 text-primary\" />\n54: {t('car_wash_orders.car_wash_information')}\n55: </CardTitle>"
+          },
+          {
+            "key": "car_wash_orders.service_performer",
+            "line": 64,
+            "context": "63: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n64: {t('car_wash_orders.service_performer')}\n65: </p>"
+          },
+          {
+            "key": "common.assigned",
+            "line": 74,
+            "context": "73: >\n74: {carWashInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n75: </Badge>"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 74,
+            "context": "73: >\n74: {carWashInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n75: </Badge>"
+          },
+          {
+            "key": "common.assigned",
+            "line": 95,
+            "context": "94: >\n95: {carWashInfo.hasTag ? t('common.assigned') : t('common.not_assigned')}\n96: </Badge>"
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 95,
+            "context": "94: >\n95: {carWashInfo.hasTag ? t('common.assigned') : t('common.not_assigned')}\n96: </Badge>"
+          },
+          {
+            "key": "car_wash_orders.service_type",
+            "line": 106,
+            "context": "105: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n106: {t('car_wash_orders.service_type')}\n107: </p>"
+          },
+          {
+            "key": "car_wash_orders.waiter",
+            "line": 114,
+            "context": "113: <Badge variant=\"secondary\" className=\"text-xs\">\n114: {t('car_wash_orders.waiter')}\n115: </Badge>"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -39505,15 +40110,17 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "17 Modal components need translation",
+      "description": "19 Modal components need translation",
       "files": [
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
         "src\\components\\dealerships\\DealershipModal.tsx",
         "src\\components\\contacts\\ContactDetailModal.tsx",
+        "src\\components\\orders\\UnifiedModalTest.tsx",
         "src\\components\\permissions\\RoleAssignmentModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
         "src\\components\\orders\\ServiceOrderModal.tsx",
+        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
@@ -39525,7 +40132,7 @@
         "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx"
       ],
-      "estimatedEffort": "9 hours"
+      "estimatedEffort": "10 hours"
     },
     {
       "priority": "MEDIUM",
@@ -39545,7 +40152,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "238 Component components need translation",
+      "description": "243 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -39637,7 +40244,6 @@
         "src\\components\\scanner\\QuickScanMode.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
-        "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
         "src\\components\\dealer\\DealerServices.tsx",
         "src\\utils\\lazyImports.ts",
         "src\\test\\validation\\phase4-integration.test.ts",
@@ -39742,12 +40348,18 @@
         "src\\components\\orders\\VehicleInfoBlock.tsx",
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\orders\\SimpleNotesDisplay.tsx",
+        "src\\components\\orders\\ServiceOrderFields.tsx",
         "src\\components\\orders\\ScheduleViewBlock.tsx",
+        "src\\components\\orders\\SalesOrderFields.tsx",
+        "src\\components\\orders\\ReconOrderFields.tsx",
         "src\\components\\orders\\RecentActivity.tsx",
         "src\\components\\orders\\QRCodeDisplay.tsx",
         "src\\components\\orders\\OrderComments.tsx",
         "src\\components\\orders\\OrderCalendarView.tsx",
+        "src\\components\\orders\\ModifiedVehicleInfoBlock.tsx",
+        "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
         "src\\components\\orders\\CommunicationActions.tsx",
+        "src\\components\\orders\\CarWashOrderFields.tsx",
         "src\\components\\orders\\communication\\VoiceRecorder.tsx",
         "src\\components\\orders\\communication\\VoicePlayer.tsx",
         "src\\components\\orders\\communication\\MessageThread.tsx",
@@ -39786,14 +40398,14 @@
         "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx"
       ],
-      "estimatedEffort": "119 hours"
+      "estimatedEffort": "122 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3134 translation keys are referenced but missing",
+      "description": "3168 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "157 hours"
+      "estimatedEffort": "159 hours"
     }
   ],
   "coverage": 77

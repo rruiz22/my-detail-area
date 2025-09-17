@@ -66,7 +66,9 @@
     "year": "Año",
     "make": "Marca",
     "model": "Modelo",
-    "color": "Color"
+    "color": "Color",
+    "optional": "Opcional",
+    "loading": "Cargando..."
   },
   "cloud_sync": {
     "title": "Panel de Sincronización en la Nube",
@@ -265,7 +267,10 @@
     "file_too_large": "El archivo es muy grande",
     "file_type_not_supported": "Tipo de archivo no soportado",
     "max_length_exceeded": "Longitud máxima excedida",
-    "min_length_not_met": "Longitud mínima no alcanzada"
+    "min_length_not_met": "Longitud mínima no alcanzada",
+    "customerNameRequired": "El nombre del cliente es obligatorio",
+    "vinInvalidLength": "El VIN debe tener exactamente 17 caracteres",
+    "dealershipRequired": "Por favor selecciona un concesionario"
   },
   "dashboard": {
     "hero": {
@@ -381,14 +386,62 @@
       "services": "Servicios",
       "deleted": "Eliminadas"
     },
-    "in_process_orders": "Órdenes en Proceso"
+    "in_process_orders": "Órdenes en Proceso",
+    "dealership": "Concesionario",
+    "assignment": "Asignación",
+    "select_dealership": "Selecciona un concesionario",
+    "assigned_to": "Asignado a",
+    "select_dealership_first": "Selecciona un concesionario primero",
+    "select_assignee": "Selecciona un encargado",
+    "vin_decoded_successfully": "VIN Decodificado Exitosamente",
+    "stock_number": "Número de Stock",
+    "vehicle": "Información del Vehículo",
+    "manual_vehicle_entry": "Ingresa los detalles del vehículo manualmente o escanea el VIN para auto-completar"
   },
   "orders": {
     "today_orders": "Órdenes de Hoy",
     "tomorrow_orders": "Órdenes de Mañana",
     "pending_orders": "Órdenes Pendientes",
     "week_orders": "Órdenes de Esta Semana",
-    "require_attention": "Requieren atención"
+    "require_attention": "Requieren atención",
+    "edit": "Editar Orden",
+    "create": "Crear Orden",
+    "customer_information": "Información del Cliente",
+    "customerName": "Nombre del Cliente",
+    "priority": "Prioridad",
+    "priority_normal": "Normal",
+    "priority_high": "Alta",
+    "priority_urgent": "Urgente",
+    "vehicleInfo": "Información del Vehículo",
+    "vin": "VIN",
+    "servicesAndNotes": "Servicios y Notas",
+    "services": "Servicios",
+    "available": "disponibles",
+    "selectDealershipFirst": "Selecciona un concesionario primero para ver los servicios disponibles",
+    "noServicesAvailable": "No hay servicios disponibles para este concesionario",
+    "total": "Total",
+    "servicesSelected": "servicios seleccionados",
+    "notes": "Notas",
+    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden..."
+  },
+  "due_date": {
+    "title": "Fecha y Hora de Vencimiento",
+    "date_placeholder": "Seleccionar fecha de vencimiento"
+  },
+  "services": {
+    "categories": {
+      "sales": "Ventas",
+      "service": "Servicio",
+      "parts": "Repuestos",
+      "recon": "Reacondicionamiento",
+      "carwash": "Lavado de Autos",
+      "detailing": "Detallado",
+      "other": "Otro"
+    },
+    "minutes": "minutos"
+  },
+  "vin_scanner_errors": {
+    "vin_input_placeholder": "Ingresa VIN de 17 caracteres o escanea con cámara"
   },
   "layout": {
     "search_placeholder": "Buscar órdenes..."
@@ -484,6 +537,25 @@
     "updated": "Actualizado",
     "qr_code_short_link": "Código QR y Enlace Corto",
     "no_qr_code": "Sin código QR",
-    "generate_qr": "Generar QR"
+    "generate_qr": "Generar QR",
+    "edit": "Editar Orden",
+    "create": "Crear Orden",
+    "customer_information": "Información del Cliente",
+    "customerName": "Nombre del Cliente",
+    "priority": "Prioridad",
+    "priority_normal": "Normal",
+    "priority_high": "Alta",
+    "priority_urgent": "Urgente",
+    "vehicleInfo": "Información del Vehículo",
+    "vin": "VIN",
+    "servicesAndNotes": "Servicios y Notas",
+    "services": "Servicios",
+    "available": "disponibles",
+    "selectDealershipFirst": "Selecciona un concesionario primero para ver los servicios disponibles",
+    "noServicesAvailable": "No hay servicios disponibles para este concesionario",
+    "total": "Total",
+    "servicesSelected": "servicios seleccionados",
+    "notes": "Notas",
+    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden..."
   }
 }
