@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 interface FileUploadProps {
@@ -36,6 +37,7 @@ export function FileUpload({
   className
 }: FileUploadProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
 
@@ -79,6 +81,11 @@ export function FileUpload({
 
   // Upload individual file
   const uploadFile = async (file: File) => {
+    if (!user) {
+      toast.error(t('attachments.auth_required', 'Please log in to upload files'));
+      return;
+    }
+
     const uploadId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
     // Add to uploading files list
@@ -91,7 +98,7 @@ export function FileUpload({
     setUploadingFiles(prev => [...prev, uploadingFile]);
 
     try {
-      console.log('📎 Starting file upload:', file.name);
+      console.log('📎 Starting file upload:', file.name, 'User:', user.email);
 
       // Update progress
       setUploadingFiles(prev =>
@@ -106,21 +113,39 @@ export function FileUpload({
         prev.map(f => f.id === uploadId ? { ...f, progress: 50 } : f)
       );
 
+      // Debug payload
+      const payload = {
+        orderId,
+        fileName: file.name,
+        fileData,
+        mimeType: file.type,
+        fileSize: file.size,
+        uploadContext,
+        description: `Uploaded via order comments`
+      };
+
+      console.log('📤 Upload payload:', {
+        orderId: payload.orderId,
+        fileName: payload.fileName,
+        mimeType: payload.mimeType,
+        fileSize: payload.fileSize,
+        uploadContext: payload.uploadContext,
+        user: user.email,
+        fileDataLength: fileData.length
+      });
+
       // Call Edge Function
       const { data, error } = await supabase.functions.invoke('upload-order-attachment', {
-        body: {
-          orderId,
-          fileName: file.name,
-          fileData,
-          mimeType: file.type,
-          fileSize: file.size,
-          uploadContext,
-          description: `Uploaded via team communication`
-        }
+        body: payload
       });
 
       if (error) {
         console.error('❌ Upload failed:', error);
+        console.error('❌ Error details:', {
+          message: error.message,
+          code: error.code || 'unknown',
+          details: error.details || 'none'
+        });
         throw error;
       }
 
