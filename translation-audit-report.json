@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 449,
-  "totalStrings": 4503,
-  "hardcodedStrings": 990,
-  "translatedStrings": 3513,
+  "scannedFiles": 453,
+  "totalStrings": 4453,
+  "hardcodedStrings": 994,
+  "translatedStrings": 3459,
   "issues": {
     "critical": [
       {
@@ -6777,20 +6777,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\services\\shortLinkService.ts",
-        "hardcodedStrings": [
-          {
-            "text": ", data.analytics);\r\n          return {\r\n            totalClicks: data.analytics.totalClicks || 0,\r\n            uniqueVisitors: data.analytics.uniqueVisitors || 0,\r\n            lastClicked: data.analytics.lastClicked\r\n          };\r\n        } else {\r\n          console.warn(",
-            "line": 102,
-            "context": "101: if (!error && data?.analytics) {\n102: console.log('✅ Edge Function analytics success:', data.analytics);\n103: return {"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
-        "severity": "low"
-      },
-      {
         "file": "src\\pages\\VinScanner.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -7166,136 +7152,146 @@
         "hardcodedStrings": [],
         "translationCalls": [
           {
+            "key": "orders.order_not_found",
+            "line": 98,
+            "exists": false
+          },
+          {
             "key": "messages.confirm_delete_order",
-            "line": 96,
+            "line": 136,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 105,
+            "line": 145,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 108,
+            "line": 148,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 119,
+            "line": 159,
             "exists": true
           },
           {
             "key": "orders.due_date_auto_corrected",
-            "line": 181,
+            "line": 221,
             "exists": false
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 196,
+            "line": 236,
             "exists": false
           },
           {
             "key": "orders.status_change_failed_due_date",
-            "line": 202,
+            "line": 242,
             "exists": false
           },
           {
             "key": "orders.status_change_failed_business_hours",
-            "line": 206,
+            "line": 246,
             "exists": false
           },
           {
             "key": "orders.status_change_failed",
-            "line": 208,
+            "line": 248,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 229,
+            "line": 269,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 230,
+            "line": 270,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 231,
+            "line": 271,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 232,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.in_process_orders",
-            "line": 233,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.week",
-            "line": 234,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.all",
-            "line": 235,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.services",
-            "line": 236,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.deleted",
-            "line": 237,
-            "exists": true
-          },
-          {
-            "key": "pages.sales_orders",
-            "line": 261,
-            "exists": true
-          },
-          {
-            "key": "common.refresh",
             "line": 272,
             "exists": true
           },
           {
-            "key": "common.new_order",
+            "key": "sales_orders.in_process_orders",
+            "line": 273,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.week",
+            "line": 274,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.all",
+            "line": 275,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.services",
             "line": 276,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.deleted",
+            "line": 277,
+            "exists": true
+          },
+          {
+            "key": "pages.sales_orders",
+            "line": 301,
+            "exists": true
+          },
+          {
+            "key": "common.refresh",
+            "line": 312,
+            "exists": true
+          },
+          {
+            "key": "common.new_order",
+            "line": 316,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "orders.order_not_found",
+            "line": 98,
+            "context": "97: console.warn('🔍 Order IDs in list:', orders.map(o => o.id));\n98: toast.error(t('orders.order_not_found'));\n99: }"
+          },
+          {
             "key": "orders.due_date_auto_corrected",
-            "line": 181,
-            "context": "180: \n181: toast.info(t('orders.due_date_auto_corrected', 'Due date automatically adjusted to next business day'));\n182: }"
+            "line": 221,
+            "context": "220: \n221: toast.info(t('orders.due_date_auto_corrected', 'Due date automatically adjusted to next business day'));\n222: }"
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 196,
-            "context": "195: \n196: toast.success(t('orders.status_updated_successfully'));\n197: } catch (error) {"
+            "line": 236,
+            "context": "235: \n236: toast.success(t('orders.status_updated_successfully'));\n237: } catch (error) {"
           },
           {
             "key": "orders.status_change_failed_due_date",
-            "line": 202,
-            "context": "201: if (error?.message?.includes('Invalid due date')) {\n202: toast.error(t('orders.status_change_failed_due_date', {\n203: message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'"
+            "line": 242,
+            "context": "241: if (error?.message?.includes('Invalid due date')) {\n242: toast.error(t('orders.status_change_failed_due_date', {\n243: message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'"
           },
           {
             "key": "orders.status_change_failed_business_hours",
-            "line": 206,
-            "context": "205: } else if (error?.message?.includes('business hours')) {\n206: toast.error(t('orders.status_change_failed_business_hours'));\n207: } else {"
+            "line": 246,
+            "context": "245: } else if (error?.message?.includes('business hours')) {\n246: toast.error(t('orders.status_change_failed_business_hours'));\n247: } else {"
           },
           {
             "key": "orders.status_change_failed",
-            "line": 208,
-            "context": "207: } else {\n208: toast.error(t('orders.status_change_failed'));\n209: }"
+            "line": 248,
+            "context": "247: } else {\n248: toast.error(t('orders.status_change_failed'));\n249: }"
           }
         ],
         "coverage": 100,
@@ -11204,7 +11200,7 @@
           {
             "key": "order_detail.regenerate_qr",
             "line": 59,
-            "exists": false
+            "exists": true
           },
           {
             "key": "order_detail.qr_auto_generated",
@@ -11238,11 +11234,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "order_detail.regenerate_qr",
-            "line": 59,
-            "context": "58: const message = regenerate\n59: ? t('order_detail.regenerate_qr')\n60: : t('order_detail.qr_auto_generated');"
-          },
           {
             "key": "order_detail.qr_auto_generated",
             "line": 60,
@@ -11595,6 +11586,30 @@
             "text": "Promise",
             "line": 45,
             "context": "44: archiveConversation: (id: string) => Promise<boolean>;\n45: deleteConversation: (id: string) => Promise<boolean>;\n46: "
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useAttachments.ts",
+        "hardcodedStrings": [
+          {
+            "text": "User not authenticated",
+            "line": 34,
+            "context": "33: if (!user) {\n34: return { success: false, error: 'User not authenticated' };\n35: }"
+          },
+          {
+            "text": ", error);\r\n      return { success: false, error: error.message };\r\n    }\r\n  };\r\n\r\n  // Upload multiple files\r\n  const uploadFiles = async (files: File[], uploadContext: string = ",
+            "line": 74,
+            "context": "73: } catch (error: any) {\n74: console.error('❌ File upload error:', error);\n75: return { success: false, error: error.message };"
+          },
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 112,
+            "context": "111: } catch (error: any) {\n112: console.error('❌ Bulk upload error:', error);\n113: toast.error('Failed to upload files');"
           }
         ],
         "translationCalls": [],
@@ -26574,96 +26589,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\orders\\VehicleInfoBlock.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "common.year",
-            "line": 39,
-            "exists": true
-          },
-          {
-            "key": "common.make",
-            "line": 44,
-            "exists": true
-          },
-          {
-            "key": "common.model",
-            "line": 49,
-            "exists": true
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 55,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 61,
-            "exists": true
-          },
-          {
-            "key": "common.color",
-            "line": 65,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.decoded",
-            "line": 75,
-            "exists": false
-          },
-          {
-            "key": "car_wash_orders.auto_populated",
-            "line": 76,
-            "exists": false
-          },
-          {
-            "key": "vehicle_info.manual_entry",
-            "line": 81,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.manually_entered",
-            "line": 82,
-            "exists": false
-          },
-          {
-            "key": "orders.vehicle_information",
-            "line": 104,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.vin_status",
-            "line": 134,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.display_preview",
-            "line": 152,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "car_wash_orders.decoded",
-            "line": 75,
-            "context": "74: status: 'success',\n75: text: t('car_wash_orders.decoded'),\n76: desc: t('car_wash_orders.auto_populated')"
-          },
-          {
-            "key": "car_wash_orders.auto_populated",
-            "line": 76,
-            "context": "75: text: t('car_wash_orders.decoded'),\n76: desc: t('car_wash_orders.auto_populated')\n77: };"
-          },
-          {
-            "key": "vehicle_info.manually_entered",
-            "line": 82,
-            "context": "81: text: t('vehicle_info.manual_entry'),\n82: desc: t('vehicle_info.manually_entered')\n83: };"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -26748,50 +26673,55 @@
         "hardcodedStrings": [
           {
             "text": "Close",
-            "line": 487,
-            "context": "486: className=\"min-w-[120px]\"\n487: >\n488: Close"
+            "line": 514,
+            "context": "513: className=\"min-w-[120px]\"\n514: >\n515: Close"
           },
           {
-            "text": "Close\r\n              ",
-            "line": 482,
-            "context": "481: <div className=\"flex justify-end\">\n482: <Button\n483: variant=\"destructive\""
+            "text": "Close\n              ",
+            "line": 509,
+            "context": "508: <div className=\"flex justify-end\">\n509: <Button\n510: variant=\"destructive\""
+          },
+          {
+            "text": ", error);\n    return <>{fallback}</>;\n  }\n};\n\n// Header Components\ninterface UnifiedOrderHeaderProps {\n  order: OrderData;\n  orderType: OrderType;\n  vehicleDisplayName: string;\n  onStatusChange: (newStatus: string) => void;\n}\n\nconst UnifiedOrderHeader = memo(function UnifiedOrderHeader({\n  order,\n  orderType,\n  vehicleDisplayName,\n  onStatusChange\n}: UnifiedOrderHeaderProps) {\n  const { t } = useTranslation();\n\n  const headerData = useMemo(() => {\n    const orderNumber = order.orderNumber || order.order_number || ",
+            "line": 137,
+            "context": "136: } catch (error) {\n137: console.error('Component rendering error:', error);\n138: return <>{fallback}</>;"
           }
         ],
         "translationCalls": [
           {
-            "key": "orders.order_details",
-            "line": 359,
+            "key": "orders.order_details_modal_title",
+            "line": 400,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 362,
+            "line": 408,
             "exists": false
           },
           {
             "key": "orders.communication_actions",
-            "line": 435,
+            "line": 462,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "orders.order_details",
-            "line": 359,
-            "context": "358: <DialogTitle className=\"sr-only\">\n359: {t('orders.order_details')} - {order.orderNumber || order.order_number}\n360: </DialogTitle>"
+            "key": "orders.order_details_modal_title",
+            "line": 400,
+            "context": "399: <DialogTitle className=\"sr-only\">\n400: {t('orders.order_details_modal_title', {\n401: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 362,
-            "context": "361: <DialogDescription className=\"sr-only\">\n362: {t('orders.order_details_description', {\n363: customer: order.customerName || order.customer_name,"
+            "line": 408,
+            "context": "407: <DialogDescription className=\"sr-only\">\n408: {t('orders.order_details_description', {\n409: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.communication_actions",
-            "line": 435,
-            "context": "434: <MessageSquare className=\"h-4 w-4\" />\n435: {t('orders.communication_actions', 'Team Communication')}\n436: </CardTitle>"
+            "line": 462,
+            "context": "461: <MessageSquare className=\"h-4 w-4\" />\n462: {t('orders.communication_actions', 'Team Communication')}\n463: </CardTitle>"
           }
         ],
-        "coverage": 60,
+        "coverage": 50,
         "severity": "low"
       },
       {
@@ -26799,174 +26729,164 @@
         "hardcodedStrings": [
           {
             "text": "Reply",
-            "line": 199,
-            "context": "198: >\n199: <Reply className=\"h-3 w-3 mr-1\" />\n200: Reply"
+            "line": 219,
+            "context": "218: >\n219: <Reply className=\"h-3 w-3 mr-1\" />\n220: Reply"
           },
           {
             "text": "Cancel",
-            "line": 247,
-            "context": "246: size=\"sm\"\n247: >\n248: Cancel"
+            "line": 267,
+            "context": "266: size=\"sm\"\n267: >\n268: Cancel"
           },
           {
             "text": "Reply",
-            "line": 267,
-            "context": "266: <div className=\"flex items-center gap-2 mb-2\">\n267: <Badge variant=\"secondary\" className=\"text-xs\">\n268: Reply"
+            "line": 287,
+            "context": "286: <div className=\"flex items-center gap-2 mb-2\">\n287: <Badge variant=\"secondary\" className=\"text-xs\">\n288: Reply"
           }
         ],
         "translationCalls": [
           {
             "key": "order_comments.comment_added",
-            "line": 65,
+            "line": 85,
             "exists": true
           },
           {
             "key": "order_comments.note_added",
-            "line": 66,
+            "line": 86,
             "exists": true
           },
           {
             "key": "order_comments.comment_failed",
-            "line": 71,
+            "line": 91,
             "exists": true
           },
           {
             "key": "order_comments.note_failed",
-            "line": 72,
-            "exists": true
-          },
-          {
-            "key": "order_comments.reply_added",
             "line": 92,
             "exists": true
           },
           {
+            "key": "order_comments.reply_added",
+            "line": 112,
+            "exists": true
+          },
+          {
             "key": "order_comments.reply_failed",
-            "line": 94,
+            "line": 114,
             "exists": true
           },
           {
             "key": "order_comments.no_comments",
-            "line": 128,
+            "line": 148,
             "exists": true
           },
           {
             "key": "order_comments.start_conversation",
-            "line": 129,
+            "line": 149,
             "exists": true
           },
           {
             "key": "order_comments.no_internal_notes",
-            "line": 134,
+            "line": 154,
             "exists": true
           },
           {
             "key": "order_comments.add_private_notes",
-            "line": 135,
+            "line": 155,
             "exists": true
           },
           {
             "key": "order_comments.detail_team",
-            "line": 168,
+            "line": 188,
             "exists": true
           },
           {
             "key": "order_comments.reply_placeholder",
-            "line": 232,
+            "line": 252,
             "exists": true
           },
           {
             "key": "order_comments.title",
-            "line": 313,
+            "line": 333,
             "exists": true
           },
           {
             "key": "order_comments.comments",
-            "line": 322,
+            "line": 342,
             "exists": true
           },
           {
             "key": "order_comments.internal_notes",
-            "line": 332,
+            "line": 352,
             "exists": true
           },
           {
             "key": "order_comments.add_comment_placeholder",
-            "line": 353,
-            "exists": true
-          },
-          {
-            "key": "order_comments.attachment_added",
-            "line": 371,
+            "line": 373,
             "exists": true
           },
           {
             "key": "order_comments.mention",
-            "line": 376,
+            "line": 396,
             "exists": true
           },
           {
             "key": "order_comments.loading_comments",
-            "line": 392,
+            "line": 413,
             "exists": true
           },
           {
             "key": "order_comments.comments_count",
-            "line": 403,
-            "exists": true
-          },
-          {
-            "key": "order_comments.team_discussion",
-            "line": 407,
-            "exists": true
-          },
-          {
-            "key": "order_comments.add_internal_placeholder",
             "line": 424,
             "exists": true
           },
           {
-            "key": "order_comments.internal_attachment_added",
-            "line": 443,
+            "key": "order_comments.team_discussion",
+            "line": 428,
+            "exists": true
+          },
+          {
+            "key": "order_comments.add_internal_placeholder",
+            "line": 445,
             "exists": true
           },
           {
             "key": "order_comments.mention_team",
-            "line": 449,
+            "line": 470,
             "exists": true
           },
           {
             "key": "order_comments.loading_notes",
-            "line": 465,
+            "line": 487,
             "exists": true
           },
           {
             "key": "order_comments.internal_count",
-            "line": 476,
+            "line": 498,
             "exists": true
           },
           {
             "key": "order_comments.confidential",
-            "line": 480,
+            "line": 502,
             "exists": true
           },
           {
             "key": "order_comments.access_denied",
-            "line": 491,
+            "line": 513,
             "exists": true
           },
           {
             "key": "order_comments.detail_access_required",
-            "line": 493,
+            "line": 515,
             "exists": true
           },
           {
             "key": "order_comments.restricted_access",
-            "line": 497,
+            "line": 519,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 91,
+        "coverage": 90,
         "severity": "low"
       },
       {
@@ -27575,61 +27495,6 @@
             "key": "schedule_view.target_completion",
             "line": 196,
             "context": "195: <p className=\"text-xs text-muted-foreground\">\n196: {t('schedule_view.target_completion', { hours: order.sla_hours })}\n197: </p>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\orders\\SalesOrderFields.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "data_table.no_stock",
-            "line": 24,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.stock_information",
-            "line": 35,
-            "exists": false
-          },
-          {
-            "key": "common.stock_number",
-            "line": 44,
-            "exists": false
-          },
-          {
-            "key": "common.available",
-            "line": 54,
-            "exists": false
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 54,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "sales_orders.stock_information",
-            "line": 35,
-            "context": "34: <Package className=\"h-5 w-5 text-primary\" />\n35: {t('sales_orders.stock_information')}\n36: </CardTitle>"
-          },
-          {
-            "key": "common.stock_number",
-            "line": 44,
-            "context": "43: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n44: {t('common.stock_number')}\n45: </p>"
-          },
-          {
-            "key": "common.available",
-            "line": 54,
-            "context": "53: >\n54: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n55: </Badge>"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 54,
-            "context": "53: >\n54: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n55: </Badge>"
           }
         ],
         "coverage": 100,
@@ -28553,7 +28418,7 @@
           {
             "key": "orders.regenerate_qr",
             "line": 253,
-            "exists": false
+            "exists": true
           },
           {
             "key": "orders.no_short_link",
@@ -28623,11 +28488,6 @@
             "context": "252: <RefreshCw className=\"w-3 h-3 mr-1\" />\n253: {loading ? t('common.regenerating') : t('orders.regenerate_qr')}\n254: </Button>"
           },
           {
-            "key": "orders.regenerate_qr",
-            "line": 253,
-            "context": "252: <RefreshCw className=\"w-3 h-3 mr-1\" />\n253: {loading ? t('common.regenerating') : t('orders.regenerate_qr')}\n254: </Button>"
-          },
-          {
             "key": "orders.no_short_link",
             "line": 261,
             "context": "260: <p className=\"text-sm text-muted-foreground\">\n261: {t('orders.no_short_link')}\n262: </p>"
@@ -28651,13 +28511,13 @@
         "hardcodedStrings": [
           {
             "text": "ST-2025-001",
-            "line": 929,
-            "context": "928: className=\"border-input bg-background\"\n929: placeholder=\"ST-2025-001\"\n930: />"
+            "line": 935,
+            "context": "934: className=\"border-input bg-background\"\n935: placeholder=\"ST-2025-001\"\n936: />"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 785,
-            "context": "784: } catch (error) {\n785: console.error('Submit error:', error);\n786: toast.error(t('orders.creation_failed'));"
+            "line": 791,
+            "context": "790: } catch (error) {\n791: console.error('Submit error:', error);\n792: toast.error(t('orders.creation_failed'));"
           }
         ],
         "translationCalls": [
@@ -28693,315 +28553,315 @@
           },
           {
             "key": "validation.dueDateRequired",
-            "line": 695,
+            "line": 700,
             "exists": true
           },
           {
             "key": "validation.dueDateTooFar",
-            "line": 704,
+            "line": 709,
             "exists": true
           },
           {
             "key": "validation.dueDateTooSoon",
-            "line": 713,
+            "line": 718,
             "exists": true
           },
           {
             "key": "validation.slotNotAvailable",
-            "line": 727,
+            "line": 733,
             "exists": true
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 735,
+            "line": 741,
             "exists": true
           },
           {
             "key": "validation.failedToReserveSlot",
-            "line": 765,
-            "exists": true
-          },
-          {
-            "key": "validation.slotReservationWarning",
             "line": 771,
             "exists": true
           },
           {
-            "key": "orders.creating_order",
-            "line": 780,
+            "key": "validation.slotReservationWarning",
+            "line": 777,
             "exists": true
           },
           {
-            "key": "orders.creation_failed",
+            "key": "orders.creating_order",
             "line": 786,
             "exists": true
           },
           {
+            "key": "orders.creation_failed",
+            "line": 792,
+            "exists": true
+          },
+          {
             "key": "orders.edit",
-            "line": 805,
+            "line": 811,
             "exists": true
           },
           {
             "key": "orders.create",
-            "line": 805,
+            "line": 811,
             "exists": true
           },
           {
             "key": "orders.edit_order_description",
-            "line": 808,
+            "line": 814,
             "exists": false
           },
           {
             "key": "orders.create_order_description",
-            "line": 808,
+            "line": 814,
             "exists": false
           },
           {
             "key": "orders.edit",
-            "line": 817,
+            "line": 823,
             "exists": true
           },
           {
             "key": "orders.create",
-            "line": 817,
+            "line": 823,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 826,
+            "line": 832,
             "exists": true
           },
           {
             "key": "sales_orders.assignment",
-            "line": 826,
+            "line": 832,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 830,
+            "line": 836,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 837,
+            "line": 843,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 837,
+            "line": 843,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 850,
+            "line": 856,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 859,
+            "line": 865,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 861,
+            "line": 867,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 862,
+            "line": 868,
             "exists": true
           },
           {
             "key": "orders.customer_information",
-            "line": 879,
+            "line": 885,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 882,
-            "exists": true
-          },
-          {
-            "key": "orders.customerNamePlaceholder",
             "line": 888,
             "exists": true
           },
           {
+            "key": "orders.customerNamePlaceholder",
+            "line": 894,
+            "exists": true
+          },
+          {
             "key": "orders.priority",
-            "line": 893,
+            "line": 899,
             "exists": true
           },
           {
             "key": "orders.priority_normal",
-            "line": 902,
+            "line": 908,
             "exists": true
           },
           {
             "key": "orders.priority_high",
-            "line": 903,
+            "line": 909,
             "exists": true
           },
           {
             "key": "orders.priority_urgent",
-            "line": 904,
+            "line": 910,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 915,
+            "line": 921,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 918,
+            "line": 924,
             "exists": true
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 923,
+            "line": 929,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 935,
+            "line": 941,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 962,
+            "line": 968,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 972,
+            "line": 978,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 981,
+            "line": 987,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 986,
+            "line": 992,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 996,
+            "line": 1002,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 1000,
+            "line": 1006,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 1003,
+            "line": 1009,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 1010,
+            "line": 1016,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1015,
+            "line": 1021,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1022,
+            "line": 1028,
             "exists": true
           },
           {
             "key": "services.categories.${service.category}",
-            "line": 1043,
+            "line": 1049,
             "exists": false
           },
           {
             "key": "services.minutes",
-            "line": 1046,
+            "line": 1052,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 1074,
-            "exists": true
-          },
-          {
-            "key": "orders.servicesSelected",
             "line": 1080,
             "exists": true
           },
           {
+            "key": "orders.servicesSelected",
+            "line": 1086,
+            "exists": true
+          },
+          {
             "key": "orders.notes",
-            "line": 1088,
+            "line": 1094,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 1095,
+            "line": 1101,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 1147,
+            "line": 1153,
             "exists": false
           },
           {
             "key": "orders.updating",
-            "line": 1166,
+            "line": 1172,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1166,
+            "line": 1172,
             "exists": true
           },
           {
             "key": "common.update",
-            "line": 1169,
+            "line": 1175,
             "exists": false
           },
           {
             "key": "common.create",
-            "line": 1169,
+            "line": 1175,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.edit_order_description",
-            "line": 808,
-            "context": "807: <div id=\"order-modal-description\" className=\"text-sm text-muted-foreground\">\n808: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n809: </div>"
+            "line": 814,
+            "context": "813: <div id=\"order-modal-description\" className=\"text-sm text-muted-foreground\">\n814: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n815: </div>"
           },
           {
             "key": "orders.create_order_description",
-            "line": 808,
-            "context": "807: <div id=\"order-modal-description\" className=\"text-sm text-muted-foreground\">\n808: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n809: </div>"
+            "line": 814,
+            "context": "813: <div id=\"order-modal-description\" className=\"text-sm text-muted-foreground\">\n814: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n815: </div>"
           },
           {
             "key": "services.categories.${service.category}",
-            "line": 1043,
-            "context": "1042: <Badge variant=\"outline\" className=\"text-xs px-2 py-0\">\n1043: {t(`services.categories.${service.category}`)}\n1044: </Badge>"
+            "line": 1049,
+            "context": "1048: <Badge variant=\"outline\" className=\"text-xs px-2 py-0\">\n1049: {t(`services.categories.${service.category}`)}\n1050: </Badge>"
           },
           {
             "key": "common.cancel",
-            "line": 1147,
-            "context": "1146: >\n1147: {t('common.cancel')}\n1148: </Button>"
+            "line": 1153,
+            "context": "1152: >\n1153: {t('common.cancel')}\n1154: </Button>"
           },
           {
             "key": "common.update",
-            "line": 1169,
-            "context": "1168: ) : (\n1169: order ? t('common.update') : t('common.create')\n1170: )}"
+            "line": 1175,
+            "context": "1174: ) : (\n1175: order ? t('common.update') : t('common.create')\n1176: )}"
           },
           {
             "key": "common.create",
-            "line": 1169,
-            "context": "1168: ) : (\n1169: order ? t('common.update') : t('common.create')\n1170: )}"
+            "line": 1175,
+            "context": "1174: ) : (\n1175: order ? t('common.update') : t('common.create')\n1176: )}"
           }
         ],
         "coverage": 97,
@@ -29580,121 +29440,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\orders\\ModifiedVehicleInfoBlock.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "vehicle_info.vehicle_information",
-            "line": 37,
-            "exists": false
-          },
-          {
-            "key": "vehicle_info.decoded_from_vin",
-            "line": 39,
-            "exists": false
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 44,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 51,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.decoded",
-            "line": 68,
-            "exists": false
-          },
-          {
-            "key": "car_wash_orders.auto_populated",
-            "line": 69,
-            "exists": false
-          },
-          {
-            "key": "vehicle_info.manual_entry",
-            "line": 74,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.manually_entered",
-            "line": 75,
-            "exists": false
-          },
-          {
-            "key": "vehicle_info.no_image_available",
-            "line": 87,
-            "exists": false
-          },
-          {
-            "key": "orders.vehicle_information",
-            "line": 96,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.vin_status",
-            "line": 136,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.vehicle_image",
-            "line": 154,
-            "exists": false
-          },
-          {
-            "key": "vehicle_info.vehicle_image_alt",
-            "line": 162,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "vehicle_info.vehicle_information",
-            "line": 37,
-            "context": "36: icon: Car,\n37: label: t('vehicle_info.vehicle_information'),\n38: value: order.vehicle_info || order.vehicleInfo || 'Vehicle information not available',"
-          },
-          {
-            "key": "vehicle_info.decoded_from_vin",
-            "line": 39,
-            "context": "38: value: order.vehicle_info || order.vehicleInfo || 'Vehicle information not available',\n39: description: t('vehicle_info.decoded_from_vin')\n40: },"
-          },
-          {
-            "key": "car_wash_orders.decoded",
-            "line": 68,
-            "context": "67: status: 'success',\n68: text: t('car_wash_orders.decoded'),\n69: desc: t('car_wash_orders.auto_populated')"
-          },
-          {
-            "key": "car_wash_orders.auto_populated",
-            "line": 69,
-            "context": "68: text: t('car_wash_orders.decoded'),\n69: desc: t('car_wash_orders.auto_populated')\n70: };"
-          },
-          {
-            "key": "vehicle_info.manually_entered",
-            "line": 75,
-            "context": "74: text: t('vehicle_info.manual_entry'),\n75: desc: t('vehicle_info.manually_entered')\n76: };"
-          },
-          {
-            "key": "vehicle_info.no_image_available",
-            "line": 87,
-            "context": "86: imageUrl,\n87: fallbackText: t('vehicle_info.no_image_available')\n88: };"
-          },
-          {
-            "key": "vehicle_info.vehicle_image",
-            "line": 154,
-            "context": "153: <Image className=\"h-4 w-4 text-muted-foreground\" />\n154: <span className=\"text-sm font-medium\">{t('vehicle_info.vehicle_image')}</span>\n155: </div>"
-          },
-          {
-            "key": "vehicle_info.vehicle_image_alt",
-            "line": 162,
-            "context": "161: src={vehicleImageData.imageUrl}\n162: alt={t('vehicle_info.vehicle_image_alt')}\n163: className=\"w-full h-auto max-h-32 object-cover rounded-md\""
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\orders\\FollowersBlock.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -29764,206 +29509,6 @@
             "key": "order_detail.followers",
             "line": 110,
             "context": "109: <Users className=\"h-5 w-5 text-primary\" />\n110: {t('order_detail.followers', 'Followers')}\n111: </div>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "order_detail.short_link_created",
-            "line": 110,
-            "exists": false
-          },
-          {
-            "key": "order_detail.regenerate_qr",
-            "line": 145,
-            "exists": false
-          },
-          {
-            "key": "order_detail.copy_link",
-            "line": 161,
-            "exists": false
-          },
-          {
-            "key": "orders.qr_code",
-            "line": 195,
-            "exists": true
-          },
-          {
-            "key": "orders.short_link",
-            "line": 195,
-            "exists": true
-          },
-          {
-            "key": "orders.qr_generating",
-            "line": 206,
-            "exists": false
-          },
-          {
-            "key": "orders.qr_generating_desc",
-            "line": 209,
-            "exists": false
-          },
-          {
-            "key": "orders.qr_generation_failed",
-            "line": 221,
-            "exists": false
-          },
-          {
-            "key": "orders.qr_retry_desc",
-            "line": 224,
-            "exists": false
-          },
-          {
-            "key": "orders.retrying",
-            "line": 235,
-            "exists": false
-          },
-          {
-            "key": "orders.retry_qr_generation",
-            "line": 240,
-            "exists": false
-          },
-          {
-            "key": "orders.scan_for_quick_access",
-            "line": 273,
-            "exists": false
-          },
-          {
-            "key": "orders.short_link",
-            "line": 281,
-            "exists": true
-          },
-          {
-            "key": "order_detail.qr_analytics",
-            "line": 303,
-            "exists": false
-          },
-          {
-            "key": "order_detail.total_scans",
-            "line": 310,
-            "exists": false
-          },
-          {
-            "key": "order_detail.unique_visitors",
-            "line": 320,
-            "exists": false
-          },
-          {
-            "key": "order_detail.last_accessed",
-            "line": 330,
-            "exists": false
-          },
-          {
-            "key": "orders.regenerate_qr",
-            "line": 346,
-            "exists": false
-          },
-          {
-            "key": "orders.no_qr_code",
-            "line": 358,
-            "exists": true
-          },
-          {
-            "key": "orders.legacy_order_qr_desc",
-            "line": 361,
-            "exists": true
-          },
-          {
-            "key": "orders.generating",
-            "line": 372,
-            "exists": false
-          },
-          {
-            "key": "orders.generate_qr_legacy",
-            "line": 377,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "order_detail.short_link_created",
-            "line": 110,
-            "context": "109: \n110: toast.success(t('order_detail.short_link_created'));\n111: "
-          },
-          {
-            "key": "order_detail.regenerate_qr",
-            "line": 145,
-            "context": "144: \n145: toast.success(t('order_detail.regenerate_qr'));\n146: "
-          },
-          {
-            "key": "order_detail.copy_link",
-            "line": 161,
-            "context": "160: if (success) {\n161: toast.success(t('order_detail.copy_link'));\n162: } else {"
-          },
-          {
-            "key": "orders.qr_generating",
-            "line": 206,
-            "context": "205: <p className=\"text-sm font-medium text-primary mb-2\">\n206: {t('orders.qr_generating')}\n207: </p>"
-          },
-          {
-            "key": "orders.qr_generating_desc",
-            "line": 209,
-            "context": "208: <p className=\"text-xs text-muted-foreground\">\n209: {t('orders.qr_generating_desc')}\n210: </p>"
-          },
-          {
-            "key": "orders.qr_generation_failed",
-            "line": 221,
-            "context": "220: <p className=\"text-sm text-destructive mb-2\">\n221: {t('orders.qr_generation_failed')}\n222: </p>"
-          },
-          {
-            "key": "orders.qr_retry_desc",
-            "line": 224,
-            "context": "223: <p className=\"text-xs text-muted-foreground mb-4\">\n224: {t('orders.qr_retry_desc')}\n225: </p>"
-          },
-          {
-            "key": "orders.retrying",
-            "line": 235,
-            "context": "234: <RefreshCw className=\"h-4 w-4 mr-2 animate-spin\" />\n235: {t('orders.retrying')}\n236: </>"
-          },
-          {
-            "key": "orders.retry_qr_generation",
-            "line": 240,
-            "context": "239: <RefreshCw className=\"h-4 w-4 mr-2\" />\n240: {t('orders.retry_qr_generation')}\n241: </>"
-          },
-          {
-            "key": "orders.scan_for_quick_access",
-            "line": 273,
-            "context": "272: <p className=\"text-sm text-muted-foreground font-medium\">\n273: {t('orders.scan_for_quick_access')}\n274: </p>"
-          },
-          {
-            "key": "order_detail.qr_analytics",
-            "line": 303,
-            "context": "302: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />\n303: <span className=\"text-sm font-medium\">{t('order_detail.qr_analytics')}</span>\n304: </div>"
-          },
-          {
-            "key": "order_detail.total_scans",
-            "line": 310,
-            "context": "309: <Eye className=\"h-3 w-3 text-primary\" />\n310: <span className=\"text-xs text-muted-foreground\">{t('order_detail.total_scans')}</span>\n311: </div>"
-          },
-          {
-            "key": "order_detail.unique_visitors",
-            "line": 320,
-            "context": "319: <Users className=\"h-3 w-3 text-secondary\" />\n320: <span className=\"text-xs text-muted-foreground\">{t('order_detail.unique_visitors')}</span>\n321: </div>"
-          },
-          {
-            "key": "order_detail.last_accessed",
-            "line": 330,
-            "context": "329: <p className=\"text-xs text-muted-foreground text-center\">\n330: {t('order_detail.last_accessed')}: {formattedAnalytics.lastClickedFormatted}\n331: </p>"
-          },
-          {
-            "key": "orders.regenerate_qr",
-            "line": 346,
-            "context": "345: <RefreshCw className=\"h-3 w-3 mr-2\" />\n346: {t('orders.regenerate_qr')}\n347: </Button>"
-          },
-          {
-            "key": "orders.generating",
-            "line": 372,
-            "context": "371: <RefreshCw className=\"h-4 w-4 mr-2 animate-spin\" />\n372: {t('orders.generating')}\n373: </>"
           }
         ],
         "coverage": 100,
@@ -30393,7 +29938,7 @@
           {
             "key": "car_wash_orders.decoded",
             "line": 364,
-            "exists": false
+            "exists": true
           },
           {
             "key": "car_wash_orders.vehicle_display",
@@ -30403,7 +29948,7 @@
           {
             "key": "car_wash_orders.auto_populated",
             "line": 400,
-            "exists": false
+            "exists": true
           },
           {
             "key": "car_wash_orders.stock_number",
@@ -30503,19 +30048,9 @@
             "context": "344: <SelectTrigger className=\"border-input bg-background\">\n345: <SelectValue placeholder={loading ? t('common.loading') : t('car_wash_orders.select_dealership')} />\n346: </SelectTrigger>"
           },
           {
-            "key": "car_wash_orders.decoded",
-            "line": 364,
-            "context": "363: <Zap className=\"w-3 h-3 mr-1\" />\n364: {t('car_wash_orders.decoded')}\n365: </Badge>"
-          },
-          {
             "key": "car_wash_orders.vehicle_display",
             "line": 390,
             "context": "389: <div>\n390: <Label htmlFor=\"vehicleInfo\">{t('car_wash_orders.vehicle_display')}</Label>\n391: <Input"
-          },
-          {
-            "key": "car_wash_orders.auto_populated",
-            "line": 400,
-            "context": "399: <div className=\"text-sm text-muted-foreground mt-1\">\n400: {t('car_wash_orders.auto_populated')}\n401: </div>"
           },
           {
             "key": "car_wash_orders.stock_number",
@@ -39768,41 +39303,40 @@
         "file": "src\\components\\attachments\\FileUpload.tsx",
         "hardcodedStrings": [
           {
+            "text": "Promise",
+            "line": 37,
+            "context": "36: export interface FileUploadRef {\n37: uploadFiles: (files: File[]) => Promise<any[]>;\n38: }"
+          },
+          {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 171,
-            "context": "170: } catch (error) {\n171: console.error('❌ File upload error:', error);\n172: toast.error(t('attachments.upload_failed', 'Failed to upload file'));"
+            "line": 197,
+            "context": "196: } catch (error) {\n197: console.error('❌ File upload error:', error);\n198: toast.error(t('attachments.upload_failed', 'Failed to upload file'));"
           }
         ],
         "translationCalls": [
           {
             "key": "attachments.auth_required",
-            "line": 85,
-            "exists": false
+            "line": 111,
+            "exists": true
           },
           {
             "key": "attachments.upload_success",
-            "line": 158,
+            "line": 184,
             "exists": true
           },
           {
             "key": "attachments.upload_failed",
-            "line": 172,
+            "line": 198,
             "exists": true
           },
           {
             "key": "attachments.attach",
-            "line": 205,
+            "line": 231,
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "attachments.auth_required",
-            "line": 85,
-            "context": "84: if (!user) {\n85: toast.error(t('attachments.auth_required', 'Please log in to upload files'));\n86: return;"
-          }
-        ],
-        "coverage": 80,
+        "missingKeys": [],
+        "coverage": 67,
         "severity": "low"
       },
       {
@@ -39810,54 +39344,54 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n        toast.error(t(",
-            "line": 144,
-            "context": "143: if (error) {\n144: console.error('❌ Download error:', error);\n145: toast.error(t('attachments.download_failed', 'Failed to download file'));"
+            "line": 151,
+            "context": "150: if (error) {\n151: console.error('❌ Download error:', error);\n152: toast.error(t('attachments.download_failed', 'Failed to download file'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 162,
-            "context": "161: } catch (error) {\n162: console.error('❌ Download error:', error);\n163: toast.error(t('attachments.download_failed', 'Failed to download file'));"
+            "line": 169,
+            "context": "168: } catch (error) {\n169: console.error('❌ Download error:', error);\n170: toast.error(t('attachments.download_failed', 'Failed to download file'));"
           }
         ],
         "translationCalls": [
           {
             "key": "attachments.download_failed",
-            "line": 145,
+            "line": 152,
             "exists": true
           },
           {
             "key": "attachments.download_success",
-            "line": 159,
+            "line": 166,
             "exists": true
           },
           {
             "key": "attachments.download_failed",
-            "line": 163,
+            "line": 170,
             "exists": true
           },
           {
             "key": "attachments.loading",
-            "line": 219,
+            "line": 245,
             "exists": true
           },
           {
             "key": "attachments.count",
-            "line": 231,
+            "line": 257,
             "exists": true
           },
           {
             "key": "attachments.preview",
-            "line": 259,
+            "line": 285,
             "exists": true
           },
           {
             "key": "attachments.download",
-            "line": 270,
+            "line": 296,
             "exists": true
           },
           {
             "key": "attachments.delete",
-            "line": 284,
+            "line": 310,
             "exists": true
           }
         ],
@@ -40479,8 +40013,8 @@
         "src\\components\\permissions\\RoleAssignmentModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
-        "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
+        "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
@@ -40513,7 +40047,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "255 Component components need translation",
+      "description": "251 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -40582,6 +40116,7 @@
         "src\\hooks\\useVinDecoding.tsx",
         "src\\hooks\\useVehicleAutoPopulation.tsx",
         "src\\hooks\\useOrderActions.tsx",
+        "src\\hooks\\useAttachments.ts",
         "src\\contexts\\PermissionContext.tsx",
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\sidebar.tsx",
@@ -40612,11 +40147,11 @@
         "src\\components\\reactions\\CommentReactions.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
         "src\\components\\dealer\\DealerServices.tsx",
+        "src\\components\\attachments\\FileUpload.tsx",
         "src\\components\\attachments\\AttachmentsList.tsx",
         "src\\workers\\vinOcrWorker.ts",
         "src\\utils\\lazyImports.ts",
         "src\\test\\validation\\phase4-integration.test.ts",
-        "src\\services\\shortLinkService.ts",
         "src\\pages\\Users.tsx",
         "src\\pages\\QRRedirect.tsx",
         "src\\pages\\DealerView.tsx",
@@ -40649,7 +40184,6 @@
         "src\\components\\debug\\SimpleSalesOrders.tsx",
         "src\\components\\common\\LazyComponentWrapper.tsx",
         "src\\components\\chat\\EnhancedChatInterface.tsx",
-        "src\\components\\attachments\\FileUpload.tsx",
         "src\\components\\ai\\AIAssistant.tsx",
         "src\\utils\\translationAudit.ts",
         "src\\pages\\VinScanner.tsx",
@@ -40718,19 +40252,15 @@
         "src\\components\\profile\\AccountSecurityTab.tsx",
         "src\\components\\productivity\\ProductivityDashboard.tsx",
         "src\\components\\productivity\\ProductivityCalendar.tsx",
-        "src\\components\\orders\\VehicleInfoBlock.tsx",
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\orders\\SimpleNotesDisplay.tsx",
         "src\\components\\orders\\ServiceOrderFields.tsx",
         "src\\components\\orders\\ScheduleViewBlock.tsx",
-        "src\\components\\orders\\SalesOrderFields.tsx",
         "src\\components\\orders\\ReconOrderFields.tsx",
         "src\\components\\orders\\RecentActivity.tsx",
         "src\\components\\orders\\OrderComments.tsx",
         "src\\components\\orders\\OrderCalendarView.tsx",
-        "src\\components\\orders\\ModifiedVehicleInfoBlock.tsx",
         "src\\components\\orders\\FollowersBlock.tsx",
-        "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
         "src\\components\\orders\\CommunicationActions.tsx",
         "src\\components\\orders\\CarWashOrderFields.tsx",
         "src\\components\\orders\\communication\\VoiceRecorder.tsx",
@@ -40771,14 +40301,14 @@
         "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx"
       ],
-      "estimatedEffort": "128 hours"
+      "estimatedEffort": "126 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3021 translation keys are referenced but missing",
+      "description": "2986 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "152 hours"
+      "estimatedEffort": "150 hours"
     }
   ],
   "coverage": 78
