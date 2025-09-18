@@ -1,7 +1,7 @@
 {
   "scannedFiles": 449,
-  "totalStrings": 4512,
-  "hardcodedStrings": 1000,
+  "totalStrings": 4501,
+  "hardcodedStrings": 989,
   "translatedStrings": 3512,
   "issues": {
     "critical": [
@@ -1559,70 +1559,6 @@
           }
         ],
         "coverage": 52,
-        "severity": "high"
-      },
-      {
-        "file": "src\\pages\\Auth.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "My Detail Area",
-            "line": 111,
-            "context": "110: <div className=\"text-center mb-8\">\n111: <h1 className=\"text-4xl font-bold text-foreground mb-2 tracking-tight drop-shadow-lg\" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>\n112: My Detail Area"
-          },
-          {
-            "text": "Dealership Operations Hub",
-            "line": 114,
-            "context": "113: </h1>\n114: <p className=\"text-muted-foreground text-lg\">\n115: Dealership Operations Hub"
-          },
-          {
-            "text": "Welcome back",
-            "line": 121,
-            "context": "120: <CardHeader className=\"text-center pb-6\">\n121: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n122: Welcome back"
-          },
-          {
-            "text": "Sign in to your account",
-            "line": 124,
-            "context": "123: </CardTitle>\n124: <CardDescription className=\"text-base text-muted-foreground\">\n125: Sign in to your account"
-          },
-          {
-            "text": "Email address",
-            "line": 131,
-            "context": "130: <div className=\"space-y-2\">\n131: <Label htmlFor=\"email\" className=\"text-sm font-medium text-foreground\">\n132: Email address"
-          },
-          {
-            "text": "Please enter a valid email address",
-            "line": 147,
-            "context": "146: <XCircle className=\"h-4 w-4\" />\n147: <AlertDescription className=\"text-sm\">\n148: Please enter a valid email address"
-          },
-          {
-            "text": "Password",
-            "line": 155,
-            "context": "154: <div className=\"space-y-2\">\n155: <Label htmlFor=\"password\" className=\"text-sm font-medium text-foreground\">\n156: Password"
-          },
-          {
-            "text": "Enter your email address",
-            "line": 142,
-            "context": "141: className=\"input-enhanced h-11 border-border/50 focus:border-accent transition-colors\"\n142: placeholder=\"Enter your email address\"\n143: />"
-          },
-          {
-            "text": "Enter your password",
-            "line": 165,
-            "context": "164: className=\"input-enhanced h-11 border-border/50 focus:border-accent transition-colors\"\n165: placeholder=\"Enter your password\"\n166: />"
-          },
-          {
-            "text": "Email address\r\n                ",
-            "line": 131,
-            "context": "130: <div className=\"space-y-2\">\n131: <Label htmlFor=\"email\" className=\"text-sm font-medium text-foreground\">\n132: Email address"
-          },
-          {
-            "text": "Password\r\n                ",
-            "line": 155,
-            "context": "154: <div className=\"space-y-2\">\n155: <Label htmlFor=\"password\" className=\"text-sm font-medium text-foreground\">\n156: Password"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
         "severity": "high"
       },
       {
@@ -40561,7 +40497,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "256 Component components need translation",
+      "description": "255 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -40585,7 +40521,6 @@
         "src\\components\\scanner\\enhanced\\VinStatistics.tsx",
         "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\debug\\DuplicateTooltipTester.tsx",
-        "src\\pages\\Auth.tsx",
         "src\\components\\followers\\UniversalFollowButton.tsx",
         "src\\components\\users\\UserDashboard.tsx",
         "src\\components\\scanner\\enhanced\\VinAnalyzer.tsx",
