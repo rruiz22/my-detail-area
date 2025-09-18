@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 import { XCircle } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -35,6 +36,7 @@ const validatePassword = (password: string) => {
 };
 
 export default function Auth() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -58,8 +60,8 @@ export default function Auth() {
     
     if (!validateEmail(sanitizedEmail)) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: t('auth.invalid_email_title'),
+        description: t('auth.invalid_email_description'),
         variant: "destructive",
       });
       return;
@@ -75,21 +77,21 @@ export default function Auth() {
         
         // Provide helpful error messages
         if (error.message.includes('Invalid login credentials')) {
-          errorMessage = "Invalid email or password. If you don't have an account, please contact your dealer for an invitation.";
+          errorMessage = t('auth.invalid_credentials');
         } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = "Please check your email and click the confirmation link before signing in.";
+          errorMessage = t('auth.email_not_confirmed');
         }
-        
+
         toast({
-          title: "Sign In Error",
+          title: t('auth.sign_in_error_title'),
           description: errorMessage,
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        title: t('auth.error_title'),
+        description: t('auth.unexpected_error'),
         variant: "destructive",
       });
     } finally {
@@ -108,28 +110,30 @@ export default function Auth() {
       <div className="w-full max-w-lg animate-fade-in">
         {/* Logo and Brand Section */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
-            My Detail Area
+          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight drop-shadow-lg dark:drop-shadow-xl" style={{
+            textShadow: 'var(--text-shadow, 2px 2px 4px rgba(0, 0, 0, 0.3), 0px 0px 8px rgba(0, 0, 0, 0.1))'
+          }}>
+            {t('auth.app_title')}
           </h1>
           <p className="text-muted-foreground text-lg">
-            Dealership Operations Hub
+            {t('auth.app_subtitle')}
           </p>
         </div>
 
         <Card className="card-enhanced border-0 bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-semibold text-foreground mb-2">
-              Welcome back
+              {t('auth.welcome_title')}
             </CardTitle>
             <CardDescription className="text-base text-muted-foreground">
-              Sign in to your account
+              {t('auth.welcome_subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                  Email address
+                  {t('auth.email_label')}
                 </Label>
                 <Input
                   id="email"
@@ -139,13 +143,13 @@ export default function Auth() {
                   maxLength={100}
                   required
                   className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
-                  placeholder="Enter your email address"
+                  placeholder={t('auth.email_placeholder')}
                 />
                 {email && !validateEmail(email) && (
                   <Alert variant="destructive" className="py-2">
                     <XCircle className="h-4 w-4" />
                     <AlertDescription className="text-sm">
-                      Please enter a valid email address
+                      {t('auth.invalid_email_description')}
                     </AlertDescription>
                   </Alert>
                 )}
@@ -153,7 +157,7 @@ export default function Auth() {
               
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                  Password
+                  {t('auth.password_label')}
                 </Label>
                 <Input
                   id="password"
@@ -162,7 +166,7 @@ export default function Auth() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
-                  placeholder="Enter your password"
+                  placeholder={t('auth.password_placeholder')}
                 />
               </div>
               
@@ -174,17 +178,17 @@ export default function Auth() {
                 {loading ? (
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Signing in...
+                    {t('auth.signing_in')}
                   </div>
                 ) : (
-                  'Sign In'
+                  t('auth.sign_in_button')
                 )}
               </Button>
             </form>
             
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Don't have access? Contact your dealer administrator.
+                {t('auth.no_access_text')}
               </p>
             </div>
           </CardContent>
@@ -192,7 +196,7 @@ export default function Auth() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-muted-foreground">
-          <p>© 2024 My Detail Area. Dealership operations platform.</p>
+          <p>{t('auth.footer_text')}</p>
         </div>
       </div>
     </div>

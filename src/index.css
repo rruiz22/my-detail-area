@@ -67,6 +67,9 @@ All colors MUST be HSL.
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    /* Text shadows for light mode */
+    --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0px 0px 8px rgba(0, 0, 0, 0.1);
+
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
@@ -115,6 +118,10 @@ All colors MUST be HSL.
     --border: 0 0% 20%;
     --input: 0 0% 20%;
     --ring: 211 100% 50%;
+
+    /* Text shadows for dark mode */
+    --text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.1), 0px 0px 12px rgba(255, 255, 255, 0.05);
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
