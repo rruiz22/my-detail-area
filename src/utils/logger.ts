@@ -12,21 +12,23 @@ interface LoggerConfig {
 }
 
 class Logger {
-  private config: LoggerConfig;
+  private isDev: boolean;
 
   constructor() {
-    this.config = {
-      isDevelopment: process.env.NODE_ENV === 'development',
-      enablePerformanceLogs: process.env.NODE_ENV === 'development',
-      enableDebugLogs: process.env.NODE_ENV === 'development'
-    };
+    // Simple environment check that works in all builds
+    try {
+      this.isDev = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
+    } catch {
+      // Fallback for production builds where process might not be available
+      this.isDev = false;
+    }
   }
 
   /**
    * Development-only logs (removed in production)
    */
   dev(...args: any[]): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.log(...args);
     }
   }
@@ -35,7 +37,7 @@ class Logger {
    * Performance logs (development only)
    */
   perf(...args: any[]): void {
-    if (this.config.enablePerformanceLogs) {
+    if (this.isDev) {
       console.log('⚡', ...args);
     }
   }
@@ -65,7 +67,7 @@ class Logger {
    * Success logs (important operations)
    */
   success(...args: any[]): void {
-    if (this.config.isDevelopment) {
+    if (this.isDev) {
       console.log('✅', ...args);
     }
   }
@@ -74,7 +76,7 @@ class Logger {
    * Cache-related logs (development only)
    */
   cache(...args: any[]): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.log('📦', ...args);
     }
   }
@@ -83,7 +85,7 @@ class Logger {
    * Database operation logs (development only)
    */
   db(...args: any[]): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.log('🗄️', ...args);
     }
   }
@@ -92,7 +94,7 @@ class Logger {
    * Authentication logs (development only)
    */
   auth(...args: any[]): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.log('👤', ...args);
     }
   }
@@ -101,7 +103,7 @@ class Logger {
    * Navigation logs (development only)
    */
   nav(...args: any[]): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.log('🔀', ...args);
     }
   }
@@ -110,7 +112,7 @@ class Logger {
    * Real-time update logs (development only)
    */
   realtime(...args: any[]): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.log('📡', ...args);
     }
   }
@@ -119,7 +121,7 @@ class Logger {
    * Business operation logs (important - development only but visible)
    */
   business(...args: any[]): void {
-    if (this.config.isDevelopment) {
+    if (this.isDev) {
       console.log('💼', ...args);
     }
   }
@@ -128,8 +130,7 @@ class Logger {
    * Disable all development logs (for production testing)
    */
   disableDevLogs(): void {
-    this.config.enableDebugLogs = false;
-    this.config.enablePerformanceLogs = false;
+    this.isDev = false;
     console.info('📵 Debug logs disabled for production mode');
   }
 
@@ -137,16 +138,15 @@ class Logger {
    * Enable all development logs
    */
   enableDevLogs(): void {
-    this.config.enableDebugLogs = true;
-    this.config.enablePerformanceLogs = true;
+    this.isDev = true;
     console.info('🔊 Debug logs enabled for development mode');
   }
 
   /**
    * Get current logger configuration
    */
-  getConfig(): LoggerConfig {
-    return { ...this.config };
+  getConfig(): { isDevelopment: boolean } {
+    return { isDevelopment: this.isDev };
   }
 
   /**
@@ -155,7 +155,7 @@ class Logger {
   startup(appName: string, version?: string): void {
     console.log(`🚀 ${appName}${version ? ` v${version}` : ''} starting up`);
 
-    if (this.config.isDevelopment) {
+    if (this.isDev) {
       console.log('🔧 Development mode - Full logging enabled');
     } else {
       console.log('🏭 Production mode - Essential logs only');
@@ -166,7 +166,7 @@ class Logger {
    * Group logs for better organization (development only)
    */
   group(label: string, callback: () => void): void {
-    if (this.config.enableDebugLogs) {
+    if (this.isDev) {
       console.group(label);
       callback();
       console.groupEnd();

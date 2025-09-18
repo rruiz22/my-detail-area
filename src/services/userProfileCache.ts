@@ -4,7 +4,10 @@
  * Maintains real-time business data while caching static user preferences
  */
 
-import { cache, warn, dev } from '@/utils/logger';
+// Use safe console methods instead of logger to avoid circular dependencies
+const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
+const safeLog = (...args: any[]) => isDev && console.log('📦', ...args);
+const safeWarn = (...args: any[]) => console.warn('⚠️', ...args);
 
 export interface CachedUserProfile {
   userId: string;
@@ -44,16 +47,16 @@ export class UserProfileCacheService {
         profile.version !== this.CACHE_VERSION ||
         Date.now() - new Date(profile.cached_at).getTime() > this.CACHE_TTL
       ) {
-        dev('Cache invalid or expired, clearing');
+        safeLog('Cache invalid or expired, clearing');
         this.clearCache();
         return null;
       }
 
-      cache('Loaded user profile from cache (instant)');
+      safeLog('Loaded user profile from cache (instant)');
       return profile;
 
     } catch (error) {
-      warn('Cache read error, clearing:', error);
+      safeWarn('Cache read error, clearing:', error);
       this.clearCache();
       return null;
     }
@@ -71,10 +74,10 @@ export class UserProfileCacheService {
       };
 
       localStorage.setItem(this.CACHE_KEY, JSON.stringify(cacheData));
-      dev('User profile cached successfully');
+      safeLog('User profile cached successfully');
 
     } catch (error) {
-      warn('Failed to cache profile:', error);
+      safeWarn('Failed to cache profile:', error);
       // Don't throw error - caching is enhancement, not requirement
     }
   }
@@ -95,10 +98,10 @@ export class UserProfileCacheService {
       cached.cached_at = new Date().toISOString();
 
       localStorage.setItem(this.CACHE_KEY, JSON.stringify(cached));
-      dev(`Cache updated: ${field}`, value);
+      safeLog(`Cache updated: ${field}`, value);
 
     } catch (error) {
-      warn('Failed to update cache field:', error);
+      safeWarn('Failed to update cache field:', error);
     }
   }
 
@@ -108,9 +111,9 @@ export class UserProfileCacheService {
   clearCache(): void {
     try {
       localStorage.removeItem(this.CACHE_KEY);
-      dev('User profile cache cleared');
+      safeLog('User profile cache cleared');
     } catch (error) {
-      warn('Failed to clear cache:', error);
+      safeWarn('Failed to clear cache:', error);
     }
   }
 
