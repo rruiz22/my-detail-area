@@ -100,7 +100,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/40">
       {/* Top right controls */}
       <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
         <LanguageSwitcher />
@@ -123,7 +123,7 @@ export default function Auth() {
           </p>
         </div>
 
-        <Card className="card-enhanced border-0 bg-card/80 backdrop-blur-sm">
+        <Card className="border-2 border-border/20 dark:border-border/40 bg-card dark:bg-muted/95 backdrop-blur-sm shadow-2xl">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-semibold text-foreground mb-2">
               {t('auth.welcome_title', 'Welcome back')}
@@ -135,7 +135,7 @@ export default function Auth() {
           <CardContent className="pt-0">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                <Label htmlFor="email" className="text-sm font-semibold text-foreground dark:text-foreground">
                   {t('auth.email_label', 'Email address')}
                 </Label>
                 <Input
@@ -145,7 +145,7 @@ export default function Auth() {
                   onChange={(e) => setEmail(sanitizeInput(e.target.value))}
                   maxLength={100}
                   required
-                  className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
+                  className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors"
                   placeholder={t('auth.email_placeholder', 'Enter your email address')}
                 />
                 {email && !validateEmail(email) && (
@@ -159,7 +159,7 @@ export default function Auth() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                <Label htmlFor="password" className="text-sm font-semibold text-foreground dark:text-foreground">
                   {t('auth.password_label', 'Password')}
                 </Label>
                 <Input
@@ -168,14 +168,14 @@ export default function Auth() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="input-enhanced h-11 border-border/50 focus:border-accent transition-colors"
+                  className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors"
                   placeholder={t('auth.password_placeholder', 'Enter your password')}
                 />
               </div>
               
-              <Button 
-                type="submit" 
-                className="w-full h-11 button-enhanced bg-gradient-primary hover:bg-gradient-primary/90 text-primary-foreground font-medium text-base" 
+              <Button
+                type="submit"
+                className="w-full h-11 bg-primary dark:bg-accent hover:bg-primary/90 dark:hover:bg-accent/90 text-primary-foreground dark:text-accent-foreground font-medium text-base shadow-lg"
                 disabled={loading}
               >
                 {loading ? (
@@ -205,7 +205,7 @@ export default function Auth() {
         </div>
 
         {/* Right Column: Pitch Deck */}
-        <div className="hidden lg:flex items-center justify-center p-8 bg-gradient-to-br from-primary/5 to-accent/10 dark:from-primary/10 dark:to-accent/20">
+        <div className="hidden lg:flex items-center justify-center p-8 bg-gradient-to-br from-primary/5 to-accent/10 dark:from-muted/30 dark:to-card/50">
           <div className="w-full max-w-lg">
             <div className="text-center space-y-8">
               {/* Tagline */}
@@ -220,7 +220,7 @@ export default function Auth() {
               </div>
 
               {/* Value Proposition */}
-              <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-elegant border border-border/50">
+              <div className="bg-card/90 dark:bg-card/95 backdrop-blur-sm rounded-2xl p-6 shadow-elegant border border-border/50">
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   {t('auth.value_proposition', 'The operational platform that connects recon, detail, service and sales to move every vehicle from intake to sale with less friction and better visibility.')}
                 </p>
@@ -228,15 +228,15 @@ export default function Auth() {
 
               {/* Features */}
               <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/80 transition-all duration-300">
+                <div className="flex items-center gap-4 p-4 bg-card/70 dark:bg-card/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/90 dark:hover:bg-card/95 transition-all duration-300">
                   <div className="text-2xl">🔎</div>
                   <span className="text-base font-medium text-foreground">{t('auth.feature_visibility', 'Real-time visibility')}</span>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/80 transition-all duration-300">
+                <div className="flex items-center gap-4 p-4 bg-card/70 dark:bg-card/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/90 dark:hover:bg-card/95 transition-all duration-300">
                   <div className="text-2xl">⚙️</div>
                   <span className="text-base font-medium text-foreground">{t('auth.feature_workflow', 'Standardized workflow')}</span>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/80 transition-all duration-300">
+                <div className="flex items-center gap-4 p-4 bg-card/70 dark:bg-card/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/90 dark:hover:bg-card/95 transition-all duration-300">
                   <div className="text-2xl">📈</div>
                   <span className="text-base font-medium text-foreground">{t('auth.feature_performance', 'Reduced T2L, faster turnover')}</span>
                 </div>
