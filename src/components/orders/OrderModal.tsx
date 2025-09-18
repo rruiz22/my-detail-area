@@ -690,32 +690,38 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       return false;
     }
 
-    // Validate due date and time
-    if (!formData.dueDate) {
-      toast.error(t('validation.dueDateRequired'));
-      return false;
+    // Validate due date and time - ONLY for sales/service orders on creation (not editing)
+    const isCreatingOrder = !order; // No existing order means creating new
+    const orderTypesRequiringDueDate = ['sales', 'service'];
+    const shouldValidateDueDate = isCreatingOrder && orderTypesRequiringDueDate.includes(formData.orderType);
+
+    if (shouldValidateDueDate) {
+      if (!formData.dueDate) {
+        toast.error(t('validation.dueDateRequired'));
+        return false;
+      }
+
+      // Check if date is within 1 week limit
+      const today = new Date();
+      const oneWeekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      if (formData.dueDate > oneWeekFromNow) {
+        toast.error(t('validation.dueDateTooFar'));
+        return false;
+      }
+
+      // Check minimum 1 hour preparation time
+      const now = new Date();
+      const minimumTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
+
+      if (formData.dueDate < minimumTime) {
+        toast.error(t('validation.dueDateTooSoon'));
+        return false;
+      }
     }
 
-    // Check if date is within 1 week limit
-    const today = new Date();
-    const oneWeekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    if (formData.dueDate > oneWeekFromNow) {
-      toast.error(t('validation.dueDateTooFar'));
-      return false;
-    }
-
-    // Check minimum 1 hour preparation time
-    const now = new Date();
-    const minimumTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
-
-    if (formData.dueDate < minimumTime) {
-      toast.error(t('validation.dueDateTooSoon'));
-      return false;
-    }
-
-    // Check appointment capacity if dealership and time are selected
-    if (selectedDealership && formData.dueDate) {
+    // Check appointment capacity if dealership and time are selected - only when validating due date
+    if (shouldValidateDueDate && selectedDealership && formData.dueDate) {
       try {
         const slot = await checkSlotAvailability(
           parseInt(selectedDealership),

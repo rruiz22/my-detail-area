@@ -19,10 +19,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useOrderComments } from '@/hooks/useOrderComments';
 import { AvatarSystem } from '@/components/ui/avatar-system';
-import { FileUpload } from '@/components/attachments/FileUpload';
+import { FileSelector } from '@/components/attachments/FileSelector';
 import { AttachmentsList } from '@/components/attachments/AttachmentsList';
 import { MentionInput } from '@/components/mentions/MentionInput';
 import { CommentReactions } from '@/components/reactions/CommentReactions';
+import { useAttachments } from '@/hooks/useAttachments';
 import { toast } from 'sonner';
 
 interface TeamCommunicationBlockProps {
@@ -38,6 +39,10 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyMessage, setReplyMessage] = useState('');
 
+  // Separate attachments for Comments and Internal Notes
+  const commentsAttachments = useAttachments(orderId);
+  const internalAttachments = useAttachments(orderId);
+
   const {
     comments,
     internalNotes,
@@ -49,17 +54,32 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     canAccessInternal
   } = useOrderComments(orderId);
 
-  // Handle adding comment/note
+  // Handle adding comment/note with attachments
   const handleAddMessage = async () => {
     if (!newMessage.trim()) return;
 
     setLoading(true);
     try {
+      const currentAttachments = activeTab === 'comments' ? commentsAttachments : internalAttachments;
+
+      // 1. Upload selected files first (if any)
+      if (currentAttachments.selectedFiles.length > 0) {
+        console.log(`📎 Uploading ${currentAttachments.selectedFiles.length} files with ${activeTab}...`);
+        await currentAttachments.uploadSelectedFiles(
+          activeTab === 'comments' ? 'public_comment' : 'internal_note'
+        );
+      }
+
+      // 2. Add comment/note
       await addComment(
         newMessage.trim(),
         activeTab === 'comments' ? 'public' : 'internal'
       );
+
+      // 3. Clear message and files
       setNewMessage('');
+      currentAttachments.clearFiles();
+
       toast.success(
         activeTab === 'comments'
           ? t('order_comments.comment_added', 'Comment added successfully')
@@ -363,18 +383,19 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                 </Button>
               </div>
 
-              <div className="flex items-center gap-2">
-                <FileUpload
-                  orderId={orderId}
-                  uploadContext="public_comment"
-                  onUploadComplete={() => {
-                    toast.success(t('order_comments.attachment_added', 'File attached successfully'));
-                  }}
-                />
-                <Button variant="outline" size="sm" className="text-xs">
-                  <AtSign className="h-3 w-3 mr-1" />
-                  {t('order_comments.mention', 'Mention')}
-                </Button>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <FileSelector
+                    selectedFiles={commentsAttachments.selectedFiles}
+                    onFilesSelected={commentsAttachments.addFiles}
+                    onRemoveFile={commentsAttachments.removeFile}
+                    disabled={loading || commentsLoading}
+                  />
+                  <Button variant="outline" size="sm" className="text-xs">
+                    <AtSign className="h-3 w-3 mr-1" />
+                    {t('order_comments.mention', 'Mention')}
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -435,19 +456,20 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <FileUpload
-                    orderId={orderId}
-                    uploadContext="internal_note"
-                    onUploadComplete={() => {
-                      toast.success(t('order_comments.internal_attachment_added', 'Internal file attached successfully'));
-                    }}
-                    className="text-xs border-amber-300"
-                  />
-                  <Button variant="outline" size="sm" className="text-xs border-amber-300">
-                    <AtSign className="h-3 w-3 mr-1" />
-                    {t('order_comments.mention_team', 'Mention Team')}
-                  </Button>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <FileSelector
+                      selectedFiles={internalAttachments.selectedFiles}
+                      onFilesSelected={internalAttachments.addFiles}
+                      onRemoveFile={internalAttachments.removeFile}
+                      disabled={loading || commentsLoading}
+                      className="border-amber-300"
+                    />
+                    <Button variant="outline" size="sm" className="text-xs border-amber-300">
+                      <AtSign className="h-3 w-3 mr-1" />
+                      {t('order_comments.mention_team', 'Mention Team')}
+                    </Button>
+                  </div>
                 </div>
               </div>
 

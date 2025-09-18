@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -26,12 +27,19 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 export default function SalesOrders() {
   const { t } = useTranslation();
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+  const orderIdFromUrl = searchParams.get('order');
+
   useEffect(() => {
     console.log('[RouteMount] SalesOrders mounted');
+    console.log('🔍 Debug - URL params on mount:', {
+      orderIdFromUrl,
+      hasOrderParam: !!orderIdFromUrl,
+      fullURL: window.location.href
+    });
     return () => console.log('[RouteUnmount] SalesOrders unmounted');
-  }, []);
-  
+  }, [orderIdFromUrl]);
+
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('sales_orders');
   const [viewMode, setViewMode] = useViewModePersistence('sales_orders');
@@ -59,6 +67,38 @@ export default function SalesOrders() {
 
   // Real-time updates handle most data changes automatically
   // Only manual refresh needed for initial load and special cases
+
+  // Auto-open order modal when URL contains ?order=ID parameter
+  useEffect(() => {
+    console.log('🔍 Auto-modal effect triggered:', {
+      orderIdFromUrl,
+      ordersCount: orders.length,
+      hasPreviewOrder: !!previewOrder,
+      shouldExecute: !!(orderIdFromUrl && orders.length > 0 && !previewOrder)
+    });
+
+    if (orderIdFromUrl && orders.length > 0 && !previewOrder) {
+      console.log('🎯 Searching for order from URL:', orderIdFromUrl);
+      console.log('📋 Available orders:', orders.map(o => ({ id: o.id, orderNumber: o.orderNumber })));
+
+      // Find the order in the loaded orders
+      const targetOrder = orders.find(order => order.id === orderIdFromUrl);
+
+      if (targetOrder) {
+        console.log('✅ Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        setPreviewOrder(targetOrder);
+
+        // Clean URL parameter after opening modal (optional)
+        const url = new URL(window.location);
+        url.searchParams.delete('order');
+        window.history.replaceState({}, '', url.pathname + url.search);
+      } else {
+        console.warn('⚠️ Order not found in current orders list:', orderIdFromUrl);
+        console.warn('🔍 Order IDs in list:', orders.map(o => o.id));
+        toast.error(t('orders.order_not_found'));
+      }
+    }
+  }, [orderIdFromUrl, orders, previewOrder, t]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);

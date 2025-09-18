@@ -59,8 +59,8 @@ export function AttachmentsList({
     try {
       console.log('📎 Fetching attachments for order:', orderId);
 
-      // Get attachments data
-      const { data: attachmentsData, error: attachmentsError } = await supabase
+      // Get attachments data filtered by context
+      let query = supabase
         .from('order_attachments')
         .select(`
           id,
@@ -75,7 +75,14 @@ export function AttachmentsList({
           is_public,
           created_at
         `)
-        .eq('order_id', orderId)
+        .eq('order_id', orderId);
+
+      // Filter by context if specified
+      if (context && context !== 'all') {
+        query = query.eq('upload_context', context);
+      }
+
+      const { data: attachmentsData, error: attachmentsError } = await query
         .order('created_at', { ascending: false });
 
       if (attachmentsError) {
@@ -208,9 +215,28 @@ export function AttachmentsList({
     }
   };
 
-  // Load attachments on mount
+  // Load attachments on mount and set up real-time subscription
   useEffect(() => {
     fetchAttachments();
+
+    // Set up real-time subscription for attachments
+    const subscription = supabase
+      .channel(`attachments-${orderId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'order_attachments',
+        filter: `order_id=eq.${orderId}`
+      }, (payload) => {
+        console.log('📡 Real-time attachment update:', payload.eventType);
+        // Refresh attachments when changes occur
+        fetchAttachments();
+      })
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [orderId]);
 
   if (loading) {

@@ -609,9 +609,19 @@
     "vin_not_provided": "VIN no proporcionado"
   },
   "vehicle_info": {
+    "vehicle_information": "Información del Vehículo",
+    "decoded_from_vin": "Decodificado del VIN",
     "vin_status": "Estado del VIN",
-    "manual_entry": "Entrada manual",
+    "manual_entry": "Entrada Manual",
+    "manually_entered": "Información ingresada manualmente",
+    "no_image_available": "Imagen del vehículo no disponible",
+    "vehicle_image": "Imagen del Vehículo",
+    "vehicle_image_alt": "Foto del vehículo",
     "display_preview": "Vista previa"
+  },
+  "car_wash_orders": {
+    "decoded": "Decodificado",
+    "auto_populated": "Auto-poblado desde el VIN"
   },
   "schedule_view": {
     "schedule_timeline": "Cronograma Programado",
@@ -624,7 +634,17 @@
   },
   "order_detail": {
     "simple_notes": "Notas",
-    "no_notes_provided": "Sin notas proporcionadas"
+    "no_notes_provided": "Sin notas proporcionadas",
+    "short_link_created": "Código QR generado exitosamente",
+    "qr_generation_failed": "Error al generar código QR",
+    "regenerate_qr": "Código QR regenerado exitosamente",
+    "qr_regeneration_failed": "Error al regenerar código QR",
+    "copy_link": "Enlace copiado al portapapeles",
+    "copy_failed": "Error al copiar enlace",
+    "qr_analytics": "Analíticas",
+    "total_scans": "Escaneos Totales",
+    "unique_visitors": "Visitantes Únicos",
+    "last_accessed": "Último acceso"
   },
   "orders": {
     "vehicle_information": "Información del Vehículo",
@@ -632,8 +652,21 @@
     "due_date": "Fecha de Vencimiento",
     "updated": "Actualizado",
     "qr_code_short_link": "Código QR y Enlace Corto",
-    "no_qr_code": "Sin código QR",
-    "generate_qr": "Generar QR",
+    "qr_code": "Código QR",
+    "short_link": "Enlace Corto",
+    "no_qr_code": "Código QR no disponible",
+    "generate_qr": "Generar Código QR",
+    "generate_qr_desc": "Generar un código QR y enlace corto para esta orden",
+    "qr_generating": "Generando código QR...",
+    "qr_generating_desc": "Por favor espera mientras creamos tu código QR",
+    "qr_generation_failed": "Falló la generación del código QR",
+    "qr_retry_desc": "Haz clic abajo para intentar generar el código QR nuevamente",
+    "retry_qr_generation": "Reintentar Generación",
+    "retrying": "Reintentando...",
+    "try_again": "Intentar de Nuevo",
+    "generating": "Generando...",
+    "regenerate_qr": "Regenerar QR",
+    "scan_for_quick_access": "Escanea para acceso rápido",
     "edit": "Editar Orden",
     "create": "Crear Orden",
     "customer_information": "Información del Cliente",

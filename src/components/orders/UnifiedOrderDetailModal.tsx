@@ -1,59 +1,37 @@
-import React, { ReactNode, useEffect, useCallback, useMemo, memo, useRef, useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import {
-  X,
-  Edit2,
-  Trash2,
-  Clock,
-  User,
-  Car,
-  Calendar,
-  DollarSign,
-  AlertCircle,
-  CheckCircle,
-  QrCode,
-  MessageSquare,
-  Link,
-  FileText,
-  Hash
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
-import { QRCodeDisplay } from './QRCodeDisplay';
-import { CommunicationActions } from './CommunicationActions';
-import { AttachmentUploader } from './AttachmentUploader';
-import { RecentActivity } from './RecentActivity';
-import { OrderStatusBadges } from './OrderStatusBadges';
-import { TimeRemaining } from './TimeRemaining';
-import { safeFormatDate } from '@/utils/dateUtils';
-import { getStatusColor } from '@/utils/statusUtils';
-import { SkeletonLoader } from './SkeletonLoader';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
+import { safeFormatDate } from '@/utils/dateUtils';
+import {
+  MessageSquare
+} from 'lucide-react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChatAndSMSActions } from './ChatAndSMSActions';
-import { ErrorBoundaryModal } from './ErrorBoundaryModal';
 import { OrderTasksSection } from './OrderTasksSection';
+import { SkeletonLoader } from './SkeletonLoader';
 
-// Type-specific field components - Direct imports for debugging
+// Type-specific field components
+import { CarWashOrderFields } from './CarWashOrderFields';
+import { ReconOrderFields } from './ReconOrderFields';
 import { SalesOrderFields } from './SalesOrderFields';
 import { ServiceOrderFields } from './ServiceOrderFields';
-import { ReconOrderFields } from './ReconOrderFields';
-import { CarWashOrderFields } from './CarWashOrderFields';
 
-// Direct imports instead of lazy loading for better performance
-import { ScheduleViewBlock } from './ScheduleViewBlock';
-import { SimpleNotesDisplay } from './SimpleNotesDisplay';
-import { TeamCommunicationBlock } from './TeamCommunicationBlock';
+// Direct imports for better performance
 import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
 import { FollowersBlock } from './FollowersBlock';
 import { RecentActivityBlock } from './RecentActivityBlock';
+import { ScheduleViewBlock } from './ScheduleViewBlock';
+import { SimpleNotesDisplay } from './SimpleNotesDisplay';
+import { TeamCommunicationBlock } from './TeamCommunicationBlock';
 
 // Enhanced TypeScript interfaces for better type safety
 // Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
 interface OrderData {
+  // Index signature for compatibility with field components
+  [key: string]: unknown;
   id: string;
   // Order identifiers (support both formats)
   order_number?: string;
@@ -83,6 +61,10 @@ interface OrderData {
   ro?: string; // Repair Order
   tag?: string; // TAG field
 
+  // Assignment fields (support both formats)
+  assigned_to?: string;
+  assignedTo?: string;
+
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   dealer_id: string | number;
   dealership_name?: string;
@@ -97,11 +79,15 @@ interface OrderData {
   estimated_completion?: string;
   due_date?: string; // For Sales/Service
   date_service_complete?: string; // For Recon/Car Wash
+  // QR and Links (support both formats)
   qr_slug?: string;
   short_url?: string;
   qr_code_url?: string;
+  qrCodeUrl?: string;
   short_link?: string;
+  shortLink?: string;
   qr_generation_status?: 'pending' | 'generating' | 'completed' | 'failed';
+  qrGenerationStatus?: 'pending' | 'generating' | 'completed' | 'failed';
 }
 
 interface ModalData {
@@ -114,6 +100,11 @@ interface ModalData {
 }
 
 type OrderType = 'sales' | 'service' | 'recon' | 'carwash';
+
+// Constants for default values
+const DEFAULT_DEALER_ID = '1';
+const FALLBACK_DEALER_ID = 5;
+const DEFAULT_DEALERSHIP_NAME = 'Premium Auto';
 
 interface UnifiedOrderDetailModalProps {
   orderType: OrderType;
@@ -129,7 +120,24 @@ interface UnifiedOrderDetailModalProps {
   dataError?: string | null;
 }
 
-// Removed lazy loading for better performance - direct imports above
+// Custom hook for QR props normalization
+const useQRProps = (orderData: OrderData) => {
+  return useMemo(() => ({
+    qrCodeUrl: orderData.qr_code_url || orderData.qrCodeUrl,
+    shortLink: orderData.short_link || orderData.shortLink,
+    qrGenerationStatus: orderData.qr_generation_status || orderData.qrGenerationStatus
+  }), [orderData.qr_code_url, orderData.qrCodeUrl, orderData.short_link, orderData.shortLink, orderData.qr_generation_status, orderData.qrGenerationStatus]);
+};
+
+// Error boundary wrapper for individual sections
+const SafeComponentWrapper = ({ children, fallback = null }: { children: React.ReactNode; fallback?: React.ReactNode }) => {
+  try {
+    return <>{children}</>;
+  } catch (error) {
+    console.error('Component rendering error:', error);
+    return <>{fallback}</>;
+  }
+};
 
 // Header Components
 interface UnifiedOrderHeaderProps {
@@ -149,7 +157,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
 
   const headerData = useMemo(() => {
     const orderNumber = order.orderNumber || order.order_number || 'New Order';
-    const dealershipName = order.dealership_name || 'Premium Auto';
+    const dealershipName = order.dealership_name || DEFAULT_DEALERSHIP_NAME;
 
     if (orderType === 'sales' || orderType === 'service') {
       return {
@@ -197,7 +205,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
         <div className="text-center space-y-1">
           {/* Vehicle Info as Title */}
           <h1 className="text-xl font-bold text-gray-900">
-            {order.vehicleInfo || order.vehicle_info || vehicleDisplayName}
+            {order.vehicle_info || vehicleDisplayName}
           </h1>
 
           {/* Stock + VIN */}
@@ -207,7 +215,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
 
           {/* Assigned To */}
           <div className="text-sm font-medium text-gray-700">
-            {order.assignedTo || order.salesperson || order.service_performer || 'Unassigned'}
+            {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || 'Unassigned'}
           </div>
         </div>
 
@@ -216,7 +224,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
           <StatusBadgeInteractive
             status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
             orderId={order.id}
-            dealerId={String(order.dealer_id)}
+            dealerId={order.dealer_id ? String(order.dealer_id) : DEFAULT_DEALER_ID}
             canUpdateStatus={true}
             onStatusChange={onStatusChange}
           />
@@ -272,11 +280,12 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   const { t } = useTranslation();
   const [orderData, setOrderData] = useState(order);
 
-  // Real-time subscription for order updates (especially short_link)
+  // Custom hook for normalized QR props
+  const qrProps = useQRProps(orderData);
+
+  // Real-time subscription for order updates with enhanced error handling
   useEffect(() => {
     if (!order?.id || !open) return;
-
-    console.log('📡 Setting up real-time subscription for order:', order.id);
 
     const subscription = supabase
       .channel(`order-updates-${order.id}`)
@@ -286,31 +295,63 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
         table: 'orders',
         filter: `id=eq.${order.id}`
       }, (payload) => {
-        console.log('📡 Real-time order update received:', payload.new);
-        // Update order data with new fields (especially short_link)
-        setOrderData(prev => ({ ...prev, ...payload.new }));
+        try {
+          // Validate payload structure and update state
+          if (payload?.new && typeof payload.new === 'object' && 'id' in payload.new) {
+            setOrderData(prev => ({
+              ...prev,
+              ...payload.new,
+              // Ensure ID consistency
+              id: prev.id
+            }));
+          }
+        } catch (error) {
+          console.warn('Failed to process real-time update:', error);
+        }
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'CHANNEL_ERROR') {
+          console.error('Real-time subscription failed for order:', order.id);
+        }
+      });
 
     return () => {
-      console.log('📡 Unsubscribing from order updates');
-      subscription.unsubscribe();
+      try {
+        supabase.removeChannel(subscription);
+      } catch (error) {
+        console.warn('Failed to cleanup subscription:', error);
+      }
     };
   }, [order?.id, open]);
 
-  // Reset scroll position when modal opens
+  // Enhanced scroll behavior with better error handling
   useEffect(() => {
-    if (open) {
-      // Small delay to ensure modal is fully rendered
-      const timer = setTimeout(() => {
-        const modalTop = document.getElementById('unified-modal-top');
-        if (modalTop) {
-          modalTop.scrollIntoView({ behavior: 'instant', block: 'start' });
-        }
-      }, 50);
+    if (!open) return;
 
-      return () => clearTimeout(timer);
-    }
+    const scrollToTop = () => {
+      try {
+        const modalTop = document.getElementById('unified-modal-top');
+        if (modalTop && typeof modalTop.scrollIntoView === 'function') {
+          modalTop.scrollIntoView({
+            behavior: 'instant',
+            block: 'start',
+            inline: 'nearest'
+          });
+        } else {
+          // Fallback: scroll container to top
+          const scrollContainer = document.querySelector('[data-testid="unified-order-detail-modal"] .overflow-y-auto');
+          if (scrollContainer) {
+            scrollContainer.scrollTop = 0;
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to scroll to modal top:', error);
+      }
+    };
+
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(scrollToTop, 50);
+    return () => clearTimeout(timer);
   }, [open]);
 
   // Memoize utility functions
@@ -356,11 +397,17 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
       >
         <div className="h-screen flex flex-col">
           <DialogTitle className="sr-only">
-            {t('orders.order_details')} - {order.orderNumber || order.order_number}
+            {t('orders.order_details_modal_title', {
+              defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,
+              orderNumber: order.orderNumber || order.order_number || 'New',
+              orderType: orderType,
+              customer: order.customerName || order.customer_name || 'Unknown Customer'
+            })}
           </DialogTitle>
           <DialogDescription className="sr-only">
             {t('orders.order_details_description', {
-              customer: order.customerName || order.customer_name,
+              defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,
+              customer: order.customerName || order.customer_name || 'customer',
               vehicle: vehicleDisplayName,
               type: orderType
             })}
@@ -399,32 +446,12 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />
                   ) : (
-                    (() => {
-                      console.log('📊 UnifiedOrderDetailModal QR props (FIXED):', {
-                        orderId: orderData.id,
-                        orderNumber: orderData.orderNumber || orderData.order_number,
-                        shortLink: orderData.shortLink,
-                        qrCodeUrl: orderData.qrCodeUrl,
-                        qrStatus: orderData.qrGenerationStatus,
-                        hasShortLink: !!orderData.shortLink,
-                        // Debug: show both snake_case and camelCase to verify transformation
-                        debug_snake_case: {
-                          short_link: orderData.short_link,
-                          qr_code_url: orderData.qr_code_url,
-                          qr_generation_status: orderData.qr_generation_status
-                        }
-                      });
-                      return (
-                        <EnhancedQRCodeBlock
-                          orderId={orderData.id}
-                          orderNumber={orderData.orderNumber || orderData.order_number}
-                          dealerId={String(orderData.dealer_id)}
-                          qrCodeUrl={orderData.qrCodeUrl}
-                          shortLink={orderData.shortLink}
-                          qrGenerationStatus={orderData.qrGenerationStatus}
-                        />
-                      );
-                    })()
+                    <EnhancedQRCodeBlock
+                      orderId={orderData.id}
+                      orderNumber={orderData.orderNumber || orderData.order_number}
+                      dealerId={orderData.dealer_id ? String(orderData.dealer_id) : DEFAULT_DEALER_ID}
+                      {...qrProps}
+                    />
                   )}
 
                   {/* Chat and Communication Actions */}
@@ -440,7 +467,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                         orderId={order.id}
                         orderNumber={order.orderNumber || order.order_number}
                         customerPhone={order.customerPhone || order.customer_phone || ''}
-                        dealerId={Number(order.dealer_id)}
+                        dealerId={order.dealer_id ? Number(order.dealer_id) : FALLBACK_DEALER_ID}
                         variant="compact"
                       />
                     </CardContent>
@@ -452,7 +479,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   ) : (
                     <FollowersBlock
                       orderId={orderData.id}
-                      dealerId={String(orderData.dealer_id || 5)}
+                      dealerId={orderData.dealer_id ? String(orderData.dealer_id) : DEFAULT_DEALER_ID}
                     />
                   )}
 

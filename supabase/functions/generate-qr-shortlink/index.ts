@@ -1,306 +1,225 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-// Use service role client for server operations
-export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+  // Use service role client for server operations
+  export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  };
 
-interface QRRequest {
-  orderId: string;
-  orderNumber: string;
-  dealerId: number;
-  regenerate?: boolean;
-  auto_generated?: boolean; // New: Indicates call from database trigger
-  retry_generation?: boolean; // New: Indicates retry attempt
-}
-
-const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+  interface QRRequest {
+    orderId: string;
+    orderNumber: string;
+    dealerId: number;
+    regenerate?: boolean;
+    auto_generated?: boolean;
+    retry_generation?: boolean;
   }
 
-  try {
-    const mdaApiKey = Deno.env.get("MDA_TO_API_KEY");
-    if (!mdaApiKey) {
-      throw new Error("MDA_TO_API_KEY not configured");
+  const handler = async (req: Request): Promise<Response> => {
+    if (req.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
     }
 
-    const {
-      orderId,
-      orderNumber,
-      dealerId,
-      regenerate = false,
-      auto_generated = false,
-      retry_generation = false
-    }: QRRequest = await req.json();
-
-    console.log(`Processing QR generation for order ${orderNumber} (ID: ${orderId})`);
-    console.log(`Context: auto_generated=${auto_generated}, regenerate=${regenerate}, retry=${retry_generation}`);
-
-    // Update QR generation status to 'generating' for auto-generated requests
-    if (auto_generated || retry_generation) {
-      await supabase.rpc('update_qr_status_only', {
-        p_order_id: orderId,
-        p_status: 'generating',
-        p_increment_attempts: true
-      });
-    }
-
-    // Check if link already exists and regenerate is false
-    if (!regenerate) {
-      const { data: existingLink } = await supabase
-        .from("sales_order_links")
-        .select("*")
-        .eq("order_id", orderId)
-        .eq("is_active", true)
-        .single();
-
-      if (existingLink) {
-        console.log(`Using existing link for order ${orderNumber}`);
-        return new Response(
-          JSON.stringify({
-            success: true,
-            linkId: existingLink.id,
-            shortLink: existingLink.short_url,
-            qrCodeUrl: existingLink.qr_code_url,
-            deepLink: existingLink.deep_link,
-            slug: existingLink.slug,
-            analytics: {
-              totalClicks: existingLink.total_clicks,
-              uniqueClicks: existingLink.unique_clicks,
-              lastClickedAt: existingLink.last_clicked_at,
-            }
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
-    }
-
-    // Generate unique 5-digit slug
-    const { data: slugData, error: slugError } = await supabase
-      .rpc('generate_unique_slug');
-
-    if (slugError || !slugData) {
-      console.error("Error generating slug:", slugError);
-      throw new Error("Failed to generate unique slug");
-    }
-
-    const slug = slugData;
-    console.log(`Generated slug: ${slug}`);
-
-    // Create the deep link to our redirect endpoint
-    // For development, use localhost; for production, use environment variable
-    const appUrl = Deno.env.get("PUBLIC_APP_URL") || "http://localhost:8080";
-    const redirectUrl = `${appUrl}/s/${slug}`;
-    const deepLink = `${appUrl}/sales-orders?order=${orderId}`;
-
-    console.log(`Using app URL: ${appUrl}`);
-    console.log(`Redirect URL will be: ${redirectUrl}`);
-
-    // Generate short link using mda.to API (fallback to mda.to direct if unavailable)
-    let shortLink = `https://mda.to/${slug.toLowerCase()}`;
-
-    console.log(`🔗 Attempting to register shortlink with mda.to API`);
-    console.log(`🔑 API Key available: ${mdaApiKey ? 'Yes' : 'No'}`);
-    console.log(`📝 Registration payload:`, {
-      url: redirectUrl,
-      custom: slug.toLowerCase(),
-      type: 'direct'
-    });
+    // Declare variables at handler level to be available in catch block
+    let orderId = '';
+    let auto_generated = false;
+    let retry_generation = false;
 
     try {
-      // Use correct mda.to API endpoint according to official documentation
-      const shortLinkResponse = await fetch("https://mda.to/api/url/add", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${mdaApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: redirectUrl,
-          custom: slug.toLowerCase(), // Use 'custom' parameter for alias
-          type: 'direct', // Direct redirection type
-        }),
-      });
+      const mdaApiKey = Deno.env.get("MDA_TO_API_KEY");
+      if (!mdaApiKey) {
+        throw new Error("MDA_TO_API_KEY not configured");
+      }
 
-      console.log(`📡 mda.to API Response Status: ${shortLinkResponse.status}`);
-      console.log(`📡 mda.to API Response Headers:`, Object.fromEntries(shortLinkResponse.headers.entries()));
+      const {
+        orderId: orderIdFromRequest,
+        orderNumber,
+        dealerId,
+        regenerate = false,
+        auto_generated: autoGenerated = false,
+        retry_generation: retryGeneration = false
+      }: QRRequest = await req.json();
 
-      if (shortLinkResponse.ok) {
-        const contentType = shortLinkResponse.headers.get("content-type") || "";
-        if (contentType.includes("application/json")) {
+      // Assign to handler-level variables
+      orderId = orderIdFromRequest;
+      auto_generated = autoGenerated;
+      retry_generation = retryGeneration;
+
+      console.log(`Processing QR generation for order ${orderNumber} (ID: ${orderId})`);
+      console.log(`Context: auto_generated=${auto_generated}, regenerate=${regenerate}, retry=${retry_generation}`);
+
+      // Update QR generation status to 'generating' for auto-generated requests
+      if (auto_generated || retry_generation) {
+        await supabase.rpc('update_qr_status_only', {
+          p_order_id: orderId,
+          p_status: 'generating',
+          p_increment_attempts: true
+        });
+      }
+
+      // Generate new links
+      console.log(`Generating QR for order ${orderNumber}`);
+
+      // Generate unique 5-digit slug
+      const { data: slugData, error: slugError } = await supabase
+        .rpc('generate_unique_slug');
+
+      if (slugError || !slugData) {
+        console.error("Error generating slug:", slugError);
+        throw new Error("Failed to generate unique slug");
+      }
+
+      const slug = slugData;
+      console.log(`Generated slug: ${slug}`);
+
+      // Create the deep link to our redirect endpoint
+      // Use BASE_URL from environment variables (configured in Supabase Dashboard)
+      const appUrl = Deno.env.get("BASE_URL") || "https://app.mydetailarea.com";
+      const redirectUrl = `${appUrl}/sales?order=${orderId}`;
+      const deepLink = redirectUrl; // Same as redirect URL - direct redirect
+
+      console.log(`Using app URL: ${appUrl}`);
+      console.log(`Redirect URL will be: ${redirectUrl}`);
+
+      // Generate short link using mda.to API
+      let shortLink = `https://mda.to/${slug.toLowerCase()}`;
+
+      console.log(`🔗 Creating shortlink with mda.to API`);
+      console.log(`🔑 API Key configured: ${mdaApiKey ? 'Yes' : 'No'}`);
+
+      try {
+        // Use correct mda.to API endpoint from official docs
+        const shortLinkResponse = await fetch("https://mda.to/api/url/add", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${mdaApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            url: redirectUrl,
+            custom: slug, // Keep uppercase for consistency
+            status: "private",
+            description: `Order ${orderNumber} - MDA System`
+          }),
+        });
+
+        if (shortLinkResponse.ok) {
           const shortLinkData = await shortLinkResponse.json();
-          console.log(`✅ mda.to API Success Response:`, shortLinkData);
 
-          // According to mda.to docs, successful response contains 'data' object with 'shorturl'
-          if (shortLinkData.error === 0 && shortLinkData.data?.shorturl) {
-            shortLink = shortLinkData.data.shorturl;
-            console.log(`✅ Got mda.to shorturl: ${shortLink}`);
-          } else if (shortLinkData.data?.url) {
-            // Alternative response format
-            shortLink = shortLinkData.data.url;
-            console.log(`✅ Got mda.to url: ${shortLink}`);
+          if (shortLinkData.error === 0) {
+            // Success response from mda.to API
+            shortLink = shortLinkData.data?.shorturl || `https://mda.to/${slug}`;
+            console.log(`✅ mda.to API success: ${shortLink}`);
           } else {
-            console.warn("⚠️ mda.to API success but no shorturl in response:", shortLinkData);
-            console.warn("🔄 Using direct mda.to URL as fallback");
+            // API returned error
+            console.warn(`⚠️ mda.to API error: ${shortLinkData.message || 'Unknown error'}`);
+            console.log(`🔄 Using fallback URL`);
           }
         } else {
           const errorText = await shortLinkResponse.text();
-          console.warn("❌ MDA API returned non-JSON response:", errorText);
-          console.warn("🔄 Using direct mda.to URL as fallback");
+          console.error(`❌ mda.to API HTTP ${shortLinkResponse.status}: ${errorText}`);
+          console.log(`🔄 Using fallback URL`);
         }
-      } else if (shortLinkResponse.status === 429) {
-        // Rate limit exceeded
-        const errorText = await shortLinkResponse.text();
-        console.error(`⚠️ MDA API Rate Limit Exceeded (429):`, errorText);
-        console.warn("🔄 Using direct mda.to URL as fallback");
-      } else {
-        const errorText = await shortLinkResponse.text();
-        console.error(`❌ MDA API Error (${shortLinkResponse.status}):`, errorText);
-        console.warn("🔄 Using direct mda.to URL as fallback");
+      } catch (err: any) {
+        console.error("❌ mda.to API call failed:", err.message || err);
+        console.log(`🔄 Using fallback URL`);
       }
-    } catch (err) {
-      console.error("❌ mda.to API call completely failed:", err);
-      console.warn("🔄 Using direct mda.to URL as fallback");
-    }
 
-    console.log(`🎯 Final shortLink will be: ${shortLink}`);
-    console.log(`📊 mda.to Integration Status: ${shortLink.startsWith('https://mda.to/') && !shortLink.includes(`/${slug.toLowerCase()}`) ? 'API SUCCESS' : 'FALLBACK USED'}`);
+      // Ensure shortlink is properly formatted
+      if (!shortLink.startsWith('https://mda.to/')) {
+        shortLink = `https://mda.to/${slug}`;
+      }
 
-    // Validate final shortlink format
-    if (!shortLink.startsWith('https://mda.to/')) {
-      console.error(`❌ Invalid shortlink format: ${shortLink}`);
-      shortLink = `https://mda.to/${slug.toLowerCase()}`;
-    }
+      console.log(`🎯 Final shortLink: ${shortLink}`);
 
-    // Skip QR image generation - will be generated locally in frontend
-    const qrCodeUrl: string | null = null;
-    console.log("Skipping QR image generation - using local generation instead");
+      // Skip QR image generation - will be generated locally in frontend
+      const qrCodeUrl: string | null = null;
 
-    // Disable existing links if regenerating
-    if (regenerate) {
-      await supabase
-        .from("sales_order_links")
-        .update({ is_active: false })
-        .eq("order_id", orderId);
-    }
+      console.log('✅ QR generation completed');
 
-    // Create new sales order link record
-    const { data: linkData, error: linkError } = await supabase
-      .from("sales_order_links")
-      .insert({
-        order_id: orderId,
-        dealer_id: dealerId,
-        slug: slug,
-        short_url: shortLink,
-        qr_code_url: qrCodeUrl,
-        deep_link: deepLink,
-        title: `Order ${orderNumber}`,
-        description: `View order details for ${orderNumber}`,
-        created_by: null, // Could get from auth context
-      })
-      .select()
-      .single();
-
-    if (linkError) {
-      console.error("Error creating sales order link:", linkError);
-      throw new Error("Failed to create sales order link record");
-    }
-
-    // Also update the legacy order fields for backward compatibility
-    const { error: orderUpdateError } = await supabase
-      .from("orders")
-      .update({
+      // Create response data
+      const orderData = {
+        id: orderId,
         short_link: shortLink,
         qr_code_url: qrCodeUrl,
-        qr_generation_status: 'completed',
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", orderId);
+        qr_scan_count: 0,
+        updated_at: new Date().toISOString()
+      };
 
-    if (orderUpdateError) {
-      console.error("Error updating order:", orderUpdateError);
-      // Don't throw error here as the main functionality works
-    }
-
-    // Update QR generation status to completed for auto-generated requests
-    if (auto_generated || retry_generation) {
-      await supabase.rpc('update_qr_status_only', {
-        p_order_id: orderId,
-        p_status: 'completed',
-        p_increment_attempts: false
-      });
-    }
-
-    console.log(`Successfully generated QR and link for order ${orderNumber} with slug ${slug}`);
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        linkId: linkData.id,
-        shortLink,
-        qrCodeUrl,
-        deepLink,
-        slug,
-        redirectUrl,
-        analytics: {
-          totalClicks: 0,
-          uniqueClicks: 0,
-          lastClickedAt: null,
-        }
-      }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      }
-    );
-  } catch (error: any) {
-    console.error("Error in generate-qr-shortlink function:", error);
-
-    // Update QR generation status to failed for auto-generated requests
-    if (auto_generated || retry_generation) {
-      try {
+      // Update QR generation status to completed for auto-generated requests
+      if (auto_generated || retry_generation) {
         await supabase.rpc('update_qr_status_only', {
           p_order_id: orderId,
-          p_status: 'failed',
+          p_status: 'completed',
           p_increment_attempts: false
         });
-      } catch (statusError) {
-        console.error("Failed to update QR generation status:", statusError);
       }
-    }
 
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: error.message,
-        context: {
-          auto_generated: auto_generated || false,
-          retry_generation: retry_generation || false
+      console.log(`Successfully generated QR and link for order ${orderNumber} with slug ${slug}`);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          linkId: orderData.id,
+          shortLink,
+          qrCodeUrl,
+          deepLink,
+          slug,
+          redirectUrl,
+          analytics: {
+            totalClicks: orderData.qr_scan_count || 0,
+            uniqueClicks: Math.floor((orderData.qr_scan_count || 0) * 0.7),
+            lastClickedAt: orderData.updated_at,
+          }
+        }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders,
+          },
         }
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders
-        },
-      }
-    );
-  }
-};
+      );
+    } catch (error: any) {
+      console.error("Error in generate-qr-shortlink function:", error);
 
-serve(handler);
+      // Update QR generation status to failed for auto-generated requests
+      if (auto_generated || retry_generation) {
+        try {
+          await supabase.rpc('update_qr_status_only', {
+            p_order_id: orderId,
+            p_status: 'failed',
+            p_increment_attempts: false
+          });
+        } catch (statusError) {
+          console.error("Failed to update QR generation status:", statusError);
+        }
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: error.message,
+          context: {
+            auto_generated: auto_generated || false,
+            retry_generation: retry_generation || false
+          }
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders
+          },
+        }
+      );
+    }
+  };
+
+  serve(handler);

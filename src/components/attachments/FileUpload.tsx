@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -13,14 +13,18 @@ import {
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { FilePreview } from './FilePreview';
 import { toast } from 'sonner';
 
 interface FileUploadProps {
   orderId: string;
+  onFilesSelected?: (files: File[]) => void;
   onUploadComplete?: (attachment: any) => void;
   uploadContext?: string;
   disabled?: boolean;
   className?: string;
+  selectedFiles?: File[];
+  onRemoveFile?: (index: number) => void;
 }
 
 interface UploadingFile {
@@ -29,12 +33,19 @@ interface UploadingFile {
   id: string;
 }
 
-export function FileUpload({
+export interface FileUploadRef {
+  uploadFiles: (files: File[]) => Promise<any[]>;
+}
+
+export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
   orderId,
+  onFilesSelected,
   onUploadComplete,
   uploadContext = 'comment',
   disabled = false,
-  className
+  className,
+  selectedFiles = [],
+  onRemoveFile
 }: FileUploadProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -64,19 +75,34 @@ export function FileUpload({
     return <File className="h-4 w-4" />;
   };
 
-  // Handle file selection
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle file selection (no immediate upload)
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    for (const file of Array.from(files)) {
-      await uploadFile(file);
+    const newFiles = Array.from(files);
+
+    // Notify parent component about selected files
+    if (onFilesSelected) {
+      onFilesSelected([...selectedFiles, ...newFiles]);
     }
 
     // Clear the input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  // Public method to upload files (called from parent)
+  const uploadFiles = async (filesToUpload: File[]): Promise<any[]> => {
+    const uploadPromises = filesToUpload.map(file => uploadFile(file));
+    const results = await Promise.allSettled(uploadPromises);
+
+    const successfulUploads = results
+      .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
+      .map(result => result.value);
+
+    return successfulUploads;
   };
 
   // Upload individual file

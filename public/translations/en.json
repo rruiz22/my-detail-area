@@ -678,7 +678,19 @@
     "download": "Download",
     "delete": "Delete",
     "download_success": "File downloaded",
-    "download_failed": "Failed to download file"
+    "download_failed": "Failed to download file",
+    "ready_to_upload": "Ready to upload",
+    "remove": "Remove",
+    "selected_files": "{{count}} files selected",
+    "auth_required": "Please log in to upload files",
+    "preview_description": "File preview and actions",
+    "file_size": "File Size",
+    "uploaded_by": "Uploaded By",
+    "file_type": "File Type",
+    "upload_date": "Upload Date",
+    "image_preview": "Image Preview",
+    "download_to_view": "Download file to view",
+    "open_external": "View"
   },
   "auth": {
     "app_title": "My Detail Area",
@@ -926,9 +938,19 @@
     "vin_not_provided": "VIN not provided"
   },
   "vehicle_info": {
+    "vehicle_information": "Vehicle Information",
+    "decoded_from_vin": "Decoded from VIN",
     "vin_status": "VIN Status",
-    "manual_entry": "Manual entry",
+    "manual_entry": "Manual Entry",
+    "manually_entered": "Manually entered information",
+    "no_image_available": "No vehicle image available",
+    "vehicle_image": "Vehicle Image",
+    "vehicle_image_alt": "Vehicle photo",
     "display_preview": "Display preview"
+  },
+  "car_wash_orders": {
+    "decoded": "Decoded",
+    "auto_populated": "Auto-populated from VIN"
   },
   "schedule_view": {
     "schedule_timeline": "Schedule Timeline",
@@ -941,7 +963,17 @@
   },
   "order_detail": {
     "simple_notes": "Notes",
-    "no_notes_provided": "No notes provided"
+    "no_notes_provided": "No notes provided",
+    "short_link_created": "QR code generated successfully",
+    "qr_generation_failed": "Failed to generate QR code",
+    "regenerate_qr": "QR code regenerated successfully",
+    "qr_regeneration_failed": "Failed to regenerate QR code",
+    "copy_link": "Link copied to clipboard",
+    "copy_failed": "Failed to copy link",
+    "qr_analytics": "Analytics",
+    "total_scans": "Total Scans",
+    "unique_visitors": "Unique Visitors",
+    "last_accessed": "Last accessed"
   },
   "orders": {
     "vehicle_information": "Vehicle Information",
@@ -951,8 +983,19 @@
     "qr_code_short_link": "QR Code & Short Link",
     "qr_code": "QR Code",
     "short_link": "Short Link",
-    "no_qr_code": "No QR code",
-    "generate_qr": "Generate QR",
+    "no_qr_code": "No QR code available",
+    "generate_qr": "Generate QR Code",
+    "generate_qr_desc": "Generate a QR code and short link for this order",
+    "qr_generating": "Generating QR code...",
+    "qr_generating_desc": "Please wait while we create your QR code",
+    "qr_generation_failed": "QR code generation failed",
+    "qr_retry_desc": "Click below to try generating the QR code again",
+    "retry_qr_generation": "Retry Generation",
+    "retrying": "Retrying...",
+    "try_again": "Try Again",
+    "generating": "Generating...",
+    "regenerate_qr": "Regenerate QR",
+    "scan_for_quick_access": "Scan for quick access",
     "legacy_order_qr_desc": "QR code for easy order access",
     "generate_qr_legacy": "Generate QR Code",
     "edit": "Edit Order",
