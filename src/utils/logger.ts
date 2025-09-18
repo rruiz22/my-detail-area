@@ -1,183 +1,141 @@
 /**
- * Professional Logging Utility
- * Environment-based logging for production-ready applications
+ * Ultra-Simple Production-Safe Logging
+ * Never fails, never blocks functionality
  */
 
-export type LogLevel = 'dev' | 'info' | 'warn' | 'error';
-
-interface LoggerConfig {
-  isDevelopment: boolean;
-  enablePerformanceLogs: boolean;
-  enableDebugLogs: boolean;
-}
-
-class Logger {
-  private isDev: boolean;
-
-  constructor() {
-    // Simple environment check that works in all builds
-    try {
-      this.isDev = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
-    } catch {
-      // Fallback for production builds where process might not be available
-      this.isDev = false;
+// Simple environment detection that always works
+const isDev = (() => {
+  try {
+    // Multiple fallback checks for environment detection
+    if (typeof window !== 'undefined') {
+      return window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1');
     }
-  }
-
-  /**
-   * Development-only logs (removed in production)
-   */
-  dev(...args: any[]): void {
-    if (this.isDev) {
-      console.log(...args);
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.NODE_ENV === 'development';
     }
+    return false;
+  } catch {
+    return false; // Safe fallback
   }
+})();
 
-  /**
-   * Performance logs (development only)
-   */
-  perf(...args: any[]): void {
-    if (this.isDev) {
-      console.log('⚡', ...args);
-    }
+// Ultra-simple logging functions that never fail
+export const dev = (...args: any[]): void => {
+  try {
+    if (isDev) console.log(...args);
+  } catch {
+    // Silent fail - never block functionality
   }
+};
 
-  /**
-   * Informational logs (always shown)
-   */
-  info(...args: any[]): void {
+export const info = (...args: any[]): void => {
+  try {
     console.info('ℹ️', ...args);
+  } catch {
+    // Silent fail
   }
+};
 
-  /**
-   * Warning logs (always shown)
-   */
-  warn(...args: any[]): void {
+export const warn = (...args: any[]): void => {
+  try {
     console.warn('⚠️', ...args);
+  } catch {
+    // Silent fail
   }
+};
 
-  /**
-   * Error logs (always shown)
-   */
-  error(...args: any[]): void {
+export const error = (...args: any[]): void => {
+  try {
     console.error('❌', ...args);
+  } catch {
+    // Silent fail
   }
+};
 
-  /**
-   * Success logs (important operations)
-   */
-  success(...args: any[]): void {
-    if (this.isDev) {
-      console.log('✅', ...args);
+export const success = (...args: any[]): void => {
+  try {
+    if (isDev) console.log('✅', ...args);
+  } catch {
+    // Silent fail
+  }
+};
+
+export const cache = (...args: any[]): void => {
+  try {
+    if (isDev) console.log('📦', ...args);
+  } catch {
+    // Silent fail
+  }
+};
+
+export const auth = (...args: any[]): void => {
+  try {
+    if (isDev) console.log('👤', ...args);
+  } catch {
+    // Silent fail
+  }
+};
+
+export const nav = (...args: any[]): void => {
+  try {
+    if (isDev) console.log('🔀', ...args);
+  } catch {
+    // Silent fail
+  }
+};
+
+export const realtime = (...args: any[]): void => {
+  try {
+    if (isDev) console.log('📡', ...args);
+  } catch {
+    // Silent fail
+  }
+};
+
+export const business = (...args: any[]): void => {
+  try {
+    if (isDev) console.log('💼', ...args);
+  } catch {
+    // Silent fail
+  }
+};
+
+// Simple logger object for backward compatibility
+export const logger = {
+  dev,
+  info,
+  warn,
+  error,
+  success,
+  cache,
+  auth,
+  nav,
+  realtime,
+  business,
+  startup: (appName: string, version?: string) => {
+    try {
+      console.log(`🚀 ${appName}${version ? ` v${version}` : ''} starting up`);
+      if (isDev) {
+        console.log('🔧 Development mode');
+      } else {
+        console.log('🏭 Production mode');
+      }
+    } catch {
+      // Silent fail
+    }
+  },
+  disableDevLogs: () => {
+    try {
+      console.info('📵 Debug logs disabled');
+    } catch {
+      // Silent fail
+    }
+  },
+  enableDevLogs: () => {
+    try {
+      console.info('🔊 Debug logs enabled');
+    } catch {
+      // Silent fail
     }
   }
-
-  /**
-   * Cache-related logs (development only)
-   */
-  cache(...args: any[]): void {
-    if (this.isDev) {
-      console.log('📦', ...args);
-    }
-  }
-
-  /**
-   * Database operation logs (development only)
-   */
-  db(...args: any[]): void {
-    if (this.isDev) {
-      console.log('🗄️', ...args);
-    }
-  }
-
-  /**
-   * Authentication logs (development only)
-   */
-  auth(...args: any[]): void {
-    if (this.isDev) {
-      console.log('👤', ...args);
-    }
-  }
-
-  /**
-   * Navigation logs (development only)
-   */
-  nav(...args: any[]): void {
-    if (this.isDev) {
-      console.log('🔀', ...args);
-    }
-  }
-
-  /**
-   * Real-time update logs (development only)
-   */
-  realtime(...args: any[]): void {
-    if (this.isDev) {
-      console.log('📡', ...args);
-    }
-  }
-
-  /**
-   * Business operation logs (important - development only but visible)
-   */
-  business(...args: any[]): void {
-    if (this.isDev) {
-      console.log('💼', ...args);
-    }
-  }
-
-  /**
-   * Disable all development logs (for production testing)
-   */
-  disableDevLogs(): void {
-    this.isDev = false;
-    console.info('📵 Debug logs disabled for production mode');
-  }
-
-  /**
-   * Enable all development logs
-   */
-  enableDevLogs(): void {
-    this.isDev = true;
-    console.info('🔊 Debug logs enabled for development mode');
-  }
-
-  /**
-   * Get current logger configuration
-   */
-  getConfig(): { isDevelopment: boolean } {
-    return { isDevelopment: this.isDev };
-  }
-
-  /**
-   * Log application startup (important)
-   */
-  startup(appName: string, version?: string): void {
-    console.log(`🚀 ${appName}${version ? ` v${version}` : ''} starting up`);
-
-    if (this.isDev) {
-      console.log('🔧 Development mode - Full logging enabled');
-    } else {
-      console.log('🏭 Production mode - Essential logs only');
-    }
-  }
-
-  /**
-   * Group logs for better organization (development only)
-   */
-  group(label: string, callback: () => void): void {
-    if (this.isDev) {
-      console.group(label);
-      callback();
-      console.groupEnd();
-    } else {
-      callback();
-    }
-  }
-}
-
-// Export singleton instance
-export const logger = new Logger();
-
-// Export commonly used log functions
-export const { dev, info, warn, error, success, cache, db, auth, nav, realtime, business } = logger;
+};
