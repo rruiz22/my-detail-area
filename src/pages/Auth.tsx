@@ -210,14 +210,12 @@ export default function Auth() {
             <div className="text-center space-y-8">
               {/* Tagline */}
               <div className="animate-tagline-entrance">
-                <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight" style={{
+                <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight relative" style={{
                   textShadow: 'var(--text-shadow)'
                 }}>
                   {t('auth.tagline', 'From Detail to sold—')}
-                  <span className="relative inline-block tagline-faster">
-                    {t('auth.tagline_faster', 'faster')}
-                    <span className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-accent to-primary animate-underline-sweep"></span>
-                  </span>
+                  {t('auth.tagline_faster', 'faster')}
+                  <span className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-accent to-primary animate-underline-sweep"></span>
                 </h2>
               </div>
 
