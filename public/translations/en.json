@@ -682,7 +682,7 @@
   },
   "auth": {
     "app_title": "My Detail Area",
-    "app_subtitle": "Dealership Operations Hub",
+    "app_subtitle": "Dealership Operations Platform",
     "welcome_title": "Welcome back",
     "welcome_subtitle": "Sign in to your account",
     "email_label": "Email address",
@@ -699,7 +699,13 @@
     "error_title": "Error",
     "unexpected_error": "An unexpected error occurred. Please try again.",
     "invalid_credentials": "Invalid email or password. If you don't have an account, please contact your dealer for an invitation.",
-    "email_not_confirmed": "Please check your email and click the confirmation link before signing in."
+    "email_not_confirmed": "Please check your email and click the confirmation link before signing in.",
+    "tagline": "From Detail to sold—",
+    "tagline_faster": "faster",
+    "value_proposition": "The operational platform that connects recon, detail, service and sales to move every vehicle from intake to sale with less friction and better visibility.",
+    "feature_visibility": "Real-time visibility",
+    "feature_workflow": "Standardized workflow",
+    "feature_performance": "Reduced T2L, faster turnover"
   },
   "sticker_scanner": {
     "title": "Dealership Sticker Scanner",

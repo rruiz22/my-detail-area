@@ -661,5 +661,32 @@
     "created_successfully": "Orden creada exitosamente",
     "updated_successfully": "Orden actualizada exitosamente",
     "save_failed": "Error al guardar la orden"
+  },
+  "auth": {
+    "app_title": "My Detail Area",
+    "app_subtitle": "Plataforma de Operaciones del Concesionario",
+    "welcome_title": "Bienvenido de vuelta",
+    "welcome_subtitle": "Inicia sesión en tu cuenta",
+    "email_label": "Dirección de correo",
+    "email_placeholder": "Ingresa tu dirección de correo",
+    "password_label": "Contraseña",
+    "password_placeholder": "Ingresa tu contraseña",
+    "sign_in_button": "Iniciar Sesión",
+    "signing_in": "Iniciando sesión...",
+    "no_access_text": "¿No tienes acceso? Contacta al administrador de tu concesionario.",
+    "footer_text": "© 2024 My Detail Area. Plataforma de operaciones del concesionario.",
+    "invalid_email_title": "Correo Inválido",
+    "invalid_email_description": "Por favor, ingresa una dirección de correo válida.",
+    "sign_in_error_title": "Error de Inicio de Sesión",
+    "error_title": "Error",
+    "unexpected_error": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+    "invalid_credentials": "Correo o contraseña inválidos. Si no tienes una cuenta, contacta a tu concesionario para una invitación.",
+    "email_not_confirmed": "Revisa tu correo y haz clic en el enlace de confirmación antes de iniciar sesión.",
+    "tagline": "Del Detail a venta—",
+    "tagline_faster": "más rápido",
+    "value_proposition": "La plataforma operativa que conecta recon, detail, service y sales para mover cada vehículo del intake a la venta con menos fricción y mejor visibilidad.",
+    "feature_visibility": "Visibilidad en tiempo real",
+    "feature_workflow": "Flujo estandarizado",
+    "feature_performance": "Menor T2L, mayor rotación"
   }
 }

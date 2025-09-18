@@ -142,6 +142,39 @@ const [viewMode, setViewMode] = useViewModePersistence('sales_orders'); // kanba
 - **3 language support** - English (base), Spanish, Portuguese (Brazilian)
 - **Namespace structure** - Group by feature/component
 
+#### **🚨 CRITICAL TRANSLATION REMINDER**
+**ALWAYS add translations when creating/modifying UI elements:**
+
+1. **English** - `public/translations/en.json`
+2. **Spanish** - `public/translations/es.json`
+3. **Portuguese (Brazil)** - `public/translations/pt-BR.json`
+
+**Required for ALL user-facing text including:**
+- Component titles and labels
+- Button text and placeholders
+- Error messages and tooltips
+- Form validation messages
+- Modal headers and descriptions
+- Toast notifications and alerts
+
+**Example pattern:**
+```typescript
+// ✅ CORRECT - With translations
+const { t } = useTranslation();
+<Button>{t('feature.button_text')}</Button>
+
+// ❌ WRONG - Hardcoded text
+<Button>Save Changes</Button>
+```
+
+**Translation key structure:**
+- `auth.*` - Authentication pages
+- `orders.*` - Order management
+- `team_communication.*` - Comments/messaging
+- `followers.*` - Team collaboration
+- `attachments.*` - File uploads
+- `common.*` - Shared elements
+
 #### **Component Creation Pattern**
 ```tsx
 import { useTranslation } from 'react-i18next';

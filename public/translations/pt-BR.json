@@ -661,5 +661,32 @@
     "created_successfully": "Pedido criado com sucesso",
     "updated_successfully": "Pedido atualizado com sucesso",
     "save_failed": "Falha ao salvar pedido"
+  },
+  "auth": {
+    "app_title": "My Detail Area",
+    "app_subtitle": "Plataforma de Operações da Concessionária",
+    "welcome_title": "Bem-vindo de volta",
+    "welcome_subtitle": "Faça login em sua conta",
+    "email_label": "Endereço de email",
+    "email_placeholder": "Digite seu endereço de email",
+    "password_label": "Senha",
+    "password_placeholder": "Digite sua senha",
+    "sign_in_button": "Entrar",
+    "signing_in": "Entrando...",
+    "no_access_text": "Não tem acesso? Entre em contato com o administrador da concessionária.",
+    "footer_text": "© 2024 My Detail Area. Plataforma de operações da concessionária.",
+    "invalid_email_title": "Email Inválido",
+    "invalid_email_description": "Por favor, digite um endereço de email válido.",
+    "sign_in_error_title": "Erro de Login",
+    "error_title": "Erro",
+    "unexpected_error": "Ocorreu um erro inesperado. Tente novamente.",
+    "invalid_credentials": "Email ou senha inválidos. Se você não tem uma conta, entre em contato com sua concessionária para um convite.",
+    "email_not_confirmed": "Verifique seu email e clique no link de confirmação antes de fazer login.",
+    "tagline": "Do Detail à venda—",
+    "tagline_faster": "mais rápido",
+    "value_proposition": "A plataforma operacional que conecta recon, detail, service e sales para mover cada veículo da entrada à venda com menos atrito e melhor visibilidade.",
+    "feature_visibility": "Visibilidade em tempo real",
+    "feature_workflow": "Fluxo padronizado",
+    "feature_performance": "Menor T2L, maior rotatividade"
   }
 }
