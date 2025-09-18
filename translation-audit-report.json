@@ -1,7 +1,7 @@
 {
   "scannedFiles": 449,
-  "totalStrings": 4501,
-  "hardcodedStrings": 989,
+  "totalStrings": 4502,
+  "hardcodedStrings": 990,
   "translatedStrings": 3512,
   "issues": {
     "critical": [
@@ -11167,13 +11167,13 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 27,
-            "context": "26: error: string | null;\n27: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<void>;\n28: refreshComments: () => Promise<void>;"
+            "line": 31,
+            "context": "30: error: string | null;\n31: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<void>;\n32: refreshComments: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 28,
-            "context": "27: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<void>;\n28: refreshComments: () => Promise<void>;\n29: commentsCount: number;"
+            "line": 32,
+            "context": "31: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<void>;\n32: refreshComments: () => Promise<void>;\n33: commentsCount: number;"
           }
         ],
         "translationCalls": [],
@@ -24285,13 +24285,13 @@
         "hardcodedStrings": [
           {
             "text": "Like",
-            "line": 126,
-            "context": "125: >\n126: <ThumbsUp className=\"h-3 w-3 mr-1\" />\n127: Like"
+            "line": 147,
+            "context": "146: >\n147: <ThumbsUp className=\"h-3 w-3 mr-1\" />\n148: Like"
           },
           {
             "text": "Love",
-            "line": 136,
-            "context": "135: >\n136: <Heart className=\"h-3 w-3 mr-1\" />\n137: Love"
+            "line": 157,
+            "context": "156: >\n157: <Heart className=\"h-3 w-3 mr-1\" />\n158: Love"
           }
         ],
         "translationCalls": [],
@@ -26799,169 +26799,174 @@
         "hardcodedStrings": [
           {
             "text": "Reply",
-            "line": 200,
-            "context": "199: >\n200: <Reply className=\"h-3 w-3 mr-1\" />\n201: Reply"
+            "line": 199,
+            "context": "198: >\n199: <Reply className=\"h-3 w-3 mr-1\" />\n200: Reply"
           },
           {
             "text": "Cancel",
-            "line": 249,
-            "context": "248: size=\"sm\"\n249: >\n250: Cancel"
+            "line": 247,
+            "context": "246: size=\"sm\"\n247: >\n248: Cancel"
+          },
+          {
+            "text": "Reply",
+            "line": 267,
+            "context": "266: <div className=\"flex items-center gap-2 mb-2\">\n267: <Badge variant=\"secondary\" className=\"text-xs\">\n268: Reply"
           }
         ],
         "translationCalls": [
           {
-            "key": "team_communication.comment_added",
+            "key": "order_comments.comment_added",
             "line": 65,
             "exists": true
           },
           {
-            "key": "team_communication.note_added",
+            "key": "order_comments.note_added",
             "line": 66,
             "exists": true
           },
           {
-            "key": "team_communication.comment_failed",
+            "key": "order_comments.comment_failed",
             "line": 71,
             "exists": true
           },
           {
-            "key": "team_communication.note_failed",
+            "key": "order_comments.note_failed",
             "line": 72,
             "exists": true
           },
           {
-            "key": "team_communication.reply_added",
+            "key": "order_comments.reply_added",
             "line": 92,
             "exists": true
           },
           {
-            "key": "team_communication.reply_failed",
+            "key": "order_comments.reply_failed",
             "line": 94,
             "exists": true
           },
           {
-            "key": "team_communication.no_comments",
+            "key": "order_comments.no_comments",
             "line": 128,
             "exists": true
           },
           {
-            "key": "team_communication.start_conversation",
+            "key": "order_comments.start_conversation",
             "line": 129,
             "exists": true
           },
           {
-            "key": "team_communication.no_internal_notes",
+            "key": "order_comments.no_internal_notes",
             "line": 134,
             "exists": true
           },
           {
-            "key": "team_communication.add_private_notes",
+            "key": "order_comments.add_private_notes",
             "line": 135,
             "exists": true
           },
           {
-            "key": "team_communication.detail_team",
-            "line": 169,
+            "key": "order_comments.detail_team",
+            "line": 168,
             "exists": true
           },
           {
-            "key": "team_communication.reply_placeholder",
-            "line": 234,
+            "key": "order_comments.reply_placeholder",
+            "line": 232,
             "exists": true
           },
           {
-            "key": "team_communication.title",
-            "line": 266,
+            "key": "order_comments.title",
+            "line": 313,
             "exists": true
           },
           {
-            "key": "team_communication.comments",
-            "line": 275,
+            "key": "order_comments.comments",
+            "line": 322,
             "exists": true
           },
           {
-            "key": "team_communication.internal_notes",
-            "line": 285,
+            "key": "order_comments.internal_notes",
+            "line": 332,
             "exists": true
           },
           {
-            "key": "team_communication.add_comment_placeholder",
-            "line": 306,
+            "key": "order_comments.add_comment_placeholder",
+            "line": 353,
             "exists": true
           },
           {
-            "key": "team_communication.attachment_added",
-            "line": 324,
+            "key": "order_comments.attachment_added",
+            "line": 371,
             "exists": true
           },
           {
-            "key": "team_communication.mention",
-            "line": 329,
+            "key": "order_comments.mention",
+            "line": 376,
             "exists": true
           },
           {
-            "key": "team_communication.loading_comments",
-            "line": 345,
+            "key": "order_comments.loading_comments",
+            "line": 392,
             "exists": true
           },
           {
-            "key": "team_communication.comments_count",
-            "line": 356,
+            "key": "order_comments.comments_count",
+            "line": 403,
             "exists": true
           },
           {
-            "key": "team_communication.team_discussion",
-            "line": 360,
+            "key": "order_comments.team_discussion",
+            "line": 407,
             "exists": true
           },
           {
-            "key": "team_communication.add_internal_placeholder",
-            "line": 377,
+            "key": "order_comments.add_internal_placeholder",
+            "line": 424,
             "exists": true
           },
           {
-            "key": "team_communication.internal_attachment_added",
-            "line": 396,
+            "key": "order_comments.internal_attachment_added",
+            "line": 443,
             "exists": true
           },
           {
-            "key": "team_communication.mention_team",
-            "line": 402,
+            "key": "order_comments.mention_team",
+            "line": 449,
             "exists": true
           },
           {
-            "key": "team_communication.loading_notes",
-            "line": 418,
+            "key": "order_comments.loading_notes",
+            "line": 465,
             "exists": true
           },
           {
-            "key": "team_communication.internal_count",
-            "line": 429,
+            "key": "order_comments.internal_count",
+            "line": 476,
             "exists": true
           },
           {
-            "key": "team_communication.confidential",
-            "line": 433,
+            "key": "order_comments.confidential",
+            "line": 480,
             "exists": true
           },
           {
-            "key": "team_communication.access_denied",
-            "line": 444,
+            "key": "order_comments.access_denied",
+            "line": 491,
             "exists": true
           },
           {
-            "key": "team_communication.detail_access_required",
-            "line": 446,
+            "key": "order_comments.detail_access_required",
+            "line": 493,
             "exists": true
           },
           {
-            "key": "team_communication.restricted_access",
-            "line": 450,
+            "key": "order_comments.restricted_access",
+            "line": 497,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 94,
+        "coverage": 91,
         "severity": "low"
       },
       {
@@ -40573,6 +40578,7 @@
         "src\\components\\scanner\\modern\\ModernVinScanner.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\productivity\\ProductivityTodos.tsx",
+        "src\\components\\orders\\TeamCommunicationBlock.tsx",
         "src\\components\\orders\\EnhancedOrderDetailLayout.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
         "src\\components\\debug\\TooltipTester.tsx",
@@ -40593,7 +40599,6 @@
         "src\\components\\scanner\\QuickScanMode.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
-        "src\\components\\orders\\TeamCommunicationBlock.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
         "src\\components\\dealer\\DealerServices.tsx",
         "src\\components\\attachments\\AttachmentsList.tsx",
