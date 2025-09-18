@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useCallback, useMemo, memo } from 'react';
+import React, { ReactNode, useEffect, useCallback, useMemo, memo, useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,8 +32,8 @@ import { TimeRemaining } from './TimeRemaining';
 import { safeFormatDate } from '@/utils/dateUtils';
 import { getStatusColor } from '@/utils/statusUtils';
 import { SkeletonLoader } from './SkeletonLoader';
+import { supabase } from '@/integrations/supabase/client';
 import { ChatAndSMSActions } from './ChatAndSMSActions';
-import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { ErrorBoundaryModal } from './ErrorBoundaryModal';
 import { OrderTasksSection } from './OrderTasksSection';
 
@@ -46,8 +46,7 @@ import { CarWashOrderFields } from './CarWashOrderFields';
 // Direct imports instead of lazy loading for better performance
 import { ScheduleViewBlock } from './ScheduleViewBlock';
 import { SimpleNotesDisplay } from './SimpleNotesDisplay';
-import { PublicCommentsBlock } from './PublicCommentsBlock';
-import { InternalNotesBlock } from './InternalNotesBlock';
+import { TeamCommunicationBlock } from './TeamCommunicationBlock';
 import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
 import { FollowersBlock } from './FollowersBlock';
 import { RecentActivityBlock } from './RecentActivityBlock';
@@ -271,19 +270,33 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   dataError
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
-  const { startMeasure, endMeasure, recordMetric } = usePerformanceMonitor();
+  const [orderData, setOrderData] = useState(order);
 
-  // Track modal rendering performance
+  // Real-time subscription for order updates (especially short_link)
   useEffect(() => {
-    if (open) {
-      startMeasure('unified-modal-render');
-      recordMetric('unified-modal-open', Date.now());
-      return () => {
-        endMeasure('unified-modal-render');
-        recordMetric('unified-modal-close', Date.now());
-      };
-    }
-  }, [open, startMeasure, endMeasure, recordMetric]);
+    if (!order?.id || !open) return;
+
+    console.log('📡 Setting up real-time subscription for order:', order.id);
+
+    const subscription = supabase
+      .channel(`order-updates-${order.id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'orders',
+        filter: `id=eq.${order.id}`
+      }, (payload) => {
+        console.log('📡 Real-time order update received:', payload.new);
+        // Update order data with new fields (especially short_link)
+        setOrderData(prev => ({ ...prev, ...payload.new }));
+      })
+      .subscribe();
+
+    return () => {
+      console.log('📡 Unsubscribing from order updates');
+      subscription.unsubscribe();
+    };
+  }, [order?.id, open]);
 
   // Reset scroll position when modal opens
   useEffect(() => {
@@ -321,17 +334,17 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   // Memoize status change handler
   const handleStatusChange = useCallback(async (newStatus: string) => {
     if (onStatusChange) {
-      await onStatusChange(order.id, newStatus);
+      await onStatusChange(orderData.id, newStatus);
     }
-  }, [onStatusChange, order.id]);
+  }, [onStatusChange, orderData.id]);
 
   // Memoize vehicle display name (for legacy compatibility, though we'll use vehicle_info)
   const vehicleDisplayName = useMemo(() => {
-    const year = order.vehicleYear || order.vehicle_year || '';
-    const make = order.vehicleMake || order.vehicle_make || '';
-    const model = order.vehicleModel || order.vehicle_model || '';
+    const year = orderData.vehicleYear || orderData.vehicle_year || '';
+    const make = orderData.vehicleMake || orderData.vehicle_make || '';
+    const model = orderData.vehicleModel || orderData.vehicle_model || '';
     return `${year} ${make} ${model}`.trim() || 'Unknown Vehicle';
-  }, [order.vehicleYear, order.vehicle_year, order.vehicleMake, order.vehicle_make, order.vehicleModel, order.vehicle_model]);
+  }, [orderData.vehicleYear, orderData.vehicle_year, orderData.vehicleMake, orderData.vehicle_make, orderData.vehicleModel, orderData.vehicle_model]);
 
   if (!order) return null;
 
@@ -358,7 +371,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             <div className="p-6" id="unified-modal-top">
               {/* Unified Header - Conditional based on order type */}
               <UnifiedOrderHeader
-                order={order}
+                order={orderData}
                 orderType={orderType}
                 vehicleDisplayName={vehicleDisplayName}
                 onStatusChange={handleStatusChange}
@@ -369,18 +382,15 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 <div className="space-y-6">
                   {/* Row 1: Type-specific fields + Schedule View (Two blocks side by side) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <OrderTypeFields orderType={orderType} order={order} />
-                    <ScheduleViewBlock order={order} />
+                    <OrderTypeFields orderType={orderType} order={orderData} />
+                    <ScheduleViewBlock order={orderData} />
                   </div>
 
                   {/* Row 2: Simple Notes Display (Full width) */}
-                  <SimpleNotesDisplay order={order} />
+                  <SimpleNotesDisplay order={orderData} />
 
-                  {/* Row 3: Team Communication (Full width like order notes) */}
-                  <div className="space-y-4">
-                    <PublicCommentsBlock orderId={order.id} />
-                    <InternalNotesBlock orderId={order.id} />
-                  </div>
+                  {/* Row 3: Team Communication - Unified with tabs (Full width) */}
+                  <TeamCommunicationBlock orderId={orderData.id} />
                 </div>
 
                 {/* Right Sidebar - Clean Design */}
@@ -390,22 +400,28 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                     <SkeletonLoader variant="qr-code" />
                   ) : (
                     (() => {
-                      console.log('📊 UnifiedOrderDetailModal QR props:', {
-                        orderId: order.id,
-                        orderNumber: order.orderNumber || order.order_number,
-                        shortLink: order.short_link,
-                        qrCodeUrl: order.qr_code_url,
-                        qrStatus: order.qr_generation_status,
-                        hasShortLink: !!order.short_link
+                      console.log('📊 UnifiedOrderDetailModal QR props (FIXED):', {
+                        orderId: orderData.id,
+                        orderNumber: orderData.orderNumber || orderData.order_number,
+                        shortLink: orderData.shortLink,
+                        qrCodeUrl: orderData.qrCodeUrl,
+                        qrStatus: orderData.qrGenerationStatus,
+                        hasShortLink: !!orderData.shortLink,
+                        // Debug: show both snake_case and camelCase to verify transformation
+                        debug_snake_case: {
+                          short_link: orderData.short_link,
+                          qr_code_url: orderData.qr_code_url,
+                          qr_generation_status: orderData.qr_generation_status
+                        }
                       });
                       return (
                         <EnhancedQRCodeBlock
-                          orderId={order.id}
-                          orderNumber={order.orderNumber || order.order_number}
-                          dealerId={String(order.dealer_id)}
-                          qrCodeUrl={order.qr_code_url}
-                          shortLink={order.short_link}
-                          qrGenerationStatus={order.qr_generation_status}
+                          orderId={orderData.id}
+                          orderNumber={orderData.orderNumber || orderData.order_number}
+                          dealerId={String(orderData.dealer_id)}
+                          qrCodeUrl={orderData.qrCodeUrl}
+                          shortLink={orderData.shortLink}
+                          qrGenerationStatus={orderData.qrGenerationStatus}
                         />
                       );
                     })()
@@ -435,16 +451,16 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                     <SkeletonLoader variant="notes" />
                   ) : (
                     <FollowersBlock
-                      orderId={order.id}
-                      dealerId={String(order.dealer_id)}
+                      orderId={orderData.id}
+                      dealerId={String(orderData.dealer_id || 5)}
                     />
                   )}
 
                   {/* Tasks & Reminders Section */}
                   <OrderTasksSection
-                    orderId={order.id}
-                    orderNumber={order.orderNumber || order.order_number || order.id}
-                    customerName={order.customerName || order.customer_name}
+                    orderId={orderData.id}
+                    orderNumber={orderData.orderNumber || orderData.order_number || orderData.id}
+                    customerName={orderData.customerName || orderData.customer_name}
                   />
 
                   {/* Enhanced Recent Activity Block */}
@@ -452,7 +468,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                     <SkeletonLoader variant="activity" />
                   ) : (
                     <RecentActivityBlock
-                      orderId={order.id}
+                      orderId={orderData.id}
                     />
                   )}
                 </div>

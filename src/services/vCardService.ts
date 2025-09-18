@@ -1,3 +1,5 @@
+import { getBaseUrl, buildContactUrl } from '@/utils/urlUtils';
+
 /**
  * vCard Service for generating contact cards compatible with mobile devices
  * Generates proper vCard 3.0 format for maximum compatibility
@@ -26,8 +28,8 @@ export class VCardService {
       (contact.phone && contact.mobile_phone && contact.phone !== contact.mobile_phone) ? `TEL;TYPE=WORK:${contact.phone}` : '',
       // Note with department and dealership
       `NOTE:${contact.department || 'Contact'} - ${contact.dealership?.name || 'MDA'}`,
-      // URL to contact detail
-      `URL:https://mda.to/contact/${contact.id}`,
+      // URL to contact detail using configurable BASE_URL
+      `URL:${buildContactUrl(contact.id)}`,
       // Categories
       contact.department ? `CATEGORIES:${contact.department}` : 'CATEGORIES:Business',
       'END:VCARD'

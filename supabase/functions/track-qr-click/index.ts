@@ -8,6 +8,7 @@ interface ClickTrackingRequest {
   userAgent?: string;
   referer?: string;
   sessionId?: string;
+  action?: 'click' | 'analytics'; // Add action parameter
 }
 
 // Function to parse user agent for device info
@@ -43,9 +44,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { slug, ipAddress, userAgent, referer, sessionId }: ClickTrackingRequest = await req.json();
+    const { slug, ipAddress, userAgent, referer, sessionId, action = 'click' }: ClickTrackingRequest = await req.json();
 
-    console.log(`Tracking click for slug: ${slug}`);
+    console.log(`Processing ${action} for slug: ${slug}`);
 
     // Get client IP if not provided
     const clientIP = ipAddress || req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
@@ -93,22 +94,53 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (linkError || !linkData) {
       console.error("Link not found:", linkError);
-      
-      // Log security event for invalid link access attempt
-      await supabase.rpc('log_security_event', {
-        p_event_type: 'invalid_link_access',
-        p_event_details: { 
-          slug, 
-          ip: clientIP, 
-          user_agent: clientUserAgent 
-        },
-        p_success: false
-      });
+
+      // Only log security events for actual click tracking, not analytics
+      if (action === 'click') {
+        await supabase.rpc('log_security_event', {
+          p_event_type: 'invalid_link_access',
+          p_event_details: {
+            slug,
+            ip: clientIP,
+            user_agent: clientUserAgent
+          },
+          p_success: false
+        });
+      }
 
       return new Response(
         JSON.stringify({ error: "Link not found" }),
-        { 
+        {
           status: 404,
+          headers: { "Content-Type": "application/json", ...corsHeaders }
+        }
+      );
+    }
+
+    // For analytics-only requests, return stats without tracking
+    if (action === 'analytics') {
+      // Get click statistics from the database
+      const { data: clickStats, error: statsError } = await supabase
+        .from("sales_order_link_clicks")
+        .select("id, clicked_at, is_unique_click")
+        .eq("link_id", linkData.id);
+
+      const totalClicks = clickStats?.length || 0;
+      const uniqueVisitors = clickStats?.filter(click => click.is_unique_click).length || 0;
+      const lastClicked = clickStats?.length > 0 ?
+        Math.max(...clickStats.map(click => new Date(click.clicked_at).getTime())) : null;
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          analytics: {
+            totalClicks,
+            uniqueVisitors,
+            lastClicked: lastClicked ? new Date(lastClicked).toISOString() : null
+          }
+        }),
+        {
+          status: 200,
           headers: { "Content-Type": "application/json", ...corsHeaders }
         }
       );

@@ -185,14 +185,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const canViewPrices = canViewPricing(roles);
 
-  // Custom setters with logging
+  // Custom setters with detailed logging and stack trace
   const setSelectedDealershipWithLog = (value: string) => {
     console.log('🔧 setSelectedDealership called with:', value);
+    console.trace('🔍 STACK TRACE for setSelectedDealership:');
     setSelectedDealership(value);
   };
 
   const setSelectedAssignedToWithLog = (value: string) => {
     console.log('🔧 setSelectedAssignedTo called with:', value);
+    console.trace('🔍 STACK TRACE for setSelectedAssignedTo:');
     setSelectedAssignedTo(value);
   };
 
@@ -321,8 +323,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         // We'll set dealership after fetchDealerships() finds the ID
         // We'll set assignedTo after fetchDealerData() loads the users and finds the ID
-      } else if (!order) {
-        // Only reset form for new order when order is explicitly null/undefined
+      } else if (!order && !editModeInitialized.current) {
+        // Only reset form for new order when order is explicitly null/undefined AND not in edit mode
         console.log('🔧 Resetting form for new order');
         editModeInitialized.current = false;
         currentOrderId.current = null;
@@ -386,23 +388,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           }
         }
 
-        if (dealershipId) {
-          setSelectedDealershipWithLog(dealershipId);
-          // Auto-fetch dealer data to get users for assigned selection
-          await fetchDealerData(dealershipId);
-        } else {
-          console.warn('⚠️ Could not find dealership for order:', {
-            dealer_id: order.dealer_id,
-            dealerId: order.dealerId,
-            dealershipName: order.dealershipName,
-            availableDealerships: dealerships.map(d => ({ id: d.id, name: d.name }))
-          });
-        }
+        // Dealership setting moved to separate useEffect that waits for options to load
+        console.log('🔧 Dealership setting will be handled by separate useEffect');
       }
     } catch (error) {
       console.error('Error fetching dealerships:', error);
     }
   };
+
 
   const fetchDealerData = async (dealershipId: string) => {
     if (!dealershipId) return;
@@ -436,17 +429,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         setAssignedUsers(users);
 
-        // If in edit mode, find and select the assigned user by name
-        if (order && order.assignedTo && order.assignedTo !== 'Unassigned') {
-          const matchingUser = users.find(user => user.name === order.assignedTo);
-          if (matchingUser) {
-            console.log('🔧 Found matching assigned user:', matchingUser);
-            setSelectedAssignedToWithLog(matchingUser.id);
-            console.log('🔧 Set selectedAssignedTo to:', matchingUser.id);
-          } else {
-            console.warn('⚠️ Could not find assigned user:', order.assignedTo, 'in users:', users.map(u => u.name));
-          }
-        }
+        // Assigned user setting moved to separate useEffect (same as dealership fix)
+        console.log('🔧 Assigned user setting will be handled by separate useEffect after users load');
       }
 
       if (servicesResult.data) {
@@ -458,6 +442,64 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       setLoading(false);
     }
   };
+
+  // CRITICAL: Set dealership ONLY after dealerships options are loaded
+  useEffect(() => {
+    if (order && dealerships.length > 0 && !selectedDealership) {
+      console.log('🔧 Dealerships loaded, attempting to set dealer for order:', order.id);
+
+      let dealershipId = null;
+
+      // Try dealer_id first (most reliable)
+      if (order.dealer_id || order.dealerId) {
+        dealershipId = (order.dealer_id || order.dealerId).toString();
+        console.log('🔧 Using dealer_id:', dealershipId);
+      }
+      // Fallback to name search
+      else if (order.dealershipName) {
+        const matchingDealer = dealerships.find(d => d.name === order.dealershipName);
+        if (matchingDealer) {
+          dealershipId = matchingDealer.id.toString();
+          console.log('🔧 Found dealer by name:', order.dealershipName, '→', dealershipId);
+        }
+      }
+
+      if (dealershipId) {
+        console.log('🔧 Setting dealership AFTER options loaded:', dealershipId);
+        setSelectedDealership(dealershipId);
+        fetchDealerData(dealershipId);
+      }
+    }
+  }, [dealerships.length, order, selectedDealership]);
+
+  // CRITICAL: Set assigned user ONLY after users are loaded (same fix as dealership)
+  useEffect(() => {
+    if (order && assignedUsers.length > 0 && !selectedAssignedTo) {
+      console.log('🔧 Users loaded, attempting to set assigned user for order:', order.id);
+
+      let matchingUser = null;
+
+      // Try to find by ID first (most reliable)
+      const assignedId = order.assigned_group_id || order.assigned_contact_id || order.assignedGroupId || order.assignedContactId;
+      if (assignedId) {
+        matchingUser = assignedUsers.find(user => user.id === assignedId);
+        console.log('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
+      }
+
+      // Fallback to name search
+      if (!matchingUser && order.assignedTo && order.assignedTo !== 'Unassigned') {
+        matchingUser = assignedUsers.find(user => user.name === order.assignedTo);
+        console.log('🔧 Searching by name:', order.assignedTo, 'found:', matchingUser?.name);
+      }
+
+      if (matchingUser) {
+        console.log('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
+        setSelectedAssignedTo(matchingUser.id);
+      } else {
+        console.warn('⚠️ Could not find assigned user:', order.assignedTo);
+      }
+    }
+  }, [assignedUsers.length, order, selectedAssignedTo]);
 
   const handleDealershipChange = (dealershipId: string) => {
     console.log('🔧 handleDealershipChange called with:', dealershipId);
@@ -579,9 +621,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       status: formData.status || 'pending',
       priority: formData.priority || 'normal',
       
-      // Assignment fields
-      assigned_group_id: formData.assignedGroupId || null,
-      assigned_contact_id: formData.assignedContactId || null,
+      // Assignment fields - map selectedAssignedTo to database
+      assigned_group_id: selectedAssignedTo || null,          // Use selectedAssignedTo for user assignment
+      assigned_contact_id: formData.assignedContactId || null, // Keep for contact assignments
       salesperson: formData.salesperson || null,
       
       // Date fields - due_date is primary, sla_deadline is secondary
@@ -754,13 +796,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl max-h-[95vh] w-[95vw] sm:w-[90vw] md:w-[85vw] p-0 mx-2 sm:mx-4" aria-describedby="order-modal-description">
+      <DialogContent
+        className="max-w-7xl max-h-[95vh] w-[95vw] sm:w-[90vw] md:w-[85vw] p-0 mx-2 sm:mx-4"
+        aria-describedby="order-modal-description"
+      >
         <DialogHeader className="p-4 sm:p-6 pb-0">
           <DialogTitle className="text-lg sm:text-xl font-semibold">
             {order ? t('orders.edit') : t('orders.create')}
           </DialogTitle>
-          <div id="order-modal-description" className="sr-only">
-            {order ? t('orders.edit') : t('orders.create')}
+          <div id="order-modal-description" className="text-sm text-muted-foreground">
+            {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
           </div>
         </DialogHeader>
 

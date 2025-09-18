@@ -108,10 +108,7 @@ export default function Auth() {
       <div className="w-full max-w-lg animate-fade-in">
         {/* Logo and Brand Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-primary rounded-2xl mb-6 shadow-elegant">
-            <div className="text-white text-2xl font-bold">M</div>
-          </div>
-          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight">
+          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
             My Detail Area
           </h1>
           <p className="text-muted-foreground text-lg">

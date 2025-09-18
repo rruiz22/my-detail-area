@@ -1,5 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Avatar from 'boring-avatars';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { userProfileCache } from '@/services/userProfileCache';
+import { dev, error as logError, warn, success } from '@/utils/logger';
 
 // Using only "beam" variant as requested - 25 different seeds for variety
 export const AVATAR_SEEDS = [
@@ -24,28 +28,122 @@ interface AvatarSystemProps {
 
 export function useAvatarPreferences() {
   const [seed, setSeed] = useState<AvatarSeed>('beam-1');
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
+  // Load avatar preference from database first, fallback to localStorage
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('user_avatar_seed');
-      if (saved && AVATAR_SEEDS.includes(saved as AvatarSeed)) {
-        setSeed(saved as AvatarSeed);
+    const loadAvatarPreference = async () => {
+      if (!user?.id) return;
+
+      try {
+        dev('Loading avatar preference for user:', user.id);
+
+        // First try to load from database
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('avatar_seed, avatar_variant')
+          .eq('id', user.id)
+          .single();
+
+        if (!error && profile?.avatar_seed) {
+          dev('Loaded avatar from database:', profile.avatar_seed);
+          if (AVATAR_SEEDS.includes(profile.avatar_seed as AvatarSeed)) {
+            setSeed(profile.avatar_seed as AvatarSeed);
+            // Sync to localStorage for faster future loads
+            localStorage.setItem('user_avatar_seed', profile.avatar_seed);
+            return;
+          }
+        }
+
+        // Fallback to localStorage if database doesn't have preference
+        const saved = localStorage.getItem('user_avatar_seed');
+        if (saved && AVATAR_SEEDS.includes(saved as AvatarSeed)) {
+          dev('Using localStorage avatar:', saved);
+          setSeed(saved as AvatarSeed);
+
+          // Sync localStorage preference to database
+          if (user?.id) {
+            await supabase
+              .from('profiles')
+              .update({
+                avatar_seed: saved,
+                avatar_variant: 'beam',
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', user.id);
+            dev('Synced localStorage avatar to database');
+          }
+        }
+
+      } catch (error) {
+        warn('Failed to load avatar preference:', error);
+        // Use default if all else fails
       }
-    } catch (error) {
-      console.warn('Failed to load avatar preference:', error);
-    }
-  }, []);
+    };
 
-  const saveSeed = (newSeed: AvatarSeed) => {
+    loadAvatarPreference();
+  }, [user?.id]);
+
+  const saveSeed = useCallback(async (newSeed: AvatarSeed) => {
+    if (!user?.id) {
+      console.warn('⚠️ No user ID, saving to localStorage only');
+      try {
+        localStorage.setItem('user_avatar_seed', newSeed);
+        setSeed(newSeed);
+      } catch (error) {
+        console.warn('Failed to save to localStorage:', error);
+      }
+      return;
+    }
+
+    setLoading(true);
     try {
-      localStorage.setItem('user_avatar_seed', newSeed);
-      setSeed(newSeed);
-    } catch (error) {
-      console.warn('Failed to save avatar preference:', error);
-    }
-  };
+      dev('Saving avatar preference with cache integration:', newSeed);
 
-  return { seed, setSeed: saveSeed };
+      // 1. Update UI immediately
+      setSeed(newSeed);
+
+      // 2. Update cache immediately
+      userProfileCache.updateCacheField(user.id, 'avatar_seed', newSeed);
+
+      // 3. Save to database in background
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          avatar_seed: newSeed,
+          avatar_variant: 'beam',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        logError('Failed to save avatar to database:', error);
+        throw error;
+      }
+
+      // 4. Update localStorage as additional backup
+      localStorage.setItem('user_avatar_seed', newSeed);
+
+      success('Avatar preference saved with cache sync');
+
+    } catch (error) {
+      logError('Failed to save avatar preference:', error);
+      // Fallback: still save to cache and localStorage
+      try {
+        userProfileCache.updateCacheField(user.id, 'avatar_seed', newSeed);
+        localStorage.setItem('user_avatar_seed', newSeed);
+        setSeed(newSeed);
+        dev('Saved to cache/localStorage as fallback');
+      } catch (localError) {
+        warn('Failed to save to cache/localStorage:', localError);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
+
+  return { seed, setSeed: saveSeed, loading };
 }
 
 // Modern avatar component using Boring Avatars "beam" variant

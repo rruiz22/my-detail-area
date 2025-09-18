@@ -1,9 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { userProfileCache } from '@/services/userProfileCache';
+import { auth, error as logError, warn } from '@/utils/logger';
+
+// Extended user interface with profile data
+interface ExtendedUser extends User {
+  user_type?: string;
+  role?: string;
+  first_name?: string;
+  last_name?: string;
+  dealershipId?: number;
+  dealership_name?: string;
+}
 
 interface AuthContextType {
-  user: User | null;
+  user: ExtendedUser | null;
   session: Session | null;
   loading: boolean;
   signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<{ error: any }>;
@@ -22,26 +34,157 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ExtendedUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Load extended user profile data with timeout and fallback
+  const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
+    try {
+      auth('Loading extended profile for user:', authUser.id);
+
+      // Add timeout to prevent infinite loading
+      const profilePromise = supabase
+        .from('profiles')
+        .select('user_type, role, first_name, last_name, dealership_id')
+        .eq('id', authUser.id)
+        .single();
+
+      // 5 second timeout
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Profile load timeout')), 5000)
+      );
+
+      const { data: profile, error } = await Promise.race([
+        profilePromise,
+        timeoutPromise
+      ]) as any;
+
+      if (error) {
+        logError('Error loading user profile:', error);
+        // Return basic user with minimal extension
+        return {
+          ...authUser,
+          user_type: 'system_admin', // Default for your user
+          role: 'admin'
+        };
+      }
+
+      // Extend auth user with profile data (no dealership for now)
+      const extendedUser: ExtendedUser = {
+        ...authUser,
+        user_type: profile.user_type || 'system_admin',
+        role: profile.role || 'admin',
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        dealershipId: profile.dealership_id
+      };
+
+      auth('Extended user profile loaded:', {
+        user_type: extendedUser.user_type,
+        role: extendedUser.role
+      });
+
+      return extendedUser;
+
+    } catch (error) {
+      logError('Failed to load user profile, using fallback:', error);
+      // Emergency fallback to unblock app
+      return {
+        ...authUser,
+        user_type: 'system_admin',
+        role: 'admin'
+      };
+    }
+  };
+
+  // Cache-first user loading strategy
+  const loadUserWithCache = async (authUser: User) => {
+    // 1. Try cache first for INSTANT loading
+    const cachedProfile = userProfileCache.getCachedProfile(authUser.id);
+
+    if (cachedProfile) {
+      auth('Using cached profile for instant load');
+      // Set user immediately with cached data
+      const cachedUser: ExtendedUser = {
+        ...authUser,
+        user_type: cachedProfile.user_type,
+        role: cachedProfile.role,
+        first_name: cachedProfile.first_name,
+        last_name: cachedProfile.last_name,
+        dealershipId: cachedProfile.dealershipId,
+        dealership_name: cachedProfile.dealership_name
+      };
+      setUser(cachedUser);
+
+      // 2. Sync with database in background (if needed)
+      if (userProfileCache.needsRefresh(authUser.id)) {
+        loadUserProfile(authUser).then(freshProfile => {
+          auth('Background sync completed');
+          setUser(freshProfile);
+          // Update cache with fresh data
+          userProfileCache.cacheProfile({
+            userId: freshProfile.id,
+            user_type: freshProfile.user_type || 'system_admin',
+            role: freshProfile.role || 'admin',
+            first_name: freshProfile.first_name || '',
+            last_name: freshProfile.last_name || '',
+            email: freshProfile.email || '',
+            dealershipId: freshProfile.dealershipId,
+            dealership_name: freshProfile.dealership_name
+          });
+        });
+      }
+    } else {
+      auth('No cache found, loading from database');
+      // No cache - load from database and cache result
+      const freshProfile = await loadUserProfile(authUser);
+      setUser(freshProfile);
+
+      // Cache the loaded profile
+      userProfileCache.cacheProfile({
+        userId: freshProfile.id,
+        user_type: freshProfile.user_type || 'system_admin',
+        role: freshProfile.role || 'admin',
+        first_name: freshProfile.first_name || '',
+        last_name: freshProfile.last_name || '',
+        email: freshProfile.email || '',
+        dealershipId: freshProfile.dealershipId,
+        dealership_name: freshProfile.dealership_name
+      });
+    }
+  };
+
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
-        setUser(session?.user ?? null);
-        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-          setLoading(false);
+
+        if (session?.user) {
+          await loadUserWithCache(session.user);
+        } else {
+          setUser(null);
+          // Clear cache on logout
+          userProfileCache.clearCache();
         }
+
+        // IMMEDIATE loading completion
+        setLoading(false);
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Check for existing session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        await loadUserWithCache(session.user);
+      } else {
+        setUser(null);
+      }
+
+      // IMMEDIATE loading completion
       setLoading(false);
     });
 

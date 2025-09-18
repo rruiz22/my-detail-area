@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  QrCode, 
-  Copy, 
-  RefreshCw, 
-  BarChart3, 
+import {
+  QrCode,
+  Copy,
+  RefreshCw,
+  BarChart3,
   ExternalLink,
   CheckCircle,
   Eye,
-  Users
+  Users,
+  AlertCircle
 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
@@ -66,12 +67,16 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
 
   useEffect(() => {
     if (shortLink) {
+      console.log('📦 shortLink prop changed:', shortLink);
       // Extract slug from shortLink directly
       const slug = shortLink.split('/').pop();
       if (slug) {
+        console.log('📦 Setting qrData from shortLink:', { slug, shortUrl: shortLink });
         setQrData({ slug, shortUrl: shortLink });
         loadAnalytics(slug);
       }
+    } else {
+      console.log('📦 No shortLink prop provided');
     }
   }, [shortLink, loadAnalytics]);
 
@@ -114,13 +119,17 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
 
   // Memoize QR regeneration function
   const regenerateQR = useCallback(async () => {
-    if (!qrData?.slug) return;
-    
     setLoading(true);
     try {
-      const newLinkData = await shortLinkService.regenerateShortLink(orderId, qrData.slug);
+      console.log('🔄 Regenerating QR for order:', orderId);
+
+      const newLinkData = await shortLinkService.regenerateShortLink(
+        orderId,
+        qrData?.slug || orderNumber,
+        dealerId ? parseInt(dealerId) : 5
+      );
       setQrData(newLinkData);
-      
+
       // Update order record
       const { error } = await supabase
         .from('orders')
@@ -132,16 +141,16 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
         .eq('id', orderId);
 
       if (error) throw error;
-      
+
       toast.success(t('order_detail.regenerate_qr'));
-      
+
     } catch (error) {
       console.error('❌ QR regeneration failed:', error);
       toast.error('Failed to regenerate QR code');
     } finally {
       setLoading(false);
     }
-  }, [orderId, qrData?.slug, t]);
+  }, [orderId, qrData?.slug, orderNumber, dealerId, t]);
 
   // Memoize copy link function
   const copyLink = useCallback(async () => {

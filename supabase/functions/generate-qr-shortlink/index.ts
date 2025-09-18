@@ -114,12 +114,13 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`🔑 API Key available: ${mdaApiKey ? 'Yes' : 'No'}`);
     console.log(`📝 Registration payload:`, {
       url: redirectUrl,
-      title: `Order ${orderNumber}`,
-      alias: slug.toLowerCase()
+      custom: slug.toLowerCase(),
+      type: 'direct'
     });
 
     try {
-      const shortLinkResponse = await fetch("https://mda.to/api/v1/shorten", {
+      // Use correct mda.to API endpoint according to official documentation
+      const shortLinkResponse = await fetch("https://mda.to/api/url/add", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${mdaApiKey}`,
@@ -127,9 +128,8 @@ const handler = async (req: Request): Promise<Response> => {
         },
         body: JSON.stringify({
           url: redirectUrl,
-          title: `Order ${orderNumber}`,
-          description: `View order details for ${orderNumber}`,
-          alias: slug.toLowerCase(), // Use our slug as alias
+          custom: slug.toLowerCase(), // Use 'custom' parameter for alias
+          type: 'direct', // Direct redirection type
         }),
       });
 
@@ -141,12 +141,29 @@ const handler = async (req: Request): Promise<Response> => {
         if (contentType.includes("application/json")) {
           const shortLinkData = await shortLinkResponse.json();
           console.log(`✅ mda.to API Success Response:`, shortLinkData);
-          shortLink = shortLinkData.shortUrl || `https://mda.to/${slug.toLowerCase()}`;
+
+          // According to mda.to docs, successful response contains 'data' object with 'shorturl'
+          if (shortLinkData.error === 0 && shortLinkData.data?.shorturl) {
+            shortLink = shortLinkData.data.shorturl;
+            console.log(`✅ Got mda.to shorturl: ${shortLink}`);
+          } else if (shortLinkData.data?.url) {
+            // Alternative response format
+            shortLink = shortLinkData.data.url;
+            console.log(`✅ Got mda.to url: ${shortLink}`);
+          } else {
+            console.warn("⚠️ mda.to API success but no shorturl in response:", shortLinkData);
+            console.warn("🔄 Using direct mda.to URL as fallback");
+          }
         } else {
           const errorText = await shortLinkResponse.text();
           console.warn("❌ MDA API returned non-JSON response:", errorText);
           console.warn("🔄 Using direct mda.to URL as fallback");
         }
+      } else if (shortLinkResponse.status === 429) {
+        // Rate limit exceeded
+        const errorText = await shortLinkResponse.text();
+        console.error(`⚠️ MDA API Rate Limit Exceeded (429):`, errorText);
+        console.warn("🔄 Using direct mda.to URL as fallback");
       } else {
         const errorText = await shortLinkResponse.text();
         console.error(`❌ MDA API Error (${shortLinkResponse.status}):`, errorText);
@@ -158,6 +175,13 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.log(`🎯 Final shortLink will be: ${shortLink}`);
+    console.log(`📊 mda.to Integration Status: ${shortLink.startsWith('https://mda.to/') && !shortLink.includes(`/${slug.toLowerCase()}`) ? 'API SUCCESS' : 'FALLBACK USED'}`);
+
+    // Validate final shortlink format
+    if (!shortLink.startsWith('https://mda.to/')) {
+      console.error(`❌ Invalid shortlink format: ${shortLink}`);
+      shortLink = `https://mda.to/${slug.toLowerCase()}`;
+    }
 
     // Skip QR image generation - will be generated locally in frontend
     const qrCodeUrl: string | null = null;

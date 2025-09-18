@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { getBaseUrl, buildOrderUrl } from '@/utils/urlUtils';
 
 export interface ShortLinkData {
   slug: string;
@@ -15,6 +16,13 @@ export interface ShortLinkData {
 export class ShortLinkService {
   private readonly domain = 'mda.to';
   private readonly baseMdaUrl = 'https://mda.to';
+
+  /**
+   * Get the configured base URL for the application
+   */
+  private getAppBaseUrl(): string {
+    return getBaseUrl();
+  }
   
   /**
    * Generate a 5-digit random slug
@@ -75,31 +83,99 @@ export class ShortLinkService {
   }
 
   /**
-   * Get analytics for existing short link (temporarily disabled)
+   * Get analytics for existing short link
    */
   async getAnalytics(slug: string): Promise<ShortLinkData['analytics']> {
-    // Temporarily disabled - track-qr-click function not deployed
-    console.log('📊 Analytics disabled for slug:', slug);
-    return {
-      totalClicks: 0,
-      uniqueVisitors: 0
-    };
-
-    /* TODO: Re-enable when track-qr-click function is deployed
     try {
-      const { data, error } = await supabase.functions.invoke('track-qr-click', {
-        body: {
-          slug,
-          action: 'analytics'
+      console.log('📊 Getting analytics for slug:', slug);
+
+      // Try Edge Function first
+      try {
+        const { data, error } = await supabase.functions.invoke('track-qr-click', {
+          body: {
+            slug,
+            action: 'analytics'
+          }
+        });
+
+        if (!error && data?.analytics) {
+          console.log('✅ Edge Function analytics success:', data.analytics);
+          return {
+            totalClicks: data.analytics.totalClicks || 0,
+            uniqueVisitors: data.analytics.uniqueVisitors || 0,
+            lastClicked: data.analytics.lastClicked
+          };
+        } else {
+          console.warn('⚠️ Edge Function failed, trying database fallback:', error);
         }
-      });
+      } catch (edgeFunctionError) {
+        console.warn('⚠️ Edge Function error, using database fallback:', edgeFunctionError);
+      }
 
-      if (error) throw error;
+      // Fallback: Direct database query
+      console.log('📊 Using database fallback for analytics');
 
+      // Get the link first
+      const { data: linkData, error: linkError } = await supabase
+        .from('sales_order_links')
+        .select('id, total_clicks, unique_clicks, last_clicked_at')
+        .eq('slug', slug.toUpperCase())
+        .eq('is_active', true)
+        .single();
+
+      if (linkError || !linkData) {
+        console.warn('⚠️ No link found for slug:', slug);
+        return {
+          totalClicks: 0,
+          uniqueVisitors: 0
+        };
+      }
+
+      // If we have stored analytics, use them
+      if (linkData.total_clicks !== null || linkData.unique_clicks !== null) {
+        console.log('✅ Database analytics found:', {
+          totalClicks: linkData.total_clicks,
+          uniqueVisitors: linkData.unique_clicks,
+          lastClicked: linkData.last_clicked_at
+        });
+
+        return {
+          totalClicks: linkData.total_clicks || 0,
+          uniqueVisitors: linkData.unique_clicks || 0,
+          lastClicked: linkData.last_clicked_at
+        };
+      }
+
+      // Alternative: Count from click records if available
+      const { data: clickData, error: clickError } = await supabase
+        .from('sales_order_link_clicks')
+        .select('id, is_unique_click, clicked_at')
+        .eq('link_id', linkData.id);
+
+      if (!clickError && clickData) {
+        const totalClicks = clickData.length;
+        const uniqueVisitors = clickData.filter(click => click.is_unique_click).length;
+        const lastClicked = clickData.length > 0 ?
+          Math.max(...clickData.map(click => new Date(click.clicked_at).getTime())) : null;
+
+        console.log('✅ Calculated analytics from click records:', {
+          totalClicks,
+          uniqueVisitors,
+          lastClicked: lastClicked ? new Date(lastClicked).toISOString() : null
+        });
+
+        return {
+          totalClicks,
+          uniqueVisitors,
+          lastClicked: lastClicked ? new Date(lastClicked).toISOString() : null
+        };
+      }
+
+      // No analytics available
+      console.log('📊 No analytics data available for slug:', slug);
       return {
-        totalClicks: data?.totalClicks || 0,
-        uniqueVisitors: data?.uniqueVisitors || 0,
-        lastClicked: data?.lastClicked
+        totalClicks: 0,
+        uniqueVisitors: 0
       };
 
     } catch (error) {
@@ -109,21 +185,20 @@ export class ShortLinkService {
         uniqueVisitors: 0
       };
     }
-    */
   }
 
   /**
    * Regenerate short link for an order
    */
-  async regenerateShortLink(orderId: string, orderNumber?: string, dealerId?: number): Promise<ShortLinkData> {
+  async regenerateShortLink(orderId: string, slug?: string, dealerId?: number): Promise<ShortLinkData> {
     try {
       console.log(`🔄 Regenerating short link for order ${orderId}`);
-      
+
       // Call Edge Function with regenerate flag
       const { data, error } = await supabase.functions.invoke('generate-qr-shortlink', {
         body: {
           orderId,
-          orderNumber: orderNumber || orderId,
+          orderNumber: slug || orderId,
           dealerId: dealerId || 5,
           regenerate: true
         }
@@ -134,9 +209,13 @@ export class ShortLinkService {
         throw error;
       }
 
+      // Generate mda.to URL regardless of what the Edge Function returns
+      const generatedSlug = data.slug || this.generateSlug();
+      const mdaUrl = `${this.baseMdaUrl}/${generatedSlug}`;
+
       return {
-        slug: data.slug,
-        shortUrl: data.shortLink,
+        slug: generatedSlug,
+        shortUrl: mdaUrl, // Force mda.to domain
         qrCodeUrl: data.qrCodeUrl,
         deepLink: data.deepLink,
         analytics: {

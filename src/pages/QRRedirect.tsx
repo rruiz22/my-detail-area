@@ -20,37 +20,88 @@ export default function QRRedirect() {
       }
 
       try {
-        // Generate session ID for tracking
-        const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        
-        // Get client info for tracking
-        const clientInfo = {
-          slug,
-          ipAddress: undefined, // Will be set by edge function
-          userAgent: navigator.userAgent,
-          referer: document.referrer || undefined,
-          sessionId,
-        };
+        console.log('🔍 Processing QR redirect for slug:', slug);
 
-        // Track the click and get redirect info
-        const { data, error } = await supabase.functions.invoke('track-qr-click', {
-          body: clientInfo
-        });
+        // Try Edge Function first
+        let deepLinkUrl = null;
 
-        if (error) {
-          console.error('Error tracking click:', error);
-          setError(t('qr_redirect.link_not_found'));
-          setLoading(false);
-          return;
+        try {
+          // Generate session ID for tracking
+          const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+          // Get client info for tracking
+          const clientInfo = {
+            slug,
+            ipAddress: undefined, // Will be set by edge function
+            userAgent: navigator.userAgent,
+            referer: document.referrer || undefined,
+            sessionId,
+          };
+
+          console.log('📡 Attempting Edge Function call...');
+          // Track the click and get redirect info
+          const { data, error } = await supabase.functions.invoke('track-qr-click', {
+            body: clientInfo
+          });
+
+          if (!error && data?.deepLink) {
+            deepLinkUrl = data.deepLink;
+            console.log('✅ Edge Function success, deepLink:', deepLinkUrl);
+          } else {
+            console.warn('⚠️ Edge Function failed or returned no deepLink:', error);
+          }
+        } catch (edgeFunctionError) {
+          console.warn('⚠️ Edge Function error, trying direct database lookup:', edgeFunctionError);
         }
 
-        if (data?.deepLink) {
-          setDeepLink(data.deepLink);
+        // Fallback: Direct database lookup if Edge Function failed
+        if (!deepLinkUrl) {
+          console.log('📊 Trying direct database lookup for slug:', slug);
+
+          const { data: linkData, error: dbError } = await supabase
+            .from('sales_order_links')
+            .select('deep_link, order_id, orders(order_number)')
+            .eq('slug', slug.toUpperCase())
+            .eq('is_active', true)
+            .single();
+
+          if (dbError || !linkData) {
+            console.error('❌ Database lookup failed:', dbError);
+            setError(t('qr_redirect.link_not_found'));
+            setLoading(false);
+            return;
+          }
+
+          deepLinkUrl = linkData.deep_link;
+          console.log('✅ Database lookup success, deepLink:', deepLinkUrl);
+
+          // Simple click tracking without Edge Function
+          try {
+            await supabase
+              .from('sales_order_link_clicks')
+              .insert({
+                link_id: linkData.order_id, // Simplified tracking
+                ip_address: 'fallback',
+                user_agent: navigator.userAgent,
+                referer: document.referrer || null,
+                session_id: `fallback-${Date.now()}`,
+                is_unique_click: true, // Assume unique for fallback
+                clicked_at: new Date().toISOString()
+              });
+            console.log('✅ Fallback click tracking recorded');
+          } catch (trackingError) {
+            console.warn('⚠️ Fallback tracking failed:', trackingError);
+            // Don't fail redirect if tracking fails
+          }
+        }
+
+        if (deepLinkUrl) {
+          setDeepLink(deepLinkUrl);
         } else {
           setError(t('qr_redirect.invalid_destination'));
         }
       } catch (err) {
-        console.error('Error processing redirect:', err);
+        console.error('❌ Error processing redirect:', err);
         setError(t('qr_redirect.processing_error'));
       } finally {
         setLoading(false);
