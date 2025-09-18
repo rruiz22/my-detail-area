@@ -8,6 +8,7 @@ export interface OrderComment {
   userId: string;
   commentText: string;
   commentType: 'public' | 'internal';
+  parentCommentId?: string;
   createdAt: string;
   updatedAt: string;
   // User profile data
@@ -17,6 +18,9 @@ export interface OrderComment {
   userEmail: string;
   userType: string;
   avatarSeed?: string;
+  // Threading data
+  replies?: OrderComment[];
+  isReply: boolean;
 }
 
 export interface OrderCommentsHookResult {
@@ -56,9 +60,35 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     canAccessInternal
   });
 
-  // Separate comments by type
-  const comments = allComments.filter(c => c.commentType === 'public');
-  const internalNotes = allComments.filter(c => c.commentType === 'internal');
+  // Organize threading structure for comments and notes
+  const organizeThreading = useCallback((comments: OrderComment[]): OrderComment[] => {
+    // Separate parent comments from replies
+    const parentComments = comments.filter(c => !c.parentCommentId);
+    const repliesMap = new Map<string, OrderComment[]>();
+
+    // Group replies by parent comment id
+    comments
+      .filter(c => c.parentCommentId)
+      .forEach(reply => {
+        const parentId = reply.parentCommentId!;
+        if (!repliesMap.has(parentId)) {
+          repliesMap.set(parentId, []);
+        }
+        repliesMap.get(parentId)!.push(reply);
+      });
+
+    // Attach replies to parent comments
+    const threaded = parentComments.map(parent => ({
+      ...parent,
+      replies: repliesMap.get(parent.id) || []
+    }));
+
+    return threaded;
+  }, []);
+
+  // Separate comments by type (only parent comments, replies are nested)
+  const comments = allComments.filter(c => c.commentType === 'public' && !c.parentCommentId);
+  const internalNotes = allComments.filter(c => c.commentType === 'internal' && !c.parentCommentId);
 
   // Fetch comments from database
   const fetchComments = useCallback(async () => {
@@ -70,7 +100,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     try {
       console.log(`💬 Fetching comments for order: ${orderId}`);
 
-      // Get comments data
+      // Get comments data including parent_comment_id for threading
       const { data: commentsData, error: commentsError } = await supabase
         .from('order_comments')
         .select(`
@@ -79,6 +109,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           user_id,
           comment_text,
           comment_type,
+          parent_comment_id,
           created_at,
           updated_at
         `)
@@ -140,6 +171,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
             userId: commentData.user_id,
             commentText: commentData.comment_text,
             commentType: commentData.comment_type as 'public' | 'internal',
+            parentCommentId: commentData.parent_comment_id,
             createdAt: commentData.created_at,
             updatedAt: commentData.updated_at,
             userName: `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.email,
@@ -147,13 +179,18 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
             userLastName: profile.last_name || '',
             userEmail: profile.email || '',
             userType: profile.user_type || 'regular',
-            avatarSeed: profile.avatar_seed
+            avatarSeed: profile.avatar_seed,
+            isReply: !!commentData.parent_comment_id,
+            replies: [] // Will be populated in threading logic
           };
         })
         .filter(Boolean) as OrderComment[];
 
-      console.log(`✅ Loaded ${transformedComments.length} comments/notes`);
-      setAllComments(transformedComments);
+      // Organize threading structure
+      const organizedComments = organizeThreading(transformedComments);
+
+      console.log(`✅ Loaded ${transformedComments.length} comments/notes with threading`);
+      setAllComments(organizedComments);
 
     } catch (err) {
       console.error('❌ Unexpected error fetching comments:', err);

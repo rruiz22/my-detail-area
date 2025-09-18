@@ -634,8 +634,8 @@
       "none": "No notifications"
     }
   },
-  "team_communication": {
-    "title": "Team Communication",
+  "order_comments": {
+    "title": "Order Comments",
     "comments": "Comments",
     "internal_notes": "Internal Notes",
     "no_comments": "No comments yet",

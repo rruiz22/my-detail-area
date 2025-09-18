@@ -45,16 +45,37 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
     if (!commentId) return;
 
     try {
-      const { data, error } = await supabase.rpc('get_comment_reactions_summary', {
-        p_comment_id: commentId
-      });
+      // Simple query instead of RPC for better reliability
+      const { data, error } = await supabase
+        .from('comment_reactions')
+        .select('reaction_type, user_id')
+        .eq('comment_id', commentId);
 
       if (error) {
         console.error('❌ Error fetching reactions:', error);
         return;
       }
 
-      setReactions(data || []);
+      // Group reactions and check if user reacted
+      const reactionMap = new Map<string, { count: number; userReacted: boolean }>();
+
+      (data || []).forEach(reaction => {
+        const existing = reactionMap.get(reaction.reaction_type) || { count: 0, userReacted: false };
+        existing.count++;
+        if (reaction.user_id === user?.id) {
+          existing.userReacted = true;
+        }
+        reactionMap.set(reaction.reaction_type, existing);
+      });
+
+      // Convert to array format
+      const reactionsArray: Reaction[] = Array.from(reactionMap.entries()).map(([type, data]) => ({
+        type,
+        count: data.count,
+        userReacted: data.userReacted
+      }));
+
+      setReactions(reactionsArray);
 
     } catch (error) {
       console.error('❌ Error fetching reactions:', error);

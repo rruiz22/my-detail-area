@@ -183,14 +183,14 @@ export function MentionInput({
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Input
         ref={inputRef}
         value={value}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={className}
+        className={`w-full ${className}`}
         disabled={disabled}
       />
 
