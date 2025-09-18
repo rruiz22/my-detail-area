@@ -1,8 +1,8 @@
 {
   "scannedFiles": 449,
-  "totalStrings": 4502,
+  "totalStrings": 4503,
   "hardcodedStrings": 990,
-  "translatedStrings": 3512,
+  "translatedStrings": 3513,
   "issues": {
     "critical": [
       {
@@ -39769,29 +39769,40 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 146,
-            "context": "145: } catch (error) {\n146: console.error('❌ File upload error:', error);\n147: toast.error(t('attachments.upload_failed', 'Failed to upload file'));"
+            "line": 171,
+            "context": "170: } catch (error) {\n171: console.error('❌ File upload error:', error);\n172: toast.error(t('attachments.upload_failed', 'Failed to upload file'));"
           }
         ],
         "translationCalls": [
           {
+            "key": "attachments.auth_required",
+            "line": 85,
+            "exists": false
+          },
+          {
             "key": "attachments.upload_success",
-            "line": 133,
+            "line": 158,
             "exists": true
           },
           {
             "key": "attachments.upload_failed",
-            "line": 147,
+            "line": 172,
             "exists": true
           },
           {
             "key": "attachments.attach",
-            "line": 180,
+            "line": 205,
             "exists": true
           }
         ],
-        "missingKeys": [],
-        "coverage": 75,
+        "missingKeys": [
+          {
+            "key": "attachments.auth_required",
+            "line": 85,
+            "context": "84: if (!user) {\n85: toast.error(t('attachments.auth_required', 'Please log in to upload files'));\n86: return;"
+          }
+        ],
+        "coverage": 80,
         "severity": "low"
       },
       {
@@ -40765,9 +40776,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3020 translation keys are referenced but missing",
+      "description": "3021 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "151 hours"
+      "estimatedEffort": "152 hours"
     }
   ],
   "coverage": 78
