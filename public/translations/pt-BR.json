@@ -416,6 +416,8 @@
     "require_attention": "Requerem atenção",
     "edit": "Editar Pedido",
     "create": "Criar Pedido",
+    "print": "Imprimir Pedido",
+    "download": "Baixar PDF",
     "customer_information": "Informações do Cliente",
     "customerName": "Nome do Cliente",
     "priority": "Prioridade",

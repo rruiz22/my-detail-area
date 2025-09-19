@@ -1,11 +1,11 @@
 export function getStatusRowColor(status: string): string {
   const statusColors: Record<string, string> = {
-    'pending': 'bg-warning/5 hover:bg-warning/10',
-    'in_progress': 'bg-blue/10 hover:bg-blue/15',
-    'completed': 'bg-success/5 hover:bg-success/10',
-    'cancelled': 'bg-destructive/5 hover:bg-destructive/10',
+    'pending': 'bg-amber-50/50 hover:bg-amber-50/80',
+    'in_progress': 'bg-blue-50/60 hover:bg-blue-50/90',
+    'completed': 'bg-green-50/50 hover:bg-green-50/80',
+    'cancelled': 'bg-gray-50/50 hover:bg-gray-50/80',
   };
-  
+
   return statusColors[status.toLowerCase()] || 'hover:bg-muted/50';
 }
 

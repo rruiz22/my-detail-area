@@ -6,11 +6,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { safeFormatDate } from '@/utils/dateUtils';
 import {
   MessageSquare,
-  Edit2
+  Edit2,
+  Printer,
+  Download
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
+import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { ChatAndSMSActions } from './ChatAndSMSActions';
 import { OrderTasksSection } from './OrderTasksSection';
 import { SkeletonLoader } from './SkeletonLoader';
@@ -28,6 +32,7 @@ import { RecentActivityBlock } from './RecentActivityBlock';
 import { ScheduleViewBlock } from './ScheduleViewBlock';
 import { SimpleNotesDisplay } from './SimpleNotesDisplay';
 import { TeamCommunicationBlock } from './TeamCommunicationBlock';
+import { ServicesDisplay } from './ServicesDisplay';
 
 // Enhanced TypeScript interfaces for better type safety
 // Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
@@ -235,6 +240,17 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
           <div className="text-sm font-medium text-gray-700">
             {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || 'Unassigned'}
           </div>
+
+          {/* Services - Fourth Row */}
+          <div className="flex justify-center">
+            <ServicesDisplay
+              services={order.services}
+              totalAmount={order.total_amount || order.totalAmount}
+              dealerId={order.dealer_id}
+              variant="kanban"
+              className="mt-1"
+            />
+          </div>
         </div>
 
         {/* Right: Status Dropdown */}
@@ -297,6 +313,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
   const { hasPermission } = usePermissionContext();
+  const { printOrder, previewPrint } = usePrintOrder();
   const [orderData, setOrderData] = useState(order);
 
   // Custom hook for normalized QR props
@@ -314,46 +331,34 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     }
   }, [canEditOrder, onEdit, orderData]);
 
-  // Real-time subscription for order updates with enhanced error handling
+  // Smart polling for order details when modal is open
+  const orderDetailsQuery = useOrderDetailsPolling(
+    ['order', order?.id || ''],
+    async () => {
+      if (!order?.id) return order;
+
+      console.log(`🔄 Polling order details for ${order.id}`);
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', order.id)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    open && !!order?.id
+  );
+
+  // Update orderData when polling returns new data
   useEffect(() => {
-    if (!order?.id || !open) return;
-
-    const subscription = supabase
-      .channel(`order-updates-${order.id}`)
-      .on('postgres_changes', {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'orders',
-        filter: `id=eq.${order.id}`
-      }, (payload) => {
-        try {
-          // Validate payload structure and update state
-          if (payload?.new && typeof payload.new === 'object' && 'id' in payload.new) {
-            setOrderData(prev => ({
-              ...prev,
-              ...payload.new,
-              // Ensure ID consistency
-              id: prev.id
-            }));
-          }
-        } catch (error) {
-          console.warn('Failed to process real-time update:', error);
-        }
-      })
-      .subscribe((status) => {
-        if (status === 'CHANNEL_ERROR') {
-          console.error('Real-time subscription failed for order:', order.id);
-        }
-      });
-
-    return () => {
-      try {
-        supabase.removeChannel(subscription);
-      } catch (error) {
-        console.warn('Failed to cleanup subscription:', error);
-      }
-    };
-  }, [order?.id, open]);
+    if (orderDetailsQuery.data && orderDetailsQuery.data.id === order?.id) {
+      setOrderData(prev => ({
+        ...prev,
+        ...orderDetailsQuery.data
+      }));
+    }
+  }, [orderDetailsQuery.data, order?.id]);
 
   // Enhanced scroll behavior with better error handling
   useEffect(() => {
@@ -554,16 +559,38 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             </div>
           </div>
 
-          {/* Footer with Danger Close Button */}
+          {/* Footer with Print Actions and Close Button */}
           <footer className="flex-none border-t bg-background p-4">
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+              {/* Print Actions */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => previewPrint(orderData)}
+                  className="flex items-center gap-2"
+                >
+                  <Printer className="h-4 w-4" />
+                  {t('orders.print')}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => printOrder(orderData)}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  {t('orders.download')}
+                </Button>
+              </div>
+
+              {/* Close Button */}
               <Button
                 variant="destructive"
                 onClick={onClose}
                 size="lg"
                 className="min-w-[120px]"
               >
-                Close
+                {t('common.close')}
               </Button>
             </div>
           </footer>

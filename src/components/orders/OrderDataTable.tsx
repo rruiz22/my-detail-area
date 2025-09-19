@@ -18,20 +18,22 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  QrCode, 
-  MessageSquare, 
-  CheckCircle, 
+import {
+  MoreHorizontal,
+  Eye,
+  Edit,
+  Trash2,
+  QrCode,
+  MessageSquare,
+  CheckCircle,
   Loader2,
   User,
   Car,
   Calendar,
   Building2,
-  Hash
+  Hash,
+  Printer,
+  Download
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { orderNumberService } from '@/services/orderNumberService';
@@ -57,6 +59,8 @@ import {
 } from '@/utils/dueDateUtils';
 import { getOrderAnimationClass } from '@/utils/orderAnimationUtils';
 import { formatOrderNumber } from '@/utils/orderUtils';
+import { ServicesDisplay } from './ServicesDisplay';
+import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { cn } from '@/lib/utils';
 import '@/styles/order-animations.css';
 
@@ -125,6 +129,7 @@ interface OrderDataTableProps {
 
 export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onStatusChange, tabType }: OrderDataTableProps) {
   const { t } = useTranslation();
+  const { printOrder, previewPrint } = usePrintOrder();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const isMobile = useIsMobile();
@@ -300,7 +305,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                                       order.status !== 'completed' && 
                                       order.status !== 'cancelled';
           const attentionClasses = showDueDateIndicator && order.dueDate 
-            ? getAttentionRowClasses(calculateTimeStatus(order.dueDate).attentionLevel)
+            ? getAttentionRowClasses(calculateTimeStatus(order.dueDate, order.status).attentionLevel)
             : '';
 
           return (
@@ -475,6 +480,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                 <TableHead className="font-medium text-foreground text-center">Order ID</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Stock</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Vehicle</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{t('orders.services')}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Due</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Status</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Actions</TableHead>
@@ -488,7 +494,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                                             order.status !== 'completed' && 
                                             order.status !== 'cancelled';
                 const attentionClasses = showDueDateIndicator && order.dueDate 
-                  ? getAttentionRowClasses(calculateTimeStatus(order.dueDate).attentionLevel)
+                  ? getAttentionRowClasses(calculateTimeStatus(order.dueDate, order.status).attentionLevel)
                   : '';
 
                 return (
@@ -575,10 +581,23 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                     </TableCell>
 
-                    {/* Column 4: Due Date/Time - Dynamic Countdown */}
+                    {/* Column 4: Services */}
+                    <TableCell className="py-4 text-left">
+                      <ServicesDisplay
+                        services={order.services}
+                        totalAmount={order.totalAmount || order.total_amount}
+                        dealerId={order.dealer_id}
+                        variant="table"
+                        maxServicesShown={3}
+                        className="min-w-[120px]"
+                      />
+                    </TableCell>
+
+                    {/* Column 6: Due Date/Time - Dynamic Countdown */}
                     <TableCell className="table-due-date-cell">
                       <DueDateIndicator
                         dueDate={order.dueDate}
+                        orderStatus={order.status}
                         orderType={tabType}
                         compact={false}
                         showDateTime={true}
@@ -594,7 +613,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       )}
                     </TableCell>
 
-                    {/* Column 5: Interactive Status */}
+                    {/* Column 6: Interactive Status */}
                     <TableCell className="py-4 text-center">
                       <div className="flex flex-col items-center gap-2">
                         <StatusBadgeInteractive
@@ -607,7 +626,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                     </TableCell>
 
-                    {/* Column 6: Action Buttons (Simplified) */}
+                    {/* Column 7: Action Buttons (Simplified) */}
                     <TableCell className="py-4 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Button
@@ -628,6 +647,16 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           title="Edit Order"
                         >
                           <Edit className="h-4 w-4 text-emerald-600" />
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => previewPrint(order)}
+                          className="h-8 w-8 p-0 transition-all hover:scale-105"
+                          title="Print Order"
+                        >
+                          <Printer className="h-4 w-4 text-gray-700" />
                         </Button>
 
                         <Button

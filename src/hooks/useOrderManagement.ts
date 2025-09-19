@@ -3,6 +3,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
+import { useOrderPolling } from '@/hooks/useSmartPolling';
+import { shouldUseRealtime } from '@/config/realtimeFeatures';
+import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
 import type { Database } from '@/integrations/supabase/types';
 
 // Enhanced database types
@@ -177,6 +180,7 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
 };
 
 export const useOrderManagement = (activeTab: string) => {
+  const { createSubscription, removeSubscription } = useSubscriptionManager();
   const [orders, setOrders] = useState<Order[]>([]);
   const [allOrders, setAllOrders] = useState<Order[]>([]); // Keep full dataset
   const [tabCounts, setTabCounts] = useState({
@@ -197,6 +201,7 @@ export const useOrderManagement = (activeTab: string) => {
     dateRange: { from: null, to: null },
   });
   const [loading, setLoading] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const { user } = useAuth();
   const { generateQR } = useOrderActions();
   
@@ -584,71 +589,96 @@ export const useOrderManagement = (activeTab: string) => {
     }
   }, [activeTab, filters, allOrders, filterOrders]);
 
-  // Real-time subscription for all orders (not just sales)
-  useEffect(() => {
-    if (!user) return;
+  // Smart polling for order data (replaces real-time subscription)
+  const ordersPollingQuery = useOrderPolling(
+    ['orders', 'all'],
+    async () => {
+      if (!user) return [];
 
-    const channel = supabase
-      .channel('all_orders_realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
+      console.log('🔄 Smart polling: Fetching orders...');
+      const { data: orders, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Enrich orders with related data
+      const enrichedOrders = await Promise.all(
+        orders.map(order => enrichOrderData(order))
+      );
+
+      return enrichedOrders;
+    },
+    !!user
+  );
+
+  // Update allOrders when polling data changes
+  useEffect(() => {
+    if (ordersPollingQuery.data) {
+      setAllOrders(ordersPollingQuery.data);
+      setLastRefresh(new Date());
+      setLoading(false);
+    }
+  }, [ordersPollingQuery.data]);
+
+  // Listen for status updates to trigger immediate refresh
+  useEffect(() => {
+    const handleStatusUpdate = () => {
+      console.log('🔄 Status update detected, triggering immediate polling refresh');
+      ordersPollingQuery.refetch();
+    };
+
+    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
+    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+  }, [ordersPollingQuery.refetch]);
+
+  // Critical order status subscription (only for important state changes)
+  useEffect(() => {
+    if (!user || !shouldUseRealtime('orderStatus')) return;
+
+    const channel = createSubscription(
+      'critical-order-status',
+      () => supabase
+        .channel('critical-order-status')
+        .on('postgres_changes', {
+          event: 'UPDATE',
           schema: 'public',
           table: 'orders'
-          // No filter - listen to all order types
-        },
-        async (payload) => {
-          realtimeUpdateCountRef.current += 1;
-          console.log(`📡 Real-time update ${realtimeUpdateCountRef.current} received:`, payload.eventType, (payload.new as SupabaseOrderRow)?.id || (payload.old as SupabaseOrderRow)?.id);
-          
-          try {
-            if (payload.eventType === 'INSERT') {
-              // Enrich the new order data just like refreshData does
-              const order = payload.new as SupabaseOrderRow;
-              const newOrder = await enrichOrderData(order);
-              
-              // Update allOrders state
-              setAllOrders(prevAllOrders => {
-                const exists = prevAllOrders.some(existingOrder => existingOrder.id === newOrder.id);
-                if (exists) return prevAllOrders;
-                return [newOrder, ...prevAllOrders];
-              });
-              
-            } else if (payload.eventType === 'UPDATE') {
-              // Enrich the updated order data
-              const order = payload.new as SupabaseOrderRow;
-              const updatedOrder = await enrichOrderData(order);
-              
-              // Update allOrders state
-              setAllOrders(prevAllOrders => 
-                prevAllOrders.map(existingOrder => 
-                  existingOrder.id === updatedOrder.id ? updatedOrder : existingOrder
-                )
-              );
-              
-            } else if (payload.eventType === 'DELETE') {
-              const deletedId = (payload.old as SupabaseOrderRow)?.id;
-              if (deletedId) {
-                // Update allOrders state
-                setAllOrders(prevAllOrders => 
-                  prevAllOrders.filter(order => order.id !== deletedId)
+          // No filter - capture ALL status changes including cancelled → pending
+        }, async (payload) => {
+          // Only process if status actually changed
+          const oldStatus = (payload.old as SupabaseOrderRow)?.status;
+          const newStatus = (payload.new as SupabaseOrderRow)?.status;
+
+          if (oldStatus !== newStatus) {
+            console.log(`🎯 Status change: ${oldStatus} → ${newStatus} for order ${newStatus?.id}`);
+
+            try {
+              if (payload.eventType === 'UPDATE') {
+                const order = payload.new as SupabaseOrderRow;
+                const updatedOrder = await enrichOrderData(order);
+
+                setAllOrders(prevAllOrders =>
+                  prevAllOrders.map(existingOrder =>
+                    existingOrder.id === updatedOrder.id ? updatedOrder : existingOrder
+                  )
                 );
               }
+            } catch (error) {
+              console.error('Error handling status update:', error);
             }
-          } catch (error) {
-            console.error('Error handling real-time update:', error);
-            // Fallback to full refresh only on error, but with debouncing
-            setTimeout(() => refreshData(), 1000);
           }
-        }
-      )
-      .subscribe();
+        }),
+      'high'
+    );
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        removeSubscription('critical-order-status');
+      }
     };
-  }, [user]);
+  }, [user, createSubscription, removeSubscription]);
 
   // Helper function to enrich order data with related information
   const enrichOrderData = useCallback(async (order: SupabaseOrderRow): Promise<Order> => {
@@ -696,6 +726,7 @@ export const useOrderManagement = (activeTab: string) => {
     tabCounts,
     filters,
     loading,
+    lastRefresh,
     updateFilters,
     refreshData,
     createOrder,

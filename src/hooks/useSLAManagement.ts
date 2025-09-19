@@ -103,7 +103,37 @@ export function useSLAManagement(order: OrderData) {
 
   // Calculate SLA status
   const slaStatus = useMemo((): SLAStatus => {
-    // Use enhanced date utilities to access data correctly
+    // Handle completed orders
+    if (order.status === 'completed') {
+      const { created, due } = getOrderDateSummary(order);
+      const completedAt = order.completed_at ? new Date(order.completed_at) : new Date();
+      const dueDate = due.isValid && due.rawValue ? new Date(due.rawValue) : null;
+
+      const wasOnTime = dueDate ? completedAt <= dueDate : true;
+
+      return {
+        isWithinSLA: wasOnTime,
+        timeRemaining: 0,
+        percentageUsed: 100,
+        status: 'completed',
+        escalationLevel: 'none',
+        businessHoursRemaining: 0
+      };
+    }
+
+    // Handle cancelled orders
+    if (order.status === 'cancelled') {
+      return {
+        isWithinSLA: true, // Cancellation doesn't violate SLA
+        timeRemaining: 0,
+        percentageUsed: 0,
+        status: 'completed',
+        escalationLevel: 'none',
+        businessHoursRemaining: 0
+      };
+    }
+
+    // Handle active orders - existing logic
     const { created, due } = getOrderDateSummary(order);
 
     console.log('🏗️ [SLA DEBUG] Date summary:', { created, due });

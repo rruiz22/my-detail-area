@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { AnimatedProgress } from '@/components/ui/animated-progress';
 import { motion } from 'framer-motion';
 import {
   Calendar,
@@ -16,7 +15,8 @@ import {
   WifiOff,
   RefreshCw,
   Play,
-  Pause
+  Pause,
+  XCircle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { safeFormatDate, calculateDaysFromNow } from '@/utils/dateUtils';
@@ -48,6 +48,38 @@ interface ScheduleItem {
   value: string;
   subtitle: string;
 }
+
+// Helper functions for progress bar colors
+const getProgressColorClass = (status: string): string => {
+  switch (status) {
+    case 'pending':
+      return '[&>div]:bg-amber-500'; // Yellow for pending
+    case 'in_progress':
+      return '[&>div]:bg-blue-500'; // Blue for in progress
+    case 'completed':
+      return '[&>div]:bg-green-500'; // Green for completed
+    case 'cancelled':
+      return '[&>div]:bg-gray-400'; // Gray for cancelled
+    default:
+      return '[&>div]:bg-gray-300'; // Default gray
+  }
+};
+
+const getSLAProgressColorClass = (status: string, isWithinSLA: boolean): string => {
+  if (status === 'completed') {
+    return isWithinSLA ? '[&>div]:bg-green-500' : '[&>div]:bg-orange-500';
+  }
+  if (status === 'cancelled') {
+    return '[&>div]:bg-gray-400';
+  }
+  if (status === 'pending') {
+    return '[&>div]:bg-amber-500';
+  }
+  if (status === 'in_progress') {
+    return isWithinSLA ? '[&>div]:bg-blue-500' : '[&>div]:bg-red-500';
+  }
+  return '[&>div]:bg-gray-300';
+};
 
 // Memoized component to prevent unnecessary re-renders
 export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
@@ -105,6 +137,28 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
 
   // Enhanced due date status calculation with hour-level precision
   const dueDateStatus = useMemo(() => {
+    // Don't show due date countdown for finalized orders
+    if (['completed', 'cancelled'].includes(currentOrder.status)) {
+      if (currentOrder.status === 'completed') {
+        return {
+          status: 'completed',
+          text: 'Order Completed',
+          color: 'text-green-600',
+          bgColor: 'bg-green-50',
+          icon: CheckCircle
+        };
+      } else {
+        return {
+          status: 'cancelled',
+          text: 'Order Cancelled',
+          color: 'text-gray-600',
+          bgColor: 'bg-gray-50',
+          icon: XCircle
+        };
+      }
+    }
+
+    // Active orders - existing logic
     const dueDate = getOrderDateSummary(currentOrder).due;
 
     if (!dueDate.isValid || !dueDate.rawValue) {
@@ -259,13 +313,10 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
             </div>
           </div>
 
-          {/* Animated Progress Bar */}
-          <AnimatedProgress
+          {/* Progress Bar with Status Colors */}
+          <Progress
             value={progress}
-            status={currentOrder.status as any}
-            className="h-3"
-            showShimmer={true}
-            animationDuration={0.8}
+            className={`h-3 ${getProgressColorClass(currentOrder.status)}`}
           />
 
           {/* Status Indicator with Subtle Animation */}
@@ -409,26 +460,25 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
             </div>
           </div>
 
-          {/* Enhanced SLA Progress Bar */}
+          {/* SLA Progress Bar with Status Colors */}
           <div className="space-y-2">
-            <AnimatedProgress
+            <Progress
               value={Math.min(slaStatus.percentageUsed, 100)}
-              status={slaStatus.status === 'overdue' ? 'cancelled' :
-                      slaStatus.status === 'at_risk' ? 'on_hold' :
-                      slaStatus.status === 'completed' ? 'completed' : 'in_progress'}
-              className="h-3"
-              showShimmer={slaStatus.status === 'overdue'}
-              animationDuration={1.0}
+              className={`h-3 ${getSLAProgressColorClass(currentOrder.status, slaStatus.isWithinSLA)}`}
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>
-                {slaStatus.businessHoursRemaining > 0
+                {currentOrder.status === 'completed'
+                  ? (slaStatus.isWithinSLA ? 'SLA Met' : 'SLA Exceeded')
+                  : currentOrder.status === 'cancelled'
+                  ? 'SLA N/A (Cancelled)'
+                  : slaStatus.businessHoursRemaining > 0
                   ? `${Math.round(slaStatus.businessHoursRemaining)}h remaining`
                   : 'SLA exceeded'
                 }
               </span>
               <span>
-                {slaStatus.escalationLevel !== 'none' && `⚠️ ${slaStatus.escalationLevel.toUpperCase()}`}
+                {slaStatus.escalationLevel !== 'none' && currentOrder.status !== 'completed' && currentOrder.status !== 'cancelled' && `⚠️ ${slaStatus.escalationLevel.toUpperCase()}`}
               </span>
             </div>
           </div>

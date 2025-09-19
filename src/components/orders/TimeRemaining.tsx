@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Clock, AlertTriangle, Calendar, CheckCircle } from 'lucide-react';
+import { Clock, AlertTriangle, Calendar, CheckCircle, XCircle } from 'lucide-react';
 
 interface TimeRemainingProps {
   order: any;
@@ -21,6 +21,37 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
 
   useEffect(() => {
     const calculateTimeInfo = () => {
+      // Handle completed orders
+      if (order?.status === 'completed') {
+        const wasOnTime = order.completed_at && order.due_date
+          ? new Date(order.completed_at) <= new Date(order.due_date)
+          : true;
+
+        setTimeInfo({
+          text: wasOnTime ? 'Completed On-Time' : 'Completed Late',
+          color: wasOnTime ? 'text-green-600' : 'text-orange-600',
+          icon: <CheckCircle className="h-4 w-4" />,
+          badge: wasOnTime ? 'COMPLETED ON TIME' : 'COMPLETED LATE',
+          badgeColor: wasOnTime
+            ? 'bg-green-100 text-green-700 border-green-300'
+            : 'bg-orange-100 text-orange-700 border-orange-300'
+        });
+        return;
+      }
+
+      // Handle cancelled orders
+      if (order?.status === 'cancelled') {
+        setTimeInfo({
+          text: 'Order Cancelled',
+          color: 'text-gray-600',
+          icon: <XCircle className="h-4 w-4" />,
+          badge: 'CANCELLED',
+          badgeColor: 'bg-gray-100 text-gray-700 border-gray-300'
+        });
+        return;
+      }
+
+      // Handle active orders - existing logic
       if (!order?.due_date) {
         setTimeInfo({
           text: 'No due date set',
@@ -106,10 +137,14 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
     };
 
     calculateTimeInfo();
-    // Update every minute for live countdown
-    const interval = setInterval(calculateTimeInfo, 60000);
-    return () => clearInterval(interval);
-  }, [order?.due_date]);
+    // Update every minute for live countdown (only for active orders)
+    const shouldUpdateContinuously = !['completed', 'cancelled'].includes(order?.status);
+
+    if (shouldUpdateContinuously) {
+      const interval = setInterval(calculateTimeInfo, 60000);
+      return () => clearInterval(interval);
+    }
+  }, [order?.due_date, order?.status, order?.completed_at]);
 
   if (!timeInfo) return null;
 

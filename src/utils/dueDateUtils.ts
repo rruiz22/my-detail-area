@@ -17,9 +17,53 @@ export interface TimeStatusInfo {
 }
 
 /**
- * Calculate the time status for an order based on its due date
+ * Calculate the time status for an order based on its due date and order status
  */
-export function calculateTimeStatus(dueDate: string | null): TimeStatusInfo {
+export function calculateTimeStatus(dueDate: string | null, orderStatus?: string): TimeStatusInfo {
+  // Handle completed orders
+  if (orderStatus === 'completed') {
+    if (!dueDate) {
+      return {
+        status: 'no-due-date',
+        timeRemaining: 0,
+        formattedTime: '',
+        attentionLevel: 'none',
+        badge: 'Completed',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50'
+      };
+    }
+
+    // Check if completed on time or late
+    const now = new Date();
+    const due = new Date(dueDate);
+    const wasOnTime = now <= due; // If completed before due date
+
+    return {
+      status: wasOnTime ? 'on-time' : 'delayed',
+      timeRemaining: 0,
+      formattedTime: '',
+      attentionLevel: 'none',
+      badge: wasOnTime ? 'Completed On-Time' : 'Completed Late',
+      color: wasOnTime ? 'text-green-600' : 'text-orange-600',
+      bgColor: wasOnTime ? 'bg-green-50' : 'bg-orange-50'
+    };
+  }
+
+  // Handle cancelled orders
+  if (orderStatus === 'cancelled') {
+    return {
+      status: 'no-due-date',
+      timeRemaining: 0,
+      formattedTime: '',
+      attentionLevel: 'none',
+      badge: 'Cancelled',
+      color: 'text-gray-600',
+      bgColor: 'bg-gray-50'
+    };
+  }
+
+  // Handle active orders (pending, in_progress) - existing logic
   if (!dueDate) {
     return {
       status: 'no-due-date',

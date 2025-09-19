@@ -432,6 +432,8 @@
     "require_attention": "Require attention",
     "edit": "Edit Order",
     "create": "Create Order",
+    "print": "Print Order",
+    "download": "Download PDF",
     "order_details": "Order Details",
     "customer_information": "Customer Information",
     "customerName": "Customer Name",

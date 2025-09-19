@@ -21,11 +21,11 @@ export const getOrderAnimationClass = (
     return '';
   }
 
-  // Calculate time status for urgency level
-  const timeStatus: TimeStatusInfo = calculateTimeStatus(dueDate);
+  // Calculate time status for urgency level (pass orderStatus for completed/cancelled logic)
+  const timeStatus: TimeStatusInfo = calculateTimeStatus(dueDate, orderStatus);
 
-  // Don't animate if there's no time urgency
-  if (!timeStatus || timeStatus.status === 'no-due-date') {
+  // Don't animate if there's no time urgency or order is completed/cancelled
+  if (!timeStatus || timeStatus.status === 'no-due-date' || ['completed', 'cancelled'].includes(normalizedStatus)) {
     return '';
   }
 

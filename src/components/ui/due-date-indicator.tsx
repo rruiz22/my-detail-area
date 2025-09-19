@@ -12,6 +12,7 @@ import {
 
 interface DueDateIndicatorProps {
   dueDate: string | null;
+  orderStatus?: string;
   orderType?: string;
   compact?: boolean;
   showDateTime?: boolean;
@@ -20,6 +21,7 @@ interface DueDateIndicatorProps {
 
 export function DueDateIndicator({
   dueDate,
+  orderStatus,
   orderType = 'sales',
   compact = false,
   showDateTime = false,
@@ -31,12 +33,7 @@ export function DueDateIndicator({
   // Update time status every minute for real-time countdown
   useEffect(() => {
     const updateTimeStatus = () => {
-      if (!dueDate) {
-        setTimeStatus(null);
-        return;
-      }
-      
-      const status = calculateTimeStatus(dueDate);
+      const status = calculateTimeStatus(dueDate, orderStatus);
       setTimeStatus(status);
     };
 
@@ -44,16 +41,25 @@ export function DueDateIndicator({
     
     // Update every 60 seconds for live countdown
     const interval = setInterval(updateTimeStatus, 60000);
-    
-    return () => clearInterval(interval);
-  }, [dueDate]);
 
-  // Don't render if no due date or no time status
-  if (!timeStatus || timeStatus.status === 'no-due-date') {
+    return () => clearInterval(interval);
+  }, [dueDate, orderStatus]);
+
+  // Don't render if no time status, but do render for completed/cancelled
+  if (!timeStatus || (timeStatus.status === 'no-due-date' && !timeStatus.badge)) {
     return null;
   }
 
-  const getIcon = (status: string) => {
+  const getIcon = (status: string, orderStatus?: string) => {
+    // Special icons for finalized orders
+    if (orderStatus === 'completed') {
+      return <CheckCircle className="w-4 h-4" />;
+    }
+    if (orderStatus === 'cancelled') {
+      return null; // No icon for cancelled orders
+    }
+
+    // Normal icons for active orders
     switch (status) {
       case 'on-time':
         return <CheckCircle className="w-4 h-4" />;
@@ -105,19 +111,21 @@ export function DueDateIndicator({
         )}
       >
         <div className="flex items-center gap-1">
-          {getIcon(timeStatus.status)}
+          {getIcon(timeStatus.status, orderStatus)}
           <span>{timeStatus.badge}</span>
         </div>
       </Badge>
 
-      {/* Time Countdown */}
-      <div className={cn(
-        "flex items-center gap-1 text-sm font-semibold justify-center",
-        timeStatus.color
-      )}>
-        <Clock className="w-4 h-4" />
-        <span>{timeStatus.formattedTime}</span>
-      </div>
+      {/* Time Countdown - Solo para órdenes activas */}
+      {!['completed', 'cancelled'].includes(orderStatus || '') && timeStatus.formattedTime && (
+        <div className={cn(
+          "flex items-center gap-1 text-sm font-semibold justify-center",
+          timeStatus.color
+        )}>
+          <Clock className="w-4 h-4" />
+          <span>{timeStatus.formattedTime}</span>
+        </div>
+      )}
 
       {/* Date and Time Display */}
       {showDateTime && dueDate && (

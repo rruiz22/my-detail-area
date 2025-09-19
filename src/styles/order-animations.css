@@ -77,10 +77,16 @@
 
 /* Sin animación para completed/cancelled - importante para performance */
 .completed,
-.cancelled {
+.cancelled,
+tr.completed,
+tr.cancelled,
+.order-row-animated.completed,
+.order-row-animated.cancelled {
   animation: none !important;
   transform: none !important;
   box-shadow: none !important;
+  border-left: none !important;
+  background: transparent !important;
 }
 
 /* Estados específicos para better visual feedback */

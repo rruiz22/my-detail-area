@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { Order } from '@/hooks/useOrderManagement';
 import { safeFormatDateOnly, calculateDaysFromNow, getSystemTimezone } from '@/utils/dateUtils';
 import { getStatusRowColor, getStatusBorder } from '@/utils/statusUtils';
+import { ServicesDisplay } from '@/components/orders/ServicesDisplay';
 
 interface OrderKanbanBoardProps {
   orders: Order[];
@@ -298,6 +299,15 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                               Customer: {order.customerName}
                             </div>
                           )}
+
+                          {/* Services Badge */}
+                          <ServicesDisplay
+                            services={order.services}
+                            totalAmount={order.totalAmount || order.total_amount}
+                            dealerId={order.dealer_id}
+                            variant="kanban"
+                            className="mt-2"
+                          />
 
                           {/* Vehicle Info */}
                           {order.vehicleInfo && (

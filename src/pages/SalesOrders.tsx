@@ -210,6 +210,15 @@ export default function SalesOrders() {
         }
       }
 
+      // Optimistic update - Update UI immediately
+      const updatedOrder = orders.find(o => o.id === orderId);
+      if (updatedOrder) {
+        // Trigger immediate state update for responsive UI
+        window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+          detail: { orderId, newStatus, timestamp: Date.now() }
+        }));
+      }
+
       await updateOrder(orderId, updateData);
 
       // Update last refresh timestamp for UI
@@ -354,8 +363,7 @@ export default function SalesOrders() {
                   <div className="text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
-                      <span className="text-success">• Real-time</span>
+                      <span>Last updated: {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
                     </div>
                   </div>
                   
