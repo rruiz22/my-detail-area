@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -27,16 +27,15 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 export default function SalesOrders() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
 
   useEffect(() => {
     console.log('[RouteMount] SalesOrders mounted');
-    console.log('🔍 Debug - URL params on mount:', {
-      orderIdFromUrl,
-      hasOrderParam: !!orderIdFromUrl,
-      fullURL: window.location.href
-    });
+    if (orderIdFromUrl) {
+      console.log('🎯 Order ID detected from URL:', orderIdFromUrl);
+    }
     return () => console.log('[RouteUnmount] SalesOrders unmounted');
   }, [orderIdFromUrl]);
 
@@ -52,6 +51,7 @@ export default function SalesOrders() {
   const [previewOrder, setPreviewOrder] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [preSelectedDate, setPreSelectedDate] = useState<Date | null>(null);
+  const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
 
   const {
     orders,
@@ -70,16 +70,8 @@ export default function SalesOrders() {
 
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
-    console.log('🔍 Auto-modal effect triggered:', {
-      orderIdFromUrl,
-      ordersCount: orders.length,
-      hasPreviewOrder: !!previewOrder,
-      shouldExecute: !!(orderIdFromUrl && orders.length > 0 && !previewOrder)
-    });
-
-    if (orderIdFromUrl && orders.length > 0 && !previewOrder) {
-      console.log('🎯 Searching for order from URL:', orderIdFromUrl);
-      console.log('📋 Available orders:', orders.map(o => ({ id: o.id, orderNumber: o.orderNumber })));
+    if (orderIdFromUrl && orders.length > 0 && !hasProcessedUrlOrder) {
+      console.log('🎯 Processing order from URL (one-time):', orderIdFromUrl);
 
       // Find the order in the loaded orders
       const targetOrder = orders.find(order => order.id === orderIdFromUrl);
@@ -87,18 +79,14 @@ export default function SalesOrders() {
       if (targetOrder) {
         console.log('✅ Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
         setPreviewOrder(targetOrder);
-
-        // Clean URL parameter after opening modal (optional)
-        const url = new URL(window.location);
-        url.searchParams.delete('order');
-        window.history.replaceState({}, '', url.pathname + url.search);
+        setHasProcessedUrlOrder(true); // Prevent loop
       } else {
         console.warn('⚠️ Order not found in current orders list:', orderIdFromUrl);
-        console.warn('🔍 Order IDs in list:', orders.map(o => o.id));
         toast.error(t('orders.order_not_found'));
+        setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, orders, previewOrder, t]);
+  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -441,7 +429,13 @@ export default function SalesOrders() {
             orderType="sales"
             order={previewOrder}
             open={true}
-            onClose={() => setPreviewOrder(null)}
+            onClose={() => {
+              setPreviewOrder(null);
+              // If we came from URL parameter, redirect to clean /sales to avoid loop
+              if (orderIdFromUrl) {
+                navigate('/sales', { replace: true });
+              }
+            }}
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}
