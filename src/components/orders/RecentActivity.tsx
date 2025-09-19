@@ -30,7 +30,7 @@ export function RecentActivity({ orderId }: RecentActivityProps) {
       case 'order_created':
         return <Package className="w-4 h-4 text-green-500" />;
       case 'status_changed':
-        return <CheckCircle className="w-4 h-4 text-blue-500" />;
+        return <CheckCircle className="w-4 h-4 text-indigo-500" />;
       case 'priority_changed':
         return <AlertCircle className="w-4 h-4 text-orange-500" />;
       case 'assignment_changed':
@@ -55,7 +55,7 @@ export function RecentActivity({ orderId }: RecentActivityProps) {
       case 'order_created':
         return 'border-l-green-500';
       case 'status_changed':
-        return 'border-l-blue-500';
+        return 'border-l-indigo-500';
       case 'priority_changed':
         return 'border-l-orange-500';
       case 'assignment_changed':

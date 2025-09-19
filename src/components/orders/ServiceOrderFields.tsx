@@ -60,7 +60,7 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Wrench className="h-5 w-5 text-primary" />
+            <Wrench className="h-5 w-5 text-gray-700" />
             {t('service_orders.service_information')}
           </CardTitle>
         </CardHeader>

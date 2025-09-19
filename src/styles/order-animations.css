@@ -1,0 +1,197 @@
+/* Order Due Date Animations - Only for Active Orders */
+
+/* Animaciones para órdenes pending */
+@keyframes pulse-pending-warning {
+  0%, 100% {
+    transform: scale(1);
+    background-color: rgba(245, 158, 11, 0.08);
+    box-shadow: 0 0 0 rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    transform: scale(1.01);
+    background-color: rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+  }
+}
+
+@keyframes pulse-pending-danger {
+  0%, 100% {
+    transform: scale(1);
+    background-color: rgba(239, 68, 68, 0.08);
+    box-shadow: 0 0 0 rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    transform: scale(1.02);
+    background-color: rgba(239, 68, 68, 0.18);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+}
+
+/* Animaciones para órdenes in_progress */
+@keyframes pulse-progress-warning {
+  0%, 100% {
+    transform: scale(1);
+    background-color: rgba(249, 115, 22, 0.08);
+    box-shadow: 0 0 0 rgba(249, 115, 22, 0.3);
+  }
+  50% {
+    transform: scale(1.015);
+    background-color: rgba(249, 115, 22, 0.16);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.4);
+  }
+}
+
+@keyframes pulse-progress-danger {
+  0%, 100% {
+    transform: scale(1);
+    background-color: rgba(239, 68, 68, 0.1);
+    box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    transform: scale(1.025);
+    background-color: rgba(239, 68, 68, 0.22);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+  }
+}
+
+/* Clases de animación aplicadas dinámicamente */
+.pending.pulse-warning {
+  animation: pulse-pending-warning 2s ease-in-out infinite;
+  border-left: 3px solid rgba(245, 158, 11, 0.6);
+}
+
+.pending.pulse-danger {
+  animation: pulse-pending-danger 1.5s ease-in-out infinite;
+  border-left: 3px solid rgba(239, 68, 68, 0.7);
+}
+
+.in_progress.pulse-warning {
+  animation: pulse-progress-warning 1.8s ease-in-out infinite;
+  border-left: 3px solid rgba(249, 115, 22, 0.6);
+}
+
+.in_progress.pulse-danger {
+  animation: pulse-progress-danger 1.2s ease-in-out infinite;
+  border-left: 3px solid rgba(239, 68, 68, 0.8);
+}
+
+/* Sin animación para completed/cancelled - importante para performance */
+.completed,
+.cancelled {
+  animation: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Estados específicos para better visual feedback */
+.order-row-animated {
+  transition: all 0.3s ease-in-out;
+  border-radius: 6px;
+  margin: 1px 0;
+}
+
+/* Hover states para filas animadas */
+.pending.pulse-warning:hover,
+.pending.pulse-danger:hover,
+.in_progress.pulse-warning:hover,
+.in_progress.pulse-danger:hover {
+  animation-play-state: paused;
+  cursor: pointer;
+}
+
+/* Respeto a preferencias de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .pending,
+  .in_progress {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Mantener solo los borders para indicación visual sin animación */
+  .pending.pulse-warning {
+    border-left: 3px solid rgba(245, 158, 11, 0.8);
+    background-color: rgba(245, 158, 11, 0.05);
+  }
+
+  .pending.pulse-danger {
+    border-left: 3px solid rgba(239, 68, 68, 0.8);
+    background-color: rgba(239, 68, 68, 0.05);
+  }
+
+  .in_progress.pulse-warning {
+    border-left: 3px solid rgba(249, 115, 22, 0.8);
+    background-color: rgba(249, 115, 22, 0.05);
+  }
+
+  .in_progress.pulse-danger {
+    border-left: 3px solid rgba(239, 68, 68, 0.8);
+    background-color: rgba(239, 68, 68, 0.05);
+  }
+}
+
+/* Performance optimization - will-change para mejor rendering */
+.pending.pulse-warning,
+.pending.pulse-danger,
+.in_progress.pulse-warning,
+.in_progress.pulse-danger {
+  will-change: transform, background-color, box-shadow;
+}
+
+/* Due Date Column Centering and Typography */
+.due-date-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.due-date-countdown {
+  font-weight: 600;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.due-date-details {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+/* Enhanced centering for table cells */
+.table-due-date-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 60px;
+  padding: 12px 8px;
+}
+
+/* Better alignment for badges and icons in table */
+.due-date-indicator-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 140px;
+  margin: 0 auto;
+}
+
+/* Prevent text wrapping in badges */
+.due-date-indicator-table .badge {
+  white-space: nowrap;
+  min-width: fit-content;
+  text-align: center;
+}

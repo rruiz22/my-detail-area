@@ -1,15 +1,15 @@
-import React, { ReactNode, useEffect, useCallback, useMemo, memo, lazy, Suspense } from 'react';
+import React, { ReactNode, useEffect, useCallback, useMemo, memo } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { 
-  X, 
-  Edit2, 
-  Trash2, 
-  Clock, 
-  User, 
+import {
+  X,
+  Edit2,
+  Trash2,
+  Clock,
+  User,
   Car,
   Calendar,
   DollarSign,
@@ -22,6 +22,7 @@ import {
   Hash
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { usePermissionContext } from '@/contexts/PermissionContext';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { QRCodeDisplay } from './QRCodeDisplay';
 import { CommunicationActions } from './CommunicationActions';
@@ -37,58 +38,11 @@ import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { ErrorBoundaryModal } from './ErrorBoundaryModal';
 import { OrderTasksSection } from './OrderTasksSection';
 
-// Enhanced TypeScript interfaces for better type safety
-// Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
-interface OrderData {
-  id: string;
-  // Order identifiers (support both formats)
-  order_number?: string;
-  custom_order_number?: string;
-  customOrderNumber?: string;
-
-  // Customer information (support both formats)
-  customer_name?: string;
-  customer_phone?: string;
-  customerName?: string;
-  customerPhone?: string;
-
-  // Vehicle information (support both formats)
-  vehicle_year?: string | number;
-  vehicle_make?: string;
-  vehicle_model?: string;
-  vehicle_vin?: string;
-  stock_number?: string;
-  vehicleYear?: string | number;
-  vehicleMake?: string;
-  vehicleModel?: string;
-  vehicleVin?: string;
-  stockNumber?: string;
-
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
-  dealer_id: string | number;
-  dealership_name?: string;
-  advisor?: string;
-  salesperson?: string;
-  notes?: string;
-  internal_notes?: string;
-  priority?: string;
-  created_at?: string;
-  updated_at?: string;
-  estimated_completion?: string;
-  qr_slug?: string;
-  short_url?: string;
-  qr_code_url?: string;
-  short_link?: string;
-}
-
-interface ModalData {
-  attachments: any[];
-  activities: any[];
-  comments: any[];
-  followers: any[];
-  analytics: any;
-  userType: 'detail' | 'regular' | null;
-}
+// Import comprehensive order types for consistency
+import type {
+  OrderData,
+  OrderModalData as ModalData
+} from '@/types/order';
 
 interface EnhancedOrderDetailLayoutProps {
   order: OrderData;
@@ -103,33 +57,74 @@ interface EnhancedOrderDetailLayoutProps {
   dataError?: string | null;
 }
 
-// Lazily loaded components for better performance
-const VehicleInfoBlockMemo = lazy(() => 
-  import('./VehicleInfoBlock').then(module => ({ default: memo(module.VehicleInfoBlock) }))
-);
-const ScheduleViewBlockMemo = lazy(() => 
-  import('./ScheduleViewBlock').then(module => ({ default: memo(module.ScheduleViewBlock) }))
-);
-const SimpleNotesDisplayMemo = lazy(() => 
-  import('./SimpleNotesDisplay').then(module => ({ default: memo(module.SimpleNotesDisplay) }))
-);
-const PublicCommentsBlockMemo = lazy(() => 
-  import('./PublicCommentsBlock').then(module => ({ default: memo(module.PublicCommentsBlock) }))
-);
-const InternalNotesBlockMemo = lazy(() => 
-  import('./InternalNotesBlock').then(module => ({ default: memo(module.InternalNotesBlock) }))
-);
-const EnhancedQRCodeBlockMemo = lazy(() => 
-  import('./EnhancedQRCodeBlock').then(module => ({ default: memo(module.EnhancedQRCodeBlock) }))
-);
-const FollowersBlockMemo = lazy(() => 
-  import('./FollowersBlock').then(module => ({ default: memo(module.FollowersBlock) }))
-);
-const RecentActivityBlockMemo = lazy(() => 
-  import('./RecentActivityBlock').then(module => ({ default: memo(module.RecentActivityBlock) }))
-);
+// Direct imports for performance - no lazy loading delays
+import { VehicleInfoBlock } from './VehicleInfoBlock';
+import { ScheduleViewBlock } from './ScheduleViewBlock';
+import { SimpleNotesDisplay } from './SimpleNotesDisplay';
+import { PublicCommentsBlock } from './PublicCommentsBlock';
+import { InternalNotesBlock } from './InternalNotesBlock';
+import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
+import { FollowersBlock } from './FollowersBlock';
+import { RecentActivityBlock } from './RecentActivityBlock';
 
-// Memoized main component with performance monitoring
+// Performance-optimized memoized components with custom comparison functions
+const VehicleInfoBlockMemo = memo(VehicleInfoBlock, (prevProps, nextProps) => {
+  // Only re-render if vehicle-specific properties change
+  const vehicleFields = ['vehicleYear', 'vehicle_year', 'vehicleMake', 'vehicle_make',
+                        'vehicleModel', 'vehicle_model', 'vehicleVin', 'vehicle_vin',
+                        'vehicleColor', 'vehicle_color', 'vehicleMileage', 'vehicle_mileage'];
+
+  return vehicleFields.every(field =>
+    prevProps.order[field as keyof OrderData] === nextProps.order[field as keyof OrderData]
+  );
+});
+
+const ScheduleViewBlockMemo = memo(ScheduleViewBlock, (prevProps, nextProps) => {
+  // Only re-render if schedule-related properties change
+  const scheduleFields = ['estimated_completion', 'actual_completion', 'status', 'assigned_to'];
+
+  return scheduleFields.every(field =>
+    prevProps.order[field as keyof OrderData] === nextProps.order[field as keyof OrderData]
+  );
+});
+
+const SimpleNotesDisplayMemo = memo(SimpleNotesDisplay, (prevProps, nextProps) => {
+  // Only re-render if notes change
+  return prevProps.order.notes === nextProps.order.notes &&
+         prevProps.order.description === nextProps.order.description;
+});
+
+const PublicCommentsBlockMemo = memo(PublicCommentsBlock, (prevProps, nextProps) => {
+  // Only re-render if orderId changes (comments managed internally)
+  return prevProps.orderId === nextProps.orderId;
+});
+
+const InternalNotesBlockMemo = memo(InternalNotesBlock, (prevProps, nextProps) => {
+  // Only re-render if orderId changes (notes managed internally)
+  return prevProps.orderId === nextProps.orderId;
+});
+
+const EnhancedQRCodeBlockMemo = memo(EnhancedQRCodeBlock, (prevProps, nextProps) => {
+  // Only re-render if QR-related properties change
+  return prevProps.orderId === nextProps.orderId &&
+         prevProps.orderNumber === nextProps.orderNumber &&
+         prevProps.dealerId === nextProps.dealerId &&
+         prevProps.qrCodeUrl === nextProps.qrCodeUrl &&
+         prevProps.shortLink === nextProps.shortLink;
+});
+
+const FollowersBlockMemo = memo(FollowersBlock, (prevProps, nextProps) => {
+  // Only re-render if identifiers change (followers managed internally)
+  return prevProps.orderId === nextProps.orderId &&
+         prevProps.dealerId === nextProps.dealerId;
+});
+
+const RecentActivityBlockMemo = memo(RecentActivityBlock, (prevProps, nextProps) => {
+  // Only re-render if orderId changes (activities managed internally)
+  return prevProps.orderId === nextProps.orderId;
+});
+
+// Memoized main component with custom comparison function
 export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout({
   order,
   open,
@@ -143,6 +138,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
   dataError
 }: EnhancedOrderDetailLayoutProps) {
   const { t } = useTranslation();
+  const { hasPermission } = usePermissionContext();
   const { startMeasure, endMeasure, recordMetric } = usePerformanceMonitor();
 
   // Track modal rendering performance
@@ -172,8 +168,8 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
     }
   }, [open]);
 
-  // Memoize utility functions
-  const formatCurrency = useMemo(() => (amount: number | null | undefined) => {
+  // Optimized utility functions with stable references
+  const formatCurrency = useCallback((amount: number | null | undefined) => {
     if (!amount) return 'N/A';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -181,7 +177,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
     }).format(amount);
   }, []);
 
-  const getPriorityColor = useMemo(() => (priority: string) => {
+  const getPriorityColor = useCallback((priority: string) => {
     switch (priority?.toLowerCase()) {
       case 'high': return 'destructive';
       case 'medium': return 'secondary';
@@ -197,13 +193,54 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
     }
   }, [onStatusChange, order.id]);
 
-  // Memoize vehicle display name
+  // Optimized vehicle display name with reduced dependencies
   const vehicleDisplayName = useMemo(() => {
     const year = order.vehicleYear || order.vehicle_year || '';
     const make = order.vehicleMake || order.vehicle_make || '';
     const model = order.vehicleModel || order.vehicle_model || '';
     return `${year} ${make} ${model}`.trim() || 'Unknown Vehicle';
-  }, [order.vehicleYear, order.vehicle_year, order.vehicleMake, order.vehicle_make, order.vehicleModel, order.vehicle_model]);
+  }, [
+    order.vehicleYear,
+    order.vehicle_year,
+    order.vehicleMake,
+    order.vehicle_make,
+    order.vehicleModel,
+    order.vehicle_model
+  ]);
+
+  // Memoized order identifiers to prevent child re-renders
+  const orderIdentifiers = useMemo(() => ({
+    id: order.id,
+    orderNumber: order.customOrderNumber || order.order_number || order.custom_order_number,
+    dealerId: String(order.dealer_id)
+  }), [order.id, order.customOrderNumber, order.order_number, order.custom_order_number, order.dealer_id]);
+
+  // Memoized QR code props to prevent unnecessary re-renders
+  const qrCodeProps = useMemo(() => ({
+    orderId: order.id,
+    orderNumber: orderIdentifiers.orderNumber,
+    dealerId: orderIdentifiers.dealerId,
+    qrCodeUrl: order.qr_code_url,
+    shortLink: order.short_link
+  }), [order.id, orderIdentifiers.orderNumber, orderIdentifiers.dealerId, order.qr_code_url, order.short_link]);
+
+  // Memoized customer info to prevent unnecessary re-renders
+  const customerInfo = useMemo(() => ({
+    name: order.customerName || order.customer_name || 'Customer',
+    phone: order.customerPhone || order.customer_phone || ''
+  }), [order.customerName, order.customer_name, order.customerPhone, order.customer_phone]);
+
+  // Check if user can edit orders
+  const canEditOrder = useMemo(() => {
+    return onEdit && hasPermission('sales_orders', 'write');
+  }, [onEdit, hasPermission]);
+
+  // Handle edit button click
+  const handleEdit = useCallback(() => {
+    if (canEditOrder) {
+      onEdit(order);
+    }
+  }, [canEditOrder, onEdit, order]);
 
   if (!order) return null;
 
@@ -228,13 +265,37 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
           <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
             <div className="p-6" id="modal-top">
               {/* Professional Topbar - Like Reference Image */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-6 shadow-sm">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
                 <div className="flex items-center justify-center text-center">
                   <div className="space-y-2">
-                    {/* Order Number - Prominent */}
-                    <h1 className="text-3xl font-bold text-gray-900">
-                      {order.customOrderNumber || order.order_number || order.custom_order_number || 'New Order'}
-                    </h1>
+                    {/* Order Number Badge with Edit Button */}
+                    <div className="flex justify-center items-center gap-4 mb-4">
+                      <div
+                        className="inline-flex items-center px-8 py-4 bg-gray-900 text-white text-2xl font-bold rounded-lg shadow-lg hover:bg-gray-800 transition-colors"
+                        style={{
+                          fontSize: '1.5rem',
+                          fontWeight: 'bold',
+                          zIndex: 10,
+                          minWidth: '200px',
+                          textAlign: 'center'
+                        }}
+                      >
+                        #{order.customOrderNumber || order.order_number || order.custom_order_number || 'New Order'}
+                      </div>
+
+                      {/* Edit Button */}
+                      {canEditOrder && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleEdit}
+                          className="flex items-center gap-2 bg-white hover:bg-gray-50 border-gray-300 text-gray-700 hover:text-gray-900 shadow-sm"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                          {t('orders.edit')}
+                        </Button>
+                      )}
+                    </div>
                     
                     {/* Business Context - Centered */}
                     <div className="text-lg text-gray-700">
@@ -248,7 +309,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                     {/* Vehicle + Status Row - Centered */}
                     <div className="flex items-center justify-center gap-6 pt-2">
                       <div className="flex items-center gap-2">
-                        <Car className="h-5 w-5 text-blue-600" />
+                        <Car className="h-5 w-5 text-gray-700" />
                         <span className="font-semibold text-gray-800">
                           {vehicleDisplayName}
                         </span>
@@ -277,27 +338,21 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                 <div className="space-y-6">
                   {/* Row 1: Vehicle Info + Schedule View (Two blocks side by side) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Suspense fallback={<SkeletonLoader variant="vehicle-info" />}>
-                      <VehicleInfoBlockMemo order={order} />
-                    </Suspense>
-                    <Suspense fallback={<SkeletonLoader variant="schedule" />}>
-                      <ScheduleViewBlockMemo order={order} />
-                    </Suspense>
+                    <VehicleInfoBlockMemo order={order} />
+                    <ScheduleViewBlockMemo
+                      order={order}
+                      onStatusUpdate={handleStatusChange}
+                      enableInteractiveFeatures={true}
+                    />
                   </div>
 
                   {/* Row 2: Simple Notes Display (Full width) */}
-                  <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                    <SimpleNotesDisplayMemo order={order} />
-                  </Suspense>
+                  <SimpleNotesDisplayMemo order={order} />
 
                   {/* Row 3: Team Communication (Full width like order notes) */}
                   <div className="space-y-4">
-                    <Suspense fallback={<SkeletonLoader variant="comments" />}>
-                      <PublicCommentsBlockMemo orderId={order.id} />
-                    </Suspense>
-                    <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                      <InternalNotesBlockMemo orderId={order.id} />
-                    </Suspense>
+                    <PublicCommentsBlockMemo orderId={orderIdentifiers.id} />
+                    <InternalNotesBlockMemo orderId={orderIdentifiers.id} />
                   </div>
                 </div>
 
@@ -307,15 +362,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />
                   ) : (
-                    <Suspense fallback={<SkeletonLoader variant="qr-code" />}>
-                      <EnhancedQRCodeBlockMemo
-                        orderId={order.id}
-                        orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number}
-                        dealerId={String(order.dealer_id)}
-                        qrCodeUrl={order.qr_code_url}
-                        shortLink={order.short_link}
-                      />
-                    </Suspense>
+                    <EnhancedQRCodeBlockMemo {...qrCodeProps} />
                   )}
 
                   {/* Chat and Communication Actions */}
@@ -328,10 +375,10 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                     </CardHeader>
                     <CardContent>
                       <ChatAndSMSActions
-                        orderId={order.id}
-                        orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number}
-                        customerPhone={order.customerPhone || order.customer_phone || ''}
-                        dealerId={Number(order.dealer_id)}
+                        orderId={orderIdentifiers.id}
+                        orderNumber={orderIdentifiers.orderNumber}
+                        customerPhone={customerInfo.phone}
+                        dealerId={Number(orderIdentifiers.dealerId)}
                         variant="compact"
                       />
                     </CardContent>
@@ -341,32 +388,26 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                   {isLoadingData ? (
                     <SkeletonLoader variant="notes" />
                   ) : (
-                    <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                      <FollowersBlockMemo
-                        orderId={order.id}
-                        dealerId={String(order.dealer_id)}
-                      />
-                    </Suspense>
+                    <FollowersBlockMemo
+                      orderId={orderIdentifiers.id}
+                      dealerId={orderIdentifiers.dealerId}
+                    />
                   )}
 
                   {/* Tasks & Reminders Section */}
-                  <Suspense fallback={<SkeletonLoader variant="notes" />}>
-                    <OrderTasksSection
-                      orderId={order.id}
-                      orderNumber={order.customOrderNumber || order.order_number || order.custom_order_number || order.id}
-                      customerName={order.customerName || order.customer_name}
-                    />
-                  </Suspense>
+                  <OrderTasksSection
+                    orderId={orderIdentifiers.id}
+                    orderNumber={orderIdentifiers.orderNumber || orderIdentifiers.id}
+                    customerName={customerInfo.name}
+                  />
 
                   {/* Enhanced Recent Activity Block */}
                   {isLoadingData ? (
                     <SkeletonLoader variant="activity" />
                   ) : (
-                    <Suspense fallback={<SkeletonLoader variant="activity" />}>
-                      <RecentActivityBlockMemo
-                        orderId={order.id}
-                      />
-                    </Suspense>
+                    <RecentActivityBlockMemo
+                      orderId={orderIdentifiers.id}
+                    />
                   )}
                 </div>
               </div>
@@ -389,5 +430,36 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
         </div>
       </DialogContent>
     </Dialog>
+  );
+}, (prevProps, nextProps) => {
+  // Custom comparison function for EnhancedOrderDetailLayout
+  // Only re-render if essential props change
+  return (
+    prevProps.open === nextProps.open &&
+    prevProps.order.id === nextProps.order.id &&
+    prevProps.order.status === nextProps.order.status &&
+    prevProps.order.notes === nextProps.order.notes &&
+    prevProps.order.internal_notes === nextProps.order.internal_notes &&
+    prevProps.isLoadingData === nextProps.isLoadingData &&
+    prevProps.dataError === nextProps.dataError &&
+    // Check vehicle info for changes
+    prevProps.order.vehicleYear === nextProps.order.vehicleYear &&
+    prevProps.order.vehicleMake === nextProps.order.vehicleMake &&
+    prevProps.order.vehicleModel === nextProps.order.vehicleModel &&
+    prevProps.order.vehicleVin === nextProps.order.vehicleVin &&
+    // Check customer info for changes
+    prevProps.order.customerName === nextProps.order.customerName &&
+    prevProps.order.customerPhone === nextProps.order.customerPhone &&
+    // Check critical order fields
+    prevProps.order.estimated_completion === nextProps.order.estimated_completion &&
+    prevProps.order.assigned_to === nextProps.order.assigned_to &&
+    prevProps.order.qr_code_url === nextProps.order.qr_code_url &&
+    prevProps.order.short_link === nextProps.order.short_link &&
+    // Function references (should be stable with useCallback)
+    prevProps.onClose === nextProps.onClose &&
+    prevProps.onEdit === nextProps.onEdit &&
+    prevProps.onDelete === nextProps.onDelete &&
+    prevProps.onStatusChange === nextProps.onStatusChange &&
+    prevProps.onNotesUpdate === nextProps.onNotesUpdate
   );
 });

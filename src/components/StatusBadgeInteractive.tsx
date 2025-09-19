@@ -21,10 +21,10 @@ interface StatusBadgeInteractiveProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'pending', label: 'status.pending', color: 'bg-warning text-warning-foreground' },
-  { value: 'in_progress', label: 'status.in_progress', color: 'bg-blue-100 text-blue-800' },
-  { value: 'completed', label: 'status.completed', color: 'bg-success text-success-foreground' },
-  { value: 'cancelled', label: 'status.cancelled', color: 'bg-destructive text-destructive-foreground' },
+  { value: 'pending', label: 'common.status.pending', color: 'bg-warning text-warning-foreground' },
+  { value: 'in_progress', label: 'common.status.in_progress', color: 'bg-blue-100 text-blue-800' },
+  { value: 'completed', label: 'common.status.completed', color: 'bg-success text-success-foreground' },
+  { value: 'cancelled', label: 'common.status.cancelled', color: 'bg-destructive text-destructive-foreground' },
 ];
 
 export function StatusBadgeInteractive({ 

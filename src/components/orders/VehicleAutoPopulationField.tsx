@@ -35,7 +35,7 @@ export const VehicleAutoPopulationField: React.FC<VehicleAutoPopulationFieldProp
   const getSourceIcon = (source: string) => {
     switch (source) {
       case 'inventory': return <Car className="h-4 w-4 text-green-600" />;
-      case 'vin_api': return <Zap className="h-4 w-4 text-blue-600" />;
+      case 'vin_api': return <Zap className="h-4 w-4 text-indigo-500" />;
       default: return null;
     }
   };

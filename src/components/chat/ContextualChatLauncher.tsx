@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { supabase } from '@/integrations/supabase/client';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +33,8 @@ interface ContextualChatLauncherProps {
   entityType: string;
   entityId: string;
   entityName?: string;
-  customerPhone?: string;
+  assignedUserId?: string;
+  assignedUserName?: string;
   variant?: 'default' | 'compact' | 'icon';
   className?: string;
 }
@@ -41,18 +43,58 @@ export function ContextualChatLauncher({
   entityType,
   entityId,
   entityName,
-  customerPhone,
+  assignedUserId,
+  assignedUserName,
   variant = 'default',
   className = ''
 }: ContextualChatLauncherProps) {
-  const { openContextualChat, sendQuickSMS } = useGlobalChat();
+  const { openContextualChat, openDirectMessage, sendQuickSMS } = useGlobalChat();
   const [showSMSDialog, setShowSMSDialog] = useState(false);
   const [smsMessage, setSmsMessage] = useState('');
   const [customPhone, setCustomPhone] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [assignedUserPhone, setAssignedUserPhone] = useState('');
+  const [loadingUserInfo, setLoadingUserInfo] = useState(false);
+
+  // Fetch assigned user contact information
+  useEffect(() => {
+    const fetchAssignedUserInfo = async () => {
+      if (!assignedUserId) return;
+
+      setLoadingUserInfo(true);
+      try {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('phone, email, first_name, last_name')
+          .eq('id', assignedUserId)
+          .single();
+
+        if (profile && !error) {
+          setAssignedUserPhone(profile.phone || '');
+          console.log('📞 Assigned user contact info loaded:', {
+            name: `${profile.first_name} ${profile.last_name}`,
+            phone: profile.phone,
+            email: profile.email
+          });
+        }
+      } catch (error) {
+        console.warn('Could not fetch assigned user info:', error);
+      } finally {
+        setLoadingUserInfo(false);
+      }
+    };
+
+    fetchAssignedUserInfo();
+  }, [assignedUserId]);
 
   const handleStartChat = () => {
-    openContextualChat(entityType, entityId);
+    if (assignedUserId) {
+      // Open direct message with assigned user
+      openDirectMessage(assignedUserId);
+    } else {
+      // Fallback to contextual chat if no assigned user
+      openContextualChat(entityType, entityId);
+    }
   };
 
   const handleSendSMS = async () => {
@@ -65,7 +107,7 @@ export function ContextualChatLauncher({
       return;
     }
 
-    const phoneToUse = customPhone || customerPhone;
+    const phoneToUse = customPhone || assignedUserPhone;
     if (!phoneToUse) {
       toast({
         title: "Error", 
@@ -137,12 +179,13 @@ export function ContextualChatLauncher({
             <MessageCircle className="h-4 w-4" />
           </Button>
           
-          {customerPhone && (
+          {assignedUserPhone && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowSMSDialog(true)}
               className="h-8 w-8 p-0"
+              title={`Send SMS to ${assignedUserName || 'assigned user'}`}
             >
               <Phone className="h-4 w-4" />
             </Button>
@@ -152,13 +195,13 @@ export function ContextualChatLauncher({
         <Dialog open={showSMSDialog} onOpenChange={setShowSMSDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Send SMS</DialogTitle>
+              <DialogTitle>Send SMS to {assignedUserName || 'Assigned User'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
                 <Label>Phone Number</Label>
                 <Input
-                  value={customPhone || customerPhone || ''}
+                  value={customPhone || assignedUserPhone || ''}
                   onChange={(e) => setCustomPhone(e.target.value)}
                   placeholder="Enter phone number"
                 />
@@ -202,18 +245,18 @@ export function ContextualChatLauncher({
           
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={handleStartChat}>
-              <Users className="h-4 w-4 mr-2" />
-              Start Team Chat
+              <MessageCircle className="h-4 w-4 mr-2" />
+              {assignedUserId ? `Message ${assignedUserName || 'Assigned User'}` : 'Start Team Chat'}
             </DropdownMenuItem>
-            
-            {customerPhone && (
+
+            {assignedUserPhone && (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setShowSMSDialog(true)}>
                   <Phone className="h-4 w-4 mr-2" />
-                  Send SMS
+                  Send SMS to {assignedUserName || 'Assigned User'}
                   <Badge variant="secondary" className="ml-2 text-xs">
-                    {customerPhone}
+                    {assignedUserPhone}
                   </Badge>
                 </DropdownMenuItem>
               </>
@@ -225,14 +268,14 @@ export function ContextualChatLauncher({
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                Send SMS {entityName && `- ${entityName}`}
+                Send SMS to {assignedUserName || 'Assigned User'} {entityName && `- ${entityName}`}
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
                 <Label>Phone Number</Label>
                 <Input
-                  value={customPhone || customerPhone || ''}
+                  value={customPhone || assignedUserPhone || ''}
                   onChange={(e) => setCustomPhone(e.target.value)}
                   placeholder="Enter phone number"
                 />
@@ -291,10 +334,10 @@ export function ContextualChatLauncher({
           Start Discussion
         </Button>
         
-        {customerPhone && (
+        {assignedUserPhone && (
           <Button variant="outline" onClick={() => setShowSMSDialog(true)}>
             <Phone className="h-4 w-4 mr-2" />
-            Send SMS
+            SMS {assignedUserName || 'Assigned User'}
           </Button>
         )}
       </div>
@@ -303,7 +346,7 @@ export function ContextualChatLauncher({
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              Send SMS Message {entityName && `- ${entityName}`}
+              Send SMS to {assignedUserName || 'Assigned User'} {entityName && `- ${entityName}`}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">

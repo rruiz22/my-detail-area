@@ -291,96 +291,138 @@ This is an enterprise-grade dealership management system with comprehensive inte
 
 ## 🤖 Claude Code Specialized Agents & Workflows
 
-### Core Development Agents
-- **`coder`** - Implementation specialist for writing clean, efficient code
-- **`reviewer`** - Code review and quality assurance specialist  
-- **`tester`** - Comprehensive testing and quality assurance specialist
-- **`planner`** - Strategic planning and task orchestration agent
-- **`researcher`** - Deep research and information gathering specialist
+### **Frontend Agents (4)**
+- **`react-architect`** - React/TypeScript architecture specialist with component composition, hooks patterns, and performance patterns
+- **`ui-designer`** - UI/UX implementation specialist enforcing Notion design system (flat colors, muted palette, no gradients)
+- **`state-manager`** - State management specialist (TanStack Query, Context API, Redux, Zustand, caching strategies)
+- **`performance-optimizer`** - Frontend performance and Core Web Vitals expert (bundle analysis, lazy loading, optimization)
 
-### Architecture & Design Specialists
-- **`system-architect`** - Expert agent for system architecture design and technical decisions
-- **`code-analyzer`** - Advanced code quality analysis for comprehensive reviews
-- **`production-validator`** - Production validation ensuring deployment readiness
+### **Backend Agents (4)**
+- **`api-architect`** - REST/GraphQL API design and Supabase integration specialist (OpenAPI specs, middleware design)
+- **`database-expert`** - Database design, optimization, and migrations specialist (PostgreSQL, RLS, query optimization)
+- **`auth-security`** - Authentication, authorization, and security expert (Supabase Auth, JWT, RBAC, security audits)
+- **`edge-functions`** - Supabase Edge Functions and serverless specialist (Deno, cold start optimization)
 
-### Domain-Specific Specialists
-- **`backend-dev`** - Specialized agent for backend API development (REST/GraphQL)
-- **`mobile-dev`** - Expert agent for React Native mobile development (iOS/Android)
-- **`ml-developer`** - Machine learning model development and deployment specialist
-- **`api-docs`** - Expert for creating and maintaining OpenAPI/Swagger documentation
+### **Quality Assurance Agents (3)**
+- **`test-engineer`** - Comprehensive testing specialist (Vitest, Testing Library, Playwright, TDD, coverage analysis)
+- **`code-reviewer`** - Code review with automated design system validation and security review
+- **`accessibility-auditor`** - Web accessibility and WCAG 2.1 AA compliance expert (screen reader testing, keyboard navigation)
 
-### DevOps & Automation
-- **`cicd-engineer`** - GitHub Actions CI/CD pipeline creation and optimization
-- **`workflow-automation`** - Intelligent workflow automation with adaptive coordination
-- **`pr-manager`** - Comprehensive pull request management with automated workflows
-- **`issue-tracker`** - Intelligent issue management and project coordination
-- **`release-manager`** - Automated release coordination and deployment
+### **DevOps Agents (3)**
+- **`deployment-engineer`** - CI/CD pipelines and deployment automation (Railway, Vercel, GitHub Actions, blue-green deployments)
+- **`monitoring-specialist`** - Application monitoring and performance tracking (APM, log aggregation, alerting)
+- **`infrastructure-provisioner`** - Infrastructure as Code and cloud provisioning (Terraform, Docker, cloud architecture)
 
-### Methodology Specialists
-- **`sparc-coder`** - SPARC methodology (Specification, Pseudocode, Architecture, Refinement, Completion)
-- **`tdd-london-swarm`** - TDD London School specialist for mock-driven development
+### **Domain-Specific Agents (3)**
+- **`dealership-expert`** - Automotive dealership business logic specialist (CRM, inventory, compliance, industry workflows)
+- **`i18n-specialist`** - Multi-language internationalization expert (EN/ES/PT-BR, translation management, locale handling)
+- **`analytics-implementer`** - Business intelligence and analytics tracking (event tracking, dashboards, funnel analysis)
 
 ### Agent Usage Patterns
 
 #### Single Agent Tasks
 ```typescript
 // Task(description, agentType)
-Task("Analyze current translation coverage and identify optimization opportunities", "code-analyzer")
-Task("Design contact groups database schema with proper relationships", "system-architect") 
-Task("Create comprehensive test suite for VIN scanner functionality", "tester")
-Task("Review security patterns in authentication and permission system", "reviewer")
+Task("Analyze current translation coverage and identify optimization opportunities", "code-reviewer")
+Task("Design contact groups database schema with proper relationships", "database-expert")
+Task("Create comprehensive test suite for VIN scanner functionality", "test-engineer")
+Task("Review security patterns in authentication and permission system", "auth-security")
+Task("Implement Notion-style dashboard components", "ui-designer")
+Task("Optimize React component performance and bundle size", "performance-optimizer")
 ```
 
 #### Multi-Agent Workflows
 ```typescript
 // Parallel agent coordination for complex features
-Task("Research best practices for theme customization in enterprise apps", "researcher")
-Task("Design theme studio architecture with performance considerations", "system-architect") 
-Task("Implement theme studio with real-time preview functionality", "coder")
-Task("Create test coverage for theme customization across all components", "tester")
-Task("Review theme implementation for security and performance", "reviewer")
+Task("Research automotive dealership requirements for theme customization", "dealership-expert")
+Task("Design theme studio architecture with real-time preview", "react-architect")
+Task("Implement theme studio with Notion design system compliance", "ui-designer")
+Task("Create test coverage for theme customization across all components", "test-engineer")
+Task("Review theme implementation for security and performance", "code-reviewer")
 ```
 
-#### Methodology-Driven Development
+#### Coordinated Development
 ```typescript
-// SPARC methodology for systematic development
-Task("Apply SPARC methodology to implement contact groups feature", "sparc-coder")
-Task("Use TDD approach for new order communication features", "tdd-london-swarm")
+// Business domain + technical implementation
+Task("Implement vehicle search with dealership-specific filtering", "dealership-expert,react-architect,ui-designer")
+Task("Create multilingual order management interface", "i18n-specialist,ui-designer,state-manager")
+Task("Build analytics dashboard with automotive KPIs", "analytics-implementer,react-architect,performance-optimizer")
 ```
 
 ### Workflow Recommendations
 
 #### For New Features
-1. **Planner** → Strategic planning and requirements analysis
-2. **System-Architect** → Technical design and architecture
-3. **Coder** → Implementation with enterprise standards
-4. **Tester** → Comprehensive test coverage
-5. **Reviewer** → Quality assurance and optimization
+1. **dealership-expert** → Business requirements and automotive workflow analysis
+2. **react-architect** → Component architecture and technical design
+3. **ui-designer** → Notion-compliant UI implementation with muted palette
+4. **test-engineer** → Comprehensive test coverage (unit, integration, e2e)
+5. **code-reviewer** → Quality assurance and design system compliance
+6. **deployment-engineer** → Production deployment and monitoring
 
-#### For Bug Fixes  
-1. **Code-Analyzer** → Root cause analysis and impact assessment
-2. **Coder** → Targeted fix implementation
-3. **Tester** → Regression testing and validation
+#### For Bug Fixes
+1. **code-reviewer** → Root cause analysis and impact assessment
+2. **react-architect** or **api-architect** → Targeted fix implementation
+3. **test-engineer** → Regression testing and validation
+4. **accessibility-auditor** → Accessibility impact check (if UI-related)
 
 #### For Performance Optimization
-1. **Code-Analyzer** → Performance bottleneck identification
-2. **System-Architect** → Optimization strategy design
-3. **Coder** → Performance improvements implementation
-4. **Production-Validator** → Production readiness validation
+1. **performance-optimizer** → Performance bottleneck identification and Core Web Vitals analysis
+2. **react-architect** → Architecture optimization strategy
+3. **database-expert** → Query and schema optimization (if backend-related)
+4. **monitoring-specialist** → Performance monitoring and alerting setup
 
 #### For API Development
-1. **Backend-Dev** → API design and implementation
-2. **API-Docs** → OpenAPI documentation creation
-3. **Tester** → API testing and validation
+1. **api-architect** → REST/GraphQL API design and Supabase integration
+2. **database-expert** → Schema design and RLS policies
+3. **auth-security** → Authentication and authorization implementation
+4. **test-engineer** → API testing and validation
+
+#### For Internationalization
+1. **i18n-specialist** → Translation strategy and implementation (EN/ES/PT-BR)
+2. **ui-designer** → Responsive design for different locales
+3. **test-engineer** → Multi-language testing and validation
+
+#### For Analytics & Business Intelligence
+1. **analytics-implementer** → Event tracking and KPI dashboard design
+2. **dealership-expert** → Automotive-specific metrics and reporting requirements
+3. **react-architect** → Dashboard architecture and data visualization
+4. **performance-optimizer** → Analytics performance optimization
 
 ### Integration with Project Standards
 
 All agents understand and follow:
-- **Translation requirements** - 100% coverage with 3-language support
-- **Permission patterns** - Role-based access control implementation
-- **Component architecture** - shadcn/ui + feature-based organization
-- **Data flow patterns** - Supabase integration standards
-- **Enterprise design** - Professional UI/UX requirements
-- **State persistence** - localStorage integration patterns
+- **Translation requirements** - 100% coverage with 3-language support (EN/ES/PT-BR)
+- **Permission patterns** - Role-based access control (system_admin > dealer_admin > dealer_manager > dealer_user)
+- **Component architecture** - shadcn/ui + Radix UI primitives + feature-based organization
+- **Data flow patterns** - Supabase integration (PostgreSQL + Auth + Edge Functions + Real-time)
+- **Notion design system** - Flat colors, muted palette, NO gradients, approved color tokens
+- **State persistence** - Advanced localStorage with tab memory and debounced writes
+- **Port configuration** - Exclusive port 8080 with strictPort: true
+- **Testing standards** - Vitest + Testing Library + Playwright E2E coverage
 
-Use these agents to maintain high development velocity while ensuring enterprise-grade quality, security, and maintainability throughout the My Detail Area system.
+### Design System Enforcement (Automated)
+
+**Forbidden Patterns** (all frontend agents enforce):
+- ❌ **NO GRADIENTS**: `linear-gradient()`, `radial-gradient()`, `conic-gradient()`
+- ❌ **NO STRONG BLUES**: `#0066cc`, `#0099ff`, `#3366ff`, `blue-600+` variants
+- ❌ **NO BRIGHT COLORS**: Avoid saturated primary colors
+
+**Approved Notion Color Palette**:
+```css
+/* Gray-based foundation */
+--gray-50: #f9fafb;   /* Backgrounds */
+--gray-100: #f3f4f6;  /* Subtle backgrounds */
+--gray-200: #e5e7eb;  /* Borders */
+--gray-300: #d1d5db;  /* Disabled states */
+--gray-500: #6b7280;  /* Secondary text */
+--gray-700: #374151;  /* Primary text */
+--gray-900: #111827;  /* Headings */
+
+/* Muted accents only */
+--emerald-500: #10b981;  /* Success */
+--amber-500: #f59e0b;    /* Warning */
+--red-500: #ef4444;      /* Error */
+--indigo-500: #6366f1;   /* Info (muted) */
+```
+
+Use these 17 specialized agents to maintain high development velocity while ensuring enterprise-grade quality, security, maintainability, and strict design system compliance throughout the My Detail Area dealership management system.

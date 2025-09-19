@@ -110,20 +110,30 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         });
 
         if (shortLinkResponse.ok) {
-          const shortLinkData = await shortLinkResponse.json();
+          // Check if response is JSON before parsing
+          const contentType = shortLinkResponse.headers.get('content-type');
 
-          if (shortLinkData.error === 0) {
-            // Success response from mda.to API
-            shortLink = shortLinkData.data?.shorturl || `https://mda.to/${slug}`;
-            console.log(`✅ mda.to API success: ${shortLink}`);
+          if (contentType && contentType.includes('application/json')) {
+            const shortLinkData = await shortLinkResponse.json();
+
+            if (shortLinkData.error === 0) {
+              // Success response from mda.to API
+              shortLink = shortLinkData.data?.shorturl || `https://mda.to/${slug}`;
+              console.log(`✅ mda.to API success: ${shortLink}`);
+            } else {
+              // API returned error
+              console.warn(`⚠️ mda.to API error: ${shortLinkData.message || 'Unknown error'}`);
+              console.log(`🔄 Using fallback URL`);
+            }
           } else {
-            // API returned error
-            console.warn(`⚠️ mda.to API error: ${shortLinkData.message || 'Unknown error'}`);
+            // Response is not JSON (likely HTML error page)
+            const responseText = await shortLinkResponse.text();
+            console.error(`❌ mda.to API returned non-JSON response (${contentType}):`, responseText.substring(0, 200));
             console.log(`🔄 Using fallback URL`);
           }
         } else {
           const errorText = await shortLinkResponse.text();
-          console.error(`❌ mda.to API HTTP ${shortLinkResponse.status}: ${errorText}`);
+          console.error(`❌ mda.to API HTTP ${shortLinkResponse.status}: ${errorText.substring(0, 200)}`);
           console.log(`🔄 Using fallback URL`);
         }
       } catch (err: any) {

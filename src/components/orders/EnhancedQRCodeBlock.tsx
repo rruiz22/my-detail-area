@@ -193,7 +193,7 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
     return shortLink || qrData?.shortUrl || '';
   }, [shortLink, qrData?.shortUrl]);
 
-  // Memoize analytics display formatting
+  // Memoize analytics display formatting (keep for system, don't display)
   const formattedAnalytics = useMemo(() => {
     if (!analytics) return null;
 
@@ -208,7 +208,7 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   return (
     <div className="bg-muted/30 p-4 rounded-lg">
       <div className="flex items-center gap-2 mb-4">
-        <QrCode className="h-5 w-5 text-primary" />
+        <QrCode className="h-5 w-5 text-gray-700" />
         <h3 className="font-semibold text-base">{t('orders.qr_code', 'QR Code')} & {t('orders.short_link', 'Short Link')}</h3>
       </div>
 
@@ -244,8 +244,8 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
         if (qrGenerationStatus === 'generating' || loading) {
           return (
             <div className="text-center py-8">
-              <RefreshCw className="h-12 w-12 text-primary mx-auto mb-3 animate-spin" />
-              <p className="text-sm font-medium text-primary mb-2">
+              <RefreshCw className="h-12 w-12 text-gray-700 mx-auto mb-3 animate-spin" />
+              <p className="text-sm font-medium text-gray-700 mb-2">
                 {t('orders.qr_generating', 'Generating QR code...')}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -284,8 +284,8 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
           return (
             <div className="space-y-4">
               {/* QR Code Display */}
-              <div className="bg-white p-6 rounded-lg border text-center shadow-md">
-                <div className="w-40 h-40 bg-gray-50 rounded-lg mx-auto mb-4 flex items-center justify-center shadow-sm">
+              <div className="bg-white p-6 rounded-lg border text-center">
+                <div className="w-40 h-40 bg-gray-50 rounded-lg mx-auto mb-4 flex items-center justify-center shadow-lg">
                   {qrUrl ? (
                     <QRCodeCanvas
                       value={qrUrl}
@@ -330,43 +330,6 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
                 </div>
               </div>
 
-              {/* Analytics */}
-              {formattedAnalytics && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 mb-2">
-                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">{t('order_detail.qr_analytics', 'Analytics')}</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-center">
-                    <div className="bg-background/50 p-2 rounded">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <Eye className="h-3 w-3 text-primary" />
-                        <span className="text-xs text-muted-foreground">{t('order_detail.total_scans', 'Total Scans')}</span>
-                      </div>
-                      <p className="text-lg font-bold text-primary">
-                        {formattedAnalytics.totalClicks}
-                      </p>
-                    </div>
-
-                    <div className="bg-background/50 p-2 rounded">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <Users className="h-3 w-3 text-secondary" />
-                        <span className="text-xs text-muted-foreground">{t('order_detail.unique_visitors', 'Unique Visitors')}</span>
-                      </div>
-                      <p className="text-lg font-bold text-secondary">
-                        {formattedAnalytics.uniqueVisitors}
-                      </p>
-                    </div>
-                  </div>
-
-                  {formattedAnalytics.lastClickedFormatted && (
-                    <p className="text-xs text-muted-foreground text-center">
-                      {t('order_detail.last_accessed', 'Last accessed')}: {formattedAnalytics.lastClickedFormatted}
-                    </p>
-                  )}
-                </div>
-              )}
 
               {/* Actions - Only Regenerate */}
               <div className="flex gap-2">

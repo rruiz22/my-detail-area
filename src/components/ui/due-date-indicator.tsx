@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -14,14 +14,16 @@ interface DueDateIndicatorProps {
   dueDate: string | null;
   orderType?: string;
   compact?: boolean;
+  showDateTime?: boolean;
   className?: string;
 }
 
-export function DueDateIndicator({ 
-  dueDate, 
+export function DueDateIndicator({
+  dueDate,
   orderType = 'sales',
   compact = false,
-  className 
+  showDateTime = false,
+  className
 }: DueDateIndicatorProps) {
   const { t } = useTranslation();
   const [timeStatus, setTimeStatus] = useState<TimeStatusInfo | null>(null);
@@ -54,13 +56,13 @@ export function DueDateIndicator({
   const getIcon = (status: string) => {
     switch (status) {
       case 'on-time':
-        return <CheckCircle className="w-3 h-3" />;
+        return <CheckCircle className="w-4 h-4" />;
       case 'need-attention':
-        return <Clock className="w-3 h-3" />;
+        return <Clock className="w-4 h-4" />;
       case 'delayed':
-        return <AlertTriangle className="w-3 h-3" />;
+        return <AlertTriangle className="w-4 h-4" />;
       default:
-        return <Clock className="w-3 h-3" />;
+        return <Clock className="w-4 h-4" />;
     }
   };
 
@@ -82,7 +84,7 @@ export function DueDateIndicator({
       <div className={cn("flex items-center gap-1", className)}>
         <div className={cn("flex items-center gap-1", timeStatus.color)}>
           {getIcon(timeStatus.status)}
-          <span className="text-xs font-medium">
+          <span className="text-sm font-semibold">
             {formatCountdown(timeStatus.timeRemaining)}
           </span>
         </div>
@@ -91,12 +93,12 @@ export function DueDateIndicator({
   }
 
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
+    <div className={cn("flex flex-col items-center gap-1 text-center", className)}>
       {/* Status Badge */}
-      <Badge 
+      <Badge
         variant={getBadgeVariant(timeStatus.status)}
         className={cn(
-          "text-xs font-medium h-5 px-2",
+          "text-xs font-medium h-5 px-2 whitespace-nowrap",
           timeStatus.bgColor,
           timeStatus.color,
           "border border-current/20"
@@ -107,15 +109,30 @@ export function DueDateIndicator({
           <span>{timeStatus.badge}</span>
         </div>
       </Badge>
-      
+
       {/* Time Countdown */}
       <div className={cn(
-        "flex items-center gap-1 text-xs font-mono",
+        "flex items-center gap-1 text-sm font-semibold justify-center",
         timeStatus.color
       )}>
-        <Clock className="w-3 h-3" />
+        <Clock className="w-4 h-4" />
         <span>{timeStatus.formattedTime}</span>
       </div>
+
+      {/* Date and Time Display */}
+      {showDateTime && dueDate && (
+        <div className="text-xs text-muted-foreground text-center">
+          <Calendar className="w-3 h-3 mr-1 text-gray-700 inline" />
+          {new Date(dueDate).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+          })}, {new Date(dueDate).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          })}
+        </div>
+      )}
     </div>
   );
 }

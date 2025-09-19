@@ -50,7 +50,7 @@ export const CarWashOrderFields = React.memo(function CarWashOrderFields({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Droplets className="h-5 w-5 text-primary" />
+            <Droplets className="h-5 w-5 text-gray-700" />
             {t('car_wash_orders.car_wash_information')}
           </CardTitle>
         </CardHeader>

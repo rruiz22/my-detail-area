@@ -160,7 +160,7 @@ export function QRCodeDisplay({
             </h4>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="flex items-center gap-1">
-                <MousePointer className="w-3 h-3 text-blue-500" />
+                <MousePointer className="w-3 h-3 text-gray-700" />
                 <span className="text-muted-foreground">{t('orders.total_clicks')}:</span>
                 <Badge variant="secondary" className="text-xs">
                   {analytics.totalClicks}

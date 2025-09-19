@@ -60,7 +60,7 @@ export function InstructionsBlock({ order, onNotesUpdate }: InstructionsBlockPro
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <FileText className="h-5 w-5 text-primary" />
+          <FileText className="h-5 w-5 text-gray-700" />
           Instructions & Notes
         </CardTitle>
       </CardHeader>
@@ -213,7 +213,7 @@ export function InstructionsBlock({ order, onNotesUpdate }: InstructionsBlockPro
           
           <div className="grid grid-cols-2 gap-4 text-center">
             <div className="p-3 bg-muted/20 rounded-lg">
-              <p className="text-lg font-bold text-primary">
+              <p className="text-lg font-bold text-gray-700">
                 {generalNotes ? generalNotes.split(' ').length : 0}
               </p>
               <p className="text-xs text-muted-foreground">Words in general notes</p>

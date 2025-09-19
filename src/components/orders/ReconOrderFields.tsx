@@ -48,7 +48,7 @@ export const ReconOrderFields = React.memo(function ReconOrderFields({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <RefreshCw className="h-5 w-5 text-primary" />
+            <RefreshCw className="h-5 w-5 text-gray-700" />
             {t('recon_orders.recon_information')}
           </CardTitle>
         </CardHeader>

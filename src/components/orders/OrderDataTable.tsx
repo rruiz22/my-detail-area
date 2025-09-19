@@ -48,16 +48,17 @@ import {
 } from '@/utils/duplicateUtils';
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
-import { ChatAndSMSActions } from './ChatAndSMSActions';
 import { DueDateIndicator, useDueDateAttention } from '@/components/ui/due-date-indicator';
-import { 
-  isSameDayOrder, 
-  isTimeBasedOrder, 
+import {
+  isSameDayOrder,
+  isTimeBasedOrder,
   getAttentionRowClasses,
   calculateTimeStatus
 } from '@/utils/dueDateUtils';
+import { getOrderAnimationClass } from '@/utils/orderAnimationUtils';
 import { formatOrderNumber } from '@/utils/orderUtils';
 import { cn } from '@/lib/utils';
+import '@/styles/order-animations.css';
 
 interface Order {
   id: string;
@@ -313,7 +314,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         {formatOrderNumber(order)}
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground mt-1">
-                        <Building2 className="w-4 h-4 mr-2 text-blue-600" />
+                        <Building2 className="w-4 h-4 mr-2 text-gray-700" />
                         <span>{order.dealershipName || 'Unknown Dealer'}</span>
                       </div>
                     </div>
@@ -373,7 +374,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           onOrderClick={onView}
                           debug={import.meta.env.DEV}
                         >
-                          <div className="text-sm font-semibold text-foreground cursor-pointer hover:text-blue-600 transition-colors">
+                          <div className="text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors">
                             {order.stockNumber || 'No Stock'}
                           </div>
                         </DuplicateTooltip>
@@ -402,7 +403,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       variant="ghost" 
                       size="sm"
                       onClick={() => onView(order)}
-                      className="flex items-center gap-2 text-blue-600 hover:bg-blue-50 transition-all hover:scale-105"
+                      className="flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition-all hover:scale-105"
                     >
                       <Eye className="h-4 w-4" />
                       View
@@ -491,12 +492,13 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                   : '';
 
                 return (
-                  <TableRow 
-                    key={order.id} 
+                  <TableRow
+                    key={order.id}
                     className={cn(
                       "border-border transition-colors cursor-pointer hover:bg-muted/50",
                       getStatusRowColor(order.status),
-                      attentionClasses
+                      attentionClasses,
+                      getOrderAnimationClass(order.status, order.dueDate)
                     )}
                     onDoubleClick={() => onView(order)}
                   >
@@ -512,7 +514,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           {formatOrderNumber(order)}
                         </div>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">
-                          <Building2 className="w-3 h-3 mr-1 text-blue-600" />
+                          <Building2 className="w-3 h-3 mr-1 text-gray-700" />
                           <span>{order.dealershipName || 'Unknown Dealer'}</span>
                         </div>
                       </div>
@@ -529,7 +531,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                             onOrderClick={onView}
                             debug={import.meta.env.DEV}
                           >
-                            <div className="text-base font-bold text-foreground cursor-pointer hover:text-blue-600 transition-colors">
+                            <div className="text-base font-bold text-foreground cursor-pointer hover:text-gray-700 transition-colors">
                               {order.stockNumber || t('data_table.no_stock')}
                             </div>
                           </DuplicateTooltip>
@@ -573,19 +575,23 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                     </TableCell>
 
-                    {/* Column 4: Due Time & Date */}
-                    <TableCell className="py-4 text-center">
-                      <div className="space-y-1">
-                        <div className="text-base font-bold text-foreground">
-                          {order.dueTime || '12:00 PM'}
+                    {/* Column 4: Due Date/Time - Dynamic Countdown */}
+                    <TableCell className="table-due-date-cell">
+                      <DueDateIndicator
+                        dueDate={order.dueDate}
+                        orderType={tabType}
+                        compact={false}
+                        showDateTime={true}
+                        className="due-date-indicator-table min-w-[140px]"
+                      />
+
+                      {/* Fallback time display if no due date */}
+                      {!order.dueDate && (
+                        <div className="text-sm text-muted-foreground text-center due-date-details">
+                          <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
+                          {order.dueTime || 'No time set'}
                         </div>
-                        <div className="flex items-center justify-center text-sm text-muted-foreground">
-                          <Calendar className="w-3 h-3 mr-1 text-purple-600" />
-                          <span>
-                            {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'No date set'}
-                          </span>
-                        </div>
-                      </div>
+                      )}
                     </TableCell>
 
                     {/* Column 5: Interactive Status */}
@@ -598,40 +604,24 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           canUpdateStatus={true}
                           onStatusChange={handleStatusChange}
                         />
-                        {/* Due Date Indicator for time-based orders */}
-                        {showDueDateIndicator && (
-                          <DueDateIndicator 
-                            dueDate={order.dueDate}
-                            orderType={tabType}
-                            compact={true}
-                          />
-                        )}
                       </div>
                     </TableCell>
 
-                    {/* Column 6: Chat & SMS Actions + Action Buttons */}
+                    {/* Column 6: Action Buttons (Simplified) */}
                     <TableCell className="py-4 text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <ChatAndSMSActions
-                          orderId={order.id}
-                          orderNumber={order.orderNumber}
-                          customerPhone={order.customerPhone}
-                          dealerId={order.dealer_id || 1}
-                          variant="icon"
-                        />
-                        
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => onView(order)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"
                           title="View Details"
                         >
-                          <Eye className="h-4 w-4 text-blue-600" />
+                          <Eye className="h-4 w-4 text-gray-700" />
                         </Button>
-                        
-                        <Button 
-                          variant="ghost" 
+
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => onEdit(order)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"
@@ -639,9 +629,9 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         >
                           <Edit className="h-4 w-4 text-emerald-600" />
                         </Button>
-                        
-                        <Button 
-                          variant="ghost" 
+
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => onDelete(order.id)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"

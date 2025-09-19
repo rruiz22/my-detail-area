@@ -5,7 +5,8 @@ import { UniversalFollowButton } from '@/components/followers/UniversalFollowBut
 interface ChatAndSMSActionsProps {
   orderId: string;
   orderNumber?: string;
-  customerPhone?: string;
+  assignedUserId?: string;
+  assignedUserName?: string;
   dealerId: number;
   className?: string;
   variant?: 'default' | 'compact' | 'icon';
@@ -14,7 +15,8 @@ interface ChatAndSMSActionsProps {
 export function ChatAndSMSActions({
   orderId,
   orderNumber,
-  customerPhone,
+  assignedUserId,
+  assignedUserName,
   dealerId,
   className = '',
   variant = 'icon'
@@ -25,7 +27,8 @@ export function ChatAndSMSActions({
         entityType="order"
         entityId={orderId}
         entityName={orderNumber}
-        customerPhone={customerPhone}
+        assignedUserId={assignedUserId}
+        assignedUserName={assignedUserName}
         variant={variant}
       />
       

@@ -5,10 +5,12 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { supabase } from '@/integrations/supabase/client';
 import { safeFormatDate } from '@/utils/dateUtils';
 import {
-  MessageSquare
+  MessageSquare,
+  Edit2
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePermissionContext } from '@/contexts/PermissionContext';
 import { ChatAndSMSActions } from './ChatAndSMSActions';
 import { OrderTasksSection } from './OrderTasksSection';
 import { SkeletonLoader } from './SkeletonLoader';
@@ -145,13 +147,17 @@ interface UnifiedOrderHeaderProps {
   orderType: OrderType;
   vehicleDisplayName: string;
   onStatusChange: (newStatus: string) => void;
+  canEditOrder?: boolean;
+  onEdit?: () => void;
 }
 
 const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
   order,
   orderType,
   vehicleDisplayName,
-  onStatusChange
+  onStatusChange,
+  canEditOrder,
+  onEdit
 }: UnifiedOrderHeaderProps) {
   const { t } = useTranslation();
 
@@ -181,7 +187,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
       case 'pending':
         return 'bg-yellow-50 border-l-4 border-yellow-500';
       case 'in_progress':
-        return 'bg-blue-50 border-l-4 border-blue-500';
+        return 'bg-indigo-50 border-l-4 border-indigo-500';
       case 'completed':
         return 'bg-green-50 border-l-4 border-green-500';
       case 'cancelled':
@@ -194,26 +200,38 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
   return (
     <div className={`${getStatusBackgroundClass(order.status)} rounded-lg p-4 mb-6 shadow-sm`}>
       <div className="grid grid-cols-3 items-center gap-4">
-        {/* Left: Order Number */}
-        <div className="text-left">
+        {/* Left: Order Number with Edit Button */}
+        <div className="text-left flex items-center gap-3">
           <h2 className="text-lg font-bold text-gray-900">
             #{headerData.orderNumber}
           </h2>
+          {/* Edit Button */}
+          {canEditOrder && onEdit && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onEdit}
+              className="flex items-center gap-2 bg-white hover:bg-gray-50 border-gray-300 text-gray-700 hover:text-gray-900 shadow-sm"
+            >
+              <Edit2 className="h-4 w-4" />
+              {t('orders.edit')}
+            </Button>
+          )}
         </div>
 
         {/* Center: Main Information */}
         <div className="text-center space-y-1">
-          {/* Vehicle Info as Title */}
+          {/* Stock + VIN - First Row (Prominent Title Style) */}
           <h1 className="text-xl font-bold text-gray-900">
-            {order.vehicle_info || vehicleDisplayName}
+            {order.stockNumber || order.stock_number} - {(order.vehicleVin || order.vehicle_vin)?.slice(-8)}
           </h1>
 
-          {/* Stock + VIN */}
-          <div className="text-sm text-muted-foreground">
-            {order.stockNumber || order.stock_number} - {(order.vehicleVin || order.vehicle_vin)?.slice(-8)}
+          {/* Vehicle Info - Second Row (Subtitle Style) */}
+          <div className="text-lg font-semibold text-gray-700">
+            {vehicleDisplayName}
           </div>
 
-          {/* Assigned To */}
+          {/* Assigned To - Third Row */}
           <div className="text-sm font-medium text-gray-700">
             {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || 'Unassigned'}
           </div>
@@ -278,10 +296,23 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   dataError
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
+  const { hasPermission } = usePermissionContext();
   const [orderData, setOrderData] = useState(order);
 
   // Custom hook for normalized QR props
   const qrProps = useQRProps(orderData);
+
+  // Check if user can edit orders
+  const canEditOrder = useMemo(() => {
+    return onEdit && hasPermission('sales_orders', 'write');
+  }, [onEdit, hasPermission]);
+
+  // Handle edit button click
+  const handleEdit = useCallback(() => {
+    if (canEditOrder) {
+      onEdit(orderData);
+    }
+  }, [canEditOrder, onEdit, orderData]);
 
   // Real-time subscription for order updates with enhanced error handling
   useEffect(() => {
@@ -379,13 +410,30 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     }
   }, [onStatusChange, orderData.id]);
 
-  // Memoize vehicle display name (for legacy compatibility, though we'll use vehicle_info)
+  // Memoize vehicle display name - prioritize vehicle_info from VIN decoder
   const vehicleDisplayName = useMemo(() => {
+    // Priority 1: Use vehicle_info if available (contains complete decoded VIN info)
+    if (orderData.vehicle_info) {
+      return orderData.vehicle_info;
+    }
+
+    // Fallback: Construct from individual fields
     const year = orderData.vehicleYear || orderData.vehicle_year || '';
     const make = orderData.vehicleMake || orderData.vehicle_make || '';
     const model = orderData.vehicleModel || orderData.vehicle_model || '';
-    return `${year} ${make} ${model}`.trim() || 'Unknown Vehicle';
-  }, [orderData.vehicleYear, orderData.vehicle_year, orderData.vehicleMake, orderData.vehicle_make, orderData.vehicleModel, orderData.vehicle_model]);
+    const trim = orderData.vehicleTrim || orderData.vehicle_trim || '';
+
+    const baseVehicle = `${year} ${make} ${model}`.trim();
+    const trimInfo = trim ? ` (${trim})` : '';
+
+    return baseVehicle ? `${baseVehicle}${trimInfo}` : 'Unknown Vehicle';
+  }, [
+    orderData.vehicle_info,
+    orderData.vehicleYear, orderData.vehicle_year,
+    orderData.vehicleMake, orderData.vehicle_make,
+    orderData.vehicleModel, orderData.vehicle_model,
+    orderData.vehicleTrim, orderData.vehicle_trim
+  ]);
 
   if (!order) return null;
 
@@ -422,6 +470,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 orderType={orderType}
                 vehicleDisplayName={vehicleDisplayName}
                 onStatusChange={handleStatusChange}
+                canEditOrder={canEditOrder}
+                onEdit={handleEdit}
               />
 
               <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
@@ -466,7 +516,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                       <ChatAndSMSActions
                         orderId={order.id}
                         orderNumber={order.orderNumber || order.order_number}
-                        customerPhone={order.customerPhone || order.customer_phone || ''}
+                        assignedUserId={order.assigned_group_id || order.assignedGroupId || ''}
+                        assignedUserName={order.assigned_to || order.assignedTo || ''}
                         dealerId={order.dealer_id ? Number(order.dealer_id) : FALLBACK_DEALER_ID}
                         variant="compact"
                       />

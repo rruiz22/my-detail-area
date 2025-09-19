@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -7,31 +7,25 @@ import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
 import { useOrderModalData } from '@/hooks/useOrderModalData';
 import { SkeletonLoader } from './SkeletonLoader';
 
-interface OrderAttachment {
-  id: string;
-  order_id: string;
-  file_name: string;
-  file_path: string;
-  file_size: number;
-  mime_type: string;
-  uploaded_by: string;
-  upload_context: string;
-  description: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// Import comprehensive order types for consistency
+import type {
+  OrderData,
+  OrderAttachment,
+  DatabaseOrder,
+  DatabaseOrderUpdate
+} from '@/types/order';
 
 interface EnhancedOrderDetailModalProps {
-  order: any;
+  order: OrderData;
   open: boolean;
   onClose: () => void;
-  onEdit?: (order: any) => void;
+  onEdit?: (order: OrderData) => void;
   onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
 }
 
-// Modal component for order details
-export function EnhancedOrderDetailModal({
+// Optimized modal component with memoization
+export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
   order,
   open,
   onClose,
@@ -45,19 +39,22 @@ export function EnhancedOrderDetailModal({
   const [notes, setNotes] = useState(order?.notes || '');
   const [internalNotes, setInternalNotes] = useState(order?.internal_notes || '');
 
+  // Memoize useOrderModalData parameters to prevent unnecessary re-fetches
+  const modalDataParams = useMemo(() => ({
+    orderId: order?.id || '',
+    qrCodeUrl: order?.qr_code_url || '',
+    enabled: open && !!order // Only fetch when modal is open and order exists
+  }), [order?.id, order?.qr_code_url, open, order]);
+
   // Use parallel data fetching hook for optimal performance
-  const { 
-    data: modalData, 
-    loading: dataLoading, 
+  const {
+    data: modalData,
+    loading: dataLoading,
     error: dataError,
     addAttachment: handleAttachmentUploaded,
     removeAttachment: handleAttachmentDeleted,
     refetch: refetchModalData
-  } = useOrderModalData({
-    orderId: order?.id || '',
-    qrCodeUrl: order?.qr_code_url || '',
-    enabled: open && !!order // Only fetch when modal is open and order exists
-  });
+  } = useOrderModalData(modalDataParams);
 
   useEffect(() => {
     if (order) {
@@ -73,14 +70,15 @@ export function EnhancedOrderDetailModal({
     }
   }, [onStatusChange, order?.id]);
 
-  // Memoize notes update handler
+  // Memoize notes update handler with proper typing
   const handleNotesUpdate = useCallback(async (field: 'notes' | 'internal_notes', value: string) => {
     if (!order?.id) return;
 
     try {
+      const updateData: DatabaseOrderUpdate = { [field]: value };
       const { error } = await supabase
         .from('orders')
-        .update({ [field]: value })
+        .update(updateData)
         .eq('id', order.id);
 
       if (error) throw error;
@@ -161,4 +159,20 @@ export function EnhancedOrderDetailModal({
       dataError={dataError}
     />
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison function - only re-render if essential props change
+  return (
+    prevProps.open === nextProps.open &&
+    prevProps.order?.id === nextProps.order?.id &&
+    prevProps.order?.status === nextProps.order?.status &&
+    prevProps.order?.notes === nextProps.order?.notes &&
+    prevProps.order?.internal_notes === nextProps.order?.internal_notes &&
+    // Check if order object reference changed but key properties are same
+    prevProps.order?.updated_at === nextProps.order?.updated_at &&
+    // Function references should be stable
+    prevProps.onClose === nextProps.onClose &&
+    prevProps.onEdit === nextProps.onEdit &&
+    prevProps.onDelete === nextProps.onDelete &&
+    prevProps.onStatusChange === nextProps.onStatusChange
+  );
+});

@@ -92,7 +92,7 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
     <Card className="h-full">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Car className="h-5 w-5 text-primary" />
+          <Car className="h-5 w-5 text-gray-700" />
           {t('orders.vehicle_information')}
         </CardTitle>
       </CardHeader>

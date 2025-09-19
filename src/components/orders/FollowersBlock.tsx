@@ -75,7 +75,7 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   const getFollowTypeIcon = (followType: string) => {
     switch (followType) {
       case 'assigned': return <Crown className="h-3 w-3 text-yellow-600" />;
-      case 'creator': return <Shield className="h-3 w-3 text-blue-600" />;
+      case 'creator': return <Shield className="h-3 w-3 text-gray-700" />;
       case 'manual': return <Users className="h-3 w-3 text-green-600" />;
       case 'interested': return <Bell className="h-3 w-3 text-purple-600" />;
       default: return <Users className="h-3 w-3 text-gray-600" />;
@@ -85,7 +85,7 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   const getFollowTypeBadgeColor = (followType: string) => {
     switch (followType) {
       case 'assigned': return 'bg-yellow-100 text-yellow-800';
-      case 'creator': return 'bg-blue-100 text-blue-800';
+      case 'creator': return 'bg-gray-100 text-gray-800';
       case 'manual': return 'bg-green-100 text-green-800';
       case 'interested': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -106,7 +106,7 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-primary" />
+            <Users className="h-5 w-5 text-gray-700" />
             {t('order_detail.followers', 'Followers')}
           </div>
           <Badge variant="outline" className="text-xs">
@@ -124,7 +124,7 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
 
         {loading ? (
           <div className="text-center py-4">
-            <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+            <div className="animate-spin w-6 h-6 border-2 border-gray-700 border-t-transparent rounded-full mx-auto"></div>
             <p className="text-xs text-muted-foreground mt-2">{t('followers.loading', 'Loading team...')}</p>
           </div>
         ) : followers.length === 0 ? (
@@ -186,7 +186,7 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
                         onClick={() => window.open(`mailto:${follower.email}`, '_blank')}
                         title={`Email ${follower.firstName}`}
                       >
-                        <Mail className="h-3 w-3 text-blue-600" />
+                        <Mail className="h-3 w-3 text-gray-700" />
                       </Button>
                     )}
                     {follower.phone && (

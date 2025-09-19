@@ -281,7 +281,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                   <div key={reply.id} className={`p-3 rounded-lg ${
                     type === 'internal'
                       ? 'bg-amber-50/80 border border-amber-100'
-                      : 'bg-blue-50/80 border border-blue-100'
+                      : 'bg-gray-50/80 border border-gray-100'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="secondary" className="text-xs">
@@ -296,7 +296,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                         size={20}
                       />
                       <span className={`text-xs font-medium ${
-                        type === 'internal' ? 'text-amber-700' : 'text-blue-700'
+                        type === 'internal' ? 'text-amber-700' : 'text-gray-700'
                       }`}>
                         {reply.userName}
                       </span>
@@ -306,7 +306,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                       </div>
                     </div>
                     <p className={`text-xs whitespace-pre-wrap ${
-                      type === 'internal' ? 'text-amber-800' : 'text-blue-800'
+                      type === 'internal' ? 'text-amber-800' : 'text-gray-800'
                     }`}>
                       {reply.commentText}
                     </p>
@@ -329,7 +329,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-primary" />
+          <MessageSquare className="h-5 w-5 text-gray-700" />
           {t('order_comments.title', 'Order Comments')}
         </CardTitle>
       </CardHeader>
@@ -408,7 +408,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
 
             {commentsLoading ? (
               <div className="text-center py-4">
-                <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+                <div className="animate-spin w-6 h-6 border-2 border-gray-700 border-t-transparent rounded-full mx-auto"></div>
                 <p className="text-xs text-muted-foreground mt-2">
                   {t('order_comments.loading_comments', 'Loading comments...')}
                 </p>
