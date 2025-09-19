@@ -7153,145 +7153,145 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 98,
+            "line": 85,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 136,
+            "line": 124,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 145,
+            "line": 133,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 148,
+            "line": 136,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 159,
+            "line": 147,
             "exists": true
           },
           {
             "key": "orders.due_date_auto_corrected",
-            "line": 221,
+            "line": 209,
             "exists": false
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 236,
+            "line": 224,
             "exists": false
           },
           {
             "key": "orders.status_change_failed_due_date",
-            "line": 242,
+            "line": 230,
             "exists": false
           },
           {
             "key": "orders.status_change_failed_business_hours",
-            "line": 246,
+            "line": 234,
             "exists": false
           },
           {
             "key": "orders.status_change_failed",
-            "line": 248,
+            "line": 236,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 269,
+            "line": 257,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 270,
+            "line": 258,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 271,
+            "line": 259,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 272,
+            "line": 260,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 273,
+            "line": 261,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 274,
+            "line": 262,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 275,
+            "line": 263,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.services",
-            "line": 276,
+            "line": 264,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 277,
+            "line": 265,
             "exists": true
           },
           {
             "key": "pages.sales_orders",
-            "line": 301,
+            "line": 289,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 312,
+            "line": 300,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 316,
+            "line": 304,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 98,
-            "context": "97: console.warn('🔍 Order IDs in list:', orders.map(o => o.id));\n98: toast.error(t('orders.order_not_found'));\n99: }"
+            "line": 85,
+            "context": "84: console.warn('⚠️ Order not found in current orders list:', orderIdFromUrl);\n85: toast.error(t('orders.order_not_found'));\n86: setHasProcessedUrlOrder(true); // Prevent retrying"
           },
           {
             "key": "orders.due_date_auto_corrected",
-            "line": 221,
-            "context": "220: \n221: toast.info(t('orders.due_date_auto_corrected', 'Due date automatically adjusted to next business day'));\n222: }"
+            "line": 209,
+            "context": "208: \n209: toast.info(t('orders.due_date_auto_corrected', 'Due date automatically adjusted to next business day'));\n210: }"
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 236,
-            "context": "235: \n236: toast.success(t('orders.status_updated_successfully'));\n237: } catch (error) {"
+            "line": 224,
+            "context": "223: \n224: toast.success(t('orders.status_updated_successfully'));\n225: } catch (error) {"
           },
           {
             "key": "orders.status_change_failed_due_date",
-            "line": 242,
-            "context": "241: if (error?.message?.includes('Invalid due date')) {\n242: toast.error(t('orders.status_change_failed_due_date', {\n243: message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'"
+            "line": 230,
+            "context": "229: if (error?.message?.includes('Invalid due date')) {\n230: toast.error(t('orders.status_change_failed_due_date', {\n231: message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'"
           },
           {
             "key": "orders.status_change_failed_business_hours",
-            "line": 246,
-            "context": "245: } else if (error?.message?.includes('business hours')) {\n246: toast.error(t('orders.status_change_failed_business_hours'));\n247: } else {"
+            "line": 234,
+            "context": "233: } else if (error?.message?.includes('business hours')) {\n234: toast.error(t('orders.status_change_failed_business_hours'));\n235: } else {"
           },
           {
             "key": "orders.status_change_failed",
-            "line": 248,
-            "context": "247: } else {\n248: toast.error(t('orders.status_change_failed'));\n249: }"
+            "line": 236,
+            "context": "235: } else {\n236: toast.error(t('orders.status_change_failed'));\n237: }"
           }
         ],
         "coverage": 100,
