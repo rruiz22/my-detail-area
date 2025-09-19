@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 453,
-  "totalStrings": 4453,
-  "hardcodedStrings": 994,
-  "translatedStrings": 3459,
+  "scannedFiles": 479,
+  "totalStrings": 4540,
+  "hardcodedStrings": 1051,
+  "translatedStrings": 3489,
   "issues": {
     "critical": [
       {
@@ -1178,164 +1178,144 @@
         "file": "src\\components\\chat\\ContextualChatLauncher.tsx",
         "hardcodedStrings": [
           {
-            "text": "Send SMS",
-            "line": 155,
-            "context": "154: <DialogHeader>\n155: <DialogTitle>Send SMS</DialogTitle>\n156: </DialogHeader>"
-          },
-          {
             "text": "Phone Number",
-            "line": 159,
-            "context": "158: <div>\n159: <Label>Phone Number</Label>\n160: <Input"
+            "line": 202,
+            "context": "201: <div>\n202: <Label>Phone Number</Label>\n203: <Input"
           },
           {
             "text": "Message",
-            "line": 167,
-            "context": "166: <div>\n167: <Label>Message</Label>\n168: <Textarea"
+            "line": 210,
+            "context": "209: <div>\n210: <Label>Message</Label>\n211: <Textarea"
           },
           {
             "text": "Cancel",
-            "line": 180,
-            "context": "179: </Button>\n180: <Button variant=\"outline\" onClick={() => setShowSMSDialog(false)}>\n181: Cancel"
+            "line": 223,
+            "context": "222: </Button>\n223: <Button variant=\"outline\" onClick={() => setShowSMSDialog(false)}>\n224: Cancel"
           },
           {
             "text": "Message",
-            "line": 197,
-            "context": "196: <Button variant=\"outline\" size=\"sm\" className={className}>\n197: <MessageCircle className=\"h-4 w-4 mr-2\" />\n198: Message"
-          },
-          {
-            "text": "Start Team Chat",
-            "line": 205,
-            "context": "204: <DropdownMenuItem onClick={handleStartChat}>\n205: <Users className=\"h-4 w-4 mr-2\" />\n206: Start Team Chat"
-          },
-          {
-            "text": "Send SMS",
-            "line": 213,
-            "context": "212: <DropdownMenuItem onClick={() => setShowSMSDialog(true)}>\n213: <Phone className=\"h-4 w-4 mr-2\" />\n214: Send SMS"
+            "line": 240,
+            "context": "239: <Button variant=\"outline\" size=\"sm\" className={className}>\n240: <MessageCircle className=\"h-4 w-4 mr-2\" />\n241: Message"
           },
           {
             "text": "Phone Number",
-            "line": 233,
-            "context": "232: <div>\n233: <Label>Phone Number</Label>\n234: <Input"
+            "line": 276,
+            "context": "275: <div>\n276: <Label>Phone Number</Label>\n277: <Input"
           },
           {
             "text": "Message",
-            "line": 241,
-            "context": "240: <div>\n241: <Label>Message</Label>\n242: <Textarea"
+            "line": 284,
+            "context": "283: <div>\n284: <Label>Message</Label>\n285: <Textarea"
           },
           {
             "text": "Quick Templates",
-            "line": 252,
-            "context": "251: <div>\n252: <Label>Quick Templates</Label>\n253: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
+            "line": 295,
+            "context": "294: <div>\n295: <Label>Quick Templates</Label>\n296: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
           },
           {
             "text": "Cancel",
-            "line": 274,
-            "context": "273: </Button>\n274: <Button variant=\"outline\" onClick={() => setShowSMSDialog(false)}>\n275: Cancel"
+            "line": 317,
+            "context": "316: </Button>\n317: <Button variant=\"outline\" onClick={() => setShowSMSDialog(false)}>\n318: Cancel"
           },
           {
             "text": "Start Discussion",
-            "line": 290,
-            "context": "289: <Button onClick={handleStartChat} className=\"flex-1\">\n290: <Users className=\"h-4 w-4 mr-2\" />\n291: Start Discussion"
-          },
-          {
-            "text": "Send SMS",
-            "line": 296,
-            "context": "295: <Button variant=\"outline\" onClick={() => setShowSMSDialog(true)}>\n296: <Phone className=\"h-4 w-4 mr-2\" />\n297: Send SMS"
+            "line": 333,
+            "context": "332: <Button onClick={handleStartChat} className=\"flex-1\">\n333: <Users className=\"h-4 w-4 mr-2\" />\n334: Start Discussion"
           },
           {
             "text": "Phone Number",
-            "line": 311,
-            "context": "310: <div>\n311: <Label>Phone Number</Label>\n312: <Input"
+            "line": 354,
+            "context": "353: <div>\n354: <Label>Phone Number</Label>\n355: <Input"
           },
           {
             "text": "Message",
-            "line": 319,
-            "context": "318: <div>\n319: <Label>Message</Label>\n320: <Textarea"
+            "line": 362,
+            "context": "361: <div>\n362: <Label>Message</Label>\n363: <Textarea"
           },
           {
             "text": "Quick Templates",
-            "line": 330,
-            "context": "329: <div>\n330: <Label>Quick Templates</Label>\n331: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
+            "line": 373,
+            "context": "372: <div>\n373: <Label>Quick Templates</Label>\n374: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
           },
           {
             "text": "Cancel",
-            "line": 352,
-            "context": "351: </Button>\n352: <Button variant=\"outline\" onClick={() => setShowSMSDialog(false)}>\n353: Cancel"
+            "line": 395,
+            "context": "394: </Button>\n395: <Button variant=\"outline\" onClick={() => setShowSMSDialog(false)}>\n396: Cancel"
           },
           {
             "text": "Enter phone number",
-            "line": 163,
-            "context": "162: onChange={(e) => setCustomPhone(e.target.value)}\n163: placeholder=\"Enter phone number\"\n164: />"
+            "line": 206,
+            "context": "205: onChange={(e) => setCustomPhone(e.target.value)}\n206: placeholder=\"Enter phone number\"\n207: />"
           },
           {
             "text": "Type your message...",
-            "line": 171,
-            "context": "170: onChange={(e) => setSmsMessage(e.target.value)}\n171: placeholder=\"Type your message...\"\n172: rows={3}"
+            "line": 214,
+            "context": "213: onChange={(e) => setSmsMessage(e.target.value)}\n214: placeholder=\"Type your message...\"\n215: rows={3}"
           },
           {
             "text": "Enter phone number",
-            "line": 237,
-            "context": "236: onChange={(e) => setCustomPhone(e.target.value)}\n237: placeholder=\"Enter phone number\"\n238: />"
+            "line": 280,
+            "context": "279: onChange={(e) => setCustomPhone(e.target.value)}\n280: placeholder=\"Enter phone number\"\n281: />"
           },
           {
             "text": "Type your message...",
-            "line": 245,
-            "context": "244: onChange={(e) => setSmsMessage(e.target.value)}\n245: placeholder=\"Type your message...\"\n246: rows={3}"
+            "line": 288,
+            "context": "287: onChange={(e) => setSmsMessage(e.target.value)}\n288: placeholder=\"Type your message...\"\n289: rows={3}"
           },
           {
             "text": "Enter phone number",
-            "line": 315,
-            "context": "314: onChange={(e) => setCustomPhone(e.target.value)}\n315: placeholder=\"Enter phone number\"\n316: />"
+            "line": 358,
+            "context": "357: onChange={(e) => setCustomPhone(e.target.value)}\n358: placeholder=\"Enter phone number\"\n359: />"
           },
           {
             "text": "Type your message...",
-            "line": 323,
-            "context": "322: onChange={(e) => setSmsMessage(e.target.value)}\n323: placeholder=\"Type your message...\"\n324: rows={4}"
+            "line": 366,
+            "context": "365: onChange={(e) => setSmsMessage(e.target.value)}\n366: placeholder=\"Type your message...\"\n367: rows={4}"
           },
           {
             "text": "Phone Number",
-            "line": 159,
-            "context": "158: <div>\n159: <Label>Phone Number</Label>\n160: <Input"
+            "line": 202,
+            "context": "201: <div>\n202: <Label>Phone Number</Label>\n203: <Input"
           },
           {
             "text": "Message",
-            "line": 167,
-            "context": "166: <div>\n167: <Label>Message</Label>\n168: <Textarea"
+            "line": 210,
+            "context": "209: <div>\n210: <Label>Message</Label>\n211: <Textarea"
           },
           {
             "text": "Phone Number",
-            "line": 233,
-            "context": "232: <div>\n233: <Label>Phone Number</Label>\n234: <Input"
+            "line": 276,
+            "context": "275: <div>\n276: <Label>Phone Number</Label>\n277: <Input"
           },
           {
             "text": "Message",
-            "line": 241,
-            "context": "240: <div>\n241: <Label>Message</Label>\n242: <Textarea"
+            "line": 284,
+            "context": "283: <div>\n284: <Label>Message</Label>\n285: <Textarea"
           },
           {
             "text": "Quick Templates",
-            "line": 252,
-            "context": "251: <div>\n252: <Label>Quick Templates</Label>\n253: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
+            "line": 295,
+            "context": "294: <div>\n295: <Label>Quick Templates</Label>\n296: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
           },
           {
             "text": "Phone Number",
-            "line": 311,
-            "context": "310: <div>\n311: <Label>Phone Number</Label>\n312: <Input"
+            "line": 354,
+            "context": "353: <div>\n354: <Label>Phone Number</Label>\n355: <Input"
           },
           {
             "text": "Message",
-            "line": 319,
-            "context": "318: <div>\n319: <Label>Message</Label>\n320: <Textarea"
+            "line": 362,
+            "context": "361: <div>\n362: <Label>Message</Label>\n363: <Textarea"
           },
           {
             "text": "Quick Templates",
-            "line": 330,
-            "context": "329: <div>\n330: <Label>Quick Templates</Label>\n331: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
+            "line": 373,
+            "context": "372: <div>\n373: <Label>Quick Templates</Label>\n374: <div className=\"grid grid-cols-1 gap-2 mt-2\">"
           },
           {
-            "text": "Send SMS",
-            "line": 155,
-            "context": "154: <DialogHeader>\n155: <DialogTitle>Send SMS</DialogTitle>\n156: </DialogHeader>"
+            "text": ", error);\r\n      } finally {\r\n        setLoadingUserInfo(false);\r\n      }\r\n    };\r\n\r\n    fetchAssignedUserInfo();\r\n  }, [assignedUserId]);\r\n\r\n  const handleStartChat = () => {\r\n    if (assignedUserId) {\r\n      // Open direct message with assigned user\r\n      openDirectMessage(assignedUserId);\r\n    } else {\r\n      // Fallback to contextual chat if no assigned user\r\n      openContextualChat(entityType, entityId);\r\n    }\r\n  };\r\n\r\n  const handleSendSMS = async () => {\r\n    if (!smsMessage.trim()) {\r\n      toast({\r\n        title: ",
+            "line": 81,
+            "context": "80: } catch (error) {\n81: console.warn('Could not fetch assigned user info:', error);\n82: } finally {"
           }
         ],
         "translationCalls": [],
@@ -1345,6 +1325,80 @@
       }
     ],
     "high": [
+      {
+        "file": "src\\tests\\scripts\\run-performance-tests.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Order Modal Performance Report",
+            "line": 276,
+            "context": "275: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n276: <title>Order Modal Performance Report</title>\n277: <style>"
+          },
+          {
+            "text": "Comprehensive analysis of system optimizations and performance improvements",
+            "line": 299,
+            "context": "298: <h1>🚀 Order Modal Performance Report</h1>\n299: <p>Comprehensive analysis of system optimizations and performance improvements</p>\n300: <p><strong>Generated:</strong> ${data.testRun.timestamp}</p>"
+          },
+          {
+            "text": "Metric",
+            "line": 334,
+            "context": "333: <tr>\n334: <th>Metric</th>\n335: <th>Current Value</th>"
+          },
+          {
+            "text": "Current Value",
+            "line": 335,
+            "context": "334: <th>Metric</th>\n335: <th>Current Value</th>\n336: <th>Target</th>"
+          },
+          {
+            "text": "Target",
+            "line": 336,
+            "context": "335: <th>Current Value</th>\n336: <th>Target</th>\n337: <th>Status</th>"
+          },
+          {
+            "text": "Status",
+            "line": 337,
+            "context": "336: <th>Target</th>\n337: <th>Status</th>\n338: </tr>"
+          },
+          {
+            "text": "Test Suite",
+            "line": 365,
+            "context": "364: <tr>\n365: <th>Test Suite</th>\n366: <th>Status</th>"
+          },
+          {
+            "text": "Status",
+            "line": 366,
+            "context": "365: <th>Test Suite</th>\n366: <th>Status</th>\n367: <th>Duration (s)</th>"
+          },
+          {
+            "text": "Key Metrics",
+            "line": 368,
+            "context": "367: <th>Duration (s)</th>\n368: <th>Key Metrics</th>\n369: </tr>"
+          },
+          {
+            "text": "\\x1b[36m",
+            "line": 47,
+            "context": "46: const colors = {\n47: info: '\\x1b[36m',    // Cyan\n48: success: '\\x1b[32m', // Green"
+          },
+          {
+            "text": "\\x1b[32m",
+            "line": 48,
+            "context": "47: info: '\\x1b[36m',    // Cyan\n48: success: '\\x1b[32m', // Green\n49: warning: '\\x1b[33m', // Yellow"
+          },
+          {
+            "text": "\\x1b[33m",
+            "line": 49,
+            "context": "48: success: '\\x1b[32m', // Green\n49: warning: '\\x1b[33m', // Yellow\n50: error: '\\x1b[31m'    // Red"
+          },
+          {
+            "text": "\\x1b[31m",
+            "line": 50,
+            "context": "49: warning: '\\x1b[33m', // Yellow\n50: error: '\\x1b[31m'    // Red\n51: };"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "high"
+      },
       {
         "file": "src\\pages\\Phase3Dashboard.tsx",
         "hardcodedStrings": [
@@ -1559,6 +1613,90 @@
           }
         ],
         "coverage": 52,
+        "severity": "high"
+      },
+      {
+        "file": "src\\hooks\\usePrintOrder.ts",
+        "hardcodedStrings": [
+          {
+            "text": "WORK ORDER",
+            "line": 191,
+            "context": "190: <div class=\"order-header\">\n191: <h2 class=\"order-title\">WORK ORDER</h2>\n192: <div class=\"order-number\">#${orderNumber}</div>"
+          },
+          {
+            "text": "Customer Information",
+            "line": 200,
+            "context": "199: <div class=\"customer-info\">\n200: <h3 class=\"section-title\">Customer Information</h3>\n201: <div class=\"info-table\">"
+          },
+          {
+            "text": "Vehicle Information",
+            "line": 219,
+            "context": "218: <div class=\"vehicle-info\">\n219: <h3 class=\"section-title\">Vehicle Information</h3>\n220: <div class=\"info-table\">"
+          },
+          {
+            "text": "Services Requested",
+            "line": 246,
+            "context": "245: <section class=\"services-section\">\n246: <h3 class=\"section-title\">Services Requested</h3>\n247: <table class=\"services-table\">"
+          },
+          {
+            "text": "Service",
+            "line": 250,
+            "context": "249: <tr>\n250: <th class=\"service-name\">Service</th>\n251: <th class=\"service-description\">Description</th>"
+          },
+          {
+            "text": "Description",
+            "line": 251,
+            "context": "250: <th class=\"service-name\">Service</th>\n251: <th class=\"service-description\">Description</th>\n252: <th class=\"service-price\" style=\"text-align: right;\">Price</th>"
+          },
+          {
+            "text": "Price",
+            "line": 252,
+            "context": "251: <th class=\"service-description\">Description</th>\n252: <th class=\"service-price\" style=\"text-align: right;\">Price</th>\n253: </tr>"
+          },
+          {
+            "text": "Customer Notes",
+            "line": 270,
+            "context": "269: <div class=\"notes-block\">\n270: <h3 class=\"section-title\">Customer Notes</h3>\n271: <div class=\"notes-content\">${order.notes}</div>"
+          },
+          {
+            "text": "Order Tracking",
+            "line": 277,
+            "context": "276: <section class=\"qr-section\">\n277: <h3 class=\"section-title\">Order Tracking</h3>\n278: <div class=\"qr-container\" style=\"text-align: center; margin: 20px 0;\">"
+          },
+          {
+            "text": "QR Code",
+            "line": 281,
+            "context": "280: `<img src=\"${order.qr_code_url}\" alt=\"QR Code\" style=\"width: 100px; height: 100px; border: 1px solid #ddd; border-radius: 4px;\">` :\n281: `<div class=\"qr-placeholder\" style=\"width: 100px; height: 100px; border: 2px dashed #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 12px; color: #666;\">QR Code</div>`\n282: }"
+          },
+          {
+            "text": "Scan for order status",
+            "line": 283,
+            "context": "282: }\n283: <p class=\"qr-instructions\" style=\"margin: 8px 0 4px 0; font-size: 12px; color: #666;\">Scan for order status</p>\n284: <p class=\"qr-url\" style=\"margin: 0; font-size: 11px; color: #888; word-break: break-all;\">${order.short_link || 'N/A'}</p>"
+          },
+          {
+            "text": "Generated by My Detail Area",
+            "line": 290,
+            "context": "289: <div class=\"footer-info\">\n290: <p>Generated by My Detail Area</p>\n291: <p>Report generated on: ${new Date().toLocaleString('en-US', {"
+          },
+          {
+            "text": "QR Code",
+            "line": 280,
+            "context": "279: ${order.qr_code_url ?\n280: `<img src=\"${order.qr_code_url}\" alt=\"QR Code\" style=\"width: 100px; height: 100px; border: 1px solid #ddd; border-radius: 4px;\">` :\n281: `<div class=\"qr-placeholder\" style=\"width: 100px; height: 100px; border: 2px dashed #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 12px; color: #666;\">QR Code</div>`"
+          },
+          {
+            "text": ", error);\r\n      toast.error(`Failed to print order: ${error}`);\r\n    }\r\n  }, [fetchCompleteOrderData, generatePrintHTML]);\r\n\r\n  // Quick print without internal notes\r\n  const printOrderQuick = useCallback(async (order: OrderData) => {\r\n    await printOrder(order, false);\r\n  }, [printOrder]);\r\n\r\n  // Admin print with internal notes\r\n  const printOrderAdmin = useCallback(async (order: OrderData) => {\r\n    await printOrder(order, true);\r\n  }, [printOrder]);\r\n\r\n  // Print preview (opens in new tab for review)\r\n  const previewPrint = useCallback(async (order: OrderData) => {\r\n    try {\r\n      const { order: completeOrder, services, dealership } = await fetchCompleteOrderData(order.id);\r\n\r\n      // Generate HTML content\r\n      const printContent = generatePrintHTML(completeOrder, services, dealership);\r\n\r\n      const previewWindow = window.open(",
+            "line": 351,
+            "context": "350: } catch (error) {\n351: console.error('Print order error:', error);\n352: toast.error(`Failed to print order: ${error}`);"
+          },
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 423,
+            "context": "422: } catch (error) {\n423: console.error('Print preview error:', error);\n424: toast.error('Failed to open print preview');"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "high"
       },
       {
@@ -2382,129 +2520,202 @@
         "severity": "high"
       },
       {
+        "file": "src\\components\\orders\\OrderPrintView.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "WORK ORDER",
+            "line": 110,
+            "context": "109: <div className=\"order-header\">\n110: <h2 className=\"order-title\">WORK ORDER</h2>\n111: <div className=\"order-number\">#{orderNumber}</div>"
+          },
+          {
+            "text": "Customer Information",
+            "line": 121,
+            "context": "120: <div className=\"customer-info\">\n121: <h3 className=\"section-title\">Customer Information</h3>\n122: <div className=\"info-table\">"
+          },
+          {
+            "text": "Vehicle Information",
+            "line": 148,
+            "context": "147: <div className=\"vehicle-info\">\n148: <h3 className=\"section-title\">Vehicle Information</h3>\n149: <div className=\"info-table\">"
+          },
+          {
+            "text": "Services Requested",
+            "line": 178,
+            "context": "177: <section className=\"services-section\">\n178: <h3 className=\"section-title\">Services Requested</h3>\n179: <table className=\"services-table\">"
+          },
+          {
+            "text": "Service",
+            "line": 182,
+            "context": "181: <tr>\n182: <th className=\"service-name\">Service</th>\n183: <th className=\"service-description\">Description</th>"
+          },
+          {
+            "text": "Description",
+            "line": 183,
+            "context": "182: <th className=\"service-name\">Service</th>\n183: <th className=\"service-description\">Description</th>\n184: <th className=\"service-price\">Price</th>"
+          },
+          {
+            "text": "Price",
+            "line": 184,
+            "context": "183: <th className=\"service-description\">Description</th>\n184: <th className=\"service-price\">Price</th>\n185: </tr>"
+          },
+          {
+            "text": "Important Dates",
+            "line": 210,
+            "context": "209: <div className=\"dates-info\">\n210: <h3 className=\"section-title\">Important Dates</h3>\n211: <div className=\"info-table\">"
+          },
+          {
+            "text": "Order Tracking",
+            "line": 227,
+            "context": "226: <div className=\"qr-section\">\n227: <h3 className=\"section-title\">Order Tracking</h3>\n228: {order.short_link && ("
+          },
+          {
+            "text": "Scan for order status",
+            "line": 236,
+            "context": "235: />\n236: <p className=\"qr-instructions\">Scan for order status</p>\n237: <p className=\"qr-url\">{order.short_link}</p>"
+          },
+          {
+            "text": "Customer Notes",
+            "line": 249,
+            "context": "248: <div className=\"notes-block\">\n249: <h3 className=\"section-title\">Customer Notes</h3>\n250: <div className=\"notes-content\">{order.notes}</div>"
+          },
+          {
+            "text": "Internal Notes",
+            "line": 256,
+            "context": "255: <div className=\"notes-block\">\n256: <h3 className=\"section-title\">Internal Notes</h3>\n257: <div className=\"notes-content internal-notes\">{order.internal_notes}</div>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "high"
+      },
+      {
         "file": "src\\components\\orders\\OrderDataTable.tsx",
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 343,
-            "context": "342: <div className={cn(\"p-2 rounded\", getDuplicateCellBackground(0))}>\n343: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n344: <div className=\"text-sm font-semibold text-foreground\">"
+            "line": 349,
+            "context": "348: <div className={cn(\"p-2 rounded\", getDuplicateCellBackground(0))}>\n349: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n350: <div className=\"text-sm font-semibold text-foreground\">"
           },
           {
             "text": "Stock",
-            "line": 367,
-            "context": "366: <div className={cn(\"p-2 rounded\", getDuplicateCellBackground(0))}>\n367: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Stock</label>\n368: <div className=\"relative inline-block\">"
+            "line": 373,
+            "context": "372: <div className={cn(\"p-2 rounded\", getDuplicateCellBackground(0))}>\n373: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Stock</label>\n374: <div className=\"relative inline-block\">"
           },
           {
             "text": "View",
-            "line": 407,
-            "context": "406: >\n407: <Eye className=\"h-4 w-4\" />\n408: View"
+            "line": 413,
+            "context": "412: >\n413: <Eye className=\"h-4 w-4\" />\n414: View"
           },
           {
             "text": "Edit",
-            "line": 417,
-            "context": "416: >\n417: <Edit className=\"h-4 w-4\" />\n418: Edit"
+            "line": 423,
+            "context": "422: >\n423: <Edit className=\"h-4 w-4\" />\n424: Edit"
           },
           {
             "text": "Delete",
-            "line": 427,
-            "context": "426: >\n427: <Trash2 className=\"h-4 w-4\" />\n428: Delete"
+            "line": 433,
+            "context": "432: >\n433: <Trash2 className=\"h-4 w-4\" />\n434: Delete"
           },
           {
             "text": "Previous",
-            "line": 444,
-            "context": "443: disabled={currentPage === 1}\n444: >\n445: Previous"
+            "line": 450,
+            "context": "449: disabled={currentPage === 1}\n450: >\n451: Previous"
           },
           {
             "text": "Next",
-            "line": 455,
-            "context": "454: disabled={currentPage >= Math.ceil(orders.length / itemsPerPage)}\n455: >\n456: Next"
+            "line": 461,
+            "context": "460: disabled={currentPage >= Math.ceil(orders.length / itemsPerPage)}\n461: >\n462: Next"
           },
           {
             "text": "Order ID",
-            "line": 474,
-            "context": "473: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n474: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n475: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>"
+            "line": 480,
+            "context": "479: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n480: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n481: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>"
           },
           {
             "text": "Stock",
-            "line": 475,
-            "context": "474: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n475: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>\n476: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>"
+            "line": 481,
+            "context": "480: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n481: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>\n482: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 476,
-            "context": "475: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>\n476: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>\n477: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>"
+            "line": 482,
+            "context": "481: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>\n482: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>\n483: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
           },
           {
             "text": "Status",
-            "line": 478,
-            "context": "477: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>\n478: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n479: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+            "line": 485,
+            "context": "484: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>\n485: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n486: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 479,
-            "context": "478: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n479: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n480: </TableRow>"
+            "line": 486,
+            "context": "485: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n486: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n487: </TableRow>"
           },
           {
             "text": "Intenta ajustar los filtros o crear una nueva orden",
-            "line": 664,
-            "context": "663: <p className=\"text-lg font-medium\">No se encontraron órdenes</p>\n664: <p className=\"text-sm\">Intenta ajustar los filtros o crear una nueva orden</p>\n665: </div>"
+            "line": 683,
+            "context": "682: <p className=\"text-lg font-medium\">No se encontraron órdenes</p>\n683: <p className=\"text-sm\">Intenta ajustar los filtros o crear una nueva orden</p>\n684: </div>"
           },
           {
             "text": "Tap to copy VIN",
-            "line": 358,
-            "context": "357: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n358: title=\"Tap to copy VIN\"\n359: >"
+            "line": 364,
+            "context": "363: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n364: title=\"Tap to copy VIN\"\n365: >"
           },
           {
             "text": "Click to copy VIN",
-            "line": 565,
-            "context": "564: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n565: title=\"Click to copy VIN\"\n566: >"
+            "line": 573,
+            "context": "572: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n573: title=\"Click to copy VIN\"\n574: >"
           },
           {
             "text": "View Details",
-            "line": 628,
-            "context": "627: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n628: title=\"View Details\"\n629: >"
+            "line": 637,
+            "context": "636: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n637: title=\"View Details\"\n638: >"
           },
           {
             "text": "Edit Order",
-            "line": 638,
-            "context": "637: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n638: title=\"Edit Order\"\n639: >"
+            "line": 647,
+            "context": "646: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n647: title=\"Edit Order\"\n648: >"
+          },
+          {
+            "text": "Print Order",
+            "line": 657,
+            "context": "656: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n657: title=\"Print Order\"\n658: >"
           },
           {
             "text": "Delete Order",
-            "line": 648,
-            "context": "647: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n648: title=\"Delete Order\"\n649: >"
+            "line": 667,
+            "context": "666: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n667: title=\"Delete Order\"\n668: >"
           }
         ],
         "translationCalls": [
           {
             "key": "data_table.due_today",
-            "line": 263,
-            "exists": false
+            "line": 269,
+            "exists": true
           },
           {
             "key": "common.loading",
-            "line": 284,
+            "line": 290,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 483,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 533,
+            "line": 541,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 567,
+            "line": 575,
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "data_table.due_today",
-            "line": 263,
-            "context": "262: } else if (diffDays === 0) {\n263: return { text: t('data_table.due_today'), variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };\n264: } else if (diffDays === 1) {"
-          }
-        ],
-        "coverage": 18,
+        "missingKeys": [],
+        "coverage": 21,
         "severity": "high"
       },
       {
@@ -5778,33 +5989,33 @@
         "hardcodedStrings": [
           {
             "text": "View",
-            "line": 249,
-            "context": "248: <DropdownMenuItem onClick={() => onView(order)}>\n249: <Eye className=\"w-4 h-4 mr-2\" />\n250: View"
+            "line": 250,
+            "context": "249: <DropdownMenuItem onClick={() => onView(order)}>\n250: <Eye className=\"w-4 h-4 mr-2\" />\n251: View"
           },
           {
             "text": "Edit",
-            "line": 253,
-            "context": "252: <DropdownMenuItem onClick={() => onEdit(order)}>\n253: <Edit className=\"w-4 h-4 mr-2\" />\n254: Edit"
+            "line": 254,
+            "context": "253: <DropdownMenuItem onClick={() => onEdit(order)}>\n254: <Edit className=\"w-4 h-4 mr-2\" />\n255: Edit"
           },
           {
             "text": "Delete",
-            "line": 260,
-            "context": "259: >\n260: <Trash className=\"w-4 h-4 mr-2\" />\n261: Delete"
+            "line": 261,
+            "context": "260: >\n261: <Trash className=\"w-4 h-4 mr-2\" />\n262: Delete"
           },
           {
             "text": "No due date",
-            "line": 279,
-            "context": "278: ) : (\n279: <div className=\"text-xs text-muted-foreground\">\n280: No due date"
+            "line": 280,
+            "context": "279: ) : (\n280: <div className=\"text-xs text-muted-foreground\">\n281: No due date"
           },
           {
             "text": "No orders",
-            "line": 373,
-            "context": "372: <div className=\"text-center py-8 text-muted-foreground\">\n373: <div className=\"text-sm\">No orders</div>\n374: <div className=\"text-xs\">Drag orders here</div>"
+            "line": 383,
+            "context": "382: <div className=\"text-center py-8 text-muted-foreground\">\n383: <div className=\"text-sm\">No orders</div>\n384: <div className=\"text-xs\">Drag orders here</div>"
           },
           {
             "text": "Drag orders here",
-            "line": 374,
-            "context": "373: <div className=\"text-sm\">No orders</div>\n374: <div className=\"text-xs\">Drag orders here</div>\n375: </div>"
+            "line": 384,
+            "context": "383: <div className=\"text-sm\">No orders</div>\n384: <div className=\"text-xs\">Drag orders here</div>\n385: </div>"
           }
         ],
         "translationCalls": [],
@@ -6264,6 +6475,76 @@
           }
         ],
         "coverage": 84,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\components\\orders\\InteractiveTimeline.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Start Work",
+            "line": 176,
+            "context": "175: >\n176: <Play className=\"h-3 w-3 mr-1\" />\n177: Start Work"
+          },
+          {
+            "text": "Mark Complete",
+            "line": 188,
+            "context": "187: >\n188: <CheckCircle className=\"h-3 w-3 mr-1\" />\n189: Mark Complete"
+          },
+          {
+            "text": "Put on Hold",
+            "line": 200,
+            "context": "199: >\n200: <Pause className=\"h-3 w-3 mr-1\" />\n201: Put on Hold"
+          },
+          {
+            "text": "Start Order",
+            "line": 259,
+            "context": "258: >\n259: <FastForward className=\"h-3 w-3 mr-1\" />\n260: Start Order"
+          },
+          {
+            "text": "Complete",
+            "line": 271,
+            "context": "270: >\n271: <CheckCircle className=\"h-3 w-3 mr-1\" />\n272: Complete"
+          },
+          {
+            "text": "Hold",
+            "line": 280,
+            "context": "279: >\n280: <Pause className=\"h-3 w-3 mr-1\" />\n281: Hold"
+          },
+          {
+            "text": "Reopen",
+            "line": 293,
+            "context": "292: >\n293: <RotateCcw className=\"h-3 w-3 mr-1\" />\n294: Reopen"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "orders.created",
+            "line": 52,
+            "exists": true
+          },
+          {
+            "key": "common.status.in_progress",
+            "line": 60,
+            "exists": true
+          },
+          {
+            "key": "common.status.completed",
+            "line": 68,
+            "exists": true
+          },
+          {
+            "key": "schedule_view.timeline",
+            "line": 217,
+            "exists": true
+          },
+          {
+            "key": "schedule_view.timeline",
+            "line": 234,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 42,
         "severity": "medium"
       },
       {
@@ -6744,6 +7025,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\tests\\config\\performance-setup.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 243,
+            "context": "242: // Measure function execution time\n243: measureFunction: async <T>(fn: () => Promise<T> | T, name: string): Promise<{ result: T; duration: number }> => {\n244: const measureId = globalThis.__PERFORMANCE_MONITOR__.startMeasure(name);"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\test\\validation\\phase4-integration.test.ts",
         "hardcodedStrings": [
           {
@@ -6769,6 +7064,20 @@
             "text": "Failed to load todos",
             "line": 413,
             "context": "412: loading: false,\n413: error: 'Failed to load todos',\n414: todos: []"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\services\\supabaseQueryOptimizer.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 55,
+            "context": "54: cacheTTL?: number;\n55: execute: () => Promise<any>;\n56: }"
           }
         ],
         "translationCalls": [],
@@ -7183,82 +7492,82 @@
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 224,
+            "line": 233,
             "exists": false
           },
           {
             "key": "orders.status_change_failed_due_date",
-            "line": 230,
+            "line": 239,
             "exists": false
           },
           {
             "key": "orders.status_change_failed_business_hours",
-            "line": 234,
+            "line": 243,
             "exists": false
           },
           {
             "key": "orders.status_change_failed",
-            "line": 236,
+            "line": 245,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 257,
+            "line": 266,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 258,
+            "line": 267,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 259,
+            "line": 268,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 260,
+            "line": 269,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 261,
+            "line": 270,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 262,
+            "line": 271,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 263,
+            "line": 272,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.services",
-            "line": 264,
+            "line": 273,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 265,
+            "line": 274,
             "exists": true
           },
           {
             "key": "pages.sales_orders",
-            "line": 289,
+            "line": 298,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 300,
+            "line": 309,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 304,
+            "line": 313,
             "exists": true
           }
         ],
@@ -7275,23 +7584,23 @@
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 224,
-            "context": "223: \n224: toast.success(t('orders.status_updated_successfully'));\n225: } catch (error) {"
+            "line": 233,
+            "context": "232: \n233: toast.success(t('orders.status_updated_successfully'));\n234: } catch (error) {"
           },
           {
             "key": "orders.status_change_failed_due_date",
-            "line": 230,
-            "context": "229: if (error?.message?.includes('Invalid due date')) {\n230: toast.error(t('orders.status_change_failed_due_date', {\n231: message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'"
+            "line": 239,
+            "context": "238: if (error?.message?.includes('Invalid due date')) {\n239: toast.error(t('orders.status_change_failed_due_date', {\n240: message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'"
           },
           {
             "key": "orders.status_change_failed_business_hours",
-            "line": 234,
-            "context": "233: } else if (error?.message?.includes('business hours')) {\n234: toast.error(t('orders.status_change_failed_business_hours'));\n235: } else {"
+            "line": 243,
+            "context": "242: } else if (error?.message?.includes('business hours')) {\n243: toast.error(t('orders.status_change_failed_business_hours'));\n244: } else {"
           },
           {
             "key": "orders.status_change_failed",
-            "line": 236,
-            "context": "235: } else {\n236: toast.error(t('orders.status_change_failed'));\n237: }"
+            "line": 245,
+            "context": "244: } else {\n245: toast.error(t('orders.status_change_failed'));\n246: }"
           }
         ],
         "coverage": 100,
@@ -10472,6 +10781,40 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useSmartPolling.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 18,
+            "context": "17: queryKey: string[];\n18: queryFn: () => Promise<T>;\n19: interval?: number;"
+          },
+          {
+            "text": "Promise",
+            "line": 106,
+            "context": "105: queryKey: string[],\n106: queryFn: () => Promise<T>,\n107: enabled: boolean = true"
+          },
+          {
+            "text": "Promise",
+            "line": 126,
+            "context": "125: queryKey: string[],\n126: queryFn: () => Promise<T>,\n127: isModalOpen: boolean = false"
+          },
+          {
+            "text": "Promise",
+            "line": 146,
+            "context": "145: queryKey: string[],\n146: queryFn: () => Promise<T>,\n147: enabled: boolean = true"
+          },
+          {
+            "text": "Promise",
+            "line": 166,
+            "context": "165: queryKey: string[],\n166: queryFn: () => Promise<T>,\n167: enabled: boolean = true"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useSmartNotifications.tsx",
         "hardcodedStrings": [
           {
@@ -10733,6 +11076,25 @@
           }
         ],
         "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useRealtimeOrderData.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", errorMessage);\r\n\r\n      updateMetrics({\r\n        errorCount: metrics.errorCount + 1,\r\n        lastError: errorMessage\r\n      });\r\n\r\n      if (handlers.onError) {\r\n        handlers.onError(errorMessage);\r\n      }\r\n    }\r\n  }, [handlers, metrics.errorCount, updateMetrics]);\r\n\r\n  // Add update to batch or process immediately\r\n  const addToBatch = useCallback((\r\n    table: string,\r\n    eventType: ",
+            "line": 164,
+            "context": "163: const errorMessage = error instanceof Error ? error.message : 'Unknown error processing real-time update';\n164: console.error('Real-time update processing error:', errorMessage);\n165: "
+          },
+          {
+            "text": ", errorMessage);\r\n\r\n      updateMetrics({\r\n        connectionStatus: ",
+            "line": 346,
+            "context": "345: const errorMessage = error instanceof Error ? error.message : 'Unknown subscription error';\n346: console.error('Real-time subscription error:', errorMessage);\n347: "
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -26672,56 +27034,81 @@
         "file": "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "hardcodedStrings": [
           {
-            "text": "Close",
-            "line": 514,
-            "context": "513: className=\"min-w-[120px]\"\n514: >\n515: Close"
-          },
-          {
-            "text": "Close\n              ",
-            "line": 509,
-            "context": "508: <div className=\"flex justify-end\">\n509: <Button\n510: variant=\"destructive\""
-          },
-          {
-            "text": ", error);\n    return <>{fallback}</>;\n  }\n};\n\n// Header Components\ninterface UnifiedOrderHeaderProps {\n  order: OrderData;\n  orderType: OrderType;\n  vehicleDisplayName: string;\n  onStatusChange: (newStatus: string) => void;\n}\n\nconst UnifiedOrderHeader = memo(function UnifiedOrderHeader({\n  order,\n  orderType,\n  vehicleDisplayName,\n  onStatusChange\n}: UnifiedOrderHeaderProps) {\n  const { t } = useTranslation();\n\n  const headerData = useMemo(() => {\n    const orderNumber = order.orderNumber || order.order_number || ",
-            "line": 137,
-            "context": "136: } catch (error) {\n137: console.error('Component rendering error:', error);\n138: return <>{fallback}</>;"
+            "text": ", error);\n    return <>{fallback}</>;\n  }\n};\n\n// Header Components\ninterface UnifiedOrderHeaderProps {\n  order: OrderData;\n  orderType: OrderType;\n  vehicleDisplayName: string;\n  onStatusChange: (newStatus: string) => void;\n  canEditOrder?: boolean;\n  onEdit?: () => void;\n}\n\nconst UnifiedOrderHeader = memo(function UnifiedOrderHeader({\n  order,\n  orderType,\n  vehicleDisplayName,\n  onStatusChange,\n  canEditOrder,\n  onEdit\n}: UnifiedOrderHeaderProps) {\n  const { t } = useTranslation();\n\n  const headerData = useMemo(() => {\n    const orderNumber = order.orderNumber || order.order_number || ",
+            "line": 144,
+            "context": "143: } catch (error) {\n144: console.error('Component rendering error:', error);\n145: return <>{fallback}</>;"
           }
         ],
         "translationCalls": [
           {
+            "key": "orders.edit",
+            "line": 222,
+            "exists": true
+          },
+          {
             "key": "orders.order_details_modal_title",
-            "line": 400,
+            "line": 453,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 408,
+            "line": 461,
             "exists": false
           },
           {
             "key": "orders.communication_actions",
-            "line": 462,
+            "line": 517,
+            "exists": false
+          },
+          {
+            "key": "orders.print",
+            "line": 573,
+            "exists": false
+          },
+          {
+            "key": "orders.download",
+            "line": 582,
+            "exists": false
+          },
+          {
+            "key": "common.close",
+            "line": 593,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_details_modal_title",
-            "line": 400,
-            "context": "399: <DialogTitle className=\"sr-only\">\n400: {t('orders.order_details_modal_title', {\n401: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 453,
+            "context": "452: <DialogTitle className=\"sr-only\">\n453: {t('orders.order_details_modal_title', {\n454: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 408,
-            "context": "407: <DialogDescription className=\"sr-only\">\n408: {t('orders.order_details_description', {\n409: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
+            "line": 461,
+            "context": "460: <DialogDescription className=\"sr-only\">\n461: {t('orders.order_details_description', {\n462: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.communication_actions",
-            "line": 462,
-            "context": "461: <MessageSquare className=\"h-4 w-4\" />\n462: {t('orders.communication_actions', 'Team Communication')}\n463: </CardTitle>"
+            "line": 517,
+            "context": "516: <MessageSquare className=\"h-4 w-4\" />\n517: {t('orders.communication_actions', 'Team Communication')}\n518: </CardTitle>"
+          },
+          {
+            "key": "orders.print",
+            "line": 573,
+            "context": "572: <Printer className=\"h-4 w-4\" />\n573: {t('orders.print')}\n574: </Button>"
+          },
+          {
+            "key": "orders.download",
+            "line": 582,
+            "context": "581: <Download className=\"h-4 w-4\" />\n582: {t('orders.download')}\n583: </Button>"
+          },
+          {
+            "key": "common.close",
+            "line": 593,
+            "context": "592: >\n593: {t('common.close')}\n594: </Button>"
           }
         ],
-        "coverage": 50,
+        "coverage": 88,
         "severity": "low"
       },
       {
@@ -26924,6 +27311,36 @@
             "key": "common.recently",
             "line": 48,
             "context": "47: <span>\n48: Added {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}\n49: </span>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\orders\\ServicesDisplay.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "orders.services_summary",
+            "line": 152,
+            "exists": false
+          },
+          {
+            "key": "orders.total_amount",
+            "line": 188,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "orders.services_summary",
+            "line": 152,
+            "context": "151: <List className=\"h-4 w-4 text-gray-700\" />\n152: {t('orders.services_summary')}\n153: </CardTitle>"
+          },
+          {
+            "key": "orders.total_amount",
+            "line": 188,
+            "context": "187: <DollarSign className=\"h-4 w-4\" />\n188: {t('orders.total_amount')}:\n189: </span>"
           }
         ],
         "coverage": 100,
@@ -27334,7 +27751,7 @@
           {
             "key": "service_orders.service_information",
             "line": 64,
-            "context": "63: <Wrench className=\"h-5 w-5 text-primary\" />\n64: {t('service_orders.service_information')}\n65: </CardTitle>"
+            "context": "63: <Wrench className=\"h-5 w-5 text-gray-700\" />\n64: {t('service_orders.service_information')}\n65: </CardTitle>"
           },
           {
             "key": "common.assigned",
@@ -27352,152 +27769,82 @@
       },
       {
         "file": "src\\components\\orders\\ScheduleViewBlock.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "Live",
+            "line": 277,
+            "context": "276: {lastUpdate && (\n277: <Badge variant=\"outline\" className=\"text-xs\">\n278: Live"
+          },
+          {
+            "text": "Start Order",
+            "line": 405,
+            "context": "404: >\n405: <Play className=\"h-3 w-3 mr-1\" />\n406: Start Order"
+          },
+          {
+            "text": "Complete",
+            "line": 417,
+            "context": "416: >\n417: <CheckCircle className=\"h-3 w-3 mr-1\" />\n418: Complete"
+          },
+          {
+            "text": "Hold",
+            "line": 426,
+            "context": "425: >\n426: <Pause className=\"h-3 w-3 mr-1\" />\n427: Hold"
+          },
+          {
+            "text": "Real-time updates active",
+            "line": 272,
+            "context": "271: {isConnected ? (\n272: <Wifi className=\"h-4 w-4 text-green-500\" title=\"Real-time updates active\" />\n273: ) : ("
+          }
+        ],
         "translationCalls": [
           {
-            "key": "schedule_view.days_overdue",
-            "line": 35,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_today",
-            "line": 43,
-            "exists": false
-          },
-          {
-            "key": "schedule_view.due_tomorrow",
-            "line": 51,
-            "exists": false
-          },
-          {
-            "key": "schedule_view.due_in_days",
-            "line": 59,
-            "exists": false
-          },
-          {
-            "key": "orders.created",
-            "line": 95,
-            "exists": true
-          },
-          {
-            "key": "orders.due_date",
-            "line": 101,
-            "exists": true
-          },
-          {
-            "key": "schedule_view.not_set",
-            "line": 102,
-            "exists": true
-          },
-          {
-            "key": "schedule_view.no_due_date",
-            "line": 103,
-            "exists": true
-          },
-          {
-            "key": "orders.updated",
-            "line": 107,
-            "exists": true
-          },
-          {
-            "key": "schedule_view.most_recent_change",
-            "line": 109,
-            "exists": true
-          },
-          {
             "key": "schedule_view.schedule_timeline",
-            "line": 118,
+            "line": 268,
             "exists": true
           },
           {
             "key": "schedule_view.order_progress",
-            "line": 138,
+            "line": 301,
             "exists": true
           },
           {
             "key": "schedule_view.order_completed",
-            "line": 149,
-            "exists": false
+            "line": 353,
+            "exists": true
           },
           {
-            "key": "schedule_view.in_progress",
-            "line": 149,
+            "key": "common.status.pending",
+            "line": 354,
+            "exists": true
+          },
+          {
+            "key": "common.status.in_progress",
+            "line": 355,
             "exists": true
           },
           {
             "key": "schedule_view.timeline",
-            "line": 158,
+            "line": 366,
             "exists": true
           },
           {
             "key": "schedule_view.sla_compliance",
-            "line": 190,
-            "exists": false
+            "line": 438,
+            "exists": true
           },
           {
             "key": "schedule_view.on_track",
-            "line": 192,
-            "exists": false
+            "line": 452,
+            "exists": true
           },
           {
             "key": "schedule_view.at_risk",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "schedule_view.target_completion",
-            "line": 196,
-            "exists": false
+            "line": 453,
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "schedule_view.days_overdue",
-            "line": 35,
-            "context": "34: status: 'overdue',\n35: text: t('schedule_view.days_overdue', { days: Math.abs(daysLeft) }),\n36: color: 'text-destructive',"
-          },
-          {
-            "key": "data_table.due_today",
-            "line": 43,
-            "context": "42: status: 'today',\n43: text: t('data_table.due_today'),\n44: color: 'text-warning',"
-          },
-          {
-            "key": "schedule_view.due_tomorrow",
-            "line": 51,
-            "context": "50: status: 'tomorrow',\n51: text: t('schedule_view.due_tomorrow'),\n52: color: 'text-warning',"
-          },
-          {
-            "key": "schedule_view.due_in_days",
-            "line": 59,
-            "context": "58: status: 'future',\n59: text: t('schedule_view.due_in_days', { days: daysLeft }),\n60: color: 'text-muted-foreground',"
-          },
-          {
-            "key": "schedule_view.order_completed",
-            "line": 149,
-            "context": "148: <span className=\"text-xs text-muted-foreground\">\n149: {order.status === 'completed' ? t('schedule_view.order_completed') : t('schedule_view.in_progress')}\n150: </span>"
-          },
-          {
-            "key": "schedule_view.sla_compliance",
-            "line": 190,
-            "context": "189: <div className=\"flex items-center justify-between\">\n190: <span className=\"text-sm font-medium\">{t('schedule_view.sla_compliance')}</span>\n191: <Badge variant={progress >= 80 ? 'default' : 'destructive'}>"
-          },
-          {
-            "key": "schedule_view.on_track",
-            "line": 192,
-            "context": "191: <Badge variant={progress >= 80 ? 'default' : 'destructive'}>\n192: {progress >= 80 ? t('schedule_view.on_track') : t('schedule_view.at_risk')}\n193: </Badge>"
-          },
-          {
-            "key": "schedule_view.at_risk",
-            "line": 192,
-            "context": "191: <Badge variant={progress >= 80 ? 'default' : 'destructive'}>\n192: {progress >= 80 ? t('schedule_view.on_track') : t('schedule_view.at_risk')}\n193: </Badge>"
-          },
-          {
-            "key": "schedule_view.target_completion",
-            "line": 196,
-            "context": "195: <p className=\"text-xs text-muted-foreground\">\n196: {t('schedule_view.target_completion', { hours: order.sla_hours })}\n197: </p>"
-          }
-        ],
-        "coverage": 100,
+        "missingKeys": [],
+        "coverage": 64,
         "severity": "low"
       },
       {
@@ -28195,7 +28542,7 @@
           {
             "key": "recon_orders.recon_information",
             "line": 52,
-            "context": "51: <RefreshCw className=\"h-5 w-5 text-primary\" />\n52: {t('recon_orders.recon_information')}\n53: </CardTitle>"
+            "context": "51: <RefreshCw className=\"h-5 w-5 text-gray-700\" />\n52: {t('recon_orders.recon_information')}\n53: </CardTitle>"
           },
           {
             "key": "recon_orders.service_performer",
@@ -28241,13 +28588,13 @@
         "hardcodedStrings": [
           {
             "text": "No recent activity",
-            "line": 181,
-            "context": "180: <Activity className=\"h-8 w-8 mx-auto mb-2 opacity-50\" />\n181: <p className=\"text-sm\">No recent activity</p>\n182: <p className=\"text-xs\">Activity will appear here</p>"
+            "line": 267,
+            "context": "266: <Activity className=\"h-8 w-8 mx-auto mb-2 opacity-50\" />\n267: <p className=\"text-sm\">No recent activity</p>\n268: <p className=\"text-xs\">Activity will appear here</p>"
           },
           {
             "text": "Activity will appear here",
-            "line": 182,
-            "context": "181: <p className=\"text-sm\">No recent activity</p>\n182: <p className=\"text-xs\">Activity will appear here</p>\n183: </div>"
+            "line": 268,
+            "context": "267: <p className=\"text-sm\">No recent activity</p>\n268: <p className=\"text-xs\">Activity will appear here</p>\n269: </div>"
           }
         ],
         "translationCalls": [],
@@ -28455,7 +28802,7 @@
           {
             "key": "orders.total_clicks",
             "line": 164,
-            "context": "163: <MousePointer className=\"w-3 h-3 text-blue-500\" />\n164: <span className=\"text-muted-foreground\">{t('orders.total_clicks')}:</span>\n165: <Badge variant=\"secondary\" className=\"text-xs\">"
+            "context": "163: <MousePointer className=\"w-3 h-3 text-gray-700\" />\n164: <span className=\"text-muted-foreground\">{t('orders.total_clicks')}:</span>\n165: <Badge variant=\"secondary\" className=\"text-xs\">"
           },
           {
             "key": "orders.unique_clicks",
@@ -29384,6 +29731,282 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\OptimizedOrderModal.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "QR Code",
+            "line": 468,
+            "context": "467: <div className=\"w-32 h-32 bg-gray-200 mx-auto mb-2 rounded-lg flex items-center justify-center\">\n468: <span className=\"text-sm text-gray-500\">QR Code</span>\n469: </div>"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "performance.monitor_title",
+            "line": 81,
+            "exists": false
+          },
+          {
+            "key": "performance.cache_stats",
+            "line": 103,
+            "exists": false
+          },
+          {
+            "key": "performance.query_stats",
+            "line": 111,
+            "exists": false
+          },
+          {
+            "key": "performance.refresh",
+            "line": 124,
+            "exists": false
+          },
+          {
+            "key": "performance.clear_cache",
+            "line": 128,
+            "exists": false
+          },
+          {
+            "key": "orders.modal.title",
+            "line": 258,
+            "exists": false
+          },
+          {
+            "key": "performance.cached",
+            "line": 268,
+            "exists": false
+          },
+          {
+            "key": "orders.modal.error_loading",
+            "line": 297,
+            "exists": false
+          },
+          {
+            "key": "common.retry",
+            "line": 304,
+            "exists": false
+          },
+          {
+            "key": "orders.modal.loading",
+            "line": 315,
+            "exists": false
+          },
+          {
+            "key": "orders.vehicle_information",
+            "line": 325,
+            "exists": true
+          },
+          {
+            "key": "orders.vehicle_year",
+            "line": 331,
+            "exists": false
+          },
+          {
+            "key": "orders.vehicle_make",
+            "line": 337,
+            "exists": false
+          },
+          {
+            "key": "orders.vehicle_model",
+            "line": 343,
+            "exists": false
+          },
+          {
+            "key": "orders.vehicle_vin",
+            "line": 349,
+            "exists": false
+          },
+          {
+            "key": "team_communication.comments",
+            "line": 363,
+            "exists": false
+          },
+          {
+            "key": "team_communication.add_comment",
+            "line": 373,
+            "exists": false
+          },
+          {
+            "key": "team_communication.internal",
+            "line": 392,
+            "exists": false
+          },
+          {
+            "key": "team_communication.no_comments",
+            "line": 400,
+            "exists": false
+          },
+          {
+            "key": "attachments.title",
+            "line": 411,
+            "exists": false
+          },
+          {
+            "key": "attachments.upload",
+            "line": 425,
+            "exists": false
+          },
+          {
+            "key": "attachments.no_attachments",
+            "line": 447,
+            "exists": false
+          },
+          {
+            "key": "orders.qr_code",
+            "line": 463,
+            "exists": true
+          },
+          {
+            "key": "performance.realtime_status",
+            "line": 496,
+            "exists": false
+          },
+          {
+            "key": "performance.connection",
+            "line": 502,
+            "exists": false
+          },
+          {
+            "key": "performance.updates",
+            "line": 513,
+            "exists": false
+          },
+          {
+            "key": "common.close",
+            "line": 527,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "performance.monitor_title",
+            "line": 81,
+            "context": "80: <Activity className=\"h-4 w-4\" />\n81: {t('performance.monitor_title')}\n82: </CardTitle>"
+          },
+          {
+            "key": "performance.cache_stats",
+            "line": 103,
+            "context": "102: <div>\n103: <div className=\"font-medium mb-2\">{t('performance.cache_stats')}</div>\n104: <div className=\"space-y-1\">"
+          },
+          {
+            "key": "performance.query_stats",
+            "line": 111,
+            "context": "110: <div>\n111: <div className=\"font-medium mb-2\">{t('performance.query_stats')}</div>\n112: <div className=\"space-y-1\">"
+          },
+          {
+            "key": "performance.refresh",
+            "line": 124,
+            "context": "123: <RefreshCw className=\"h-3 w-3 mr-1\" />\n124: {t('performance.refresh')}\n125: </Button>"
+          },
+          {
+            "key": "performance.clear_cache",
+            "line": 128,
+            "context": "127: <Database className=\"h-3 w-3 mr-1\" />\n128: {t('performance.clear_cache')}\n129: </Button>"
+          },
+          {
+            "key": "orders.modal.title",
+            "line": 258,
+            "context": "257: <DialogTitle className=\"text-2xl font-bold\">\n258: {t('orders.modal.title')} - {order.custom_order_number || order.id}\n259: </DialogTitle>"
+          },
+          {
+            "key": "performance.cached",
+            "line": 268,
+            "context": "267: <Zap className=\"h-3 w-3 mr-1\" />\n268: {t('performance.cached')}\n269: </Badge>"
+          },
+          {
+            "key": "orders.modal.error_loading",
+            "line": 297,
+            "context": "296: <AlertDescription>\n297: {t('orders.modal.error_loading')}: {error}\n298: <Button"
+          },
+          {
+            "key": "common.retry",
+            "line": 304,
+            "context": "303: >\n304: {t('common.retry')}\n305: </Button>"
+          },
+          {
+            "key": "orders.modal.loading",
+            "line": 315,
+            "context": "314: <RefreshCw className=\"h-8 w-8 animate-spin mx-auto mb-4 text-gray-400\" />\n315: <p className=\"text-gray-500\">{t('orders.modal.loading')}</p>\n316: </div>"
+          },
+          {
+            "key": "orders.vehicle_year",
+            "line": 331,
+            "context": "330: <label className=\"text-sm font-medium text-gray-500\">\n331: {t('orders.vehicle_year')}\n332: </label>"
+          },
+          {
+            "key": "orders.vehicle_make",
+            "line": 337,
+            "context": "336: <label className=\"text-sm font-medium text-gray-500\">\n337: {t('orders.vehicle_make')}\n338: </label>"
+          },
+          {
+            "key": "orders.vehicle_model",
+            "line": 343,
+            "context": "342: <label className=\"text-sm font-medium text-gray-500\">\n343: {t('orders.vehicle_model')}\n344: </label>"
+          },
+          {
+            "key": "orders.vehicle_vin",
+            "line": 349,
+            "context": "348: <label className=\"text-sm font-medium text-gray-500\">\n349: {t('orders.vehicle_vin')}\n350: </label>"
+          },
+          {
+            "key": "team_communication.comments",
+            "line": 363,
+            "context": "362: <CardTitle>\n363: {t('team_communication.comments')} ({data.comments.length})\n364: </CardTitle>"
+          },
+          {
+            "key": "team_communication.add_comment",
+            "line": 373,
+            "context": "372: >\n373: {t('team_communication.add_comment')}\n374: </Button>"
+          },
+          {
+            "key": "team_communication.internal",
+            "line": 392,
+            "context": "391: <Badge variant=\"secondary\" className=\"mt-2\">\n392: {t('team_communication.internal')}\n393: </Badge>"
+          },
+          {
+            "key": "team_communication.no_comments",
+            "line": 400,
+            "context": "399: <p className=\"text-gray-500 text-sm\">\n400: {t('team_communication.no_comments')}\n401: </p>"
+          },
+          {
+            "key": "attachments.title",
+            "line": 411,
+            "context": "410: <CardTitle>\n411: {t('attachments.title')} ({data.attachments.length})\n412: </CardTitle>"
+          },
+          {
+            "key": "attachments.upload",
+            "line": 425,
+            "context": "424: >\n425: {t('attachments.upload')}\n426: </Button>"
+          },
+          {
+            "key": "attachments.no_attachments",
+            "line": 447,
+            "context": "446: <p className=\"text-gray-500 text-sm\">\n447: {t('attachments.no_attachments')}\n448: </p>"
+          },
+          {
+            "key": "performance.realtime_status",
+            "line": 496,
+            "context": "495: <Signal className=\"h-4 w-4\" />\n496: {t('performance.realtime_status')}\n497: </CardTitle>"
+          },
+          {
+            "key": "performance.connection",
+            "line": 502,
+            "context": "501: <div className=\"flex justify-between\">\n502: <span>{t('performance.connection')}:</span>\n503: <Badge"
+          },
+          {
+            "key": "performance.updates",
+            "line": 513,
+            "context": "512: <div className=\"flex justify-between\">\n513: <span>{t('performance.updates')}:</span>\n514: <span>{performanceMetrics.realtimeMetrics?.updateCount || 0}</span>"
+          },
+          {
+            "key": "common.close",
+            "line": 527,
+            "context": "526: <Button onClick={onClose}>\n527: {t('common.close')}\n528: </Button>"
+          }
+        ],
+        "coverage": 96,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\OptimizedEnhancedOrderDetailModal.tsx",
         "hardcodedStrings": [
           {
@@ -29508,7 +30131,7 @@
           {
             "key": "order_detail.followers",
             "line": 110,
-            "context": "109: <Users className=\"h-5 w-5 text-primary\" />\n110: {t('order_detail.followers', 'Followers')}\n111: </div>"
+            "context": "109: <Users className=\"h-5 w-5 text-gray-700\" />\n110: {t('order_detail.followers', 'Followers')}\n111: </div>"
           }
         ],
         "coverage": 100,
@@ -29520,45 +30143,45 @@
         "translationCalls": [
           {
             "key": "messages.notes_updated_successfully",
-            "line": 88,
+            "line": 86,
             "exists": false
           },
           {
             "key": "messages.error_updating_notes",
-            "line": 97,
+            "line": 95,
             "exists": false
           },
           {
             "key": "attachments.uploadSuccess",
-            "line": 104,
+            "line": 102,
             "exists": false
           },
           {
             "key": "attachments.deleteSuccess",
-            "line": 109,
+            "line": 107,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "messages.notes_updated_successfully",
-            "line": 88,
-            "context": "87: \n88: toast.success(t('messages.notes_updated_successfully'));\n89: "
+            "line": 86,
+            "context": "85: \n86: toast.success(t('messages.notes_updated_successfully'));\n87: "
           },
           {
             "key": "messages.error_updating_notes",
-            "line": 97,
-            "context": "96: console.error('Error updating notes:', error);\n97: toast.error(t('messages.error_updating_notes'));\n98: }"
+            "line": 95,
+            "context": "94: console.error('Error updating notes:', error);\n95: toast.error(t('messages.error_updating_notes'));\n96: }"
           },
           {
             "key": "attachments.uploadSuccess",
-            "line": 104,
-            "context": "103: handleAttachmentUploaded(newAttachment);\n104: toast.success(t('attachments.uploadSuccess'));\n105: }, [handleAttachmentUploaded, t]);"
+            "line": 102,
+            "context": "101: handleAttachmentUploaded(newAttachment);\n102: toast.success(t('attachments.uploadSuccess'));\n103: }, [handleAttachmentUploaded, t]);"
           },
           {
             "key": "attachments.deleteSuccess",
-            "line": 109,
-            "context": "108: handleAttachmentDeleted(attachmentId);\n109: toast.success(t('attachments.deleteSuccess'));\n110: }, [handleAttachmentDeleted, t]);"
+            "line": 107,
+            "context": "106: handleAttachmentDeleted(attachmentId);\n107: toast.success(t('attachments.deleteSuccess'));\n108: }, [handleAttachmentDeleted, t]);"
           }
         ],
         "coverage": 100,
@@ -29569,55 +30192,60 @@
         "hardcodedStrings": [
           {
             "text": "Premium Auto",
-            "line": 241,
-            "context": "240: <div className=\"text-lg text-gray-700\">\n241: <span className=\"font-semibold\">Premium Auto</span>\n242: <span className=\"mx-2 text-gray-400\">•</span>"
+            "line": 302,
+            "context": "301: <div className=\"text-lg text-gray-700\">\n302: <span className=\"font-semibold\">Premium Auto</span>\n303: <span className=\"mx-2 text-gray-400\">•</span>"
           },
           {
             "text": "Close",
-            "line": 384,
-            "context": "383: className=\"min-w-[120px]\"\n384: >\n385: Close"
+            "line": 425,
+            "context": "424: className=\"min-w-[120px]\"\n425: >\n426: Close"
           },
           {
             "text": "Close\r\n              ",
-            "line": 379,
-            "context": "378: <div className=\"flex justify-end\">\n379: <Button\n380: variant=\"destructive\""
+            "line": 420,
+            "context": "419: <div className=\"flex justify-end\">\n420: <Button\n421: variant=\"destructive\""
           }
         ],
         "translationCalls": [
           {
             "key": "orders.order_details",
-            "line": 218,
+            "line": 255,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 221,
+            "line": 258,
             "exists": false
           },
           {
+            "key": "orders.edit",
+            "line": 295,
+            "exists": true
+          },
+          {
             "key": "orders.communication_actions",
-            "line": 326,
+            "line": 373,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_details",
-            "line": 218,
-            "context": "217: <DialogTitle className=\"sr-only\">\n218: {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}\n219: </DialogTitle>"
+            "line": 255,
+            "context": "254: <DialogTitle className=\"sr-only\">\n255: {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}\n256: </DialogTitle>"
           },
           {
             "key": "orders.order_details_description",
-            "line": 221,
-            "context": "220: <DialogDescription className=\"sr-only\">\n221: {t('orders.order_details_description', {\n222: customer: order.customerName || order.customer_name,"
+            "line": 258,
+            "context": "257: <DialogDescription className=\"sr-only\">\n258: {t('orders.order_details_description', {\n259: customer: order.customerName || order.customer_name,"
           },
           {
             "key": "orders.communication_actions",
-            "line": 326,
-            "context": "325: <MessageSquare className=\"h-4 w-4\" />\n326: {t('orders.communication_actions', 'Team Communication')}\n327: </CardTitle>"
+            "line": 373,
+            "context": "372: <MessageSquare className=\"h-4 w-4\" />\n373: {t('orders.communication_actions', 'Team Communication')}\n374: </CardTitle>"
           }
         ],
-        "coverage": 50,
+        "coverage": 57,
         "severity": "low"
       },
       {
@@ -30175,7 +30803,7 @@
           {
             "key": "car_wash_orders.car_wash_information",
             "line": 54,
-            "context": "53: <Droplets className=\"h-5 w-5 text-primary\" />\n54: {t('car_wash_orders.car_wash_information')}\n55: </CardTitle>"
+            "context": "53: <Droplets className=\"h-5 w-5 text-gray-700\" />\n54: {t('car_wash_orders.car_wash_information')}\n55: </CardTitle>"
           },
           {
             "key": "car_wash_orders.service_performer",
@@ -39996,7 +40624,7 @@
         "src\\components\\detail-hub\\KioskManager.tsx (62 strings)",
         "src\\components\\detail-hub\\InvoiceCenter.tsx (50 strings)",
         "src\\components\\detail-hub\\EmployeePortal.tsx (42 strings)",
-        "src\\components\\chat\\ContextualChatLauncher.tsx (32 strings)",
+        "src\\components\\chat\\ContextualChatLauncher.tsx (28 strings)",
         "src\\components\\detail-hub\\TimecardSystem.tsx (24 strings)"
       ],
       "estimatedEffort": "21 hours"
@@ -40004,7 +40632,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "20 Modal components need translation",
+      "description": "21 Modal components need translation",
       "files": [
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
         "src\\components\\dealerships\\DealershipModal.tsx",
@@ -40013,12 +40641,13 @@
         "src\\components\\permissions\\RoleAssignmentModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
-        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
+        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\orders\\OrderDetailModal.tsx",
+        "src\\components\\orders\\OptimizedOrderModal.tsx",
         "src\\components\\orders\\OptimizedEnhancedOrderDetailModal.tsx",
         "src\\components\\notifications\\NotificationPreferencesModal.tsx",
         "src\\components\\followers\\AddFollowerModal.tsx",
@@ -40027,7 +40656,7 @@
         "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx"
       ],
-      "estimatedEffort": "10 hours"
+      "estimatedEffort": "11 hours"
     },
     {
       "priority": "MEDIUM",
@@ -40047,7 +40676,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "251 Component components need translation",
+      "description": "260 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -40055,20 +40684,23 @@
         "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\users\\password\\PasswordActivityLog.tsx",
+        "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\detail-hub\\ReportsCenter.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
-        "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
+        "src\\hooks\\usePrintOrder.ts",
         "src\\components\\users\\AdvancedUserFilters.tsx",
         "src\\components\\dev\\StorageDevTools.tsx",
+        "src\\tests\\scripts\\run-performance-tests.ts",
         "src\\pages\\Phase3Dashboard.tsx",
         "src\\components\\performance\\PerformanceMonitor.tsx",
         "src\\components\\orders\\InstructionsBlock.tsx",
         "src\\components\\management\\DealershipManagementSection.tsx",
         "src\\components\\scanner\\enhanced\\VinStatistics.tsx",
+        "src\\components\\orders\\OrderPrintView.tsx",
         "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\debug\\DuplicateTooltipTester.tsx",
         "src\\components\\followers\\UniversalFollowButton.tsx",
@@ -40086,6 +40718,7 @@
         "src\\components\\ProtectedLayout.tsx",
         "src\\components\\DashboardLayout.tsx",
         "src\\components\\sales\\SmartDashboard.tsx",
+        "src\\components\\orders\\InteractiveTimeline.tsx",
         "src\\components\\orders\\AttachmentUploader.tsx",
         "src\\test\\components\\PermissionGuard.test.tsx",
         "src\\lib\\cloudSync.ts",
@@ -40095,10 +40728,12 @@
         "src\\components\\orders\\OrderFilters.tsx",
         "src\\pages\\NFCTracking.tsx",
         "src\\hooks\\useUserPresence.tsx",
+        "src\\hooks\\useSmartPolling.ts",
         "src\\hooks\\useSmartNotifications.tsx",
         "src\\components\\users\\UserActivityFeed.tsx",
         "src\\components\\ui\\pagination.tsx",
         "src\\components\\productivity\\ProductivityMetrics.tsx",
+        "src\\components\\orders\\ScheduleViewBlock.tsx",
         "src\\components\\chat\\FloatingChatBubble.tsx",
         "src\\hooks\\useFollowers.ts",
         "src\\hooks\\useEntityFollowers.tsx",
@@ -40134,6 +40769,7 @@
         "src\\hooks\\useTypingIndicators.tsx",
         "src\\hooks\\useStockManagement.ts",
         "src\\hooks\\useStatusPermissions.tsx",
+        "src\\hooks\\useRealtimeOrderData.ts",
         "src\\hooks\\usePermissions.tsx",
         "src\\hooks\\useOrderComments.ts",
         "src\\hooks\\useOptimizedVinScanner.tsx",
@@ -40151,7 +40787,9 @@
         "src\\components\\attachments\\AttachmentsList.tsx",
         "src\\workers\\vinOcrWorker.ts",
         "src\\utils\\lazyImports.ts",
+        "src\\tests\\config\\performance-setup.ts",
         "src\\test\\validation\\phase4-integration.test.ts",
+        "src\\services\\supabaseQueryOptimizer.ts",
         "src\\pages\\Users.tsx",
         "src\\pages\\QRRedirect.tsx",
         "src\\pages\\DealerView.tsx",
@@ -40254,8 +40892,8 @@
         "src\\components\\productivity\\ProductivityCalendar.tsx",
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\orders\\SimpleNotesDisplay.tsx",
+        "src\\components\\orders\\ServicesDisplay.tsx",
         "src\\components\\orders\\ServiceOrderFields.tsx",
-        "src\\components\\orders\\ScheduleViewBlock.tsx",
         "src\\components\\orders\\ReconOrderFields.tsx",
         "src\\components\\orders\\RecentActivity.tsx",
         "src\\components\\orders\\OrderComments.tsx",
@@ -40301,15 +40939,15 @@
         "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx"
       ],
-      "estimatedEffort": "126 hours"
+      "estimatedEffort": "130 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2986 translation keys are referenced but missing",
+      "description": "3006 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "150 hours"
+      "estimatedEffort": "151 hours"
     }
   ],
-  "coverage": 78
+  "coverage": 77
 }
