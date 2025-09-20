@@ -158,12 +158,11 @@ export const InvitationManagement: React.FC = () => {
   // Resend invitation
   const handleResendInvitation = useCallback(async (invitation: Invitation) => {
     try {
-      // For now, we'll just extend the expiration date
-      // In a real implementation, you'd want to call an edge function to resend the email
+      // Extend the expiration date
       const newExpirationDate = new Date();
       newExpirationDate.setDate(newExpirationDate.getDate() + 7);
 
-      const { error } = await supabase
+      const { error: updateError } = await supabase
         .from('dealer_invitations')
         .update({
           expires_at: newExpirationDate.toISOString(),
@@ -171,18 +170,46 @@ export const InvitationManagement: React.FC = () => {
         })
         .eq('id', invitation.id);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
-      toast({
-        title: t('common.success'),
-        description: 'Invitation resent successfully',
+      // Get current user for inviter information
+      const { data: { user } } = await supabase.auth.getUser();
+
+      // Send invitation email via Edge Function
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email', {
+        body: {
+          invitationId: invitation.id,
+          to: invitation.email,
+          dealershipName: invitation.dealer?.name || 'Dealership',
+          roleName: invitation.role_name,
+          inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
+            ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+            : user?.email?.split('@')[0] || 'Team Member',
+          inviterEmail: user?.email || '',
+          invitationToken: invitation.invitation_token,
+          expiresAt: newExpirationDate.toISOString()
+        }
       });
+
+      if (emailError) {
+        console.error('Error sending invitation email:', emailError);
+        toast({
+          title: t('common.success'),
+          description: t('invitations.invitation_updated_email_failed'),
+          variant: 'default',
+        });
+      } else {
+        toast({
+          title: t('common.success'),
+          description: t('invitations.invitation_resent'),
+        });
+      }
 
       fetchInvitations();
     } catch (error: unknown) {
       toast({
         title: t('common.error'),
-        description: error instanceof Error ? error.message : 'Error resending invitation',
+        description: error instanceof Error ? error.message : t('invitations.error_resending'),
         variant: 'destructive',
       });
     }

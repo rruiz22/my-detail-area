@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -135,6 +135,15 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
   const isMobile = useIsMobile();
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
+  // Auto-reset pagination when orders data changes to prevent empty pages
+  useEffect(() => {
+    const totalPages = Math.ceil(orders.length / itemsPerPage);
+    if (currentPage > totalPages && totalPages > 0) {
+      console.log(`📄 Auto-resetting pagination: page ${currentPage} > ${totalPages} total pages`);
+      setCurrentPage(1);
+    }
+  }, [orders.length, currentPage, itemsPerPage]);
+
   // Enhanced memoized duplicate detection with caching
   const duplicateData = useMemo(() => {
     const startTime = performance.now();
@@ -264,13 +273,13 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return { text: `${Math.abs(diffDays)} días vencido`, variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground' };
+      return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground' };
     } else if (diffDays === 0) {
       return { text: t('data_table.due_today'), variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };
     } else if (diffDays === 1) {
-      return { text: 'Vence mañana', variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };
+      return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };
     } else {
-      return { text: `Vence en ${diffDays} días`, variant: 'outline' as const, className: 'border-border text-foreground' };
+      return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };
     }
   };
 
@@ -320,7 +329,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground mt-1">
                         <Building2 className="w-4 h-4 mr-2 text-gray-700" />
-                        <span>{order.dealershipName || 'Unknown Dealer'}</span>
+                        <span>{order.dealershipName || t('data_table.unknown_dealer')}</span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
@@ -363,7 +372,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                             onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
                             title="Tap to copy VIN"
                           >
-                            {order.vehicleVin || 'No VIN'}
+                            {order.vehicleVin || t('data_table.vin_not_provided')}
                           </div>
                         </DuplicateTooltip>
                         <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} />
@@ -380,14 +389,14 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           debug={import.meta.env.DEV}
                         >
                           <div className="text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors">
-                            {order.stockNumber || 'No Stock'}
+                            {order.stockNumber || t('data_table.no_stock')}
                           </div>
                         </DuplicateTooltip>
                         <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} />
                       </div>
                       <div className="flex items-center text-xs text-muted-foreground mt-1">
                         <User className="w-3 h-3 mr-1 text-green-600" />
-                        {order.assignedTo || 'Unassigned'}
+                        {order.assignedTo || t('data_table.unassigned')}
                       </div>
                     </div>
                   </div>
@@ -411,7 +420,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       className="flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition-all hover:scale-105"
                     >
                       <Eye className="h-4 w-4" />
-                      View
+                      {t('data_table.view')}
                     </Button>
                     
                     <Button 
@@ -421,7 +430,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       className="flex items-center gap-2 text-emerald-600 hover:bg-emerald-50 transition-all hover:scale-105"
                     >
                       <Edit className="h-4 w-4" />
-                      Edit
+                      {t('data_table.edit')}
                     </Button>
                     
                     <Button 
@@ -431,7 +440,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       className="flex items-center gap-2 text-rose-600 hover:bg-rose-50 transition-all hover:scale-105"
                     >
                       <Trash2 className="h-4 w-4" />
-                      Delete
+                      {t('data_table.delete')}
                     </Button>
                   </div>
                 </div>
@@ -451,7 +460,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
             Previous
           </Button>
           <span className="flex items-center px-3 text-sm text-muted-foreground">
-            Page {currentPage} of {Math.ceil(orders.length / itemsPerPage)}
+{t('data_table.page_of', { current: currentPage, total: Math.ceil(orders.length / itemsPerPage) })}
           </span>
           <Button 
             variant="outline" 
@@ -468,7 +477,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       <Card className="hidden lg:block border-border shadow-sm">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold">
-            {orders.length} orders
+{t('data_table.orders_count', { count: orders.length })}
           </CardTitle>
         </CardHeader>
         
@@ -521,7 +530,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         </div>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">
                           <Building2 className="w-3 h-3 mr-1 text-gray-700" />
-                          <span>{order.dealershipName || 'Unknown Dealer'}</span>
+                          <span>{order.dealershipName || t('data_table.unknown_dealer')}</span>
                         </div>
                       </div>
                     </TableCell>
@@ -608,7 +617,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       {!order.dueDate && (
                         <div className="text-sm text-muted-foreground text-center due-date-details">
                           <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
-                          {order.dueTime || 'No time set'}
+                          {order.dueTime || t('data_table.no_time_set')}
                         </div>
                       )}
                     </TableCell>
@@ -634,7 +643,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           size="sm"
                           onClick={() => onView(order)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"
-                          title="View Details"
+                          title={t('data_table.view_details')}
                         >
                           <Eye className="h-4 w-4 text-gray-700" />
                         </Button>
@@ -644,7 +653,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           size="sm"
                           onClick={() => onEdit(order)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"
-                          title="Edit Order"
+                          title={t('data_table.edit_order')}
                         >
                           <Edit className="h-4 w-4 text-emerald-600" />
                         </Button>
@@ -654,7 +663,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           size="sm"
                           onClick={() => previewPrint(order)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"
-                          title="Print Order"
+                          title={t('data_table.print_order')}
                         >
                           <Printer className="h-4 w-4 text-gray-700" />
                         </Button>
@@ -664,7 +673,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           size="sm"
                           onClick={() => onDelete(order.id)}
                           className="h-8 w-8 p-0 transition-all hover:scale-105"
-                          title="Delete Order"
+                          title={t('data_table.delete_order')}
                         >
                           <Trash2 className="h-4 w-4 text-rose-600" />
                         </Button>
@@ -679,8 +688,8 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                   <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                     <div className="flex flex-col items-center space-y-2">
                       <Car className="w-12 h-12 text-muted-foreground/50" />
-                      <p className="text-lg font-medium">No se encontraron órdenes</p>
-                      <p className="text-sm">Intenta ajustar los filtros o crear una nueva orden</p>
+                      <p className="text-lg font-medium">{t('data_table.no_orders_found')}</p>
+                      <p className="text-sm">{t('data_table.adjust_filters_or_create')}</p>
                     </div>
                   </TableCell>
                 </TableRow>

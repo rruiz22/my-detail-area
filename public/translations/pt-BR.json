@@ -557,7 +557,26 @@
     "title": "Rastreamento NFC"
   },
   "dealerships": {
-    "title": "Concessionárias"
+    "title": "Concessionárias",
+    "manage_description": "Gerenciar concessionárias, seus contatos e usuários",
+    "show_stats": "Mostrar Estatísticas",
+    "hide_stats": "Ocultar Estatísticas",
+    "add_new": "Adicionar Concessionária",
+    "invite_user": "Convidar Usuário",
+    "name": "Nome",
+    "location": "Localização",
+    "contacts_count": "Contatos",
+    "users_count": "Usuários",
+    "subscription_plan": "Plano",
+    "status": "Status",
+    "all_statuses": "Todos os Status",
+    "all_plans": "Todos os Planos",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "suspended": "Suspenso",
+    "basic_plan": "Básico",
+    "premium_plan": "Premium",
+    "enterprise_plan": "Empresarial"
   },
   "profile": {
     "title": "Perfil"
@@ -609,7 +628,21 @@
   "data_table": {
     "no_stock": "Sem estoque",
     "vin_not_provided": "VIN não fornecido",
-    "due_today": "Vence Hoje"
+    "due_today": "Vence Hoje",
+    "no_orders_found": "Nenhum pedido encontrado",
+    "adjust_filters_or_create": "Tente ajustar os filtros ou criar um novo pedido",
+    "unknown_dealer": "Concessionária Desconhecida",
+    "unassigned": "Não Atribuído",
+    "no_time_set": "Nenhum horário definido",
+    "orders_count": "{{count}} pedidos",
+    "page_of": "Página {{current}} de {{total}}",
+    "view": "Ver",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "view_details": "Ver Detalhes",
+    "edit_order": "Editar Pedido",
+    "delete_order": "Excluir Pedido",
+    "print_order": "Imprimir Pedido"
   },
   "vehicle_info": {
     "vehicle_information": "Informações do Veículo",
@@ -765,6 +798,76 @@
     "internal_attachment_added": "Arquivo interno anexado com sucesso",
     "reply_added": "Resposta adicionada com sucesso",
     "reply_failed": "Falha ao adicionar resposta",
-    "reply_placeholder": "Escrever uma resposta..."
+    "reply_placeholder": "Escrever uma resposta...",
+    "selectAssignedTo": "Selecionar responsável",
+    "selectClient": "Selecionar concessionária",
+    "selectClientFirst": "Selecionar uma concessionária primeiro"
+  },
+  "service_orders": {
+    "po_number": "Número PO",
+    "ro_number": "Número RO",
+    "tag_number": "Número TAG"
+  },
+  "dealer": {
+    "view": {
+      "back": "Voltar para Concessionárias",
+      "subtitle": "Visão da Concessionária",
+      "loading": "Carregando concessionária...",
+      "title": "Concessionária",
+      "active": "Ativo",
+      "not_found": "Concessionária Não Encontrada",
+      "not_found_desc": "A concessionária solicitada não foi encontrada",
+      "back_to_list": "Voltar para Concessionárias",
+      "tabs": {
+        "overview": "Visão Geral",
+        "groups": "Grupos",
+        "users": "Usuários"
+      }
+    },
+    "tabs": {
+      "services": "Serviços",
+      "categories": "Categorias"
+    },
+    "modules": {
+      "title": "Módulos"
+    },
+    "overview": {
+      "title": "Visão Geral",
+      "description": "Métricas de desempenho e estatísticas da concessionária",
+      "total_orders": "Total de Pedidos",
+      "orders_today": "Pedidos Hoje",
+      "avg_sla_hours": "Média SLA Horas",
+      "sla_compliance": "Conformidade SLA",
+      "pending_orders": "Pedidos Pendentes",
+      "in_progress_orders": "Pedidos em Andamento",
+      "completed_orders": "Pedidos Concluídos",
+      "cancelled_orders": "Pedidos Cancelados",
+      "orders_by_module": "Pedidos por Módulo",
+      "top_services": "Principais Serviços",
+      "top_services_desc": "Serviços mais solicitados",
+      "sales": "Vendas",
+      "service": "Serviço",
+      "recon": "Recon",
+      "carwash": "Lavagem",
+      "no_data": "Nenhum dado disponível",
+      "no_services_data": "Nenhum dado de serviços disponível",
+      "calculating": "Calculando...",
+      "error_loading_kpis": "Erro ao carregar métricas de desempenho"
+    }
+  },
+  "invitations": {
+    "send_invitation": "Enviar Convite",
+    "invitation_sent": "Convite enviado por e-mail com sucesso",
+    "invitation_resent": "Convite reenviado por e-mail com sucesso",
+    "invitation_created_email_failed": "Convite criado mas não foi possível enviar o e-mail",
+    "invitation_updated_email_failed": "Convite atualizado mas não foi possível enviar o e-mail",
+    "error_resending": "Erro ao reenviar convite",
+    "invite_user_to": "Convidar usuário para {{dealership}}",
+    "dealer_user": "Usuário da Concessionária",
+    "accept": {
+      "email_not_match": "E-mail Não Corresponde",
+      "email_not_match_desc": "Este convite foi enviado para um endereço de e-mail diferente",
+      "auth_required_desc": "Você deve estar autenticado para enviar convites"
+    }
   }
 }

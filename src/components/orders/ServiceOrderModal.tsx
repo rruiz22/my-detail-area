@@ -28,8 +28,6 @@ interface OrderFormData {
   
   // Customer information (vehicle owner)
   customerName: string;
-  customerEmail?: string;
-  customerPhone?: string;
   
   // Vehicle information
   vehicleVin: string;
@@ -45,7 +43,6 @@ interface OrderFormData {
   
   // Assignment information (employee responsible)
   assignedGroupId?: string;
-  assignedContactId?: string;
   salesperson?: string;
   
   // Order details
@@ -76,8 +73,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     orderType: 'service',
     status: 'pending',
     customerName: '',
-    customerEmail: '',
-    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
@@ -87,7 +82,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     ro: '',
     tag: '',
     assignedGroupId: '',
-    assignedContactId: '',
     salesperson: '',
     notes: '',
     internalNotes: '',
@@ -99,9 +93,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
-  const [selectedContact, setSelectedContact] = useState('');
+  const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
   const [dealerships, setDealerships] = useState([]);
-  const [contacts, setContacts] = useState([]);
+  const [assignedUsers, setAssignedUsers] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -119,8 +113,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           orderType: order.orderType || order.order_type || 'service',
           status: order.status || 'pending',
           customerName: order.customerName || order.customer_name || '',
-          customerEmail: order.customerEmail || order.customer_email || '',
-          customerPhone: order.customerPhone || order.customer_phone || '',
           vehicleVin: order.vehicleVin || order.vehicle_vin || '',
           vehicleYear: order.vehicleYear?.toString() || order.vehicle_year?.toString() || '',
           vehicleMake: order.vehicleMake || order.vehicle_make || '',
@@ -130,7 +122,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           ro: order.ro || '',
           tag: order.tag || '',
           assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
-          assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
           salesperson: order.salesperson || '',
           notes: order.notes || '',
           internalNotes: order.internalNotes || order.internal_notes || '',
@@ -160,7 +151,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           ro: '',
           tag: '',
           assignedGroupId: '',
-          assignedContactId: '',
           salesperson: '',
           notes: '',
           internalNotes: '',
@@ -172,10 +162,38 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         });
         setSelectedServices([]);
         setSelectedDealership('');
-        setSelectedContact('');
+        setSelectedAssignedTo('');
       }
     }
   }, [order, open]);
+
+  // Set selectedAssignedTo when assignedUsers are loaded and order exists (similar to Sales modal)
+  useEffect(() => {
+    if (assignedUsers.length > 0 && order && selectedAssignedTo === '') {
+      // Find the user that matches the order's assignment
+      let matchingUser = null;
+
+      // Try to find by ID first (most reliable)
+      const assignedId = order.assigned_group_id || order.assignedGroupId;
+      if (assignedId) {
+        matchingUser = assignedUsers.find(user => user.id === assignedId);
+        console.log('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
+      }
+
+      // Fallback to name search
+      if (!matchingUser && order.assignedTo && order.assignedTo !== 'Unassigned') {
+        matchingUser = assignedUsers.find(user => user.name === order.assignedTo);
+        console.log('🔧 Searching by name:', order.assignedTo, 'found:', matchingUser?.name);
+      }
+
+      if (matchingUser) {
+        console.log('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
+        setSelectedAssignedTo(matchingUser.id);
+      } else {
+        console.warn('⚠️ Could not find assigned user:', order.assignedTo);
+      }
+    }
+  }, [assignedUsers.length, order, selectedAssignedTo]);
 
   const fetchDealerships = async () => {
     try {
@@ -198,22 +216,27 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     
     setLoading(true);
     try {
-      const [contactsResult, servicesResult] = await Promise.all([
+      const [usersResult, servicesResult] = await Promise.all([
         supabase
-          .from('dealership_contacts')
-          .select('id, first_name, last_name, email, phone')
-          .eq('dealership_id', parseInt(dealershipId))
-          .eq('status', 'active'),
+          .from('dealer_memberships')
+          .select(`
+            profiles!inner (
+              id,
+              first_name,
+              last_name,
+              email
+            )
+          `)
+          .eq('dealership_id', parseInt(dealershipId)),
         supabase
           .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealershipId) })
       ]);
 
-      if (contactsResult.data) {
-        setContacts(contactsResult.data.map(contact => ({
-          id: contact.id,
-          name: `${contact.first_name} ${contact.last_name}`,
-          email: contact.email,
-          phone: contact.phone
+      if (usersResult.data) {
+        setAssignedUsers(usersResult.data.map((membership: any) => ({
+          id: membership.profiles.id,
+          name: `${membership.profiles.first_name} ${membership.profiles.last_name}`.trim(),
+          email: membership.profiles.email
         })));
       }
 
@@ -229,22 +252,22 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealership(dealershipId);
-    setSelectedContact('');
-    setContacts([]);
+    setSelectedAssignedTo('');
+    setAssignedUsers([]);
     setServices([]);
     setSelectedServices([]);
-    
+
     if (dealershipId) {
       fetchDealerData(dealershipId);
     }
   };
 
-  const handleContactChange = (contactId: string) => {
-    setSelectedContact(contactId);
-    // Update assignment in form data - do NOT overwrite customer info automatically
+  const handleAssignedToChange = (userId: string) => {
+    setSelectedAssignedTo(userId);
+    // Update assignment in form data using assigned_group_id (same as Sales)
     setFormData(prev => ({
       ...prev,
-      assignedContactId: contactId
+      assignedGroupId: userId
     }));
   };
 
@@ -284,8 +307,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     // Map frontend camelCase to backend snake_case
     order_number: formData.orderNumber,
     customer_name: formData.customerName,
-    customer_email: formData.customerEmail || null,
-    customer_phone: formData.customerPhone || null,
     vehicle_vin: formData.vehicleVin || null,
     vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
     vehicle_make: formData.vehicleMake || null,
@@ -297,7 +318,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     order_type: formData.orderType,
     status: formData.status,
     assigned_group_id: formData.assignedGroupId || null,
-    assigned_contact_id: formData.assignedContactId || null,
     salesperson: formData.salesperson || null,
     notes: formData.notes || null,
     internal_notes: formData.internalNotes || null,
@@ -364,10 +384,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                   </div>
 
                    <div>
-                     <Label htmlFor="contact">{t('sales_orders.contact')}</Label>
-                      <Select 
-                        value={selectedContact || ""} 
-                        onValueChange={handleContactChange} 
+                     <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
+                      <Select
+                        value={selectedAssignedTo || ""}
+                        onValueChange={handleAssignedToChange} 
                         disabled={loading || !selectedDealership}
                       >
                         <SelectTrigger className="border-input bg-background">
@@ -380,9 +400,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                           } />
                         </SelectTrigger>
                        <SelectContent className="bg-popover border border-border max-h-[200px]">
-                         {contacts.map((contact: any) => (
-                           <SelectItem key={contact.id} value={contact.id}>
-                             {contact.name} - {contact.email}
+                         {assignedUsers.map((user: any) => (
+                           <SelectItem key={user.id} value={user.id}>
+                             {user.name} - {user.email}
                            </SelectItem>
                          ))}
                        </SelectContent>
@@ -402,28 +422,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                      />
                    </div>
 
-                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <div>
-                       <Label htmlFor="customerEmail">{t('orders.customerEmail')}</Label>
-                       <Input
-                         id="customerEmail"
-                         type="email"
-                         value={formData.customerEmail}
-                         onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                         className="border-input bg-background"
-                       />
-                     </div>
-
-                     <div>
-                       <Label htmlFor="customerPhone">{t('orders.customerPhone')}</Label>
-                       <Input
-                         id="customerPhone"
-                         value={formData.customerPhone}
-                         onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-                         className="border-input bg-background"
-                       />
-                     </div>
-                   </div>
 
                    {/* Service Order Specific Fields */}
                    <Separator />

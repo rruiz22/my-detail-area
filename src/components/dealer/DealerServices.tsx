@@ -78,12 +78,6 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     p.module === 'dealerships' && ['write', 'delete', 'admin'].includes(p.permission_level)
   ) || true; // Allow all dealer members for now
 
-  useEffect(() => {
-    fetchServices();
-    fetchGroups();
-    fetchCategories();
-  }, [dealerId, fetchServices, fetchGroups, fetchCategories]);
-
   const fetchServices = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -140,6 +134,12 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
       console.error('Error fetching categories:', error);
     }
   }, [dealerId, formData.category_id]);
+
+  useEffect(() => {
+    fetchServices();
+    fetchGroups();
+    fetchCategories();
+  }, [dealerId, fetchServices, fetchGroups, fetchCategories]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

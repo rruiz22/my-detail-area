@@ -36,11 +36,16 @@ export function LiveClock({
       hour12: !format24h,
     };
 
-    if (showDate) {
-      options.weekday = 'short';
-      options.month = 'short';
-      options.day = 'numeric';
-    }
+    return date.toLocaleString('en-US', options);
+  };
+
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: timezone,
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    };
 
     return date.toLocaleString('en-US', options);
   };
@@ -63,13 +68,15 @@ export function LiveClock({
       {showIcon && (
         <Clock className="h-4 w-4 text-muted-foreground" />
       )}
-      <div className="flex flex-col">
+      <div className="flex flex-col text-center">
+        {/* First Row: Time */}
         <span className="font-medium">
           {formatTime(currentTime)}
         </span>
+        {/* Second Row: Date and Timezone */}
         {showDate && (
           <span className="text-xs text-muted-foreground">
-            {getTimezoneAbbr()}
+            {formatDate(currentTime)} {getTimezoneAbbr()}
           </span>
         )}
       </div>

@@ -79,27 +79,30 @@ const DealerView = () => {
     <>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-          <div className="flex items-center space-x-4">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
             <Button variant="outline" size="sm" asChild>
               <Link to="/dealerships">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 {t('dealer.view.back')}
               </Link>
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight flex items-center space-x-2">
-                <Building2 className="h-8 w-8 text-primary" />
-                <span>{dealerName || t('dealer.view.title')}</span>
-              </h1>
-              <p className="text-muted-foreground">
-                {t('dealer.view.subtitle', { id })}
-              </p>
+            <div className="flex items-center space-x-2">
+              <Badge variant="outline">ID: {id}</Badge>
+              <Badge variant="secondary">Active</Badge>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge variant="default">ID: {id}</Badge>
-            <Badge variant="outline">{t('dealer.view.active')}</Badge>
+
+          <div className="flex items-start space-x-3">
+            <Building2 className="h-8 w-8 text-primary mt-1" />
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                {dealerName || t('dealer.view.loading')}
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                {t('dealer.view.subtitle')}
+              </p>
+            </div>
           </div>
         </div>
 

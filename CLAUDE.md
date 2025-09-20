@@ -136,6 +136,15 @@ const [viewMode, setViewMode] = useViewModePersistence('sales_orders'); // kanba
 
 ### Critical Development Standards
 
+#### **TypeScript Best Practices (Mandatory)**
+- **NEVER use `any` types** - Always define proper interfaces and union types
+- **Type safety first** - Use strict TypeScript configuration
+- **Proper error handling** - Type errors at compile time, not runtime
+- **Interface definitions** - Create specific types for all data structures
+- **Union types** - Use `string | Interface` instead of `any`
+- **Generic constraints** - Prefer `<T extends SomeType>` over `<T = any>`
+- **Type guards** - Use `typeof` and `in` operators for type narrowing
+
 #### **Translation Coverage (Mandatory)**
 - **Run audit**: `node scripts/audit-translations.cjs` before major changes
 - **100% coverage required** - No hardcoded user-facing text

@@ -40,6 +40,12 @@ interface OrdersByType {
   carwash: number;
 }
 
+interface ServiceItem {
+  name: string;
+  price?: number;
+  description?: string;
+}
+
 export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -52,12 +58,6 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
   });
   const [topServices, setTopServices] = useState<Array<{ name: string; count: number }>>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchKPIs();
-    fetchOrdersByType();
-    fetchTopServices();
-  }, [dealerId, fetchKPIs, fetchOrdersByType, fetchTopServices]);
 
   const fetchKPIs = useCallback(async () => {
     try {
@@ -114,8 +114,10 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
 
       data.forEach(order => {
         if (order.services && Array.isArray(order.services)) {
-          order.services.forEach((service: string) => {
-            serviceCounts[service] = (serviceCounts[service] || 0) + 1;
+          order.services.forEach((service: string | ServiceItem) => {
+            // Handle both string and object service formats
+            const serviceName = typeof service === 'string' ? service : service.name;
+            serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
           });
         }
       });
@@ -133,10 +135,16 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
     }
   }, [dealerId]);
 
+  useEffect(() => {
+    fetchKPIs();
+    fetchOrdersByType();
+    fetchTopServices();
+  }, [dealerId, fetchKPIs, fetchOrdersByType, fetchTopServices]);
+
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[...Array(8)].map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader className="pb-2">
@@ -155,7 +163,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
   return (
     <div className="space-y-6">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -189,7 +197,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {kpis?.avg_sla_hours ? `${Math.round(kpis.avg_sla_hours)}h` : 'N/A'}
+              {kpis?.avg_sla_hours ? `${Math.round(kpis.avg_sla_hours)}h` : t('dealer.overview.calculating')}
             </div>
           </CardContent>
         </Card>
@@ -203,14 +211,14 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {kpis?.sla_compliance_rate ? `${Math.round(kpis.sla_compliance_rate)}%` : 'N/A'}
+              {kpis?.sla_compliance_rate ? `${Math.round(kpis.sla_compliance_rate)}%` : t('dealer.overview.calculating')}
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Order Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -270,7 +278,7 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Button 
                 variant="outline" 
                 className="flex items-center justify-between p-4 h-auto"
@@ -334,15 +342,22 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
                       <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
                         {index + 1}
                       </div>
-                      <span className="font-medium">{service.name}</span>
+                      <span className="font-medium truncate max-w-[200px]" title={service.name}>
+                        {service.name.length > 24 ? `${service.name.slice(0, 24)}...` : service.name}
+                      </span>
                     </div>
                     <Badge variant="outline">{service.count}</Badge>
                   </div>
                 ))
               ) : (
-                <p className="text-muted-foreground text-center py-4">
-                  {t('dealer.overview.no_services_data')}
-                </p>
+                <div className="text-center py-6">
+                  <div className="text-muted-foreground text-sm mb-2">
+                    {t('dealer.overview.no_services_data')}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {t('dealer.overview.no_data')}
+                  </p>
+                </div>
               )}
             </div>
           </CardContent>

@@ -146,22 +146,23 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
       <SidebarHeader className="p-4 space-y-3">
+        {/* Logo/Title (First Row) */}
         <div className="flex items-center justify-center">
           {collapsed ? (
             <div className="font-bold text-lg text-primary">MDA</div>
           ) : (
-            <div>
-              <h1 className="font-bold text-xl">My Detail Area</h1>
-              <p className="text-[10px] text-muted-foreground">Enterprise Dealership Management</p>
+            <div className="text-center">
+              <h1 className="font-bold text-lg">My Detail Area</h1>
+              <p className="text-[9px] text-muted-foreground">Enterprise Dealership Management</p>
             </div>
           )}
         </div>
 
-        {/* Live Clock - Eastern Time */}
+        {/* Live Clock - Eastern Time (Second Row) */}
         <div className="flex justify-center">
           <LiveClock
-            className={collapsed ? "scale-75" : ""}
-            showIcon={!collapsed}
+            className={collapsed ? "scale-75" : "text-base"}
+            showIcon={false}
             showDate={true}
             timezone={getSystemTimezone()}
             format24h={false}

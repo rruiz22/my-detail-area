@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -62,17 +62,14 @@ export function Dealerships() {
   const [selectedDealershipForInvite, setSelectedDealershipForInvite] = useState<number | null>(null);
   const [showStats, setShowStats] = useState(false);
 
-  const fetchDealerships = async () => {
+  const fetchDealerships = useCallback(async () => {
     try {
       setLoading(true);
       
       // Build the query with filters
       let query = supabase
         .from('dealerships')
-        .select(`
-          *,
-          dealership_contacts!inner(count)
-        `)
+        .select('*')
         .is('deleted_at', null);
 
       if (statusFilter !== 'all') {
@@ -122,7 +119,7 @@ export function Dealerships() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, statusFilter, planFilter, t]);
 
   useEffect(() => {
     fetchDealerships();
@@ -214,30 +211,37 @@ export function Dealerships() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{t('dealerships.title')}</h1>
-            <p className="text-muted-foreground">
-              {t('dealerships.manage_description', 'Manage dealerships, their contacts and users')}
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t('dealerships.title')}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              {t('dealerships.manage_description')}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
               onClick={toggleStats}
-              className="gap-2"
+              className="gap-2 text-sm"
+              size="sm"
             >
               <BarChart3 className="h-4 w-4" />
-              {showStats ? t('dealerships.hide_stats') : t('dealerships.show_stats')}
+              <span className="hidden sm:inline">
+                {showStats ? t('dealerships.hide_stats') : t('dealerships.show_stats')}
+              </span>
+              <span className="sm:hidden">
+                {showStats ? 'Hide' : 'Stats'}
+              </span>
             </Button>
-            <Button onClick={handleAdd} className="gap-2">
+            <Button onClick={handleAdd} className="gap-2 text-sm" size="sm">
               <Plus className="h-4 w-4" />
-              {t('dealerships.add_new')}
+              <span className="hidden sm:inline">{t('dealerships.add_new')}</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </div>
         </div>
 
         {/* Statistics Cards */}
         {showStats && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
             {dealerships
               .filter(d => d.status === 'active')
               .slice(0, 6)
@@ -259,8 +263,8 @@ export function Dealerships() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="relative">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="relative sm:col-span-2 lg:col-span-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder={t('common.search')}
@@ -274,7 +278,7 @@ export function Dealerships() {
                   <SelectValue placeholder={t('dealerships.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('dealerships.all_statuses', 'All Status')}</SelectItem>
+                  <SelectItem value="all">{t('dealerships.all_statuses')}</SelectItem>
                   <SelectItem value="active">{t('dealerships.active')}</SelectItem>
                   <SelectItem value="inactive">{t('dealerships.inactive')}</SelectItem>
                   <SelectItem value="suspended">{t('dealerships.suspended')}</SelectItem>
@@ -285,7 +289,7 @@ export function Dealerships() {
                   <SelectValue placeholder={t('dealerships.subscription_plan')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('dealerships.all_plans', 'All Plans')}</SelectItem>
+                  <SelectItem value="all">{t('dealerships.all_plans')}</SelectItem>
                   <SelectItem value="basic">{t('dealerships.basic_plan')}</SelectItem>
                   <SelectItem value="premium">{t('dealerships.premium_plan')}</SelectItem>
                   <SelectItem value="enterprise">{t('dealerships.enterprise_plan')}</SelectItem>
@@ -298,34 +302,35 @@ export function Dealerships() {
         {/* Table */}
         <Card>
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[800px]">
+                <TableHeader>
                 <TableRow>
                   <TableHead className="w-12"></TableHead>
                   <TableHead>{t('dealerships.name')}</TableHead>
-                  <TableHead>{t('dealerships.location', 'Location')}</TableHead>
-                  <TableHead className="text-center">{t('dealerships.contacts_count')}</TableHead>
+                  <TableHead className="hidden sm:table-cell">{t('dealerships.location', 'Location')}</TableHead>
+                  <TableHead className="text-center hidden md:table-cell">{t('dealerships.contacts_count')}</TableHead>
                   <TableHead className="text-center">{t('dealerships.users_count')}</TableHead>
-                  <TableHead>{t('dealerships.subscription_plan')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('dealerships.subscription_plan')}</TableHead>
                   <TableHead>{t('dealerships.status')}</TableHead>
                   <TableHead className="w-12"></TableHead>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
+                </TableHeader>
+                <TableBody>
+                  {loading ? (
                   <TableRow>
                     <TableCell colSpan={8} className="h-24 text-center">
                       {t('common.loading')}
                     </TableCell>
                   </TableRow>
-                ) : dealerships.length === 0 ? (
+                  ) : dealerships.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="h-24 text-center">
                       {t('common.no_data')}
                     </TableCell>
                   </TableRow>
-                ) : (
-                  dealerships.map((dealership) => (
+                  ) : (
+                    dealerships.map((dealership) => (
                     <TableRow 
                       key={dealership.id} 
                       className="cursor-pointer hover:bg-muted/50"
@@ -345,15 +350,15 @@ export function Dealerships() {
                           <div className="text-sm text-muted-foreground">{dealership.email}</div>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <div className="text-sm">
-                          {dealership.city && dealership.state ? 
-                            `${dealership.city}, ${dealership.state}` : 
+                          {dealership.city && dealership.state ?
+                            `${dealership.city}, ${dealership.state}` :
                             dealership.city || dealership.state || '-'
                           }
                         </div>
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="text-center hidden md:table-cell">
                         <div className="flex items-center justify-center gap-1">
                           <Users className="h-4 w-4 text-muted-foreground" />
                           {dealership.contacts_count || 0}
@@ -365,7 +370,7 @@ export function Dealerships() {
                           {dealership.users_count || 0}
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden lg:table-cell">
                         <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>
                           {t(`dealerships.${dealership.subscription_plan}_plan`)}
                         </Badge>
@@ -399,7 +404,7 @@ export function Dealerships() {
                               handleInviteUser(dealership);
                             }}>
                               <Mail className="mr-2 h-4 w-4" />
-                              Invitar Usuario
+                              {t('dealerships.invite_user')}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={(e) => {
                               e.stopPropagation();
@@ -421,8 +426,9 @@ export function Dealerships() {
                     </TableRow>
                   ))
                 )}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>

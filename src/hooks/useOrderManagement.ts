@@ -6,6 +6,7 @@ import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { shouldUseRealtime } from '@/config/realtimeFeatures';
 import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
+import { getSystemTimezone } from '@/utils/dateUtils';
 import type { Database } from '@/integrations/supabase/types';
 
 // Enhanced database types
@@ -210,19 +211,43 @@ export const useOrderManagement = (activeTab: string) => {
   const lastRefreshTimeRef = useRef(0);
   const realtimeUpdateCountRef = useRef(0);
 
+  // Helper function to get dates in system timezone (Eastern Time) for consistent filtering
+  const getSystemTimezoneDates = useCallback(() => {
+    const timezone = getSystemTimezone();
+    const now = new Date();
+
+    // Get current date in system timezone and normalize to start of day
+    const todayInTimezone = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+    todayInTimezone.setHours(0, 0, 0, 0);
+
+    // Tomorrow in system timezone
+    const tomorrowInTimezone = new Date(todayInTimezone);
+    tomorrowInTimezone.setDate(tomorrowInTimezone.getDate() + 1);
+
+    // Next week in system timezone (7 days from today)
+    const nextWeekInTimezone = new Date(todayInTimezone);
+    nextWeekInTimezone.setDate(nextWeekInTimezone.getDate() + 7);
+    nextWeekInTimezone.setHours(23, 59, 59, 999);
+
+    return {
+      today: todayInTimezone,
+      tomorrow: tomorrowInTimezone,
+      nextWeek: nextWeekInTimezone,
+      timezone
+    };
+  }, []);
+
   const calculateTabCounts = useMemo(() => (allOrders: Order[]) => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const nextWeek = new Date(today);
-    nextWeek.setDate(nextWeek.getDate() + 7);
+    const { today, tomorrow, nextWeek } = getSystemTimezoneDates();
 
     return {
       today: allOrders.filter(order => {
+        if (!order.dueDate && !order.createdAt) return false;
         const orderDate = new Date(order.dueDate || order.createdAt);
         return orderDate.toDateString() === today.toDateString();
       }).length,
       tomorrow: allOrders.filter(order => {
+        if (!order.dueDate && !order.createdAt) return false;
         const orderDate = new Date(order.dueDate || order.createdAt);
         return orderDate.toDateString() === tomorrow.toDateString();
       }).length,
@@ -231,33 +256,35 @@ export const useOrderManagement = (activeTab: string) => {
       complete: allOrders.filter(order => order.status === 'completed').length,
       cancelled: allOrders.filter(order => order.status === 'cancelled').length,
       week: allOrders.filter(order => {
+        if (!order.dueDate && !order.createdAt) return false;
         const orderDate = new Date(order.dueDate || order.createdAt);
-        return orderDate >= today && orderDate <= nextWeek;
+        // Normalize order date to start of day for comparison
+        const orderDateNormalized = new Date(orderDate);
+        orderDateNormalized.setHours(0, 0, 0, 0);
+        return orderDateNormalized >= today && orderDateNormalized <= nextWeek;
       }).length,
       services: allOrders.filter(order => order.orderType === 'service').length,
     };
-  }, []);
+  }, [getSystemTimezoneDates]);
 
   const filterOrders = useMemo(() => (allOrders: Order[], tab: string, currentFilters: OrderFilters) => {
     let filtered = [...allOrders];
 
     // Apply tab-specific filtering
     if (tab !== 'dashboard' && tab !== 'all') {
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const nextWeek = new Date(today);
-      nextWeek.setDate(nextWeek.getDate() + 7);
+      const { today, tomorrow, nextWeek } = getSystemTimezoneDates();
 
       switch (tab) {
         case 'today':
           filtered = filtered.filter(order => {
+            if (!order.dueDate && !order.createdAt) return false;
             const orderDate = new Date(order.dueDate || order.createdAt);
             return orderDate.toDateString() === today.toDateString();
           });
           break;
         case 'tomorrow':
           filtered = filtered.filter(order => {
+            if (!order.dueDate && !order.createdAt) return false;
             const orderDate = new Date(order.dueDate || order.createdAt);
             return orderDate.toDateString() === tomorrow.toDateString();
           });
@@ -276,8 +303,12 @@ export const useOrderManagement = (activeTab: string) => {
           break;
         case 'week':
           filtered = filtered.filter(order => {
+            if (!order.dueDate && !order.createdAt) return false;
             const orderDate = new Date(order.dueDate || order.createdAt);
-            return orderDate >= today && orderDate <= nextWeek;
+            // Normalize order date to start of day for comparison
+            const orderDateNormalized = new Date(orderDate);
+            orderDateNormalized.setHours(0, 0, 0, 0);
+            return orderDateNormalized >= today && orderDateNormalized <= nextWeek;
           });
           break;
         case 'services':
@@ -322,7 +353,7 @@ export const useOrderManagement = (activeTab: string) => {
     }
 
     return filtered;
-  }, []);
+  }, [getSystemTimezoneDates]);
 
   const refreshData = useCallback(async (skipFiltering = false) => {
     if (!user) return;
@@ -617,10 +648,22 @@ export const useOrderManagement = (activeTab: string) => {
   useEffect(() => {
     if (ordersPollingQuery.data) {
       setAllOrders(ordersPollingQuery.data);
-      setLastRefresh(new Date());
       setLoading(false);
     }
   }, [ordersPollingQuery.data]);
+
+  // Always update lastRefresh when polling executes (every 60s), regardless of data changes
+  useEffect(() => {
+    if (ordersPollingQuery.isFetching) {
+      console.log('🔄 Orders polling started - updating lastRefresh timestamp');
+    }
+
+    // Update timestamp when fetch completes (success or error)
+    if (!ordersPollingQuery.isFetching && (ordersPollingQuery.data || ordersPollingQuery.error)) {
+      setLastRefresh(new Date());
+      console.log('⏰ LastRefresh updated:', new Date().toLocaleTimeString());
+    }
+  }, [ordersPollingQuery.isFetching, ordersPollingQuery.data, ordersPollingQuery.error]);
 
   // Listen for status updates to trigger immediate refresh
   useEffect(() => {

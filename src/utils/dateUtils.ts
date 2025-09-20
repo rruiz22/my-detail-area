@@ -103,6 +103,10 @@ export const calculateDaysFromNow = (dateString?: string | null): number | null 
   const todayInTimezone = new Date(today.toLocaleString('en-US', { timeZone: timezone }));
   const dateInTimezone = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
 
+  // Normalize both dates to start of day (00:00:00) for consistent day-based comparison
+  todayInTimezone.setHours(0, 0, 0, 0);
+  dateInTimezone.setHours(0, 0, 0, 0);
+
   const diffTime = dateInTimezone.getTime() - todayInTimezone.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };

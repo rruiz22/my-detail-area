@@ -85,11 +85,6 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   const [selectedUser, setSelectedUser] = useState<DealerMembership | null>(null);
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    fetchUsers();
-    fetchGroups();
-  }, [dealerId, fetchUsers, fetchGroups]);
-
   const fetchUsers = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -136,6 +131,11 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       console.error('Error fetching groups:', error);
     }
   }, [dealerId]);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchGroups();
+  }, [dealerId, fetchUsers, fetchGroups]);
 
   const handleToggleUserStatus = async (user: DealerMembership) => {
     try {

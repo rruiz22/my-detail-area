@@ -110,7 +110,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
 
     try {
       // Create dealer invitation using RPC function
-      const { data: invitationToken, error } = await supabase
+      const { data: invitationData, error } = await supabase
         .rpc('create_dealer_invitation', {
           p_dealer_id: selectedDealerId,
           p_email: email,
@@ -119,15 +119,46 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
 
       if (error) throw error;
 
-      // In a real application, you would send an email with the invitation link
-      const invitationLink = `${window.location.origin}/invitation/${invitationToken}`;
-      
-      console.log('Invitation created:', invitationLink);
+      // Get dealership and inviter information for email
+      const { data: dealershipData } = await supabase
+        .from('dealerships')
+        .select('name')
+        .eq('id', selectedDealerId)
+        .single();
 
-      toast({
-        title: t('common.success'),
-        description: t('invitations.invitation_sent'),
+      const dealershipName = dealershipData?.name || 'Dealership';
+      const roleName = DEALER_ROLES.find(role => role.value === selectedRole)?.key || selectedRole;
+
+      // Send invitation email via Edge Function
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email', {
+        body: {
+          invitationId: invitationData.id,
+          to: email,
+          dealershipName,
+          roleName: t(`roles.${roleName}`, roleName),
+          inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
+            ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+            : user?.email?.split('@')[0] || 'Team Member',
+          inviterEmail: user?.email || '',
+          invitationToken: invitationData.token,
+          expiresAt: invitationData.expires_at
+        }
       });
+
+      if (emailError) {
+        console.error('Error sending invitation email:', emailError);
+        // Still show success for invitation creation, but warn about email
+        toast({
+          title: t('common.success'),
+          description: t('invitations.invitation_created_email_failed'),
+          variant: 'default',
+        });
+      } else {
+        toast({
+          title: t('common.success'),
+          description: t('invitations.invitation_sent'),
+        });
+      }
 
       // Reset form
       setEmail('');

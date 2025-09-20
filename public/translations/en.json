@@ -800,7 +800,26 @@
     "title": "NFC Tracking"
   },
   "dealerships": {
-    "title": "Dealerships"
+    "title": "Dealerships",
+    "manage_description": "Manage dealerships, their contacts and users",
+    "show_stats": "Show Stats",
+    "hide_stats": "Hide Stats",
+    "add_new": "Add Dealership",
+    "invite_user": "Invite User",
+    "name": "Name",
+    "location": "Location",
+    "contacts_count": "Contacts",
+    "users_count": "Users",
+    "subscription_plan": "Plan",
+    "status": "Status",
+    "all_statuses": "All Status",
+    "all_plans": "All Plans",
+    "active": "Active",
+    "inactive": "Inactive",
+    "suspended": "Suspended",
+    "basic_plan": "Basic",
+    "premium_plan": "Premium",
+    "enterprise_plan": "Enterprise"
   },
   "profile": {
     "title": "Profile",
@@ -938,7 +957,21 @@
   "data_table": {
     "no_stock": "No stock",
     "vin_not_provided": "VIN not provided",
-    "due_today": "Due Today"
+    "due_today": "Due Today",
+    "no_orders_found": "No orders found",
+    "adjust_filters_or_create": "Try adjusting filters or creating a new order",
+    "unknown_dealer": "Unknown Dealer",
+    "unassigned": "Unassigned",
+    "no_time_set": "No time set",
+    "orders_count": "{{count}} orders",
+    "page_of": "Page {{current}} of {{total}}",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view_details": "View Details",
+    "edit_order": "Edit Order",
+    "delete_order": "Delete Order",
+    "print_order": "Print Order"
   },
   "vehicle_info": {
     "vehicle_information": "Vehicle Information",
@@ -1035,6 +1068,76 @@
     "creating": "Creating...",
     "created_successfully": "Order created successfully",
     "updated_successfully": "Order updated successfully",
-    "save_failed": "Failed to save order"
+    "save_failed": "Failed to save order",
+    "selectAssignedTo": "Select an assignee",
+    "selectClient": "Select a dealership",
+    "selectClientFirst": "Select a dealership first"
+  },
+  "service_orders": {
+    "po_number": "PO Number",
+    "ro_number": "RO Number",
+    "tag_number": "TAG Number"
+  },
+  "dealer": {
+    "view": {
+      "back": "Back to Dealerships",
+      "subtitle": "Dealership Overview",
+      "loading": "Loading dealership...",
+      "title": "Dealership",
+      "active": "Active",
+      "not_found": "Dealership Not Found",
+      "not_found_desc": "The requested dealership could not be found",
+      "back_to_list": "Back to Dealerships",
+      "tabs": {
+        "overview": "Overview",
+        "groups": "Groups",
+        "users": "Users"
+      }
+    },
+    "tabs": {
+      "services": "Services",
+      "categories": "Categories"
+    },
+    "modules": {
+      "title": "Modules"
+    },
+    "overview": {
+      "title": "Overview",
+      "description": "Dealership performance metrics and statistics",
+      "total_orders": "Total Orders",
+      "orders_today": "Orders Today",
+      "avg_sla_hours": "Avg SLA Hours",
+      "sla_compliance": "SLA Compliance",
+      "pending_orders": "Pending Orders",
+      "in_progress_orders": "In Progress Orders",
+      "completed_orders": "Completed Orders",
+      "cancelled_orders": "Cancelled Orders",
+      "orders_by_module": "Orders by Module",
+      "top_services": "Top Services",
+      "top_services_desc": "Most requested services",
+      "sales": "Sales",
+      "service": "Service",
+      "recon": "Recon",
+      "carwash": "Car Wash",
+      "no_data": "No data available",
+      "no_services_data": "No services data available",
+      "calculating": "Calculating...",
+      "error_loading_kpis": "Error loading performance metrics"
+    }
+  },
+  "invitations": {
+    "send_invitation": "Send Invitation",
+    "invitation_sent": "Invitation email sent successfully",
+    "invitation_resent": "Invitation email resent successfully",
+    "invitation_created_email_failed": "Invitation created but email could not be sent",
+    "invitation_updated_email_failed": "Invitation updated but email could not be sent",
+    "error_resending": "Error resending invitation",
+    "invite_user_to": "Invite user to {{dealership}}",
+    "dealer_user": "Dealer User",
+    "accept": {
+      "email_not_match": "Email Mismatch",
+      "email_not_match_desc": "This invitation was sent to a different email address",
+      "auth_required_desc": "You must be logged in to send invitations"
+    }
   }
 }
