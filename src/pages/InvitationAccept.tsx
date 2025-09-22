@@ -71,28 +71,20 @@ export function InvitationAccept() {
 
       console.log('🔍 Searching for invitation with token:', token);
 
-      // Fetch invitation details with better error handling
+      // Use RPC function to verify invitation token (bypasses RLS)
       const { data: invitationData, error: invitationError } = await supabase
-        .from('dealer_invitations')
-        .select(`
-          id,
-          dealer_id,
-          email,
-          role_name,
-          expires_at,
-          accepted_at,
-          inviter_id
-        `)
-        .eq('invitation_token', token);
+        .rpc('verify_invitation_token', {
+          p_invitation_token: token
+        });
 
-      console.log('📊 Supabase response:', { invitationData, invitationError });
+      console.log('📊 Supabase RPC response:', { invitationData, invitationError });
 
       if (invitationError) {
-        console.error('❌ Supabase query error:', invitationError);
+        console.error('❌ Supabase RPC error:', invitationError);
         throw new Error(t('invitations.accept.database_error', 'Database error occurred'));
       }
 
-      // Handle case where no invitation is found or multiple results
+      // Handle case where no invitation is found
       if (!invitationData || invitationData.length === 0) {
         console.error('❌ No invitation found for token:', token);
         console.log('💡 This could mean:');
@@ -100,21 +92,6 @@ export function InvitationAccept() {
         console.log('  - Invitation was deleted');
         console.log('  - Token has expired and was cleaned up');
         console.log('  - Database connection issue');
-
-        // Try to get some debug info about dealer_invitations table
-        try {
-          const { data: debugData, error: debugError } = await supabase
-            .from('dealer_invitations')
-            .select('id, invitation_token, email, expires_at')
-            .limit(5);
-
-          console.log('🔍 Recent invitations for debugging:', debugData);
-          if (debugError) {
-            console.error('❌ Debug query error:', debugError);
-          }
-        } catch (debugErr) {
-          console.error('❌ Debug query failed:', debugErr);
-        }
 
         throw new Error(t('invitations.accept.not_found'));
       }
@@ -133,22 +110,10 @@ export function InvitationAccept() {
         throw new Error(t('invitations.accept.expired'));
       }
 
-      // Fetch dealership details
-      const { data: dealershipData } = await supabase
-        .from('dealerships')
-        .select('name')
-        .eq('id', singleInvitation.dealer_id);
-
-      // Fetch inviter details
-      const { data: inviterData } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('id', singleInvitation.inviter_id);
-
       setInvitation({
         ...singleInvitation,
-        dealership_name: dealershipData?.[0]?.name || t('dealerships.title'),
-        inviter_email: inviterData?.[0]?.email || t('users.admin'),
+        dealership_name: singleInvitation.dealership_name || t('dealerships.title'),
+        inviter_email: singleInvitation.inviter_email || t('users.admin'),
       });
     } catch (err: any) {
       console.error('Error fetching invitation:', err);
