@@ -1,7 +1,7 @@
 {
   "scannedFiles": 488,
-  "totalStrings": 4851,
-  "hardcodedStrings": 1067,
+  "totalStrings": 4852,
+  "hardcodedStrings": 1068,
   "translatedStrings": 3784,
   "issues": {
     "critical": [
@@ -5266,38 +5266,43 @@
         "hardcodedStrings": [
           {
             "text": "Ir al Inicio",
-            "line": 257,
-            "context": "256: onClick={() => navigate('/auth')}\n257: >\n258: Ir al Inicio"
+            "line": 284,
+            "context": "283: onClick={() => navigate('/auth')}\n284: >\n285: Ir al Inicio"
           },
           {
             "text": "Ir al Dashboard",
-            "line": 281,
-            "context": "280: onClick={() => navigate('/dashboard')}\n281: >\n282: Ir al Dashboard"
+            "line": 308,
+            "context": "307: onClick={() => navigate('/dashboard')}\n308: >\n309: Ir al Dashboard"
           },
           {
             "text": "Has sido invitado a unirte a un concesionario",
-            "line": 296,
-            "context": "295: <CardTitle>Invitación al Concesionario</CardTitle>\n296: <CardDescription>\n297: Has sido invitado a unirte a un concesionario"
+            "line": 323,
+            "context": "322: <CardTitle>Invitación al Concesionario</CardTitle>\n323: <CardDescription>\n324: Has sido invitado a unirte a un concesionario"
           },
           {
             "text": "Concesionario",
-            "line": 308,
-            "context": "307: <p className=\"font-medium\">{invitation.dealership_name}</p>\n308: <p className=\"text-sm text-muted-foreground\">Concesionario</p>\n309: </div>"
+            "line": 335,
+            "context": "334: <p className=\"font-medium\">{invitation.dealership_name}</p>\n335: <p className=\"text-sm text-muted-foreground\">Concesionario</p>\n336: </div>"
           },
           {
             "text": "Rol asignado",
-            "line": 316,
-            "context": "315: <p className=\"font-medium\">{getRoleDisplayName(invitation.role_name)}</p>\n316: <p className=\"text-sm text-muted-foreground\">Rol asignado</p>\n317: </div>"
+            "line": 343,
+            "context": "342: <p className=\"font-medium\">{getRoleDisplayName(invitation.role_name)}</p>\n343: <p className=\"text-sm text-muted-foreground\">Rol asignado</p>\n344: </div>"
           },
           {
             "text": ", invitationError);\r\n        throw new Error(t(",
-            "line": 86,
-            "context": "85: if (invitationError) {\n86: console.error('Supabase query error:', invitationError);\n87: throw new Error(t('invitations.accept.database_error', 'Database error occurred'));"
+            "line": 91,
+            "context": "90: if (invitationError) {\n91: console.error('❌ Supabase query error:', invitationError);\n92: throw new Error(t('invitations.accept.database_error', 'Database error occurred'));"
+          },
+          {
+            "text": ", debugError);\r\n          }\r\n        } catch (debugErr) {\r\n          console.error(",
+            "line": 113,
+            "context": "112: if (debugError) {\n113: console.error('❌ Debug query error:', debugError);\n114: }"
           },
           {
             "text": ", error);\r\n        throw new Error(error.message || ",
-            "line": 176,
-            "context": "175: if (error) {\n176: console.error('Supabase RPC error:', error);\n177: throw new Error(error.message || 'Error accepting invitation');"
+            "line": 203,
+            "context": "202: if (error) {\n203: console.error('Supabase RPC error:', error);\n204: throw new Error(error.message || 'Error accepting invitation');"
           }
         ],
         "translationCalls": [
@@ -5308,233 +5313,233 @@
           },
           {
             "key": "invitations.accept.invalid_invitation",
-            "line": 62,
+            "line": 63,
             "exists": true
           },
           {
             "key": "invitations.accept.database_error",
-            "line": 87,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.not_found",
             "line": 92,
             "exists": true
           },
           {
+            "key": "invitations.accept.not_found",
+            "line": 119,
+            "exists": true
+          },
+          {
             "key": "invitations.accept.expired",
-            "line": 106,
+            "line": 133,
             "exists": true
           },
           {
             "key": "dealerships.title",
-            "line": 123,
+            "line": 150,
             "exists": true
           },
           {
             "key": "users.admin",
-            "line": 124,
+            "line": 151,
             "exists": false
           },
           {
             "key": "invitations.accept.auth_required",
-            "line": 137,
+            "line": 164,
             "exists": true
           },
           {
             "key": "invitations.accept.auth_required_desc",
-            "line": 138,
+            "line": 165,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 147,
+            "line": 174,
             "exists": false
           },
           {
             "key": "invitations.accept.invalid_invitation",
-            "line": 148,
+            "line": 175,
             "exists": true
           },
           {
             "key": "invitations.accept.email_not_match",
-            "line": 157,
+            "line": 184,
             "exists": true
           },
           {
             "key": "invitations.accept.email_not_match_desc",
-            "line": 158,
+            "line": 185,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 181,
-            "exists": false
-          },
-          {
-            "key": "invitations.accept.success_message",
-            "line": 182,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "messages.error",
-            "line": 193,
-            "exists": true
-          },
-          {
-            "key": "invitations.dealer_user",
-            "line": 203,
-            "exists": true
-          },
-          {
-            "key": "invitations.dealer_salesperson",
-            "line": 204,
-            "exists": false
-          },
-          {
-            "key": "invitations.dealer_service_advisor",
-            "line": 205,
-            "exists": false
-          },
-          {
-            "key": "invitations.dealer_sales_manager",
-            "line": 206,
-            "exists": false
-          },
-          {
-            "key": "invitations.dealer_service_manager",
-            "line": 207,
-            "exists": false
-          },
-          {
-            "key": "invitations.dealer_manager",
             "line": 208,
             "exists": false
           },
           {
-            "key": "invitations.dealer_admin",
+            "key": "invitations.accept.success_message",
             "line": 209,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 219,
+            "exists": false
+          },
+          {
+            "key": "messages.error",
+            "line": 220,
+            "exists": true
+          },
+          {
+            "key": "invitations.dealer_user",
+            "line": 230,
+            "exists": true
+          },
+          {
+            "key": "invitations.dealer_salesperson",
+            "line": 231,
+            "exists": false
+          },
+          {
+            "key": "invitations.dealer_service_advisor",
+            "line": 232,
+            "exists": false
+          },
+          {
+            "key": "invitations.dealer_sales_manager",
+            "line": 233,
+            "exists": false
+          },
+          {
+            "key": "invitations.dealer_service_manager",
+            "line": 234,
+            "exists": false
+          },
+          {
+            "key": "invitations.dealer_manager",
+            "line": 235,
+            "exists": false
+          },
+          {
+            "key": "invitations.dealer_admin",
+            "line": 236,
             "exists": false
           },
           {
             "key": "invitations.accept.verifying",
-            "line": 234,
+            "line": 261,
             "exists": true
           },
           {
             "key": "invitations.accept.auth_instructions",
-            "line": 348,
+            "line": 375,
             "exists": true
           },
           {
             "key": "invitations.accept.step_1",
-            "line": 351,
+            "line": 378,
             "exists": true
           },
           {
             "key": "invitations.accept.step_2",
-            "line": 352,
+            "line": 379,
             "exists": true
           },
           {
             "key": "invitations.accept.create_account",
-            "line": 361,
+            "line": 388,
             "exists": true
           },
           {
             "key": "invitations.accept.sign_in",
-            "line": 368,
+            "line": 395,
             "exists": true
           },
           {
             "key": "invitations.accept.email_mismatch_detail",
-            "line": 376,
+            "line": 403,
             "exists": true
           },
           {
             "key": "invitations.accept.but_logged_as",
-            "line": 376,
+            "line": 403,
             "exists": true
           },
           {
             "key": "invitations.accept.switch_account",
-            "line": 384,
+            "line": 411,
             "exists": true
           },
           {
             "key": "invitations.accept.accepting",
-            "line": 397,
+            "line": 424,
             "exists": true
           },
           {
             "key": "invitations.accept.accept_button",
-            "line": 402,
+            "line": 429,
             "exists": true
           },
           {
             "key": "invitations.accept.decline",
-            "line": 413,
+            "line": 440,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "users.admin",
-            "line": 124,
-            "context": "123: dealership_name: dealershipData?.[0]?.name || t('dealerships.title'),\n124: inviter_email: inviterData?.[0]?.email || t('users.admin'),\n125: });"
+            "line": 151,
+            "context": "150: dealership_name: dealershipData?.[0]?.name || t('dealerships.title'),\n151: inviter_email: inviterData?.[0]?.email || t('users.admin'),\n152: });"
           },
           {
             "key": "common.error",
-            "line": 147,
-            "context": "146: toast({\n147: title: t('common.error'),\n148: description: t('invitations.accept.invalid_invitation'),"
+            "line": 174,
+            "context": "173: toast({\n174: title: t('common.error'),\n175: description: t('invitations.accept.invalid_invitation'),"
           },
           {
             "key": "common.success",
-            "line": 181,
-            "context": "180: toast({\n181: title: t('common.success'),\n182: description: t('invitations.accept.success_message', { dealership: invitation.dealership_name }),"
+            "line": 208,
+            "context": "207: toast({\n208: title: t('common.success'),\n209: description: t('invitations.accept.success_message', { dealership: invitation.dealership_name }),"
           },
           {
             "key": "common.error",
-            "line": 192,
-            "context": "191: toast({\n192: title: t('common.error'),\n193: description: err.message || t('messages.error'),"
+            "line": 219,
+            "context": "218: toast({\n219: title: t('common.error'),\n220: description: err.message || t('messages.error'),"
           },
           {
             "key": "invitations.dealer_salesperson",
-            "line": 204,
-            "context": "203: dealer_user: t('invitations.dealer_user'),\n204: dealer_salesperson: t('invitations.dealer_salesperson'),\n205: dealer_service_advisor: t('invitations.dealer_service_advisor'),"
+            "line": 231,
+            "context": "230: dealer_user: t('invitations.dealer_user'),\n231: dealer_salesperson: t('invitations.dealer_salesperson'),\n232: dealer_service_advisor: t('invitations.dealer_service_advisor'),"
           },
           {
             "key": "invitations.dealer_service_advisor",
-            "line": 205,
-            "context": "204: dealer_salesperson: t('invitations.dealer_salesperson'),\n205: dealer_service_advisor: t('invitations.dealer_service_advisor'),\n206: dealer_sales_manager: t('invitations.dealer_sales_manager'),"
+            "line": 232,
+            "context": "231: dealer_salesperson: t('invitations.dealer_salesperson'),\n232: dealer_service_advisor: t('invitations.dealer_service_advisor'),\n233: dealer_sales_manager: t('invitations.dealer_sales_manager'),"
           },
           {
             "key": "invitations.dealer_sales_manager",
-            "line": 206,
-            "context": "205: dealer_service_advisor: t('invitations.dealer_service_advisor'),\n206: dealer_sales_manager: t('invitations.dealer_sales_manager'),\n207: dealer_service_manager: t('invitations.dealer_service_manager'),"
+            "line": 233,
+            "context": "232: dealer_service_advisor: t('invitations.dealer_service_advisor'),\n233: dealer_sales_manager: t('invitations.dealer_sales_manager'),\n234: dealer_service_manager: t('invitations.dealer_service_manager'),"
           },
           {
             "key": "invitations.dealer_service_manager",
-            "line": 207,
-            "context": "206: dealer_sales_manager: t('invitations.dealer_sales_manager'),\n207: dealer_service_manager: t('invitations.dealer_service_manager'),\n208: dealer_manager: t('invitations.dealer_manager'),"
+            "line": 234,
+            "context": "233: dealer_sales_manager: t('invitations.dealer_sales_manager'),\n234: dealer_service_manager: t('invitations.dealer_service_manager'),\n235: dealer_manager: t('invitations.dealer_manager'),"
           },
           {
             "key": "invitations.dealer_manager",
-            "line": 208,
-            "context": "207: dealer_service_manager: t('invitations.dealer_service_manager'),\n208: dealer_manager: t('invitations.dealer_manager'),\n209: dealer_admin: t('invitations.dealer_admin'),"
+            "line": 235,
+            "context": "234: dealer_service_manager: t('invitations.dealer_service_manager'),\n235: dealer_manager: t('invitations.dealer_manager'),\n236: dealer_admin: t('invitations.dealer_admin'),"
           },
           {
             "key": "invitations.dealer_admin",
-            "line": 209,
-            "context": "208: dealer_manager: t('invitations.dealer_manager'),\n209: dealer_admin: t('invitations.dealer_admin'),\n210: };"
+            "line": 236,
+            "context": "235: dealer_manager: t('invitations.dealer_manager'),\n236: dealer_admin: t('invitations.dealer_admin'),\n237: };"
           }
         ],
-        "coverage": 84,
+        "coverage": 82,
         "severity": "medium"
       },
       {
@@ -41749,11 +41754,11 @@
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
         "src\\components\\dev\\OrderNumberMigrationTool.tsx",
         "src\\test\\components\\Button.test.tsx",
+        "src\\pages\\InvitationAccept.tsx",
         "src\\hooks\\useChatPermissions.tsx",
         "src\\hooks\\useChatMessages.tsx",
         "src\\components\\sales\\OrderPreviewPanel.tsx",
         "src\\pages\\Management.tsx",
-        "src\\pages\\InvitationAccept.tsx",
         "src\\hooks\\useChatNotifications.tsx",
         "src\\components\\ProtectedLayout.tsx",
         "src\\components\\DashboardLayout.tsx",
