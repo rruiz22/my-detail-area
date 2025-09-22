@@ -20,6 +20,7 @@ export type MessageType = 'info' | 'warning' | 'success' | 'error'
 export type NotificationType = 'order_update' | 'payment' | 'system' | 'reminder' | 'chat'
 export type TagType = 'vehicle' | 'location' | 'order' | 'tool'
 export type ActionType = 'read' | 'write' | 'update' | 'locate'
+export type SettingType = 'smtp' | 'sms' | 'security' | 'features' | 'app_config' | 'integration'
 
 export interface Database {
   public: {
@@ -641,6 +642,34 @@ export interface Database {
           read_at?: string
         }
       }
+
+      // System Settings
+      system_settings: {
+        Row: {
+          setting_key: string
+          setting_value: Json
+          setting_type: SettingType
+          updated_by?: string
+          updated_at?: string
+          created_at: string
+        }
+        Insert: {
+          setting_key: string
+          setting_value: Json
+          setting_type: SettingType
+          updated_by?: string
+          updated_at?: string
+          created_at?: string
+        }
+        Update: {
+          setting_key?: string
+          setting_value?: Json
+          setting_type?: SettingType
+          updated_by?: string
+          updated_at?: string
+          created_at?: string
+        }
+      }
     }
 
     Views: {
@@ -685,6 +714,7 @@ export interface Database {
       notification_type: NotificationType
       tag_type: TagType
       action_type: ActionType
+      setting_type: SettingType
     }
 
     CompositeTypes: {
@@ -708,6 +738,7 @@ export type NFCTag = Tables<'nfc_tags'>
 export type NFCScan = Tables<'nfc_scans'>
 export type Message = Tables<'messages'>
 export type Notification = Tables<'notifications'>
+export type SystemSetting = Tables<'system_settings'>
 
 // Insert types
 export type DealershipInsert = TablesInsert<'dealerships'>
@@ -719,6 +750,7 @@ export type NFCTagInsert = TablesInsert<'nfc_tags'>
 export type NFCScanInsert = TablesInsert<'nfc_scans'>
 export type MessageInsert = TablesInsert<'messages'>
 export type NotificationInsert = TablesInsert<'notifications'>
+export type SystemSettingInsert = TablesInsert<'system_settings'>
 
 // Update types
 export type DealershipUpdate = TablesUpdate<'dealerships'>
@@ -730,3 +762,57 @@ export type NFCTagUpdate = TablesUpdate<'nfc_tags'>
 export type NFCScanUpdate = TablesUpdate<'nfc_scans'>
 export type MessageUpdate = TablesUpdate<'messages'>
 export type NotificationUpdate = TablesUpdate<'notifications'>
+export type SystemSettingUpdate = TablesUpdate<'system_settings'>
+
+// System Settings specific types
+export interface FeatureFlagsConfig {
+  chat_enabled: boolean
+  nfc_tracking_enabled: boolean
+  vin_scanner_enabled: boolean
+  qr_generation_enabled: boolean
+  realtime_updates_enabled: boolean
+  file_uploads_enabled: boolean
+}
+
+export interface SecurityConfig {
+  max_login_attempts: number
+  session_timeout_hours: number
+  password_min_length: number
+  require_mfa: boolean
+  allow_password_reset: boolean
+}
+
+export interface SMTPConfig {
+  host: string
+  port: number
+  username: string
+  password: string
+  from_email: string
+  use_tls: boolean
+}
+
+export interface SMSConfig {
+  provider: 'twilio' | 'aws_sns' | 'other'
+  account_sid?: string
+  auth_token?: string
+  from_number: string
+  enabled: boolean
+}
+
+// Union type for all possible setting values
+export type SystemSettingValue =
+  | FeatureFlagsConfig
+  | SecurityConfig
+  | SMTPConfig
+  | SMSConfig
+  | Record<string, any>
+
+// Typed system setting with specific value types
+export interface TypedSystemSetting<T = SystemSettingValue> {
+  setting_key: string
+  setting_value: T
+  setting_type: SettingType
+  updated_by?: string
+  updated_at?: string
+  created_at: string
+}

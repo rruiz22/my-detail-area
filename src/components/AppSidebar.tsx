@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe, Calendar } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -11,32 +11,53 @@ import { LiveClock } from "@/components/ui/live-clock";
 import { getSystemTimezone } from "@/utils/dateUtils";
 export function AppSidebar() {
   const { state, open, setOpen } = useSidebar();
-  const { roles } = usePermissions();
+  const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
 
-  // Core Operations
-  const coreNavItems = [{
-    title: t('navigation.dashboard'),
-    url: "/dashboard",
-    icon: LayoutDashboard
-  }, {
-    title: t('navigation.sales_orders'),
-    url: "/sales",
-    icon: ShoppingCart
-  }, {
-    title: t('navigation.service_orders'),
-    url: "/service",
-    icon: Wrench
-  }, {
-    title: t('navigation.recon_orders'),
-    url: "/recon",
-    icon: RefreshCw
-  }, {
-    title: t('navigation.car_wash'),
-    url: "/carwash",
-    icon: Droplets
-  }];
+  // Core Operations - Filtered by user's allowed order types
+  const coreNavItems = React.useMemo(() => {
+    const allowedOrderTypes = getAllowedOrderTypes();
+    const baseItems = [
+      {
+        title: t('navigation.dashboard'),
+        url: "/dashboard",
+        icon: LayoutDashboard,
+        orderType: null // Dashboard is always accessible
+      },
+      {
+        title: t('navigation.sales_orders'),
+        url: "/sales",
+        icon: ShoppingCart,
+        orderType: 'sales'
+      },
+      {
+        title: t('navigation.service_orders'),
+        url: "/service",
+        icon: Wrench,
+        orderType: 'service'
+      },
+      {
+        title: t('navigation.recon_orders'),
+        url: "/recon",
+        icon: RefreshCw,
+        orderType: 'recon'
+      },
+      {
+        title: t('navigation.car_wash'),
+        url: "/carwash",
+        icon: Droplets,
+        orderType: 'carwash'
+      }
+    ];
+
+    // Filter items based on user's allowed order types
+    return baseItems.filter(item =>
+      item.orderType === null ||
+      allowedOrderTypes.includes(item.orderType as any) ||
+      enhancedUser?.role === 'system_admin'
+    );
+  }, [t, getAllowedOrderTypes, enhancedUser?.role]);
 
   // Workflow Management
   const workflowNavItems = [{
@@ -83,39 +104,54 @@ export function AppSidebar() {
     icon: User
   }];
 
-  // Management & Reports
-  const managementNavItems = [{
-    title: t('dealerships.title'),
-    url: "/dealerships",
-    icon: Building2
-  }, {
-    title: t('navigation.management'),
-    url: "/management",
-    icon: Shield
-  }, {
-    title: t('pages.user_management'),
-    url: "/users",
-    icon: Users
-  }, {
-    title: t('navigation.reports'),
-    url: "/reports",
-    icon: FileText
-  }, {
-    title: t('navigation.settings'),
-    url: "/settings",
-    icon: Settings
-  }];
+  // Management & Reports - Simplified to single admin menu
+  const managementNavItems = React.useMemo(() => {
+    const baseItems = [
+      {
+        title: t('admin.administration'),
+        url: "/admin",
+        icon: Shield,
+        requiresSystemAdmin: true,
+        description: t('admin.administration_description')
+      },
+      {
+        title: t('navigation.reports'),
+        url: "/reports",
+        icon: FileText,
+        requiresSystemAdmin: false // Managers can access reports
+      },
+      {
+        title: t('navigation.settings'),
+        url: "/settings",
+        icon: Settings,
+        requiresSystemAdmin: false // Everyone can access settings
+      }
+    ];
+
+    // Filter items based on user role
+    return baseItems.filter(item =>
+      !item.requiresSystemAdmin ||
+      enhancedUser?.role === 'system_admin'
+    );
+  }, [t, enhancedUser?.role]);
 
   // System Admin - only navigation items
-  const systemAdminNavItems = isSystemAdmin(roles) ? [{
-    title: t('navigation.landing_page'),
-    url: "/landing",
-    icon: Globe
-  }, {
-    title: 'Phase 3 Dashboard',
-    url: "/phase3",
-    icon: Sparkles
-  }] : [];
+  const systemAdminNavItems = React.useMemo(() => {
+    if (enhancedUser?.role !== 'system_admin') return [];
+
+    return [
+      {
+        title: t('navigation.landing_page'),
+        url: "/landing",
+        icon: Globe
+      },
+      {
+        title: 'Phase 3 Dashboard',
+        url: "/phase3",
+        icon: Sparkles
+      }
+    ];
+  }, [enhancedUser?.role, t]);
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
   
@@ -331,9 +367,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Management & Reports */}
+        {/* Administration & Reports */}
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.management_reports')}</SidebarGroupLabel>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.administration_reports')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {managementNavItems.map(item => (

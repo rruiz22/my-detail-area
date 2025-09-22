@@ -7,6 +7,7 @@ import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { shouldUseRealtime } from '@/config/realtimeFeatures';
 import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
 import { getSystemTimezone } from '@/utils/dateUtils';
+import { usePermissions } from '@/hooks/usePermissions';
 import type { Database } from '@/integrations/supabase/types';
 
 // Enhanced database types
@@ -204,6 +205,7 @@ export const useOrderManagement = (activeTab: string) => {
   const [loading, setLoading] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const { user } = useAuth();
+  const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
   
   // Debug and call counting refs
@@ -356,35 +358,47 @@ export const useOrderManagement = (activeTab: string) => {
   }, [getSystemTimezoneDates]);
 
   const refreshData = useCallback(async (skipFiltering = false) => {
-    if (!user) return;
-    
+    if (!user || !enhancedUser) return;
+
     // Debug logging and call counting
     refreshCallCountRef.current += 1;
     const now = Date.now();
     const timeSinceLastRefresh = now - lastRefreshTimeRef.current;
-    
-    console.log(`🔄 refreshData called (${refreshCallCountRef.current}) - skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
-    
+
+    console.log(`🔄 refreshData called (${refreshCallCountRef.current}) - dealer: ${enhancedUser.dealership_id}, skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
+
     // Prevent excessive calls (less than 1 second apart) - more aggressive throttling
     if (timeSinceLastRefresh < 1000 && refreshCallCountRef.current > 1) {
       console.warn('⚠️ refreshData called too frequently, skipping to prevent loop');
       return;
     }
-    
+
     lastRefreshTimeRef.current = now;
     setLoading(true);
-    
+
     try {
-      // Fetch orders from Supabase (basic query first)
-      const { data: orders, error } = await supabase
+      // CRITICAL: Filter orders by user's assigned dealer for multi-dealer isolation
+      let ordersQuery = supabase
         .from('orders')
         .select('*')
+        .eq('dealer_id', enhancedUser.dealership_id)
         .order('created_at', { ascending: false });
+
+      // CRITICAL: Filter by allowed order types based on user role and groups
+      const allowedOrderTypes = getAllowedOrderTypes();
+      if (allowedOrderTypes.length > 0) {
+        ordersQuery = ordersQuery.in('order_type', allowedOrderTypes);
+        console.log(`🔒 Filtering orders by allowed types: [${allowedOrderTypes.join(', ')}] for dealer ${enhancedUser.dealership_id}`);
+      }
+
+      const { data: orders, error } = await ordersQuery;
 
       if (error) {
         console.error('Error fetching orders:', error);
         return;
       }
+
+      console.log(`📊 Fetched ${orders?.length || 0} orders for dealer ${enhancedUser.dealership_id}`);
 
       // Fetch dealerships data separately
       const { data: dealerships, error: dealershipsError } = await supabase
@@ -450,7 +464,7 @@ export const useOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [filterOrders, calculateTabCounts, user, activeTab, filters]);
+  }, [filterOrders, calculateTabCounts, user, enhancedUser, getAllowedOrderTypes, activeTab, filters]);
 
   const updateFilters = useCallback((newFilters: Partial<OrderFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
@@ -602,14 +616,14 @@ export const useOrderManagement = (activeTab: string) => {
 
   // Initialize data on mount with debouncing to prevent multiple calls
   useEffect(() => {
-    if (user && refreshCallCountRef.current === 0) {
+    if (user && enhancedUser && refreshCallCountRef.current === 0) {
       const timer = setTimeout(() => {
         refreshData();
       }, 100); // Small delay to batch multiple rapid effect calls
 
       return () => clearTimeout(timer);
     }
-  }, [user, refreshData]); // Include refreshData in deps but guard with call count
+  }, [user, enhancedUser, refreshData]); // Wait for both user and enhancedUser
 
   // Handle filtering when tab or filters change (without full refresh)
   useEffect(() => {

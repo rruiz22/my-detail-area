@@ -144,17 +144,15 @@ export const UnifiedUserManagement: React.FC = () => {
     }
   };
 
-  // Effects
-  useEffect(() => {
-    fetchUsersWithRoles();
-    fetchDealerships();
-  }, [fetchUsersWithRoles]);
+  // Helper functions (moved before filterUsers)
+  const getDisplayName = useCallback((user: User) => {
+    if (user.first_name || user.last_name) {
+      return `${user.first_name || ''} ${user.last_name || ''}`.trim();
+    }
+    return user.email.split('@')[0];
+  }, []);
 
-  useEffect(() => {
-    filterUsers();
-  }, [filterUsers]);
-
-  // Filter function
+  // Filter function (now after getDisplayName)
   const filterUsers = useCallback(() => {
     let filtered = users;
 
@@ -172,13 +170,15 @@ export const UnifiedUserManagement: React.FC = () => {
     setFilteredUsers(filtered);
   }, [users, searchQuery, selectedDealership, getDisplayName]);
 
-  // Helper functions
-  const getDisplayName = useCallback((user: User) => {
-    if (user.first_name || user.last_name) {
-      return `${user.first_name || ''} ${user.last_name || ''}`.trim();
-    }
-    return user.email.split('@')[0];
-  }, []);
+  // Effects (moved after all function declarations)
+  useEffect(() => {
+    fetchUsersWithRoles();
+    fetchDealerships();
+  }, [fetchUsersWithRoles]);
+
+  useEffect(() => {
+    filterUsers();
+  }, [filterUsers]);
 
   const getInitials = (user: User) => {
     const name = getDisplayName(user);

@@ -41,6 +41,7 @@ import { toast } from 'sonner';
 import { safeParseDate } from '@/utils/dateUtils';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getStatusRowColor } from '@/utils/statusUtils';
 import { 
@@ -130,6 +131,7 @@ interface OrderDataTableProps {
 export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onStatusChange, tabType }: OrderDataTableProps) {
   const { t } = useTranslation();
   const { printOrder, previewPrint } = usePrintOrder();
+  const { canEditOrder, canDeleteOrder } = usePermissions();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const isMobile = useIsMobile();
@@ -423,25 +425,31 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       {t('data_table.view')}
                     </Button>
                     
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => onEdit(order)}
-                      className="flex items-center gap-2 text-emerald-600 hover:bg-emerald-50 transition-all hover:scale-105"
-                    >
-                      <Edit className="h-4 w-4" />
-                      {t('data_table.edit')}
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => onDelete(order.id)}
-                      className="flex items-center gap-2 text-rose-600 hover:bg-rose-50 transition-all hover:scale-105"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      {t('data_table.delete')}
-                    </Button>
+                    {/* Edit - Only if user can edit this specific order */}
+                    {canEditOrder(order) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onEdit(order)}
+                        className="flex items-center gap-2 text-emerald-600 hover:bg-emerald-50 transition-all hover:scale-105"
+                      >
+                        <Edit className="h-4 w-4" />
+                        {t('data_table.edit')}
+                      </Button>
+                    )}
+
+                    {/* Delete - Only if user can delete orders (system admin only) */}
+                    {canDeleteOrder(order) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onDelete(order.id)}
+                        className="flex items-center gap-2 text-rose-600 hover:bg-rose-50 transition-all hover:scale-105"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        {t('data_table.delete')}
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -648,15 +656,18 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           <Eye className="h-4 w-4 text-gray-700" />
                         </Button>
 
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onEdit(order)}
-                          className="h-8 w-8 p-0 transition-all hover:scale-105"
-                          title={t('data_table.edit_order')}
-                        >
-                          <Edit className="h-4 w-4 text-emerald-600" />
-                        </Button>
+                        {/* Edit - Only if user can edit this specific order */}
+                        {canEditOrder(order) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onEdit(order)}
+                            className="h-8 w-8 p-0 transition-all hover:scale-105"
+                            title={t('data_table.edit_order')}
+                          >
+                            <Edit className="h-4 w-4 text-emerald-600" />
+                          </Button>
+                        )}
 
                         <Button
                           variant="ghost"
@@ -668,15 +679,18 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           <Printer className="h-4 w-4 text-gray-700" />
                         </Button>
 
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => onDelete(order.id)}
-                          className="h-8 w-8 p-0 transition-all hover:scale-105"
-                          title={t('data_table.delete_order')}
-                        >
-                          <Trash2 className="h-4 w-4 text-rose-600" />
-                        </Button>
+                        {/* Delete - Only if user can delete orders (system admin only) */}
+                        {canDeleteOrder(order) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onDelete(order.id)}
+                            className="h-8 w-8 p-0 transition-all hover:scale-105"
+                            title={t('data_table.delete_order')}
+                          >
+                            <Trash2 className="h-4 w-4 text-rose-600" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

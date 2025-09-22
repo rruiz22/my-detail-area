@@ -116,11 +116,6 @@ export function ServicesDisplay({
           <div key={service.id} className="flex items-center justify-center gap-2 text-sm">
             {getServiceIcon(service.name)}
             <span className="truncate font-semibold">{service.name}</span>
-            {canViewPrices && service.price && (
-              <span className="text-xs text-muted-foreground font-mono">
-                {formatPrice(service.price)}
-              </span>
-            )}
           </div>
         ))}
 
@@ -130,14 +125,6 @@ export function ServicesDisplay({
           </div>
         )}
 
-        {canViewPrices && totalAmount && (
-          <div className="pt-1 border-t border-gray-200">
-            <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-              <DollarSign className="h-3 w-3" />
-              <span>Total: {formatPrice(totalAmount)}</span>
-            </div>
-          </div>
-        )}
       </div>
     );
   }

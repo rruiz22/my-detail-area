@@ -21,6 +21,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Order } from '@/hooks/useOrderManagement';
 import { safeFormatDateOnly, calculateDaysFromNow, getSystemTimezone } from '@/utils/dateUtils';
+import { usePermissions } from '@/hooks/usePermissions';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { getStatusRowColor, getStatusBorder } from '@/utils/statusUtils';
 import { ServicesDisplay } from '@/components/orders/ServicesDisplay';
 
@@ -43,6 +45,7 @@ interface KanbanColumn {
 
 export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusChange }: OrderKanbanBoardProps) {
   const { t } = useTranslation();
+  const { canEditOrder, canDeleteOrder } = usePermissions();
   const [draggedOrder, setDraggedOrder] = useState<Order | null>(null);
 
   const columns: KanbanColumn[] = [
@@ -250,17 +253,25 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                                 <Eye className="w-4 h-4 mr-2" />
                                 View
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => onEdit(order)}>
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => onDelete(order.id)}
-                                className="text-destructive focus:text-destructive"
-                              >
-                                <Trash className="w-4 h-4 mr-2" />
-                                Delete
-                              </DropdownMenuItem>
+
+                              {/* Edit - Only if user can edit this specific order */}
+                              {canEditOrder(order) && (
+                                <DropdownMenuItem onClick={() => onEdit(order)}>
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Edit
+                                </DropdownMenuItem>
+                              )}
+
+                              {/* Delete - Only if user can delete orders (system admin only) */}
+                              {canDeleteOrder(order) && (
+                                <DropdownMenuItem
+                                  onClick={() => onDelete(order.id)}
+                                  className="text-destructive focus:text-destructive"
+                                >
+                                  <Trash className="w-4 h-4 mr-2" />
+                                  Delete
+                                </DropdownMenuItem>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
@@ -363,14 +374,18 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                           >
                             <Eye className="w-3 h-3" />
                           </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => onEdit(order)}
-                            className="h-5 w-5 p-0 hover:bg-primary/10"
-                          >
-                            <Edit className="w-3 h-3" />
-                          </Button>
+
+                          {/* Edit - Only if user can edit this specific order */}
+                          {canEditOrder(order) && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => onEdit(order)}
+                              className="h-5 w-5 p-0 hover:bg-primary/10"
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </CardContent>

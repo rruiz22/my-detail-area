@@ -25,6 +25,7 @@ import {
 import { formatDistanceToNow, format, isAfter } from 'date-fns';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { InvitationTemplateModal } from './InvitationTemplateModal';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Invitation {
   id: string;
@@ -47,11 +48,12 @@ interface Invitation {
   };
 }
 
-type InvitationStatus = 'all' | 'pending' | 'accepted' | 'expired';
+type InvitationStatus = 'all' | 'pending' | 'accepted' | 'expired' | 'cancelled';
 
 export const InvitationManagement: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   // State management
   const [invitations, setInvitations] = useState<Invitation[]>([]);
@@ -66,6 +68,9 @@ export const InvitationManagement: React.FC = () => {
     try {
       setLoading(true);
 
+      console.log('📥 [INVITATIONS] Starting fetch...');
+
+      // Query with JOINs to get dealership and inviter info
       const { data, error } = await supabase
         .from('dealer_invitations')
         .select(`
@@ -81,11 +86,35 @@ export const InvitationManagement: React.FC = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('🧪 [INVITATIONS] Complete query result:', {
+        hasError: !!error,
+        errorMessage: error?.message,
+        dataCount: data?.length || 0,
+        sampleData: data?.[0], // Show first record structure
+        fullSampleData: JSON.stringify(data?.[0], null, 2) // Full structure for debugging
+      });
+
+      console.log('📊 [INVITATIONS] Query result:', {
+        hasError: !!error,
+        errorMessage: error?.message,
+        dataCount: data?.length || 0,
+        data: data?.slice(0, 2) // Show first 2 for debugging
+      });
+
+      if (error) {
+        console.error('❌ [INVITATIONS] Database error:', error);
+        throw error;
+      }
 
       setInvitations(data || []);
+
+      console.log('✅ [INVITATIONS] Fetch completed:', {
+        totalInvitations: data?.length || 0,
+        stateUpdated: true
+      });
+
     } catch (error: unknown) {
-      console.error('Error fetching invitations:', error);
+      console.error('💥 [INVITATIONS] Error fetching invitations:', error);
       toast({
         title: t('common.error'),
         description: error instanceof Error ? error.message : 'Error loading invitations',
@@ -98,31 +127,31 @@ export const InvitationManagement: React.FC = () => {
 
   // Filter invitations by status
   const getFilteredInvitations = () => {
-    const now = new Date();
-    
     return invitations.filter(invitation => {
-      const isExpired = isAfter(now, new Date(invitation.expires_at));
-      const isAccepted = !!invitation.accepted_at;
-      
+      const status = getInvitationStatus(invitation);
+
       switch (selectedStatus) {
         case 'pending':
-          return !isAccepted && !isExpired;
+          return status === 'pending';
         case 'accepted':
-          return isAccepted;
+          return status === 'accepted';
         case 'expired':
-          return isExpired && !isAccepted;
+          return status === 'expired';
+        case 'cancelled':
+          return status === 'cancelled';
         default:
           return true;
       }
     });
   };
 
-  // Get invitation status
+  // Get invitation status with enhanced logic
   const getInvitationStatus = (invitation: Invitation) => {
     const now = new Date();
     const isExpired = isAfter(now, new Date(invitation.expires_at));
-    
+
     if (invitation.accepted_at) return 'accepted';
+    if ((invitation as any).cancelled_at) return 'cancelled';
     if (isExpired) return 'expired';
     return 'pending';
   };
@@ -132,8 +161,10 @@ export const InvitationManagement: React.FC = () => {
     switch (status) {
       case 'accepted':
         return 'default';
-      case 'expired':
+      case 'cancelled':
         return 'destructive';
+      case 'expired':
+        return 'secondary';
       case 'pending':
         return 'secondary';
       default:
@@ -146,8 +177,10 @@ export const InvitationManagement: React.FC = () => {
     switch (status) {
       case 'accepted':
         return <CheckCircle className="h-4 w-4" />;
-      case 'expired':
+      case 'cancelled':
         return <XCircle className="h-4 w-4" />;
+      case 'expired':
+        return <Clock className="h-4 w-4" />;
       case 'pending':
         return <Clock className="h-4 w-4" />;
       default:
@@ -158,9 +191,18 @@ export const InvitationManagement: React.FC = () => {
   // Resend invitation
   const handleResendInvitation = useCallback(async (invitation: Invitation) => {
     try {
+      console.log('🔄 [RESEND INVITATION] Starting resend process for:', {
+        invitationId: invitation.id,
+        email: invitation.email,
+        dealership: invitation.dealerships?.name,
+        role: invitation.role_name
+      });
+
       // Extend the expiration date
       const newExpirationDate = new Date();
       newExpirationDate.setDate(newExpirationDate.getDate() + 7);
+
+      console.log('📅 [RESEND INVITATION] Extending expiration to:', newExpirationDate.toISOString());
 
       const { error: updateError } = await supabase
         .from('dealer_invitations')
@@ -170,25 +212,38 @@ export const InvitationManagement: React.FC = () => {
         })
         .eq('id', invitation.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('❌ [RESEND INVITATION] Database update error:', updateError);
+        throw updateError;
+      }
+
+      console.log('✅ [RESEND INVITATION] Database updated successfully');
 
       // Get current user for inviter information
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Send invitation email via Edge Function
-      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email', {
-        body: {
-          invitationId: invitation.id,
-          to: invitation.email,
-          dealershipName: invitation.dealer?.name || 'Dealership',
-          roleName: invitation.role_name,
-          inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
-            ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
-            : user?.email?.split('@')[0] || 'Team Member',
-          inviterEmail: user?.email || '',
-          invitationToken: invitation.invitation_token,
-          expiresAt: newExpirationDate.toISOString()
-        }
+      const emailData = {
+        invitationId: invitation.id,
+        to: invitation.email,
+        dealershipName: invitation.dealerships?.name || 'Dealership',
+        roleName: invitation.role_name,
+        inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
+          ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+          : user?.email?.split('@')[0] || 'Team Member',
+        inviterEmail: user?.email || '',
+        invitationToken: invitation.invitation_token,
+        expiresAt: newExpirationDate.toISOString()
+      };
+
+      console.log('📧 [RESEND INVITATION] Sending email data:', {
+        ...emailData,
+        hasToken: !!emailData.invitationToken,
+        hasInvitationId: !!emailData.invitationId
+      });
+
+      // Send invitation email via DEBUG Edge Function (same as creation)
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email-debug', {
+        body: emailData
       });
 
       if (emailError) {
@@ -215,15 +270,16 @@ export const InvitationManagement: React.FC = () => {
     }
   }, [t, toast, fetchInvitations]);
 
-  // Cancel invitation
+  // Cancel invitation (soft cancel with tracking)
   const handleCancelInvitation = useCallback(async (invitation: Invitation) => {
-    if (!confirm('Are you sure you want to cancel this invitation?')) return;
+    if (!confirm(t('invitations.confirm_cancel'))) return;
 
     try {
       const { error } = await supabase
         .from('dealer_invitations')
         .update({
-          expires_at: new Date().toISOString(), // Set to now to expire it
+          cancelled_at: new Date().toISOString(),
+          cancelled_by: user?.id,
           updated_at: new Date().toISOString()
         })
         .eq('id', invitation.id);
@@ -232,32 +288,72 @@ export const InvitationManagement: React.FC = () => {
 
       toast({
         title: t('common.success'),
-        description: 'Invitation cancelled successfully',
+        description: t('invitations.cancelled_successfully'),
       });
 
       fetchInvitations();
     } catch (error: unknown) {
       toast({
         title: t('common.error'),
-        description: error instanceof Error ? error.message : 'Error cancelling invitation',
+        description: error instanceof Error ? error.message : t('invitations.error_cancelling'),
         variant: 'destructive',
       });
     }
-  }, [t, toast, fetchInvitations]);
+  }, [t, toast, fetchInvitations, user]);
 
-  // Get invitation stats
+  // Delete invitation permanently (hard delete)
+  const handleDeleteInvitation = useCallback(async (invitation: Invitation) => {
+    if (!confirm(t('invitations.confirm_delete'))) return;
+
+    try {
+      const { error } = await supabase
+        .from('dealer_invitations')
+        .update({
+          deleted_at: new Date().toISOString(),
+          deleted_by: user?.id,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', invitation.id);
+
+      if (error) throw error;
+
+      toast({
+        title: t('common.success'),
+        description: t('invitations.deleted_successfully'),
+      });
+
+      fetchInvitations();
+    } catch (error: unknown) {
+      toast({
+        title: t('common.error'),
+        description: error instanceof Error ? error.message : t('invitations.error_deleting'),
+        variant: 'destructive',
+      });
+    }
+  }, [t, toast, fetchInvitations, user]);
+
+  // Get invitation stats with enhanced states
   const getInvitationStats = () => {
     const now = new Date();
     const total = invitations.length;
-    const pending = invitations.filter(inv => 
-      !inv.accepted_at && !isAfter(now, new Date(inv.expires_at))
-    ).length;
-    const accepted = invitations.filter(inv => !!inv.accepted_at).length;
-    const expired = invitations.filter(inv => 
-      !inv.accepted_at && isAfter(now, new Date(inv.expires_at))
-    ).length;
+    const pending = invitations.filter(inv => {
+      const status = getInvitationStatus(inv);
+      return status === 'pending';
+    }).length;
+    const accepted = invitations.filter(inv => {
+      const status = getInvitationStatus(inv);
+      return status === 'accepted';
+    }).length;
+    const cancelled = invitations.filter(inv => {
+      const status = getInvitationStatus(inv);
+      return status === 'cancelled';
+    }).length;
+    const expired = invitations.filter(inv => {
+      const status = getInvitationStatus(inv);
+      return status === 'expired';
+    }).length;
 
-    return { total, pending, accepted, expired };
+    return { total, pending, accepted, cancelled, expired };
   };
 
   const stats = getInvitationStats();
@@ -419,19 +515,21 @@ export const InvitationManagement: React.FC = () => {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant="outline">{invitation.role_name}</Badge>
+                              <Badge variant="outline">{t(`roles.${invitation.role_name}`, invitation.role_name)}</Badge>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <Building2 className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">{invitation.dealer?.name || 'Unknown'}</span>
+                                <span className="text-sm">{invitation.dealerships?.name || 'Unknown'}</span>
                               </div>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm">
-                                  {invitation.inviter?.first_name || invitation.inviter?.email || 'Unknown'}
+                                  {invitation.profiles?.first_name ?
+                                    `${invitation.profiles.first_name} ${invitation.profiles.last_name || ''}`.trim() :
+                                    invitation.profiles?.email || 'Unknown'}
                                 </span>
                               </div>
                             </TableCell>
@@ -481,12 +579,24 @@ export const InvitationManagement: React.FC = () => {
                                     <Send className="h-4 w-4" />
                                   </Button>
                                 )}
-                                {status !== 'accepted' && (
+                                {status === 'pending' && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleCancelInvitation(invitation)}
+                                    className="h-8 w-8 p-0 text-orange-600 hover:text-orange-700"
+                                    title={t('invitations.cancel_invitation')}
+                                  >
+                                    <XCircle className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                {status !== 'accepted' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleDeleteInvitation(invitation)}
                                     className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                                    title={t('invitations.delete_invitation')}
                                   >
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
@@ -508,7 +618,7 @@ export const InvitationManagement: React.FC = () => {
         <DealerInvitationModal
           isOpen={isInviteModalOpen}
           onClose={() => setIsInviteModalOpen(false)}
-          dealerId={selectedDealership || 1}
+          dealerId={selectedDealership || null}
           onInvitationSent={() => {
             fetchInvitations();
             setIsInviteModalOpen(false);

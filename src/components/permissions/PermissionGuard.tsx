@@ -1,20 +1,32 @@
 import React from 'react';
 import { usePermissions, AppModule, PermissionLevel } from '@/hooks/usePermissions';
 
+interface Order {
+  id: string;
+  dealer_id: number;
+  order_type: string;
+  status: string;
+}
+
 interface PermissionGuardProps {
   module: AppModule;
   permission: PermissionLevel;
   children: React.ReactNode;
   fallback?: React.ReactNode;
+  // Optional order-specific checks
+  order?: Order;
+  requireOrderAccess?: boolean;
 }
 
 export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   module,
   permission,
   children,
-  fallback = null
+  fallback = null,
+  order,
+  requireOrderAccess = false
 }) => {
-  const { hasPermission, loading } = usePermissions();
+  const { hasPermission, canEditOrder, canDeleteOrder, loading } = usePermissions();
 
   if (loading) {
     return (
@@ -24,11 +36,27 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
     );
   }
 
-  // Ensure hasPermission returns a boolean and handle any errors
   let hasAccess = false;
+
   try {
-    const result = hasPermission(module, permission);
-    hasAccess = Boolean(result);
+    // Check general module permission first
+    const moduleAccess = hasPermission(module, permission);
+
+    if (!moduleAccess) {
+      hasAccess = false;
+    } else if (requireOrderAccess && order) {
+      // For order-specific actions, check order permissions
+      if (permission === 'edit') {
+        hasAccess = canEditOrder(order);
+      } else if (permission === 'delete') {
+        hasAccess = canDeleteOrder(order);
+      } else {
+        // For view permissions, check if user's dealer matches order's dealer
+        hasAccess = moduleAccess;
+      }
+    } else {
+      hasAccess = moduleAccess;
+    }
   } catch (error) {
     console.error('Error checking permission:', error);
     hasAccess = false;

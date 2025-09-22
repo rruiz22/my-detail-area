@@ -1,45 +1,45 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { RouteLogger } from "@/components/debug/RouteLogger";
+import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
 import { NotificationProvider } from "@/components/NotificationProvider";
+import { ProtectedLayout } from "@/components/ProtectedLayout";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
-import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { ProtectedLayout } from "@/components/ProtectedLayout";
-import Dashboard from "./pages/Dashboard";
-import SalesOrders from "./pages/SalesOrders";
-import SimpleSalesOrders from "./components/debug/SimpleSalesOrders";
-import Profile from "./pages/Profile";
-import ServiceOrders from "./pages/ServiceOrders";
-import ReconOrders from "./pages/ReconOrders";
-import GetReady from "./pages/GetReady";
-import CarWash from "./pages/CarWash";
-import Stock from "./pages/Stock";
-import Productivity from "./pages/Productivity";
-import DetailHub from "./pages/DetailHub";
-import Chat from "./pages/Chat";
-import { Dealerships } from "./pages/Dealerships";
-import Contacts from "./pages/Contacts";
-import DealerView from "./pages/DealerView";
-import Reports from "./pages/Reports";
-import Settings from "./pages/Settings";
-import Users from "./pages/Users";
-import Management from "./pages/Management";
-import QRRedirect from "./pages/QRRedirect";
-import VinScanner from "./pages/VinScanner";
-import NFCTracking from "./pages/NFCTracking";
-import Phase3Dashboard from "./pages/Phase3Dashboard";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
+import { TooltipTester } from "./components/debug/TooltipTester";
 import Auth from "./pages/Auth";
+import CarWash from "./pages/CarWash";
+import Chat from "./pages/Chat";
+import Contacts from "./pages/Contacts";
+import Dashboard from "./pages/Dashboard";
+import { Dealerships } from "./pages/Dealerships";
+import DealerView from "./pages/DealerView";
+import DetailHub from "./pages/DetailHub";
+import GetReady from "./pages/GetReady";
 import Index from "./pages/Index";
 import { InvitationAccept } from "./pages/InvitationAccept";
+import Management from "./pages/Management";
+import NFCTracking from "./pages/NFCTracking";
 import NotFound from "./pages/NotFound";
-import { TooltipTester } from "./components/debug/TooltipTester";
-import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
-import { RouteLogger } from "@/components/debug/RouteLogger";
-import SimpleServiceOrders from "./components/debug/SimpleServiceOrders";
+import Phase3Dashboard from "./pages/Phase3Dashboard";
+import Productivity from "./pages/Productivity";
+import Profile from "./pages/Profile";
+import PublicReconData from "./pages/PublicReconData";
+import QRRedirect from "./pages/QRRedirect";
+import ReconOrders from "./pages/ReconOrders";
+import Reports from "./pages/Reports";
+import SalesOrders from "./pages/SalesOrders";
+import ServiceOrders from "./pages/ServiceOrders";
+import Settings from "./pages/Settings";
+import Stock from "./pages/Stock";
+import Users from "./pages/Users";
+import VinScanner from "./pages/VinScanner";
+import AdminDashboard from "./pages/AdminDashboard";
 
     console.log('🚀 App starting up with improved navigation');
     console.log('📱 Current URL:', window.location.href);
@@ -57,6 +57,9 @@ const AppRoutes = () => {
         <Route path="/s/:slug" element={<QRRedirect />} />
         <Route path="/invitation/:token" element={<InvitationAccept />} />
         <Route path="/landing" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+
+        {/* Nueva ruta pública para datos de recon */}
+        <Route path="/public/recon-data" element={<PublicReconData />} />
 
         {/* Protected application routes - Nested under ProtectedLayout */}
         <Route path="/" element={<ProtectedLayout />}>
@@ -80,6 +83,7 @@ const AppRoutes = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="users" element={<Users />} />
           <Route path="management" element={<Management />} />
+          <Route path="admin" element={<AdminDashboard />} />
           <Route path="phase3" element={<Phase3Dashboard />} />
           <Route path="get-ready/*" element={<GetReady />} />
           <Route path="debug/tooltips" element={<TooltipTester />} />

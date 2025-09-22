@@ -1,142 +1,425 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Save, Database, Mail, MessageSquare } from "lucide-react";
-import { useTranslation } from 'react-i18next';
+import { Badge } from "@/components/ui/badge";
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
+import { IntegrationSettings } from '@/components/settings/IntegrationSettings';
 import { StorageDevTools } from "@/components/dev/StorageDevTools";
 import { developmentConfig } from "@/config/development";
+import { Save, Database, Mail, MessageSquare, User, Building2, Palette, Bell } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+
+interface UserPreferences {
+  email_notifications: boolean;
+  sms_notifications: boolean;
+  in_app_alerts: boolean;
+  theme_preference: string;
+  language: string;
+}
 
 export default function Settings() {
   const { t } = useTranslation();
-  
-  return (
-    <div className="space-y-6 max-w-4xl">
-        {/* General Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('settings.general_settings')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="dealership">{t('settings.dealership_name')}</Label>
-                <Input id="dealership" placeholder={t('placeholders.enter_dealership_name')} defaultValue="Premium Auto Group" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="location">{t('settings.location')}</Label>
-                <Input id="location" placeholder={t('placeholders.enter_location')} defaultValue="Miami, FL" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="address">{t('settings.address')}</Label>
-              <Input id="address" placeholder={t('placeholders.enter_full_address')} defaultValue="123 Auto Plaza Blvd, Miami, FL 33101" />
-            </div>
-          </CardContent>
-        </Card>
+  const { toast } = useToast();
+  const { enhancedUser } = usePermissions();
+  const [activeTab, setActiveTab] = useTabPersistence('settings');
 
-        {/* Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5" />
-              {t('settings.notification_settings')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('settings.email_notifications')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('settings.email_alerts_description')}
-                </p>
-              </div>
-              <Switch defaultChecked />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('settings.sms_notifications')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('settings.sms_description')}
-                </p>
-              </div>
-              <Switch />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('settings.in_app_alerts')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('settings.toast_description')}
-                </p>
-              </div>
-              <Switch defaultChecked />
-            </div>
-          </CardContent>
-        </Card>
+  const [userPrefs, setUserPrefs] = useState<UserPreferences>({
+    email_notifications: true,
+    sms_notifications: false,
+    in_app_alerts: true,
+    theme_preference: 'system',
+    language: 'en'
+  });
 
-        {/* Integrations */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5" />
-              {t('settings.integrations')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 border rounded-lg bg-muted/50">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">{t('settings.database_backend')}</h4>
-                <Button variant="outline" size="sm">
-                  {t('settings.connect_supabase')}
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t('settings.supabase_description')}
-              </p>
-            </div>
-            
-            <div className="p-4 border rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">{t('settings.vin_decoding_api')}</h4>
-                <Button variant="outline" size="sm" disabled>
-                  {t('settings.configure')}
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t('settings.vin_api_description')}
-              </p>
-            </div>
-            
-            <div className="p-4 border rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">{t('settings.photo_management')}</h4>
-                <Button variant="outline" size="sm" disabled>
-                  {t('settings.configure')}
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t('settings.photo_description')}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+  const [dealershipInfo, setDealershipInfo] = useState({
+    name: '',
+    location: '',
+    address: '',
+    phone: '',
+    email: ''
+  });
 
-        {/* Development Tools - Only shown in development mode */}
-        {developmentConfig.features.enableStorageDebug && (
-          <StorageDevTools />
-        )}
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button>
-            <Save className="h-4 w-4 mr-2" />
-            {t('settings.save_settings')}
-          </Button>
+  // Optimized data loading with parallel queries to prevent flashing
+  const loadSettings = useCallback(async () => {
+    // Early exit if no user data
+    if (!enhancedUser?.id) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // PARALLEL LOADING: Execute both queries simultaneously to reduce flashing
+      const [dealershipResult, notificationResult] = await Promise.all([
+        // Query 1: Dealership info (only if user has dealership)
+        enhancedUser.dealership_id
+          ? supabase
+              .from('dealerships')
+              .select('name, city, state, address, phone, email')
+              .eq('id', enhancedUser.dealership_id)
+              .single()
+          : Promise.resolve({ data: null, error: null }),
+
+        // Query 2: User notification settings
+        supabase
+          .from('user_notification_settings')
+          .select('*')
+          .eq('user_id', enhancedUser.id)
+          .single()
+      ]);
+
+      // Process dealership data
+      if (!dealershipResult.error && dealershipResult.data) {
+        const dealershipData = dealershipResult.data;
+        setDealershipInfo({
+          name: dealershipData.name || '',
+          location: `${dealershipData.city || ''}, ${dealershipData.state || ''}`.trim().replace(/^,|,$/, ''),
+          address: dealershipData.address || '',
+          phone: dealershipData.phone || '',
+          email: dealershipData.email || ''
+        });
+      }
+
+      // Process notification data with better defaults
+      if (!notificationResult.error && notificationResult.data) {
+        const notificationData = notificationResult.data;
+        setUserPrefs({
+          email_notifications: notificationData.email_notifications ?? true,
+          sms_notifications: notificationData.push_notifications ?? false,
+          in_app_alerts: notificationData.in_app_notifications ?? true,
+          theme_preference: 'system',
+          language: 'en'
+        });
+      } else {
+        // Set defaults if no notification settings exist
+        setUserPrefs({
+          email_notifications: true,
+          sms_notifications: false,
+          in_app_alerts: true,
+          theme_preference: 'system',
+          language: 'en'
+        });
+      }
+
+    } catch (error) {
+      console.error('Error loading settings:', error);
+
+      // Graceful fallback with user data
+      setUserPrefs({
+        email_notifications: true,
+        sms_notifications: false,
+        in_app_alerts: true,
+        theme_preference: 'system',
+        language: 'en'
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [enhancedUser?.id, enhancedUser?.dealership_id]); // Optimized dependencies
+
+  useEffect(() => {
+    if (enhancedUser) {
+      loadSettings();
+    }
+  }, [enhancedUser, loadSettings]);
+
+  // Save user preferences
+  const saveUserPreferences = async () => {
+    try {
+      setSaving(true);
+
+      const { error } = await supabase
+        .from('user_notification_settings')
+        .upsert({
+          user_id: enhancedUser?.id,
+          dealer_id: enhancedUser?.dealership_id,
+          email_notifications: userPrefs.email_notifications,
+          push_notifications: userPrefs.sms_notifications,
+          in_app_notifications: userPrefs.in_app_alerts,
+          notification_frequency: 'immediate',
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: t('common.success'),
+        description: t('settings.preferences_saved')
+      });
+
+    } catch (error) {
+      console.error('Error saving preferences:', error);
+      toast({
+        title: t('common.error'),
+        description: t('settings.save_error'),
+        variant: 'destructive'
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6 w-full">
+        {/* Header Skeleton */}
+        <div className="border-b pb-6">
+          <div className="h-8 bg-muted rounded w-48 mb-2 animate-pulse"></div>
+          <div className="h-4 bg-muted rounded w-96 animate-pulse"></div>
         </div>
+
+        {/* Tabs Skeleton */}
+        <div className="space-y-6">
+          <div className="flex space-x-1 border rounded-lg p-1">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-9 bg-muted rounded flex-1 animate-pulse"></div>
+            ))}
+          </div>
+
+          {/* Content Skeleton */}
+          <Card>
+            <CardHeader>
+              <div className="h-6 bg-muted rounded w-40 animate-pulse"></div>
+              <div className="h-4 bg-muted rounded w-64 animate-pulse"></div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="space-y-2">
+                    <div className="h-4 bg-muted rounded w-24 animate-pulse"></div>
+                    <div className="p-4 bg-muted rounded-lg">
+                      <div className="h-5 bg-muted-foreground/20 rounded w-32 mb-2 animate-pulse"></div>
+                      <div className="h-4 bg-muted-foreground/20 rounded w-24 animate-pulse"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 w-full">
+      {/* Header */}
+      <div className="border-b pb-6">
+        <h1 className="text-3xl font-bold tracking-tight">{t('settings.title')}</h1>
+        <p className="text-muted-foreground">{t('settings.description')}</p>
+      </div>
+
+      {/* Settings Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="profile" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('settings.profile')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="flex items-center gap-2">
+            <Bell className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('settings.notifications')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="dealership" className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('settings.dealership')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="integrations" className="flex items-center gap-2">
+            <Database className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('settings.integrations')}</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Profile Settings */}
+        <TabsContent value="profile" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                {t('settings.profile_settings')}
+              </CardTitle>
+              <CardDescription>
+                {t('settings.profile_description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label>{t('settings.current_user')}</Label>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="font-medium">{enhancedUser?.email}</p>
+                    <p className="text-sm text-muted-foreground">{t('settings.role')}: {enhancedUser?.role}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('settings.user_type')}</Label>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="font-medium capitalize">{enhancedUser?.user_type}</p>
+                    <p className="text-sm text-muted-foreground">{t('settings.dealership')}: {dealershipInfo.name}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('settings.dealership_id')}</Label>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="font-medium">ID: {enhancedUser?.dealership_id}</p>
+                    <p className="text-sm text-muted-foreground">{dealershipInfo.location}</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Notification Settings */}
+        <TabsContent value="notifications" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="h-5 w-5" />
+                {t('settings.notification_preferences')}
+              </CardTitle>
+              <CardDescription>
+                {t('settings.notification_description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t('settings.email_notifications')}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.email_alerts_description')}
+                  </p>
+                </div>
+                <Switch
+                  checked={userPrefs.email_notifications}
+                  onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, email_notifications: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t('settings.sms_notifications')}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.sms_alerts_description')}
+                  </p>
+                </div>
+                <Switch
+                  checked={userPrefs.sms_notifications}
+                  onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, sms_notifications: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t('settings.in_app_alerts')}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.toast_description')}
+                  </p>
+                </div>
+                <Switch
+                  checked={userPrefs.in_app_alerts}
+                  onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, in_app_alerts: checked }))}
+                />
+              </div>
+
+              <div className="pt-4">
+                <Button onClick={saveUserPreferences} disabled={saving}>
+                  <Save className="h-4 w-4 mr-2" />
+                  {t('settings.save_preferences')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Dealership Settings */}
+        <TabsContent value="dealership" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building2 className="h-5 w-5" />
+                {t('settings.dealership_information')}
+              </CardTitle>
+              <CardDescription>
+                {t('settings.dealership_info_description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>{t('settings.dealership_name')}</Label>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <p className="font-medium">{dealershipInfo.name || t('settings.no_dealership')}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('settings.location')}</Label>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <p className="font-medium">{dealershipInfo.location || t('settings.no_location')}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t('settings.contact_info')}</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-3 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground">{t('settings.email')}</p>
+                    <p className="font-medium">{dealershipInfo.email || t('settings.no_email')}</p>
+                  </div>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground">{t('settings.phone')}</p>
+                    <p className="font-medium">{dealershipInfo.phone || t('settings.no_phone')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {enhancedUser?.role === 'system_admin' && (
+                <div className="pt-4 border-t">
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.dealership_edit_note')}
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-2">
+                    {t('settings.edit_dealership')}
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* System Integrations */}
+        <TabsContent value="integrations" className="space-y-6">
+          <IntegrationSettings />
+        </TabsContent>
+      </Tabs>
+
+      {/* Development Tools - Only shown in development mode */}
+      {developmentConfig.features.enableStorageDebug && (
+        <div className="mt-8 border-t pt-6">
+          <details className="group">
+            <summary className="flex items-center gap-2 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+              <span className="group-open:rotate-90 transition-transform">▶</span>
+              🛠️ Storage Development Tools
+              <Badge variant="outline" className="text-xs">Dev Only</Badge>
+            </summary>
+            <div className="mt-4">
+              <StorageDevTools />
+            </div>
+          </details>
+        </div>
+      )}
     </div>
   );
 }

@@ -65,7 +65,7 @@ const DealerView = () => {
           <h1 className="text-2xl font-bold">{t('dealer.view.not_found')}</h1>
           <p className="text-muted-foreground">{t('dealer.view.not_found_desc')}</p>
           <Button asChild>
-            <Link to="/dealerships">
+            <Link to="/admin">
               <ArrowLeft className="h-4 w-4 mr-2" />
               {t('dealer.view.back_to_list')}
             </Link>
@@ -82,7 +82,7 @@ const DealerView = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Button variant="outline" size="sm" asChild>
-              <Link to="/dealerships">
+              <Link to="/admin">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 {t('dealer.view.back')}
               </Link>

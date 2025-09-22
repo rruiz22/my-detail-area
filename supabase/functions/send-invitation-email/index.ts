@@ -165,9 +165,11 @@ const handler = async (req: Request): Promise<Response> => {
       expiresAt
     } = validatedData;
 
-    // Get the base URL from environment or construct it
-    const baseUrl = Deno.env.get("PUBLIC_SITE_URL") || "https://mydetailarea.com";
+    // Get the base URL from environment with correct fallback
+    const baseUrl = Deno.env.get("PUBLIC_SITE_URL") || "https://dds.mydetailarea.com";
     const invitationLink = `${baseUrl}/invitation/${invitationToken}`;
+
+    console.log('🔗 [EMAIL] Generated invitation link:', invitationLink);
 
     // Format expiration date
     const expirationDate = new Date(expiresAt).toLocaleDateString('en-US', {

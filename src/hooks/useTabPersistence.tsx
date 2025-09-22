@@ -37,6 +37,16 @@ export const TAB_CONFIGS = {
     defaultTab: 'overview',
     validTabs: ['overview', 'users', 'dealerships', 'permissions', 'theme', 'migration']
   },
+  admin_dashboard: {
+    key: 'admin',
+    defaultTab: 'dealerships',
+    validTabs: ['dealerships', 'users', 'reports', 'system']
+  },
+  settings: {
+    key: 'settings',
+    defaultTab: 'profile',
+    validTabs: ['profile', 'notifications', 'dealership', 'integrations']
+  },
   dealer_view: {
     key: 'dealer',
     defaultTab: 'overview', 

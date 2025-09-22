@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Order } from '@/hooks/useOrderManagement';
 import { safeFormatDate, calculateDaysFromNow } from '@/utils/dateUtils';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface OrderPreviewPanelProps {
   order: Order | null;
@@ -30,14 +31,15 @@ interface OrderPreviewPanelProps {
   onStatusChange?: (orderId: string, newStatus: string) => void;
 }
 
-export function OrderPreviewPanel({ 
-  order, 
-  open, 
-  onClose, 
+export function OrderPreviewPanel({
+  order,
+  open,
+  onClose,
   onEdit,
-  onStatusChange 
+  onStatusChange
 }: OrderPreviewPanelProps) {
   const { t } = useTranslation();
+  const { canEditOrder } = usePermissions();
 
   if (!order) return null;
 
@@ -108,8 +110,8 @@ export function OrderPreviewPanel({
             <StatusBadgeInteractive
               status={order.status}
               orderId={order.id}
-              dealerId="1"
-              canUpdateStatus={true}
+              dealerId={order.dealerId?.toString() || "1"}
+              canUpdateStatus={canEditOrder(order)}
               onStatusChange={onStatusChange || (() => {})}
             />
             {dueInfo && (
@@ -289,14 +291,17 @@ export function OrderPreviewPanel({
 
           {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
-            <Button 
-              variant="outline" 
-              className="flex-1"
-              onClick={() => onEdit(order)}
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Edit Order
-            </Button>
+            {/* Edit Button - Only if user can edit this specific order */}
+            {canEditOrder(order) && (
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => onEdit(order)}
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Order
+              </Button>
+            )}
             <Button variant="outline" onClick={onClose}>
               Close
             </Button>

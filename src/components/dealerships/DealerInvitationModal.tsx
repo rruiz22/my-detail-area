@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,40 +32,25 @@ interface DealerInvitationModalProps {
 }
 
 const DEALER_ROLES = [
-  { 
-    value: 'dealer_user', 
+  {
+    value: 'viewer',
+    key: 'viewer',
+    description: 'Read-only access to basic modules'
+  },
+  {
+    value: 'dealer_user',
     key: 'dealer_user',
-    description: 'Acceso de lectura a módulos básicos' 
+    description: 'Standard user access to dealership modules'
   },
-  { 
-    value: 'dealer_salesperson', 
-    key: 'dealer_salesperson',
-    description: 'Gestión de órdenes de venta' 
-  },
-  { 
-    value: 'dealer_service_advisor', 
-    key: 'dealer_service_advisor',
-    description: 'Gestión de órdenes de servicio' 
-  },
-  { 
-    value: 'dealer_sales_manager', 
-    key: 'dealer_sales_manager',
-    description: 'Administración completa de ventas' 
-  },
-  { 
-    value: 'dealer_service_manager', 
-    key: 'dealer_service_manager',
-    description: 'Administración completa de servicio' 
-  },
-  { 
-    value: 'dealer_manager', 
+  {
+    value: 'dealer_manager',
     key: 'dealer_manager',
-    description: 'Administración general del concesionario' 
+    description: 'Manager access with extended permissions'
   },
-  { 
-    value: 'dealer_admin', 
+  {
+    value: 'dealer_admin',
     key: 'dealer_admin',
-    description: 'Acceso completo al concesionario' 
+    description: 'Full administrative access to dealership'
   },
 ];
 
@@ -84,6 +69,21 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
   const [selectedRole, setSelectedRole] = useState<string>('');
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(dealerId || null);
   const [loading, setLoading] = useState(false);
+
+  // Reset state when modal opens/closes or dealerId prop changes
+  useEffect(() => {
+    if (isOpen) {
+      console.log('🔄 [INVITE MODAL] Opening modal with:', {
+        providedDealerId: dealerId,
+        dealershipsCount: dealerships.length,
+        dealershipsLoading,
+        dealershipsNames: dealerships.map(d => d.name)
+      });
+      setEmail('');
+      setSelectedRole('');
+      setSelectedDealerId(dealerId || null);
+    }
+  }, [isOpen, dealerId, dealerships, dealershipsLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +110,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
 
     try {
       // Create dealer invitation using RPC function
-      const { data: invitationData, error } = await supabase
+      const { data: invitationResponse, error } = await supabase
         .rpc('create_dealer_invitation', {
           p_dealer_id: selectedDealerId,
           p_email: email,
@@ -118,6 +118,11 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
         });
 
       if (error) throw error;
+
+      console.log('🎯 [INVITE RPC] Response from create_dealer_invitation:', invitationResponse);
+
+      // Parse the JSON response from the RPC function
+      const invitationData = invitationResponse;
 
       // Get dealership and inviter information for email
       const { data: dealershipData } = await supabase
@@ -129,20 +134,35 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       const dealershipName = dealershipData?.name || 'Dealership';
       const roleName = DEALER_ROLES.find(role => role.value === selectedRole)?.key || selectedRole;
 
-      // Send invitation email via Edge Function
-      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email', {
-        body: {
-          invitationId: invitationData.id,
-          to: email,
-          dealershipName,
-          roleName: t(`roles.${roleName}`, roleName),
-          inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
-            ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
-            : user?.email?.split('@')[0] || 'Team Member',
-          inviterEmail: user?.email || '',
-          invitationToken: invitationData.token,
-          expiresAt: invitationData.expires_at
-        }
+      // Prepare email data
+      const emailData = {
+        invitationId: invitationData.id,
+        to: email,
+        dealershipName,
+        roleName: t(`roles.${roleName}`, roleName),
+        inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
+          ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+          : user?.email?.split('@')[0] || 'Team Member',
+        inviterEmail: user?.email || '',
+        invitationToken: invitationData.token,
+        expiresAt: invitationData.expires_at
+      };
+
+      console.log('📧 [INVITE EMAIL] Sending invitation data:', {
+        ...emailData,
+        invitationId: emailData.invitationId,
+        to: emailData.to,
+        dealershipName: emailData.dealershipName,
+        roleName: emailData.roleName,
+        inviterName: emailData.inviterName,
+        inviterEmail: emailData.inviterEmail,
+        hasToken: !!emailData.invitationToken,
+        expiresAt: emailData.expiresAt
+      });
+
+      // Send invitation email via DEBUG Edge Function
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email-debug', {
+        body: emailData
       });
 
       if (emailError) {

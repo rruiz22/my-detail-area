@@ -26,6 +26,10 @@ interface DealershipStats {
   pending_invitations: number;
   total_orders: number;
   orders_this_month: number;
+  pending_orders: number;
+  completed_orders: number;
+  total_groups: number;
+  users_with_groups: number;
 }
 
 interface DealershipStatsCardProps {
@@ -42,30 +46,166 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchStats();
-  }, [dealerId, fetchStats]);
-
   const fetchStats = useCallback(async () => {
+    // Validación de dealerId antes de hacer consultas
+    if (!dealerId || dealerId === undefined) {
+      console.warn('⚠️ DealershipStatsCard: dealerId is undefined, skipping stats fetch');
+      setLoading(false);
+      setError('No dealership selected');
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
-      const { data, error } = await supabase
-        .rpc('get_dealership_stats', { p_dealer_id: dealerId });
+      console.log('📊 Fetching stats for dealership:', dealerId);
 
-      if (error) throw error;
+      // SOLUCIÓN PERMANENTE: Consultas directas de Supabase
+      // Ejecutar múltiples consultas en paralelo para mejor rendimiento
+      const [
+        allUsersQuery,
+        activeUsersQuery,
+        ordersQuery,
+        groupsQuery,
+        membershipQuery,
+        ordersThisMonthQuery,
+        pendingOrdersQuery,
+        completedOrdersQuery
+      ] = await Promise.all([
+        // Total usuarios del dealership
+        supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealership_id', dealerId),
 
-      if (data && data.length > 0) {
-        setStats(data[0]);
+        // Usuarios activos (excluyendo roles inactivos)
+        supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealership_id', dealerId)
+          .in('role', ['system_admin', 'admin', 'manager', 'viewer', 'technician']),
+
+        // Total órdenes del dealership
+        supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealer_id', dealerId),
+
+        // Total grupos activos del dealership
+        supabase
+          .from('dealer_groups')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealer_id', dealerId)
+          .eq('is_active', true),
+
+        // Usuarios con grupos asignados (filtrado por dealership)
+        supabase
+          .from('user_group_memberships')
+          .select(`
+            user_id,
+            dealer_groups!inner (
+              dealer_id
+            )
+          `, { count: 'exact', head: true })
+          .eq('is_active', true)
+          .eq('dealer_groups.dealer_id', dealerId),
+
+        // Órdenes de este mes
+        supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealer_id', dealerId)
+          .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
+
+        // Órdenes pendientes
+        supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealer_id', dealerId)
+          .in('status', ['pending', 'in_progress']),
+
+        // Órdenes completadas
+        supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealer_id', dealerId)
+          .eq('status', 'completed')
+      ]);
+
+      // Verificar errores en cualquiera de las consultas
+      const errors = [
+        allUsersQuery.error,
+        activeUsersQuery.error,
+        ordersQuery.error,
+        groupsQuery.error,
+        membershipQuery.error,
+        ordersThisMonthQuery.error,
+        pendingOrdersQuery.error,
+        completedOrdersQuery.error
+      ].filter(error => error);
+
+      if (errors.length > 0) {
+        console.error('Database query errors:', errors);
+        throw new Error(`Database query failed: ${errors[0]?.message || 'Unknown database error'}`);
       }
-    } catch (err: Error | unknown) {
-      console.error('Error fetching dealership stats:', err);
-      setError(err.message);
+
+      // Construir estadísticas con datos reales y precisos
+      const statsData: DealershipStats = {
+        total_users: allUsersQuery.count || 0,
+        active_users: activeUsersQuery.count || 0,
+        pending_invitations: 0, // Campo para futuro uso
+        total_orders: ordersQuery.count || 0,
+        orders_this_month: ordersThisMonthQuery.count || 0,
+        pending_orders: pendingOrdersQuery.count || 0,
+        completed_orders: completedOrdersQuery.count || 0,
+        total_groups: groupsQuery.count || 0,
+        users_with_groups: membershipQuery.count || 0
+      };
+
+      console.log('✅ Dealership stats calculated:', {
+        dealerId,
+        stats: statsData
+      });
+
+      setStats(statsData);
+
+    } catch (err: any) {
+      console.error('❌ Error fetching dealership stats for dealer', dealerId, ':', err);
+
+      // Manejo robusto de diferentes tipos de errores
+      let errorMessage = 'Failed to load dealership statistics';
+
+      if (err?.message) {
+        errorMessage = err.message;
+      } else if (err?.code) {
+        errorMessage = `Database error (${err.code}): ${err.details || 'Unknown error'}`;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+
+      setError(errorMessage);
+
+      // Fallback: setear datos vacíos para evitar crashes de UI
+      setStats({
+        total_users: 0,
+        active_users: 0,
+        pending_invitations: 0,
+        total_orders: 0,
+        orders_this_month: 0,
+        pending_orders: 0,
+        completed_orders: 0,
+        total_groups: 0,
+        users_with_groups: 0
+      });
     } finally {
       setLoading(false);
     }
   }, [dealerId]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   if (loading) {
     return (
@@ -182,7 +322,7 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
                 </div>
                 
                 <div className="space-y-1">
-                  <p className="text-2xl font-bold">{item.value.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">{(item.value || 0).toLocaleString()}</p>
                   <p className="text-sm font-medium text-muted-foreground">
                     {item.label}
                   </p>
