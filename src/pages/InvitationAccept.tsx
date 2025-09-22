@@ -59,6 +59,7 @@ export function InvitationAccept() {
 
   const fetchInvitationDetails = useCallback(async () => {
     if (!token) {
+      console.error('❌ No token provided');
       setError(t('invitations.accept.invalid_invitation'));
       setLoading(false);
       return;
@@ -67,6 +68,8 @@ export function InvitationAccept() {
     try {
       setLoading(true);
       setError(null);
+
+      console.log('🔍 Searching for invitation with token:', token);
 
       // Fetch invitation details with better error handling
       const { data: invitationData, error: invitationError } = await supabase
@@ -82,13 +85,37 @@ export function InvitationAccept() {
         `)
         .eq('invitation_token', token);
 
+      console.log('📊 Supabase response:', { invitationData, invitationError });
+
       if (invitationError) {
-        console.error('Supabase query error:', invitationError);
+        console.error('❌ Supabase query error:', invitationError);
         throw new Error(t('invitations.accept.database_error', 'Database error occurred'));
       }
 
       // Handle case where no invitation is found or multiple results
       if (!invitationData || invitationData.length === 0) {
+        console.error('❌ No invitation found for token:', token);
+        console.log('💡 This could mean:');
+        console.log('  - Token is invalid or malformed');
+        console.log('  - Invitation was deleted');
+        console.log('  - Token has expired and was cleaned up');
+        console.log('  - Database connection issue');
+
+        // Try to get some debug info about dealer_invitations table
+        try {
+          const { data: debugData, error: debugError } = await supabase
+            .from('dealer_invitations')
+            .select('id, invitation_token, email, expires_at')
+            .limit(5);
+
+          console.log('🔍 Recent invitations for debugging:', debugData);
+          if (debugError) {
+            console.error('❌ Debug query error:', debugError);
+          }
+        } catch (debugErr) {
+          console.error('❌ Debug query failed:', debugErr);
+        }
+
         throw new Error(t('invitations.accept.not_found'));
       }
 

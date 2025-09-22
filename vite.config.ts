@@ -23,7 +23,9 @@ export default defineConfig(({ mode }) => ({
       "lodash/throttle": "lodash-es/throttle",
       "lodash": "lodash-es",
       // Prevent @emotion/is-prop-valid from loading in browser
-      "@emotion/is-prop-valid": path.resolve(__dirname, "./src/utils/empty-module.js")
+      "@emotion/is-prop-valid": path.resolve(__dirname, "./src/utils/empty-module.js"),
+      "@emotion/styled": path.resolve(__dirname, "./src/utils/empty-module.js"),
+      "@emotion/react": path.resolve(__dirname, "./src/utils/empty-module.js")
     },
   },
   define: {
