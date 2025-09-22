@@ -46,6 +46,7 @@ export function InvitationAccept() {
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAuthOptions, setShowAuthOptions] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -67,7 +68,7 @@ export function InvitationAccept() {
       setLoading(true);
       setError(null);
 
-      // Fetch invitation details
+      // Fetch invitation details with better error handling
       const { data: invitationData, error: invitationError } = await supabase
         .from('dealer_invitations')
         .select(`
@@ -79,17 +80,26 @@ export function InvitationAccept() {
           accepted_at,
           inviter_id
         `)
-        .eq('invitation_token', token)
-        .single();
+        .eq('invitation_token', token);
 
-      if (invitationError) throw invitationError;
+      if (invitationError) {
+        console.error('Supabase query error:', invitationError);
+        throw new Error(t('invitations.accept.database_error', 'Database error occurred'));
+      }
 
-      if (!invitationData) {
+      // Handle case where no invitation is found or multiple results
+      if (!invitationData || invitationData.length === 0) {
         throw new Error(t('invitations.accept.not_found'));
       }
 
+      if (invitationData.length > 1) {
+        console.warn('Multiple invitations found for token:', token);
+      }
+
+      const singleInvitation = invitationData[0];
+
       // Check if invitation is expired
-      const expiresAt = new Date(invitationData.expires_at);
+      const expiresAt = new Date(singleInvitation.expires_at);
       const now = new Date();
 
       if (expiresAt < now) {
@@ -100,20 +110,18 @@ export function InvitationAccept() {
       const { data: dealershipData } = await supabase
         .from('dealerships')
         .select('name')
-        .eq('id', invitationData.dealer_id)
-        .single();
+        .eq('id', singleInvitation.dealer_id);
 
       // Fetch inviter details
       const { data: inviterData } = await supabase
         .from('profiles')
         .select('email')
-        .eq('id', invitationData.inviter_id)
-        .single();
+        .eq('id', singleInvitation.inviter_id);
 
       setInvitation({
-        ...invitationData,
-        dealership_name: dealershipData?.name || t('dealerships.title'),
-        inviter_email: inviterData?.email || t('users.admin'),
+        ...singleInvitation,
+        dealership_name: dealershipData?.[0]?.name || t('dealerships.title'),
+        inviter_email: inviterData?.[0]?.email || t('users.admin'),
       });
     } catch (err: any) {
       console.error('Error fetching invitation:', err);
@@ -334,59 +342,75 @@ export function InvitationAccept() {
 
           {/* User Authentication Check */}
           {!user ? (
-            <div className="space-y-3">
-              <p className="text-sm text-muted-foreground text-center">
-                Debes iniciar sesión con el email <strong>{invitation.email}</strong> para aceptar esta invitación
-              </p>
-              <Button 
-                className="w-full" 
-                onClick={() => navigate('/auth')}
-              >
-                Iniciar Sesión
-              </Button>
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <p className="text-sm text-blue-700 dark:text-blue-300 text-center mb-3">
+                  {t('invitations.accept.auth_instructions', 'Para aceptar esta invitación, necesitas:')}
+                </p>
+                <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
+                  <p>• {t('invitations.accept.step_1', 'Crear cuenta o iniciar sesión con:')} <strong>{invitation.email}</strong></p>
+                  <p>• {t('invitations.accept.step_2', 'Aceptar la invitación automáticamente')}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  className="w-full"
+                  onClick={() => navigate(`/auth?email=${encodeURIComponent(invitation.email)}&mode=signup&invitation=${token}`)}
+                >
+                  {t('invitations.accept.create_account', 'Crear Cuenta')}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => navigate(`/auth?email=${encodeURIComponent(invitation.email)}&mode=signin&invitation=${token}`)}
+                >
+                  {t('invitations.accept.sign_in', 'Iniciar Sesión')}
+                </Button>
+              </div>
             </div>
           ) : user.email !== invitation.email ? (
             <div className="space-y-3">
               <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
                 <p className="text-sm text-destructive">
-                  Esta invitación fue enviada a <strong>{invitation.email}</strong> pero has iniciado sesión con <strong>{user.email}</strong>
+                  {t('invitations.accept.email_mismatch_detail', 'Esta invitación fue enviada a')} <strong>{invitation.email}</strong> {t('invitations.accept.but_logged_as', 'pero has iniciado sesión con')} <strong>{user.email}</strong>
                 </p>
               </div>
-              <Button 
-                variant="outline" 
-                className="w-full" 
-                onClick={() => navigate('/auth')}
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate(`/auth?email=${encodeURIComponent(invitation.email)}&invitation=${token}`)}
               >
-                Cambiar de Cuenta
+                {t('invitations.accept.switch_account', 'Cambiar de Cuenta')}
               </Button>
             </div>
           ) : (
             <div className="space-y-3">
-              <Button 
-                className="w-full" 
+              <Button
+                className="w-full"
                 onClick={handleAcceptInvitation}
                 disabled={accepting}
               >
                 {accepting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Aceptando...
+                    {t('invitations.accept.accepting', 'Aceptando...')}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="mr-2 h-4 w-4" />
-                    Aceptar Invitación
+                    {t('invitations.accept.accept_button', 'Aceptar Invitación')}
                   </>
                 )}
               </Button>
-              
-              <Button 
-                variant="outline" 
+
+              <Button
+                variant="outline"
                 className="w-full"
                 onClick={() => navigate('/dashboard')}
                 disabled={accepting}
               >
-                Declinar
+                {t('invitations.accept.decline', 'Declinar')}
               </Button>
             </div>
           )}

@@ -1182,12 +1182,24 @@
       "verifying": "Verificando convite...",
       "not_found": "Convite não encontrado",
       "expired": "Este convite expirou",
+      "database_error": "Erro na base de dados",
       "email_not_match": "E-mail Não Corresponde",
       "email_not_match_desc": "Este convite foi enviado para um endereço de e-mail diferente",
       "auth_required": "Autenticação Necessária",
       "auth_required_desc": "Você deve estar autenticado para aceitar este convite",
       "invalid_invitation": "Dados de convite inválidos",
-      "success_message": "Você se juntou com sucesso a {{dealership}}"
+      "success_message": "Você se juntou com sucesso a {{dealership}}",
+      "auth_instructions": "Para aceitar este convite, você precisa:",
+      "step_1": "Criar conta ou fazer login com:",
+      "step_2": "Aceitar o convite automaticamente",
+      "create_account": "Criar Conta",
+      "sign_in": "Fazer Login",
+      "email_mismatch_detail": "Este convite foi enviado para",
+      "but_logged_as": "mas você está logado com",
+      "switch_account": "Trocar de Conta",
+      "accepting": "Aceitando...",
+      "accept_button": "Aceitar Convite",
+      "decline": "Recusar"
     }
   }
 }

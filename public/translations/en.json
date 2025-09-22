@@ -1437,12 +1437,24 @@
       "verifying": "Verifying invitation...",
       "not_found": "Invitation not found",
       "expired": "This invitation has expired",
+      "database_error": "Database error occurred",
       "email_not_match": "Email Mismatch",
       "email_not_match_desc": "This invitation was sent to a different email address",
       "auth_required": "Authentication Required",
       "auth_required_desc": "You must be logged in to accept this invitation",
       "invalid_invitation": "Invalid invitation data",
-      "success_message": "Successfully joined {{dealership}}"
+      "success_message": "Successfully joined {{dealership}}",
+      "auth_instructions": "To accept this invitation, you need to:",
+      "step_1": "Create account or sign in with:",
+      "step_2": "Accept the invitation automatically",
+      "create_account": "Create Account",
+      "sign_in": "Sign In",
+      "email_mismatch_detail": "This invitation was sent to",
+      "but_logged_as": "but you are logged in with",
+      "switch_account": "Switch Account",
+      "accepting": "Accepting...",
+      "accept_button": "Accept Invitation",
+      "decline": "Decline"
     }
   }
 }

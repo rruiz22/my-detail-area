@@ -1185,12 +1185,24 @@
       "verifying": "Verificando invitación...",
       "not_found": "Invitación no encontrada",
       "expired": "Esta invitación ha expirado",
+      "database_error": "Error en la base de datos",
       "email_not_match": "Correo No Coincide",
       "email_not_match_desc": "Esta invitación fue enviada a una dirección de correo diferente",
       "auth_required": "Autenticación Requerida",
       "auth_required_desc": "Debes estar autenticado para aceptar esta invitación",
       "invalid_invitation": "Datos de invitación inválidos",
-      "success_message": "Te has unido exitosamente a {{dealership}}"
+      "success_message": "Te has unido exitosamente a {{dealership}}",
+      "auth_instructions": "Para aceptar esta invitación, necesitas:",
+      "step_1": "Crear cuenta o iniciar sesión con:",
+      "step_2": "Aceptar la invitación automáticamente",
+      "create_account": "Crear Cuenta",
+      "sign_in": "Iniciar Sesión",
+      "email_mismatch_detail": "Esta invitación fue enviada a",
+      "but_logged_as": "pero has iniciado sesión con",
+      "switch_account": "Cambiar de Cuenta",
+      "accepting": "Aceptando...",
+      "accept_button": "Aceptar Invitación",
+      "decline": "Declinar"
     }
   }
 }
