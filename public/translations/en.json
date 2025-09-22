@@ -1434,9 +1434,15 @@
     "invite_user_to": "Invite user to {{dealership}}",
     "dealer_user": "Dealer User",
     "accept": {
+      "verifying": "Verifying invitation...",
+      "not_found": "Invitation not found",
+      "expired": "This invitation has expired",
       "email_not_match": "Email Mismatch",
       "email_not_match_desc": "This invitation was sent to a different email address",
-      "auth_required_desc": "You must be logged in to send invitations"
+      "auth_required": "Authentication Required",
+      "auth_required_desc": "You must be logged in to accept this invitation",
+      "invalid_invitation": "Invalid invitation data",
+      "success_message": "Successfully joined {{dealership}}"
     }
   }
 }

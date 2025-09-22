@@ -51,12 +51,18 @@ export function InvitationAccept() {
     if (token) {
       fetchInvitationDetails();
     } else {
-      setError('Token de invitación no válido');
+      setError(t('invitations.accept.invalid_invitation'));
       setLoading(false);
     }
-  }, [token, fetchInvitationDetails]);
+  }, [token]);
 
   const fetchInvitationDetails = useCallback(async () => {
+    if (!token) {
+      setError(t('invitations.accept.invalid_invitation'));
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -128,7 +134,14 @@ export function InvitationAccept() {
       return;
     }
 
-    if (!invitation) return;
+    if (!invitation || !token) {
+      toast({
+        title: t('common.error'),
+        description: t('invitations.accept.invalid_invitation'),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     // Verify email matches
     if (invitation.email !== user.email) {
@@ -140,23 +153,31 @@ export function InvitationAccept() {
       return;
     }
 
+    // Prevent double submission
+    if (accepting) return;
+
     setAccepting(true);
 
     try {
       const { error } = await supabase
         .rpc('accept_dealer_invitation', {
-          p_invitation_token: token!,
+          p_invitation_token: token,
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase RPC error:', error);
+        throw new Error(error.message || 'Error accepting invitation');
+      }
 
       toast({
         title: t('common.success'),
         description: t('invitations.accept.success_message', { dealership: invitation.dealership_name }),
       });
 
-      // Redirect to dealership dashboard
-      navigate('/dashboard');
+      // Small delay to ensure toast is visible before navigation
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
     } catch (err: any) {
       console.error('Error accepting invitation:', err);
       toast({
@@ -202,7 +223,7 @@ export function InvitationAccept() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center space-y-4">
               <Loader2 className="h-8 w-8 animate-spin" />
-              <p>Verificando invitación...</p>
+              <p>{t('invitations.accept.verifying')}</p>
             </div>
           </CardContent>
         </Card>

@@ -21,7 +21,9 @@ export default defineConfig(({ mode }) => ({
       "lodash/isArray": "lodash-es/isArray",
       "lodash/isObject": "lodash-es/isObject",
       "lodash/throttle": "lodash-es/throttle",
-      "lodash": "lodash-es"
+      "lodash": "lodash-es",
+      // Prevent @emotion/is-prop-valid from loading in browser
+      "@emotion/is-prop-valid": path.resolve(__dirname, "./src/utils/empty-module.js")
     },
   },
   define: {

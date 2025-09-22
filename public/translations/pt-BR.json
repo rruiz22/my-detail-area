@@ -1179,9 +1179,15 @@
     "invite_user_to": "Convidar usuário para {{dealership}}",
     "dealer_user": "Usuário da Concessionária",
     "accept": {
+      "verifying": "Verificando convite...",
+      "not_found": "Convite não encontrado",
+      "expired": "Este convite expirou",
       "email_not_match": "E-mail Não Corresponde",
       "email_not_match_desc": "Este convite foi enviado para um endereço de e-mail diferente",
-      "auth_required_desc": "Você deve estar autenticado para enviar convites"
+      "auth_required": "Autenticação Necessária",
+      "auth_required_desc": "Você deve estar autenticado para aceitar este convite",
+      "invalid_invitation": "Dados de convite inválidos",
+      "success_message": "Você se juntou com sucesso a {{dealership}}"
     }
   }
 }

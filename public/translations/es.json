@@ -1182,9 +1182,15 @@
     "invite_user_to": "Invitar usuario a {{dealership}}",
     "dealer_user": "Usuario de Concesionario",
     "accept": {
+      "verifying": "Verificando invitación...",
+      "not_found": "Invitación no encontrada",
+      "expired": "Esta invitación ha expirado",
       "email_not_match": "Correo No Coincide",
       "email_not_match_desc": "Esta invitación fue enviada a una dirección de correo diferente",
-      "auth_required_desc": "Debes estar autenticado para enviar invitaciones"
+      "auth_required": "Autenticación Requerida",
+      "auth_required_desc": "Debes estar autenticado para aceptar esta invitación",
+      "invalid_invitation": "Datos de invitación inválidos",
+      "success_message": "Te has unido exitosamente a {{dealership}}"
     }
   }
 }
