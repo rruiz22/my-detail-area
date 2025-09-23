@@ -84,8 +84,8 @@ export function InvitationAccept() {
         throw new Error(t('invitations.accept.database_error'));
       }
 
-      // Handle case where no invitation is found
-      if (!invitationData || invitationData.length === 0) {
+      // Handle case where no invitation is found or invalid
+      if (!invitationData || !invitationData.valid) {
         console.error('❌ No invitation found for token:', token);
         console.log('💡 This could mean:');
         console.log('  - Token is invalid or malformed');
@@ -93,14 +93,15 @@ export function InvitationAccept() {
         console.log('  - Token has expired and was cleaned up');
         console.log('  - Database connection issue');
 
+        // Check for specific error from the RPC function
+        if (invitationData && invitationData.error) {
+          throw new Error(invitationData.message || t('invitations.accept.not_found'));
+        }
+
         throw new Error(t('invitations.accept.not_found'));
       }
 
-      if (invitationData.length > 1) {
-        console.warn('Multiple invitations found for token:', token);
-      }
-
-      const singleInvitation = invitationData[0];
+      const singleInvitation = invitationData.invitation;
 
       // Check if invitation is expired
       const expiresAt = new Date(singleInvitation.expires_at);
@@ -111,9 +112,13 @@ export function InvitationAccept() {
       }
 
       setInvitation({
-        ...singleInvitation,
-        dealership_name: singleInvitation.dealership_name || t('dealerships.title'),
-        inviter_email: singleInvitation.inviter_email || t('users.admin'),
+        id: singleInvitation.id,
+        dealer_id: singleInvitation.dealership.id,
+        email: singleInvitation.email,
+        role_name: singleInvitation.role_name,
+        expires_at: singleInvitation.expires_at,
+        dealership_name: singleInvitation.dealership.name || t('dealerships.title'),
+        inviter_email: singleInvitation.inviter.email || t('users.admin'),
       });
     } catch (err: any) {
       console.error('Error fetching invitation:', err);
