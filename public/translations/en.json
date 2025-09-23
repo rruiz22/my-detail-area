@@ -919,6 +919,9 @@
   "nfc_tracking": {
     "title": "NFC Tracking"
   },
+  "users": {
+    "admin": "Administrator"
+  },
   "dealerships": {
     "title": "Dealerships",
     "description": "Manage dealerships and their configurations",
@@ -1454,7 +1457,22 @@
       "switch_account": "Switch Account",
       "accepting": "Accepting...",
       "accept_button": "Accept Invitation",
-      "decline": "Decline"
+      "decline": "Decline",
+      "title": "Dealership Invitation",
+      "subtitle": "You have been invited to join a dealership",
+      "invalid_title": "Invalid Invitation",
+      "not_found_description": "Could not find the invitation",
+      "go_to_start": "Go to Start",
+      "already_accepted_title": "Invitation Already Accepted",
+      "already_accepted_description": "This invitation has already been accepted previously",
+      "go_to_dashboard": "Go to Dashboard",
+      "dealership_label": "Dealership",
+      "role_label": "Assigned Role",
+      "invited_by": "Invited by {{email}}",
+      "expires_prefix": "Expires in",
+      "expires_in_hours": "{{hours}} hours",
+      "expires_in_days": "{{days}} days",
+      "expiration_warning": "This invitation has an expiration date"
     }
   }
 }

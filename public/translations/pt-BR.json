@@ -700,6 +700,9 @@
   "nfc_tracking": {
     "title": "Rastreamento NFC"
   },
+  "users": {
+    "admin": "Administrador"
+  },
   "dealerships": {
     "title": "Concessionárias",
     "manage_description": "Gerenciar concessionárias, seus contatos e usuários",
@@ -1199,7 +1202,22 @@
       "switch_account": "Trocar de Conta",
       "accepting": "Aceitando...",
       "accept_button": "Aceitar Convite",
-      "decline": "Recusar"
+      "decline": "Recusar",
+      "title": "Convite da Concessionária",
+      "subtitle": "Você foi convidado para se juntar a uma concessionária",
+      "invalid_title": "Convite Inválido",
+      "not_found_description": "Não foi possível encontrar o convite",
+      "go_to_start": "Ir ao Início",
+      "already_accepted_title": "Convite Já Aceito",
+      "already_accepted_description": "Este convite já foi aceito anteriormente",
+      "go_to_dashboard": "Ir ao Dashboard",
+      "dealership_label": "Concessionária",
+      "role_label": "Função Atribuída",
+      "invited_by": "Convidado por {{email}}",
+      "expires_prefix": "Expira em",
+      "expires_in_hours": "{{hours}} horas",
+      "expires_in_days": "{{days}} dias",
+      "expiration_warning": "Este convite tem data de expiração"
     }
   }
 }

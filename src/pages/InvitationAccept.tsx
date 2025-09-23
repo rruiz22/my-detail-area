@@ -74,14 +74,14 @@ export function InvitationAccept() {
       // Use RPC function to verify invitation token (bypasses RLS)
       const { data: invitationData, error: invitationError } = await supabase
         .rpc('verify_invitation_token', {
-          p_invitation_token: token
+          token_input: token
         });
 
       console.log('📊 Supabase RPC response:', { invitationData, invitationError });
 
       if (invitationError) {
         console.error('❌ Supabase RPC error:', invitationError);
-        throw new Error(t('invitations.accept.database_error', 'Database error occurred'));
+        throw new Error(t('invitations.accept.database_error'));
       }
 
       // Handle case where no invitation is found
@@ -161,7 +161,7 @@ export function InvitationAccept() {
     try {
       const { error } = await supabase
         .rpc('accept_dealer_invitation', {
-          p_invitation_token: token,
+          token_input: token,
         });
 
       if (error) {
@@ -192,28 +192,28 @@ export function InvitationAccept() {
 
   const getRoleDisplayName = (roleName: string) => {
     const roleMap: Record<string, string> = {
-      dealer_user: t('invitations.dealer_user'),
-      dealer_salesperson: t('invitations.dealer_salesperson'),
-      dealer_service_advisor: t('invitations.dealer_service_advisor'),
-      dealer_sales_manager: t('invitations.dealer_sales_manager'),
-      dealer_service_manager: t('invitations.dealer_service_manager'),
-      dealer_manager: t('invitations.dealer_manager'),
-      dealer_admin: t('invitations.dealer_admin'),
+      dealer_user: t('roles.dealer_user'),
+      dealer_salesperson: t('roles.dealer_salesperson'),
+      dealer_service_advisor: t('roles.dealer_service_advisor'),
+      dealer_sales_manager: t('roles.dealer_sales_manager'),
+      dealer_service_manager: t('roles.dealer_service_manager'),
+      dealer_manager: t('roles.dealer_manager'),
+      dealer_admin: t('roles.dealer_admin'),
     };
     return roleMap[roleName] || roleName;
   };
 
   const getTimeUntilExpiration = () => {
     if (!invitation) return '';
-    
+
     const expiresAt = new Date(invitation.expires_at);
     const now = new Date();
     const diffInHours = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 24) {
-      return `${diffInHours} horas`;
+      return t('invitations.accept.expires_in_hours', { hours: diffInHours });
     }
-    return `${Math.ceil(diffInHours / 24)} días`;
+    return t('invitations.accept.expires_in_days', { days: Math.ceil(diffInHours / 24) });
   };
 
   if (loading) {
@@ -237,9 +237,9 @@ export function InvitationAccept() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <XCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <CardTitle>Invitación No Válida</CardTitle>
+            <CardTitle>{t('invitations.accept.invalid_title')}</CardTitle>
             <CardDescription>
-              {error || 'No se pudo encontrar la invitación'}
+              {error || t('invitations.accept.not_found_description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -247,7 +247,7 @@ export function InvitationAccept() {
               className="w-full" 
               onClick={() => navigate('/auth')}
             >
-              Ir al Inicio
+              {t('invitations.accept.go_to_start')}
             </Button>
           </CardContent>
         </Card>
@@ -261,9 +261,9 @@ export function InvitationAccept() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <CardTitle>Invitación Ya Aceptada</CardTitle>
+            <CardTitle>{t('invitations.accept.already_accepted_title')}</CardTitle>
             <CardDescription>
-              Esta invitación ya ha sido aceptada anteriormente
+              {t('invitations.accept.already_accepted_description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -271,7 +271,7 @@ export function InvitationAccept() {
               className="w-full" 
               onClick={() => navigate('/dashboard')}
             >
-              Ir al Dashboard
+              {t('invitations.accept.go_to_dashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -284,9 +284,9 @@ export function InvitationAccept() {
       <Card className="w-full max-w-lg">
         <CardHeader className="text-center">
           <UserPlus className="h-12 w-12 text-primary mx-auto mb-4" />
-          <CardTitle>Invitación al Concesionario</CardTitle>
+          <CardTitle>{t('invitations.accept.title')}</CardTitle>
           <CardDescription>
-            Has sido invitado a unirte a un concesionario
+            {t('invitations.accept.subtitle')}
           </CardDescription>
         </CardHeader>
         
@@ -297,7 +297,7 @@ export function InvitationAccept() {
               <Building2 className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="font-medium">{invitation.dealership_name}</p>
-                <p className="text-sm text-muted-foreground">Concesionario</p>
+                <p className="text-sm text-muted-foreground">{t('invitations.accept.dealership_label')}</p>
               </div>
             </div>
 
@@ -305,7 +305,7 @@ export function InvitationAccept() {
               <Shield className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="font-medium">{getRoleDisplayName(invitation.role_name)}</p>
-                <p className="text-sm text-muted-foreground">Rol asignado</p>
+                <p className="text-sm text-muted-foreground">{t('invitations.accept.role_label')}</p>
               </div>
             </div>
 
@@ -314,7 +314,7 @@ export function InvitationAccept() {
               <div>
                 <p className="font-medium">{invitation.email}</p>
                 <p className="text-sm text-muted-foreground">
-                  Invitado por {invitation.inviter_email}
+                  {t('invitations.accept.invited_by', { email: invitation.inviter_email })}
                 </p>
               </div>
             </div>
@@ -323,10 +323,10 @@ export function InvitationAccept() {
               <Clock className="h-5 w-5 text-orange-500" />
               <div>
                 <p className="font-medium text-orange-700 dark:text-orange-300">
-                  Expira en {getTimeUntilExpiration()}
+                  {t('invitations.accept.expires_prefix')} {getTimeUntilExpiration()}
                 </p>
                 <p className="text-sm text-orange-600 dark:text-orange-400">
-                  Esta invitación tiene fecha límite
+                  {t('invitations.accept.expiration_warning')}
                 </p>
               </div>
             </div>
@@ -337,11 +337,11 @@ export function InvitationAccept() {
             <div className="space-y-4">
               <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm text-blue-700 dark:text-blue-300 text-center mb-3">
-                  {t('invitations.accept.auth_instructions', 'Para aceptar esta invitación, necesitas:')}
+                  {t('invitations.accept.auth_instructions')}
                 </p>
                 <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-                  <p>• {t('invitations.accept.step_1', 'Crear cuenta o iniciar sesión con:')} <strong>{invitation.email}</strong></p>
-                  <p>• {t('invitations.accept.step_2', 'Aceptar la invitación automáticamente')}</p>
+                  <p>• {t('invitations.accept.step_1')} <strong>{invitation.email}</strong></p>
+                  <p>• {t('invitations.accept.step_2')}</p>
                 </div>
               </div>
 
@@ -350,14 +350,14 @@ export function InvitationAccept() {
                   className="w-full"
                   onClick={() => navigate(`/auth?email=${encodeURIComponent(invitation.email)}&mode=signup&invitation=${token}`)}
                 >
-                  {t('invitations.accept.create_account', 'Crear Cuenta')}
+                  {t('invitations.accept.create_account')}
                 </Button>
                 <Button
                   variant="outline"
                   className="w-full"
                   onClick={() => navigate(`/auth?email=${encodeURIComponent(invitation.email)}&mode=signin&invitation=${token}`)}
                 >
-                  {t('invitations.accept.sign_in', 'Iniciar Sesión')}
+                  {t('invitations.accept.sign_in')}
                 </Button>
               </div>
             </div>
@@ -365,7 +365,7 @@ export function InvitationAccept() {
             <div className="space-y-3">
               <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
                 <p className="text-sm text-destructive">
-                  {t('invitations.accept.email_mismatch_detail', 'Esta invitación fue enviada a')} <strong>{invitation.email}</strong> {t('invitations.accept.but_logged_as', 'pero has iniciado sesión con')} <strong>{user.email}</strong>
+                  {t('invitations.accept.email_mismatch_detail')} <strong>{invitation.email}</strong> {t('invitations.accept.but_logged_as')} <strong>{user.email}</strong>
                 </p>
               </div>
               <Button
@@ -373,7 +373,7 @@ export function InvitationAccept() {
                 className="w-full"
                 onClick={() => navigate(`/auth?email=${encodeURIComponent(invitation.email)}&invitation=${token}`)}
               >
-                {t('invitations.accept.switch_account', 'Cambiar de Cuenta')}
+                {t('invitations.accept.switch_account')}
               </Button>
             </div>
           ) : (
@@ -386,12 +386,12 @@ export function InvitationAccept() {
                 {accepting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('invitations.accept.accepting', 'Aceptando...')}
+                    {t('invitations.accept.accepting')}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="mr-2 h-4 w-4" />
-                    {t('invitations.accept.accept_button', 'Aceptar Invitación')}
+                    {t('invitations.accept.accept_button')}
                   </>
                 )}
               </Button>
@@ -402,7 +402,7 @@ export function InvitationAccept() {
                 onClick={() => navigate('/dashboard')}
                 disabled={accepting}
               >
-                {t('invitations.accept.decline', 'Declinar')}
+                {t('invitations.accept.decline')}
               </Button>
             </div>
           )}

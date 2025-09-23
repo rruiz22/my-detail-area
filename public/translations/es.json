@@ -700,6 +700,9 @@
   "nfc_tracking": {
     "title": "Seguimiento NFC"
   },
+  "users": {
+    "admin": "Administrador"
+  },
   "dealerships": {
     "title": "Concesionarios",
     "manage_description": "Gestionar concesionarios, sus contactos y usuarios",
@@ -1202,7 +1205,22 @@
       "switch_account": "Cambiar de Cuenta",
       "accepting": "Aceptando...",
       "accept_button": "Aceptar Invitación",
-      "decline": "Declinar"
+      "decline": "Declinar",
+      "title": "Invitación al Concesionario",
+      "subtitle": "Has sido invitado a unirte a un concesionario",
+      "invalid_title": "Invitación No Válida",
+      "not_found_description": "No se pudo encontrar la invitación",
+      "go_to_start": "Ir al Inicio",
+      "already_accepted_title": "Invitación Ya Aceptada",
+      "already_accepted_description": "Esta invitación ya ha sido aceptada anteriormente",
+      "go_to_dashboard": "Ir al Dashboard",
+      "dealership_label": "Concesionario",
+      "role_label": "Rol Asignado",
+      "invited_by": "Invitado por {{email}}",
+      "expires_prefix": "Expira en",
+      "expires_in_hours": "{{hours}} horas",
+      "expires_in_days": "{{days}} días",
+      "expiration_warning": "Esta invitación tiene fecha límite"
     }
   }
 }
