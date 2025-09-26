@@ -45,12 +45,16 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
   disabled = false,
   className,
   selectedFiles = [],
-  onRemoveFile
-}: FileUploadProps) {
+  onRemoveFile,
+}: FileUploadProps, ref) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
+
+  useImperativeHandle(ref, () => ({
+    uploadFiles
+  }));
 
   // Convert file to base64
   const fileToBase64 = (file: File): Promise<string> => {
@@ -259,4 +263,4 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
       )}
     </div>
   );
-}
+});

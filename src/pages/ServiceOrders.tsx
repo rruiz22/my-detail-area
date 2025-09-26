@@ -6,6 +6,7 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
+import { LiveTimer } from '@/components/ui/LiveTimer';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -30,13 +31,13 @@ export default function ServiceOrders() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const {
     orders,
     tabCounts,
     filters,
     loading,
+    lastRefresh,
     updateFilters,
     refreshData,
     createOrder,
@@ -125,7 +126,11 @@ export default function ServiceOrders() {
             <h1 className="text-2xl font-bold">{t('pages.service_orders')}</h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            <LiveTimer
+              lastRefresh={lastRefresh}
+              isRefreshing={loading}
+            />
             <Button
               variant="outline"
               size="sm"

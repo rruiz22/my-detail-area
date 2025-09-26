@@ -107,7 +107,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: newEmployee, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -137,7 +137,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: updates, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -157,7 +157,7 @@ export const useDetailHubIntegration = () => {
       
       // Employees are already set in state
       return { data: employees, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: "Failed to fetch employees",
@@ -187,7 +187,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: { face_id: faceId }, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Enrollment Failed",
         description: error.message,
@@ -222,7 +222,7 @@ export const useDetailHubIntegration = () => {
           success: false
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Face Recognition Error",
         description: error.message,
@@ -270,7 +270,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: newEntry, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Clock In Failed",
         description: error.message,
@@ -318,7 +318,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: updatedEntry, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Clock Out Failed",
         description: error.message,
@@ -356,7 +356,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: updatedEntry, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -394,7 +394,7 @@ export const useDetailHubIntegration = () => {
       });
 
       return { data: updatedEntry, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -432,7 +432,7 @@ export const useDetailHubIntegration = () => {
       }
 
       return { data: filteredEntries, error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: "Failed to fetch time entries",

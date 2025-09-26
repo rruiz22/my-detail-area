@@ -151,7 +151,7 @@ interface UnifiedOrderHeaderProps {
   order: OrderData;
   orderType: OrderType;
   vehicleDisplayName: string;
-  onStatusChange: (newStatus: string) => void;
+  onStatusChange: (orderId: string, newStatus: string) => void;
   canEditOrder?: boolean;
   onEdit?: () => void;
 }
@@ -316,13 +316,29 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   const { printOrder, previewPrint } = usePrintOrder();
   const [orderData, setOrderData] = useState(order);
 
+  useEffect(() => {
+    setOrderData(order);
+  }, [order]);
+
   // Custom hook for normalized QR props
   const qrProps = useQRProps(orderData);
 
   // Check if user can edit orders
   const canEditOrder = useMemo(() => {
-    return onEdit && hasPermission('sales_orders', 'write');
-  }, [onEdit, hasPermission]);
+    if (!onEdit) {
+      return false;
+    }
+
+    const permissionModuleMap = {
+      sales: 'sales_orders',
+      service: 'service_orders',
+      recon: 'recon_orders',
+      carwash: 'car_wash'
+    } as const;
+
+    const targetModule = permissionModuleMap[orderType];
+    return hasPermission(targetModule, 'edit');
+  }, [onEdit, hasPermission, orderType]);
 
   // Handle edit button click
   const handleEdit = useCallback(() => {
@@ -409,11 +425,15 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   }, []);
 
   // Memoize status change handler
-  const handleStatusChange = useCallback(async (newStatus: string) => {
-    if (onStatusChange) {
-      await onStatusChange(orderData.id, newStatus);
-    }
-  }, [onStatusChange, orderData.id]);
+  const handleStatusChange = useCallback(
+    async (orderId: string, newStatus: string) => {
+      if (onStatusChange) {
+        await onStatusChange(orderId, newStatus);
+      }
+      setOrderData(prev => (prev.id === orderId ? { ...prev, status: newStatus } : prev));
+    },
+    [onStatusChange]
+  );
 
   // Memoize vehicle display name - prioritize vehicle_info from VIN decoder
   const vehicleDisplayName = useMemo(() => {
@@ -519,11 +539,11 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                     </CardHeader>
                     <CardContent>
                       <ChatAndSMSActions
-                        orderId={order.id}
-                        orderNumber={order.orderNumber || order.order_number}
-                        assignedUserId={order.assigned_group_id || order.assignedGroupId || ''}
-                        assignedUserName={order.assigned_to || order.assignedTo || ''}
-                        dealerId={order.dealer_id ? Number(order.dealer_id) : FALLBACK_DEALER_ID}
+                        orderId={orderData.id}
+                        orderNumber={orderData.orderNumber || orderData.order_number}
+                        assignedUserId={orderData.assigned_group_id || orderData.assignedGroupId || ''}
+                        assignedUserName={orderData.assigned_to || orderData.assignedTo || ''}
+                        dealerId={orderData.dealer_id ? Number(orderData.dealer_id) : FALLBACK_DEALER_ID}
                         variant="compact"
                       />
                     </CardContent>

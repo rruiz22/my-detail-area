@@ -26,6 +26,7 @@ interface DueDateTimePickerProps {
   placeholder?: string;
   disabled?: boolean;
   dealerId?: number;
+  enforceBusinessRules?: boolean;
 }
 
 export function DueDateTimePicker({
@@ -34,7 +35,8 @@ export function DueDateTimePicker({
   className,
   placeholder,
   disabled,
-  dealerId
+  dealerId,
+  enforceBusinessRules = true
 }: DueDateTimePickerProps) {
   const { t } = useTranslation();
   const { getAvailableSlots } = useAppointmentCapacity();
@@ -47,23 +49,24 @@ export function DueDateTimePicker({
     const now = new Date();
     const isSelectedToday = selectedDate && isToday(selectedDate);
     const currentHour = now.getHours();
-    
+
     if (!selectedDate) return slots;
-    
+
     const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    
-    // Business hours based on day of week
-    let endHour = 18; // Default Monday-Friday until 6 PM
-    
-    if (dayOfWeek === 0) { // Sunday - Closed
-      return slots;
-    } else if (dayOfWeek === 6) { // Saturday - Until 5 PM
-      endHour = 17;
+
+    const startHour = enforceBusinessRules ? 8 : 0;
+    let endHour = enforceBusinessRules ? 18 : 23;
+
+    if (enforceBusinessRules) {
+      if (dayOfWeek === 0) {
+        return slots;
+      } else if (dayOfWeek === 6) {
+        endHour = 17;
+      }
     }
-    
-    for (let hour = 8; hour <= endHour; hour++) {
-      // If it's today, ensure minimum 1 hour preparation time
-      if (isSelectedToday) {
+
+    for (let hour = startHour; hour <= endHour; hour++) {
+      if (enforceBusinessRules && isSelectedToday) {
         const currentMinutes = now.getMinutes();
         const minimumHour = Math.ceil(currentHour + currentMinutes / 60) + 1;
 
@@ -71,14 +74,13 @@ export function DueDateTimePicker({
           continue;
         }
       }
-      
+
       const time = setMinutes(setHours(new Date(), hour), 0);
       const timeString = format(time, 'h:mm a');
 
-      // Check capacity for this hour slot
       const slotCapacity = availableSlots.find(slot => slot.hour_slot === hour);
       const availableCount = slotCapacity?.available_slots ?? 3;
-      const isSlotFull = availableCount <= 0;
+      const isSlotFull = enforceBusinessRules && availableCount <= 0;
 
       slots.push({
         value: hour.toString(),
@@ -88,13 +90,13 @@ export function DueDateTimePicker({
         maxCapacity: slotCapacity?.max_capacity ?? 3
       });
     }
-    
+
     return slots;
   };
 
   // Load available slots when date changes
   const loadAvailableSlots = React.useCallback(async (date: Date) => {
-    if (!dealerId || !date) return;
+    if (!enforceBusinessRules || !dealerId || !date) return;
 
     try {
       const slots = await getAvailableSlots(dealerId, date);
@@ -103,7 +105,7 @@ export function DueDateTimePicker({
       console.error('Error loading available slots:', error);
       setAvailableSlots([]);
     }
-  }, [dealerId, getAvailableSlots]);
+  }, [dealerId, enforceBusinessRules, getAvailableSlots]);
 
   const handleDateChange = (date: Date | undefined) => {
     if (!date) {
@@ -163,21 +165,22 @@ export function DueDateTimePicker({
 
   // Disable past dates, Sundays, and dates beyond 1 week
   const isDateDisabled = (date: Date) => {
+    if (!enforceBusinessRules) {
+      return false;
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Disable past dates
     if (date < today) {
       return true;
     }
 
-    // Disable dates more than 1 week in the future
     const oneWeekFromNow = addDays(today, 7);
     if (date > oneWeekFromNow) {
       return true;
     }
 
-    // Disable Sundays (day 0)
     if (date.getDay() === 0) {
       return true;
     }
@@ -246,7 +249,7 @@ export function DueDateTimePicker({
                 >
                   <div className="flex items-center justify-between w-full">
                     <span>{slot.label}</span>
-                    {dealerId && (
+                    {dealerId && enforceBusinessRules && (
                       <Badge
                         variant={slot.availableSlots > 0 ? "secondary" : "destructive"}
                         className="ml-2 text-xs"

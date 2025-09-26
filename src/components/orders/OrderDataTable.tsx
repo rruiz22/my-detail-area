@@ -275,7 +275,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground' };
+      return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };
     } else if (diffDays === 0) {
       return { text: t('data_table.due_today'), variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };
     } else if (diffDays === 1) {
@@ -356,7 +356,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
                   {/* Vehicle and Stock Row */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className={cn("p-2 rounded", getDuplicateCellBackground(0))}>
+                    <div className="p-2 rounded">
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</label>
                       <div className="text-sm font-semibold text-foreground">
                         {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
@@ -380,7 +380,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} />
                       </div>
                     </div>
-                    <div className={cn("p-2 rounded", getDuplicateCellBackground(0))}>
+                    <div className="p-2 rounded">
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Stock</label>
                       <div className="relative inline-block">
                         <DuplicateTooltip
@@ -544,7 +544,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 2: Stock & Assigned User */}
-                    <TableCell className={cn("py-4 text-center", getDuplicateCellBackground((duplicateData.stockDuplicateOrders.get(order.id) || []).length))}>
+                    <TableCell className="py-4 text-center">
                       <div className="space-y-1">
                         <div className="relative inline-block">
                           <DuplicateTooltip
@@ -568,7 +568,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 3: Vehicle & VIN */}
-                    <TableCell className={cn("py-4 text-center", getDuplicateCellBackground((duplicateData.vinDuplicateOrders.get(order.id) || []).length))}>
+                    <TableCell className="py-4 text-center">
                       <div className="space-y-1">
                         <div className="text-base font-bold text-foreground">
                           {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
@@ -618,7 +618,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         orderType={tabType}
                         compact={false}
                         showDateTime={true}
-                        className="due-date-indicator-table min-w-[140px]"
+                        className="due-date-indicator-table min-w-[140px] whitespace-nowrap"
                       />
 
                       {/* Fallback time display if no due date */}

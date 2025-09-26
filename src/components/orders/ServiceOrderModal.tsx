@@ -103,6 +103,13 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   const canViewPrices = canViewPricing(roles);
 
+  const isEditing = Boolean(order);
+
+  // Check global dealer filter
+  const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
+  const isGlobalFilterActive = globalDealerFilter && globalDealerFilter !== 'all';
+  const isDealerFieldReadOnly = isGlobalFilterActive;
+
   useEffect(() => {
     if (open) {
       fetchDealerships();
@@ -195,6 +202,14 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     }
   }, [assignedUsers.length, order, selectedAssignedTo]);
 
+  // Set dealership from global filter for new orders
+  useEffect(() => {
+    if (!order && isGlobalFilterActive && dealerships.length > 0 && !selectedDealership) {
+      console.log('🎯 Service Orders: Setting dealership from global filter:', globalDealerFilter);
+      handleDealershipChange(globalDealerFilter);
+    }
+  }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
+
   const fetchDealerships = async () => {
     try {
       const { data: user } = await supabase.auth.getUser();
@@ -229,7 +244,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           `)
           .eq('dealership_id', parseInt(dealershipId)),
         supabase
-          .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealershipId) })
+          .rpc('get_dealer_services_by_department', {
+            p_dealer_id: parseInt(dealershipId),
+            p_department_name: 'Service Dept'
+          })
       ]);
 
       if (usersResult.data) {
@@ -364,11 +382,18 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
-                    <Select 
-                      value={selectedDealership} 
+                    <div className="flex items-center justify-between mb-2">
+                      <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                      {isDealerFieldReadOnly && (
+                        <Badge variant="secondary" className="text-xs">
+                          {t('dealerships.auto_selected')}
+                        </Badge>
+                      )}
+                    </div>
+                    <Select
+                      value={selectedDealership}
                       onValueChange={handleDealershipChange}
-                      disabled={loading}
+                      disabled={loading || isDealerFieldReadOnly}
                     >
                       <SelectTrigger className="border-input bg-background">
                         <SelectValue placeholder={loading ? t('common.loading') : t('orders.selectClient')} />
@@ -518,6 +543,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                          value={formData.dueDate}
                          onChange={(date) => handleInputChange('dueDate', date)}
                          placeholder={t('due_date.date_placeholder')}
+                         enforceBusinessRules={!isEditing}
                        />
                      </div>
                      <div className="text-xs text-muted-foreground">

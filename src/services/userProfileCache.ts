@@ -6,8 +6,8 @@
 
 // Use safe console methods instead of logger to avoid circular dependencies
 const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
-const safeLog = (...args: any[]) => isDev && console.log('📦', ...args);
-const safeWarn = (...args: any[]) => console.warn('⚠️', ...args);
+const safeLog = (...args: unknown[]) => isDev && console.log('📦', ...args);
+const safeWarn = (...args: unknown[]) => console.warn('⚠️', ...args);
 
 export interface CachedUserProfile {
   userId: string;

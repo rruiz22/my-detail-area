@@ -71,7 +71,19 @@
     "model": "Modelo",
     "color": "Color",
     "optional": "Opcional",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "last_updated": "Última actualización",
+    "next_refresh": "Próxima actualización",
+    "time": {
+      "just_now": "ahora mismo",
+      "seconds_ago": "hace {{count}}s",
+      "minutes_ago": "hace {{count}}m",
+      "hours_ago": "hace {{count}}h",
+      "days_ago": "hace {{count}}d",
+      "refreshing": "Actualizando...",
+      "refresh_in_seconds": "{{count}}s",
+      "refresh_in_minutes": "{{minutes}}:{{seconds}}"
+    }
   },
   "cloud_sync": {
     "title": "Panel de Sincronización en la Nube",
@@ -360,20 +372,20 @@
   "pages": {
     "sales_orders": "Órdenes de Ventas",
     "user_management": {
-    "title": "Gestión de Usuarios y Grupos",
-    "manage_description": "Gestionar usuarios, roles y asignaciones de grupos",
-    "export_report": "Exportar Reporte",
-    "search_users": "Buscar usuarios...",
-    "user": "Usuario",
-    "roles": "Roles",
-    "users": "Usuarios",
-    "manage": "Gestionar",
-    "no_dealership_assigned": "Sin concesionario asignado",
-    "no_users_matching_filters": "No hay usuarios que coincidan con los filtros",
-    "no_users_found": "No se encontraron usuarios",
-    "no_roles": "Sin roles asignados",
-    "incomplete_setup": "Configuración Incompleta"
-  }
+      "title": "Gestión de Usuarios y Grupos",
+      "manage_description": "Gestionar usuarios, roles y asignaciones de grupos",
+      "export_report": "Exportar Reporte",
+      "search_users": "Buscar usuarios...",
+      "user": "Usuario",
+      "roles": "Roles",
+      "users": "Usuarios",
+      "manage": "Gestionar",
+      "no_dealership_assigned": "Sin concesionario asignado",
+      "no_users_matching_filters": "No hay usuarios que coincidan con los filtros",
+      "no_users_found": "No se encontraron usuarios",
+      "no_roles": "Sin roles asignados",
+      "incomplete_setup": "Configuración Incompleta"
+    }
   },
   "management": {
     "overview": "Resumen",
@@ -459,15 +471,28 @@
     "manual_vehicle_entry": "Ingresa los detalles del vehículo manualmente o escanea el VIN para auto-completar"
   },
   "orders": {
-    "today_orders": "Órdenes de Hoy",
-    "tomorrow_orders": "Órdenes de Mañana",
-    "pending_orders": "Órdenes Pendientes",
-    "week_orders": "Órdenes de Esta Semana",
-    "require_attention": "Requieren atención",
+    "vehicle_information": "Información del Vehículo",
+    "created": "Creado",
+    "due_date": "Fecha de Vencimiento",
+    "updated": "Actualizado",
+    "qr_code_short_link": "Código QR y Enlace Corto",
+    "qr_code": "Código QR",
+    "short_link": "Enlace Corto",
+    "no_qr_code": "Código QR no disponible",
+    "generate_qr": "Generar Código QR",
+    "generate_qr_desc": "Generar un código QR y enlace corto para esta orden",
+    "qr_generating": "Generando código QR...",
+    "qr_generating_desc": "Por favor espera mientras creamos tu código QR",
+    "qr_generation_failed": "Falló la generación del código QR",
+    "qr_retry_desc": "Haz clic abajo para intentar generar el código QR nuevamente",
+    "retry_qr_generation": "Reintentar Generación",
+    "retrying": "Reintentando...",
+    "try_again": "Intentar de Nuevo",
+    "generating": "Generando...",
+    "regenerate_qr": "Regenerar QR",
+    "scan_for_quick_access": "Escanea para acceso rápido",
     "edit": "Editar Orden",
     "create": "Crear Orden",
-    "print": "Imprimir Orden",
-    "download": "Descargar PDF",
     "customer_information": "Información del Cliente",
     "customerName": "Nombre del Cliente",
     "priority": "Prioridad",
@@ -484,7 +509,15 @@
     "total": "Total",
     "servicesSelected": "servicios seleccionados",
     "notes": "Notas",
-    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden..."
+    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden...",
+    "customerNamePlaceholder": "Ingresa el nombre completo del cliente (obligatorio)",
+    "creating_order": "Creando orden...",
+    "creation_failed": "Error al crear la orden",
+    "updating": "Actualizando...",
+    "creating": "Creando...",
+    "created_successfully": "Orden creada exitosamente",
+    "updated_successfully": "Orden actualizada exitosamente",
+    "save_failed": "Error al guardar la orden"
   },
   "due_date": {
     "title": "Fecha y Hora de Vencimiento",
@@ -504,7 +537,14 @@
       "recon": "Reacondicionamiento",
       "carwash": "Lavado de Autos",
       "detailing": "Detallado",
-      "other": "Otro"
+      "other": "Otro",
+      "undefined": "General"
+    },
+    "departments": {
+      "sales_dept": "Depto. Ventas",
+      "service_dept": "Depto. Servicio",
+      "recon_dept": "Depto. Recon",
+      "carwash_dept": "Depto. Lavado"
     },
     "minutes": "minutos"
   },
@@ -512,24 +552,7 @@
     "vin_input_placeholder": "Ingresa VIN de 17 caracteres o escanea con cámara"
   },
   "vin_scanner_hub": {
-    "title": "Centro de Escáner VIN",
-    "subtitle": "Escaneo avanzado de VIN con reconocimiento impulsado por IA",
-    "scanner": "Escáner",
-    "scan": "Escanear",
-    "smart_focus": "Enfoque Inteligente",
-    "smart": "Inteligente",
-    "batch_processing": "Procesamiento por Lotes",
-    "batch": "Lotes",
-    "quick_mode": "Modo Rápido",
-    "quick": "Rápido",
-    "history": "Historial",
-    "hist": "Hist",
-    "analytics": "Analíticas",
-    "stats": "Stats",
-    "settings": "Configuración",
-    "config": "Config",
-    "start_smart_scan": "Iniciar Escaneo Inteligente",
-    "smart_scan_description": "Escaneo impulsado por IA con enfoque automático y detección de regiones"
+    "title": "Escáner VIN"
   },
   "vin_scanner": {
     "smart_focus_title": "Escáner VIN con Enfoque Inteligente",
@@ -693,9 +716,6 @@
   },
   "contacts": {
     "title": "Contactos"
-  },
-  "vin_scanner_hub": {
-    "title": "Escáner VIN"
   },
   "nfc_tracking": {
     "title": "Seguimiento NFC"
@@ -865,31 +885,6 @@
     "at_risk": "En Riesgo",
     "target_completion": "Objetivo: {{hours}} horas"
   },
-  "admin": {
-    "dashboard_title": "Panel de Administración",
-    "dashboard_description": "Administración y gestión centralizada del sistema",
-    "system_administrator": "Administrador del Sistema",
-    "administration": "Administración",
-    "administration_description": "Gestión unificada de concesionarios, usuarios y sistema",
-    "dealerships": "Concesionarios",
-    "users_groups": "Usuarios y Grupos",
-    "reports": "Reportes",
-    "system": "Sistema",
-    "users_and_groups": "Gestión de Usuarios y Grupos",
-    "users_groups_description": "Gestionar usuarios, roles y asignaciones de grupos",
-    "system_reports": "Reportes del Sistema",
-    "system_reports_description": "Reportes de analíticas y rendimiento",
-    "system_settings": "Configuración del Sistema",
-    "system_settings_description": "Configuración del sistema y herramientas",
-    "system_tools": "Herramientas del Sistema",
-    "system_tools_description": "Herramientas de base de datos y mantenimiento",
-    "database_tools": "Herramientas de Base de Datos",
-    "database_description": "Utilidades de migración y mantenimiento de base de datos",
-    "backup_tools": "Respaldo y Recuperación",
-    "backup_description": "Operaciones de respaldo y recuperación del sistema",
-    "dealership_management_coming_soon": "Interfaz de gestión de concesionarios próximamente",
-    "migrate_from_dealerships_page": "Por ahora, usar la página de concesionarios legacy"
-  },
   "groups": {
     "title": "Gestión de Grupos",
     "subtitle": "Gestionar grupos de usuarios para {{dealerName}}",
@@ -948,9 +943,6 @@
     "members_fetch_error": "Error al obtener miembros del grupo",
     "groups_assigned_successfully": "Grupos asignados exitosamente",
     "group_assignment_error": "Error al asignar grupos",
-    "members": "Miembros",
-    "existing_groups": "Grupos Existentes",
-    "no_groups_found": "No se encontraron grupos",
     "create_first_group": "Crea tu primer grupo para organizar permisos de usuario",
     "name_placeholder": "ej., Vendedores",
     "slug_placeholder": "ej., vendedores",
@@ -984,55 +976,6 @@
     "total_scans": "Escaneos Totales",
     "unique_visitors": "Visitantes Únicos",
     "last_accessed": "Último acceso"
-  },
-  "orders": {
-    "vehicle_information": "Información del Vehículo",
-    "created": "Creado",
-    "due_date": "Fecha de Vencimiento",
-    "updated": "Actualizado",
-    "qr_code_short_link": "Código QR y Enlace Corto",
-    "qr_code": "Código QR",
-    "short_link": "Enlace Corto",
-    "no_qr_code": "Código QR no disponible",
-    "generate_qr": "Generar Código QR",
-    "generate_qr_desc": "Generar un código QR y enlace corto para esta orden",
-    "qr_generating": "Generando código QR...",
-    "qr_generating_desc": "Por favor espera mientras creamos tu código QR",
-    "qr_generation_failed": "Falló la generación del código QR",
-    "qr_retry_desc": "Haz clic abajo para intentar generar el código QR nuevamente",
-    "retry_qr_generation": "Reintentar Generación",
-    "retrying": "Reintentando...",
-    "try_again": "Intentar de Nuevo",
-    "generating": "Generando...",
-    "regenerate_qr": "Regenerar QR",
-    "scan_for_quick_access": "Escanea para acceso rápido",
-    "edit": "Editar Orden",
-    "create": "Crear Orden",
-    "customer_information": "Información del Cliente",
-    "customerName": "Nombre del Cliente",
-    "priority": "Prioridad",
-    "priority_normal": "Normal",
-    "priority_high": "Alta",
-    "priority_urgent": "Urgente",
-    "vehicleInfo": "Información del Vehículo",
-    "vin": "VIN",
-    "servicesAndNotes": "Servicios y Notas",
-    "services": "Servicios",
-    "available": "disponibles",
-    "selectDealershipFirst": "Selecciona un concesionario primero para ver los servicios disponibles",
-    "noServicesAvailable": "No hay servicios disponibles para este concesionario",
-    "total": "Total",
-    "servicesSelected": "servicios seleccionados",
-    "notes": "Notas",
-    "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden...",
-    "customerNamePlaceholder": "Ingresa el nombre completo del cliente (obligatorio)",
-    "creating_order": "Creando orden...",
-    "creation_failed": "Error al crear la orden",
-    "updating": "Actualizando...",
-    "creating": "Creando...",
-    "created_successfully": "Orden creada exitosamente",
-    "updated_successfully": "Orden actualizada exitosamente",
-    "save_failed": "Error al guardar la orden"
   },
   "auth": {
     "app_title": "My Detail Area",
@@ -1255,5 +1198,31 @@
       "expires_in_days": "{{days}} días",
       "expiration_warning": "Esta invitación tiene fecha límite"
     }
+  },
+  "vin_input": {
+    "placeholder": "Ingresa un VIN de 17 caracteres",
+    "paste_button": "Pegar VIN",
+    "clipboard_error": "No se pudo leer el portapapeles.",
+    "clipboard_no_vin": "No se encontró un VIN completo en el portapapeles.",
+    "clipboard_unsupported": "El acceso al portapapeles no está disponible en este navegador."
+  },
+  "modern_vin_scanner": {
+    "dialog_title": "Escáner de VIN",
+    "dialog_subtitle": "Escanea VIN de vehículos usando la cámara o sube una imagen.",
+    "scan_camera": "Escanear con cámara",
+    "upload_image": "Subir imagen",
+    "status_ready": "Listo para escanear",
+    "status_scanning": "Procesando imagen…",
+    "status_processing_upload": "Procesando archivo subido…",
+    "status_success": "VIN detectado.",
+    "status_no_vin": "No se encontró un VIN. Ajusta la iluminación o el enfoque.",
+    "status_invalid": "El texto escaneado no es un VIN válido. Vuelve a intentar.",
+    "status_error": "Ocurrió un problema al escanear. Intenta nuevamente.",
+    "action_retry": "Intentar de nuevo",
+    "action_use_result": "Usar VIN",
+    "camera_unavailable": "No se pudo acceder a la cámara. Revisa los permisos del navegador.",
+    "confidence_label": "Confianza",
+    "sticker_hint": "Apunta la cámara a la calcomanía del VIN y mantén el pulso firme.",
+    "plate_hint": "Apunta la cámara para que la placa del VIN llene la guía."
   }
 }

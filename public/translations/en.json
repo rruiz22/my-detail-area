@@ -25,8 +25,9 @@
       "loading": "Loading"
     },
     "priority": {
-      "normal": "Normal",
-      "high": "High",
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority",
       "urgent": "Urgent"
     },
     "actions": "Actions",
@@ -81,14 +82,20 @@
     "created_at": "Created Date",
     "advisor": "Advisor",
     "price": "Price",
-    "priority": {
-      "high": "High Priority",
-      "medium": "Medium Priority",
-      "low": "Low Priority",
-      "urgent": "Urgent"
-    },
     "optional": "Optional",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "last_updated": "Last updated",
+    "next_refresh": "Next refresh",
+    "time": {
+      "just_now": "just now",
+      "seconds_ago": "{{count}}s ago",
+      "minutes_ago": "{{count}}m ago",
+      "hours_ago": "{{count}}h ago",
+      "days_ago": "{{count}}d ago",
+      "refreshing": "Refreshing...",
+      "refresh_in_seconds": "{{count}}s",
+      "refresh_in_minutes": "{{minutes}}:{{seconds}}"
+    }
   },
   "cloud_sync": {
     "title": "Cloud Sync Dashboard",
@@ -377,20 +384,20 @@
   "pages": {
     "sales_orders": "Sales Orders",
     "user_management": {
-    "title": "Users & Groups Management",
-    "manage_description": "Manage users, roles, and group assignments",
-    "export_report": "Export Report",
-    "search_users": "Search users...",
-    "user": "User",
-    "roles": "Roles",
-    "users": "Users",
-    "manage": "Manage",
-    "no_dealership_assigned": "No dealership assigned",
-    "no_users_matching_filters": "No users match the current filters",
-    "no_users_found": "No users found",
-    "no_roles": "No roles assigned",
-    "incomplete_setup": "Incomplete Setup"
-  }
+      "title": "Users & Groups Management",
+      "manage_description": "Manage users, roles, and group assignments",
+      "export_report": "Export Report",
+      "search_users": "Search users...",
+      "user": "User",
+      "roles": "Roles",
+      "users": "Users",
+      "manage": "Manage",
+      "no_dealership_assigned": "No dealership assigned",
+      "no_users_matching_filters": "No users match the current filters",
+      "no_users_found": "No users found",
+      "no_roles": "No roles assigned",
+      "incomplete_setup": "Incomplete Setup"
+    }
   },
   "management": {
     "overview": "Overview",
@@ -451,16 +458,30 @@
     "manual_vehicle_entry": "Enter vehicle details manually or scan VIN for auto-fill"
   },
   "orders": {
-    "today_orders": "Today's Orders",
-    "tomorrow_orders": "Tomorrow's Orders",
-    "pending_orders": "Pending Orders",
-    "week_orders": "This Week's Orders",
-    "require_attention": "Require attention",
+    "vehicle_information": "Vehicle Information",
+    "created": "Created",
+    "due_date": "Due Date",
+    "updated": "Updated",
+    "qr_code_short_link": "QR Code & Short Link",
+    "qr_code": "QR Code",
+    "short_link": "Short Link",
+    "no_qr_code": "No QR code available",
+    "generate_qr": "Generate QR Code",
+    "generate_qr_desc": "Generate a QR code and short link for this order",
+    "qr_generating": "Generating QR code...",
+    "qr_generating_desc": "Please wait while we create your QR code",
+    "qr_generation_failed": "QR code generation failed",
+    "qr_retry_desc": "Click below to try generating the QR code again",
+    "retry_qr_generation": "Retry Generation",
+    "retrying": "Retrying...",
+    "try_again": "Try Again",
+    "generating": "Generating...",
+    "regenerate_qr": "Regenerate QR",
+    "scan_for_quick_access": "Scan for quick access",
+    "legacy_order_qr_desc": "QR code for easy order access",
+    "generate_qr_legacy": "Generate QR Code",
     "edit": "Edit Order",
     "create": "Create Order",
-    "print": "Print Order",
-    "download": "Download PDF",
-    "order_details": "Order Details",
     "customer_information": "Customer Information",
     "customerName": "Customer Name",
     "priority": "Priority",
@@ -477,7 +498,18 @@
     "total": "Total",
     "servicesSelected": "services selected",
     "notes": "Notes",
-    "notesPlaceholder": "Add any special instructions or details about this order..."
+    "notesPlaceholder": "Add any special instructions or details about this order...",
+    "customerNamePlaceholder": "Enter customer full name (required)",
+    "creating_order": "Creating order...",
+    "creation_failed": "Failed to create order",
+    "updating": "Updating...",
+    "creating": "Creating...",
+    "created_successfully": "Order created successfully",
+    "updated_successfully": "Order updated successfully",
+    "save_failed": "Failed to save order",
+    "selectAssignedTo": "Select an assignee",
+    "selectClient": "Select a dealership",
+    "selectClientFirst": "Select a dealership first"
   },
   "due_date": {
     "title": "Due Date & Time",
@@ -497,7 +529,14 @@
       "recon": "Reconditioning",
       "carwash": "Car Wash",
       "detailing": "Detailing",
-      "other": "Other"
+      "other": "Other",
+      "undefined": "General"
+    },
+    "departments": {
+      "sales_dept": "Sales Dept",
+      "service_dept": "Service Dept",
+      "recon_dept": "Recon Dept",
+      "carwash_dept": "CarWash Dept"
     },
     "minutes": "minutes"
   },
@@ -505,24 +544,7 @@
     "vin_input_placeholder": "Enter 17-character VIN or scan with camera"
   },
   "vin_scanner_hub": {
-    "title": "VIN Scanner Hub",
-    "subtitle": "Advanced VIN scanning with AI-powered recognition",
-    "scanner": "Scanner",
-    "scan": "Scan",
-    "smart_focus": "Smart Focus",
-    "smart": "Smart",
-    "batch_processing": "Batch Processing",
-    "batch": "Batch",
-    "quick_mode": "Quick Mode",
-    "quick": "Quick",
-    "history": "History",
-    "hist": "Hist",
-    "analytics": "Analytics",
-    "stats": "Stats",
-    "settings": "Settings",
-    "config": "Config",
-    "start_smart_scan": "Start Smart Scan",
-    "smart_scan_description": "AI-powered scanning with auto-focus and region detection"
+    "title": "VIN Scanner"
   },
   "vin_scanner": {
     "smart_focus_title": "Smart Focus VIN Scanner",
@@ -808,32 +830,29 @@
     "processing_time": "Processing time",
     "supported_formats": "Supported formats",
     "generic": "Generic",
-    "camera_error": "Camera access error",
-    "sticker_mode": "Sticker Mode",
-    "processing_sticker": "Processing sticker...",
-    "auto_detect": "Auto Detect",
-    "detect_sticker": "Detect Sticker",
-    "barcode_area": "Barcode",
-    "vin_area": "VIN NUMBER",
-    "info_area": "Vehicle Info",
-    "sticker_detected": "Sticker detected",
-    "looking_for_sticker": "Looking for sticker...",
-    "optimized_for_dealership": "Optimized for dealership stickers",
-    "scan_sticker": "Scan Sticker",
-    "camera_starting": "Starting camera",
-    "position_sticker": "Position the sticker within the guides",
-    "start_camera": "Start Camera",
-    "vin_detected": "VIN detected from sticker",
-    "scan_failed": "Sticker scan failed",
-    "template": "Template",
-    "processing_time": "Processing time",
-    "supported_formats": "Supported formats",
-    "generic": "Generic"
+    "camera_error": "Camera access error"
   },
   "modern_vin_scanner": {
     "title": "VIN Scanner",
     "subtitle": "Scan vehicle VINs using camera or upload images",
-    "analyzing_image": "Analyzing image..."
+    "analyzing_image": "Analyzing image...",
+    "dialog_title": "VIN Scanner",
+    "dialog_subtitle": "Scan vehicle VINs using the camera or upload an image.",
+    "scan_camera": "Scan with camera",
+    "upload_image": "Upload image",
+    "status_ready": "Ready to scan",
+    "status_scanning": "Processing image…",
+    "status_processing_upload": "Processing uploaded file…",
+    "status_success": "VIN detected.",
+    "status_no_vin": "No VIN found. Try adjusting the lighting or focus.",
+    "status_invalid": "Scanned text is not a valid VIN. Please rescan.",
+    "status_error": "Something went wrong while scanning. Please try again.",
+    "action_retry": "Try again",
+    "action_use_result": "Use VIN",
+    "camera_unavailable": "Unable to access camera. Check browser permissions.",
+    "confidence_label": "Confidence",
+    "sticker_hint": "Aim the camera at the VIN sticker and hold steady.",
+    "plate_hint": "Aim the camera so the VIN plate fills the guide."
   },
   "settings": {
     "title": "Settings",
@@ -945,9 +964,6 @@
   },
   "contacts": {
     "title": "Contacts"
-  },
-  "vin_scanner_hub": {
-    "title": "VIN Scanner"
   },
   "nfc_tracking": {
     "title": "NFC Tracking"
@@ -1235,7 +1251,10 @@
     "backup_tools": "Backup & Recovery",
     "backup_description": "System backup and recovery operations",
     "dealership_management_coming_soon": "Dealership management interface coming soon",
-    "migrate_from_dealerships_page": "For now, use the legacy dealerships page"
+    "migrate_from_dealerships_page": "For now, use the legacy dealerships page",
+    "all_dealerships": "All Dealerships",
+    "auto_selected": "Auto-selected from filter",
+    "change_filter_to_edit": "Change global filter to edit dealer"
   },
   "groups": {
     "title": "Group Management",
@@ -1328,60 +1347,6 @@
     "total_scans": "Total Scans",
     "unique_visitors": "Unique Visitors",
     "last_accessed": "Last accessed"
-  },
-  "orders": {
-    "vehicle_information": "Vehicle Information",
-    "created": "Created",
-    "due_date": "Due Date",
-    "updated": "Updated",
-    "qr_code_short_link": "QR Code & Short Link",
-    "qr_code": "QR Code",
-    "short_link": "Short Link",
-    "no_qr_code": "No QR code available",
-    "generate_qr": "Generate QR Code",
-    "generate_qr_desc": "Generate a QR code and short link for this order",
-    "qr_generating": "Generating QR code...",
-    "qr_generating_desc": "Please wait while we create your QR code",
-    "qr_generation_failed": "QR code generation failed",
-    "qr_retry_desc": "Click below to try generating the QR code again",
-    "retry_qr_generation": "Retry Generation",
-    "retrying": "Retrying...",
-    "try_again": "Try Again",
-    "generating": "Generating...",
-    "regenerate_qr": "Regenerate QR",
-    "scan_for_quick_access": "Scan for quick access",
-    "legacy_order_qr_desc": "QR code for easy order access",
-    "generate_qr_legacy": "Generate QR Code",
-    "edit": "Edit Order",
-    "create": "Create Order",
-    "customer_information": "Customer Information",
-    "customerName": "Customer Name",
-    "priority": "Priority",
-    "priority_normal": "Normal",
-    "priority_high": "High",
-    "priority_urgent": "Urgent",
-    "vehicleInfo": "Vehicle Information",
-    "vin": "VIN",
-    "servicesAndNotes": "Services & Notes",
-    "services": "Services",
-    "available": "available",
-    "selectDealershipFirst": "Select a dealership first to view available services",
-    "noServicesAvailable": "No services available for this dealership",
-    "total": "Total",
-    "servicesSelected": "services selected",
-    "notes": "Notes",
-    "notesPlaceholder": "Add any special instructions or details about this order...",
-    "customerNamePlaceholder": "Enter customer full name (required)",
-    "creating_order": "Creating order...",
-    "creation_failed": "Failed to create order",
-    "updating": "Updating...",
-    "creating": "Creating...",
-    "created_successfully": "Order created successfully",
-    "updated_successfully": "Order updated successfully",
-    "save_failed": "Failed to save order",
-    "selectAssignedTo": "Select an assignee",
-    "selectClient": "Select a dealership",
-    "selectClientFirst": "Select a dealership first"
   },
   "service_orders": {
     "po_number": "PO Number",
@@ -1507,5 +1472,12 @@
       "expires_in_days": "{{days}} days",
       "expiration_warning": "This invitation has an expiration date"
     }
+  },
+  "vin_input": {
+    "placeholder": "Enter 17-character VIN",
+    "paste_button": "Paste VIN",
+    "clipboard_error": "Unable to read from clipboard.",
+    "clipboard_no_vin": "No complete VIN was found in your clipboard.",
+    "clipboard_unsupported": "Clipboard access is not available in this browser."
   }
 }

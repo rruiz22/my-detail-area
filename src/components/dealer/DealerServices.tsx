@@ -113,27 +113,28 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   }, [dealerId]);
 
   const fetchCategories = useCallback(async () => {
+    console.log('🔍 Fetching categories for dealer:', dealerId);
     try {
       // Fetch categories available for all modules (for services management)
+      // For now, just fetch global categories (dealer_id IS NULL) which are available to all dealerships
       const { data, error } = await supabase
         .from('service_categories')
         .select('id, name, description, is_system_category, color, icon')
         .eq('is_active', true)
-        .or(`is_system_category.eq.true,dealer_id.eq.${dealerId}`)
-        .order('is_system_category', { ascending: false })
+        .is('dealer_id', null)
         .order('name');
 
+      console.log('📊 Categories query result:', { data, error });
+
       if (error) throw error;
+
+      console.log(`✅ Found ${data?.length || 0} categories:`, data);
       setCategories(data || []);
 
-      // Set default category_id to the first available category
-      if (data && data.length > 0 && !formData.category_id) {
-        setFormData(prev => ({ ...prev, category_id: data[0].id }));
-      }
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error('❌ Error fetching categories:', error);
     }
-  }, [dealerId, formData.category_id]);
+  }, [dealerId]);
 
   useEffect(() => {
     fetchServices();
@@ -141,9 +142,27 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     fetchCategories();
   }, [dealerId, fetchServices, fetchGroups, fetchCategories]);
 
+  // Set default category when categories are loaded
+  useEffect(() => {
+    if (categories.length > 0 && !formData.category_id) {
+      console.log('🎯 Setting default category from effect:', categories[0]);
+      setFormData(prev => ({ ...prev, category_id: categories[0].id }));
+    }
+  }, [categories, formData.category_id]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Validation: category_id is required
+    if (!formData.category_id) {
+      toast({
+        title: t('services.error'),
+        description: 'Category selection is required',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     try {
       const serviceData = {
         name: formData.name,
@@ -241,12 +260,11 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   };
 
   const resetForm = () => {
-    const defaultCategoryId = categories.length > 0 ? categories[0].id : '';
     setFormData({
       name: '',
       description: '',
       price: '',
-      category_id: defaultCategoryId,
+      category_id: '',
       duration: '',
       is_active: true,
       assigned_groups: []
@@ -329,28 +347,38 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   </div>
                   
                   <div>
-                    <Label htmlFor="category">{t('services.category')}</Label>
-                    <Select value={formData.category_id} onValueChange={(value) => 
+                    <Label htmlFor="category">{t('services.category')} *</Label>
+                    <Select value={formData.category_id} onValueChange={(value) =>
                       setFormData(prev => ({ ...prev, category_id: value }))
                     }>
                       <SelectTrigger>
                         <SelectValue placeholder="Select category..." />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map(category => (
-                          <SelectItem key={category.id} value={category.id}>
-                            <div className="flex items-center space-x-2">
-                              <div 
-                                className="w-3 h-3 rounded-full" 
-                                style={{ backgroundColor: category.color }}
-                              />
-                              <span>{category.name}</span>
-                              {!category.is_system_category && (
-                                <Badge variant="outline" className="text-xs">Custom</Badge>
-                              )}
-                            </div>
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="adf6477f-0819-44b0-813f-4869a2cf5a27">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#3B82F6' }} />
+                            <span>Sales Dept</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="bd46fe22-7023-4b84-974d-db35e9fa6a03">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10B981' }} />
+                            <span>Service Dept</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="63837333-c41f-4c18-b4b2-98e1bc1bb85d">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#F59E0B' }} />
+                            <span>Recon Dept</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="ae0e020b-7456-4ac5-991b-72d18295d224">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#06B6D4' }} />
+                            <span>CarWash Dept</span>
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -367,18 +395,16 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  {canViewPrices && (
-                    <div>
-                      <Label htmlFor="price">{t('services.price')}</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        step="0.01"
-                        value={formData.price}
-                        onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <Label htmlFor="price">{t('services.price')}</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                    />
+                  </div>
                   
                   <div>
                     <Label htmlFor="duration">{t('services.duration')}</Label>
@@ -513,7 +539,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
               )}
               
               <div className="flex justify-between text-sm">
-                {canViewPrices && service.price && (
+                {service.price && (
                   <div className="flex items-center space-x-1">
                     <DollarSign className="h-4 w-4" />
                     <span>${service.price.toFixed(2)}</span>

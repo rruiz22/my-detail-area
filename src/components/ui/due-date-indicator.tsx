@@ -90,7 +90,7 @@ export function DueDateIndicator({
       <div className={cn("flex items-center gap-1", className)}>
         <div className={cn("flex items-center gap-1", timeStatus.color)}>
           {getIcon(timeStatus.status)}
-          <span className="text-sm font-semibold">
+          <span className="text-sm font-semibold whitespace-nowrap">
             {formatCountdown(timeStatus.timeRemaining)}
           </span>
         </div>
@@ -123,7 +123,7 @@ export function DueDateIndicator({
           timeStatus.color
         )}>
           <Clock className="w-4 h-4" />
-          <span>{timeStatus.formattedTime}</span>
+          <span className="whitespace-nowrap">{timeStatus.formattedTime}</span>
         </div>
       )}
 

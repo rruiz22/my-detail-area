@@ -107,7 +107,7 @@ export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>{t('reports.export.format')}</Label>
-              <Select value={exportFormat} onValueChange={(value: any) => setExportFormat(value)}>
+              <Select value={exportFormat} onValueChange={(value: 'pdf' | 'excel' | 'csv') => setExportFormat(value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

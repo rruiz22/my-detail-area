@@ -348,7 +348,12 @@ for (const relativePath of targetFiles) {
 
     // Replace hardcoded strings
     for (const [original, translationKey] of Object.entries(stringMappings)) {
-      const escapedOriginal = original.replace(/[.*+?^${}()|[\\]\\]/g, '\\\\$&');
+      // Simple escape without problematic regex
+      const specialChars = ['\\\\', '.', '*', '+', '?', '^', '$', '{', '}', '(', ')', '|', '[', ']'];
+      let escapedOriginal = original;
+      for (const char of specialChars) {
+        escapedOriginal = escapedOriginal.split(char).join('\\\\' + char);
+      }
 
       // Pattern for JSX content: >Text<
       const jsxPattern = new RegExp(\`(>\\\\s*)\${escapedOriginal}(\\\\s*<)\`, 'g');

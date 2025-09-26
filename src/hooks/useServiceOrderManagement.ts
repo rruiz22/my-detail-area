@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
+import { useOrderPolling } from '@/hooks/useSmartPolling';
+import { usePermissions } from '@/hooks/usePermissions';
 import type { Database } from '@/integrations/supabase/types';
 
 // Supabase type definitions
@@ -127,6 +129,7 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
 
 export const useServiceOrderManagement = (activeTab: string) => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
+  const [allOrders, setAllOrders] = useState<ServiceOrder[]>([]); // Keep full dataset
   const [filters, setFilters] = useState<ServiceOrderFilters>({
     search: '',
     status: '',
@@ -135,7 +138,9 @@ export const useServiceOrderManagement = (activeTab: string) => {
     dateRange: { from: null, to: null },
   });
   const [loading, setLoading] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const { user } = useAuth();
+  const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
 
   const tabCounts = useMemo((): ServiceTabCounts => {
@@ -144,24 +149,24 @@ export const useServiceOrderManagement = (activeTab: string) => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return {
-      all: orders.length,
-      today: orders.filter(order => {
+      all: allOrders.length,
+      today: allOrders.filter(order => {
         const orderDate = new Date(order.dueDate || order.createdAt);
         return orderDate.toDateString() === today.toDateString();
       }).length,
-      tomorrow: orders.filter(order => {
+      tomorrow: allOrders.filter(order => {
         const orderDate = new Date(order.dueDate || order.createdAt);
         return orderDate.toDateString() === tomorrow.toDateString();
       }).length,
-      pending: orders.filter(order => order.status === 'pending').length,
-      inProgress: orders.filter(order => order.status === 'in_progress').length,
-      completed: orders.filter(order => order.status === 'completed').length,
-      cancelled: orders.filter(order => order.status === 'cancelled').length,
+      pending: allOrders.filter(order => order.status === 'pending').length,
+      inProgress: allOrders.filter(order => order.status === 'in_progress').length,
+      completed: allOrders.filter(order => order.status === 'completed').length,
+      cancelled: allOrders.filter(order => order.status === 'cancelled').length,
     };
-  }, [orders]);
+  }, [allOrders]);
 
   const filteredOrders = useMemo(() => {
-    let filtered = [...orders];
+    let filtered = [...allOrders];
 
     // Apply tab-specific filtering
     if (activeTab !== 'dashboard' && activeTab !== 'all') {
@@ -233,7 +238,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
     }
 
     return filtered;
-  }, [orders, activeTab, filters]);
+  }, [allOrders, activeTab, filters]);
 
   const refreshData = useCallback(async () => {
     if (!user) return;
@@ -451,57 +456,139 @@ export const useServiceOrderManagement = (activeTab: string) => {
     }
   }, [user, refreshData]);
 
-  // Initialize data on mount and when dependencies change
-  useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
+  // useEffect(() => {
+  //   refreshData();
+  // }, [refreshData]);
 
-  // Real-time subscription for service orders
-  useEffect(() => {
-    if (!user) return;
+  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
+  // useEffect(() => {
+  //   if (!user) return;
 
-    const channel = supabase
-      .channel('service_orders_realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'orders',
-          filter: 'order_type=eq.service'
-        },
-        async (payload) => {
-          console.log('Service order real-time update:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            const newOrder = transformServiceOrder(payload.new as SupabaseOrder);
-            setOrders(prevOrders => [newOrder, ...prevOrders]);
-          } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformServiceOrder(payload.new as SupabaseOrder);
-            setOrders(prevOrders =>
-              prevOrders.map(order =>
-                order.id === updatedOrder.id ? updatedOrder : order
-              )
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders =>
-              prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-            );
+  //   const channel = supabase
+  //     .channel('service_orders_realtime')
+  //     .on(
+  //       'postgres_changes',
+  //       {
+  //         event: '*',
+  //         schema: 'public',
+  //         table: 'orders',
+  //         filter: 'order_type=eq.service'
+  //       },
+  //       async (payload) => {
+  //         console.log('Service order real-time update:', payload);
+
+  //         if (payload.eventType === 'INSERT') {
+  //           const newOrder = transformServiceOrder(payload.new as SupabaseOrder);
+  //           setOrders(prevOrders => [newOrder, ...prevOrders]);
+  //         } else if (payload.eventType === 'UPDATE') {
+  //           const updatedOrder = transformServiceOrder(payload.new as SupabaseOrder);
+  //           setOrders(prevOrders =>
+  //             prevOrders.map(order =>
+  //               order.id === updatedOrder.id ? updatedOrder : order
+  //             )
+  //           );
+  //         } else if (payload.eventType === 'DELETE') {
+  //           setOrders(prevOrders =>
+  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
+  //           );
+  //         }
+  //       }
+  //     )
+  //     .subscribe();
+
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // }, [user]);
+
+  // Smart polling for service order data (replaces real-time subscription and initial refresh)
+  const serviceOrdersPollingQuery = useOrderPolling(
+    ['orders', 'service'],
+    async () => {
+      if (!user || !enhancedUser) return [];
+
+      console.log('🔄 Smart polling: Fetching service orders...');
+
+      // Apply same dealer filtering logic as Sales Orders
+      let ordersQuery = supabase
+        .from('orders')
+        .select('*')
+        .eq('order_type', 'service')
+        .order('created_at', { ascending: false });
+
+      // Check global dealer filter
+      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
+      const dealerFilter = savedDealerFilter === 'all' ? 'all' : (savedDealerFilter ? parseInt(savedDealerFilter) : 'all');
+
+      // Handle dealer filtering based on user type and global filter
+      if (enhancedUser.dealership_id === null) {
+        // User is multi-dealer - respect global filter
+        if (dealerFilter === 'all') {
+          // Show all dealers user has access to
+          const { data: userDealerships, error: dealershipError } = await supabase
+            .from('dealer_memberships')
+            .select('dealer_id')
+            .eq('user_id', user.id)
+            .eq('is_active', true);
+
+          if (dealershipError) {
+            console.error('Error fetching user dealerships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', 5);
+          } else {
+            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
+            console.log(`🏢 Service Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
+        } else {
+          // Filter by specific dealer selected in dropdown
+          console.log(`🎯 Service Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
         }
-      )
-      .subscribe();
+      } else {
+        // User has single assigned dealership - ignore global filter
+        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
+      }
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user]);
+      // Filter by allowed order types
+      const allowedOrderTypes = getAllowedOrderTypes();
+      if (allowedOrderTypes.length > 0) {
+        ordersQuery = ordersQuery.in('order_type', allowedOrderTypes);
+      }
+
+      const { data: orders, error } = await ordersQuery;
+      if (error) throw error;
+
+      // Transform to ServiceOrder format
+      const serviceOrders = (orders || []).map(order => transformServiceOrder(order));
+
+      return serviceOrders;
+    },
+    !!(user && enhancedUser)
+  );
+
+  // Update allOrders when polling data changes
+  useEffect(() => {
+    if (serviceOrdersPollingQuery.data) {
+      setAllOrders(serviceOrdersPollingQuery.data);
+      setLoading(false);
+    }
+  }, [serviceOrdersPollingQuery.data]);
+
+  // Update lastRefresh when polling completes
+  useEffect(() => {
+    if (!serviceOrdersPollingQuery.isFetching && (serviceOrdersPollingQuery.data || serviceOrdersPollingQuery.error)) {
+      setLastRefresh(new Date());
+      console.log('⏰ Service Orders LastRefresh updated:', new Date().toLocaleTimeString());
+    }
+  }, [serviceOrdersPollingQuery.isFetching, serviceOrdersPollingQuery.data, serviceOrdersPollingQuery.error]);
 
   return {
     orders: filteredOrders,
     tabCounts,
     filters,
     loading,
+    lastRefresh,
     updateFilters,
     refreshData,
     createOrder,

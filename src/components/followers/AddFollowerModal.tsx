@@ -239,7 +239,7 @@ export function AddFollowerModal({
           {selectedUserId && (
             <div className="space-y-2">
               <Label>{t('followers.notification_level', 'Notification Level')}</Label>
-              <Select value={notificationLevel} onValueChange={setNotificationLevel}>
+              <Select value={notificationLevel} onValueChange={(value: 'all' | 'important' | 'none') => setNotificationLevel(value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

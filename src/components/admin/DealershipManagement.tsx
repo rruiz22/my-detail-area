@@ -253,7 +253,7 @@ export const DealershipManagement: React.FC = () => {
               </div>
             </div>
 
-            <Select value={statusFilter} onValueChange={(value: any) => setStatusFilter(value)}>
+            <Select value={statusFilter} onValueChange={(value: 'all' | 'active' | 'inactive' | 'suspended') => setStatusFilter(value)}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder={t('dealerships.status_filter')} />
               </SelectTrigger>

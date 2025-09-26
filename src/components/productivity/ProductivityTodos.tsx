@@ -279,7 +279,7 @@ export const ProductivityTodos = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="priority">{t('productivity.priority.label')}</Label>
-                  <Select value={newTodo.priority} onValueChange={(value) => setNewTodo({ ...newTodo, priority: value as any })}>
+                  <Select value={newTodo.priority} onValueChange={(value: 'low' | 'medium' | 'high') => setNewTodo({ ...newTodo, priority: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -455,7 +455,7 @@ export const ProductivityTodos = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="edit-priority">{t('productivity.priority.label')}</Label>
-                  <Select value={editingTodo.priority} onValueChange={(value) => setEditingTodo({ ...editingTodo, priority: value as any })}>
+                  <Select value={editingTodo.priority} onValueChange={(value: 'low' | 'medium' | 'high') => setEditingTodo({ ...editingTodo, priority: value })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>

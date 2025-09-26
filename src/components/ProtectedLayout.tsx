@@ -13,6 +13,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NotificationBell } from "./notifications/NotificationBell";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserDropdown } from "./ui/user-dropdown";
+import { DealershipFilter } from "./filters/DealershipFilter";
 
 interface ProtectedLayoutProps {
   children?: ReactNode;
@@ -69,6 +70,7 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
             </div>
 
             <div className="flex items-center gap-3">
+              <DealershipFilter />
               <LanguageSwitcher />
               <ThemeToggle />
               {currentDealership?.id && <NotificationBell dealerId={currentDealership.id} />}

@@ -5,8 +5,29 @@ import { Button } from '@/components/ui/button';
 import { Car, Hash, Palette, Calendar, Shield, Eye } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+interface VehicleOrder {
+  // Camel case properties
+  vehicleYear?: string | number;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleVin?: string;
+  stockNumber?: string | number;
+  vehicleColor?: string;
+
+  // Snake case properties
+  vehicle_year?: string | number;
+  vehicle_make?: string;
+  vehicle_model?: string;
+  vehicle_vin?: string;
+  stock_number?: string | number;
+  vehicle_color?: string;
+
+  // Other properties
+  vin_decoded?: boolean;
+}
+
 interface VehicleInfoBlockProps {
-  order: any;
+  order: VehicleOrder;
 }
 
 // Memoized component to prevent unnecessary re-renders
@@ -104,7 +125,7 @@ export const VehicleInfoBlock = React.memo(function VehicleInfoBlock({ order }: 
           {t('orders.vehicle_information')}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Vehicle Details Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -133,7 +154,7 @@ export const VehicleInfoBlock = React.memo(function VehicleInfoBlock({ order }: 
               <Shield className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium">{t('vehicle_info.vin_status')}</span>
             </div>
-            <Badge 
+            <Badge
               variant={decodeStatus.status === 'success' ? 'default' : 'outline'}
               className="text-xs"
             >

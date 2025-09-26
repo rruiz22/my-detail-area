@@ -166,6 +166,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [selectedDealership, setSelectedDealership] = useState('');
   const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
 
+  const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
+  const isGlobalFilterActive = globalDealerFilter && globalDealerFilter !== 'all';
+  const isDealerFieldReadOnly = Boolean(isGlobalFilterActive);
+
   // Refs to prevent double-setting in Strict Mode
   const editModeInitialized = useRef(false);
   const currentOrderId = useRef<string | null>(null);
@@ -184,6 +188,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   }>({});
 
   const canViewPrices = canViewPricing(roles);
+
+  const isEditing = Boolean(order);
+  const requiresDueDate = !isEditing && ['sales', 'service'].includes(formData.orderType);
 
   // Custom setters with detailed logging and stack trace
   const setSelectedDealershipWithLog = (value: string) => {
@@ -417,7 +424,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           .eq('dealer_id', parseInt(dealershipId))
           .eq('is_active', true),
         supabase
-          .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealershipId) })
+          .rpc('get_dealer_services_by_department', {
+            p_dealer_id: parseInt(dealershipId),
+            p_department_name: 'Sales Dept'
+          })
       ]);
 
       if (usersResult.data) {
@@ -442,6 +452,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!order && isGlobalFilterActive && globalDealerFilter && dealerships.length > 0 && !selectedDealership) {
+      handleDealershipChange(globalDealerFilter);
+    }
+  }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
 
   // CRITICAL: Set dealership ONLY after dealerships options are loaded
   useEffect(() => {
@@ -758,13 +774,15 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         return;
       }
 
-      // Reserve appointment slot before creating order
-      if (formData.dueDate && selectedDealership) {
+      // Reserve appointment slot before creating order when needed
+      const shouldReserveSlot = !isEditing && requiresDueDate && formData.dueDate && selectedDealership;
+
+      if (shouldReserveSlot) {
         try {
           const slotReserved = await reserveSlot(
             parseInt(selectedDealership),
-            formData.dueDate,
-            formData.dueDate.getHours()
+            formData.dueDate as Date,
+            (formData.dueDate as Date).getHours()
           );
 
           if (!slotReserved) {
@@ -833,11 +851,18 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       </h3>
                     </div>
                   <div>
-                    <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
-                    <Select 
-                      value={selectedDealership} 
+                    <div className="flex items-center justify-between mb-2">
+                      <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                      {isDealerFieldReadOnly && (
+                        <Badge variant="secondary" className="text-xs">
+                          {t('dealerships.auto_selected')}
+                        </Badge>
+                      )}
+                    </div>
+                    <Select
+                      value={selectedDealership}
                       onValueChange={handleDealershipChange}
-                      disabled={loading}
+                      disabled={loading || isDealerFieldReadOnly}
                     >
                       <SelectTrigger className="border-input bg-background">
                         <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
@@ -991,6 +1016,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                          onChange={(date) => handleInputChange('dueDate', date)}
                          placeholder={t('due_date.date_placeholder')}
                          dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
+                         enforceBusinessRules={!isEditing}
                        />
                      </div>
                    </div>
@@ -1161,7 +1187,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   !formData.vehicleVin ||
                   !formData.stockNumber ||
                   !selectedAssignedTo ||
-                  !formData.dueDate ||
+                  (requiresDueDate && !formData.dueDate) ||
                   selectedServices.length === 0
                 }
                 className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"

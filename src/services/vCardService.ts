@@ -1,4 +1,5 @@
 import { getBaseUrl, buildContactUrl } from '@/utils/urlUtils';
+import { DealershipContact } from '@/types/dealership';
 
 /**
  * vCard Service for generating contact cards compatible with mobile devices
@@ -8,7 +9,7 @@ export class VCardService {
   /**
    * Generate vCard 3.0 format string from contact data
    */
-  generateVCard(contact: any): string {
+  generateVCard(contact: DealershipContact): string {
     const vCardLines = [
       'BEGIN:VCARD',
       'VERSION:3.0',
@@ -46,7 +47,7 @@ export class VCardService {
   /**
    * Generate downloadable vCard file
    */
-  downloadVCard(contact: any): void {
+  downloadVCard(contact: DealershipContact): void {
     const vCardData = this.generateVCard(contact);
     const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
     
@@ -70,7 +71,7 @@ export class VCardService {
   /**
    * Copy vCard to clipboard for sharing
    */
-  async copyVCard(contact: any): Promise<boolean> {
+  async copyVCard(contact: DealershipContact): Promise<boolean> {
     try {
       const vCardData = this.generateVCard(contact);
       await navigator.clipboard.writeText(vCardData);
@@ -85,7 +86,7 @@ export class VCardService {
   /**
    * Validate vCard data
    */
-  validateContact(contact: any): { isValid: boolean; errors: string[] } {
+  validateContact(contact: DealershipContact): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
     
     if (!contact.first_name || !contact.last_name) {
@@ -132,7 +133,7 @@ export class VCardService {
   /**
    * Generate QR-friendly vCard (optimized for QR scanning)
    */
-  generateCompactVCard(contact: any): string {
+  generateCompactVCard(contact: DealershipContact): string {
     // More compact format for better QR readability
     const compactLines = [
       'BEGIN:VCARD',

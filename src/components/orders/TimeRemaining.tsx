@@ -164,7 +164,7 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
       {/* Precise Time Information */}
       <div className={`flex items-center gap-2 ${timeInfo.color} ${textSize} font-medium`}>
         {showIcon && <Clock className={iconSize} />}
-        <span>{timeInfo.text}</span>
+        <span className="whitespace-nowrap">{timeInfo.text}</span>
       </div>
     </div>
   );

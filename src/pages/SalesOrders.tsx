@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { toast } from 'sonner';
 import { getSystemTimezone } from '@/utils/dateUtils';
+import { LiveTimer } from '@/components/ui/LiveTimer';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -49,7 +50,6 @@ export default function SalesOrders() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
   const [preSelectedDate, setPreSelectedDate] = useState<Date | null>(null);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
 
@@ -58,6 +58,7 @@ export default function SalesOrders() {
     tabCounts,
     filters,
     loading,
+    lastRefresh: managementLastRefresh,
     updateFilters,
     refreshData,
     createOrder,
@@ -360,12 +361,10 @@ export default function SalesOrders() {
                 
                 {/* Last Update Info */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <div className="text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>Last updated: {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
-                    </div>
-                  </div>
+                  <LiveTimer
+                    lastRefresh={managementLastRefresh}
+                    isRefreshing={loading}
+                  />
                   
                   {/* Mobile-friendly info */}
                   <div className="text-xs text-muted-foreground sm:hidden">

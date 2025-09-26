@@ -70,7 +70,7 @@ export const useAttachments = (orderId: string) => {
       console.log('✅ File uploaded successfully:', data.attachment.id);
       return { success: true, attachment: data.attachment };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ File upload error:', error);
       return { success: false, error: error.message };
     }
@@ -108,7 +108,7 @@ export const useAttachments = (orderId: string) => {
 
       return uploadResults;
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Bulk upload error:', error);
       toast.error('Failed to upload files');
       return [];
