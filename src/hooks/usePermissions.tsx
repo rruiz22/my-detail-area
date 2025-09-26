@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-export type AppModule = 
+export type AppModule =
   | 'dashboard'
   | 'sales_orders'
   | 'service_orders'
@@ -15,18 +15,19 @@ export type AppModule =
   | 'dealerships'
   | 'users'
   | 'management'
-  | 'productivity';
+  | 'productivity'
+  | 'contacts';
 
-export type PermissionLevel = 'none' | 'view' | 'edit' | 'delete';
+export type PermissionLevel = 'none' | 'view' | 'edit' | 'delete' | 'admin';
 
-// Order types that correspond to modules
 export type OrderType = 'sales' | 'service' | 'recon' | 'carwash';
 
-// User roles simplified for multi-dealer system
+/** @deprecated Legacy types - use CustomRole system instead */
 export type UserRole = 'dealer_user' | 'manager' | 'system_admin';
+/** @deprecated Legacy types - no longer used */
 export type UserType = 'dealer' | 'detail';
 
-// User group information
+/** @deprecated Legacy interface - use EnhancedUserV2 instead */
 export interface UserGroup {
   id: string;
   name: string;
@@ -38,7 +39,24 @@ export interface UserGroup {
   description?: string;
 }
 
-// Enhanced user profile with multi-dealer fields
+export interface CustomRoleWithPermissions {
+  id: string;
+  role_name: string;
+  display_name: string;
+  dealer_id: number;
+  permissions: Map<AppModule, PermissionLevel>;
+}
+
+export interface EnhancedUserV2 {
+  id: string;
+  email: string;
+  dealership_id: number | null;
+  is_system_admin: boolean;
+  custom_roles: CustomRoleWithPermissions[];
+  all_permissions: Map<AppModule, PermissionLevel>;
+}
+
+/** @deprecated Legacy interface for backward compatibility */
 export interface EnhancedUser {
   id: string;
   email: string;
@@ -50,10 +68,10 @@ export interface EnhancedUser {
 
 export const usePermissions = () => {
   const { user } = useAuth();
-  const [enhancedUser, setEnhancedUser] = useState<EnhancedUser | null>(null);
+  const [enhancedUser, setEnhancedUser] = useState<EnhancedUser | EnhancedUserV2 | null>(null);
   const [loading, setLoading] = useState(true);
+  const [useCustomRoles, setUseCustomRoles] = useState(false);
 
-  // Map AppModule to OrderType for permission checks
   const getOrderTypeFromModule = useCallback((module: AppModule): OrderType | null => {
     const moduleMap: Record<string, OrderType> = {
       'sales_orders': 'sales',
@@ -64,32 +82,166 @@ export const usePermissions = () => {
     return moduleMap[module] || null;
   }, []);
 
-  const fetchUserPermissions = useCallback(async () => {
-    if (!user) {
-      setEnhancedUser(null);
-      setLoading(false);
-      return;
+  const fetchFeatureFlag = useCallback(async (): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('system_settings')
+        .select('setting_value')
+        .eq('setting_key', 'use_custom_roles_system')
+        .single();
+
+      if (error || !data) {
+        console.log('Feature flag not found, using legacy system');
+        return false;
+      }
+
+      const flagValue = data.setting_value;
+      return flagValue === true || flagValue === 'true';
+    } catch (error) {
+      console.error('Error fetching feature flag:', error);
+      return false;
     }
+  }, []);
+
+  const fetchCustomRolePermissions = useCallback(async (): Promise<EnhancedUserV2 | null> => {
+    if (!user) return null;
 
     try {
-      setLoading(true);
-
-      // Fetch user profile with dealer and groups information
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select(`
-          id,
-          email,
-          role,
-          user_type,
-          dealership_id
-        `)
+        .select('id, email, role, dealership_id')
         .eq('id', user.id)
         .single();
 
       if (profileError) throw profileError;
 
-      // Fetch user's groups if they are dealer_user with user_type 'dealer'
+      if (profileData.role === 'system_admin') {
+        return {
+          id: profileData.id,
+          email: profileData.email,
+          dealership_id: profileData.dealership_id,
+          is_system_admin: true,
+          custom_roles: [],
+          all_permissions: new Map()
+        };
+      }
+
+      const { data: assignmentsData, error: assignmentsError } = await supabase
+        .from('user_custom_role_assignments')
+        .select(`
+          custom_role_id,
+          dealer_id,
+          dealer_custom_roles (
+            id,
+            role_name,
+            display_name,
+            dealer_id
+          )
+        `)
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+
+      if (assignmentsError) {
+        console.error('Error fetching role assignments:', assignmentsError);
+        return {
+          id: profileData.id,
+          email: profileData.email,
+          dealership_id: profileData.dealership_id,
+          is_system_admin: false,
+          custom_roles: [],
+          all_permissions: new Map()
+        };
+      }
+
+      const roleIds = (assignmentsData || [])
+        .map(a => a.dealer_custom_roles?.id)
+        .filter(Boolean) as string[];
+
+      if (roleIds.length === 0) {
+        return {
+          id: profileData.id,
+          email: profileData.email,
+          dealership_id: profileData.dealership_id,
+          is_system_admin: false,
+          custom_roles: [],
+          all_permissions: new Map()
+        };
+      }
+
+      const { data: permissionsData, error: permissionsError } = await supabase
+        .from('dealer_role_permissions')
+        .select('role_id, module, permission_level')
+        .in('role_id', roleIds);
+
+      if (permissionsError) throw permissionsError;
+
+      const rolesMap = new Map<string, CustomRoleWithPermissions>();
+
+      (assignmentsData || []).forEach(assignment => {
+        const role = assignment.dealer_custom_roles;
+        if (!role) return;
+
+        const rolePerms = (permissionsData || [])
+          .filter(p => p.role_id === role.id);
+
+        const permissionsMap = new Map<AppModule, PermissionLevel>();
+        rolePerms.forEach(p => {
+          permissionsMap.set(p.module as AppModule, p.permission_level as PermissionLevel);
+        });
+
+        rolesMap.set(role.id, {
+          id: role.id,
+          role_name: role.role_name,
+          display_name: role.display_name,
+          dealer_id: role.dealer_id,
+          permissions: permissionsMap
+        });
+      });
+
+      const allPermissions = new Map<AppModule, PermissionLevel>();
+      const permissionHierarchy: Record<PermissionLevel, number> = {
+        'none': 0,
+        'view': 1,
+        'edit': 2,
+        'delete': 3,
+        'admin': 4
+      };
+
+      rolesMap.forEach(role => {
+        role.permissions.forEach((level, module) => {
+          const existingLevel = allPermissions.get(module);
+          if (!existingLevel || permissionHierarchy[level] > permissionHierarchy[existingLevel]) {
+            allPermissions.set(module, level);
+          }
+        });
+      });
+
+      return {
+        id: profileData.id,
+        email: profileData.email,
+        dealership_id: profileData.dealership_id,
+        is_system_admin: false,
+        custom_roles: Array.from(rolesMap.values()),
+        all_permissions: allPermissions
+      };
+    } catch (error) {
+      console.error('Error in fetchCustomRolePermissions:', error);
+      return null;
+    }
+  }, [user]);
+
+  const fetchLegacyPermissions = useCallback(async (): Promise<EnhancedUser | null> => {
+    if (!user) return null;
+
+    try {
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, email, role, user_type, dealership_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
       let userGroups: UserGroup[] = [];
       if (profileData.role === 'dealer_user' && profileData.user_type === 'dealer') {
         const { data: groupsData, error: groupsError } = await supabase
@@ -120,7 +272,7 @@ export const usePermissions = () => {
         }
       }
 
-      const enhancedUserData: EnhancedUser = {
+      return {
         id: profileData.id,
         email: profileData.email,
         role: profileData.role as UserRole,
@@ -128,156 +280,214 @@ export const usePermissions = () => {
         dealership_id: profileData.dealership_id,
         groups: userGroups
       };
+    } catch (error) {
+      console.error('Error in fetchLegacyPermissions:', error);
+      return null;
+    }
+  }, [user]);
 
-      setEnhancedUser(enhancedUserData);
+  const fetchUserPermissions = useCallback(async () => {
+    if (!user) {
+      setEnhancedUser(null);
+      setLoading(false);
+      return;
+    }
 
+    try {
+      setLoading(true);
+
+      const customRolesEnabled = await fetchFeatureFlag();
+      setUseCustomRoles(customRolesEnabled);
+
+      if (customRolesEnabled) {
+        console.log('🟢 Using CUSTOM ROLES system');
+        const userData = await fetchCustomRolePermissions();
+        setEnhancedUser(userData);
+      } else {
+        console.log('🟡 Using LEGACY system');
+        const userData = await fetchLegacyPermissions();
+        setEnhancedUser(userData);
+      }
     } catch (error) {
       console.error('Error fetching user permissions:', error);
       setEnhancedUser(null);
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, fetchFeatureFlag, fetchCustomRolePermissions, fetchLegacyPermissions]);
 
   useEffect(() => {
     fetchUserPermissions();
   }, [fetchUserPermissions]);
 
-  const hasPermission = useCallback((module: AppModule, requiredLevel: PermissionLevel): boolean => {
-    if (!enhancedUser) return false;
+  const isEnhancedUserV2 = (user: any): user is EnhancedUserV2 => {
+    return user && 'is_system_admin' in user && 'all_permissions' in user;
+  };
 
-    try {
-      // System admin has full access to everything
-      if (enhancedUser.role === 'system_admin') {
-        return true;
-      }
-
-      // Only system_admin can delete
-      if (requiredLevel === 'delete') {
-        return enhancedUser.role === 'system_admin';
-      }
-
-      // For order modules, check specific order type access
-      const orderType = getOrderTypeFromModule(module);
-      if (orderType) {
-        return canAccessOrderType(enhancedUser, orderType, requiredLevel);
-      }
-
-      // For non-order modules (dashboard, reports, settings, etc.)
-      return canAccessGeneralModule(enhancedUser, module, requiredLevel);
-
-    } catch (error) {
-      console.error('Error in hasPermission:', error);
-      return false;
-    }
-  }, [enhancedUser, getOrderTypeFromModule]);
-
-  // Check if user can access specific order type
-  const canAccessOrderType = useCallback((
-    user: EnhancedUser,
-    orderType: OrderType,
-    requiredLevel: PermissionLevel
-  ): boolean => {
-    // Manager can access all order types from their dealer
-    if (user.role === 'manager') {
-      return requiredLevel !== 'delete'; // Manager can't delete
-    }
-
-    // dealer_user with user_type 'detail' can access all order types
-    if (user.role === 'dealer_user' && user.user_type === 'detail') {
-      return requiredLevel !== 'delete'; // Detail users can't delete
-    }
-
-    // dealer_user with user_type 'dealer' - check groups
-    if (user.role === 'dealer_user' && user.user_type === 'dealer') {
-      const hasAccess = user.groups.some(group =>
-        group.allowed_order_types.includes(orderType)
-      );
-      return hasAccess && requiredLevel !== 'delete'; // Dealer users can't delete
-    }
-
-    return false;
-  }, []);
-
-  // Check access to general modules (non-orders)
-  const canAccessGeneralModule = useCallback((
-    user: EnhancedUser,
+  const hasPermissionCustomRoles = useCallback((
+    userV2: EnhancedUserV2,
     module: AppModule,
     requiredLevel: PermissionLevel
   ): boolean => {
-    // Basic access rules for general modules
-    switch (module) {
-      case 'dashboard':
-        return true; // Everyone can view dashboard
+    if (userV2.is_system_admin) return true;
 
-      case 'reports':
-      case 'settings':
-        return user.role === 'manager' || user.role === 'system_admin';
+    const userLevel = userV2.all_permissions.get(module);
+    if (!userLevel || userLevel === 'none') return false;
 
-      case 'users':
-      case 'dealerships':
-      case 'management':
-        return user.role === 'system_admin'; // Only system admin
+    const hierarchy: Record<PermissionLevel, number> = {
+      'none': 0,
+      'view': 1,
+      'edit': 2,
+      'delete': 3,
+      'admin': 4
+    };
 
-      case 'chat':
-      case 'productivity':
-      case 'stock':
-        return true; // Everyone can access
-
-      default:
-        return false;
-    }
+    return hierarchy[userLevel] >= hierarchy[requiredLevel];
   }, []);
 
-  // Check if user can edit a specific order
+  const hasPermissionLegacy = useCallback((
+    userLegacy: EnhancedUser,
+    module: AppModule,
+    requiredLevel: PermissionLevel
+  ): boolean => {
+    try {
+      if (userLegacy.role === 'system_admin') {
+        return true;
+      }
+
+      if (requiredLevel === 'delete') {
+        return userLegacy.role === 'system_admin';
+      }
+
+      const orderType = getOrderTypeFromModule(module);
+      if (orderType) {
+        if (userLegacy.role === 'manager') {
+          return requiredLevel !== 'delete';
+        }
+
+        if (userLegacy.role === 'dealer_user' && userLegacy.user_type === 'detail') {
+          return requiredLevel !== 'delete';
+        }
+
+        if (userLegacy.role === 'dealer_user' && userLegacy.user_type === 'dealer') {
+          const hasAccess = userLegacy.groups.some(group =>
+            group.allowed_order_types.includes(orderType)
+          );
+          return hasAccess && requiredLevel !== 'delete';
+        }
+
+        return false;
+      }
+
+      switch (module) {
+        case 'dashboard':
+          return true;
+        case 'reports':
+        case 'settings':
+          return userLegacy.role === 'manager' || userLegacy.role === 'system_admin';
+        case 'users':
+        case 'dealerships':
+        case 'management':
+          return userLegacy.role === 'system_admin';
+        case 'chat':
+        case 'productivity':
+        case 'stock':
+          return true;
+        default:
+          return false;
+      }
+    } catch (error) {
+      console.error('Error in hasPermissionLegacy:', error);
+      return false;
+    }
+  }, [getOrderTypeFromModule]);
+
+  const hasPermission = useCallback((module: AppModule, requiredLevel: PermissionLevel): boolean => {
+    if (!enhancedUser) return false;
+
+    if (isEnhancedUserV2(enhancedUser)) {
+      return hasPermissionCustomRoles(enhancedUser, module, requiredLevel);
+    } else {
+      return hasPermissionLegacy(enhancedUser, module, requiredLevel);
+    }
+  }, [enhancedUser, hasPermissionCustomRoles, hasPermissionLegacy]);
+
   const canEditOrder = useCallback((order: { dealer_id: number; order_type: string; status: string }): boolean => {
     if (!enhancedUser) return false;
 
-    // Must be same dealer
-    if (order.dealer_id !== enhancedUser.dealership_id && enhancedUser.role !== 'system_admin') {
-      return false;
+    if (isEnhancedUserV2(enhancedUser)) {
+      if (enhancedUser.is_system_admin) return true;
+
+      if (order.dealer_id !== enhancedUser.dealership_id) return false;
+      if (['completed', 'cancelled'].includes(order.status)) return false;
+
+      const orderType = order.order_type as OrderType;
+      const moduleMap: Record<OrderType, AppModule> = {
+        'sales': 'sales_orders',
+        'service': 'service_orders',
+        'recon': 'recon_orders',
+        'carwash': 'car_wash'
+      };
+      const module = moduleMap[orderType];
+      return hasPermissionCustomRoles(enhancedUser, module, 'edit');
+    } else {
+      if (enhancedUser.role === 'system_admin') return true;
+      if (order.dealer_id !== enhancedUser.dealership_id) return false;
+      if (['completed', 'cancelled'].includes(order.status)) return false;
+      const orderType = order.order_type as OrderType;
+      return hasPermissionLegacy(enhancedUser, `${orderType}_orders` as AppModule, 'edit');
     }
+  }, [enhancedUser, hasPermissionCustomRoles, hasPermissionLegacy]);
 
-    // Can't edit completed or cancelled orders
-    if (['completed', 'cancelled'].includes(order.status)) {
-      return false;
-    }
-
-    // Check order type access
-    const orderType = order.order_type as OrderType;
-    return canAccessOrderType(enhancedUser, orderType, 'edit');
-  }, [enhancedUser, canAccessOrderType]);
-
-  // Check if user can delete a specific order
   const canDeleteOrder = useCallback((order: { dealer_id: number }): boolean => {
     if (!enhancedUser) return false;
 
-    // Only system_admin can delete orders
-    return enhancedUser.role === 'system_admin';
+    if (isEnhancedUserV2(enhancedUser)) {
+      return enhancedUser.is_system_admin;
+    } else {
+      return enhancedUser.role === 'system_admin';
+    }
   }, [enhancedUser]);
 
-  // Get user's allowed order types
   const getAllowedOrderTypes = useCallback((): OrderType[] => {
     if (!enhancedUser) return [];
 
-    if (enhancedUser.role === 'system_admin') {
-      return ['sales', 'service', 'recon', 'carwash'];
-    }
+    if (isEnhancedUserV2(enhancedUser)) {
+      if (enhancedUser.is_system_admin) {
+        return ['sales', 'service', 'recon', 'carwash'];
+      }
 
-    if (enhancedUser.role === 'manager') {
-      return ['sales', 'service', 'recon', 'carwash'];
-    }
+      const allowed: OrderType[] = [];
+      const orderModules: Array<[OrderType, AppModule]> = [
+        ['sales', 'sales_orders'],
+        ['service', 'service_orders'],
+        ['recon', 'recon_orders'],
+        ['carwash', 'car_wash']
+      ];
 
-    if (enhancedUser.role === 'dealer_user' && enhancedUser.user_type === 'detail') {
-      return ['sales', 'service', 'recon', 'carwash'];
-    }
+      orderModules.forEach(([orderType, module]) => {
+        if (hasPermissionCustomRoles(enhancedUser, module, 'view')) {
+          allowed.push(orderType);
+        }
+      });
 
-    if (enhancedUser.role === 'dealer_user' && enhancedUser.user_type === 'dealer') {
-      return enhancedUser.groups.flatMap(group => group.allowed_order_types);
+      return allowed;
+    } else {
+      if (enhancedUser.role === 'system_admin') {
+        return ['sales', 'service', 'recon', 'carwash'];
+      }
+      if (enhancedUser.role === 'manager') {
+        return ['sales', 'service', 'recon', 'carwash'];
+      }
+      if (enhancedUser.role === 'dealer_user' && enhancedUser.user_type === 'detail') {
+        return ['sales', 'service', 'recon', 'carwash'];
+      }
+      if (enhancedUser.role === 'dealer_user' && enhancedUser.user_type === 'dealer') {
+        return enhancedUser.groups.flatMap(group => group.allowed_order_types);
+      }
+      return [];
     }
-
-    return [];
-  }, [enhancedUser]);
+  }, [enhancedUser, hasPermissionCustomRoles]);
 
   const refreshPermissions = useCallback(() => {
     fetchUserPermissions();
@@ -291,8 +501,7 @@ export const usePermissions = () => {
     canDeleteOrder,
     getAllowedOrderTypes,
     refreshPermissions,
-    // Legacy compatibility
-    roles: [], // For backward compatibility
-    permissions: [] // For backward compatibility
+    roles: [],
+    permissions: []
   };
 };
