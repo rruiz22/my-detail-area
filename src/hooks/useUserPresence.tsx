@@ -72,7 +72,10 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
     }
 
     heartbeatIntervalRef.current = setInterval(async () => {
-      if (!user?.id || !activeDealerId) return;
+      if (!user?.id || !activeDealerId || activeDealerId === null) {
+        console.log('⏭️ Skipping presence update - no valid dealer');
+        return;
+      }
 
       try {
         await supabase
@@ -83,7 +86,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
           .eq('user_id', user.id)
           .eq('dealer_id', activeDealerId);
       } catch (err) {
-        console.error('Heartbeat error:', err);
+        console.error('❌ Heartbeat error:', err);
       }
     }, 30000); // Update every 30 seconds
   }, [user?.id, activeDealerId]);

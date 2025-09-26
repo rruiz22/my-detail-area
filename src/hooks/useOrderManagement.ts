@@ -377,12 +377,57 @@ export const useOrderManagement = (activeTab: string) => {
     setLoading(true);
 
     try {
-      // CRITICAL: Filter orders by user's assigned dealer for multi-dealer isolation
+      // CRITICAL: Filter orders by user's assigned dealer(s) for multi-dealer support
       let ordersQuery = supabase
         .from('orders')
         .select('*')
-        .eq('dealer_id', enhancedUser.dealership_id)
         .order('created_at', { ascending: false });
+
+      // Check global dealer filter from localStorage with robust validation
+      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
+      const parsedFilter = savedDealerFilter && savedDealerFilter !== 'null' && savedDealerFilter !== 'undefined'
+        ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
+        : 'all';
+      const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
+      console.log(`🔍 Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
+
+      // Handle dealer filtering based on user type and global filter
+      if (enhancedUser.dealership_id === null) {
+        // User is multi-dealer - respect global filter
+        if (dealerFilter === 'all') {
+          // Show all dealers user has access to
+          const { data: userDealerships, error: dealershipError } = await supabase
+            .from('dealer_memberships')
+            .select('dealer_id')
+            .eq('user_id', user.id)
+            .eq('is_active', true);
+
+          if (dealershipError || !userDealerships || userDealerships.length === 0) {
+            console.warn('⚠️ No dealer memberships found - showing all dealerships');
+            const { data: allDealerships } = await supabase.from('dealerships').select('id');
+            const allDealerIds = allDealerships?.map(d => d.id) || [];
+            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+          } else {
+            const dealerIds = userDealerships.map(d => d.dealer_id);
+            console.log(`🏢 Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
+          }
+        } else {
+          // Filter by specific dealer selected in dropdown - validate it's a number
+          if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
+            console.log(`🎯 Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+            ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+          } else {
+            console.warn(`⚠️ Invalid dealerFilter: ${dealerFilter}, falling back to all dealers`);
+            const { data: allDealerships } = await supabase.from('dealerships').select('id');
+            const allDealerIds = allDealerships?.map(d => d.id) || [];
+            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+          }
+        }
+      } else {
+        // User has single assigned dealership - ignore global filter
+        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
+      }
 
       // CRITICAL: Filter by allowed order types based on user role and groups
       const allowedOrderTypes = getAllowedOrderTypes();
@@ -614,16 +659,27 @@ export const useOrderManagement = (activeTab: string) => {
     }
   }, [user]);
 
-  // Initialize data on mount with debouncing to prevent multiple calls
-  useEffect(() => {
-    if (user && enhancedUser && refreshCallCountRef.current === 0) {
-      const timer = setTimeout(() => {
-        refreshData();
-      }, 100); // Small delay to batch multiple rapid effect calls
+  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
+  // useEffect(() => {
+  //   if (user && enhancedUser && refreshCallCountRef.current === 0) {
+  //     const timer = setTimeout(() => {
+  //       refreshData();
+  //     }, 100); // Small delay to batch multiple rapid effect calls
 
-      return () => clearTimeout(timer);
-    }
-  }, [user, enhancedUser, refreshData]); // Wait for both user and enhancedUser
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [user, enhancedUser, refreshData]); // Wait for both user and enhancedUser
+
+  // Listen for dealer filter changes
+  useEffect(() => {
+    const handleDealerFilterChange = () => {
+      console.log('🎯 Dealer filter changed - refreshing data');
+      refreshData();
+    };
+
+    window.addEventListener('dealerFilterChanged', handleDealerFilterChange);
+    return () => window.removeEventListener('dealerFilterChanged', handleDealerFilterChange);
+  }, [refreshData]);
 
   // Handle filtering when tab or filters change (without full refresh)
   useEffect(() => {
@@ -638,14 +694,69 @@ export const useOrderManagement = (activeTab: string) => {
   const ordersPollingQuery = useOrderPolling(
     ['orders', 'all'],
     async () => {
-      if (!user) return [];
+      if (!user || !enhancedUser) return [];
 
       console.log('🔄 Smart polling: Fetching orders...');
-      const { data: orders, error } = await supabase
+
+      // Apply same dealer filtering logic as refreshData
+      let ordersQuery = supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
 
+      // Check global dealer filter with robust validation
+      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
+      const parsedFilter = savedDealerFilter && savedDealerFilter !== 'null' && savedDealerFilter !== 'undefined'
+        ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
+        : 'all';
+      const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
+      console.log(`🔍 Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
+
+      // Handle dealer filtering based on user type and global filter
+      if (enhancedUser.dealership_id === null) {
+        // User is multi-dealer - respect global filter
+        if (dealerFilter === 'all') {
+          // Show all dealers user has access to
+          const { data: userDealerships, error: dealershipError } = await supabase
+            .from('dealer_memberships')
+            .select('dealer_id')
+            .eq('user_id', user.id)
+            .eq('is_active', true);
+
+          if (dealershipError || !userDealerships || userDealerships.length === 0) {
+            console.warn('⚠️ Polling - No dealer memberships found - showing all dealerships');
+            const { data: allDealerships } = await supabase.from('dealerships').select('id');
+            const allDealerIds = allDealerships?.map(d => d.id) || [];
+            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+          } else {
+            const dealerIds = userDealerships.map(d => d.dealer_id);
+            console.log(`🏢 Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
+          }
+        } else {
+          // Filter by specific dealer selected in dropdown - validate it's a number
+          if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
+            console.log(`🎯 Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+            ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+          } else {
+            console.warn(`⚠️ Polling - Invalid dealerFilter: ${dealerFilter}, falling back to all dealers`);
+            const { data: allDealerships } = await supabase.from('dealerships').select('id');
+            const allDealerIds = allDealerships?.map(d => d.id) || [];
+            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+          }
+        }
+      } else {
+        // User has single assigned dealership - ignore global filter
+        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
+      }
+
+      // Filter by allowed order types
+      const allowedOrderTypes = getAllowedOrderTypes();
+      if (allowedOrderTypes.length > 0) {
+        ordersQuery = ordersQuery.in('order_type', allowedOrderTypes);
+      }
+
+      const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
       // Enrich orders with related data
@@ -655,7 +766,7 @@ export const useOrderManagement = (activeTab: string) => {
 
       return enrichedOrders;
     },
-    !!user
+    !!(user && enhancedUser)
   );
 
   // Update allOrders when polling data changes
