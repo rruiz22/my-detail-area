@@ -1,5 +1,8 @@
 {
   "common": {
+    "access_denied": "Acceso Denegado",
+    "insufficient_permissions": "No tienes permisos para acceder a este recurso",
+    "back_to_dashboard": "Volver al Panel",
     "orders": "Órdenes",
     "status": {
       "online": "En línea",
@@ -141,6 +144,8 @@
       "server_error": "Error del servidor",
       "invalid_request": "Solicitud inválida",
       "access_denied": "Acceso denegado",
+      "insufficient_permissions": "No tienes permisos para acceder a este recurso",
+      "back_to_dashboard": "Volver al Panel",
       "not_found": "No encontrado",
       "forbidden": "Prohibido",
       "unauthorized": "No autorizado",

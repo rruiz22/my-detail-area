@@ -66,6 +66,11 @@ export interface EnhancedUser {
   groups: UserGroup[];
 }
 
+// Feature flag cache (5 minutes)
+let featureFlagCache: boolean | null = null;
+let featureFlagTimestamp = 0;
+const FEATURE_FLAG_CACHE_DURATION = 300000; // 5 minutes
+
 export const usePermissions = () => {
   const { user } = useAuth();
   const [enhancedUser, setEnhancedUser] = useState<EnhancedUser | EnhancedUserV2 | null>(null);
@@ -83,6 +88,11 @@ export const usePermissions = () => {
   }, []);
 
   const fetchFeatureFlag = useCallback(async (): Promise<boolean> => {
+    // Return cached value if still valid
+    if (featureFlagCache !== null && Date.now() - featureFlagTimestamp < FEATURE_FLAG_CACHE_DURATION) {
+      return featureFlagCache;
+    }
+
     try {
       const { data, error } = await supabase
         .from('system_settings')
@@ -91,14 +101,20 @@ export const usePermissions = () => {
         .single();
 
       if (error || !data) {
-        console.log('Feature flag not found, using legacy system');
+        console.log('Feature flag not accessible, using legacy system');
+        featureFlagCache = false;
+        featureFlagTimestamp = Date.now();
         return false;
       }
 
-      const flagValue = data.setting_value;
-      return flagValue === true || flagValue === 'true';
+      const flagValue = data.setting_value === true || data.setting_value === 'true';
+      featureFlagCache = flagValue;
+      featureFlagTimestamp = Date.now();
+      return flagValue;
     } catch (error) {
       console.error('Error fetching feature flag:', error);
+      featureFlagCache = false;
+      featureFlagTimestamp = Date.now();
       return false;
     }
   }, []);
@@ -331,6 +347,15 @@ export const usePermissions = () => {
   ): boolean => {
     if (userV2.is_system_admin) return true;
 
+    // Fallback: Users without custom roles can only access dashboard, productivity, profile
+    if (userV2.custom_roles.length === 0) {
+      const allowedModules: AppModule[] = ['dashboard', 'productivity'];
+      if (allowedModules.includes(module) && requiredLevel === 'view') {
+        return true;
+      }
+      return false;
+    }
+
     const userLevel = userV2.all_permissions.get(module);
     if (!userLevel || userLevel === 'none') return false;
 
@@ -455,6 +480,12 @@ export const usePermissions = () => {
     if (isEnhancedUserV2(enhancedUser)) {
       if (enhancedUser.is_system_admin) {
         return ['sales', 'service', 'recon', 'carwash'];
+      }
+
+      // If user has no custom roles assigned, return empty (no order access)
+      if (enhancedUser.custom_roles.length === 0) {
+        console.warn('⚠️ User has no custom roles assigned - no order access');
+        return [];
       }
 
       const allowed: OrderType[] = [];

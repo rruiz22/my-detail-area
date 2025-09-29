@@ -11,7 +11,7 @@ import { LiveClock } from "@/components/ui/live-clock";
 import { getSystemTimezone } from "@/utils/dateUtils";
 export function AppSidebar() {
   const { state, open, setOpen } = useSidebar();
-  const { enhancedUser, getAllowedOrderTypes } = usePermissions();
+  const { enhancedUser, getAllowedOrderTypes, hasPermission } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
 
@@ -60,80 +60,104 @@ export function AppSidebar() {
   }, [t, getAllowedOrderTypes, enhancedUser?.role]);
 
   // Workflow Management
-  const workflowNavItems = [{
-    title: t('navigation.get_ready'),
-    url: "/get-ready",
-    icon: Zap
-  }, {
-    title: t('navigation.stock'),
-    url: "/stock",
-    icon: Package
-  }, {
-    title: t('navigation.detail_hub'),
-    url: "/detail-hub",
-    icon: Clock
-  }];
+  const workflowNavItems = React.useMemo(() => {
+    const baseItems = [{
+      title: t('navigation.get_ready'),
+      url: "/get-ready",
+      icon: Zap,
+      module: 'productivity'
+    }, {
+      title: t('navigation.stock'),
+      url: "/stock",
+      icon: Package,
+      module: 'stock'
+    }, {
+      title: t('navigation.detail_hub'),
+      url: "/detail-hub",
+      icon: Clock,
+      module: 'productivity'
+    }];
+
+    // Filter by permissions
+    return baseItems.filter(item => hasPermission(item.module, 'view'));
+  }, [t, hasPermission]);
 
   // Tools & Communication
-  const toolsNavItems = [{
-    title: t('chat.title'),
-    url: "/chat",
-    icon: MessageCircle
-  }, {
-    title: t('contacts.title'),
-    url: "/contacts",
-    icon: Users2
-  }, {
-    title: t('vin_scanner_hub.title'),
-    url: "/vin-scanner",
-    icon: QrCode
-  }, {
-    title: t('nfc_tracking.title'),
-    url: "/nfc-tracking",
-    icon: Nfc
-  }];
+  const toolsNavItems = React.useMemo(() => {
+    const baseItems = [{
+      title: t('chat.title'),
+      url: "/chat",
+      icon: MessageCircle,
+      module: 'chat'
+    }, {
+      title: t('contacts.title'),
+      url: "/contacts",
+      icon: Users2,
+      module: 'contacts'
+    }, {
+      title: t('vin_scanner_hub.title'),
+      url: "/vin-scanner",
+      icon: QrCode,
+      module: 'productivity'
+    }, {
+      title: t('nfc_tracking.title'),
+      url: "/nfc-tracking",
+      icon: Nfc,
+      module: 'productivity'
+    }];
+
+    // Filter by permissions
+    return baseItems.filter(item => hasPermission(item.module, 'view'));
+  }, [t, hasPermission]);
 
   // Productivity
-  const productivityNavItems = [{
-    title: t('navigation.productivity'),
-    url: "/productivity",
-    icon: Calendar
-  }, {
-    title: t('profile.title'),
-    url: "/profile",
-    icon: User
-  }];
+  const productivityNavItems = React.useMemo(() => {
+    const baseItems = [{
+      title: t('navigation.productivity'),
+      url: "/productivity",
+      icon: Calendar,
+      module: 'productivity'
+    }, {
+      title: t('profile.title'),
+      url: "/profile",
+      icon: User,
+      module: null // Profile always accessible
+    }];
 
-  // Management & Reports - Simplified to single admin menu
+    // Filter by permissions
+    return baseItems.filter(item => !item.module || hasPermission(item.module, 'view'));
+  }, [t, hasPermission]);
+
+  // Management & Reports - Filtered by permissions
   const managementNavItems = React.useMemo(() => {
     const baseItems = [
       {
         title: t('admin.administration'),
         url: "/admin",
         icon: Shield,
-        requiresSystemAdmin: true,
+        module: 'management',
+        permission: 'admin',
         description: t('admin.administration_description')
       },
       {
         title: t('navigation.reports'),
         url: "/reports",
         icon: FileText,
-        requiresSystemAdmin: false // Managers can access reports
+        module: 'reports',
+        permission: 'view'
       },
       {
         title: t('navigation.settings'),
         url: "/settings",
         icon: Settings,
-        requiresSystemAdmin: false // Everyone can access settings
+        module: 'settings',
+        permission: 'view'
       }
     ];
 
-    // Filter items based on user role
-    return baseItems.filter(item =>
-      !item.requiresSystemAdmin ||
-      enhancedUser?.role === 'system_admin'
-    );
-  }, [t, enhancedUser?.role]);
+    // Filter items based on permissions
+    return baseItems.filter(item => hasPermission(item.module, item.permission));
+  }, [t, hasPermission]);
 
   // System Admin - only navigation items
   const systemAdminNavItems = React.useMemo(() => {

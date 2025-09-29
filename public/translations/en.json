@@ -1,5 +1,8 @@
 {
   "common": {
+    "access_denied": "Access Denied",
+    "insufficient_permissions": "You don't have permission to access this resource",
+    "back_to_dashboard": "Back to Dashboard",
     "orders": "Orders",
     "status": {
       "online": "Online",
@@ -153,6 +156,8 @@
       "server_error": "Server error",
       "invalid_request": "Invalid request",
       "access_denied": "Access denied",
+      "insufficient_permissions": "You don't have permission to access this resource",
+      "back_to_dashboard": "Back to Dashboard",
       "not_found": "Not found",
       "forbidden": "Forbidden",
       "unauthorized": "Unauthorized",

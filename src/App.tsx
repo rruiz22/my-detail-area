@@ -3,6 +3,7 @@ import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { PermissionGuard } from "@/components/permissions/PermissionGuard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -76,9 +77,23 @@ const AppRoutes = () => {
           <Route path="vin-scanner" element={<VinScanner />} />
           <Route path="nfc-tracking" element={<NFCTracking />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
+          <Route
+            path="settings"
+            element={
+              <PermissionGuard module="settings" permission="view">
+                <Settings />
+              </PermissionGuard>
+            }
+          />
           <Route path="dealerships" element={<Dealerships />} />
-          <Route path="dealers/:id" element={<DealerView />} />
+          <Route
+            path="dealers/:id"
+            element={
+              <PermissionGuard module="dealerships" permission="admin">
+                <DealerView />
+              </PermissionGuard>
+            }
+          />
           <Route path="contacts" element={<Contacts />} />
           <Route path="profile" element={<Profile />} />
           <Route path="users" element={<Users />} />
