@@ -86,7 +86,9 @@
       "refreshing": "Actualizando...",
       "refresh_in_seconds": "{{count}}s",
       "refresh_in_minutes": "{{minutes}}:{{seconds}}"
-    }
+    },
+    "assigned": "Asignado",
+    "not_assigned": "Sin Asignar"
   },
   "cloud_sync": {
     "title": "Panel de Sincronización en la Nube",
@@ -1082,7 +1084,11 @@
   "service_orders": {
     "po_number": "Número PO",
     "ro_number": "Número RO",
-    "tag_number": "Número TAG"
+    "tag_number": "Número TAG",
+    "purchase_order": "Orden de Compra",
+    "repair_order": "Orden de Reparación",
+    "tag": "Etiqueta",
+    "service_information": "Información de Servicio"
   },
   "dealer": {
     "view": {
@@ -1229,5 +1235,167 @@
     "confidence_label": "Confianza",
     "sticker_hint": "Apunta la cámara a la calcomanía del VIN y mantén el pulso firme.",
     "plate_hint": "Apunta la cámara para que la placa del VIN llene la guía."
+  },
+  "get_ready": {
+    "tabs": {
+      "overview": "Resumen",
+      "details_view": "Vista de Detalles",
+      "approvals": "Aprobaciones",
+      "vendors": "Proveedores",
+      "reports": "Reportes",
+      "setup": "Configuración"
+    },
+    "search_placeholder": "Buscar vehículos...",
+    "steps": {
+      "title": "Get Ready - Flujo Optimizado",
+      "dis": "Días en Paso",
+      "dtf": "Días para Finalizar",
+      "dis_tooltip": "Promedio de días que los vehículos permanecen en este paso",
+      "dtf_tooltip": "Promedio de días restantes hasta completar el proceso"
+    },
+    "table": {
+      "step": "Paso",
+      "image": "Imagen",
+      "stock": "Stock",
+      "vehicle": "Vehículo",
+      "media": "Media",
+      "work_items": "Elementos de Trabajo",
+      "days_in_step": "Días en Paso",
+      "notes": "Notas",
+      "priority": "Prioridad"
+    },
+    "detail_panel": {
+      "no_selection": {
+        "title": "Sin Selección",
+        "description": "Selecciona un vehículo de la lista para ver sus detalles"
+      }
+    },
+    "title": "Get Ready",
+    "subtitle": "Flujo de trabajo optimizado de reacondicionamiento",
+    "kpis": {
+      "t2l": "Tiempo a Línea",
+      "avg_t2l": "T2L Promedio",
+      "target_t2l": "T2L Objetivo",
+      "sla_compliance": "Cumplimiento SLA",
+      "daily_throughput": "Rendimiento Diario",
+      "weekly_capacity": "Capacidad Semanal",
+      "utilization_rate": "Tasa de Utilización",
+      "holding_cost": "Costo de Retención",
+      "total_holding_cost": "Costo Total de Retención",
+      "roi_improvement": "Mejora ROI"
+    },
+    "alerts": {
+      "bottleneck": "Cuello de Botella",
+      "sla_warning": "Advertencia SLA",
+      "sla_critical": "SLA Crítico",
+      "active_alerts": "alertas activas",
+      "no_alerts": "Sin alertas"
+    },
+    "status": {
+      "on_track": "En Camino",
+      "at_risk": "En Riesgo",
+      "critical": "Crítico",
+      "green": "Verde",
+      "yellow": "Amarillo",
+      "red": "Rojo"
+    },
+    "workflow": {
+      "standard": "Estándar",
+      "express": "Expreso",
+      "priority": "Prioridad"
+    },
+    "metrics": {
+      "capacity": "Capacidad",
+      "sla_hours": "Horas SLA",
+      "cost_per_day": "Costo por Día",
+      "throughput": "Rendimiento",
+      "efficiency": "Eficiencia",
+      "utilization": "Utilización"
+    },
+    "dashboard": {
+      "title": "Panel Get Ready",
+      "performance_overview": "Resumen de Rendimiento",
+      "workflow_insights": "Insights de Flujo",
+      "actionable_items": "Elementos Accionables"
+    },
+    "vehicle_form": {
+      "add_vehicle": "Agregar Vehículo",
+      "title": {
+        "add": "Agregar Nuevo Vehículo",
+        "edit": "Editar Vehículo"
+      },
+      "description": "Complete la información del vehículo a continuación. Los campos obligatorios están marcados con asterisco (*)",
+      "fields": {
+        "stock_number": "Número de Stock",
+        "vin": "VIN",
+        "year": "Año",
+        "make": "Marca",
+        "model": "Modelo",
+        "trim": "Versión",
+        "step": "Paso Actual",
+        "workflow": "Tipo de Flujo",
+        "priority": "Prioridad",
+        "assigned_to": "Asignado a",
+        "notes": "Notas"
+      },
+      "placeholders": {
+        "notes": "Ingrese notas o instrucciones adicionales..."
+      },
+      "errors": {
+        "stock_required": "El número de stock es obligatorio",
+        "vin_required": "El VIN es obligatorio",
+        "vin_invalid": "El VIN debe tener exactamente 17 caracteres",
+        "year_required": "El año es obligatorio",
+        "year_invalid": "Por favor ingrese un año válido",
+        "make_required": "La marca es obligatoria",
+        "model_required": "El modelo es obligatorio",
+        "save_failed": "Error al guardar el vehículo. Por favor intente nuevamente."
+      },
+      "success": {
+        "created": "Vehículo creado exitosamente",
+        "updated": "Vehículo actualizado exitosamente"
+      }
+    },
+    "setup": {
+      "title": "Configuración del Flujo de Trabajo",
+      "subtitle": "Configurar pasos y ajustes del flujo de trabajo",
+      "access_denied": "Acceso Denegado",
+      "no_steps_title": "Sin Pasos de Flujo de Trabajo",
+      "no_steps_description": "Este concesionario aún no tiene pasos de flujo de trabajo configurados",
+      "add_step": "Agregar Paso",
+      "form": {
+        "title_create": "Crear Paso de Flujo de Trabajo",
+        "title_edit": "Editar Paso de Flujo de Trabajo",
+        "description": "Configure los detalles y ajustes del paso a continuación",
+        "fields": {
+          "name": "Nombre del Paso",
+          "description": "Descripción",
+          "color": "Color",
+          "sla_hours": "SLA (Horas)",
+          "max_capacity": "Capacidad Máxima",
+          "cost_per_day": "Costo por Día"
+        },
+        "placeholders": {
+          "name": "ej., Inspección, Mecánica, Detallado",
+          "description": "Describe qué sucede en este paso..."
+        },
+        "errors": {
+          "name_required": "El nombre del paso es obligatorio",
+          "sla_required": "Las horas SLA deben ser un número positivo",
+          "capacity_required": "La capacidad máxima debe ser al menos 1"
+        }
+      },
+      "step_created": "Paso creado exitosamente",
+      "step_updated": "Paso actualizado exitosamente",
+      "step_deleted": "Paso eliminado exitosamente",
+      "step_archived": "Paso archivado exitosamente",
+      "step_create_failed": "Error al crear el paso",
+      "step_update_failed": "Error al actualizar el paso",
+      "step_delete_failed": "Error al eliminar el paso",
+      "step_delete_failed_has_vehicles": "No se puede eliminar un paso con vehículos activos",
+      "step_archive_failed": "Error al archivar el paso",
+      "delete_confirm_title": "Eliminar Paso",
+      "delete_confirm_message": "¿Está seguro de que desea eliminar {{stepName}}? Esta acción no se puede deshacer."
+    }
   }
 }

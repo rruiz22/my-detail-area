@@ -98,7 +98,9 @@
       "refreshing": "Refreshing...",
       "refresh_in_seconds": "{{count}}s",
       "refresh_in_minutes": "{{minutes}}:{{seconds}}"
-    }
+    },
+    "assigned": "Assigned",
+    "not_assigned": "Not Assigned"
   },
   "cloud_sync": {
     "title": "Cloud Sync Dashboard",
@@ -1356,7 +1358,11 @@
   "service_orders": {
     "po_number": "PO Number",
     "ro_number": "RO Number",
-    "tag_number": "TAG Number"
+    "tag_number": "TAG Number",
+    "purchase_order": "Purchase Order",
+    "repair_order": "Repair Order",
+    "tag": "Tag",
+    "service_information": "Service Information"
   },
   "dealer": {
     "view": {
@@ -1484,5 +1490,167 @@
     "clipboard_error": "Unable to read from clipboard.",
     "clipboard_no_vin": "No complete VIN was found in your clipboard.",
     "clipboard_unsupported": "Clipboard access is not available in this browser."
+  },
+  "get_ready": {
+    "tabs": {
+      "overview": "Overview",
+      "details_view": "Details View",
+      "approvals": "Approvals",
+      "vendors": "Vendors",
+      "reports": "Reports",
+      "setup": "Setup"
+    },
+    "search_placeholder": "Search vehicles...",
+    "steps": {
+      "title": "Get Ready - Optimized Flow",
+      "dis": "Days In Step",
+      "dtf": "Days To Finish",
+      "dis_tooltip": "Average days vehicles remain in this step",
+      "dtf_tooltip": "Average days remaining to complete the process"
+    },
+    "table": {
+      "step": "Step",
+      "image": "Image",
+      "stock": "Stock",
+      "vehicle": "Vehicle",
+      "media": "Media",
+      "work_items": "Work Items",
+      "days_in_step": "Days in Step",
+      "notes": "Notes",
+      "priority": "Priority"
+    },
+    "detail_panel": {
+      "no_selection": {
+        "title": "No Selection",
+        "description": "Select a vehicle from the list to view its details"
+      }
+    },
+    "title": "Get Ready",
+    "subtitle": "Optimized reconditioning workflow",
+    "kpis": {
+      "t2l": "Time to Line",
+      "avg_t2l": "Avg T2L",
+      "target_t2l": "Target T2L",
+      "sla_compliance": "SLA Compliance",
+      "daily_throughput": "Daily Throughput",
+      "weekly_capacity": "Weekly Capacity",
+      "utilization_rate": "Utilization Rate",
+      "holding_cost": "Holding Cost",
+      "total_holding_cost": "Total Holding Cost",
+      "roi_improvement": "ROI Improvement"
+    },
+    "alerts": {
+      "bottleneck": "Bottleneck",
+      "sla_warning": "SLA Warning",
+      "sla_critical": "SLA Critical",
+      "active_alerts": "active alerts",
+      "no_alerts": "No alerts"
+    },
+    "status": {
+      "on_track": "On Track",
+      "at_risk": "At Risk",
+      "critical": "Critical",
+      "green": "Green",
+      "yellow": "Yellow",
+      "red": "Red"
+    },
+    "workflow": {
+      "standard": "Standard",
+      "express": "Express",
+      "priority": "Priority"
+    },
+    "metrics": {
+      "capacity": "Capacity",
+      "sla_hours": "SLA Hours",
+      "cost_per_day": "Cost per Day",
+      "throughput": "Throughput",
+      "efficiency": "Efficiency",
+      "utilization": "Utilization"
+    },
+    "dashboard": {
+      "title": "Get Ready Dashboard",
+      "performance_overview": "Performance Overview",
+      "workflow_insights": "Workflow Insights",
+      "actionable_items": "Actionable Items"
+    },
+    "vehicle_form": {
+      "add_vehicle": "Add Vehicle",
+      "title": {
+        "add": "Add New Vehicle",
+        "edit": "Edit Vehicle"
+      },
+      "description": "Fill in the vehicle information below. Required fields are marked with an asterisk (*)",
+      "fields": {
+        "stock_number": "Stock Number",
+        "vin": "VIN",
+        "year": "Year",
+        "make": "Make",
+        "model": "Model",
+        "trim": "Trim",
+        "step": "Current Step",
+        "workflow": "Workflow Type",
+        "priority": "Priority",
+        "assigned_to": "Assigned To",
+        "notes": "Notes"
+      },
+      "placeholders": {
+        "notes": "Enter any additional notes or instructions..."
+      },
+      "errors": {
+        "stock_required": "Stock number is required",
+        "vin_required": "VIN is required",
+        "vin_invalid": "VIN must be exactly 17 characters",
+        "year_required": "Year is required",
+        "year_invalid": "Please enter a valid year",
+        "make_required": "Make is required",
+        "model_required": "Model is required",
+        "save_failed": "Failed to save vehicle. Please try again."
+      },
+      "success": {
+        "created": "Vehicle created successfully",
+        "updated": "Vehicle updated successfully"
+      }
+    },
+    "setup": {
+      "title": "Workflow Setup",
+      "subtitle": "Configure workflow steps and settings",
+      "access_denied": "Access Denied",
+      "no_steps_title": "No Workflow Steps",
+      "no_steps_description": "This dealership doesn't have any workflow steps configured yet",
+      "add_step": "Add Step",
+      "form": {
+        "title_create": "Create Workflow Step",
+        "title_edit": "Edit Workflow Step",
+        "description": "Configure the step details and settings below",
+        "fields": {
+          "name": "Step Name",
+          "description": "Description",
+          "color": "Color",
+          "sla_hours": "SLA (Hours)",
+          "max_capacity": "Max Capacity",
+          "cost_per_day": "Cost per Day"
+        },
+        "placeholders": {
+          "name": "e.g., Inspection, Mechanical, Detail",
+          "description": "Describe what happens in this step..."
+        },
+        "errors": {
+          "name_required": "Step name is required",
+          "sla_required": "SLA hours must be a positive number",
+          "capacity_required": "Max capacity must be at least 1"
+        }
+      },
+      "step_created": "Step created successfully",
+      "step_updated": "Step updated successfully",
+      "step_deleted": "Step deleted successfully",
+      "step_archived": "Step archived successfully",
+      "step_create_failed": "Failed to create step",
+      "step_update_failed": "Failed to update step",
+      "step_delete_failed": "Failed to delete step",
+      "step_delete_failed_has_vehicles": "Cannot delete step with active vehicles",
+      "step_archive_failed": "Failed to archive step",
+      "delete_confirm_title": "Delete Step",
+      "delete_confirm_message": "Are you sure you want to delete {{stepName}}? This action cannot be undone."
+    }
   }
 }

@@ -86,7 +86,9 @@
       "refreshing": "Atualizando...",
       "refresh_in_seconds": "{{count}}s",
       "refresh_in_minutes": "{{minutes}}:{{seconds}}"
-    }
+    },
+    "assigned": "Atribuído",
+    "not_assigned": "Não Atribuído"
   },
   "cloud_sync": {
     "title": "Painel de Sincronização na Nuvem",
@@ -1082,7 +1084,11 @@
   "service_orders": {
     "po_number": "Número PO",
     "ro_number": "Número RO",
-    "tag_number": "Número TAG"
+    "tag_number": "Número TAG",
+    "purchase_order": "Ordem de Compra",
+    "repair_order": "Ordem de Reparo",
+    "tag": "Etiqueta",
+    "service_information": "Informações do Serviço"
   },
   "dealer": {
     "view": {
@@ -1229,5 +1235,167 @@
     "confidence_label": "Confiança",
     "sticker_hint": "Aponte a câmera para o adesivo do VIN e mantenha firme.",
     "plate_hint": "Aponte a câmera para que a placa do VIN preencha o guia."
+  },
+  "get_ready": {
+    "tabs": {
+      "overview": "Visão Geral",
+      "details_view": "Vista de Detalhes",
+      "approvals": "Aprovações",
+      "vendors": "Fornecedores",
+      "reports": "Relatórios",
+      "setup": "Configuração"
+    },
+    "search_placeholder": "Buscar veículos...",
+    "steps": {
+      "title": "Get Ready - Fluxo Otimizado",
+      "dis": "Dias na Etapa",
+      "dtf": "Dias para Finalizar",
+      "dis_tooltip": "Média de dias que os veículos permanecem nesta etapa",
+      "dtf_tooltip": "Média de dias restantes para completar o processo"
+    },
+    "table": {
+      "step": "Etapa",
+      "image": "Imagem",
+      "stock": "Estoque",
+      "vehicle": "Veículo",
+      "media": "Mídia",
+      "work_items": "Itens de Trabalho",
+      "days_in_step": "Dias na Etapa",
+      "notes": "Anotações",
+      "priority": "Prioridade"
+    },
+    "detail_panel": {
+      "no_selection": {
+        "title": "Sem Seleção",
+        "description": "Selecione um veículo da lista para ver seus detalhes"
+      }
+    },
+    "title": "Get Ready",
+    "subtitle": "Fluxo de trabalho otimizado de recondicionamento",
+    "kpis": {
+      "t2l": "Tempo para Linha",
+      "avg_t2l": "T2L Médio",
+      "target_t2l": "T2L Meta",
+      "sla_compliance": "Conformidade SLA",
+      "daily_throughput": "Rendimento Diário",
+      "weekly_capacity": "Capacidade Semanal",
+      "utilization_rate": "Taxa de Utilização",
+      "holding_cost": "Custo de Retenção",
+      "total_holding_cost": "Custo Total de Retenção",
+      "roi_improvement": "Melhoria ROI"
+    },
+    "alerts": {
+      "bottleneck": "Gargalo",
+      "sla_warning": "Aviso SLA",
+      "sla_critical": "SLA Crítico",
+      "active_alerts": "alertas ativos",
+      "no_alerts": "Sem alertas"
+    },
+    "status": {
+      "on_track": "No Caminho Certo",
+      "at_risk": "Em Risco",
+      "critical": "Crítico",
+      "green": "Verde",
+      "yellow": "Amarelo",
+      "red": "Vermelho"
+    },
+    "workflow": {
+      "standard": "Padrão",
+      "express": "Expresso",
+      "priority": "Prioridade"
+    },
+    "metrics": {
+      "capacity": "Capacidade",
+      "sla_hours": "Horas SLA",
+      "cost_per_day": "Custo por Dia",
+      "throughput": "Rendimento",
+      "efficiency": "Eficiência",
+      "utilization": "Utilização"
+    },
+    "dashboard": {
+      "title": "Painel Get Ready",
+      "performance_overview": "Visão Geral de Desempenho",
+      "workflow_insights": "Insights de Fluxo",
+      "actionable_items": "Itens Acionáveis"
+    },
+    "vehicle_form": {
+      "add_vehicle": "Adicionar Veículo",
+      "title": {
+        "add": "Adicionar Novo Veículo",
+        "edit": "Editar Veículo"
+      },
+      "description": "Preencha as informações do veículo abaixo. Campos obrigatórios estão marcados com asterisco (*)",
+      "fields": {
+        "stock_number": "Número de Estoque",
+        "vin": "VIN",
+        "year": "Ano",
+        "make": "Marca",
+        "model": "Modelo",
+        "trim": "Versão",
+        "step": "Etapa Atual",
+        "workflow": "Tipo de Fluxo",
+        "priority": "Prioridade",
+        "assigned_to": "Atribuído a",
+        "notes": "Notas"
+      },
+      "placeholders": {
+        "notes": "Digite notas ou instruções adicionais..."
+      },
+      "errors": {
+        "stock_required": "O número de estoque é obrigatório",
+        "vin_required": "O VIN é obrigatório",
+        "vin_invalid": "O VIN deve ter exatamente 17 caracteres",
+        "year_required": "O ano é obrigatório",
+        "year_invalid": "Por favor insira um ano válido",
+        "make_required": "A marca é obrigatória",
+        "model_required": "O modelo é obrigatório",
+        "save_failed": "Falha ao salvar o veículo. Por favor tente novamente."
+      },
+      "success": {
+        "created": "Veículo criado com sucesso",
+        "updated": "Veículo atualizado com sucesso"
+      }
+    },
+    "setup": {
+      "title": "Configuração do Fluxo de Trabalho",
+      "subtitle": "Configurar etapas e definições do fluxo de trabalho",
+      "access_denied": "Acesso Negado",
+      "no_steps_title": "Sem Etapas de Fluxo de Trabalho",
+      "no_steps_description": "Esta concessionária ainda não possui etapas de fluxo de trabalho configuradas",
+      "add_step": "Adicionar Etapa",
+      "form": {
+        "title_create": "Criar Etapa de Fluxo de Trabalho",
+        "title_edit": "Editar Etapa de Fluxo de Trabalho",
+        "description": "Configure os detalhes e definições da etapa abaixo",
+        "fields": {
+          "name": "Nome da Etapa",
+          "description": "Descrição",
+          "color": "Cor",
+          "sla_hours": "SLA (Horas)",
+          "max_capacity": "Capacidade Máxima",
+          "cost_per_day": "Custo por Dia"
+        },
+        "placeholders": {
+          "name": "ex: Inspeção, Mecânica, Detalhamento",
+          "description": "Descreva o que acontece nesta etapa..."
+        },
+        "errors": {
+          "name_required": "O nome da etapa é obrigatório",
+          "sla_required": "As horas SLA devem ser um número positivo",
+          "capacity_required": "A capacidade máxima deve ser pelo menos 1"
+        }
+      },
+      "step_created": "Etapa criada com sucesso",
+      "step_updated": "Etapa atualizada com sucesso",
+      "step_deleted": "Etapa excluída com sucesso",
+      "step_archived": "Etapa arquivada com sucesso",
+      "step_create_failed": "Falha ao criar etapa",
+      "step_update_failed": "Falha ao atualizar etapa",
+      "step_delete_failed": "Falha ao excluir etapa",
+      "step_delete_failed_has_vehicles": "Não é possível excluir etapa com veículos ativos",
+      "step_archive_failed": "Falha ao arquivar etapa",
+      "delete_confirm_title": "Excluir Etapa",
+      "delete_confirm_message": "Tem certeza de que deseja excluir {{stepName}}? Esta ação não pode ser desfeita."
+    }
   }
 }

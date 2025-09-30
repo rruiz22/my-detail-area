@@ -3,8 +3,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Search, 
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  Search,
   Download,
   Settings,
   Grid3X3,
@@ -34,13 +35,23 @@ const TABS: TabConfig[] = [
 export function GetReadyTopbar() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { user } = useAuth();
+
+  // Filter tabs based on user role
+  const visibleTabs = TABS.filter(tab => {
+    // Hide Setup tab for non-system_admin users
+    if (tab.key === 'setup' && user?.role !== 'system_admin') {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="h-12 border-b bg-gradient-to-r from-background to-muted/20 border-border/40 shadow-sm">
       <div className="h-full px-4 flex items-center justify-between gap-4">
         {/* Left Section - Navigation Tabs */}
         <div className="flex items-center space-x-1">
-          {TABS.map((tab) => {
+          {visibleTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = location.pathname === tab.path || 
               (tab.path === '/get-ready' && location.pathname === '/get-ready');
