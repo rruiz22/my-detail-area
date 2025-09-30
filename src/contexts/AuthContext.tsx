@@ -174,19 +174,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     );
 
-    // Check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
+    // Check for existing session with network error handling
+    supabase.auth.getSession()
+      .then(async ({ data: { session }, error }) => {
+        if (error) {
+          // Handle network errors gracefully
+          if (
+            error.message?.includes('Failed to fetch') ||
+            error.message?.includes('NetworkError') ||
+            !navigator.onLine
+          ) {
+            warn('Network error during session check, will retry when online');
+            setLoading(false);
+            return;
+          }
+          logError('Error getting session:', error);
+        }
 
-      if (session?.user) {
-        await loadUserWithCache(session.user);
-      } else {
-        setUser(null);
-      }
+        setSession(session);
 
-      // IMMEDIATE loading completion
-      setLoading(false);
-    });
+        if (session?.user) {
+          await loadUserWithCache(session.user);
+        } else {
+          setUser(null);
+        }
+
+        // IMMEDIATE loading completion
+        setLoading(false);
+      })
+      .catch((error) => {
+        // Catch any unexpected errors
+        logError('Unexpected error during session initialization:', error);
+        setLoading(false);
+      });
 
     return () => subscription.unsubscribe();
   }, []);

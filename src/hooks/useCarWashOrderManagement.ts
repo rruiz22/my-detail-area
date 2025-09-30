@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
 import type { Database } from '@/integrations/supabase/types';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -48,7 +49,7 @@ interface CarWashTabCounts {
   week: number;
   all: number;
   pending: number;
-  in_progress: number;
+  in_process: number;
   completed: number;
   cancelled: number;
   waiter: number;
@@ -135,8 +136,9 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     dateRange: { from: null, to: null },
   });
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, enhancedUser } = useAuth();
   const { generateQR } = useOrderActions();
+  const queryClient = useQueryClient();
 
   const calculateTabCounts = useMemo(() => (allOrders: CarWashOrder[]): CarWashTabCounts => {
     const today = new Date();
@@ -154,7 +156,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
       }).length,
       all: allOrders.length,
       pending: allOrders.filter(order => order.status === 'pending').length,
-      in_progress: allOrders.filter(order => order.status === 'in_progress').length,
+      in_process: allOrders.filter(order => order.status === 'in_progress').length,
       completed: allOrders.filter(order => order.status === 'completed').length,
       cancelled: allOrders.filter(order => order.status === 'cancelled').length,
       waiter: allOrders.filter(order => order.isWaiter).length,
@@ -186,7 +188,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         case 'pending':
           filtered = filtered.filter(order => order.status === 'pending');
           break;
-        case 'in_progress':
+        case 'in_process':
           filtered = filtered.filter(order => order.status === 'in_progress');
           break;
         case 'completed':
@@ -236,17 +238,54 @@ export const useCarWashOrderManagement = (activeTab: string) => {
   }, []);
 
   const refreshData = useCallback(async () => {
-    if (!user) return;
-    
+    if (!user || !enhancedUser) return;
+
     setLoading(true);
-    
+
     try {
-      // Fetch car wash orders from Supabase (basic query first)
-      const { data: orders, error } = await supabase
+      console.log('🔄 CarWash refreshData: Fetching car wash orders...');
+
+      // Apply same dealer filtering logic as other modules
+      let ordersQuery = supabase
         .from('orders')
         .select('*')
         .eq('order_type', 'car_wash')
         .order('created_at', { ascending: false });
+
+      // Check global dealer filter
+      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
+      const dealerFilter = savedDealerFilter === 'all' ? 'all' : (savedDealerFilter ? parseInt(savedDealerFilter) : 'all');
+
+      // Handle dealer filtering based on user type and global filter
+      if (enhancedUser.dealership_id === null) {
+        // User is multi-dealer - respect global filter
+        if (dealerFilter === 'all') {
+          // Show all dealers user has access to
+          const { data: userDealerships, error: dealershipError } = await supabase
+            .from('dealer_memberships')
+            .select('dealer_id')
+            .eq('user_id', user.id)
+            .eq('is_active', true);
+
+          if (dealershipError) {
+            console.error('Error fetching user dealerships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', 5);
+          } else {
+            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
+            console.log(`🏢 CarWash refreshData - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
+          }
+        } else {
+          // Filter by specific dealer selected in dropdown
+          console.log(`🎯 CarWash refreshData - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+        }
+      } else {
+        // User has single assigned dealership - ignore global filter
+        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
+      }
+
+      const { data: orders, error } = await ordersQuery;
 
       if (error) {
         console.error('Error fetching car wash orders:', error);
@@ -287,7 +326,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
       });
 
       const filtered = filterOrders(allOrders, activeTab, filters);
-      
+
       setOrders(filtered);
       setTabCounts(calculateTabCounts(allOrders));
     } catch (error) {
@@ -295,7 +334,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [activeTab, filters, filterOrders, calculateTabCounts, user]);
+  }, [activeTab, filters, filterOrders, calculateTabCounts, user, enhancedUser]);
 
   const updateFilters = useCallback((newFilters: Partial<CarWashOrderFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
@@ -360,7 +399,10 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         console.error('Failed to generate QR code:', qrError);
         // Don't fail the order creation if QR generation fails
       }
-      
+
+      // Invalidate React Query cache to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
+
       // Real-time subscription will handle the data update automatically
     } catch (error) {
       console.error('Error in createOrder:', error);
@@ -368,7 +410,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [user, refreshData]);
+  }, [user, generateQR, queryClient]);
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<CarWashOrderData> & { status?: string }) => {
     if (!user) return;
@@ -412,28 +454,17 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         throw error;
       }
 
-      // Update local state immediately for better UX
-      setOrders(prevOrders =>
-        prevOrders.map(order =>
-          order.id === orderId
-            ? {
-                ...order,
-                ...updateDataRaw,
-                updatedAt: new Date().toISOString(),
-                isWaiter: updateData.priority === 'urgent'
-              }
-            : order
-        )
-      );
-      
       console.log('Car wash order updated successfully:', data);
+
+      // Invalidate React Query cache to force fresh data from polling
+      await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
     } catch (error) {
       console.error('Error in updateOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, queryClient]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
@@ -452,6 +483,10 @@ export const useCarWashOrderManagement = (activeTab: string) => {
       }
 
       console.log('Car wash order deleted successfully');
+
+      // Invalidate React Query cache to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
+
       // Real-time subscription will handle the data update automatically
     } catch (error) {
       console.error('Error in deleteOrder:', error);
@@ -459,7 +494,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     } finally {
       setLoading(false);
     }
-  }, [user, refreshData]);
+  }, [user, queryClient]);
 
   // Initialize data on mount and when dependencies change
   useEffect(() => {

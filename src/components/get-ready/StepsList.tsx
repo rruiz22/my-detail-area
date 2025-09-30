@@ -174,17 +174,6 @@ export function StepsList() {
                   </div>
                 </div>
 
-                {/* Capacity */}
-                <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50">
-                  <TrendingUp className="h-4 w-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-500">{t('get_ready.metrics.capacity')}</p>
-                    <p className="text-sm font-semibold text-gray-900">
-                      {step.current_capacity}/{step.max_capacity}
-                    </p>
-                  </div>
-                </div>
-
                 {/* Cost per Day */}
                 {step.cost_per_day > 0 && (
                   <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50">

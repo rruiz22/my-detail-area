@@ -8,6 +8,7 @@ import { shouldUseRealtime } from '@/config/realtimeFeatures';
 import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@/integrations/supabase/types';
 
 // Enhanced database types
@@ -207,7 +208,8 @@ export const useOrderManagement = (activeTab: string) => {
   const { user } = useAuth();
   const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
-  
+  const queryClient = useQueryClient();
+
   // Debug and call counting refs
   const refreshCallCountRef = useRef(0);
   const lastRefreshTimeRef = useRef(0);
@@ -381,6 +383,7 @@ export const useOrderManagement = (activeTab: string) => {
       let ordersQuery = supabase
         .from('orders')
         .select('*')
+        .eq('order_type', 'sales')
         .order('created_at', { ascending: false });
 
       // Check global dealer filter from localStorage with robust validation
@@ -504,12 +507,15 @@ export const useOrderManagement = (activeTab: string) => {
         const filtered = filterOrders(allOrders, activeTab, filters);
         setOrders(filtered);
       }
+
+      // Force polling query to update
+      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
     } catch (error) {
       console.error('Error in refreshData:', error);
     } finally {
       setLoading(false);
     }
-  }, [filterOrders, calculateTabCounts, user, enhancedUser, getAllowedOrderTypes, activeTab, filters]);
+  }, [filterOrders, calculateTabCounts, user, enhancedUser, getAllowedOrderTypes, activeTab, filters, queryClient]);
 
   const updateFilters = useCallback((newFilters: Partial<OrderFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
@@ -562,15 +568,16 @@ export const useOrderManagement = (activeTab: string) => {
           console.error('Failed to generate QR code:', qrError);
           // QR generation failure doesn't affect order creation
         });
-      
-      // Real-time subscription will handle the data update automatically
+
+      // Force immediate refetch to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
     } catch (error) {
       console.error('Error in createOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user, generateQR]);
+  }, [user, generateQR, queryClient]);
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<OrderFormData>) => {
     if (!user) return;
@@ -615,23 +622,17 @@ export const useOrderManagement = (activeTab: string) => {
         updatedAt: new Date().toISOString()
       };
 
-      // Update local state immediately for better UX
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === orderId 
-            ? { ...order, ...transformedData }
-            : order
-        )
-      );
-      
       console.log('Order updated successfully:', data);
+
+      // Force immediate refetch to get fresh data
+      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
     } catch (error) {
       console.error('Error in updateOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, queryClient]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
@@ -650,14 +651,16 @@ export const useOrderManagement = (activeTab: string) => {
       }
 
       console.log('Order deleted successfully');
-      // Real-time subscription will handle the data update automatically
+
+      // Force immediate refetch to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
     } catch (error) {
       console.error('Error in deleteOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, queryClient]);
 
   // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
   // useEffect(() => {
@@ -702,6 +705,7 @@ export const useOrderManagement = (activeTab: string) => {
       let ordersQuery = supabase
         .from('orders')
         .select('*')
+        .eq('order_type', 'sales')
         .order('created_at', { ascending: false });
 
       // Check global dealer filter with robust validation

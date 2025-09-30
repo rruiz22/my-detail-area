@@ -87,15 +87,24 @@ export default function ServiceOrders() {
         await createOrder(orderData);
       }
       setShowModal(false);
-      refreshData();
     } catch (error) {
       console.error('Error saving order:', error);
     }
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    await updateOrder(orderId, { status: newStatus });
-    // Real-time updates will handle the refresh automatically
+    try {
+      await updateOrder(orderId, { status: newStatus });
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
+      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+        detail: { orderId, newStatus, timestamp: Date.now() }
+      }));
+    } catch (error) {
+      console.error('Status change failed:', error);
+      throw error;
+    }
   };
 
   const handleCardClick = (filter: string) => {
@@ -203,7 +212,7 @@ export default function ServiceOrders() {
                   onEdit={handleEditOrder}
                   onDelete={handleDeleteOrder}
                   onView={handleViewOrder}
-                  tabType={activeFilter}
+                  tabType="service"
                 />
               )}
             </>

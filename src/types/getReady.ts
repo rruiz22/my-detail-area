@@ -17,8 +17,6 @@ export interface GetReadyStep {
   parallel_capable: boolean;
   express_lane_eligible: boolean;
   cost_per_day: number;
-  current_capacity: number;
-  max_capacity: number;
 }
 
 export interface GetReadyVehicle {

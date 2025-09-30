@@ -228,7 +228,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   const fetchDealerData = async (dealershipId: string) => {
     if (!dealershipId) return;
-    
+
+    console.log('🔍 ServiceOrderModal: Fetching dealer data for dealership:', dealershipId);
     setLoading(true);
     try {
       const [usersResult, servicesResult] = await Promise.all([
@@ -242,7 +243,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
               email
             )
           `)
-          .eq('dealership_id', parseInt(dealershipId)),
+          .eq('dealer_id', parseInt(dealershipId))
+          .eq('is_active', true),
         supabase
           .rpc('get_dealer_services_by_department', {
             p_dealer_id: parseInt(dealershipId),
@@ -250,19 +252,39 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           })
       ]);
 
+      console.log('📊 Users query result:', {
+        error: usersResult.error,
+        count: usersResult.data?.length,
+        data: usersResult.data
+      });
+
+      if (usersResult.error) {
+        console.error('❌ Error fetching users:', usersResult.error);
+      }
+
       if (usersResult.data) {
-        setAssignedUsers(usersResult.data.map((membership: any) => ({
+        const mappedUsers = usersResult.data.map((membership: any) => ({
           id: membership.profiles.id,
           name: `${membership.profiles.first_name} ${membership.profiles.last_name}`.trim(),
           email: membership.profiles.email
-        })));
+        }));
+
+        console.log('✅ Mapped users:', mappedUsers);
+        setAssignedUsers(mappedUsers);
+      } else {
+        console.warn('⚠️ No users found for dealership:', dealershipId);
+        setAssignedUsers([]);
       }
 
       if (servicesResult.data) {
+        console.log('✅ Services loaded:', servicesResult.data.length);
         setServices(servicesResult.data);
+      } else {
+        console.warn('⚠️ No services found');
+        setServices([]);
       }
     } catch (error) {
-      console.error('Error fetching dealer data:', error);
+      console.error('❌ Error fetching dealer data:', error);
     } finally {
       setLoading(false);
     }
@@ -321,37 +343,34 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     }
   };
 
-  const transformToDbFormat = (formData: OrderFormData) => ({
-    // Map frontend camelCase to backend snake_case
-    order_number: formData.orderNumber,
-    customer_name: formData.customerName,
-    vehicle_vin: formData.vehicleVin || null,
-    vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
-    vehicle_make: formData.vehicleMake || null,
-    vehicle_model: formData.vehicleModel || null,
-    vehicle_info: formData.vehicleInfo || null,
-    po: formData.po || null,
-    ro: formData.ro || null,
-    tag: formData.tag || null,
-    order_type: formData.orderType,
-    status: formData.status,
-    assigned_group_id: formData.assignedGroupId || null,
-    salesperson: formData.salesperson || null,
-    notes: formData.notes || null,
-    internal_notes: formData.internalNotes || null,
-    priority: formData.priority || 'normal',
-    due_date: formData.dueDate || null,
-    sla_deadline: formData.slaDeadline || null,
-    scheduled_date: formData.scheduledDate || null,
-    scheduled_time: formData.scheduledTime || null,
-    dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
-    services: selectedServices
-  });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const dbData = transformToDbFormat(formData);
-    onSave(dbData);
+
+    // Send camelCase data directly - hook will handle transformation
+    const orderData = {
+      customerName: formData.customerName,
+      customerEmail: formData.customerEmail,
+      customerPhone: formData.customerPhone,
+      vehicleVin: formData.vehicleVin || undefined,
+      vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
+      vehicleMake: formData.vehicleMake || undefined,
+      vehicleModel: formData.vehicleModel || undefined,
+      vehicleInfo: formData.vehicleInfo || undefined,
+      po: formData.po || undefined,
+      ro: formData.ro || undefined,
+      tag: formData.tag || undefined,
+      assignedGroupId: selectedAssignedTo || undefined,
+      services: selectedServices,
+      totalAmount: selectedServices.reduce((total, serviceId) => {
+        const service = services.find(s => s.id === serviceId);
+        return total + (service?.price || 0);
+      }, 0),
+      notes: formData.notes || undefined,
+      dueDate: formData.dueDate || undefined,
+      dealerId: selectedDealership ? parseInt(selectedDealership) : undefined
+    };
+
+    onSave(orderData);
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {

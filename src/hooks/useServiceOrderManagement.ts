@@ -5,6 +5,7 @@ import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@/integrations/supabase/types';
 
 // Supabase type definitions
@@ -35,6 +36,7 @@ interface ServiceOrderData {
   po?: string;
   ro?: string;
   tag?: string;
+  assignedGroupId?: string;
   services: ServiceItem[];
   totalAmount?: number;
   notes?: string;
@@ -48,7 +50,7 @@ interface ServiceTabCounts {
   today: number;
   tomorrow: number;
   pending: number;
-  inProgress: number;
+  in_process: number;
   completed: number;
   cancelled: number;
 }
@@ -68,6 +70,7 @@ export interface ServiceOrder {
   po?: string;
   ro?: string;
   tag?: string;
+  stockNumber?: string; // Mapped from tag for table compatibility
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   services: ServiceItem[];
   totalAmount?: number;
@@ -107,12 +110,13 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   po: supabaseOrder.po || undefined,
   ro: supabaseOrder.ro || undefined,
   tag: supabaseOrder.tag || undefined,
+  stockNumber: supabaseOrder.tag || undefined, // Map tag to stockNumber for table compatibility
   status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
   services: (supabaseOrder.services as ServiceItem[]) || [],
   totalAmount: supabaseOrder.total_amount || undefined,
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
-  dueDate: supabaseOrder.sla_deadline || undefined,
+  dueDate: supabaseOrder.due_date || undefined,
   assignedTo: 'Unassigned', // Will be overwritten in refreshData
   notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
@@ -120,10 +124,10 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
   createdByGroupName: undefined,
-  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
+  dueTime: supabaseOrder.due_date ? new Date(supabaseOrder.due_date).toLocaleTimeString('en-US', {
+    hour: '2-digit',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   }) : undefined,
 });
 
@@ -142,6 +146,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
   const { user } = useAuth();
   const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
+  const queryClient = useQueryClient();
 
   const tabCounts = useMemo((): ServiceTabCounts => {
     const today = new Date();
@@ -159,7 +164,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
         return orderDate.toDateString() === tomorrow.toDateString();
       }).length,
       pending: allOrders.filter(order => order.status === 'pending').length,
-      inProgress: allOrders.filter(order => order.status === 'in_progress').length,
+      in_process: allOrders.filter(order => order.status === 'in_progress').length,
       completed: allOrders.filter(order => order.status === 'completed').length,
       cancelled: allOrders.filter(order => order.status === 'cancelled').length,
     };
@@ -190,7 +195,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
         case 'pending':
           filtered = filtered.filter(order => order.status === 'pending');
           break;
-        case 'inProgress':
+        case 'in_process':
           filtered = filtered.filter(order => order.status === 'in_progress');
           break;
         case 'completed':
@@ -239,268 +244,6 @@ export const useServiceOrderManagement = (activeTab: string) => {
 
     return filtered;
   }, [allOrders, activeTab, filters]);
-
-  const refreshData = useCallback(async () => {
-    if (!user) return;
-    
-    setLoading(true);
-    
-    try {
-      // Fetch service orders from Supabase (basic query first)
-      const { data: orders, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('order_type', 'service')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching service orders:', error);
-        return;
-      }
-
-      // Fetch dealerships data separately
-      const { data: dealerships, error: dealershipsError } = await supabase
-        .from('dealerships')
-        .select('id, name');
-
-      if (dealershipsError) {
-        console.error('Error fetching dealerships:', dealershipsError);
-      }
-
-      // Fetch dealer groups data separately
-      const { data: dealerGroups, error: groupsError } = await supabase
-        .from('dealer_groups')
-        .select('id, name');
-
-      if (groupsError) {
-        console.error('Error fetching dealer groups:', groupsError);
-      }
-
-      // Create lookup maps for better performance
-      const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
-      const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
-
-      // Transform orders with joined data
-      const serviceOrders = (orders || []).map(order => {
-        const transformedOrder = transformServiceOrder(order);
-        // Add joined data manually
-        transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
-        transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
-        transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
-        return transformedOrder;
-      });
-
-      setOrders(serviceOrders);
-    } catch (error) {
-      console.error('Error in refreshData:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
-  const updateFilters = useCallback((newFilters: Partial<ServiceOrderFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
-  }, []);
-
-  const createOrder = useCallback(async (orderData: ServiceOrderData) => {
-    if (!user) return;
-    
-    setLoading(true);
-    
-    try {
-      console.log('Creating service order with data:', orderData);
-      
-      // Use database function to generate sequential order number
-      const { data: orderNumberData, error: numberError } = await supabase
-        .rpc('generate_service_order_number');
-
-      if (numberError || !orderNumberData) {
-        console.error('Error generating order number:', numberError);
-        throw new Error('Failed to generate service order number');
-      }
-
-      const insertData: SupabaseOrderInsert = {
-        order_number: orderNumberData, // Use sequential SV-1001, SV-1002, etc.
-        customer_name: orderData.customerName,
-        customer_email: orderData.customerEmail,
-        customer_phone: orderData.customerPhone,
-        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
-        vehicle_make: orderData.vehicleMake,
-        vehicle_model: orderData.vehicleModel,
-        vehicle_vin: orderData.vehicleVin,
-        vehicle_info: orderData.vehicleInfo,
-        po: orderData.po,
-        ro: orderData.ro,
-        tag: orderData.tag,
-        order_type: 'service',
-        status: 'pending',
-        services: orderData.services || [],
-        total_amount: orderData.totalAmount || 0,
-        sla_deadline: orderData.dueDate,
-        dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
-        notes: orderData.notes,
-      };
-
-      console.log('Inserting service order to DB:', insertData);
-
-      const { data, error } = await supabase
-        .from('orders')
-        .insert(insertData)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating service order:', error);
-        throw error;
-      }
-
-      console.log('Service order created successfully:', data);
-      
-      // Auto-generate QR code and shortlink
-      try {
-        await generateQR(data.id, data.order_number, data.dealer_id);
-        console.log('QR code and shortlink generated for service order:', data.order_number);
-      } catch (qrError) {
-        console.error('Failed to generate QR code:', qrError);
-        // Don't fail the order creation if QR generation fails
-      }
-      
-      // Real-time subscription will handle the data update automatically
-    } catch (error) {
-      console.error('Error in createOrder:', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, [user, refreshData, generateQR]);
-
-  const updateOrder = useCallback(async (orderId: string, orderData: Partial<ServiceOrderData> & { status?: string }) => {
-    if (!user) return;
-    
-    setLoading(true);
-    
-    try {
-      const updateData: SupabaseOrderUpdate = {
-        customer_name: orderData.customerName,
-        customer_email: orderData.customerEmail,
-        customer_phone: orderData.customerPhone,
-        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : undefined,
-        vehicle_make: orderData.vehicleMake,
-        vehicle_model: orderData.vehicleModel,
-        vehicle_vin: orderData.vehicleVin,
-        vehicle_info: orderData.vehicleInfo,
-        po: orderData.po,
-        ro: orderData.ro,
-        tag: orderData.tag,
-        status: orderData.status,
-        services: orderData.services,
-        total_amount: orderData.totalAmount,
-        sla_deadline: orderData.dueDate,
-        notes: orderData.notes,
-      };
-
-      const { data, error } = await supabase
-        .from('orders')
-        .update(updateData)
-        .eq('id', orderId)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error updating service order:', error);
-        throw error;
-      }
-
-      // Update local state immediately for better UX
-      setOrders(prevOrders =>
-        prevOrders.map(order =>
-          order.id === orderId
-            ? { ...order, ...orderData, updatedAt: new Date().toISOString() }
-            : order
-        )
-      );
-      
-      console.log('Service order updated successfully:', data);
-    } catch (error) {
-      console.error('Error in updateOrder:', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
-  const deleteOrder = useCallback(async (orderId: string) => {
-    if (!user) return;
-    
-    setLoading(true);
-    
-    try {
-      const { error } = await supabase
-        .from('orders')
-        .delete()
-        .eq('id', orderId);
-
-      if (error) {
-        console.error('Error deleting service order:', error);
-        throw error;
-      }
-
-      console.log('Service order deleted successfully');
-      // Real-time subscription will handle the data update automatically
-    } catch (error) {
-      console.error('Error in deleteOrder:', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, [user, refreshData]);
-
-  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
-  // useEffect(() => {
-  //   refreshData();
-  // }, [refreshData]);
-
-  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
-  // useEffect(() => {
-  //   if (!user) return;
-
-  //   const channel = supabase
-  //     .channel('service_orders_realtime')
-  //     .on(
-  //       'postgres_changes',
-  //       {
-  //         event: '*',
-  //         schema: 'public',
-  //         table: 'orders',
-  //         filter: 'order_type=eq.service'
-  //       },
-  //       async (payload) => {
-  //         console.log('Service order real-time update:', payload);
-
-  //         if (payload.eventType === 'INSERT') {
-  //           const newOrder = transformServiceOrder(payload.new as SupabaseOrder);
-  //           setOrders(prevOrders => [newOrder, ...prevOrders]);
-  //         } else if (payload.eventType === 'UPDATE') {
-  //           const updatedOrder = transformServiceOrder(payload.new as SupabaseOrder);
-  //           setOrders(prevOrders =>
-  //             prevOrders.map(order =>
-  //               order.id === updatedOrder.id ? updatedOrder : order
-  //             )
-  //           );
-  //         } else if (payload.eventType === 'DELETE') {
-  //           setOrders(prevOrders =>
-  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-  //           );
-  //         }
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [user]);
 
   // Smart polling for service order data (replaces real-time subscription and initial refresh)
   const serviceOrdersPollingQuery = useOrderPolling(
@@ -559,13 +302,258 @@ export const useServiceOrderManagement = (activeTab: string) => {
       const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
-      // Transform to ServiceOrder format
-      const serviceOrders = (orders || []).map(order => transformServiceOrder(order));
+      // Fetch related data in parallel (same as refreshData)
+      const [dealershipsResult, profilesResult, groupsResult] = await Promise.all([
+        supabase.from('dealerships').select('id, name'),
+        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.from('dealer_groups').select('id, name')
+      ]);
+
+      // Create lookup maps for better performance
+      const dealershipMap = new Map(dealershipsResult.data?.map(d => [d.id, d.name]) || []);
+      const userMap = new Map(profilesResult.data?.map(u => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
+      const groupMap = new Map(groupsResult.data?.map(g => [g.id, g.name]) || []);
+
+      // Transform orders with joined data
+      const serviceOrders = (orders || []).map(order => {
+        const transformed = transformServiceOrder(order);
+
+        // DEBUG: Log polling assignment data
+        console.log('🔄 Polling Assignment Debug:', {
+          orderId: order.id,
+          orderNumber: order.order_number,
+          assigned_group_id: order.assigned_group_id,
+          due_date: order.due_date
+        });
+
+        // Add joined data manually
+        transformed.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
+        transformed.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+        transformed.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+
+        // Fix assignment mapping - assigned_group_id contains user IDs
+        transformed.assignedTo = order.assigned_group_id ?
+          userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+
+        console.log('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
+
+        return transformed;
+      });
 
       return serviceOrders;
     },
     !!(user && enhancedUser)
   );
+
+  // Simplified refreshData - uses polling query for consistency
+  const refreshData = useCallback(async () => {
+    console.log('🔄 Manual refresh triggered - using polling query');
+    await serviceOrdersPollingQuery.refetch();
+  }, [serviceOrdersPollingQuery]);
+
+  const updateFilters = useCallback((newFilters: Partial<ServiceOrderFilters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+  }, []);
+
+  const createOrder = useCallback(async (orderData: ServiceOrderData) => {
+    if (!user) return;
+    
+    setLoading(true);
+    
+    try {
+      console.log('Creating service order with data:', orderData);
+      
+      // Use database function to generate sequential order number
+      const { data: orderNumberData, error: numberError } = await supabase
+        .rpc('generate_service_order_number');
+
+      if (numberError || !orderNumberData) {
+        console.error('Error generating order number:', numberError);
+        throw new Error('Failed to generate service order number');
+      }
+
+      const insertData: SupabaseOrderInsert = {
+        order_number: orderNumberData, // Use sequential SV-1001, SV-1002, etc.
+        customer_name: orderData.customerName,
+        customer_email: orderData.customerEmail,
+        customer_phone: orderData.customerPhone,
+        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
+        vehicle_make: orderData.vehicleMake,
+        vehicle_model: orderData.vehicleModel,
+        vehicle_vin: orderData.vehicleVin,
+        vehicle_info: orderData.vehicleInfo,
+        po: orderData.po,
+        ro: orderData.ro,
+        tag: orderData.tag,
+        assigned_group_id: orderData.assignedGroupId || null,
+        order_type: 'service',
+        status: 'pending',
+        services: orderData.services || [],
+        total_amount: orderData.totalAmount || 0,
+        due_date: orderData.dueDate || null, // Use due_date, NOT sla_deadline
+        dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
+        notes: orderData.notes,
+      };
+
+      console.log('Inserting service order to DB:', insertData);
+
+      const { data, error } = await supabase
+        .from('orders')
+        .insert(insertData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating service order:', error);
+        throw error;
+      }
+
+      console.log('Service order created successfully:', data);
+      
+      // Auto-generate QR code and shortlink
+      try {
+        await generateQR(data.id, data.order_number, data.dealer_id);
+        console.log('QR code and shortlink generated for service order:', data.order_number);
+      } catch (qrError) {
+        console.error('Failed to generate QR code:', qrError);
+        // Don't fail the order creation if QR generation fails
+      }
+
+      // Force immediate refetch to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
+    } catch (error) {
+      console.error('Error in createOrder:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [user, generateQR, queryClient]);
+
+  const updateOrder = useCallback(async (orderId: string, orderData: Partial<ServiceOrderData> & { status?: string }) => {
+    if (!user) return;
+    
+    setLoading(true);
+    
+    try {
+      const updateData: SupabaseOrderUpdate = {
+        customer_name: orderData.customerName,
+        customer_email: orderData.customerEmail,
+        customer_phone: orderData.customerPhone,
+        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : undefined,
+        vehicle_make: orderData.vehicleMake,
+        vehicle_model: orderData.vehicleModel,
+        vehicle_vin: orderData.vehicleVin,
+        vehicle_info: orderData.vehicleInfo,
+        po: orderData.po,
+        ro: orderData.ro,
+        tag: orderData.tag,
+        status: orderData.status,
+        services: orderData.services,
+        total_amount: orderData.totalAmount,
+        sla_deadline: orderData.dueDate,
+        notes: orderData.notes,
+      };
+
+      const { data, error } = await supabase
+        .from('orders')
+        .update(updateData)
+        .eq('id', orderId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating service order:', error);
+        throw error;
+      }
+
+      console.log('Service order updated successfully:', data);
+
+      // Force immediate refetch to get fresh data
+      await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
+    } catch (error) {
+      console.error('Error in updateOrder:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [user, queryClient]);
+
+  const deleteOrder = useCallback(async (orderId: string) => {
+    if (!user) return;
+    
+    setLoading(true);
+    
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId);
+
+      if (error) {
+        console.error('Error deleting service order:', error);
+        throw error;
+      }
+
+      console.log('Service order deleted successfully');
+
+      // Force immediate refetch to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
+    } catch (error) {
+      console.error('Error in deleteOrder:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [user, queryClient]);
+
+  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
+  // useEffect(() => {
+  //   refreshData();
+  // }, [refreshData]);
+
+  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
+  // useEffect(() => {
+  //   if (!user) return;
+
+  //   const channel = supabase
+  //     .channel('service_orders_realtime')
+  //     .on(
+  //       'postgres_changes',
+  //       {
+  //         event: '*',
+  //         schema: 'public',
+  //         table: 'orders',
+  //         filter: 'order_type=eq.service'
+  //       },
+  //       async (payload) => {
+  //         console.log('Service order real-time update:', payload);
+
+  //         if (payload.eventType === 'INSERT') {
+  //           const newOrder = transformServiceOrder(payload.new as SupabaseOrder);
+  //           setOrders(prevOrders => [newOrder, ...prevOrders]);
+  //         } else if (payload.eventType === 'UPDATE') {
+  //           const updatedOrder = transformServiceOrder(payload.new as SupabaseOrder);
+  //           setOrders(prevOrders =>
+  //             prevOrders.map(order =>
+  //               order.id === updatedOrder.id ? updatedOrder : order
+  //             )
+  //           );
+  //         } else if (payload.eventType === 'DELETE') {
+  //           setOrders(prevOrders =>
+  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
+  //           );
+  //         }
+  //       }
+  //     )
+  //     .subscribe();
+
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // }, [user]);
 
   // Update allOrders when polling data changes
   useEffect(() => {

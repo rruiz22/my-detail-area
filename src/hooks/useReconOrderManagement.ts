@@ -2,8 +2,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@/integrations/supabase/types';
 
 // Supabase type definitions
@@ -101,7 +103,7 @@ interface TabCounts {
   today: number;
   tomorrow: number;
   pending: number;
-  inProgress: number;
+  in_process: number;
   completed: number;
   cancelled: number;
   needsApproval: number;
@@ -169,7 +171,9 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
 
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { user, enhancedUser } = useAuth();
   const { generateQR } = useOrderActions();
+  const queryClient = useQueryClient();
 
   // Calculate tab counts with recon-specific tabs
   const tabCounts = useMemo((): TabCounts => {
@@ -185,7 +189,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         order.dueDate && new Date(order.dueDate).toDateString() === tomorrow
       ).length,
       pending: orders.filter(order => order.status === 'pending').length,
-      inProgress: orders.filter(order => order.status === 'in_progress').length,
+      in_process: orders.filter(order => order.status === 'in_progress').length,
       completed: orders.filter(order => order.status === 'completed').length,
       cancelled: orders.filter(order => order.status === 'cancelled').length,
       needsApproval: orders.filter(order => order.status === 'needs_approval').length,
@@ -215,7 +219,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       case 'pending':
         filtered = filtered.filter(order => order.status === 'pending');
         break;
-      case 'in_progress':
+      case 'in_process':
         filtered = filtered.filter(order => order.status === 'in_progress');
         break;
       case 'completed':
@@ -290,15 +294,54 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
 
   // Fetch recon orders from Supabase
   const refreshData = async () => {
+    if (!user || !enhancedUser) return;
+
     try {
       setLoading(true);
-      
-      // Fetch recon orders from Supabase (basic query first)
-      const { data: orders, error } = await supabase
+
+      console.log('🔄 Recon refreshData: Fetching recon orders...');
+
+      // Apply same dealer filtering logic as other modules
+      let ordersQuery = supabase
         .from('orders')
         .select('*')
         .eq('order_type', 'recon')
         .order('created_at', { ascending: false });
+
+      // Check global dealer filter
+      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
+      const dealerFilter = savedDealerFilter === 'all' ? 'all' : (savedDealerFilter ? parseInt(savedDealerFilter) : 'all');
+
+      // Handle dealer filtering based on user type and global filter
+      if (enhancedUser.dealership_id === null) {
+        // User is multi-dealer - respect global filter
+        if (dealerFilter === 'all') {
+          // Show all dealers user has access to
+          const { data: userDealerships, error: dealershipError } = await supabase
+            .from('dealer_memberships')
+            .select('dealer_id')
+            .eq('user_id', user.id)
+            .eq('is_active', true);
+
+          if (dealershipError) {
+            console.error('Error fetching user dealerships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', 5);
+          } else {
+            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
+            console.log(`🏢 Recon refreshData - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
+          }
+        } else {
+          // Filter by specific dealer selected in dropdown
+          console.log(`🎯 Recon refreshData - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+        }
+      } else {
+        // User has single assigned dealership - ignore global filter
+        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
+      }
+
+      const { data: orders, error } = await ordersQuery;
 
       if (error) {
         console.error('Error fetching recon orders:', error);
@@ -454,6 +497,9 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         description: t('recon.order_created_successfully'),
       });
 
+      // Invalidate React Query cache to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'recon'] });
+
       return newOrder;
     } catch (error) {
       console.error('Error creating recon order:', error);
@@ -515,17 +561,15 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         return null;
       }
 
-      const updatedOrder = transformReconOrder(data);
-      setOrders(prev => prev.map(order => 
-        order.id === orderId ? updatedOrder : order
-      ));
-
       toast({
         title: t('common.success'),
         description: t('recon.order_updated_successfully'),
       });
 
-      return updatedOrder;
+      // Invalidate React Query cache to force fresh data from polling
+      await queryClient.refetchQueries({ queryKey: ['orders', 'recon'] });
+
+      return transformReconOrder(data);
     } catch (error) {
       console.error('Error updating recon order:', error);
       toast({
@@ -556,11 +600,14 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       }
 
       setOrders(prev => prev.filter(order => order.id !== orderId));
-      
+
       toast({
         title: t('common.success'),
         description: t('recon.order_deleted_successfully'),
       });
+
+      // Invalidate React Query cache to refresh order list
+      await queryClient.refetchQueries({ queryKey: ['orders', 'recon'] });
 
       return true;
     } catch (error) {

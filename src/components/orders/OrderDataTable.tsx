@@ -381,7 +381,9 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                     </div>
                     <div className="p-2 rounded">
-                      <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Stock</label>
+                      <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                        {tabType === 'service' ? 'Tag' : 'Stock'}
+                      </label>
                       <div className="relative inline-block">
                         <DuplicateTooltip
                           orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
@@ -495,7 +497,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="w-16 font-medium text-foreground text-center">#</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Order ID</TableHead>
-                <TableHead className="font-medium text-foreground text-center">Stock</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Vehicle</TableHead>
                 <TableHead className="font-medium text-foreground text-center">{t('orders.services')}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Due</TableHead>

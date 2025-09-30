@@ -100,8 +100,23 @@ export default function ReconOrders() {
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    await updateOrder(orderId, { status: newStatus });
-    // Real-time updates will handle the refresh automatically
+    try {
+      await updateOrder(orderId, { status: newStatus });
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
+      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+        detail: { orderId, newStatus, timestamp: Date.now() }
+      }));
+
+      // Refresh table data immediately after successful status change
+      setTimeout(() => refreshData(), 100);
+    } catch (error) {
+      console.error('Status change failed:', error);
+      // Trigger refresh to revert any optimistic UI updates
+      setTimeout(() => refreshData(), 100);
+      throw error;
+    }
   };
 
   const handleCardClick = (filter: string) => {

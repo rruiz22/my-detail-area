@@ -1,13 +1,28 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { GetReadyContent } from '@/components/get-ready/GetReadyContent';
-import { useTranslation } from 'react-i18next';
+import { GetReadySetup } from './GetReadySetup';
 
 export default function GetReady() {
-  const { t } = useTranslation();
-  
   return (
-    <div>
-      <GetReadyContent />
-    </div>
+    <Routes>
+      {/* Default overview route */}
+      <Route index element={<GetReadyContent />} />
+
+      {/* Details view */}
+      <Route path="details" element={<GetReadyContent />} />
+
+      {/* Approvals */}
+      <Route path="approvals" element={<GetReadyContent />} />
+
+      {/* Vendors */}
+      <Route path="vendors" element={<GetReadyContent />} />
+
+      {/* Reports */}
+      <Route path="reports" element={<GetReadyContent />} />
+
+      {/* Setup - system_admin only */}
+      <Route path="setup" element={<GetReadySetup />} />
+    </Routes>
   );
 }

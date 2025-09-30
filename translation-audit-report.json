@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 495,
-  "totalStrings": 4911,
-  "hardcodedStrings": 1090,
-  "translatedStrings": 3821,
+  "scannedFiles": 510,
+  "totalStrings": 5054,
+  "hardcodedStrings": 1171,
+  "translatedStrings": 3883,
   "issues": {
     "critical": [
       {
@@ -3114,212 +3114,6 @@
         "severity": "high"
       },
       {
-        "file": "src\\components\\orders\\OrderDataTable.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Vehicle",
-            "line": 360,
-            "context": "359: <div className=\"p-2 rounded\">\n360: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n361: <div className=\"text-sm font-semibold text-foreground\">"
-          },
-          {
-            "text": "Stock",
-            "line": 384,
-            "context": "383: <div className=\"p-2 rounded\">\n384: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Stock</label>\n385: <div className=\"relative inline-block\">"
-          },
-          {
-            "text": "Previous",
-            "line": 467,
-            "context": "466: disabled={currentPage === 1}\n467: >\n468: Previous"
-          },
-          {
-            "text": "Next",
-            "line": 478,
-            "context": "477: disabled={currentPage >= Math.ceil(orders.length / itemsPerPage)}\n478: >\n479: Next"
-          },
-          {
-            "text": "Order ID",
-            "line": 497,
-            "context": "496: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n497: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n498: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>"
-          },
-          {
-            "text": "Stock",
-            "line": 498,
-            "context": "497: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n498: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>\n499: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>"
-          },
-          {
-            "text": "Vehicle",
-            "line": 499,
-            "context": "498: <TableHead className=\"font-medium text-foreground text-center\">Stock</TableHead>\n499: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>\n500: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
-          },
-          {
-            "text": "Status",
-            "line": 502,
-            "context": "501: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>\n502: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n503: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
-          },
-          {
-            "text": "Actions",
-            "line": 503,
-            "context": "502: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n503: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n504: </TableRow>"
-          },
-          {
-            "text": "Tap to copy VIN",
-            "line": 375,
-            "context": "374: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n375: title=\"Tap to copy VIN\"\n376: >"
-          },
-          {
-            "text": "Click to copy VIN",
-            "line": 590,
-            "context": "589: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n590: title=\"Click to copy VIN\"\n591: >"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "data_table.days_overdue",
-            "line": 278,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_today",
-            "line": 280,
-            "exists": true
-          },
-          {
-            "key": "data_table.due_tomorrow",
-            "line": 282,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_in_days",
-            "line": 284,
-            "exists": false
-          },
-          {
-            "key": "common.loading",
-            "line": 301,
-            "exists": true
-          },
-          {
-            "key": "data_table.unknown_dealer",
-            "line": 334,
-            "exists": true
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 377,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 394,
-            "exists": true
-          },
-          {
-            "key": "data_table.unassigned",
-            "line": 401,
-            "exists": true
-          },
-          {
-            "key": "data_table.view",
-            "line": 425,
-            "exists": true
-          },
-          {
-            "key": "data_table.edit",
-            "line": 437,
-            "exists": true
-          },
-          {
-            "key": "data_table.delete",
-            "line": 450,
-            "exists": true
-          },
-          {
-            "key": "data_table.page_of",
-            "line": 471,
-            "exists": true
-          },
-          {
-            "key": "data_table.orders_count",
-            "line": 488,
-            "exists": true
-          },
-          {
-            "key": "orders.services",
-            "line": 500,
-            "exists": true
-          },
-          {
-            "key": "data_table.unknown_dealer",
-            "line": 541,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 558,
-            "exists": true
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 592,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_time_set",
-            "line": 628,
-            "exists": true
-          },
-          {
-            "key": "data_table.view_details",
-            "line": 654,
-            "exists": true
-          },
-          {
-            "key": "data_table.edit_order",
-            "line": 666,
-            "exists": true
-          },
-          {
-            "key": "data_table.print_order",
-            "line": 677,
-            "exists": true
-          },
-          {
-            "key": "data_table.delete_order",
-            "line": 689,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_orders_found",
-            "line": 705,
-            "exists": true
-          },
-          {
-            "key": "data_table.adjust_filters_or_create",
-            "line": 706,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "data_table.days_overdue",
-            "line": 278,
-            "context": "277: if (diffDays < 0) {\n278: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n279: } else if (diffDays === 0) {"
-          },
-          {
-            "key": "data_table.due_tomorrow",
-            "line": 282,
-            "context": "281: } else if (diffDays === 1) {\n282: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n283: } else {"
-          },
-          {
-            "key": "data_table.due_in_days",
-            "line": 284,
-            "context": "283: } else {\n284: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n285: }"
-          }
-        ],
-        "coverage": 69,
-        "severity": "high"
-      },
-      {
         "file": "src\\components\\orders\\InstructionsBlock.tsx",
         "hardcodedStrings": [
           {
@@ -3948,6 +3742,402 @@
           }
         ],
         "coverage": 50,
+        "severity": "high"
+      },
+      {
+        "file": "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "SLA Compliance",
+            "line": 199,
+            "context": "198: <div className=\"space-y-1\">\n199: <div className=\"text-muted-foreground\">SLA Compliance</div>\n200: <div className=\"flex items-center gap-2\">"
+          },
+          {
+            "text": "Efficiency",
+            "line": 206,
+            "context": "205: <div className=\"space-y-1\">\n206: <div className=\"text-muted-foreground\">Efficiency</div>\n207: <div className=\"flex items-center gap-2\">"
+          },
+          {
+            "text": "Standard",
+            "line": 227,
+            "context": "226: <CardTitle className=\"text-base flex items-center gap-2\">\n227: <Target className=\"h-5 w-5 text-blue-600\" />\n228: Standard"
+          },
+          {
+            "text": "Active vehicles",
+            "line": 234,
+            "context": "233: <div className=\"text-2xl font-bold\">12</div>\n234: <div className=\"text-xs text-muted-foreground\">Active vehicles</div>\n235: <Progress value={75} className=\"h-2\" />"
+          },
+          {
+            "text": "Express",
+            "line": 244,
+            "context": "243: <CardTitle className=\"text-base flex items-center gap-2\">\n244: <Zap className=\"h-5 w-5 text-green-600\" />\n245: Express"
+          },
+          {
+            "text": "Active vehicles",
+            "line": 251,
+            "context": "250: <div className=\"text-2xl font-bold\">5</div>\n251: <div className=\"text-xs text-muted-foreground\">Active vehicles</div>\n252: <Progress value={60} className=\"h-2\" />"
+          },
+          {
+            "text": "Priority",
+            "line": 261,
+            "context": "260: <CardTitle className=\"text-base flex items-center gap-2\">\n261: <Shield className=\"h-5 w-5 text-purple-600\" />\n262: Priority"
+          },
+          {
+            "text": "Active vehicles",
+            "line": 268,
+            "context": "267: <div className=\"text-2xl font-bold\">3</div>\n268: <div className=\"text-xs text-muted-foreground\">Active vehicles</div>\n269: <Progress value={90} className=\"h-2\" />"
+          },
+          {
+            "text": "Action Items",
+            "line": 279,
+            "context": "278: <CardHeader>\n279: <CardTitle>Action Items</CardTitle>\n280: <CardDescription>"
+          },
+          {
+            "text": "Priority tasks that require attention",
+            "line": 280,
+            "context": "279: <CardTitle>Action Items</CardTitle>\n280: <CardDescription>\n281: Priority tasks that require attention"
+          },
+          {
+            "text": "Immediate action required",
+            "line": 301,
+            "context": "300: {item.type === 'critical' && item.count > 0 && (\n301: <div className=\"text-xs text-red-600 font-medium mt-1\">\n302: Immediate action required"
+          },
+          {
+            "text": "Take Action",
+            "line": 313,
+            "context": "312: )}\n313: <Button onClick={item.action} size=\"sm\">\n314: Take Action"
+          },
+          {
+            "text": "Quick Actions",
+            "line": 328,
+            "context": "327: <CardHeader>\n328: <CardTitle>Quick Actions</CardTitle>\n329: <CardDescription>"
+          },
+          {
+            "text": "Common workflow operations",
+            "line": 329,
+            "context": "328: <CardTitle>Quick Actions</CardTitle>\n329: <CardDescription>\n330: Common workflow operations"
+          },
+          {
+            "text": "Performance Metrics",
+            "line": 354,
+            "context": "353: <CardHeader>\n354: <CardTitle>Performance Metrics</CardTitle>\n355: <CardDescription>"
+          },
+          {
+            "text": "SLA Compliance",
+            "line": 363,
+            "context": "362: <div className=\"flex items-center justify-between\">\n363: <span className=\"text-sm font-medium\">SLA Compliance</span>\n364: <span className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Efficiency Rate",
+            "line": 376,
+            "context": "375: <div className=\"flex items-center justify-between\">\n376: <span className=\"text-sm font-medium\">Efficiency Rate</span>\n377: <span className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Daily Throughput",
+            "line": 389,
+            "context": "388: <div className=\"flex items-center justify-between\">\n389: <span className=\"text-sm font-medium\">Daily Throughput</span>\n390: <span className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Customer Satisfaction",
+            "line": 402,
+            "context": "401: <div className=\"flex items-center justify-between\">\n402: <span className=\"text-sm font-medium\">Customer Satisfaction</span>\n403: <span className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Take Action\n                    ",
+            "line": 313,
+            "context": "312: )}\n313: <Button onClick={item.action} size=\"sm\">\n314: Take Action"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "high"
+      },
+      {
+        "file": "src\\components\\get-ready\\GetReadyVehicleList.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Table",
+            "line": 155,
+            "context": "154: onClick={() => setViewMode('table')}\n155: >\n156: Table"
+          },
+          {
+            "text": "Grid",
+            "line": 162,
+            "context": "161: onClick={() => setViewMode('grid')}\n162: >\n163: Grid"
+          },
+          {
+            "text": "Actions",
+            "line": 187,
+            "context": "186: <DropdownMenuContent align=\"end\">\n187: <DropdownMenuLabel>Actions</DropdownMenuLabel>\n188: <DropdownMenuItem>"
+          },
+          {
+            "text": "View Details",
+            "line": 189,
+            "context": "188: <DropdownMenuItem>\n189: <Eye className=\"h-4 w-4 mr-2\" />\n190: View Details"
+          },
+          {
+            "text": "Edit Vehicle",
+            "line": 193,
+            "context": "192: <DropdownMenuItem>\n193: <Edit className=\"h-4 w-4 mr-2\" />\n194: Edit Vehicle"
+          },
+          {
+            "text": "Advance Step",
+            "line": 198,
+            "context": "197: <DropdownMenuItem>\n198: <ArrowRight className=\"h-4 w-4 mr-2\" />\n199: Advance Step"
+          },
+          {
+            "text": "Table",
+            "line": 270,
+            "context": "269: onClick={() => setViewMode('table')}\n270: >\n271: Table"
+          },
+          {
+            "text": "Grid",
+            "line": 277,
+            "context": "276: onClick={() => setViewMode('grid')}\n277: >\n278: Grid"
+          },
+          {
+            "text": "Workflow",
+            "line": 292,
+            "context": "291: <TableHead>{t('get_ready.table.step')}</TableHead>\n292: <TableHead>Workflow</TableHead>\n293: <TableHead>T2L</TableHead>"
+          },
+          {
+            "text": "Progress",
+            "line": 297,
+            "context": "296: <TableHead>{t('get_ready.table.priority')}</TableHead>\n297: <TableHead>Progress</TableHead>\n298: <TableHead>Assigned</TableHead>"
+          },
+          {
+            "text": "Assigned",
+            "line": 298,
+            "context": "297: <TableHead>Progress</TableHead>\n298: <TableHead>Assigned</TableHead>\n299: <TableHead className=\"text-right\">Actions</TableHead>"
+          },
+          {
+            "text": "Actions",
+            "line": 299,
+            "context": "298: <TableHead>Assigned</TableHead>\n299: <TableHead className=\"text-right\">Actions</TableHead>\n300: </TableRow>"
+          },
+          {
+            "text": "Actions",
+            "line": 401,
+            "context": "400: <DropdownMenuContent align=\"end\">\n401: <DropdownMenuLabel>Actions</DropdownMenuLabel>\n402: <DropdownMenuItem>"
+          },
+          {
+            "text": "View Details",
+            "line": 403,
+            "context": "402: <DropdownMenuItem>\n403: <Eye className=\"h-4 w-4 mr-2\" />\n404: View Details"
+          },
+          {
+            "text": "Edit Vehicle",
+            "line": 407,
+            "context": "406: <DropdownMenuItem>\n407: <Edit className=\"h-4 w-4 mr-2\" />\n408: Edit Vehicle"
+          },
+          {
+            "text": "Advance Step",
+            "line": 412,
+            "context": "411: <DropdownMenuItem>\n412: <ArrowRight className=\"h-4 w-4 mr-2\" />\n413: Advance Step"
+          },
+          {
+            "text": "No vehicles found",
+            "line": 430,
+            "context": "429: <Car className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n430: <h3 className=\"text-lg font-medium mb-2\">No vehicles found</h3>\n431: <p>Try adjusting your filters or search criteria.</p>"
+          },
+          {
+            "text": "Actions",
+            "line": 187,
+            "context": "186: <DropdownMenuContent align=\"end\">\n187: <DropdownMenuLabel>Actions</DropdownMenuLabel>\n188: <DropdownMenuItem>"
+          },
+          {
+            "text": "Actions",
+            "line": 401,
+            "context": "400: <DropdownMenuContent align=\"end\">\n401: <DropdownMenuLabel>Actions</DropdownMenuLabel>\n402: <DropdownMenuItem>"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 209,
+            "exists": false
+          },
+          {
+            "key": "get_ready.table.image",
+            "line": 288,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.stock",
+            "line": 289,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.vehicle",
+            "line": 290,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.step",
+            "line": 291,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.days_in_step",
+            "line": 294,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.priority",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 346,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 209,
+            "context": "208: <Badge variant=\"outline\" className={getWorkflowColor(vehicle.workflow_type)}>\n209: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n210: </Badge>"
+          },
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 346,
+            "context": "345: <Badge variant=\"outline\" className={getWorkflowColor(vehicle.workflow_type)}>\n346: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n347: </Badge>"
+          }
+        ],
+        "coverage": 30,
+        "severity": "high"
+      },
+      {
+        "file": "src\\components\\get-ready\\GetReadySplitContent.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Quick Actions",
+            "line": 75,
+            "context": "74: <CardTitle className=\"flex items-center gap-2\">\n75: <MoreHorizontal className=\"h-5 w-5\" />\n76: Quick Actions"
+          },
+          {
+            "text": "Active Alerts",
+            "line": 87,
+            "context": "86: <CardHeader>\n87: <CardTitle>Active Alerts</CardTitle>\n88: </CardHeader>"
+          },
+          {
+            "text": "Clear Filters",
+            "line": 144,
+            "context": "143: {hasActiveFilters && (\n144: <Button variant=\"ghost\" size=\"sm\" onClick={clearFilters}>\n145: Clear Filters"
+          },
+          {
+            "text": "All Types",
+            "line": 186,
+            "context": "185: <SelectContent>\n186: <SelectItem value=\"all\">All Types</SelectItem>\n187: <SelectItem value=\"standard\">{t('get_ready.workflow.standard')}</SelectItem>"
+          },
+          {
+            "text": "All Priorities",
+            "line": 202,
+            "context": "201: <SelectContent>\n202: <SelectItem value=\"all\">All Priorities</SelectItem>\n203: <SelectItem value=\"low\">Low</SelectItem>"
+          },
+          {
+            "text": "Normal",
+            "line": 204,
+            "context": "203: <SelectItem value=\"low\">Low</SelectItem>\n204: <SelectItem value=\"normal\">Normal</SelectItem>\n205: <SelectItem value=\"high\">High</SelectItem>"
+          },
+          {
+            "text": "High",
+            "line": 205,
+            "context": "204: <SelectItem value=\"normal\">Normal</SelectItem>\n205: <SelectItem value=\"high\">High</SelectItem>\n206: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+          },
+          {
+            "text": "Urgent",
+            "line": 206,
+            "context": "205: <SelectItem value=\"high\">High</SelectItem>\n206: <SelectItem value=\"urgent\">Urgent</SelectItem>\n207: </SelectContent>"
+          },
+          {
+            "text": "Days in Step",
+            "line": 219,
+            "context": "218: <SelectContent>\n219: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n220: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>"
+          },
+          {
+            "text": "Days to Finish",
+            "line": 220,
+            "context": "219: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n220: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>\n221: <SelectItem value=\"priority_score\">Priority Score</SelectItem>"
+          },
+          {
+            "text": "Priority Score",
+            "line": 221,
+            "context": "220: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>\n221: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n222: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+          },
+          {
+            "text": "SLA Status",
+            "line": 222,
+            "context": "221: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n222: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n223: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+          },
+          {
+            "text": "Stock Number",
+            "line": 223,
+            "context": "222: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n223: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n224: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+          },
+          {
+            "text": "Date Added",
+            "line": 224,
+            "context": "223: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n224: <SelectItem value=\"created_at\">Date Added</SelectItem>\n225: </SelectContent>"
+          },
+          {
+            "text": "Clear Filters\n                ",
+            "line": 144,
+            "context": "143: {hasActiveFilters && (\n144: <Button variant=\"ghost\" size=\"sm\" onClick={clearFilters}>\n145: Clear Filters"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.actions.refresh",
+            "line": 122,
+            "exists": false
+          },
+          {
+            "key": "common.actions.export",
+            "line": 126,
+            "exists": false
+          },
+          {
+            "key": "get_ready.vehicle_form.add_vehicle",
+            "line": 133,
+            "exists": true
+          },
+          {
+            "key": "get_ready.search_placeholder",
+            "line": 155,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.standard",
+            "line": 187,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.express",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.priority",
+            "line": 189,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.actions.refresh",
+            "line": 122,
+            "context": "121: <RefreshCw className=\"h-4 w-4 mr-2\" />\n122: {t('common.actions.refresh')}\n123: </Button>"
+          },
+          {
+            "key": "common.actions.export",
+            "line": 126,
+            "context": "125: <Download className=\"h-4 w-4 mr-2\" />\n126: {t('common.actions.export')}\n127: </Button>"
+          }
+        ],
+        "coverage": 32,
         "severity": "high"
       },
       {
@@ -5839,44 +6029,44 @@
         "hardcodedStrings": [
           {
             "text": "Enterprise Dealership Management",
-            "line": 100,
-            "context": "99: <span>•</span>\n100: <span>Enterprise Dealership Management</span>\n101: </div>"
+            "line": 119,
+            "context": "118: <span>•</span>\n119: <span>Enterprise Dealership Management</span>\n120: </div>"
           },
           {
             "text": "Privacy Policy",
-            "line": 104,
-            "context": "103: <div className=\"flex items-center gap-4 text-sm\">\n104: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n105: Privacy Policy"
+            "line": 123,
+            "context": "122: <div className=\"flex items-center gap-4 text-sm\">\n123: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n124: Privacy Policy"
           },
           {
             "text": "Terms of Service",
-            "line": 107,
-            "context": "106: </Button>\n107: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n108: Terms of Service"
+            "line": 126,
+            "context": "125: </Button>\n126: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n127: Terms of Service"
           },
           {
             "text": "Support",
-            "line": 110,
-            "context": "109: </Button>\n110: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n111: Support"
+            "line": 129,
+            "context": "128: </Button>\n129: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n130: Support"
           },
           {
-            "text": "Privacy Policy\r\n                ",
-            "line": 104,
-            "context": "103: <div className=\"flex items-center gap-4 text-sm\">\n104: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n105: Privacy Policy"
+            "text": "Privacy Policy\n                ",
+            "line": 123,
+            "context": "122: <div className=\"flex items-center gap-4 text-sm\">\n123: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n124: Privacy Policy"
           },
           {
-            "text": "Terms of Service\r\n                ",
-            "line": 107,
-            "context": "106: </Button>\n107: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n108: Terms of Service"
+            "text": "Terms of Service\n                ",
+            "line": 126,
+            "context": "125: </Button>\n126: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n127: Terms of Service"
           },
           {
-            "text": "Support\r\n                ",
-            "line": 110,
-            "context": "109: </Button>\n110: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n111: Support"
+            "text": "Support\n                ",
+            "line": 129,
+            "context": "128: </Button>\n129: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n130: Support"
           }
         ],
         "translationCalls": [
           {
             "key": "layout.search_placeholder",
-            "line": 66,
+            "line": 85,
             "exists": true
           }
         ],
@@ -5889,44 +6079,44 @@
         "hardcodedStrings": [
           {
             "text": "Enterprise Dealership Management",
-            "line": 61,
-            "context": "60: <span>•</span>\n61: <span>Enterprise Dealership Management</span>\n62: </div>"
+            "line": 59,
+            "context": "58: <span>•</span>\n59: <span>Enterprise Dealership Management</span>\n60: </div>"
           },
           {
             "text": "Privacy Policy",
-            "line": 65,
-            "context": "64: <div className=\"flex items-center gap-4 text-sm\">\n65: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n66: Privacy Policy"
+            "line": 63,
+            "context": "62: <div className=\"flex items-center gap-4 text-sm\">\n63: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n64: Privacy Policy"
           },
           {
             "text": "Terms of Service",
-            "line": 68,
-            "context": "67: </Button>\n68: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n69: Terms of Service"
+            "line": 66,
+            "context": "65: </Button>\n66: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n67: Terms of Service"
           },
           {
             "text": "Support",
-            "line": 71,
-            "context": "70: </Button>\n71: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n72: Support"
+            "line": 69,
+            "context": "68: </Button>\n69: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n70: Support"
           },
           {
-            "text": "Privacy Policy\r\n                ",
-            "line": 65,
-            "context": "64: <div className=\"flex items-center gap-4 text-sm\">\n65: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n66: Privacy Policy"
+            "text": "Privacy Policy\n              ",
+            "line": 63,
+            "context": "62: <div className=\"flex items-center gap-4 text-sm\">\n63: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n64: Privacy Policy"
           },
           {
-            "text": "Terms of Service\r\n                ",
-            "line": 68,
-            "context": "67: </Button>\n68: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n69: Terms of Service"
+            "text": "Terms of Service\n              ",
+            "line": 66,
+            "context": "65: </Button>\n66: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n67: Terms of Service"
           },
           {
-            "text": "Support\r\n                ",
-            "line": 71,
-            "context": "70: </Button>\n71: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n72: Support"
+            "text": "Support\n              ",
+            "line": 69,
+            "context": "68: </Button>\n69: <Button variant=\"link\" size=\"sm\" className=\"text-muted-foreground hover:text-foreground\">\n70: Support"
           }
         ],
         "translationCalls": [
           {
             "key": "layout.search_placeholder",
-            "line": 37,
+            "line": 35,
             "exists": true
           }
         ],
@@ -6783,6 +6973,202 @@
         "severity": "medium"
       },
       {
+        "file": "src\\components\\orders\\OrderDataTable.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Vehicle",
+            "line": 360,
+            "context": "359: <div className=\"p-2 rounded\">\n360: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n361: <div className=\"text-sm font-semibold text-foreground\">"
+          },
+          {
+            "text": "Previous",
+            "line": 469,
+            "context": "468: disabled={currentPage === 1}\n469: >\n470: Previous"
+          },
+          {
+            "text": "Next",
+            "line": 480,
+            "context": "479: disabled={currentPage >= Math.ceil(orders.length / itemsPerPage)}\n480: >\n481: Next"
+          },
+          {
+            "text": "Order ID",
+            "line": 499,
+            "context": "498: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n499: <TableHead className=\"font-medium text-foreground text-center\">Order ID</TableHead>\n500: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>"
+          },
+          {
+            "text": "Vehicle",
+            "line": 501,
+            "context": "500: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>\n501: <TableHead className=\"font-medium text-foreground text-center\">Vehicle</TableHead>\n502: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+          },
+          {
+            "text": "Status",
+            "line": 504,
+            "context": "503: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>\n504: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n505: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+          },
+          {
+            "text": "Actions",
+            "line": 505,
+            "context": "504: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n505: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n506: </TableRow>"
+          },
+          {
+            "text": "Tap to copy VIN",
+            "line": 375,
+            "context": "374: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n375: title=\"Tap to copy VIN\"\n376: >"
+          },
+          {
+            "text": "Click to copy VIN",
+            "line": 592,
+            "context": "591: onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}\n592: title=\"Click to copy VIN\"\n593: >"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "data_table.days_overdue",
+            "line": 278,
+            "exists": false
+          },
+          {
+            "key": "data_table.due_today",
+            "line": 280,
+            "exists": true
+          },
+          {
+            "key": "data_table.due_tomorrow",
+            "line": 282,
+            "exists": false
+          },
+          {
+            "key": "data_table.due_in_days",
+            "line": 284,
+            "exists": false
+          },
+          {
+            "key": "common.loading",
+            "line": 301,
+            "exists": true
+          },
+          {
+            "key": "data_table.unknown_dealer",
+            "line": 334,
+            "exists": true
+          },
+          {
+            "key": "data_table.vin_not_provided",
+            "line": 377,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_stock",
+            "line": 396,
+            "exists": true
+          },
+          {
+            "key": "data_table.unassigned",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "data_table.view",
+            "line": 427,
+            "exists": true
+          },
+          {
+            "key": "data_table.edit",
+            "line": 439,
+            "exists": true
+          },
+          {
+            "key": "data_table.delete",
+            "line": 452,
+            "exists": true
+          },
+          {
+            "key": "data_table.page_of",
+            "line": 473,
+            "exists": true
+          },
+          {
+            "key": "data_table.orders_count",
+            "line": 490,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 502,
+            "exists": true
+          },
+          {
+            "key": "data_table.unknown_dealer",
+            "line": 543,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_stock",
+            "line": 560,
+            "exists": true
+          },
+          {
+            "key": "data_table.vin_not_provided",
+            "line": 594,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_time_set",
+            "line": 630,
+            "exists": true
+          },
+          {
+            "key": "data_table.view_details",
+            "line": 656,
+            "exists": true
+          },
+          {
+            "key": "data_table.edit_order",
+            "line": 668,
+            "exists": true
+          },
+          {
+            "key": "data_table.print_order",
+            "line": 679,
+            "exists": true
+          },
+          {
+            "key": "data_table.delete_order",
+            "line": 691,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_orders_found",
+            "line": 707,
+            "exists": true
+          },
+          {
+            "key": "data_table.adjust_filters_or_create",
+            "line": 708,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "data_table.days_overdue",
+            "line": 278,
+            "context": "277: if (diffDays < 0) {\n278: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n279: } else if (diffDays === 0) {"
+          },
+          {
+            "key": "data_table.due_tomorrow",
+            "line": 282,
+            "context": "281: } else if (diffDays === 1) {\n282: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n283: } else {"
+          },
+          {
+            "key": "data_table.due_in_days",
+            "line": 284,
+            "context": "283: } else {\n284: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n285: }"
+          }
+        ],
+        "coverage": 74,
+        "severity": "medium"
+      },
+      {
         "file": "src\\components\\orders\\InteractiveTimeline.tsx",
         "hardcodedStrings": [
           {
@@ -7115,6 +7501,45 @@
           }
         ],
         "coverage": 72,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\components\\get-ready\\GetReadyExample.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Frontend",
+            "line": 105,
+            "context": "104: <div>\n105: <h4 className=\"font-semibold mb-2\">Frontend</h4>\n106: <ul className=\"text-sm text-muted-foreground space-y-1\">"
+          },
+          {
+            "text": "Arquitectura",
+            "line": 114,
+            "context": "113: <div>\n114: <h4 className=\"font-semibold mb-2\">Arquitectura</h4>\n115: <ul className=\"text-sm text-muted-foreground space-y-1\">"
+          },
+          {
+            "text": "Overview Dashboard",
+            "line": 150,
+            "context": "149: <div>\n150: <h4 className=\"font-semibold\">Overview Dashboard</h4>\n151: <p className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Workflow Management",
+            "line": 174,
+            "context": "173: <div>\n174: <h4 className=\"font-semibold\">Workflow Management</h4>\n175: <p className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Alertas y SLA",
+            "line": 186,
+            "context": "185: <div>\n186: <h4 className=\"font-semibold\">Alertas y SLA</h4>\n187: <p className=\"text-sm text-muted-foreground\">"
+          },
+          {
+            "text": "Recibe notificaciones proactivas sobre cuellos de botella y SLA risks",
+            "line": 187,
+            "context": "186: <h4 className=\"font-semibold\">Alertas y SLA</h4>\n187: <p className=\"text-sm text-muted-foreground\">\n188: Recibe notificaciones proactivas sobre cuellos de botella y SLA risks"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "medium"
       },
       {
@@ -7946,25 +8371,25 @@
           },
           {
             "key": "pages.service_orders",
-            "line": 126,
+            "line": 135,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 141,
+            "line": 150,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 145,
+            "line": 154,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "pages.service_orders",
-            "line": 126,
-            "context": "125: <div className=\"flex items-center gap-4\">\n126: <h1 className=\"text-2xl font-bold\">{t('pages.service_orders')}</h1>\n127: </div>"
+            "line": 135,
+            "context": "134: <div className=\"flex items-center gap-4\">\n135: <h1 className=\"text-2xl font-bold\">{t('pages.service_orders')}</h1>\n136: </div>"
           }
         ],
         "coverage": 100,
@@ -8006,7 +8431,7 @@
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 234,
+            "line": 231,
             "exists": false
           },
           {
@@ -8098,8 +8523,8 @@
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 234,
-            "context": "233: \n234: toast.success(t('orders.status_updated_successfully'));\n235: } catch (error) {"
+            "line": 231,
+            "context": "230: \n231: toast.success(t('orders.status_updated_successfully'));\n232: "
           },
           {
             "key": "orders.status_change_failed_due_date",
@@ -8196,100 +8621,100 @@
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 118,
+            "line": 133,
             "exists": false
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 119,
+            "line": 134,
             "exists": false
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 142,
+            "line": 157,
             "exists": false
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 143,
+            "line": 158,
             "exists": false
           },
           {
             "key": "common.general",
-            "line": 143,
+            "line": 158,
             "exists": false
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 145,
+            "line": 160,
             "exists": false
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 146,
+            "line": 161,
             "exists": false
           },
           {
             "key": "pages.recon_orders",
-            "line": 170,
+            "line": 185,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 181,
+            "line": 196,
             "exists": true
           },
           {
             "key": "recon.new_recon_order",
-            "line": 185,
+            "line": 200,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "recon_defaults.default_customer",
-            "line": 118,
-            "context": "117: order_number: order.orderNumber,\n118: customer_name: t('recon_defaults.default_customer'),\n119: customerName: t('recon_defaults.default_customer'),"
+            "line": 133,
+            "context": "132: order_number: order.orderNumber,\n133: customer_name: t('recon_defaults.default_customer'),\n134: customerName: t('recon_defaults.default_customer'),"
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 119,
-            "context": "118: customer_name: t('recon_defaults.default_customer'),\n119: customerName: t('recon_defaults.default_customer'),\n120: vehicle_year: order.vehicleYear,"
+            "line": 134,
+            "context": "133: customer_name: t('recon_defaults.default_customer'),\n134: customerName: t('recon_defaults.default_customer'),\n135: vehicle_year: order.vehicleYear,"
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 142,
-            "context": "141: // Required fields for Order interface\n142: service: t('recon_defaults.default_service'),\n143: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,"
+            "line": 157,
+            "context": "156: // Required fields for Order interface\n157: service: t('recon_defaults.default_service'),\n158: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,"
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 143,
-            "context": "142: service: t('recon_defaults.default_service'),\n143: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n144: price: order.reconCost || 0,"
+            "line": 158,
+            "context": "157: service: t('recon_defaults.default_service'),\n158: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n159: price: order.reconCost || 0,"
           },
           {
             "key": "common.general",
-            "line": 143,
-            "context": "142: service: t('recon_defaults.default_service'),\n143: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n144: price: order.reconCost || 0,"
+            "line": 158,
+            "context": "157: service: t('recon_defaults.default_service'),\n158: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n159: price: order.reconCost || 0,"
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 145,
-            "context": "144: price: order.reconCost || 0,\n145: advisor: t('recon_defaults.default_advisor'),\n146: department: t('recon_defaults.default_department')"
+            "line": 160,
+            "context": "159: price: order.reconCost || 0,\n160: advisor: t('recon_defaults.default_advisor'),\n161: department: t('recon_defaults.default_department')"
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 146,
-            "context": "145: advisor: t('recon_defaults.default_advisor'),\n146: department: t('recon_defaults.default_department')\n147: }));"
+            "line": 161,
+            "context": "160: advisor: t('recon_defaults.default_advisor'),\n161: department: t('recon_defaults.default_department')\n162: }));"
           },
           {
             "key": "pages.recon_orders",
-            "line": 170,
-            "context": "169: <div className=\"flex items-center gap-4\">\n170: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n171: </div>"
+            "line": 185,
+            "context": "184: <div className=\"flex items-center gap-4\">\n185: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n186: </div>"
           },
           {
             "key": "recon.new_recon_order",
-            "line": 185,
-            "context": "184: <Plus className=\"h-4 w-4 mr-2\" />\n185: {t('recon.new_recon_order')}\n186: </Button>"
+            "line": 200,
+            "context": "199: <Plus className=\"h-4 w-4 mr-2\" />\n200: {t('recon.new_recon_order')}\n201: </Button>"
           }
         ],
         "coverage": 100,
@@ -9603,6 +10028,36 @@
         "severity": "low"
       },
       {
+        "file": "src\\pages\\GetReadySetup.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "System administrators only",
+            "line": 19,
+            "context": "18: </h2>\n19: <p className=\"text-sm text-gray-500\">\n20: System administrators only"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.setup.access_denied",
+            "line": 17,
+            "exists": true
+          },
+          {
+            "key": "get_ready.setup.title",
+            "line": 34,
+            "exists": true
+          },
+          {
+            "key": "get_ready.setup.subtitle",
+            "line": 37,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 75,
+        "severity": "low"
+      },
+      {
         "file": "src\\pages\\DealerView.tsx",
         "hardcodedStrings": [
           {
@@ -10529,50 +10984,50 @@
           },
           {
             "key": "car_wash_orders.waiter",
-            "line": 110,
+            "line": 126,
             "exists": false
           },
           {
             "key": "pages.car_wash",
-            "line": 121,
+            "line": 137,
             "exists": false
           },
           {
             "key": "car_wash_orders.waiting",
-            "line": 125,
+            "line": 141,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 138,
+            "line": 154,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 142,
+            "line": 158,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "car_wash_orders.waiter",
-            "line": 110,
-            "context": "109: <Clock className=\"w-3 h-3 mr-1\" />\n110: {t('car_wash_orders.waiter')}\n111: </Badge>"
+            "line": 126,
+            "context": "125: <Clock className=\"w-3 h-3 mr-1\" />\n126: {t('car_wash_orders.waiter')}\n127: </Badge>"
           },
           {
             "key": "pages.car_wash",
-            "line": 121,
-            "context": "120: <div className=\"flex items-center gap-4\">\n121: <h1 className=\"text-2xl font-bold\">{t('pages.car_wash')}</h1>\n122: {tabCounts.waiter > 0 && ("
+            "line": 137,
+            "context": "136: <div className=\"flex items-center gap-4\">\n137: <h1 className=\"text-2xl font-bold\">{t('pages.car_wash')}</h1>\n138: {tabCounts.waiter > 0 && ("
           },
           {
             "key": "car_wash_orders.waiting",
-            "line": 125,
-            "context": "124: <Clock className=\"w-3 h-3 mr-1\" />\n125: {tabCounts.waiter} {t('car_wash_orders.waiting')}\n126: </Badge>"
+            "line": 141,
+            "context": "140: <Clock className=\"w-3 h-3 mr-1\" />\n141: {tabCounts.waiter} {t('car_wash_orders.waiting')}\n142: </Badge>"
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 142,
-            "context": "141: <Plus className=\"h-4 w-4 mr-2\" />\n142: {t('car_wash_orders.quick_order')}\n143: </Button>"
+            "line": 158,
+            "context": "157: <Plus className=\"h-4 w-4 mr-2\" />\n158: {t('car_wash_orders.quick_order')}\n159: </Button>"
           }
         ],
         "coverage": 100,
@@ -10950,6 +11405,40 @@
             "text": ", err);\r\n      setError(",
             "line": 59,
             "context": "58: } catch (err) {\n59: console.error('VIN decoding error:', err);\n60: setError('Network error. Please try again.');"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useVehicleManagement.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 107,
+            "context": "106: onError: (error: any) => {\n107: console.error('Create vehicle error:', error);\n108: toast.error('Failed to create vehicle');"
+          },
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 143,
+            "context": "142: onError: (error: any) => {\n143: console.error('Update vehicle error:', error);\n144: toast.error('Failed to update vehicle');"
+          },
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 169,
+            "context": "168: onError: (error: any) => {\n169: console.error('Delete vehicle error:', error);\n170: toast.error('Failed to delete vehicle');"
+          },
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 202,
+            "context": "201: onError: (error: any) => {\n202: console.error('Move vehicle error:', error);\n203: toast.error('Failed to move vehicle');"
+          },
+          {
+            "text": ", error);\r\n      toast.error(",
+            "line": 237,
+            "context": "236: onError: (error: any) => {\n237: console.error('Bulk update error:', error);\n238: toast.error('Failed to update vehicles');"
           }
         ],
         "translationCalls": [],
@@ -11568,225 +12057,225 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 306,
+            "line": 349,
             "exists": false
           },
           {
             "key": "recon.error_fetching_orders",
-            "line": 307,
-            "exists": false
-          },
-          {
-            "key": "common.error",
             "line": 350,
             "exists": false
           },
           {
+            "key": "common.error",
+            "line": 393,
+            "exists": false
+          },
+          {
             "key": "recon.error_fetching_orders",
-            "line": 351,
+            "line": 394,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 433,
+            "line": 476,
             "exists": false
           },
           {
             "key": "recon.error_creating_order",
-            "line": 434,
+            "line": 477,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 453,
+            "line": 496,
             "exists": false
           },
           {
             "key": "recon.order_created_successfully",
-            "line": 454,
+            "line": 497,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 461,
+            "line": 507,
             "exists": false
           },
           {
             "key": "recon.error_creating_order",
-            "line": 462,
+            "line": 508,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 511,
+            "line": 557,
             "exists": false
           },
           {
             "key": "recon.error_updating_order",
-            "line": 512,
+            "line": 558,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 524,
+            "line": 565,
             "exists": false
           },
           {
             "key": "recon.order_updated_successfully",
-            "line": 525,
+            "line": 566,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 532,
+            "line": 576,
             "exists": false
           },
           {
             "key": "recon.error_updating_order",
-            "line": 533,
+            "line": 577,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 551,
+            "line": 595,
             "exists": false
           },
           {
             "key": "recon.error_deleting_order",
-            "line": 552,
+            "line": 596,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 561,
+            "line": 605,
             "exists": false
           },
           {
             "key": "recon.order_deleted_successfully",
-            "line": 562,
+            "line": 606,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 569,
+            "line": 616,
             "exists": false
           },
           {
             "key": "recon.error_deleting_order",
-            "line": 570,
+            "line": 617,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.error",
-            "line": 306,
-            "context": "305: toast({\n306: title: t('common.error'),\n307: description: t('recon.error_fetching_orders'),"
+            "line": 349,
+            "context": "348: toast({\n349: title: t('common.error'),\n350: description: t('recon.error_fetching_orders'),"
           },
           {
             "key": "recon.error_fetching_orders",
-            "line": 307,
-            "context": "306: title: t('common.error'),\n307: description: t('recon.error_fetching_orders'),\n308: variant: 'destructive',"
-          },
-          {
-            "key": "common.error",
             "line": 350,
-            "context": "349: toast({\n350: title: t('common.error'),\n351: description: t('recon.error_fetching_orders'),"
-          },
-          {
-            "key": "recon.error_fetching_orders",
-            "line": 351,
-            "context": "350: title: t('common.error'),\n351: description: t('recon.error_fetching_orders'),\n352: variant: 'destructive',"
+            "context": "349: title: t('common.error'),\n350: description: t('recon.error_fetching_orders'),\n351: variant: 'destructive',"
           },
           {
             "key": "common.error",
-            "line": 433,
-            "context": "432: toast({\n433: title: t('common.error'),\n434: description: t('recon.error_creating_order'),"
+            "line": 393,
+            "context": "392: toast({\n393: title: t('common.error'),\n394: description: t('recon.error_fetching_orders'),"
+          },
+          {
+            "key": "recon.error_fetching_orders",
+            "line": 394,
+            "context": "393: title: t('common.error'),\n394: description: t('recon.error_fetching_orders'),\n395: variant: 'destructive',"
+          },
+          {
+            "key": "common.error",
+            "line": 476,
+            "context": "475: toast({\n476: title: t('common.error'),\n477: description: t('recon.error_creating_order'),"
           },
           {
             "key": "recon.error_creating_order",
-            "line": 434,
-            "context": "433: title: t('common.error'),\n434: description: t('recon.error_creating_order'),\n435: variant: 'destructive',"
+            "line": 477,
+            "context": "476: title: t('common.error'),\n477: description: t('recon.error_creating_order'),\n478: variant: 'destructive',"
           },
           {
             "key": "common.success",
-            "line": 453,
-            "context": "452: toast({\n453: title: t('common.success'),\n454: description: t('recon.order_created_successfully'),"
+            "line": 496,
+            "context": "495: toast({\n496: title: t('common.success'),\n497: description: t('recon.order_created_successfully'),"
           },
           {
             "key": "recon.order_created_successfully",
-            "line": 454,
-            "context": "453: title: t('common.success'),\n454: description: t('recon.order_created_successfully'),\n455: });"
+            "line": 497,
+            "context": "496: title: t('common.success'),\n497: description: t('recon.order_created_successfully'),\n498: });"
           },
           {
             "key": "common.error",
-            "line": 461,
-            "context": "460: toast({\n461: title: t('common.error'),\n462: description: t('recon.error_creating_order'),"
+            "line": 507,
+            "context": "506: toast({\n507: title: t('common.error'),\n508: description: t('recon.error_creating_order'),"
           },
           {
             "key": "recon.error_creating_order",
-            "line": 462,
-            "context": "461: title: t('common.error'),\n462: description: t('recon.error_creating_order'),\n463: variant: 'destructive',"
+            "line": 508,
+            "context": "507: title: t('common.error'),\n508: description: t('recon.error_creating_order'),\n509: variant: 'destructive',"
           },
           {
             "key": "common.error",
-            "line": 511,
-            "context": "510: toast({\n511: title: t('common.error'),\n512: description: t('recon.error_updating_order'),"
+            "line": 557,
+            "context": "556: toast({\n557: title: t('common.error'),\n558: description: t('recon.error_updating_order'),"
           },
           {
             "key": "recon.error_updating_order",
-            "line": 512,
-            "context": "511: title: t('common.error'),\n512: description: t('recon.error_updating_order'),\n513: variant: 'destructive',"
+            "line": 558,
+            "context": "557: title: t('common.error'),\n558: description: t('recon.error_updating_order'),\n559: variant: 'destructive',"
           },
           {
             "key": "common.success",
-            "line": 524,
-            "context": "523: toast({\n524: title: t('common.success'),\n525: description: t('recon.order_updated_successfully'),"
+            "line": 565,
+            "context": "564: toast({\n565: title: t('common.success'),\n566: description: t('recon.order_updated_successfully'),"
           },
           {
             "key": "recon.order_updated_successfully",
-            "line": 525,
-            "context": "524: title: t('common.success'),\n525: description: t('recon.order_updated_successfully'),\n526: });"
+            "line": 566,
+            "context": "565: title: t('common.success'),\n566: description: t('recon.order_updated_successfully'),\n567: });"
           },
           {
             "key": "common.error",
-            "line": 532,
-            "context": "531: toast({\n532: title: t('common.error'),\n533: description: t('recon.error_updating_order'),"
+            "line": 576,
+            "context": "575: toast({\n576: title: t('common.error'),\n577: description: t('recon.error_updating_order'),"
           },
           {
             "key": "recon.error_updating_order",
-            "line": 533,
-            "context": "532: title: t('common.error'),\n533: description: t('recon.error_updating_order'),\n534: variant: 'destructive',"
+            "line": 577,
+            "context": "576: title: t('common.error'),\n577: description: t('recon.error_updating_order'),\n578: variant: 'destructive',"
           },
           {
             "key": "common.error",
-            "line": 551,
-            "context": "550: toast({\n551: title: t('common.error'),\n552: description: t('recon.error_deleting_order'),"
+            "line": 595,
+            "context": "594: toast({\n595: title: t('common.error'),\n596: description: t('recon.error_deleting_order'),"
           },
           {
             "key": "recon.error_deleting_order",
-            "line": 552,
-            "context": "551: title: t('common.error'),\n552: description: t('recon.error_deleting_order'),\n553: variant: 'destructive',"
+            "line": 596,
+            "context": "595: title: t('common.error'),\n596: description: t('recon.error_deleting_order'),\n597: variant: 'destructive',"
           },
           {
             "key": "common.success",
-            "line": 561,
-            "context": "560: toast({\n561: title: t('common.success'),\n562: description: t('recon.order_deleted_successfully'),"
+            "line": 605,
+            "context": "604: toast({\n605: title: t('common.success'),\n606: description: t('recon.order_deleted_successfully'),"
           },
           {
             "key": "recon.order_deleted_successfully",
-            "line": 562,
-            "context": "561: title: t('common.success'),\n562: description: t('recon.order_deleted_successfully'),\n563: });"
+            "line": 606,
+            "context": "605: title: t('common.success'),\n606: description: t('recon.order_deleted_successfully'),\n607: });"
           },
           {
             "key": "common.error",
-            "line": 569,
-            "context": "568: toast({\n569: title: t('common.error'),\n570: description: t('recon.error_deleting_order'),"
+            "line": 616,
+            "context": "615: toast({\n616: title: t('common.error'),\n617: description: t('recon.error_deleting_order'),"
           },
           {
             "key": "recon.error_deleting_order",
-            "line": 570,
-            "context": "569: title: t('common.error'),\n570: description: t('recon.error_deleting_order'),\n571: variant: 'destructive',"
+            "line": 617,
+            "context": "616: title: t('common.error'),\n617: description: t('recon.error_deleting_order'),\n618: variant: 'destructive',"
           }
         ],
         "coverage": 100,
@@ -12455,6 +12944,25 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useGetReady.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "2023 Honda Civic LX",
+            "line": 479,
+            "context": "478: stock_number: 'STK001',\n479: vehicle_info: '2023 Honda Civic LX',\n480: hours_overdue: 18,"
+          },
+          {
+            "text": "2022 Toyota Camry LE",
+            "line": 488,
+            "context": "487: stock_number: 'STK002',\n488: vehicle_info: '2022 Toyota Camry LE',\n489: hours_overdue: 6,"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useFollowers.ts",
         "hardcodedStrings": [
           {
@@ -13012,13 +13520,13 @@
         "hardcodedStrings": [
           {
             "text": "My Detail Area",
-            "line": 191,
-            "context": "190: <div className=\"text-center\">\n191: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n192: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>"
+            "line": 215,
+            "context": "214: <div className=\"text-center\">\n215: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n216: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>"
           },
           {
             "text": "Enterprise Dealership Management",
-            "line": 192,
-            "context": "191: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n192: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>\n193: </div>"
+            "line": 216,
+            "context": "215: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n216: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>\n217: </div>"
           }
         ],
         "translationCalls": [
@@ -13049,102 +13557,102 @@
           },
           {
             "key": "navigation.get_ready",
-            "line": 64,
+            "line": 65,
             "exists": true
           },
           {
             "key": "navigation.stock",
-            "line": 68,
+            "line": 70,
             "exists": true
           },
           {
             "key": "navigation.detail_hub",
-            "line": 72,
+            "line": 75,
             "exists": true
           },
           {
             "key": "chat.title",
-            "line": 79,
+            "line": 88,
             "exists": true
           },
           {
             "key": "contacts.title",
-            "line": 83,
+            "line": 93,
             "exists": true
           },
           {
             "key": "vin_scanner_hub.title",
-            "line": 87,
-            "exists": true
-          },
-          {
-            "key": "nfc_tracking.title",
-            "line": 91,
-            "exists": true
-          },
-          {
-            "key": "navigation.productivity",
             "line": 98,
             "exists": true
           },
           {
+            "key": "nfc_tracking.title",
+            "line": 103,
+            "exists": true
+          },
+          {
+            "key": "navigation.productivity",
+            "line": 116,
+            "exists": true
+          },
+          {
             "key": "profile.title",
-            "line": 102,
+            "line": 121,
             "exists": true
           },
           {
             "key": "admin.administration",
-            "line": 111,
+            "line": 135,
             "exists": true
           },
           {
             "key": "admin.administration_description",
-            "line": 115,
+            "line": 140,
             "exists": true
           },
           {
             "key": "navigation.reports",
-            "line": 118,
+            "line": 143,
             "exists": true
           },
           {
             "key": "navigation.settings",
-            "line": 124,
+            "line": 150,
             "exists": true
           },
           {
             "key": "navigation.landing_page",
-            "line": 144,
+            "line": 168,
             "exists": true
           },
           {
             "key": "navigation.core_operations",
-            "line": 212,
+            "line": 236,
             "exists": true
           },
           {
             "key": "navigation.workflow_management",
-            "line": 252,
+            "line": 276,
             "exists": true
           },
           {
             "key": "navigation.tools_communication",
-            "line": 292,
+            "line": 316,
             "exists": true
           },
           {
             "key": "navigation.productivity_section",
-            "line": 332,
+            "line": 356,
             "exists": true
           },
           {
             "key": "navigation.administration_reports",
-            "line": 372,
+            "line": 396,
             "exists": true
           },
           {
             "key": "navigation.system_admin",
-            "line": 413,
+            "line": 437,
             "exists": true
           }
         ],
@@ -16360,18 +16868,18 @@
         "hardcodedStrings": [
           {
             "text": "Toggle Sidebar",
-            "line": 238,
-            "context": "237: <PanelLeft />\n238: <span className=\"sr-only\">Toggle Sidebar</span>\n239: </Button>"
+            "line": 258,
+            "context": "257: <PanelLeft />\n258: <span className=\"sr-only\">Toggle Sidebar</span>\n259: </Button>"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 253,
-            "context": "252: data-sidebar=\"rail\"\n253: aria-label=\"Toggle Sidebar\"\n254: tabIndex={-1}"
+            "line": 273,
+            "context": "272: data-sidebar=\"rail\"\n273: aria-label=\"Toggle Sidebar\"\n274: tabIndex={-1}"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 256,
-            "context": "255: onClick={toggleSidebar}\n256: title=\"Toggle Sidebar\"\n257: className={cn("
+            "line": 276,
+            "context": "275: onClick={toggleSidebar}\n276: title=\"Toggle Sidebar\"\n277: className={cn("
           }
         ],
         "translationCalls": [],
@@ -28081,80 +28589,70 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n    return <>{fallback}</>;\r\n  }\r\n};\r\n\r\n// Header Components\r\ninterface UnifiedOrderHeaderProps {\r\n  order: OrderData;\r\n  orderType: OrderType;\r\n  vehicleDisplayName: string;\r\n  onStatusChange: (orderId: string, newStatus: string) => void;\r\n  canEditOrder?: boolean;\r\n  onEdit?: () => void;\r\n}\r\n\r\nconst UnifiedOrderHeader = memo(function UnifiedOrderHeader({\r\n  order,\r\n  orderType,\r\n  vehicleDisplayName,\r\n  onStatusChange,\r\n  canEditOrder,\r\n  onEdit\r\n}: UnifiedOrderHeaderProps) {\r\n  const { t } = useTranslation();\r\n\r\n  const headerData = useMemo(() => {\r\n    const orderNumber = order.orderNumber || order.order_number || ",
-            "line": 144,
-            "context": "143: } catch (error) {\n144: console.error('Component rendering error:', error);\n145: return <>{fallback}</>;"
+            "line": 142,
+            "context": "141: } catch (error) {\n142: console.error('Component rendering error:', error);\n143: return <>{fallback}</>;"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.edit",
-            "line": 222,
+            "line": 220,
             "exists": true
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 473,
+            "line": 471,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 481,
-            "exists": false
-          },
-          {
-            "key": "orders.communication_actions",
-            "line": 537,
+            "line": 479,
             "exists": false
           },
           {
             "key": "orders.print",
-            "line": 593,
+            "line": 571,
             "exists": false
           },
           {
             "key": "orders.download",
-            "line": 602,
+            "line": 580,
             "exists": false
           },
           {
             "key": "common.close",
-            "line": 613,
+            "line": 591,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_details_modal_title",
-            "line": 473,
-            "context": "472: <DialogTitle className=\"sr-only\">\n473: {t('orders.order_details_modal_title', {\n474: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 471,
+            "context": "470: <DialogTitle className=\"sr-only\">\n471: {t('orders.order_details_modal_title', {\n472: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 481,
-            "context": "480: <DialogDescription className=\"sr-only\">\n481: {t('orders.order_details_description', {\n482: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
-          },
-          {
-            "key": "orders.communication_actions",
-            "line": 537,
-            "context": "536: <MessageSquare className=\"h-4 w-4\" />\n537: {t('orders.communication_actions', 'Team Communication')}\n538: </CardTitle>"
+            "line": 479,
+            "context": "478: <DialogDescription className=\"sr-only\">\n479: {t('orders.order_details_description', {\n480: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.print",
-            "line": 593,
-            "context": "592: <Printer className=\"h-4 w-4\" />\n593: {t('orders.print')}\n594: </Button>"
+            "line": 571,
+            "context": "570: <Printer className=\"h-4 w-4\" />\n571: {t('orders.print')}\n572: </Button>"
           },
           {
             "key": "orders.download",
-            "line": 602,
-            "context": "601: <Download className=\"h-4 w-4\" />\n602: {t('orders.download')}\n603: </Button>"
+            "line": 580,
+            "context": "579: <Download className=\"h-4 w-4\" />\n580: {t('orders.download')}\n581: </Button>"
           },
           {
             "key": "common.close",
-            "line": 613,
-            "context": "612: >\n613: {t('common.close')}\n614: </Button>"
+            "line": 591,
+            "context": "590: >\n591: {t('common.close')}\n592: </Button>"
           }
         ],
-        "coverage": 88,
+        "coverage": 86,
         "severity": "low"
       },
       {
@@ -28397,375 +28895,275 @@
         "hardcodedStrings": [
           {
             "text": "PO-2025-001",
-            "line": 462,
-            "context": "461: className=\"border-input bg-background\"\n462: placeholder=\"PO-2025-001\"\n463: />"
+            "line": 481,
+            "context": "480: className=\"border-input bg-background\"\n481: placeholder=\"PO-2025-001\"\n482: />"
           },
           {
             "text": "RO-2025-001",
-            "line": 473,
-            "context": "472: className=\"border-input bg-background\"\n473: placeholder=\"RO-2025-001\"\n474: />"
+            "line": 492,
+            "context": "491: className=\"border-input bg-background\"\n492: placeholder=\"RO-2025-001\"\n493: />"
           },
           {
             "text": "TAG-001",
-            "line": 484,
-            "context": "483: className=\"border-input bg-background\"\n484: placeholder=\"TAG-001\"\n485: />"
+            "line": 503,
+            "context": "502: className=\"border-input bg-background\"\n503: placeholder=\"TAG-001\"\n504: />"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.edit_service_order",
-            "line": 367,
+            "line": 386,
             "exists": false
           },
           {
             "key": "orders.create_service_order",
-            "line": 367,
+            "line": 386,
             "exists": false
           },
           {
             "key": "orders.edit_service_order",
-            "line": 370,
-            "exists": false
-          },
-          {
-            "key": "orders.create_service_order",
-            "line": 370,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.dealership",
-            "line": 381,
-            "exists": true
-          },
-          {
-            "key": "orders.clientInfo",
-            "line": 381,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.dealership",
-            "line": 386,
-            "exists": true
-          },
-          {
-            "key": "dealerships.auto_selected",
             "line": 389,
             "exists": false
           },
           {
+            "key": "orders.create_service_order",
+            "line": 389,
+            "exists": false
+          },
+          {
+            "key": "sales_orders.dealership",
+            "line": 400,
+            "exists": true
+          },
+          {
+            "key": "orders.clientInfo",
+            "line": 400,
+            "exists": false
+          },
+          {
+            "key": "sales_orders.dealership",
+            "line": 405,
+            "exists": true
+          },
+          {
+            "key": "dealerships.auto_selected",
+            "line": 408,
+            "exists": false
+          },
+          {
             "key": "common.loading",
-            "line": 399,
+            "line": 418,
             "exists": true
           },
           {
             "key": "orders.selectClient",
-            "line": 399,
+            "line": 418,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 412,
+            "line": 431,
             "exists": true
           },
           {
             "key": "orders.selectClient",
-            "line": 421,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
-            "line": 423,
-            "exists": true
-          },
-          {
-            "key": "orders.selectClient",
-            "line": 424,
-            "exists": true
-          },
-          {
-            "key": "orders.customerName",
             "line": 440,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 442,
+            "exists": true
+          },
+          {
+            "key": "orders.selectClient",
+            "line": 443,
+            "exists": true
+          },
+          {
+            "key": "orders.customerName",
+            "line": 459,
+            "exists": true
+          },
+          {
             "key": "service_orders.po_number",
-            "line": 456,
+            "line": 475,
             "exists": true
           },
           {
             "key": "service_orders.ro_number",
-            "line": 467,
+            "line": 486,
             "exists": true
           },
           {
             "key": "service_orders.tag_number",
-            "line": 478,
+            "line": 497,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 495,
+            "line": 514,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 498,
+            "line": 517,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 505,
+            "line": 524,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 526,
-            "exists": true
-          },
-          {
-            "key": "due_date.title",
-            "line": 540,
-            "exists": true
-          },
-          {
-            "key": "due_date.date_placeholder",
             "line": 545,
             "exists": true
           },
           {
-            "key": "due_date.validation.business_hours_only",
-            "line": 550,
-            "exists": false
-          },
-          {
-            "key": "orders.servicesAndNotes",
+            "key": "due_date.title",
             "line": 559,
             "exists": true
           },
           {
-            "key": "orders.services",
+            "key": "due_date.date_placeholder",
             "line": 564,
             "exists": true
           },
           {
+            "key": "due_date.validation.business_hours_only",
+            "line": 569,
+            "exists": false
+          },
+          {
+            "key": "orders.servicesAndNotes",
+            "line": 578,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 583,
+            "exists": true
+          },
+          {
             "key": "orders.available",
-            "line": 567,
+            "line": 586,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 574,
+            "line": 593,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 578,
+            "line": 597,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 578,
+            "line": 597,
             "exists": true
           },
           {
             "key": "orders.totalPrice",
-            "line": 620,
+            "line": 639,
             "exists": false
           },
           {
             "key": "orders.notes",
-            "line": 627,
+            "line": 646,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 634,
+            "line": 653,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 653,
+            "line": 672,
             "exists": false
           },
           {
             "key": "common.saving",
-            "line": 659,
+            "line": 678,
             "exists": false
           },
           {
             "key": "common.save",
-            "line": 662,
+            "line": 681,
             "exists": false
           },
           {
             "key": "common.create",
-            "line": 662,
+            "line": 681,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.edit_service_order",
-            "line": 367,
-            "context": "366: <DialogTitle className=\"text-xl font-semibold\">\n367: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n368: </DialogTitle>"
+            "line": 386,
+            "context": "385: <DialogTitle className=\"text-xl font-semibold\">\n386: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n387: </DialogTitle>"
           },
           {
             "key": "orders.create_service_order",
-            "line": 367,
-            "context": "366: <DialogTitle className=\"text-xl font-semibold\">\n367: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n368: </DialogTitle>"
+            "line": 386,
+            "context": "385: <DialogTitle className=\"text-xl font-semibold\">\n386: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n387: </DialogTitle>"
           },
           {
             "key": "orders.edit_service_order",
-            "line": 370,
-            "context": "369: <DialogDescription className=\"sr-only\" id=\"service-order-modal-description\">\n370: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n371: </DialogDescription>"
+            "line": 389,
+            "context": "388: <DialogDescription className=\"sr-only\" id=\"service-order-modal-description\">\n389: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n390: </DialogDescription>"
           },
           {
             "key": "orders.create_service_order",
-            "line": 370,
-            "context": "369: <DialogDescription className=\"sr-only\" id=\"service-order-modal-description\">\n370: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n371: </DialogDescription>"
+            "line": 389,
+            "context": "388: <DialogDescription className=\"sr-only\" id=\"service-order-modal-description\">\n389: {order ? t('orders.edit_service_order') : t('orders.create_service_order')}\n390: </DialogDescription>"
           },
           {
             "key": "orders.clientInfo",
-            "line": 381,
-            "context": "380: <CardHeader className=\"pb-3\">\n381: <CardTitle className=\"text-base\">{t('sales_orders.dealership')} & {t('orders.clientInfo')}</CardTitle>\n382: </CardHeader>"
+            "line": 400,
+            "context": "399: <CardHeader className=\"pb-3\">\n400: <CardTitle className=\"text-base\">{t('sales_orders.dealership')} & {t('orders.clientInfo')}</CardTitle>\n401: </CardHeader>"
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 389,
-            "context": "388: <Badge variant=\"secondary\" className=\"text-xs\">\n389: {t('dealerships.auto_selected')}\n390: </Badge>"
+            "line": 408,
+            "context": "407: <Badge variant=\"secondary\" className=\"text-xs\">\n408: {t('dealerships.auto_selected')}\n409: </Badge>"
           },
           {
             "key": "due_date.validation.business_hours_only",
-            "line": 550,
-            "context": "549: <div className=\"text-xs text-muted-foreground\">\n550: {t('due_date.validation.business_hours_only')}\n551: </div>"
+            "line": 569,
+            "context": "568: <div className=\"text-xs text-muted-foreground\">\n569: {t('due_date.validation.business_hours_only')}\n570: </div>"
           },
           {
             "key": "orders.totalPrice",
-            "line": 620,
-            "context": "619: <div className=\"flex justify-between items-center\">\n620: <span className=\"text-sm font-medium\">{t('orders.totalPrice')}</span>\n621: <span className=\"text-lg font-bold text-primary\">${totalPrice.toFixed(2)}</span>"
+            "line": 639,
+            "context": "638: <div className=\"flex justify-between items-center\">\n639: <span className=\"text-sm font-medium\">{t('orders.totalPrice')}</span>\n640: <span className=\"text-lg font-bold text-primary\">${totalPrice.toFixed(2)}</span>"
           },
           {
             "key": "common.cancel",
-            "line": 653,
-            "context": "652: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n653: {t('common.cancel')}\n654: </Button>"
+            "line": 672,
+            "context": "671: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n672: {t('common.cancel')}\n673: </Button>"
           },
           {
             "key": "common.saving",
-            "line": 659,
-            "context": "658: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n659: {t('common.saving')}\n660: </>"
+            "line": 678,
+            "context": "677: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n678: {t('common.saving')}\n679: </>"
           },
           {
             "key": "common.save",
-            "line": 662,
-            "context": "661: ) : (\n662: order ? t('common.save') : t('common.create')\n663: )}"
+            "line": 681,
+            "context": "680: ) : (\n681: order ? t('common.save') : t('common.create')\n682: )}"
           },
           {
             "key": "common.create",
-            "line": 662,
-            "context": "661: ) : (\n662: order ? t('common.save') : t('common.create')\n663: )}"
+            "line": 681,
+            "context": "680: ) : (\n681: order ? t('common.save') : t('common.create')\n682: )}"
           }
         ],
         "coverage": 93,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\orders\\ServiceOrderFields.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "service_orders.purchase_order",
-            "line": 30,
-            "exists": false
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 31,
-            "exists": false
-          },
-          {
-            "key": "service_orders.repair_order",
-            "line": 37,
-            "exists": false
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 38,
-            "exists": false
-          },
-          {
-            "key": "service_orders.tag",
-            "line": 44,
-            "exists": false
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 45,
-            "exists": false
-          },
-          {
-            "key": "service_orders.service_information",
-            "line": 64,
-            "exists": false
-          },
-          {
-            "key": "common.assigned",
-            "line": 91,
-            "exists": false
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 91,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "service_orders.purchase_order",
-            "line": 30,
-            "context": "29: label: 'PO',\n30: fullLabel: t('service_orders.purchase_order'),\n31: value: order.po || order.purchase_order || t('common.not_assigned'),"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 31,
-            "context": "30: fullLabel: t('service_orders.purchase_order'),\n31: value: order.po || order.purchase_order || t('common.not_assigned'),\n32: hasValue: !!(order.po || order.purchase_order)"
-          },
-          {
-            "key": "service_orders.repair_order",
-            "line": 37,
-            "context": "36: label: 'RO',\n37: fullLabel: t('service_orders.repair_order'),\n38: value: order.ro || order.repair_order || t('common.not_assigned'),"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 38,
-            "context": "37: fullLabel: t('service_orders.repair_order'),\n38: value: order.ro || order.repair_order || t('common.not_assigned'),\n39: hasValue: !!(order.ro || order.repair_order)"
-          },
-          {
-            "key": "service_orders.tag",
-            "line": 44,
-            "context": "43: label: 'TAG',\n44: fullLabel: t('service_orders.tag'),\n45: value: order.tag || t('common.not_assigned'),"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 45,
-            "context": "44: fullLabel: t('service_orders.tag'),\n45: value: order.tag || t('common.not_assigned'),\n46: hasValue: !!order.tag"
-          },
-          {
-            "key": "service_orders.service_information",
-            "line": 64,
-            "context": "63: <Wrench className=\"h-5 w-5 text-gray-700\" />\n64: {t('service_orders.service_information')}\n65: </CardTitle>"
-          },
-          {
-            "key": "common.assigned",
-            "line": 91,
-            "context": "90: >\n91: {info.hasValue ? t('common.assigned') : t('common.not_assigned')}\n92: </Badge>"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 91,
-            "context": "90: >\n91: {info.hasValue ? t('common.assigned') : t('common.not_assigned')}\n92: </Badge>"
-          }
-        ],
-        "coverage": 100,
         "severity": "low"
       },
       {
@@ -28773,79 +29171,64 @@
         "hardcodedStrings": [
           {
             "text": "Live",
-            "line": 277,
-            "context": "276: {lastUpdate && (\n277: <Badge variant=\"outline\" className=\"text-xs\">\n278: Live"
+            "line": 255,
+            "context": "254: {lastUpdate && (\n255: <Badge variant=\"outline\" className=\"text-xs\">\n256: Live"
           },
           {
             "text": "Start Order",
-            "line": 405,
-            "context": "404: >\n405: <Play className=\"h-3 w-3 mr-1\" />\n406: Start Order"
+            "line": 383,
+            "context": "382: >\n383: <Play className=\"h-3 w-3 mr-1\" />\n384: Start Order"
           },
           {
             "text": "Complete",
-            "line": 417,
-            "context": "416: >\n417: <CheckCircle className=\"h-3 w-3 mr-1\" />\n418: Complete"
+            "line": 395,
+            "context": "394: >\n395: <CheckCircle className=\"h-3 w-3 mr-1\" />\n396: Complete"
           },
           {
             "text": "Hold",
-            "line": 426,
-            "context": "425: >\n426: <Pause className=\"h-3 w-3 mr-1\" />\n427: Hold"
+            "line": 404,
+            "context": "403: >\n404: <Pause className=\"h-3 w-3 mr-1\" />\n405: Hold"
           },
           {
             "text": "Real-time updates active",
-            "line": 272,
-            "context": "271: {isConnected ? (\n272: <Wifi className=\"h-4 w-4 text-green-500\" title=\"Real-time updates active\" />\n273: ) : ("
+            "line": 250,
+            "context": "249: {isConnected ? (\n250: <Wifi className=\"h-4 w-4 text-green-500\" title=\"Real-time updates active\" />\n251: ) : ("
           }
         ],
         "translationCalls": [
           {
             "key": "schedule_view.schedule_timeline",
-            "line": 268,
+            "line": 246,
             "exists": true
           },
           {
             "key": "schedule_view.order_progress",
-            "line": 301,
+            "line": 279,
             "exists": true
           },
           {
             "key": "schedule_view.order_completed",
-            "line": 353,
+            "line": 331,
             "exists": true
           },
           {
             "key": "common.status.pending",
-            "line": 354,
+            "line": 332,
             "exists": true
           },
           {
             "key": "common.status.in_progress",
-            "line": 355,
+            "line": 333,
             "exists": true
           },
           {
             "key": "schedule_view.timeline",
-            "line": 366,
-            "exists": true
-          },
-          {
-            "key": "schedule_view.sla_compliance",
-            "line": 438,
-            "exists": true
-          },
-          {
-            "key": "schedule_view.on_track",
-            "line": 452,
-            "exists": true
-          },
-          {
-            "key": "schedule_view.at_risk",
-            "line": 453,
+            "line": 344,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 64,
+        "coverage": 55,
         "severity": "low"
       },
       {
@@ -29481,7 +29864,7 @@
           {
             "key": "common.not_assigned",
             "line": 34,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.not_specified",
@@ -29501,12 +29884,12 @@
           {
             "key": "common.assigned",
             "line": 72,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.not_assigned",
             "line": 72,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.stock_number",
@@ -29521,7 +29904,7 @@
           {
             "key": "common.not_assigned",
             "line": 93,
-            "exists": false
+            "exists": true
           },
           {
             "key": "recon_orders.recon_type",
@@ -29530,11 +29913,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "common.not_assigned",
-            "line": 34,
-            "context": "33: const reconInfo = React.useMemo(() => ({\n34: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n35: reconType: order.recon_type || order.reconType || t('common.not_specified'),"
-          },
           {
             "key": "common.not_specified",
             "line": 35,
@@ -29551,27 +29929,12 @@
             "context": "61: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n62: {t('recon_orders.service_performer')}\n63: </p>"
           },
           {
-            "key": "common.assigned",
-            "line": 72,
-            "context": "71: >\n72: {reconInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n73: </Badge>"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 72,
-            "context": "71: >\n72: {reconInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n73: </Badge>"
-          },
-          {
             "key": "common.stock_number",
             "line": 83,
             "context": "82: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n83: {t('common.stock_number')}\n84: </p>"
           },
           {
             "key": "common.available",
-            "line": 93,
-            "context": "92: >\n93: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n94: </Badge>"
-          },
-          {
-            "key": "common.not_assigned",
             "line": 93,
             "context": "92: >\n93: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n94: </Badge>"
           },
@@ -31742,12 +32105,12 @@
           {
             "key": "common.not_assigned",
             "line": 30,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.not_assigned",
             "line": 32,
-            "exists": false
+            "exists": true
           },
           {
             "key": "car_wash_orders.standard_wash",
@@ -31767,22 +32130,22 @@
           {
             "key": "common.assigned",
             "line": 74,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.not_assigned",
             "line": 74,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.assigned",
             "line": 95,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.not_assigned",
             "line": 95,
-            "exists": false
+            "exists": true
           },
           {
             "key": "car_wash_orders.service_type",
@@ -31797,16 +32160,6 @@
         ],
         "missingKeys": [
           {
-            "key": "common.not_assigned",
-            "line": 30,
-            "context": "29: const carWashInfo = React.useMemo(() => ({\n30: tag: order.tag || t('common.not_assigned'),\n31: hasTag: !!order.tag,"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 32,
-            "context": "31: hasTag: !!order.tag,\n32: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n33: hasServicePerformer: !!(order.service_performer || order.servicePerformer),"
-          },
-          {
             "key": "car_wash_orders.standard_wash",
             "line": 35,
             "context": "34: isWaiter: order.is_waiter || order.isWaiter || false,\n35: serviceType: order.service_type || order.serviceType || t('car_wash_orders.standard_wash')\n36: }), ["
@@ -31820,26 +32173,6 @@
             "key": "car_wash_orders.service_performer",
             "line": 64,
             "context": "63: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n64: {t('car_wash_orders.service_performer')}\n65: </p>"
-          },
-          {
-            "key": "common.assigned",
-            "line": 74,
-            "context": "73: >\n74: {carWashInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n75: </Badge>"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 74,
-            "context": "73: >\n74: {carWashInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}\n75: </Badge>"
-          },
-          {
-            "key": "common.assigned",
-            "line": 95,
-            "context": "94: >\n95: {carWashInfo.hasTag ? t('common.assigned') : t('common.not_assigned')}\n96: </Badge>"
-          },
-          {
-            "key": "common.not_assigned",
-            "line": 95,
-            "context": "94: >\n95: {carWashInfo.hasTag ? t('common.assigned') : t('common.not_assigned')}\n96: </Badge>"
           },
           {
             "key": "car_wash_orders.service_type",
@@ -36808,47 +37141,47 @@
           {
             "key": "get_ready.table.step",
             "line": 118,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.image",
             "line": 119,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.stock",
             "line": 120,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.vehicle",
             "line": 121,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.media",
             "line": 122,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.work_items",
             "line": 123,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.days_in_step",
             "line": 124,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.notes",
             "line": 125,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.priority",
             "line": 126,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.table.no_work_items",
@@ -36893,51 +37226,6 @@
             "context": "109: <Printer className=\"h-4 w-4 mr-2\" />\n110: {t('common.print', 'Print')}\n111: </Button>"
           },
           {
-            "key": "get_ready.table.step",
-            "line": 118,
-            "context": "117: <TableRow>\n118: <TableHead className=\"w-16\">{t('get_ready.table.step')}</TableHead>\n119: <TableHead className=\"w-16\">{t('get_ready.table.image')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.image",
-            "line": 119,
-            "context": "118: <TableHead className=\"w-16\">{t('get_ready.table.step')}</TableHead>\n119: <TableHead className=\"w-16\">{t('get_ready.table.image')}</TableHead>\n120: <TableHead>{t('get_ready.table.stock')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.stock",
-            "line": 120,
-            "context": "119: <TableHead className=\"w-16\">{t('get_ready.table.image')}</TableHead>\n120: <TableHead>{t('get_ready.table.stock')}</TableHead>\n121: <TableHead>{t('get_ready.table.vehicle')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.vehicle",
-            "line": 121,
-            "context": "120: <TableHead>{t('get_ready.table.stock')}</TableHead>\n121: <TableHead>{t('get_ready.table.vehicle')}</TableHead>\n122: <TableHead className=\"w-20 text-center\">{t('get_ready.table.media')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.media",
-            "line": 122,
-            "context": "121: <TableHead>{t('get_ready.table.vehicle')}</TableHead>\n122: <TableHead className=\"w-20 text-center\">{t('get_ready.table.media')}</TableHead>\n123: <TableHead className=\"w-32\">{t('get_ready.table.work_items')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.work_items",
-            "line": 123,
-            "context": "122: <TableHead className=\"w-20 text-center\">{t('get_ready.table.media')}</TableHead>\n123: <TableHead className=\"w-32\">{t('get_ready.table.work_items')}</TableHead>\n124: <TableHead className=\"w-24\">{t('get_ready.table.days_in_step')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.days_in_step",
-            "line": 124,
-            "context": "123: <TableHead className=\"w-32\">{t('get_ready.table.work_items')}</TableHead>\n124: <TableHead className=\"w-24\">{t('get_ready.table.days_in_step')}</TableHead>\n125: <TableHead className=\"w-32\">{t('get_ready.table.notes')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.notes",
-            "line": 125,
-            "context": "124: <TableHead className=\"w-24\">{t('get_ready.table.days_in_step')}</TableHead>\n125: <TableHead className=\"w-32\">{t('get_ready.table.notes')}</TableHead>\n126: <TableHead className=\"w-20\">{t('get_ready.table.priority')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.priority",
-            "line": 126,
-            "context": "125: <TableHead className=\"w-32\">{t('get_ready.table.notes')}</TableHead>\n126: <TableHead className=\"w-20\">{t('get_ready.table.priority')}</TableHead>\n127: </TableRow>"
-          },
-          {
             "key": "get_ready.table.no_work_items",
             "line": 217,
             "context": "216: <span className=\"text-xs text-muted-foreground\">\n217: {t('get_ready.table.no_work_items')}\n218: </span>"
@@ -36957,18 +37245,249 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\get-ready\\VehicleFormModal.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "STK001",
+            "line": 179,
+            "context": "178: onChange={e => updateFormData('stock_number', e.target.value)}\n179: placeholder=\"STK001\"\n180: className={errors.stock_number ? 'border-red-500' : ''}"
+          },
+          {
+            "text": "Honda",
+            "line": 235,
+            "context": "234: onChange={e => updateFormData('make', e.target.value)}\n235: placeholder=\"Honda\"\n236: className={errors.make ? 'border-red-500' : ''}"
+          },
+          {
+            "text": "Civic",
+            "line": 252,
+            "context": "251: onChange={e => updateFormData('model', e.target.value)}\n252: placeholder=\"Civic\"\n253: className={errors.model ? 'border-red-500' : ''}"
+          },
+          {
+            "text": "John Doe",
+            "line": 356,
+            "context": "355: onChange={e => updateFormData('assigned_to', e.target.value)}\n356: placeholder=\"John Doe\"\n357: />"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.vehicle_form.errors.stock_required",
+            "line": 87,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.vin_required",
+            "line": 91,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.vin_invalid",
+            "line": 93,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.year_required",
+            "line": 98,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.year_invalid",
+            "line": 100,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.make_required",
+            "line": 104,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.model_required",
+            "line": 108,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.success.updated",
+            "line": 130,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.success.created",
+            "line": 131,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.save_failed",
+            "line": 138,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.title.edit",
+            "line": 158,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.title.add",
+            "line": 159,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.description",
+            "line": 162,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.stock_number",
+            "line": 172,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.vin",
+            "line": 189,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.year",
+            "line": 210,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.make",
+            "line": 228,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.model",
+            "line": 245,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.trim",
+            "line": 264,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.step",
+            "line": 278,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.workflow",
+            "line": 301,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.standard",
+            "line": 312,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.express",
+            "line": 315,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.priority",
+            "line": 318,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.priority",
+            "line": 329,
+            "exists": true
+          },
+          {
+            "key": "common.priority.low",
+            "line": 339,
+            "exists": true
+          },
+          {
+            "key": "common.priority.normal",
+            "line": 340,
+            "exists": false
+          },
+          {
+            "key": "common.priority.medium",
+            "line": 341,
+            "exists": true
+          },
+          {
+            "key": "common.priority.high",
+            "line": 342,
+            "exists": true
+          },
+          {
+            "key": "common.priority.urgent",
+            "line": 343,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.assigned_to",
+            "line": 350,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.notes",
+            "line": 364,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.placeholders.notes",
+            "line": 370,
+            "exists": true
+          },
+          {
+            "key": "common.actions.cancel",
+            "line": 383,
+            "exists": false
+          },
+          {
+            "key": "common.actions.update",
+            "line": 388,
+            "exists": false
+          },
+          {
+            "key": "common.actions.create",
+            "line": 389,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.priority.normal",
+            "line": 340,
+            "context": "339: <SelectItem value=\"low\">{t('common.priority.low')}</SelectItem>\n340: <SelectItem value=\"normal\">{t('common.priority.normal')}</SelectItem>\n341: <SelectItem value=\"medium\">{t('common.priority.medium')}</SelectItem>"
+          },
+          {
+            "key": "common.actions.cancel",
+            "line": 383,
+            "context": "382: >\n383: {t('common.actions.cancel')}\n384: </Button>"
+          },
+          {
+            "key": "common.actions.update",
+            "line": 388,
+            "context": "387: {isEditMode\n388: ? t('common.actions.update')\n389: : t('common.actions.create')}"
+          },
+          {
+            "key": "common.actions.create",
+            "line": 389,
+            "context": "388: ? t('common.actions.update')\n389: : t('common.actions.create')}\n390: </Button>"
+          }
+        ],
+        "coverage": 90,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\get-ready\\VehicleDetailPanel.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "get_ready.detail_panel.no_selection.title",
             "line": 59,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.detail_panel.no_selection.description",
             "line": 62,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.detail_panel.error.title",
@@ -36998,7 +37517,7 @@
           {
             "key": "get_ready.tabs.vendors",
             "line": 156,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.tabs.timeline",
@@ -37073,16 +37592,6 @@
         ],
         "missingKeys": [
           {
-            "key": "get_ready.detail_panel.no_selection.title",
-            "line": 59,
-            "context": "58: <h3 className=\"text-lg font-medium mb-2\">\n59: {t('get_ready.detail_panel.no_selection.title')}\n60: </h3>"
-          },
-          {
-            "key": "get_ready.detail_panel.no_selection.description",
-            "line": 62,
-            "context": "61: <p className=\"text-sm\">\n62: {t('get_ready.detail_panel.no_selection.description')}\n63: </p>"
-          },
-          {
             "key": "get_ready.detail_panel.error.title",
             "line": 86,
             "context": "85: <h3 className=\"text-lg font-medium mb-2\">\n86: {t('get_ready.detail_panel.error.title')}\n87: </h3>"
@@ -37106,11 +37615,6 @@
             "key": "get_ready.tabs.notes",
             "line": 152,
             "context": "151: <MessageSquare className=\"h-4 w-4\" />\n152: <span className=\"hidden sm:inline\">{t('get_ready.tabs.notes')}</span>\n153: </TabsTrigger>"
-          },
-          {
-            "key": "get_ready.tabs.vendors",
-            "line": 156,
-            "context": "155: <Users className=\"h-4 w-4\" />\n156: <span className=\"hidden sm:inline\">{t('get_ready.tabs.vendors')}</span>\n157: </TabsTrigger>"
           },
           {
             "key": "get_ready.tabs.timeline",
@@ -37187,40 +37691,111 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\get-ready\\StepsList.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Default",
+            "line": 137,
+            "context": "136: {step.is_default && (\n137: <Badge variant=\"outline\" className=\"bg-gray-50 text-gray-700 border-gray-200\">\n138: Default"
+          },
+          {
+            "text": "Vehicles",
+            "line": 205,
+            "context": "204: <div>\n205: <p className=\"text-xs text-gray-500\">Vehicles</p>\n206: <p className=\"text-sm font-semibold text-gray-900\">"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "messages.error.generic",
+            "line": 71,
+            "exists": false
+          },
+          {
+            "key": "get_ready.setup.no_steps_title",
+            "line": 85,
+            "exists": true
+          },
+          {
+            "key": "get_ready.setup.no_steps_description",
+            "line": 88,
+            "exists": true
+          },
+          {
+            "key": "get_ready.setup.add_step",
+            "line": 101,
+            "exists": true
+          },
+          {
+            "key": "get_ready.metrics.capacity",
+            "line": 181,
+            "exists": true
+          },
+          {
+            "key": "get_ready.setup.delete_confirm_title",
+            "line": 229,
+            "exists": true
+          },
+          {
+            "key": "get_ready.setup.delete_confirm_message",
+            "line": 231,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 236,
+            "exists": true
+          },
+          {
+            "key": "common.status.loading",
+            "line": 243,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.delete",
+            "line": 243,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "messages.error.generic",
+            "line": 71,
+            "context": "70: <p className=\"text-sm font-medium\">\n71: {t('messages.error.generic')}\n72: </p>"
+          }
+        ],
+        "coverage": 83,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\get-ready\\GetReadyTopbar.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 61,
+            "line": 72,
             "exists": false
           },
           {
             "key": "get_ready.search_placeholder",
-            "line": 74,
-            "exists": false
+            "line": 85,
+            "exists": true
           },
           {
             "key": "common.export",
-            "line": 82,
+            "line": 93,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 61,
-            "context": "60: <span className=\"hidden sm:inline\">\n61: {t(`get_ready.tabs.${tab.key}`)}\n62: </span>"
-          },
-          {
-            "key": "get_ready.search_placeholder",
-            "line": 74,
-            "context": "73: <Input\n74: placeholder={t('get_ready.search_placeholder')}\n75: className=\"pl-8 w-64\""
+            "line": 72,
+            "context": "71: <span className=\"hidden sm:inline\">\n72: {t(`get_ready.tabs.${tab.key}`)}\n73: </span>"
           },
           {
             "key": "common.export",
-            "line": 82,
-            "context": "81: <Download className=\"h-4 w-4 mr-2\" />\n82: {t('common.export')}\n83: </Button>"
+            "line": 93,
+            "context": "92: <Download className=\"h-4 w-4 mr-2\" />\n93: {t('common.export')}\n94: </Button>"
           }
         ],
         "coverage": 100,
@@ -37228,62 +37803,157 @@
       },
       {
         "file": "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "Daily",
+            "line": 111,
+            "context": "110: <div className=\"bg-blue-50 rounded p-1\">\n111: <div className=\"text-xs text-blue-700 font-medium\">Daily</div>\n112: <div className=\"text-xs font-bold text-blue-800\">{kpis.dailyThroughput}</div>"
+          }
+        ],
         "translationCalls": [
           {
-            "key": "get_ready.steps.title",
-            "line": 44,
-            "exists": false
+            "key": "get_ready.title",
+            "line": 91,
+            "exists": true
           },
           {
-            "key": "get_ready.steps.dis_tooltip",
-            "line": 111,
-            "exists": false
+            "key": "get_ready.title",
+            "line": 144,
+            "exists": true
           },
           {
-            "key": "get_ready.steps.dis",
-            "line": 113,
-            "exists": false
-          },
-          {
-            "key": "get_ready.steps.dtf_tooltip",
-            "line": 118,
-            "exists": false
-          },
-          {
-            "key": "get_ready.steps.dtf",
-            "line": 120,
-            "exists": false
+            "key": "get_ready.alerts.active_alerts",
+            "line": 157,
+            "exists": true
           }
         ],
-        "missingKeys": [
+        "missingKeys": [],
+        "coverage": 75,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
+        "hardcodedStrings": [
           {
-            "key": "get_ready.steps.title",
-            "line": 44,
-            "context": "43: <h2 className=\"font-semibold text-sm text-gray-900\">\n44: {t('get_ready.steps.title')}\n45: </h2>"
+            "text": "Issues requiring immediate attention",
+            "line": 139,
+            "context": "138: </CardTitle>\n139: <CardDescription>\n140: Issues requiring immediate attention"
           },
           {
-            "key": "get_ready.steps.dis_tooltip",
-            "line": 111,
-            "context": "110: className=\"h-4 px-1 text-xs bg-blue-50 border-blue-200 text-blue-700\"\n111: title={t('get_ready.steps.dis_tooltip')}\n112: >"
+            "text": "Key performance indicators and trends",
+            "line": 153,
+            "context": "152: <CardTitle>{t('get_ready.dashboard.performance_overview')}</CardTitle>\n153: <CardDescription>\n154: Key performance indicators and trends"
           },
           {
-            "key": "get_ready.steps.dis",
-            "line": 113,
-            "context": "112: >\n113: {t('get_ready.steps.dis')}: {step.days_in_step_avg}d\n114: </Badge>"
-          },
-          {
-            "key": "get_ready.steps.dtf_tooltip",
-            "line": 118,
-            "context": "117: className=\"h-4 px-1 text-xs bg-green-50 border-green-200 text-green-700\"\n118: title={t('get_ready.steps.dtf_tooltip')}\n119: >"
-          },
-          {
-            "key": "get_ready.steps.dtf",
-            "line": 120,
-            "context": "119: >\n120: {t('get_ready.steps.dtf')}: {step.days_to_frontline_avg}d\n121: </Badge>"
+            "text": "Quality Score",
+            "line": 182,
+            "context": "181: <div className=\"space-y-2\">\n182: <div className=\"text-sm font-medium\">\n183: Quality Score"
           }
         ],
-        "coverage": 100,
+        "translationCalls": [
+          {
+            "key": "get_ready.kpis.avg_t2l",
+            "line": 50,
+            "exists": true
+          },
+          {
+            "key": "get_ready.kpis.sla_compliance",
+            "line": 72,
+            "exists": true
+          },
+          {
+            "key": "get_ready.kpis.daily_throughput",
+            "line": 94,
+            "exists": true
+          },
+          {
+            "key": "get_ready.kpis.total_holding_cost",
+            "line": 113,
+            "exists": true
+          },
+          {
+            "key": "get_ready.dashboard.title",
+            "line": 137,
+            "exists": true
+          },
+          {
+            "key": "get_ready.dashboard.performance_overview",
+            "line": 152,
+            "exists": true
+          },
+          {
+            "key": "get_ready.metrics.efficiency",
+            "line": 161,
+            "exists": true
+          },
+          {
+            "key": "get_ready.kpis.weekly_capacity",
+            "line": 171,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 73,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\GetReadyAlerts.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Vehicle",
+            "line": 153,
+            "context": "152: <div>\n153: <div className=\"mb-1\">\n154: Vehicle <strong>{(alert as any).stock_number}</strong> is{' '}"
+          },
+          {
+            "text": "View Details",
+            "line": 165,
+            "context": "164: <div className=\"flex items-center gap-2 mt-2\">\n165: <Button size=\"sm\" variant=\"outline\" className=\"h-6 text-xs\">\n166: View Details"
+          },
+          {
+            "text": "Dismiss",
+            "line": 168,
+            "context": "167: </Button>\n168: <Button size=\"sm\" variant=\"ghost\" className=\"h-6 text-xs\">\n169: Dismiss"
+          },
+          {
+            "text": "View Details\n                  ",
+            "line": 165,
+            "context": "164: <div className=\"flex items-center gap-2 mt-2\">\n165: <Button size=\"sm\" variant=\"outline\" className=\"h-6 text-xs\">\n166: View Details"
+          },
+          {
+            "text": "Dismiss\n                  ",
+            "line": 168,
+            "context": "167: </Button>\n168: <Button size=\"sm\" variant=\"ghost\" className=\"h-6 text-xs\">\n169: Dismiss"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.alerts.no_alerts",
+            "line": 28,
+            "exists": true
+          },
+          {
+            "key": "get_ready.alerts.bottleneck",
+            "line": 73,
+            "exists": true
+          },
+          {
+            "key": "get_ready.alerts.sla_warning",
+            "line": 77,
+            "exists": true
+          },
+          {
+            "key": "get_ready.alerts.active_alerts",
+            "line": 110,
+            "exists": true
+          },
+          {
+            "key": "get_ready.alerts.bottleneck",
+            "line": 127,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 50,
         "severity": "low"
       },
       {
@@ -38685,7 +39355,7 @@
           {
             "key": "common.access_denied",
             "line": 171,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealer.modules.title",
@@ -38758,11 +39428,6 @@
             "key": "dealer.modules.update_error",
             "line": 121,
             "context": "120: title: t('common.error'),\n121: description: t('dealer.modules.update_error'),\n122: variant: 'destructive'"
-          },
-          {
-            "key": "common.access_denied",
-            "line": 171,
-            "context": "170: <CardContent className=\"pt-6\">\n171: <p className=\"text-muted-foreground text-center\">{t('common.access_denied')}</p>\n172: </CardContent>"
           },
           {
             "key": "dealer.modules.description",
@@ -41994,7 +42659,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "23 Modal components need translation",
+      "description": "24 Modal components need translation",
       "files": [
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
         "src\\components\\dealerships\\DealershipModal.tsx",
@@ -42005,6 +42670,7 @@
         "src\\components\\dealer\\EditRoleModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
+        "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
@@ -42040,7 +42706,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "267 Component components need translation",
+      "description": "276 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -42048,7 +42714,9 @@
         "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\invitations\\InvitationManagement.tsx",
+        "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
         "src\\components\\users\\password\\PasswordActivityLog.tsx",
+        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\detail-hub\\ReportsCenter.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
@@ -42056,6 +42724,7 @@
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
         "src\\hooks\\usePrintOrder.ts",
         "src\\components\\users\\AdvancedUserFilters.tsx",
+        "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\dev\\StorageDevTools.tsx",
         "src\\tests\\scripts\\run-performance-tests.ts",
         "src\\pages\\Phase3Dashboard.tsx",
@@ -42068,11 +42737,11 @@
         "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\debug\\DuplicateTooltipTester.tsx",
         "src\\components\\settings\\IntegrationSettings.tsx",
-        "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\followers\\UniversalFollowButton.tsx",
         "src\\components\\users\\UserDashboard.tsx",
         "src\\components\\scanner\\enhanced\\VinAnalyzer.tsx",
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
+        "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\dev\\OrderNumberMigrationTool.tsx",
         "src\\test\\components\\Button.test.tsx",
         "src\\hooks\\useChatPermissions.tsx",
@@ -42092,7 +42761,9 @@
         "src\\hooks\\useEnhancedNotifications.tsx",
         "src\\components\\sales\\OrderKanbanBoard.tsx",
         "src\\components\\orders\\OrderFilters.tsx",
+        "src\\components\\get-ready\\GetReadyExample.tsx",
         "src\\pages\\NFCTracking.tsx",
+        "src\\hooks\\useVehicleManagement.ts",
         "src\\hooks\\useUserPresence.tsx",
         "src\\hooks\\useSmartPolling.ts",
         "src\\hooks\\useSmartNotifications.tsx",
@@ -42100,6 +42771,7 @@
         "src\\components\\ui\\pagination.tsx",
         "src\\components\\productivity\\ProductivityMetrics.tsx",
         "src\\components\\orders\\ScheduleViewBlock.tsx",
+        "src\\components\\get-ready\\GetReadyAlerts.tsx",
         "src\\components\\dealer\\DealerServices.tsx",
         "src\\components\\chat\\FloatingChatBubble.tsx",
         "src\\pages\\DealerView.tsx",
@@ -42129,6 +42801,7 @@
         "src\\components\\orders\\TeamCommunicationBlock.tsx",
         "src\\components\\orders\\EnhancedOrderDetailLayout.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
+        "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
         "src\\components\\debug\\TooltipTester.tsx",
         "src\\utils\\modalDataCache.ts",
         "src\\test\\integration\\orderProductivityIntegration.test.tsx",
@@ -42140,6 +42813,7 @@
         "src\\hooks\\useRealtimeOrderData.ts",
         "src\\hooks\\useOrderComments.ts",
         "src\\hooks\\useOptimizedVinScanner.tsx",
+        "src\\hooks\\useGetReady.tsx",
         "src\\hooks\\useDealershipModules.tsx",
         "src\\hooks\\useAdvancedVinScanner.tsx",
         "src\\components\\AppSidebar.tsx",
@@ -42149,6 +42823,7 @@
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
+        "src\\components\\get-ready\\StepsList.tsx",
         "src\\components\\attachments\\FileUpload.tsx",
         "src\\components\\attachments\\AttachmentsList.tsx",
         "src\\workers\\vinOcrWorker.ts",
@@ -42159,6 +42834,7 @@
         "src\\pages\\Users.tsx",
         "src\\pages\\Settings.tsx",
         "src\\pages\\QRRedirect.tsx",
+        "src\\pages\\GetReadySetup.tsx",
         "src\\lib\\sessionRecovery.ts",
         "src\\hooks\\usePerformanceMonitor.ts",
         "src\\hooks\\useAccessibleDealerships.tsx",
@@ -42186,6 +42862,7 @@
         "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\nfc\\NFCPhysicalWriter.tsx",
         "src\\components\\management\\DealershipPerformanceTable.tsx",
+        "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\debug\\SimpleSalesOrders.tsx",
         "src\\components\\common\\LazyComponentWrapper.tsx",
@@ -42262,7 +42939,6 @@
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\orders\\SimpleNotesDisplay.tsx",
         "src\\components\\orders\\ServicesDisplay.tsx",
-        "src\\components\\orders\\ServiceOrderFields.tsx",
         "src\\components\\orders\\ReconOrderFields.tsx",
         "src\\components\\orders\\RecentActivity.tsx",
         "src\\components\\orders\\OrderComments.tsx",
@@ -42291,7 +42967,6 @@
         "src\\components\\get-ready\\VehicleTable.tsx",
         "src\\components\\get-ready\\VehicleDetailPanel.tsx",
         "src\\components\\get-ready\\GetReadyTopbar.tsx",
-        "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
         "src\\components\\debug\\SimpleServiceOrders.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
@@ -42310,15 +42985,15 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "134 hours"
+      "estimatedEffort": "138 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2888 translation keys are referenced but missing",
+      "description": "2858 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "145 hours"
+      "estimatedEffort": "143 hours"
     }
   ],
-  "coverage": 78
+  "coverage": 77
 }

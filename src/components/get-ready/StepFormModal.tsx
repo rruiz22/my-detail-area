@@ -42,7 +42,6 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
     description: step?.description || '',
     color: step?.color || DEFAULT_COLORS[0],
     sla_hours: step?.sla_hours?.toString() || '24',
-    max_capacity: step?.max_capacity?.toString() || '10',
     cost_per_day: step?.cost_per_day?.toString() || '0',
   });
 
@@ -59,10 +58,6 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       newErrors.sla_hours = t('get_ready.setup.form.errors.sla_required');
     }
 
-    if (!formData.max_capacity || parseInt(formData.max_capacity) < 1) {
-      newErrors.max_capacity = t('get_ready.setup.form.errors.capacity_required');
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -77,7 +72,6 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       description: formData.description.trim() || undefined,
       color: formData.color,
       sla_hours: parseInt(formData.sla_hours),
-      max_capacity: parseInt(formData.max_capacity),
       cost_per_day: parseFloat(formData.cost_per_day) || 0,
       order_index: step?.order_index || nextOrderIndex,
     };
@@ -98,7 +92,6 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       description: '',
       color: DEFAULT_COLORS[0],
       sla_hours: '24',
-      max_capacity: '10',
       cost_per_day: '0',
     });
     setErrors({});
@@ -190,21 +183,6 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
                 {errors.sla_hours && <p className="text-sm text-red-500">{errors.sla_hours}</p>}
               </div>
 
-              {/* Max Capacity */}
-              <div className="space-y-2">
-                <Label htmlFor="max_capacity">
-                  {t('get_ready.setup.form.fields.max_capacity')} <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="max_capacity"
-                  type="number"
-                  min="1"
-                  value={formData.max_capacity}
-                  onChange={(e) => setFormData({ ...formData, max_capacity: e.target.value })}
-                  className={errors.max_capacity ? 'border-red-500' : ''}
-                />
-                {errors.max_capacity && <p className="text-sm text-red-500">{errors.max_capacity}</p>}
-              </div>
             </div>
 
             {/* Cost per Day */}

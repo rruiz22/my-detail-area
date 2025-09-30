@@ -222,9 +222,6 @@ export default function SalesOrders() {
 
       await updateOrder(orderId, updateData);
 
-      // Update last refresh timestamp for UI
-      setLastRefresh(new Date());
-
       // Dispatch event to notify other components
       window.dispatchEvent(new CustomEvent('orderStatusChanged'));
       window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
@@ -232,6 +229,9 @@ export default function SalesOrders() {
       }));
 
       toast.success(t('orders.status_updated_successfully'));
+
+      // Refresh table data immediately after successful status change
+      setTimeout(() => refreshData(), 100);
     } catch (error) {
       console.error('Status change failed:', error);
 
@@ -409,7 +409,7 @@ export default function SalesOrders() {
                   onDelete={handleDeleteOrder}
                   onView={handleViewOrder}
                   onStatusChange={handleStatusChange}
-                  tabType={activeFilter}
+                  tabType="sales"
                 />
               )}
             </div>

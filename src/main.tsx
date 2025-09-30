@@ -1,3 +1,6 @@
+// Import network error suppressor FIRST to catch all errors
+import "./utils/networkErrorSuppressor";
+
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
 import App from "./App.tsx";

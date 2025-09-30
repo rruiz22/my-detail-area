@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { supabase } from '@/integrations/supabase/client';
 import { safeFormatDate } from '@/utils/dateUtils';
 import {
-  MessageSquare,
   Edit2,
   Printer,
   Download
@@ -15,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
-import { ChatAndSMSActions } from './ChatAndSMSActions';
 import { OrderTasksSection } from './OrderTasksSection';
 import { SkeletonLoader } from './SkeletonLoader';
 
@@ -528,26 +526,6 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                       {...qrProps}
                     />
                   )}
-
-                  {/* Chat and Communication Actions */}
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" />
-                        {t('orders.communication_actions', 'Team Communication')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ChatAndSMSActions
-                        orderId={orderData.id}
-                        orderNumber={orderData.orderNumber || orderData.order_number}
-                        assignedUserId={orderData.assigned_group_id || orderData.assignedGroupId || ''}
-                        assignedUserName={orderData.assigned_to || orderData.assignedTo || ''}
-                        dealerId={orderData.dealer_id ? Number(orderData.dealer_id) : FALLBACK_DEALER_ID}
-                        variant="compact"
-                      />
-                    </CardContent>
-                  </Card>
 
                   {/* Enhanced Followers Block */}
                   {isLoadingData ? (

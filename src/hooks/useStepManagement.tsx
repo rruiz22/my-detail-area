@@ -12,7 +12,6 @@ interface CreateStepInput {
   color: string;
   icon?: string;
   sla_hours: number;
-  max_capacity: number;
   cost_per_day?: number;
   is_default?: boolean;
 }
@@ -47,11 +46,9 @@ export function useStepManagement() {
           color: input.color,
           icon: input.icon || 'circle',
           sla_hours: input.sla_hours,
-          max_capacity: input.max_capacity,
           cost_per_day: input.cost_per_day || 0,
           is_default: input.is_default || false,
           is_active: true,
-          current_capacity: 0,
         })
         .select()
         .single();

@@ -1305,7 +1305,6 @@
       "priority": "Prioridad"
     },
     "metrics": {
-      "capacity": "Capacidad",
       "sla_hours": "Horas SLA",
       "cost_per_day": "Costo por Día",
       "throughput": "Rendimiento",
@@ -1354,7 +1353,9 @@
       "success": {
         "created": "Vehículo creado exitosamente",
         "updated": "Vehículo actualizado exitosamente"
-      }
+      },
+      "vin_decoded": "VIN Decodificado",
+      "decoding_vin": "Decodificando VIN..."
     },
     "setup": {
       "title": "Configuración del Flujo de Trabajo",
@@ -1372,7 +1373,6 @@
           "description": "Descripción",
           "color": "Color",
           "sla_hours": "SLA (Horas)",
-          "max_capacity": "Capacidad Máxima",
           "cost_per_day": "Costo por Día"
         },
         "placeholders": {
@@ -1381,8 +1381,7 @@
         },
         "errors": {
           "name_required": "El nombre del paso es obligatorio",
-          "sla_required": "Las horas SLA deben ser un número positivo",
-          "capacity_required": "La capacidad máxima debe ser al menos 1"
+          "sla_required": "Las horas SLA deben ser un número positivo"
         }
       },
       "step_created": "Paso creado exitosamente",

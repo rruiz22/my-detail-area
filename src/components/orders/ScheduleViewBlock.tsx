@@ -2,6 +2,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import {
   Calendar,
@@ -13,19 +14,15 @@ import {
   Target,
   Wifi,
   WifiOff,
-  RefreshCw,
   Play,
   Pause,
   XCircle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { safeFormatDate, calculateDaysFromNow } from '@/utils/dateUtils';
 import { createScheduleItems, getOrderDateSummary } from '@/utils/orderDateUtils';
 import { getEnhancedDueDateStatus } from '@/utils/overdueCalculations';
 import type { OrderData } from '@/types/order';
 import { useRealtimeSchedule } from '@/hooks/useRealtimeSchedule';
-import { InteractiveTimeline } from './InteractiveTimeline';
-import { useSLAManagement } from '@/hooks/useSLAManagement';
 
 interface ScheduleViewBlockProps {
   order: OrderData;
@@ -63,22 +60,6 @@ const getProgressColorClass = (status: string): string => {
     default:
       return '[&>div]:bg-gray-300'; // Default gray
   }
-};
-
-const getSLAProgressColorClass = (status: string, isWithinSLA: boolean): string => {
-  if (status === 'completed') {
-    return isWithinSLA ? '[&>div]:bg-green-500' : '[&>div]:bg-orange-500';
-  }
-  if (status === 'cancelled') {
-    return '[&>div]:bg-gray-400';
-  }
-  if (status === 'pending') {
-    return '[&>div]:bg-amber-500';
-  }
-  if (status === 'in_progress') {
-    return isWithinSLA ? '[&>div]:bg-blue-500' : '[&>div]:bg-red-500';
-  }
-  return '[&>div]:bg-gray-300';
 };
 
 // Memoized component to prevent unnecessary re-renders
@@ -126,9 +107,6 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
     enabled: true,
     onScheduleUpdate: handleScheduleUpdate
   });
-
-  // SLA management
-  const { slaStatus, getSLARecommendations, getSLAColors } = useSLAManagement(currentOrder);
 
   // Update local order when prop changes
   React.useEffect(() => {
@@ -431,78 +409,6 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
             </div>
           </div>
         )}
-
-        {/* Enhanced SLA Compliance */}
-        <div className="pt-3 border-t space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{t('schedule_view.sla_compliance')}</span>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant={
-                  slaStatus.status === 'overdue' ? 'destructive' :
-                  slaStatus.status === 'at_risk' ? 'secondary' :
-                  'default'
-                }
-                className={
-                  slaStatus.status === 'overdue' ? 'bg-red-500 text-white' :
-                  slaStatus.status === 'at_risk' ? 'bg-yellow-500 text-white' :
-                  'bg-green-500 text-white'
-                }
-              >
-                {slaStatus.status === 'on_track' ? t('schedule_view.on_track') :
-                 slaStatus.status === 'at_risk' ? t('schedule_view.at_risk') :
-                 slaStatus.status === 'overdue' ? 'OVERDUE' :
-                 slaStatus.status === 'completed' ? 'COMPLETED' : 'UNKNOWN'}
-              </Badge>
-              <span className="text-xs text-muted-foreground">
-                {Math.round(slaStatus.percentageUsed)}%
-              </span>
-            </div>
-          </div>
-
-          {/* SLA Progress Bar with Status Colors */}
-          <div className="space-y-2">
-            <Progress
-              value={Math.min(slaStatus.percentageUsed, 100)}
-              className={`h-3 ${getSLAProgressColorClass(currentOrder.status, slaStatus.isWithinSLA)}`}
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>
-                {currentOrder.status === 'completed'
-                  ? (slaStatus.isWithinSLA ? 'SLA Met' : 'SLA Exceeded')
-                  : currentOrder.status === 'cancelled'
-                  ? 'SLA N/A (Cancelled)'
-                  : slaStatus.businessHoursRemaining > 0
-                  ? `${Math.round(slaStatus.businessHoursRemaining)}h remaining`
-                  : 'SLA exceeded'
-                }
-              </span>
-              <span>
-                {slaStatus.escalationLevel !== 'none' && currentOrder.status !== 'completed' && currentOrder.status !== 'cancelled' && `⚠️ ${slaStatus.escalationLevel.toUpperCase()}`}
-              </span>
-            </div>
-          </div>
-
-          {/* SLA Recommendations */}
-          {getSLARecommendations().length > 0 && (
-            <div className={`p-2 rounded-md ${getSLAColors().bg} ${getSLAColors().border} border`}>
-              <div className="space-y-1">
-                {getSLARecommendations().map((recommendation, index) => (
-                  <p key={index} className={`text-xs ${getSLAColors().text}`}>
-                    • {recommendation}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Next Business Day Info */}
-          {slaStatus.nextBusinessDay && slaStatus.businessHoursRemaining <= 8 && (
-            <div className="text-xs text-muted-foreground">
-              Next business day: {safeFormatDate(slaStatus.nextBusinessDay.toISOString())}
-            </div>
-          )}
-        </div>
       </CardContent>
     </Card>
   );

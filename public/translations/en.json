@@ -1560,7 +1560,6 @@
       "priority": "Priority"
     },
     "metrics": {
-      "capacity": "Capacity",
       "sla_hours": "SLA Hours",
       "cost_per_day": "Cost per Day",
       "throughput": "Throughput",
@@ -1604,12 +1603,18 @@
         "year_invalid": "Please enter a valid year",
         "make_required": "Make is required",
         "model_required": "Model is required",
-        "save_failed": "Failed to save vehicle. Please try again."
+        "save_failed": "Failed to save vehicle. Please try again.",
+        "delete_failed": "Failed to delete vehicle. Please try again.",
+        "move_failed": "Failed to move vehicle. Please try again."
       },
       "success": {
         "created": "Vehicle created successfully",
-        "updated": "Vehicle updated successfully"
-      }
+        "updated": "Vehicle updated successfully",
+        "deleted": "Vehicle deleted successfully",
+        "moved": "Vehicle moved to new step successfully"
+      },
+      "vin_decoded": "VIN Decoded",
+      "decoding_vin": "Decoding VIN..."
     },
     "setup": {
       "title": "Workflow Setup",
@@ -1627,7 +1632,6 @@
           "description": "Description",
           "color": "Color",
           "sla_hours": "SLA (Hours)",
-          "max_capacity": "Max Capacity",
           "cost_per_day": "Cost per Day"
         },
         "placeholders": {
@@ -1636,8 +1640,7 @@
         },
         "errors": {
           "name_required": "Step name is required",
-          "sla_required": "SLA hours must be a positive number",
-          "capacity_required": "Max capacity must be at least 1"
+          "sla_required": "SLA hours must be a positive number"
         }
       },
       "step_created": "Step created successfully",
