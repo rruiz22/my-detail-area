@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 510,
-  "totalStrings": 5054,
+  "scannedFiles": 511,
+  "totalStrings": 5053,
   "hardcodedStrings": 1171,
-  "translatedStrings": 3883,
+  "translatedStrings": 3882,
   "issues": {
     "critical": [
       {
@@ -12948,13 +12948,13 @@
         "hardcodedStrings": [
           {
             "text": "2023 Honda Civic LX",
-            "line": 479,
-            "context": "478: stock_number: 'STK001',\n479: vehicle_info: '2023 Honda Civic LX',\n480: hours_overdue: 18,"
+            "line": 455,
+            "context": "454: stock_number: 'STK001',\n455: vehicle_info: '2023 Honda Civic LX',\n456: hours_overdue: 18,"
           },
           {
             "text": "2022 Toyota Camry LE",
-            "line": 488,
-            "context": "487: stock_number: 'STK002',\n488: vehicle_info: '2022 Toyota Camry LE',\n489: hours_overdue: 6,"
+            "line": 464,
+            "context": "463: stock_number: 'STK002',\n464: vehicle_info: '2022 Toyota Camry LE',\n465: hours_overdue: 6,"
           }
         ],
         "translationCalls": [],
@@ -37249,227 +37249,227 @@
         "hardcodedStrings": [
           {
             "text": "STK001",
-            "line": 179,
-            "context": "178: onChange={e => updateFormData('stock_number', e.target.value)}\n179: placeholder=\"STK001\"\n180: className={errors.stock_number ? 'border-red-500' : ''}"
+            "line": 228,
+            "context": "227: onChange={e => updateFormData('stock_number', e.target.value)}\n228: placeholder=\"STK001\"\n229: className={errors.stock_number ? 'border-red-500' : ''}"
           },
           {
             "text": "Honda",
-            "line": 235,
-            "context": "234: onChange={e => updateFormData('make', e.target.value)}\n235: placeholder=\"Honda\"\n236: className={errors.make ? 'border-red-500' : ''}"
+            "line": 299,
+            "context": "298: onChange={e => updateFormData('make', e.target.value)}\n299: placeholder=\"Honda\"\n300: className={errors.make ? 'border-red-500' : ''}"
           },
           {
             "text": "Civic",
-            "line": 252,
-            "context": "251: onChange={e => updateFormData('model', e.target.value)}\n252: placeholder=\"Civic\"\n253: className={errors.model ? 'border-red-500' : ''}"
+            "line": 316,
+            "context": "315: onChange={e => updateFormData('model', e.target.value)}\n316: placeholder=\"Civic\"\n317: className={errors.model ? 'border-red-500' : ''}"
           },
           {
             "text": "John Doe",
-            "line": 356,
-            "context": "355: onChange={e => updateFormData('assigned_to', e.target.value)}\n356: placeholder=\"John Doe\"\n357: />"
+            "line": 420,
+            "context": "419: onChange={e => updateFormData('assigned_to', e.target.value)}\n420: placeholder=\"John Doe\"\n421: />"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.vehicle_form.errors.stock_required",
-            "line": 87,
+            "line": 95,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.vin_required",
-            "line": 91,
+            "line": 99,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.vin_invalid",
-            "line": 93,
+            "line": 101,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.year_required",
-            "line": 98,
+            "line": 106,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.year_invalid",
-            "line": 100,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.make_required",
-            "line": 104,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.model_required",
             "line": 108,
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.success.updated",
-            "line": 130,
+            "key": "get_ready.vehicle_form.errors.make_required",
+            "line": 112,
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.success.created",
-            "line": 131,
+            "key": "get_ready.vehicle_form.errors.model_required",
+            "line": 116,
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.errors.save_failed",
-            "line": 138,
+            "key": "get_ready.vehicle_form.vin_decoded",
+            "line": 194,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.title.edit",
-            "line": 158,
+            "line": 207,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.title.add",
-            "line": 159,
+            "line": 208,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.description",
-            "line": 162,
+            "line": 211,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.stock_number",
-            "line": 172,
+            "line": 221,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.vin",
-            "line": 189,
+            "line": 239,
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.fields.year",
-            "line": 210,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.make",
-            "line": 228,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.model",
+            "key": "get_ready.vehicle_form.vin_decoded",
             "line": 245,
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.fields.trim",
+            "key": "get_ready.vehicle_form.decoding_vin",
             "line": 264,
             "exists": true
           },
           {
+            "key": "get_ready.vehicle_form.fields.year",
+            "line": 274,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.make",
+            "line": 292,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.model",
+            "line": 309,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.trim",
+            "line": 328,
+            "exists": true
+          },
+          {
             "key": "get_ready.vehicle_form.fields.step",
-            "line": 278,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.workflow",
-            "line": 301,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.standard",
-            "line": 312,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.express",
-            "line": 315,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.priority",
-            "line": 318,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.priority",
-            "line": 329,
-            "exists": true
-          },
-          {
-            "key": "common.priority.low",
-            "line": 339,
-            "exists": true
-          },
-          {
-            "key": "common.priority.normal",
-            "line": 340,
-            "exists": false
-          },
-          {
-            "key": "common.priority.medium",
-            "line": 341,
-            "exists": true
-          },
-          {
-            "key": "common.priority.high",
             "line": 342,
             "exists": true
           },
           {
+            "key": "get_ready.vehicle_form.fields.workflow",
+            "line": 365,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.standard",
+            "line": 376,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.express",
+            "line": 379,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.priority",
+            "line": 382,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.priority",
+            "line": 393,
+            "exists": true
+          },
+          {
+            "key": "common.priority.low",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "common.priority.normal",
+            "line": 404,
+            "exists": false
+          },
+          {
+            "key": "common.priority.medium",
+            "line": 405,
+            "exists": true
+          },
+          {
+            "key": "common.priority.high",
+            "line": 406,
+            "exists": true
+          },
+          {
             "key": "common.priority.urgent",
-            "line": 343,
+            "line": 407,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.assigned_to",
-            "line": 350,
+            "line": 414,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.notes",
-            "line": 364,
+            "line": 428,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.placeholders.notes",
-            "line": 370,
+            "line": 434,
             "exists": true
           },
           {
             "key": "common.actions.cancel",
-            "line": 383,
+            "line": 447,
             "exists": false
           },
           {
             "key": "common.actions.update",
-            "line": 388,
+            "line": 452,
             "exists": false
           },
           {
             "key": "common.actions.create",
-            "line": 389,
+            "line": 453,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.priority.normal",
-            "line": 340,
-            "context": "339: <SelectItem value=\"low\">{t('common.priority.low')}</SelectItem>\n340: <SelectItem value=\"normal\">{t('common.priority.normal')}</SelectItem>\n341: <SelectItem value=\"medium\">{t('common.priority.medium')}</SelectItem>"
+            "line": 404,
+            "context": "403: <SelectItem value=\"low\">{t('common.priority.low')}</SelectItem>\n404: <SelectItem value=\"normal\">{t('common.priority.normal')}</SelectItem>\n405: <SelectItem value=\"medium\">{t('common.priority.medium')}</SelectItem>"
           },
           {
             "key": "common.actions.cancel",
-            "line": 383,
-            "context": "382: >\n383: {t('common.actions.cancel')}\n384: </Button>"
+            "line": 447,
+            "context": "446: >\n447: {t('common.actions.cancel')}\n448: </Button>"
           },
           {
             "key": "common.actions.update",
-            "line": 388,
-            "context": "387: {isEditMode\n388: ? t('common.actions.update')\n389: : t('common.actions.create')}"
+            "line": 452,
+            "context": "451: {isEditMode\n452: ? t('common.actions.update')\n453: : t('common.actions.create')}"
           },
           {
             "key": "common.actions.create",
-            "line": 389,
-            "context": "388: ? t('common.actions.update')\n389: : t('common.actions.create')}\n390: </Button>"
+            "line": 453,
+            "context": "452: ? t('common.actions.update')\n453: : t('common.actions.create')}\n454: </Button>"
           }
         ],
         "coverage": 90,
@@ -37700,8 +37700,8 @@
           },
           {
             "text": "Vehicles",
-            "line": 205,
-            "context": "204: <div>\n205: <p className=\"text-xs text-gray-500\">Vehicles</p>\n206: <p className=\"text-sm font-semibold text-gray-900\">"
+            "line": 194,
+            "context": "193: <div>\n194: <p className=\"text-xs text-gray-500\">Vehicles</p>\n195: <p className=\"text-sm font-semibold text-gray-900\">"
           }
         ],
         "translationCalls": [
@@ -37726,33 +37726,28 @@
             "exists": true
           },
           {
-            "key": "get_ready.metrics.capacity",
-            "line": 181,
-            "exists": true
-          },
-          {
             "key": "get_ready.setup.delete_confirm_title",
-            "line": 229,
+            "line": 218,
             "exists": true
           },
           {
             "key": "get_ready.setup.delete_confirm_message",
-            "line": 231,
+            "line": 220,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 236,
+            "line": 225,
             "exists": true
           },
           {
             "key": "common.status.loading",
-            "line": 243,
+            "line": 232,
             "exists": true
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 243,
+            "line": 232,
             "exists": true
           }
         ],
@@ -37763,7 +37758,7 @@
             "context": "70: <p className=\"text-sm font-medium\">\n71: {t('messages.error.generic')}\n72: </p>"
           }
         ],
-        "coverage": 83,
+        "coverage": 82,
         "severity": "low"
       },
       {
@@ -37806,24 +37801,24 @@
         "hardcodedStrings": [
           {
             "text": "Daily",
-            "line": 111,
-            "context": "110: <div className=\"bg-blue-50 rounded p-1\">\n111: <div className=\"text-xs text-blue-700 font-medium\">Daily</div>\n112: <div className=\"text-xs font-bold text-blue-800\">{kpis.dailyThroughput}</div>"
+            "line": 109,
+            "context": "108: <div className=\"bg-blue-50 rounded p-1\">\n109: <div className=\"text-xs text-blue-700 font-medium\">Daily</div>\n110: <div className=\"text-xs font-bold text-blue-800\">{kpis.dailyThroughput}</div>"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.title",
-            "line": 91,
+            "line": 89,
             "exists": true
           },
           {
             "key": "get_ready.title",
-            "line": 144,
+            "line": 142,
             "exists": true
           },
           {
             "key": "get_ready.alerts.active_alerts",
-            "line": 157,
+            "line": 155,
             "exists": true
           }
         ],
