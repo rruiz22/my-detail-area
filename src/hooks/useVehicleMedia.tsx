@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
@@ -55,11 +56,15 @@ export interface UpdateMediaInput {
  */
 export function useVehicleMedia(vehicleId: string | null) {
   const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
 
   return useQuery({
     queryKey: ['vehicle-media', vehicleId],
     queryFn: async () => {
       if (!vehicleId) return [];
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
 
       const { data, error } = await supabase
         .from('vehicle_media')
@@ -71,6 +76,7 @@ export function useVehicleMedia(vehicleId: string | null) {
           )
         `)
         .eq('vehicle_id', vehicleId)
+        .eq('dealer_id', currentDealership.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -202,16 +208,22 @@ export function useUploadMedia() {
  */
 export function useUpdateMedia() {
   const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: UpdateMediaInput & { vehicleId: string }) => {
       const { id, vehicleId, ...updates } = input;
 
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
+
       const { data, error } = await supabase
         .from('vehicle_media')
         .update(updates)
         .eq('id', id)
+        .eq('dealer_id', currentDealership.id)
         .select()
         .single();
 
@@ -239,10 +251,15 @@ export function useUpdateMedia() {
  */
 export function useDeleteMedia() {
   const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, vehicleId, filePath }: { id: string; vehicleId: string; filePath: string }) => {
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
+
       // Delete file from storage
       const { error: storageError } = await supabase.storage
         .from('vehicle-media')
@@ -257,7 +274,8 @@ export function useDeleteMedia() {
       const { error } = await supabase
         .from('vehicle_media')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('dealer_id', currentDealership.id);
 
       if (error) {
         console.error('Error deleting media:', error);

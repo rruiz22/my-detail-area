@@ -73,6 +73,10 @@ export function useVehicleManagement() {
   // Update Vehicle
   const updateVehicleMutation = useMutation({
     mutationFn: async ({ id, ...input }: UpdateVehicleInput) => {
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
+
       const updateData: any = {};
 
       if (input.stock_number) updateData.stock_number = input.stock_number;
@@ -91,6 +95,7 @@ export function useVehicleManagement() {
         .from('get_ready_vehicles')
         .update(updateData)
         .eq('id', id)
+        .eq('dealer_id', currentDealership.id)
         .select()
         .single();
 
@@ -111,10 +116,15 @@ export function useVehicleManagement() {
   // Delete Vehicle
   const deleteVehicleMutation = useMutation({
     mutationFn: async (vehicleId: string) => {
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
+
       const { error } = await supabase
         .from('get_ready_vehicles')
         .delete()
-        .eq('id', vehicleId);
+        .eq('id', vehicleId)
+        .eq('dealer_id', currentDealership.id);
 
       if (error) throw error;
     },

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
@@ -104,11 +105,15 @@ export interface UpdateWorkItemInput {
  */
 export function useWorkItems(vehicleId: string | null) {
   const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
 
   return useQuery({
     queryKey: ['work-items', vehicleId],
     queryFn: async () => {
       if (!vehicleId) return [];
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
 
       const { data, error } = await supabase
         .from('get_ready_work_items')
@@ -120,6 +125,7 @@ export function useWorkItems(vehicleId: string | null) {
           )
         `)
         .eq('vehicle_id', vehicleId)
+        .eq('dealer_id', currentDealership.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -190,11 +196,16 @@ export function useCreateWorkItem() {
  */
 export function useUpdateWorkItem() {
   const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: UpdateWorkItemInput) => {
       const { id, ...updates } = input;
+
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
 
       const { data, error } = await supabase
         .from('get_ready_work_items')
@@ -203,6 +214,7 @@ export function useUpdateWorkItem() {
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
+        .eq('dealer_id', currentDealership.id)
         .select()
         .single();
 
