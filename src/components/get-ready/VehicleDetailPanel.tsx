@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import { useVehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
+import { VehicleMediaTab } from './tabs/VehicleMediaTab';
 
 interface VehicleDetailPanelProps {
   className?: string;
@@ -161,12 +162,9 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
             <VehicleWorkItemsTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          {/* Other tabs with placeholder content */}
-          <TabsContent value="media" className="flex-1 p-4">
-            <div className="text-center py-8 text-muted-foreground">
-              <Image className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <div className="text-sm">{t('get_ready.media.coming_soon')}</div>
-            </div>
+          {/* Media Tab */}
+          <TabsContent value="media" className="flex-1 overflow-hidden p-4">
+            <VehicleMediaTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
           <TabsContent value="notes" className="flex-1 p-4">
