@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { mockVehicles } from '@/data/mockVehicles';
 import { useGetReady } from '@/hooks/useGetReady';
+import { useGetReadyVehiclesList } from '@/hooks/useGetReadyVehicles';
+import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { cn } from '@/lib/utils';
 import {
     AlertTriangle,
@@ -16,14 +17,13 @@ import {
     Clock,
     Edit,
     Eye,
+    Loader2,
     MoreHorizontal,
     User,
     XCircle
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-// Using centralized mock vehicle data
 
 interface GetReadyVehicleListProps {
   searchQuery: string;
@@ -46,57 +46,33 @@ export function GetReadyVehicleList({
 }: GetReadyVehicleListProps) {
   const { t } = useTranslation();
   const { steps } = useGetReady();
+  const { setSelectedVehicleId, selectedVehicleId } = useGetReadyStore();
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
 
-  // Filter and sort vehicles
-  const filteredAndSortedVehicles = useMemo(() => {
-    let filtered = mockVehicles.filter(vehicle => {
-      // Search filter
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        if (!vehicle.stock_number.toLowerCase().includes(query) &&
-            !vehicle.vin.toLowerCase().includes(query) &&
-            !`${vehicle.year} ${vehicle.make} ${vehicle.model}`.toLowerCase().includes(query) &&
-            !vehicle.assigned_to.toLowerCase().includes(query)) {
-          return false;
-        }
-      }
+  // Action handlers
+  const handleViewDetails = (vehicleId: string) => {
+    setSelectedVehicleId(vehicleId);
+  };
 
-      // Step filter
-      if (selectedStep !== 'all' && vehicle.step_id !== selectedStep) {
-        return false;
-      }
+  const handleEditVehicle = (vehicleId: string) => {
+    // TODO: Open edit modal - will be connected to parent component's modal
+    console.log('Edit vehicle:', vehicleId);
+  };
 
-      // Workflow filter
-      if (selectedWorkflow !== 'all' && vehicle.workflow_type !== selectedWorkflow) {
-        return false;
-      }
+  const handleAdvanceStep = (vehicleId: string) => {
+    // TODO: Implement advance to next step functionality
+    console.log('Advance step for vehicle:', vehicleId);
+  };
 
-      // Priority filter
-      if (selectedPriority !== 'all' && vehicle.priority !== selectedPriority) {
-        return false;
-      }
-
-      return true;
-    });
-
-    // Sort vehicles
-    filtered.sort((a, b) => {
-      let aValue: any = a[sortBy as keyof typeof a];
-      let bValue: any = b[sortBy as keyof typeof b];
-
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-    return filtered;
-  }, [searchQuery, selectedStep, selectedWorkflow, selectedPriority, sortBy, sortOrder]);
+  // Fetch real vehicles from Supabase
+  const { data: vehicles = [], isLoading } = useGetReadyVehiclesList({
+    searchQuery,
+    selectedStep,
+    selectedWorkflow,
+    selectedPriority,
+    sortBy,
+    sortOrder
+  });
 
   const getSLAStatusIcon = (status: string) => {
     switch (status) {
@@ -139,13 +115,25 @@ export function GetReadyVehicleList({
     }
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className={cn("flex items-center justify-center p-12", className)}>
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (viewMode === 'grid') {
     return (
       <div className={cn("space-y-4", className)}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">
-            Vehicles ({filteredAndSortedVehicles.length})
+            Vehicles ({vehicles.length})
           </h3>
           <div className="flex items-center gap-2">
             <Button
@@ -167,7 +155,7 @@ export function GetReadyVehicleList({
 
         {/* Grid View */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredAndSortedVehicles.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <Card key={vehicle.id} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
@@ -184,19 +172,19 @@ export function GetReadyVehicleList({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>
+                      <DropdownMenuLabel>{t('get_ready.actions.actions')}</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => handleViewDetails(vehicle.id)}>
                         <Eye className="h-4 w-4 mr-2" />
-                        View Details
+                        {t('get_ready.actions.view_details')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEditVehicle(vehicle.id)}>
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit Vehicle
+                        {t('get_ready.actions.edit_vehicle')}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleAdvanceStep(vehicle.id)}>
                         <ArrowRight className="h-4 w-4 mr-2" />
-                        Advance Step
+                        {t('get_ready.actions.advance_step')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -260,7 +248,7 @@ export function GetReadyVehicleList({
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">
-          Vehicles ({filteredAndSortedVehicles.length})
+          Vehicles ({vehicles.length})
         </h3>
         <div className="flex items-center gap-2">
           <Button
@@ -281,27 +269,40 @@ export function GetReadyVehicleList({
       </div>
 
       {/* Table */}
-      <Card>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">{t('get_ready.table.image')}</TableHead>
-              <TableHead>{t('get_ready.table.stock')}</TableHead>
-              <TableHead>{t('get_ready.table.vehicle')}</TableHead>
-              <TableHead>{t('get_ready.table.step')}</TableHead>
-              <TableHead>Workflow</TableHead>
-              <TableHead>T2L</TableHead>
-              <TableHead>{t('get_ready.table.days_in_step')}</TableHead>
-              <TableHead>DTF</TableHead>
-              <TableHead>{t('get_ready.table.priority')}</TableHead>
-              <TableHead>Progress</TableHead>
-              <TableHead>Assigned</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredAndSortedVehicles.map((vehicle) => (
-              <TableRow key={vehicle.id}>
+      <Card className="h-full flex flex-col">
+        <div className="flex-none p-4 border-b">
+          <p className="text-sm text-muted-foreground">
+            {t('get_ready.table.click_to_view')}
+          </p>
+        </div>
+        <div className="flex-1 overflow-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-background z-10">
+              <TableRow>
+                <TableHead className="w-[100px]">{t('get_ready.table.image')}</TableHead>
+                <TableHead>{t('get_ready.table.stock')}</TableHead>
+                <TableHead>{t('get_ready.table.vehicle')}</TableHead>
+                <TableHead>{t('get_ready.table.step')}</TableHead>
+                <TableHead>Workflow</TableHead>
+                <TableHead>T2L</TableHead>
+                <TableHead>{t('get_ready.table.days_in_step')}</TableHead>
+                <TableHead>DTF</TableHead>
+                <TableHead>{t('get_ready.table.priority')}</TableHead>
+                <TableHead>Progress</TableHead>
+                <TableHead>Assigned</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {vehicles.map((vehicle) => (
+                <TableRow
+                  key={vehicle.id}
+                  onClick={() => handleViewDetails(vehicle.id)}
+                  className={cn(
+                    "cursor-pointer hover:bg-muted/50 transition-colors",
+                    selectedVehicleId === vehicle.id && "bg-primary/10 border-l-4 border-l-primary"
+                  )}
+                >
                 {/* Image */}
                 <TableCell>
                   <Avatar className="h-10 w-14 rounded">
@@ -398,19 +399,19 @@ export function GetReadyVehicleList({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>
+                      <DropdownMenuLabel>{t('get_ready.actions.actions')}</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => handleViewDetails(vehicle.id)}>
                         <Eye className="h-4 w-4 mr-2" />
-                        View Details
+                        {t('get_ready.actions.view_details')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEditVehicle(vehicle.id)}>
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit Vehicle
+                        {t('get_ready.actions.edit_vehicle')}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleAdvanceStep(vehicle.id)}>
                         <ArrowRight className="h-4 w-4 mr-2" />
-                        Advance Step
+                        {t('get_ready.actions.advance_step')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -419,16 +420,17 @@ export function GetReadyVehicleList({
             ))}
           </TableBody>
         </Table>
+        </div>
       </Card>
 
       {/* Empty State */}
-      {filteredAndSortedVehicles.length === 0 && (
+      {vehicles.length === 0 && (
         <Card>
           <CardContent className="py-8">
             <div className="text-center text-muted-foreground">
               <Car className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <h3 className="text-lg font-medium mb-2">No vehicles found</h3>
-              <p>Try adjusting your filters or search criteria.</p>
+              <h3 className="text-lg font-medium mb-2">{t('get_ready.no_vehicles.title')}</h3>
+              <p>{t('get_ready.no_vehicles.description')}</p>
             </div>
           </CardContent>
         </Card>

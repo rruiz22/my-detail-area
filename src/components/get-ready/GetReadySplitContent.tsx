@@ -25,7 +25,7 @@ interface GetReadySplitContentProps {
 export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { t } = useTranslation();
   const location = useLocation();
-  const { splitLayout, selectedStepId } = useGetReadyStore();
+  const { splitLayout, selectedStepId, selectedVehicleId } = useGetReadyStore();
   const { steps, refetchSteps, refetchKPIs } = useGetReady();
 
   // State for filters when in details view
@@ -135,151 +135,98 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           </div>
         </div>
 
-        {/* Filters and Search */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Filters & Search</CardTitle>
-              {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Clear Filters
-                </Button>
-              )}
+        {/* Compact Filters Bar */}
+        <div className="flex items-center gap-3 px-4 py-3 bg-muted/30 rounded-lg border">
+          {/* Step indicator (read-only from sidebar) */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Step:</span>
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+              {selectedStep === 'all' ? 'All Steps' : steps.find(s => s.id === selectedStep)?.name || 'All Steps'}
+            </Badge>
+          </div>
+
+          {/* Workflow filter */}
+          <Select value={selectedWorkflow} onValueChange={setSelectedWorkflow}>
+            <SelectTrigger className="w-32 h-9">
+              <SelectValue placeholder="Workflow" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="standard">{t('get_ready.workflow.standard')}</SelectItem>
+              <SelectItem value="express">{t('get_ready.workflow.express')}</SelectItem>
+              <SelectItem value="priority">{t('get_ready.workflow.priority')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Priority filter */}
+          <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+            <SelectTrigger className="w-32 h-9">
+              <SelectValue placeholder="Priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Priorities</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="normal">Normal</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="urgent">Urgent</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Sort controls */}
+          <div className="flex items-center gap-2">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-36 h-9">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="days_in_step">Days in Step</SelectItem>
+                <SelectItem value="days_to_frontline">Days to Finish</SelectItem>
+                <SelectItem value="priority_score">Priority Score</SelectItem>
+                <SelectItem value="sla_status">SLA Status</SelectItem>
+                <SelectItem value="stock_number">Stock Number</SelectItem>
+                <SelectItem value="created_at">Date Added</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 w-9 p-0"
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            >
+              {sortOrder === 'asc' ? '↑' : '↓'}
+            </Button>
+          </div>
+
+          <div className="flex-1" />
+
+          {/* Clear filters button (only when active) */}
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
+              Clear Filters
+            </Button>
+          )}
+        </div>
+
+        {/* Enhanced Vehicle List with Detail Panel Below */}
+        <div className="flex-1 flex flex-col gap-4 overflow-hidden">
+          {/* Vehicle List - Fixed height with scroll */}
+          <div className="flex-none h-[500px] overflow-hidden">
+            <GetReadyVehicleList
+              searchQuery={searchQuery}
+              selectedStep={selectedStep}
+              selectedWorkflow={selectedWorkflow}
+              selectedPriority={selectedPriority}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+            />
+          </div>
+
+          {/* Detail Panel Below - Only when vehicle is selected */}
+          {selectedVehicleId && (
+            <div className="flex-none border-t pt-4">
+              <VehicleDetailPanel />
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Search Bar */}
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t('get_ready.search_placeholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            {/* Filter Row */}
-            <div className="flex flex-wrap items-center gap-4">
-              {/* Step Filter - Controlled by Sidebar */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Step:</span>
-                <div className="bg-muted/50 border border-border rounded-md px-3 py-2 text-sm min-w-32">
-                  {selectedStep === 'all'
-                    ? 'All Steps'
-                    : steps.find(s => s.id === selectedStep)?.name || 'All Steps'
-                  }
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  (Select from sidebar)
-                </span>
-              </div>
-
-              {/* Workflow Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Workflow:</span>
-                <Select value={selectedWorkflow} onValueChange={setSelectedWorkflow}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="standard">{t('get_ready.workflow.standard')}</SelectItem>
-                    <SelectItem value="express">{t('get_ready.workflow.express')}</SelectItem>
-                    <SelectItem value="priority">{t('get_ready.workflow.priority')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Priority Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Priority:</span>
-                <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Priorities</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="normal">Normal</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="urgent">Urgent</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Sort Options */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Sort by:</span>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-36">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="days_in_step">Days in Step</SelectItem>
-                    <SelectItem value="days_to_frontline">Days to Finish</SelectItem>
-                    <SelectItem value="priority_score">Priority Score</SelectItem>
-                    <SelectItem value="sla_status">SLA Status</SelectItem>
-                    <SelectItem value="stock_number">Stock Number</SelectItem>
-                    <SelectItem value="created_at">Date Added</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Sort Order */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              >
-                {sortOrder === 'asc' ? '↑' : '↓'}
-              </Button>
-            </div>
-
-            {/* Active Filters Display */}
-            {hasActiveFilters && (
-              <div className="flex items-center gap-2 pt-2 border-t">
-                <span className="text-sm text-muted-foreground">Active filters:</span>
-                {searchQuery && (
-                  <Badge variant="secondary">
-                    Search: "{searchQuery}"
-                  </Badge>
-                )}
-                {selectedWorkflow !== 'all' && (
-                  <Badge variant="secondary">
-                    Workflow: {selectedWorkflow}
-                  </Badge>
-                )}
-                {selectedPriority !== 'all' && (
-                  <Badge variant="secondary">
-                    Priority: {selectedPriority}
-                  </Badge>
-                )}
-              </div>
-            )}
-
-            {/* Step Selection Info */}
-            {selectedStep !== 'all' && (
-              <div className="flex items-center gap-2 pt-2 border-t">
-                <span className="text-sm text-muted-foreground">Viewing step:</span>
-                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                  {steps.find(s => s.id === selectedStep)?.name}
-                </Badge>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Vehicle List */}
-        <div className="flex-1 overflow-hidden">
-          <GetReadyVehicleList
-            searchQuery={searchQuery}
-            selectedStep={selectedStep}
-            selectedWorkflow={selectedWorkflow}
-            selectedPriority={selectedPriority}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-          />
+          )}
         </div>
 
         {/* Vehicle Form Modal */}

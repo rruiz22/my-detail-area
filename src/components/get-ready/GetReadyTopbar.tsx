@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Search,
-  Download,
   Settings,
   Grid3X3,
   Eye,
@@ -88,11 +87,6 @@ export function GetReadyTopbar() {
           </div>
 
           {/* Action Buttons */}
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            {t('common.export')}
-          </Button>
-
           <Button variant="outline" size="sm">
             <Settings className="h-4 w-4" />
           </Button>

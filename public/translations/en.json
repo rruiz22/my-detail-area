@@ -1498,7 +1498,12 @@
       "approvals": "Approvals",
       "vendors": "Vendors",
       "reports": "Reports",
-      "setup": "Setup"
+      "setup": "Setup",
+      "work_items": "Work Items",
+      "media": "Media",
+      "notes": "Notes",
+      "timeline": "Timeline",
+      "appraisal": "Appraisal"
     },
     "search_placeholder": "Search vehicles...",
     "steps": {
@@ -1517,13 +1522,60 @@
       "work_items": "Work Items",
       "days_in_step": "Days in Step",
       "notes": "Notes",
-      "priority": "Priority"
+      "priority": "Priority",
+      "click_to_view": "Click on a row to view vehicle details"
     },
     "detail_panel": {
       "no_selection": {
         "title": "No Selection",
         "description": "Select a vehicle from the list to view its details"
+      },
+      "error": {
+        "title": "Error Loading Vehicle",
+        "description": "Unable to load vehicle details. Please try again."
+      },
+      "close": "Close Details",
+      "showing_details": "Showing details for",
+      "collapse": "Collapse Details"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "edit_vehicle": "Edit Vehicle",
+      "advance_step": "Advance Step",
+      "actions": "Actions"
+    },
+    "work_items": {
+      "need_attention": "Need Attention",
+      "in_progress": "In Progress",
+      "declined": "Declined",
+      "completed": "Completed",
+      "add_work_item": "Add Work Item",
+      "no_items": "No work items yet",
+      "status": {
+        "pending": "Pending",
+        "in_progress": "In Progress",
+        "completed": "Completed",
+        "declined": "Declined"
       }
+    },
+    "media": {
+      "coming_soon": "Media gallery coming soon"
+    },
+    "notes": {
+      "coming_soon": "Notes feature coming soon"
+    },
+    "vendors": {
+      "coming_soon": "Vendor management coming soon"
+    },
+    "timeline": {
+      "coming_soon": "Timeline view coming soon"
+    },
+    "appraisal": {
+      "coming_soon": "Appraisal details coming soon"
+    },
+    "no_vehicles": {
+      "title": "No vehicles found",
+      "description": "Try adjusting your filters or search criteria, or add a new vehicle."
     },
     "title": "Get Ready",
     "subtitle": "Optimized reconditioning workflow",

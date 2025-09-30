@@ -1,25 +1,23 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  Wrench, 
-  Image, 
-  MessageSquare, 
-  Users, 
-  Clock, 
+import {
+  Wrench,
+  Image,
+  MessageSquare,
+  Users,
+  Clock,
   DollarSign,
-  Plus,
   AlertTriangle,
-  CheckCircle,
   Circle,
-  Pause
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useVehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
+import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
 
 interface VehicleDetailPanelProps {
   className?: string;
@@ -27,38 +25,24 @@ interface VehicleDetailPanelProps {
 
 export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { t } = useTranslation();
-  const { selectedVehicleId } = useGetReadyStore();
+  const { selectedVehicleId, setSelectedVehicleId } = useGetReadyStore();
   const { data: vehicleDetail, isLoading } = useVehicleDetail(selectedVehicleId);
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'in_progress': return <Circle className="h-4 w-4 text-blue-600" />;
-      case 'pending': return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
-      case 'declined': return <Pause className="h-4 w-4 text-red-600" />;
-      default: return <Circle className="h-4 w-4 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed': return 'text-green-600 bg-green-50 border-green-200';
-      case 'in_progress': return 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'pending': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'declined': return 'text-red-600 bg-red-50 border-red-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
+  const handleClose = () => {
+    setSelectedVehicleId(null);
   };
 
   if (!selectedVehicleId) {
     return (
-      <div className={cn("flex items-center justify-center h-full bg-muted/20", className)}>
-        <div className="text-center text-muted-foreground">
-          <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+      <div className={cn("flex items-center justify-center h-full bg-muted/20 border-t", className)}>
+        <div className="text-center text-muted-foreground p-8 animate-in fade-in duration-500">
+          <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted/50">
+            <Circle className="h-8 w-8 opacity-50" />
+          </div>
           <h3 className="text-lg font-medium mb-2">
             {t('get_ready.detail_panel.no_selection.title')}
           </h3>
-          <p className="text-sm">
+          <p className="text-sm max-w-xs mx-auto">
             {t('get_ready.detail_panel.no_selection.description')}
           </p>
         </div>
@@ -68,10 +52,15 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
   if (isLoading) {
     return (
-      <div className={cn("p-4", className)}>
+      <div className={cn("p-4 border-t rounded-lg bg-background shadow-lg animate-in slide-in-from-bottom duration-300", className)}>
         <div className="space-y-4">
-          <div className="h-8 bg-muted animate-pulse rounded" />
-          <div className="h-64 bg-muted animate-pulse rounded" />
+          <div className="h-20 bg-muted animate-pulse rounded" />
+          <div className="h-12 bg-muted animate-pulse rounded" />
+          <div className="space-y-2">
+            <div className="h-24 bg-muted animate-pulse rounded" />
+            <div className="h-24 bg-muted animate-pulse rounded" />
+            <div className="h-24 bg-muted animate-pulse rounded" />
+          </div>
         </div>
       </div>
     );
@@ -79,41 +68,43 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
   if (!vehicleDetail) {
     return (
-      <div className={cn("flex items-center justify-center h-full", className)}>
-        <div className="text-center text-muted-foreground">
-          <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-red-500 opacity-50" />
-          <h3 className="text-lg font-medium mb-2">
+      <div className={cn("flex items-center justify-center h-full border-t rounded-lg bg-background shadow-lg", className)}>
+        <div className="text-center text-muted-foreground p-8 animate-in fade-in duration-500">
+          <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50">
+            <AlertTriangle className="h-8 w-8 text-red-500" />
+          </div>
+          <h3 className="text-lg font-medium mb-2 text-red-600">
             {t('get_ready.detail_panel.error.title')}
           </h3>
-          <p className="text-sm">
+          <p className="text-sm max-w-xs mx-auto mb-4">
             {t('get_ready.detail_panel.error.description')}
           </p>
+          <Button variant="outline" size="sm" onClick={handleClose}>
+            {t('get_ready.detail_panel.close')}
+          </Button>
         </div>
       </div>
     );
   }
 
   const vehicle = vehicleDetail as Record<string, unknown>;
-  const workItems = (vehicleDetail.work_orders as Record<string, unknown>[]) || [];
-  const media: Record<string, unknown>[] = []; // Empty for now since attachments property doesn't exist
-  const notes: Record<string, unknown>[] = []; // Empty for now since comments property doesn't exist
-
-  // Calculate work item counters
-  const workItemCounters = workItems.reduce((acc: Record<string, number>, item: Record<string, unknown>) => {
-    acc[item.status] = (acc[item.status] || 0) + 1;
-    return acc;
-  }, {});
-
-  const needAttention = (workItemCounters.pending || 0) + (workItems.filter((item: Record<string, unknown>) => item.approval_required).length || 0);
-  const inProgress = workItemCounters.in_progress || 0;
-  const declined = workItemCounters.declined || 0;
-  const completed = workItemCounters.completed || 0;
 
   return (
-    <div className={cn("h-full flex flex-col", className)}>
+    <div className={cn("flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300 max-h-[600px]", className)}>
       {/* Vehicle Header */}
-      <div className="p-4 border-b bg-card/50">
-        <div className="flex items-center justify-between">
+      <div className="p-4 border-b bg-card/50 relative">
+        {/* Close Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-2 right-2 h-8 w-8"
+          onClick={handleClose}
+          aria-label={t('get_ready.detail_panel.close')}
+        >
+          <X className="h-4 w-4" />
+        </Button>
+
+        <div className="flex items-center justify-between pr-10">
           <div>
             <h2 className="text-lg font-semibold">
               {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
@@ -167,104 +158,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
           {/* Work Items Tab */}
           <TabsContent value="work-items" className="flex-1 overflow-hidden p-4">
-            <div className="h-full flex flex-col">
-              {/* Counters */}
-              <div className="grid grid-cols-4 gap-4 mb-4">
-                <Card className="p-3">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                    <div>
-                      <div className="text-2xl font-bold">{needAttention}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {t('get_ready.work_items.need_attention')}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-                <Card className="p-3">
-                  <div className="flex items-center gap-2">
-                    <Circle className="h-4 w-4 text-blue-600" />
-                    <div>
-                      <div className="text-2xl font-bold">{inProgress}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {t('get_ready.work_items.in_progress')}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-                <Card className="p-3">
-                  <div className="flex items-center gap-2">
-                    <Pause className="h-4 w-4 text-red-600" />
-                    <div>
-                      <div className="text-2xl font-bold">{declined}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {t('get_ready.work_items.declined')}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-                <Card className="p-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <div>
-                      <div className="text-2xl font-bold">{completed}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {t('get_ready.work_items.completed')}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Add Work Item Button */}
-              <div className="mb-4">
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  {t('get_ready.work_items.add_work_item')}
-                </Button>
-              </div>
-
-              {/* Work Items List */}
-              <div className="flex-1 overflow-y-auto space-y-2">
-                {workItems.length > 0 ? (
-                  workItems.map((item: any) => (
-                    <Card key={item.id} className="p-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-3 flex-1">
-                          {getStatusIcon(item.status)}
-                          <div className="flex-1">
-                            <div className="font-medium text-sm">{item.title}</div>
-                            {item.description && (
-                              <div className="text-xs text-muted-foreground mt-1">
-                                {item.description}
-                              </div>
-                            )}
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="outline" className={cn("text-xs", getStatusColor(item.status))}>
-                                {t(`get_ready.work_items.status.${item.status}`)}
-                              </Badge>
-                              <Badge variant="outline" className="text-xs">
-                                {item.work_type}
-                              </Badge>
-                              {item.estimated_cost > 0 && (
-                                <span className="text-xs text-muted-foreground">
-                                  ${item.estimated_cost}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Wrench className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <div className="text-sm">{t('get_ready.work_items.no_items')}</div>
-                  </div>
-                )}
-              </div>
-            </div>
+            <VehicleWorkItemsTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
           {/* Other tabs with placeholder content */}

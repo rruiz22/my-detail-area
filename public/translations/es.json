@@ -1243,7 +1243,12 @@
       "approvals": "Aprobaciones",
       "vendors": "Proveedores",
       "reports": "Reportes",
-      "setup": "Configuración"
+      "setup": "Configuración",
+      "work_items": "Trabajos",
+      "media": "Medios",
+      "notes": "Notas",
+      "timeline": "Línea de Tiempo",
+      "appraisal": "Avalúo"
     },
     "search_placeholder": "Buscar vehículos...",
     "steps": {
@@ -1262,13 +1267,60 @@
       "work_items": "Elementos de Trabajo",
       "days_in_step": "Días en Paso",
       "notes": "Notas",
-      "priority": "Prioridad"
+      "priority": "Prioridad",
+      "click_to_view": "Haz clic en una fila para ver detalles del vehículo"
     },
     "detail_panel": {
       "no_selection": {
         "title": "Sin Selección",
         "description": "Selecciona un vehículo de la lista para ver sus detalles"
+      },
+      "error": {
+        "title": "Error al Cargar Vehículo",
+        "description": "No se pudieron cargar los detalles del vehículo. Por favor, intenta de nuevo."
+      },
+      "close": "Cerrar Detalles",
+      "showing_details": "Mostrando detalles de",
+      "collapse": "Ocultar Detalles"
+    },
+    "actions": {
+      "view_details": "Ver Detalles",
+      "edit_vehicle": "Editar Vehículo",
+      "advance_step": "Avanzar Paso",
+      "actions": "Acciones"
+    },
+    "work_items": {
+      "need_attention": "Requieren Atención",
+      "in_progress": "En Progreso",
+      "declined": "Rechazados",
+      "completed": "Completados",
+      "add_work_item": "Agregar Trabajo",
+      "no_items": "No hay trabajos aún",
+      "status": {
+        "pending": "Pendiente",
+        "in_progress": "En Progreso",
+        "completed": "Completado",
+        "declined": "Rechazado"
       }
+    },
+    "media": {
+      "coming_soon": "Galería de medios próximamente"
+    },
+    "notes": {
+      "coming_soon": "Función de notas próximamente"
+    },
+    "vendors": {
+      "coming_soon": "Gestión de proveedores próximamente"
+    },
+    "timeline": {
+      "coming_soon": "Vista de línea de tiempo próximamente"
+    },
+    "appraisal": {
+      "coming_soon": "Detalles de avalúo próximamente"
+    },
+    "no_vehicles": {
+      "title": "No se encontraron vehículos",
+      "description": "Intenta ajustar tus filtros o criterios de búsqueda, o agrega un nuevo vehículo."
     },
     "title": "Get Ready",
     "subtitle": "Flujo de trabajo optimizado de reacondicionamiento",
@@ -1348,11 +1400,15 @@
         "year_invalid": "Por favor ingrese un año válido",
         "make_required": "La marca es obligatoria",
         "model_required": "El modelo es obligatorio",
-        "save_failed": "Error al guardar el vehículo. Por favor intente nuevamente."
+        "save_failed": "Error al guardar el vehículo. Por favor intente nuevamente.",
+        "delete_failed": "Error al eliminar el vehículo. Por favor intente nuevamente.",
+        "move_failed": "Error al mover el vehículo. Por favor intente nuevamente."
       },
       "success": {
         "created": "Vehículo creado exitosamente",
-        "updated": "Vehículo actualizado exitosamente"
+        "updated": "Vehículo actualizado exitosamente",
+        "deleted": "Vehículo eliminado exitosamente",
+        "moved": "Vehículo movido al nuevo paso exitosamente"
       },
       "vin_decoded": "VIN Decodificado",
       "decoding_vin": "Decodificando VIN..."
