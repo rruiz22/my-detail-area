@@ -124,12 +124,13 @@ export const useOrderPolling = <T>(
 export const useOrderDetailsPolling = <T>(
   queryKey: string[],
   queryFn: () => Promise<T>,
-  isModalOpen: boolean = false
+  isModalOpen: boolean = false,
+  options?: { interval?: number }
 ) => {
   return useSmartPolling({
     queryKey,
     queryFn,
-    interval: pollingConfig.orderDetails, // 30 seconds
+    interval: options?.interval ?? pollingConfig.orderDetails, // Default: 30 seconds, configurable via options
     enabled: isModalOpen,
     onlyWhenVisible: true,
     onlyWhenFocused: false,

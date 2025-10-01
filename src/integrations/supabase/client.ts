@@ -27,3 +27,16 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     },
   },
 });
+
+// Debug helper - temporary
+(window as any).debugSupabaseSession = async () => {
+  const session = await supabase.auth.getSession();
+  console.log('🔍 Session Debug:', {
+    hasSession: !!session.data.session,
+    user: session.data.session?.user?.id,
+    email: session.data.session?.user?.email,
+    hasToken: !!session.data.session?.access_token,
+    tokenPreview: session.data.session?.access_token?.substring(0, 20) + '...',
+  });
+  return session;
+};

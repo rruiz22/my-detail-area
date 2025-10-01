@@ -40,7 +40,9 @@ import {
   Clock,
   Wrench,
   Loader2,
+  FileStack,
 } from 'lucide-react';
+import { LiveWorkTimer } from '@/components/get-ready/LiveWorkTimer';
 import { cn } from '@/lib/utils';
 import {
   useWorkItems,
@@ -55,6 +57,7 @@ import {
   WorkItemStatus,
   CreateWorkItemInput,
 } from '@/hooks/useVehicleWorkItems';
+import { AddFromTemplatesModal } from '@/components/get-ready/AddFromTemplatesModal';
 
 interface VehicleWorkItemsTabProps {
   vehicleId: string;
@@ -77,6 +80,7 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
   const [completeModalOpen, setCompleteModalOpen] = useState(false);
+  const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
   const [selectedWorkItem, setSelectedWorkItem] = useState<any>(null);
 
   // Form states
@@ -254,11 +258,15 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
         </Card>
       </div>
 
-      {/* Add Work Item Button */}
-      <div className="mb-4">
+      {/* Add Work Item Buttons */}
+      <div className="flex gap-2 mb-4">
         <Button size="sm" onClick={() => setCreateModalOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           {t('get_ready.work_items.add_work_item')}
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => setTemplatesModalOpen(true)}>
+          <FileStack className="h-4 w-4 mr-2" />
+          {t('get_ready.work_items.add_from_templates')}
         </Button>
       </div>
 
@@ -324,6 +332,15 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
                           <span>{item.decline_reason}</span>
                         </div>
                       )}
+
+                      {/* Live Timer for In Progress Items */}
+                      {item.status === 'in_progress' && item.actual_start && (
+                        <LiveWorkTimer
+                          startTime={item.actual_start}
+                          size="sm"
+                          showStopButton={false}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -372,9 +389,20 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
                         <DropdownMenuItem
                           onClick={() => {
                             setSelectedWorkItem(item);
+
+                            // Calculate actual hours from actual_start if available
+                            let calculatedHours = item.actual_hours || item.estimated_hours || 0;
+                            if (item.actual_start && !item.actual_hours) {
+                              const startTime = new Date(item.actual_start);
+                              const endTime = new Date();
+                              const diffInMs = endTime.getTime() - startTime.getTime();
+                              // Convert to hours with 2 decimal precision
+                              calculatedHours = Math.round((diffInMs / (1000 * 60 * 60)) * 100) / 100;
+                            }
+
                             setCompletionData({
                               actualCost: item.actual_cost || item.estimated_cost || 0,
-                              actualHours: item.actual_hours || item.estimated_hours || 0,
+                              actualHours: calculatedHours,
                             });
                             setCompleteModalOpen(true);
                           }}
@@ -575,7 +603,14 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
               />
             </div>
             <div>
-              <Label htmlFor="actual_hours">{t('get_ready.work_items.actual_hours')}</Label>
+              <Label htmlFor="actual_hours">
+                {t('get_ready.work_items.actual_hours')}
+                {selectedWorkItem?.actual_start && !selectedWorkItem?.actual_hours && (
+                  <span className="text-xs text-muted-foreground ml-2 font-normal">
+                    ({t('get_ready.work_items.auto_calculated')})
+                  </span>
+                )}
+              </Label>
               <Input
                 id="actual_hours"
                 type="number"
@@ -597,6 +632,13 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Add from Templates Modal */}
+      <AddFromTemplatesModal
+        vehicleId={vehicleId}
+        open={templatesModalOpen}
+        onOpenChange={setTemplatesModalOpen}
+      />
     </div>
   );
 }

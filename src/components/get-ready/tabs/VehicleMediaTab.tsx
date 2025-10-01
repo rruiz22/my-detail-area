@@ -329,10 +329,10 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
           viewMode === 'grid' ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {filteredMedia.map((media) => (
-                <Card key={media.id} className="group relative overflow-hidden hover:shadow-lg transition-shadow">
+                <Card key={media.id} className="group relative overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
                   {/* Media Preview */}
                   <div
-                    className="aspect-square bg-gray-100 cursor-pointer relative"
+                    className="aspect-square bg-gray-100 cursor-pointer relative flex-shrink-0"
                     onClick={() => openPreviewModal(media)}
                   >
                     {media.media_type === 'photo' ? (
@@ -342,25 +342,33 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                         className="w-full h-full object-cover"
                       />
                     ) : media.media_type === 'video' ? (
-                      <div className="flex items-center justify-center w-full h-full">
+                      <div className="flex flex-col items-center justify-center w-full h-full gap-2">
                         <Video className="h-12 w-12 text-purple-600" />
+                        <span className="text-xs text-gray-500 font-medium">VIDEO</span>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center w-full h-full">
+                      <div className="flex flex-col items-center justify-center w-full h-full gap-2 p-3">
                         <FileText className="h-12 w-12 text-gray-600" />
+                        <span className="text-xs text-gray-500 font-medium text-center">DOCUMENT</span>
                       </div>
                     )}
                   </div>
 
-                  {/* Media Info */}
-                  <div className="p-2">
-                    <div className="flex items-start justify-between gap-2">
+                  {/* Media Info - Enhanced spacing */}
+                  <div className="p-3 flex-1 flex flex-col justify-between min-h-[80px]">
+                    <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-medium truncate">
+                        {/* File name with tooltip */}
+                        <div
+                          className="text-sm font-medium line-clamp-2 break-words mb-1.5"
+                          title={media.title || media.file_name}
+                        >
                           {media.title || media.file_name}
                         </div>
+
+                        {/* Category badge */}
                         {media.category && (
-                          <Badge variant="outline" className="text-xs mt-1">
+                          <Badge variant="outline" className="text-xs">
                             {t(`get_ready.media.categories.${media.category}`)}
                           </Badge>
                         )}
@@ -369,8 +377,8 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                       {/* Actions Dropdown */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                            <MoreHorizontal className="h-3 w-3" />
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 flex-shrink-0">
+                            <MoreHorizontal className="h-3.5 w-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -392,9 +400,10 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                       </DropdownMenu>
                     </div>
 
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                    {/* File metadata */}
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-auto">
                       {getMediaIcon(media.media_type)}
-                      <span>{formatFileSize(media.file_size)}</span>
+                      <span className="font-medium">{formatFileSize(media.file_size)}</span>
                     </div>
                   </div>
                 </Card>

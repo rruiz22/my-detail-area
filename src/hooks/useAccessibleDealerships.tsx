@@ -61,7 +61,21 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
       }
 
       setDealerships(data || []);
-      setCurrentDealership(data?.[0] || null);
+
+      // Check if there's a saved filter in localStorage
+      const savedFilter = localStorage.getItem('selectedDealerFilter');
+      if (savedFilter && savedFilter !== 'all' && data) {
+        const savedId = parseInt(savedFilter);
+        const savedDealership = data.find((d: Dealership) => d.id === savedId);
+        if (savedDealership) {
+          setCurrentDealership(savedDealership);
+          console.log('🏢 [useAccessibleDealerships] Restored saved dealership:', savedDealership.name);
+        } else {
+          setCurrentDealership(data[0] || null);
+        }
+      } else {
+        setCurrentDealership(data?.[0] || null);
+      }
     } catch (err) {
       console.error('Error in fetchDealerships:', err);
       const errorMessage = t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships';
@@ -104,6 +118,32 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
   useEffect(() => {
     fetchDealerships();
   }, [fetchDealerships]);
+
+  // Listen for dealership filter changes from DealershipFilter component
+  useEffect(() => {
+    const handleDealerFilterChange = (event: CustomEvent) => {
+      const { dealerId } = event.detail;
+
+      if (dealerId === 'all') {
+        // When "All Dealerships" is selected, use the first dealership
+        setCurrentDealership(dealerships[0] || null);
+        console.log('🏢 [useAccessibleDealerships] Filter changed to "All Dealerships"');
+      } else {
+        // Find and set the specific dealership
+        const selectedDealership = dealerships.find(d => d.id === dealerId);
+        if (selectedDealership) {
+          setCurrentDealership(selectedDealership);
+          console.log('🏢 [useAccessibleDealerships] Filter changed to:', selectedDealership.name);
+        }
+      }
+    };
+
+    window.addEventListener('dealerFilterChanged', handleDealerFilterChange as EventListener);
+
+    return () => {
+      window.removeEventListener('dealerFilterChanged', handleDealerFilterChange as EventListener);
+    };
+  }, [dealerships]);
 
   return {
     dealerships,

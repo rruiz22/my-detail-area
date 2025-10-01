@@ -126,3 +126,42 @@ export interface WorkflowOptimization {
   optimization_potential: number;
   recommended_actions: string[];
 }
+
+// Vendor Management Types
+export type VendorSpecialty = 'mechanical' | 'body_work' | 'paint' | 'detailing' | 'glass' | 'upholstery' | 'electronics' | 'other';
+
+export interface Vendor {
+  id: string;
+  dealer_id: number;
+  name: string;
+  specialties: VendorSpecialty[];
+  contact_info: {
+    email?: string;
+    phone?: string;
+    address?: string;
+    contact_person?: string;
+  } | null;
+  performance_rating: number | null; // 1-5 stars
+  is_active: boolean;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorWithStats extends Vendor {
+  active_jobs: number;
+  completed_jobs: number;
+  average_completion_time: number; // in hours
+  on_time_rate: number; // percentage
+  total_cost_ytd: number;
+}
+
+export interface VendorPerformanceMetrics {
+  vendor_id: string;
+  vendor_name: string;
+  jobs_completed: number;
+  avg_rating: number;
+  on_time_percentage: number;
+  total_revenue: number;
+  avg_job_cost: number;
+}

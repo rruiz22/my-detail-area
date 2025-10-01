@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { GetReadyContent } from '@/components/get-ready/GetReadyContent';
+import { VendorManagement } from '@/components/get-ready/VendorManagement';
 import { GetReadySetup } from './GetReadySetup';
 
 export default function GetReady() {
@@ -15,8 +16,8 @@ export default function GetReady() {
       {/* Approvals */}
       <Route path="approvals" element={<GetReadyContent />} />
 
-      {/* Vendors */}
-      <Route path="vendors" element={<GetReadyContent />} />
+      {/* Vendors - NEW: Full vendor management */}
+      <Route path="vendors" element={<VendorManagement />} />
 
       {/* Reports */}
       <Route path="reports" element={<GetReadyContent />} />

@@ -218,8 +218,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           order_id: orderId,
           user_id: user.id,
           comment_text: text.trim(),
-          comment_type: type,
-          parent_comment_id: parentId || null
+          comment_type: type
         })
         .select()
         .single();

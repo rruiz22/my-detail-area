@@ -1,6 +1,5 @@
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { safeFormatDate } from '@/utils/dateUtils';
@@ -11,6 +10,7 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
@@ -32,11 +32,16 @@ import { SimpleNotesDisplay } from './SimpleNotesDisplay';
 import { TeamCommunicationBlock } from './TeamCommunicationBlock';
 import { ServicesDisplay } from './ServicesDisplay';
 
+// Service item interface
+interface ServiceItem {
+  id: string;
+  name: string;
+  price?: number;
+}
+
 // Enhanced TypeScript interfaces for better type safety
 // Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
 interface OrderData {
-  // Index signature for compatibility with field components
-  [key: string]: unknown;
   id: string;
   // Order identifiers (support both formats)
   order_number?: string;
@@ -54,21 +59,27 @@ interface OrderData {
   vehicle_model?: string;
   vehicle_vin?: string;
   vehicle_info?: string; // New unified VIN display field
+  vehicle_trim?: string;
   stock_number?: string;
   vehicleYear?: string | number;
   vehicleMake?: string;
   vehicleModel?: string;
   vehicleVin?: string;
+  vehicleTrim?: string;
   stockNumber?: string;
 
   // Service-specific fields
   po?: string; // Purchase Order
   ro?: string; // Repair Order
   tag?: string; // TAG field
+  services?: ServiceItem[] | string;
+  total_amount?: number;
+  totalAmount?: number;
 
   // Assignment fields (support both formats)
   assigned_to?: string;
   assignedTo?: string;
+  assigned_group_id?: string; // User ID for modal edit
 
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   dealer_id: string | number;
@@ -95,12 +106,46 @@ interface OrderData {
   qrGenerationStatus?: 'pending' | 'generating' | 'completed' | 'failed';
 }
 
+interface Attachment {
+  id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+  created_at: string;
+}
+
+interface Activity {
+  id: string;
+  action: string;
+  created_at: string;
+  user_id: string;
+}
+
+interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+}
+
+interface Follower {
+  id: string;
+  user_id: string;
+  created_at: string;
+}
+
+interface Analytics {
+  views?: number;
+  scans?: number;
+  last_accessed?: string;
+}
+
 interface ModalData {
-  attachments: any[];
-  activities: any[];
-  comments: any[];
-  followers: any[];
-  analytics: any;
+  attachments: Attachment[];
+  activities: Activity[];
+  comments: Comment[];
+  followers: Follower[];
+  analytics: Analytics | null;
   userType: 'detail' | 'regular' | null;
 }
 
@@ -108,7 +153,6 @@ type OrderType = 'sales' | 'service' | 'recon' | 'carwash';
 
 // Constants for default values
 const DEFAULT_DEALER_ID = '1';
-const FALLBACK_DEALER_ID = 5;
 const DEFAULT_DEALERSHIP_NAME = 'Premium Auto';
 
 interface UnifiedOrderDetailModalProps {
@@ -117,12 +161,65 @@ interface UnifiedOrderDetailModalProps {
   open: boolean;
   onClose: () => void;
   onEdit?: (order: OrderData) => void;
-  onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
-  onNotesUpdate?: (orderId: string, notes: string, type: 'general' | 'internal') => void;
-  modalData?: ModalData;
   isLoadingData?: boolean;
-  dataError?: string | null;
+}
+
+// Data normalization function - converts snake_case DB fields to camelCase
+function normalizeOrderData(data: any): Partial<OrderData> {
+  if (!data) return {};
+
+  return {
+    id: data.id,
+    // Order identifiers
+    orderNumber: data.order_number || data.orderNumber,
+    // Customer information
+    customerName: data.customer_name || data.customerName,
+    customerPhone: data.customer_phone || data.customerPhone,
+    // Vehicle information
+    vehicleYear: data.vehicle_year || data.vehicleYear,
+    vehicleMake: data.vehicle_make || data.vehicleMake,
+    vehicleModel: data.vehicle_model || data.vehicleModel,
+    vehicleVin: data.vehicle_vin || data.vehicleVin,
+    vehicleInfo: data.vehicle_info || data.vehicleInfo,
+    vehicleTrim: data.vehicle_trim || data.vehicleTrim,
+    stockNumber: data.stock_number || data.stockNumber,
+    // Service-specific fields
+    po: data.po,
+    ro: data.ro,
+    tag: data.tag,
+    services: data.services,
+    totalAmount: data.total_amount || data.totalAmount,
+    // Assignment (assigned_group_id contains the user ID)
+    assignedTo: data.assignedTo || data.assigned_to,
+    assigned_to: data.assignedTo || data.assigned_to, // Keep both formats
+    assigned_group_id: data.assigned_group_id, // User ID for modal edit
+    // Status and management
+    status: data.status,
+    dealer_id: data.dealer_id,
+    dealership_name: data.dealership_name || data.dealershipName,
+    advisor: data.advisor,
+    salesperson: data.salesperson,
+    service_performer: data.service_performer || data.servicePerformer,
+    notes: data.notes,
+    internal_notes: data.internal_notes || data.internalNotes,
+    priority: data.priority,
+    // Dates
+    created_at: data.created_at || data.createdAt,
+    updated_at: data.updated_at || data.updatedAt,
+    estimated_completion: data.estimated_completion || data.estimatedCompletion,
+    due_date: data.due_date || data.dueDate,
+    date_service_complete: data.date_service_complete || data.dateServiceComplete,
+    // QR and Links
+    qr_slug: data.qr_slug || data.qrSlug,
+    short_url: data.short_url || data.shortUrl,
+    qr_code_url: data.qr_code_url || data.qrCodeUrl,
+    qrCodeUrl: data.qr_code_url || data.qrCodeUrl,
+    short_link: data.short_link || data.shortLink,
+    shortLink: data.short_link || data.shortLink,
+    qr_generation_status: data.qr_generation_status || data.qrGenerationStatus,
+    qrGenerationStatus: data.qr_generation_status || data.qrGenerationStatus,
+  };
 }
 
 // Custom hook for QR props normalization
@@ -134,22 +231,14 @@ const useQRProps = (orderData: OrderData) => {
   }), [orderData.qr_code_url, orderData.qrCodeUrl, orderData.short_link, orderData.shortLink, orderData.qr_generation_status, orderData.qrGenerationStatus]);
 };
 
-// Error boundary wrapper for individual sections
-const SafeComponentWrapper = ({ children, fallback = null }: { children: React.ReactNode; fallback?: React.ReactNode }) => {
-  try {
-    return <>{children}</>;
-  } catch (error) {
-    console.error('Component rendering error:', error);
-    return <>{fallback}</>;
-  }
-};
 
 // Header Components
 interface UnifiedOrderHeaderProps {
   order: OrderData;
   orderType: OrderType;
   vehicleDisplayName: string;
-  onStatusChange: (orderId: string, newStatus: string) => void;
+  effectiveDealerId: string; // Required for StatusBadgeInteractive
+  onStatusChange?: (orderId: string, newStatus: string) => void; // Optional to match parent interface
   canEditOrder?: boolean;
   onEdit?: () => void;
 }
@@ -158,35 +247,21 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
   order,
   orderType,
   vehicleDisplayName,
+  effectiveDealerId,
   onStatusChange,
   canEditOrder,
   onEdit
 }: UnifiedOrderHeaderProps) {
   const { t } = useTranslation();
 
-  const headerData = useMemo(() => {
-    const orderNumber = order.orderNumber || order.order_number || 'New Order';
-    const dealershipName = order.dealership_name || DEFAULT_DEALERSHIP_NAME;
+  const orderNumber = useMemo(() =>
+    order.orderNumber || order.order_number || 'New Order',
+    [order.orderNumber, order.order_number]
+  );
 
-    if (orderType === 'sales' || orderType === 'service') {
-      return {
-        orderNumber,
-        line2: `${dealershipName} - ${order.salesperson || 'Unassigned'}`,
-        line3: `Vehicle - ${order.vehicleVin || order.vehicle_vin || 'No VIN'} - Due: ${order.due_date ? safeFormatDate(order.due_date) : 'Not set'}`
-      };
-    } else {
-      // Recon and Car Wash
-      return {
-        orderNumber,
-        line2: `${dealershipName} - ${order.service_performer || 'Service Performer'}`,
-        line3: `Vehicle - ${order.vehicleVin || order.vehicle_vin || 'No VIN'} - Date Service Complete: ${order.date_service_complete ? safeFormatDate(order.date_service_complete) : 'Not set'}`
-      };
-    }
-  }, [order, orderType]);
-
-  // Get status background class
-  const getStatusBackgroundClass = (status: string) => {
-    switch (status?.toLowerCase()) {
+  // Get status background class (memoized)
+  const getStatusBackgroundClass = useMemo(() => {
+    switch (order.status?.toLowerCase()) {
       case 'pending':
         return 'bg-yellow-50 border-l-4 border-yellow-500';
       case 'in_progress':
@@ -195,18 +270,20 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
         return 'bg-green-50 border-l-4 border-green-500';
       case 'cancelled':
         return 'bg-red-50 border-l-4 border-red-500';
+      case 'on_hold':
+        return 'bg-orange-50 border-l-4 border-orange-500';
       default:
         return 'bg-gray-50 border-l-4 border-gray-500';
     }
-  };
+  }, [order.status]);
 
   return (
-    <div className={`${getStatusBackgroundClass(order.status)} rounded-lg p-4 mb-6 shadow-sm`}>
+    <div className={`${getStatusBackgroundClass} rounded-lg p-4 mb-6 shadow-sm`}>
       <div className="grid grid-cols-3 items-center gap-4">
         {/* Left: Order Number with Edit Button */}
         <div className="text-left flex items-center gap-3">
           <h2 className="text-lg font-bold text-gray-900">
-            #{headerData.orderNumber}
+            #{orderNumber}
           </h2>
           {/* Edit Button */}
           {canEditOrder && onEdit && (
@@ -225,8 +302,11 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
         {/* Center: Main Information */}
         <div className="text-center space-y-1">
           {/* Stock + VIN - First Row (Prominent Title Style) */}
-          <h1 className="text-xl font-bold text-gray-900">
-            {order.stockNumber || order.stock_number} - {(order.vehicleVin || order.vehicle_vin)?.slice(-8)}
+          <h1 className="text-xl font-bold text-gray-900 font-mono">
+            {order.stockNumber || order.stock_number} - {(() => {
+              const vin = order.vehicleVin || order.vehicle_vin;
+              return vin && vin.length >= 8 ? vin.slice(-8) : (vin || 'N/A');
+            })()}
           </h1>
 
           {/* Vehicle Info - Second Row (Subtitle Style) */}
@@ -236,13 +316,13 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
 
           {/* Assigned To - Third Row */}
           <div className="text-sm font-medium text-gray-700">
-            {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || 'Unassigned'}
+            {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || t('common.unassigned')}
           </div>
 
           {/* Services - Fourth Row */}
           <div className="flex justify-center">
             <ServicesDisplay
-              services={order.services}
+              services={Array.isArray(order.services) ? order.services : []}
               totalAmount={order.total_amount || order.totalAmount}
               dealerId={order.dealer_id}
               variant="kanban"
@@ -253,13 +333,15 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
 
         {/* Right: Status Dropdown */}
         <div className="text-right">
-          <StatusBadgeInteractive
-            status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
-            orderId={order.id}
-            dealerId={order.dealer_id ? String(order.dealer_id) : DEFAULT_DEALER_ID}
-            canUpdateStatus={true}
-            onStatusChange={onStatusChange}
-          />
+          {onStatusChange && (
+            <StatusBadgeInteractive
+              status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold'}
+              orderId={order.id}
+              dealerId={effectiveDealerId}
+              canUpdateStatus={true}
+              onStatusChange={onStatusChange}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -302,12 +384,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   open,
   onClose,
   onEdit,
-  onDelete,
   onStatusChange,
-  onNotesUpdate,
-  modalData,
-  isLoadingData = false,
-  dataError
+  isLoadingData = false
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
   const { hasPermission } = usePermissionContext();
@@ -320,6 +398,12 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
   // Custom hook for normalized QR props
   const qrProps = useQRProps(orderData);
+
+  // Compute effective dealer ID - prefer orderData, fallback to DEFAULT
+  const effectiveDealerId = useMemo(() =>
+    orderData.dealer_id ? String(orderData.dealer_id) : DEFAULT_DEALER_ID,
+    [orderData.dealer_id]
+  );
 
   // Check if user can edit orders
   const canEditOrder = useMemo(() => {
@@ -340,7 +424,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
   // Handle edit button click
   const handleEdit = useCallback(() => {
-    if (canEditOrder) {
+    if (canEditOrder && onEdit) {
       onEdit(orderData);
     }
   }, [canEditOrder, onEdit, orderData]);
@@ -367,12 +451,29 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   // Update orderData when polling returns new data
   useEffect(() => {
     if (orderDetailsQuery.data && orderDetailsQuery.data.id === order?.id) {
+      // Normalize polling data to prevent snake_case overwriting camelCase
+      const normalized = normalizeOrderData(orderDetailsQuery.data);
+
       setOrderData(prev => ({
         ...prev,
-        ...orderDetailsQuery.data
+        ...normalized,
+        // Preserve critical transformed fields that might be lost
+        services: normalized.services !== undefined ? normalized.services : prev.services,
+        vehicleInfo: normalized.vehicleInfo || prev.vehicleInfo,
+        // Preserve assignedTo if polling data doesn't have it (user name is transformed from JOIN, not in raw DB)
+        assignedTo: normalized.assignedTo || prev.assignedTo,
+        assigned_to: normalized.assigned_to || prev.assigned_to,
       }));
     }
   }, [orderDetailsQuery.data, order?.id]);
+
+  // Error handling for polling failures
+  useEffect(() => {
+    if (orderDetailsQuery.error) {
+      console.error('Order polling error:', orderDetailsQuery.error);
+      toast.error(t('orders.polling_error') || 'Failed to refresh order data');
+    }
+  }, [orderDetailsQuery.error, t]);
 
   // Enhanced scroll behavior with better error handling
   useEffect(() => {
@@ -404,31 +505,32 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     return () => clearTimeout(timer);
   }, [open]);
 
-  // Memoize utility functions
-  const formatCurrency = useMemo(() => (amount: number | null | undefined) => {
-    if (!amount) return 'N/A';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  }, []);
-
-  const getPriorityColor = useMemo(() => (priority: string) => {
-    switch (priority?.toLowerCase()) {
-      case 'high': return 'destructive';
-      case 'medium': return 'secondary';
-      case 'low': return 'outline';
-      default: return 'outline';
-    }
-  }, []);
-
   // Memoize status change handler
   const handleStatusChange = useCallback(
     async (orderId: string, newStatus: string) => {
-      if (onStatusChange) {
-        await onStatusChange(orderId, newStatus);
+      try {
+        // Validate status type
+        const validStatuses: Array<'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold'> =
+          ['pending', 'in_progress', 'completed', 'cancelled', 'on_hold'];
+
+        if (!validStatuses.includes(newStatus as typeof validStatuses[number])) {
+          console.error('Invalid status:', newStatus);
+          return;
+        }
+
+        if (onStatusChange) {
+          await onStatusChange(orderId, newStatus);
+        }
+
+        setOrderData(prev => (
+          prev.id === orderId
+            ? { ...prev, status: newStatus as OrderData['status'] }
+            : prev
+        ));
+      } catch (error) {
+        console.error('Failed to update order status:', error);
+        // Optionally show toast notification here
       }
-      setOrderData(prev => (prev.id === orderId ? { ...prev, status: newStatus } : prev));
     },
     [onStatusChange]
   );
@@ -449,14 +551,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     const baseVehicle = `${year} ${make} ${model}`.trim();
     const trimInfo = trim ? ` (${trim})` : '';
 
-    return baseVehicle ? `${baseVehicle}${trimInfo}` : 'Unknown Vehicle';
-  }, [
-    orderData.vehicle_info,
-    orderData.vehicleYear, orderData.vehicle_year,
-    orderData.vehicleMake, orderData.vehicle_make,
-    orderData.vehicleModel, orderData.vehicle_model,
-    orderData.vehicleTrim, orderData.vehicle_trim
-  ]);
+    return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');
+  }, [orderData, t]);
 
   if (!order) return null;
 
@@ -492,6 +588,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 order={orderData}
                 orderType={orderType}
                 vehicleDisplayName={vehicleDisplayName}
+                effectiveDealerId={effectiveDealerId}
                 onStatusChange={handleStatusChange}
                 canEditOrder={canEditOrder}
                 onEdit={handleEdit}
@@ -522,7 +619,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                     <EnhancedQRCodeBlock
                       orderId={orderData.id}
                       orderNumber={orderData.orderNumber || orderData.order_number}
-                      dealerId={orderData.dealer_id ? String(orderData.dealer_id) : DEFAULT_DEALER_ID}
+                      dealerId={effectiveDealerId}
                       {...qrProps}
                     />
                   )}
@@ -533,7 +630,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   ) : (
                     <FollowersBlock
                       orderId={orderData.id}
-                      dealerId={orderData.dealer_id ? String(orderData.dealer_id) : DEFAULT_DEALER_ID}
+                      dealerId={effectiveDealerId}
                     />
                   )}
 

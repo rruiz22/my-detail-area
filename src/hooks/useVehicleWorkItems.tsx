@@ -23,6 +23,7 @@ export interface WorkItem {
   estimated_hours: number;
   actual_hours: number;
   assigned_technician?: string;
+  assigned_vendor_id?: string | null; // NEW: Vendor assignment
   approval_required: boolean;
   approval_status?: string;
   decline_reason?: string;
@@ -50,6 +51,11 @@ export interface WorkItem {
     first_name: string;
     last_name: string;
   };
+  assigned_vendor?: { // NEW: Vendor data when joined
+    id: string;
+    name: string;
+    specialties: string[];
+  } | null;
 }
 
 export interface CreateWorkItemInput {
@@ -134,7 +140,35 @@ export function useWorkItems(vehicleId: string | null) {
         throw error;
       }
 
-      return data as WorkItem[];
+      // Fetch vendor data separately if there are assigned vendors
+      const workItemsWithVendors = data || [];
+      const vendorIds = [...new Set(workItemsWithVendors
+        .map(wi => wi.assigned_vendor_id)
+        .filter(Boolean)
+      )];
+
+      let vendors: any[] = [];
+      if (vendorIds.length > 0) {
+        const { data: vendorsData, error: vendorsError } = await supabase
+          .from('recon_vendors')
+          .select('id, name, specialties')
+          .in('id', vendorIds);
+
+        if (!vendorsError && vendorsData) {
+          vendors = vendorsData;
+        }
+      }
+
+      // Map vendor data to work items
+      const vendorMap = new Map(vendors.map(v => [v.id, v]));
+      const result = workItemsWithVendors.map(workItem => ({
+        ...workItem,
+        assigned_vendor: workItem.assigned_vendor_id
+          ? vendorMap.get(workItem.assigned_vendor_id) || null
+          : null
+      }));
+
+      return result as WorkItem[];
     },
     enabled: !!vehicleId,
   });
@@ -146,20 +180,21 @@ export function useWorkItems(vehicleId: string | null) {
 export function useCreateWorkItem() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: CreateWorkItemInput) => {
-      if (!user?.dealer_id) {
-        throw new Error('Dealer ID not found');
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
       }
 
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .insert({
           ...input,
-          dealer_id: user.dealer_id,
-          created_by: user.id,
+          dealer_id: currentDealership.id,
+          created_by: user?.id,
           status: 'pending',
           priority: input.priority || 2,
           estimated_cost: input.estimated_cost || 0,
@@ -375,6 +410,7 @@ export function useStartWorkItem() {
 
 /**
  * Hook to complete a work item (marks actual_end timestamp)
+ * Auto-calculates actual_hours from actual_start if not provided
  */
 export function useCompleteWorkItem() {
   const { t } = useTranslation();
@@ -387,13 +423,39 @@ export function useCompleteWorkItem() {
       actualCost?: number;
       actualHours?: number;
     }) => {
+      // First, fetch the work item to get actual_start for auto-calculation
+      const { data: workItem, error: fetchError } = await supabase
+        .from('get_ready_work_items')
+        .select('actual_start, estimated_hours')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) {
+        console.error('Error fetching work item for completion:', fetchError);
+        throw fetchError;
+      }
+
+      // Auto-calculate actual_hours if not provided and actual_start exists
+      let finalActualHours = actualHours;
+      if (actualHours === undefined && workItem?.actual_start) {
+        const startTime = new Date(workItem.actual_start);
+        const endTime = new Date();
+        const diffInMs = endTime.getTime() - startTime.getTime();
+        // Convert to hours with 2 decimal precision
+        finalActualHours = Math.round((diffInMs / (1000 * 60 * 60)) * 100) / 100;
+        console.log(`Auto-calculated actual_hours: ${finalActualHours} (from ${workItem.actual_start} to ${endTime.toISOString()})`);
+      } else if (actualHours === undefined) {
+        // Fallback to estimated_hours if no actual_start
+        finalActualHours = workItem?.estimated_hours || 0;
+      }
+
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
           status: 'completed',
           actual_end: new Date().toISOString(),
           actual_cost: actualCost,
-          actual_hours: actualHours,
+          actual_hours: finalActualHours,
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
@@ -450,6 +512,58 @@ export function useDeleteWorkItem() {
     onError: (error) => {
       console.error('Delete work item mutation error:', error);
       toast.error(t('get_ready.work_items.error_deleting'));
+    },
+  });
+}
+
+/**
+ * Hook to assign a vendor to a work item
+ */
+export function useAssignVendorToWorkItem() {
+  const { t } = useTranslation();
+  const { currentDealership } = useAccessibleDealerships();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ workItemId, vendorId, vehicleId }: {
+      workItemId: string;
+      vendorId: string | null;
+      vehicleId: string;
+    }) => {
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
+
+      const { data, error } = await supabase
+        .from('get_ready_work_items')
+        .update({
+          assigned_vendor_id: vendorId,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', workItemId)
+        .eq('dealer_id', currentDealership.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error assigning vendor:', error);
+        throw error;
+      }
+
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['work-items', variables.vehicleId] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
+      toast.success(
+        variables.vendorId
+          ? t('get_ready.vendors.vendor_assigned_successfully')
+          : t('get_ready.vendors.vendor_unassigned_successfully')
+      );
+    },
+    onError: (error) => {
+      console.error('Assign vendor mutation error:', error);
+      toast.error(t('get_ready.vendors.error_assigning_vendor'));
     },
   });
 }

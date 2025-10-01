@@ -18,7 +18,10 @@
       "Bash(curl:*)",
       "Bash(netstat:*)",
       "Bash(pkill:*)",
-      "Bash(npx supabase functions:*)"
+      "Bash(npx supabase functions:*)",
+      "Bash(dir:*)",
+      "Bash(find:*)",
+      "Bash(npm run build:dev:*)"
     ],
     "deny": [],
     "ask": []

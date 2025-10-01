@@ -34,7 +34,8 @@ export function useVehicleManagement() {
         throw new Error('No dealership selected');
       }
 
-      const { data, error } = await supabase
+      // 1. Create the vehicle
+      const { data: vehicle, error } = await supabase
         .from('get_ready_vehicles')
         .insert({
           dealer_id: currentDealership.id,
@@ -56,7 +57,42 @@ export function useVehicleManagement() {
         .single();
 
       if (error) throw error;
-      return data;
+
+      // 2. Auto-create work items from templates
+      try {
+        const { data: templates } = await supabase
+          .from('work_item_templates')
+          .select('*')
+          .eq('dealer_id', currentDealership.id)
+          .eq('is_active', true)
+          .eq('auto_assign', true)
+          .order('order_index', { ascending: true });
+
+        if (templates && templates.length > 0) {
+          const workItems = templates.map(template => ({
+            vehicle_id: vehicle.id,
+            dealer_id: currentDealership.id,
+            title: template.name,
+            description: template.description || null,
+            work_type: template.work_type,
+            status: 'pending',
+            priority: template.priority,
+            estimated_cost: template.estimated_cost,
+            actual_cost: 0,
+            estimated_hours: template.estimated_hours,
+            actual_hours: 0,
+            approval_required: template.approval_required,
+          }));
+
+          await supabase.from('get_ready_work_items').insert(workItems);
+          console.log(`Created ${workItems.length} work items from templates for vehicle ${vehicle.id}`);
+        }
+      } catch (workItemError) {
+        // Log error but don't fail vehicle creation
+        console.error('Error creating work items from templates:', workItemError);
+      }
+
+      return vehicle;
     },
     onSuccess: () => {
       // Invalidate both vehicles and steps queries to update counts

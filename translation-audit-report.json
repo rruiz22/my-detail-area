@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 513,
-  "totalStrings": 5110,
-  "hardcodedStrings": 1169,
-  "translatedStrings": 3941,
+  "scannedFiles": 518,
+  "totalStrings": 5180,
+  "hardcodedStrings": 1172,
+  "translatedStrings": 4008,
   "issues": {
     "critical": [
       {
@@ -5344,114 +5344,114 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 182,
-            "context": "181: onError: (error) => {\n182: console.error('Create work item mutation error:', error);\n183: toast.error(t('get_ready.work_items.error_creating'));"
+            "line": 188,
+            "context": "187: onError: (error) => {\n188: console.error('Create work item mutation error:', error);\n189: toast.error(t('get_ready.work_items.error_creating'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 223,
-            "context": "222: onError: (error) => {\n223: console.error('Update work item mutation error:', error);\n224: toast.error(t('get_ready.work_items.error_updating'));"
+            "line": 235,
+            "context": "234: onError: (error) => {\n235: console.error('Update work item mutation error:', error);\n236: toast.error(t('get_ready.work_items.error_updating'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 270,
-            "context": "269: onError: (error) => {\n270: console.error('Approve work item mutation error:', error);\n271: toast.error(t('get_ready.work_items.error_approving'));"
+            "line": 282,
+            "context": "281: onError: (error) => {\n282: console.error('Approve work item mutation error:', error);\n283: toast.error(t('get_ready.work_items.error_approving'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 318,
-            "context": "317: onError: (error) => {\n318: console.error('Decline work item mutation error:', error);\n319: toast.error(t('get_ready.work_items.error_declining'));"
+            "line": 330,
+            "context": "329: onError: (error) => {\n330: console.error('Decline work item mutation error:', error);\n331: toast.error(t('get_ready.work_items.error_declining'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 358,
-            "context": "357: onError: (error) => {\n358: console.error('Start work item mutation error:', error);\n359: toast.error(t('get_ready.work_items.error_starting'));"
+            "line": 370,
+            "context": "369: onError: (error) => {\n370: console.error('Start work item mutation error:', error);\n371: toast.error(t('get_ready.work_items.error_starting'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 405,
-            "context": "404: onError: (error) => {\n405: console.error('Complete work item mutation error:', error);\n406: toast.error(t('get_ready.work_items.error_completing'));"
+            "line": 417,
+            "context": "416: onError: (error) => {\n417: console.error('Complete work item mutation error:', error);\n418: toast.error(t('get_ready.work_items.error_completing'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 439,
-            "context": "438: onError: (error) => {\n439: console.error('Delete work item mutation error:', error);\n440: toast.error(t('get_ready.work_items.error_deleting'));"
+            "line": 451,
+            "context": "450: onError: (error) => {\n451: console.error('Delete work item mutation error:', error);\n452: toast.error(t('get_ready.work_items.error_deleting'));"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.work_items.error_loading",
-            "line": 127,
+            "line": 133,
             "exists": true
           },
           {
             "key": "get_ready.work_items.created_successfully",
-            "line": 179,
+            "line": 185,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_creating",
-            "line": 183,
+            "line": 189,
             "exists": true
           },
           {
             "key": "get_ready.work_items.updated_successfully",
-            "line": 220,
+            "line": 232,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_updating",
-            "line": 224,
+            "line": 236,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approved_successfully",
-            "line": 267,
+            "line": 279,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_approving",
-            "line": 271,
+            "line": 283,
             "exists": true
           },
           {
             "key": "get_ready.work_items.declined_successfully",
-            "line": 315,
+            "line": 327,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_declining",
-            "line": 319,
+            "line": 331,
             "exists": true
           },
           {
             "key": "get_ready.work_items.started_successfully",
-            "line": 355,
+            "line": 367,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_starting",
-            "line": 359,
+            "line": 371,
             "exists": true
           },
           {
             "key": "get_ready.work_items.completed_successfully",
-            "line": 402,
+            "line": 414,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_completing",
-            "line": 406,
+            "line": 418,
             "exists": true
           },
           {
             "key": "get_ready.work_items.deleted_successfully",
-            "line": 436,
+            "line": 448,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_deleting",
-            "line": 440,
+            "line": 452,
             "exists": true
           }
         ],
@@ -11540,6 +11540,66 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useVehicleMedia.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      toast.error(t(",
+            "line": 200,
+            "context": "199: onError: (error) => {\n200: console.error('Upload media mutation error:', error);\n201: toast.error(t('get_ready.media.error_uploading'));"
+          },
+          {
+            "text": ", error);\r\n      toast.error(t(",
+            "line": 243,
+            "context": "242: onError: (error) => {\n243: console.error('Update media mutation error:', error);\n244: toast.error(t('get_ready.media.error_updating'));"
+          },
+          {
+            "text": ", error);\r\n      toast.error(t(",
+            "line": 294,
+            "context": "293: onError: (error) => {\n294: console.error('Delete media mutation error:', error);\n295: toast.error(t('get_ready.media.error_deleting'));"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.media.error_loading",
+            "line": 84,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.uploaded_successfully",
+            "line": 197,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.error_uploading",
+            "line": 201,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.updated_successfully",
+            "line": 240,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.error_updating",
+            "line": 244,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.deleted_successfully",
+            "line": 291,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.error_deleting",
+            "line": 295,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 70,
         "severity": "low"
       },
       {
@@ -28716,73 +28776,67 @@
       },
       {
         "file": "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
-        "hardcodedStrings": [
-          {
-            "text": ", error);\r\n    return <>{fallback}</>;\r\n  }\r\n};\r\n\r\n// Header Components\r\ninterface UnifiedOrderHeaderProps {\r\n  order: OrderData;\r\n  orderType: OrderType;\r\n  vehicleDisplayName: string;\r\n  onStatusChange: (orderId: string, newStatus: string) => void;\r\n  canEditOrder?: boolean;\r\n  onEdit?: () => void;\r\n}\r\n\r\nconst UnifiedOrderHeader = memo(function UnifiedOrderHeader({\r\n  order,\r\n  orderType,\r\n  vehicleDisplayName,\r\n  onStatusChange,\r\n  canEditOrder,\r\n  onEdit\r\n}: UnifiedOrderHeaderProps) {\r\n  const { t } = useTranslation();\r\n\r\n  const headerData = useMemo(() => {\r\n    const orderNumber = order.orderNumber || order.order_number || ",
-            "line": 142,
-            "context": "141: } catch (error) {\n142: console.error('Component rendering error:', error);\n143: return <>{fallback}</>;"
-          }
-        ],
+        "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "orders.edit",
-            "line": 220,
+            "line": 236,
             "exists": true
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 471,
+            "line": 478,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 479,
+            "line": 486,
             "exists": false
           },
           {
             "key": "orders.print",
-            "line": 571,
+            "line": 578,
             "exists": false
           },
           {
             "key": "orders.download",
-            "line": 580,
+            "line": 587,
             "exists": false
           },
           {
             "key": "common.close",
-            "line": 591,
+            "line": 598,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_details_modal_title",
-            "line": 471,
-            "context": "470: <DialogTitle className=\"sr-only\">\n471: {t('orders.order_details_modal_title', {\n472: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 478,
+            "context": "477: <DialogTitle className=\"sr-only\">\n478: {t('orders.order_details_modal_title', {\n479: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 479,
-            "context": "478: <DialogDescription className=\"sr-only\">\n479: {t('orders.order_details_description', {\n480: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
+            "line": 486,
+            "context": "485: <DialogDescription className=\"sr-only\">\n486: {t('orders.order_details_description', {\n487: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.print",
-            "line": 571,
-            "context": "570: <Printer className=\"h-4 w-4\" />\n571: {t('orders.print')}\n572: </Button>"
+            "line": 578,
+            "context": "577: <Printer className=\"h-4 w-4\" />\n578: {t('orders.print')}\n579: </Button>"
           },
           {
             "key": "orders.download",
-            "line": 580,
-            "context": "579: <Download className=\"h-4 w-4\" />\n580: {t('orders.download')}\n581: </Button>"
+            "line": 587,
+            "context": "586: <Download className=\"h-4 w-4\" />\n587: {t('orders.download')}\n588: </Button>"
           },
           {
             "key": "common.close",
-            "line": 591,
-            "context": "590: >\n591: {t('common.close')}\n592: </Button>"
+            "line": 598,
+            "context": "597: >\n598: {t('common.close')}\n599: </Button>"
           }
         ],
-        "coverage": 86,
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -38192,6 +38246,357 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\get-ready\\tabs\\VehicleMediaTab.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n    }\r\n  };\r\n\r\n  const handleEdit = async () => {\r\n    if (!selectedMedia) return;\r\n\r\n    await updateMedia.mutateAsync({\r\n      id: selectedMedia.id,\r\n      vehicleId,\r\n      category: editCategory,\r\n    });\r\n\r\n    setEditModalOpen(false);\r\n    setSelectedMedia(null);\r\n  };\r\n\r\n  const handleDelete = async (media: VehicleMedia) => {\r\n    if (confirm(t(",
+            "line": 158,
+            "context": "157: } catch (error) {\n158: console.error('Upload error:', error);\n159: }"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.media.categories.all",
+            "line": 83,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.intake",
+            "line": 84,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.damage",
+            "line": 85,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.work_in_progress",
+            "line": 86,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.completion",
+            "line": 87,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.exterior_360",
+            "line": 88,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.interior",
+            "line": 89,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.undercarriage",
+            "line": 90,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.engine_bay",
+            "line": 91,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.vin_plates",
+            "line": 92,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.odometer",
+            "line": 93,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.confirm_delete",
+            "line": 176,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.photos",
+            "line": 232,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.videos",
+            "line": 241,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.documents",
+            "line": 250,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.total",
+            "line": 259,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.upload",
+            "line": 313,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.${media.category}",
+            "line": 364,
+            "exists": false
+          },
+          {
+            "key": "get_ready.actions.actions",
+            "line": 377,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.edit",
+            "line": 381,
+            "exists": false
+          },
+          {
+            "key": "get_ready.actions.delete",
+            "line": 389,
+            "exists": false
+          },
+          {
+            "key": "get_ready.media.categories.${media.category}",
+            "line": 436,
+            "exists": false
+          },
+          {
+            "key": "get_ready.actions.actions",
+            "line": 454,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.edit",
+            "line": 458,
+            "exists": false
+          },
+          {
+            "key": "get_ready.actions.delete",
+            "line": 466,
+            "exists": false
+          },
+          {
+            "key": "get_ready.media.no_media",
+            "line": 478,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.drag_drop_hint",
+            "line": 479,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.upload_media",
+            "line": 488,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.upload_description",
+            "line": 489,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.selected_files",
+            "line": 496,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.category",
+            "line": 515,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.intake",
+            "line": 521,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.damage",
+            "line": 522,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.work_in_progress",
+            "line": 523,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.completion",
+            "line": 524,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.exterior_360",
+            "line": 525,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.interior",
+            "line": 526,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.undercarriage",
+            "line": 527,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.engine_bay",
+            "line": 528,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.vin_plates",
+            "line": 529,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.odometer",
+            "line": 530,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 538,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.upload",
+            "line": 542,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.edit_media",
+            "line": 552,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.edit_description",
+            "line": 553,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.category",
+            "line": 558,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.intake",
+            "line": 564,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.damage",
+            "line": 565,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.work_in_progress",
+            "line": 566,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.completion",
+            "line": 567,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.exterior_360",
+            "line": 568,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.interior",
+            "line": 569,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.undercarriage",
+            "line": 570,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.engine_bay",
+            "line": 571,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.vin_plates",
+            "line": 572,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.odometer",
+            "line": 573,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 581,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.save",
+            "line": 585,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.view_document",
+            "line": 632,
+            "exists": true
+          },
+          {
+            "key": "get_ready.media.categories.${selectedMedia.category}",
+            "line": 652,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "get_ready.media.categories.${media.category}",
+            "line": 364,
+            "context": "363: <Badge variant=\"outline\" className=\"text-xs mt-1\">\n364: {t(`get_ready.media.categories.${media.category}`)}\n365: </Badge>"
+          },
+          {
+            "key": "get_ready.actions.edit",
+            "line": 381,
+            "context": "380: <Edit className=\"h-4 w-4 mr-2\" />\n381: {t('get_ready.actions.edit')}\n382: </DropdownMenuItem>"
+          },
+          {
+            "key": "get_ready.actions.delete",
+            "line": 389,
+            "context": "388: <Trash2 className=\"h-4 w-4 mr-2\" />\n389: {t('get_ready.actions.delete')}\n390: </DropdownMenuItem>"
+          },
+          {
+            "key": "get_ready.media.categories.${media.category}",
+            "line": 436,
+            "context": "435: <Badge variant=\"outline\" className=\"text-xs\">\n436: {t(`get_ready.media.categories.${media.category}`)}\n437: </Badge>"
+          },
+          {
+            "key": "get_ready.actions.edit",
+            "line": 458,
+            "context": "457: <Edit className=\"h-4 w-4 mr-2\" />\n458: {t('get_ready.actions.edit')}\n459: </DropdownMenuItem>"
+          },
+          {
+            "key": "get_ready.actions.delete",
+            "line": 466,
+            "context": "465: <Trash2 className=\"h-4 w-4 mr-2\" />\n466: {t('get_ready.actions.delete')}\n467: </DropdownMenuItem>"
+          },
+          {
+            "key": "get_ready.media.categories.${selectedMedia.category}",
+            "line": 652,
+            "context": "651: <Badge variant=\"outline\">\n652: {t(`get_ready.media.categories.${selectedMedia.category}`)}\n653: </Badge>"
+          }
+        ],
+        "coverage": 98,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\followers\\AddFollowerModal.tsx",
         "hardcodedStrings": [
           {
@@ -42909,7 +43314,6 @@
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
-        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\orders\\OrderDetailModal.tsx",
         "src\\components\\orders\\OptimizedOrderModal.tsx",
@@ -42918,6 +43322,7 @@
         "src\\components\\followers\\AddFollowerModal.tsx",
         "src\\components\\contacts\\ContactModal.tsx",
         "src\\components\\stock\\VehicleDetailsModal.tsx",
+        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx"
       ],
@@ -42941,7 +43346,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "277 Component components need translation",
+      "description": "279 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -43025,6 +43430,7 @@
         "src\\lib\\errorHandling.ts",
         "src\\hooks\\useWebNFC.tsx",
         "src\\hooks\\useVinDecoding.tsx",
+        "src\\hooks\\useVehicleMedia.tsx",
         "src\\hooks\\useVehicleAutoPopulation.tsx",
         "src\\hooks\\useOrderActions.tsx",
         "src\\hooks\\useAttachments.ts",
@@ -43099,6 +43505,7 @@
         "src\\components\\nfc\\NFCPhysicalWriter.tsx",
         "src\\components\\management\\DealershipPerformanceTable.tsx",
         "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
+        "src\\components\\get-ready\\tabs\\VehicleMediaTab.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\debug\\SimpleSalesOrders.tsx",
         "src\\components\\common\\LazyComponentWrapper.tsx",
@@ -43221,12 +43628,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "139 hours"
+      "estimatedEffort": "140 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2847 translation keys are referenced but missing",
+      "description": "2854 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "143 hours"
     }

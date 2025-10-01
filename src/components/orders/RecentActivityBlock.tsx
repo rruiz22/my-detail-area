@@ -46,7 +46,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       setLoading(true);
 
       // Fetch all activity sources in parallel
-      const [commentsResult, attachmentsResult, orderHistoryResult] = await Promise.allSettled([
+      const [commentsResult, attachmentsResult, orderHistoryResult, activityLogResult] = await Promise.allSettled([
         // 1. Comments and Internal Notes (without JOIN - we'll fetch user info separately)
         supabase
           .from('order_comments')
@@ -83,7 +83,15 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
           .from('orders')
           .select('id, created_at, updated_at, status, assigned_group_id')
           .eq('id', orderId)
-          .single()
+          .single(),
+
+        // 4. Order Activity Log (change tracking)
+        supabase
+          .from('order_activity_log')
+          .select('id, order_id, user_id, activity_type, field_name, old_value, new_value, description, created_at, metadata')
+          .eq('order_id', orderId)
+          .order('created_at', { ascending: false })
+          .limit(20)
       ]);
 
       const allActivities: ActivityItem[] = [];
@@ -151,6 +159,72 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
             metadata: { timeDiff: Math.floor(timeDiff / 1000) }
           });
         }
+      }
+
+      // Process Activity Log (track all order changes)
+      if (activityLogResult.status === 'fulfilled' && activityLogResult.value.data) {
+        const activityLogs = activityLogResult.value.data;
+
+        // Get unique user IDs and fetch their profiles
+        const userIds = [...new Set(activityLogs.map((log: any) => log.user_id).filter(Boolean))];
+        let userProfiles: Record<string, any> = {};
+
+        if (userIds.length > 0) {
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, first_name, last_name, email')
+            .in('id', userIds);
+
+          if (profiles) {
+            userProfiles = profiles.reduce((acc, profile) => {
+              acc[profile.id] = profile;
+              return acc;
+            }, {} as Record<string, any>);
+          }
+        }
+
+        const activityLogItems = activityLogs.map((log: any) => {
+          // Get user name from fetched profiles
+          const profile = log.user_id ? userProfiles[log.user_id] : null;
+          const userName = profile
+            ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.email || 'Team Member'
+            : 'System';
+
+          // Map activity_type to action_type for UI display
+          const activityTypeMap: Record<string, ActivityItem['action_type']> = {
+            'status_changed': 'status_change',
+            'assignment_changed': 'assignment_change',
+            'due_date_changed': 'due_date_change',
+            'notes_updated': 'note',
+            'order_created': 'edit',
+            'priority_changed': 'edit',
+            'customer_updated': 'edit',
+            'services_updated': 'edit',
+            'amount_updated': 'edit'
+          };
+
+          const actionType = activityTypeMap[log.activity_type] || 'edit';
+
+          // Use description from log or generate from activity_type
+          const action = log.description || log.activity_type.replace(/_/g, ' ');
+
+          return {
+            id: `activity-log-${log.id}`,
+            action: action.charAt(0).toUpperCase() + action.slice(1),
+            description: log.field_name
+              ? `Changed ${log.field_name.replace(/_/g, ' ')}`
+              : log.description || '',
+            user_name: userName,
+            user_id: log.user_id,
+            created_at: log.created_at,
+            action_type: actionType,
+            old_value: log.old_value,
+            new_value: log.new_value,
+            metadata: log.metadata
+          };
+        });
+
+        allActivities.push(...activityLogItems);
       }
 
       // Sort all activities by date (most recent first) and limit

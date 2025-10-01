@@ -116,12 +116,13 @@ export function useVehicleMedia(vehicleId: string | null) {
 export function useUploadMedia() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: UploadMediaInput) => {
-      if (!user?.dealer_id) {
-        throw new Error('Dealer ID not found');
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
       }
 
       // Upload file to Supabase Storage
@@ -166,7 +167,7 @@ export function useUploadMedia() {
         .from('vehicle_media')
         .insert({
           vehicle_id: input.vehicle_id,
-          dealer_id: user.dealer_id,
+          dealer_id: currentDealership.id,
           file_path: uploadData.path,
           file_name: input.file.name,
           file_size: input.file.size,
@@ -176,7 +177,7 @@ export function useUploadMedia() {
           annotations: input.annotations || {},
           metadata,
           linked_work_item_id: input.linked_work_item_id,
-          uploaded_by: user.id,
+          uploaded_by: user?.id,
         })
         .select()
         .single();

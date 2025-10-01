@@ -100,6 +100,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
+  const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
 
   const canViewPrices = canViewPricing(roles);
 
@@ -113,8 +114,30 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   useEffect(() => {
     if (open) {
       fetchDealerships();
-      
+
       if (order) {
+        // EDIT MODE: Set flag to trigger auto-population after dealerships load
+        setNeedsAutopopulate(true);
+        setSelectedDealership('');
+        setSelectedAssignedTo('');
+
+        // Debug logging - investigate dealer fields (similar to Sales modal)
+        console.log('🔍 Service Order Edit Mode - Investigating dealer fields:');
+        console.log('🔍 All order fields:', Object.keys(order));
+        console.log('🔍 Dealership fields:', {
+          dealer_id: order.dealer_id,
+          dealerId: order.dealerId,
+          dealership_id: order.dealership_id,
+          dealer: order.dealer,
+          dealershipId: order.dealershipId
+        });
+        console.log('🔍 Assignment fields:', {
+          assigned_to: order.assigned_to,
+          assignedTo: order.assignedTo,
+          assigned_group_id: order.assigned_group_id,
+          assignedGroupId: order.assignedGroupId
+        });
+
         setFormData({
           orderNumber: order.orderNumber || order.order_number || '',
           orderType: order.orderType || order.order_type || 'service',
@@ -139,8 +162,12 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           scheduledTime: order.scheduledTime || order.scheduled_time || ''
         });
         setSelectedServices(order.services || []);
-        setSelectedDealership(order.dealerId?.toString() || '');
+        // Do NOT set dealership here - let the useEffect handle it after dealerships load (prevents race condition)
+        // setSelectedDealership(order.dealerId?.toString() || '');
       } else {
+        // CREATE MODE: Clear flag
+        setNeedsAutopopulate(false);
+
         // Reset form for new order
         setFormData({
           orderNumber: '',
@@ -197,7 +224,11 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         console.log('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
         setSelectedAssignedTo(matchingUser.id);
       } else {
-        console.warn('⚠️ Could not find assigned user:', order.assignedTo);
+        console.warn('⚠️ Could not find assigned user:', {
+          assignedTo: order.assignedTo,
+          assigned_group_id: order.assigned_group_id,
+          assignedGroupId: order.assignedGroupId
+        });
       }
     }
   }, [assignedUsers.length, order, selectedAssignedTo]);
@@ -209,6 +240,37 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       handleDealershipChange(globalDealerFilter);
     }
   }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
+
+  // Auto-populate dealership when flag is set AND dealerships are loaded (FLAG PATTERN)
+  useEffect(() => {
+    if (needsAutopopulate && dealerships.length > 0 && order) {
+      const dealerIdStr = order.dealerId?.toString() || order.dealer_id?.toString();
+
+      if (dealerIdStr) {
+        // Verify dealer exists in list
+        const dealerExists = dealerships.some((d: any) => d.id.toString() === dealerIdStr);
+
+        if (dealerExists) {
+          console.log('🔧 [FLAG PATTERN] Service Order Edit: Auto-setting dealership:', dealerIdStr);
+          setSelectedDealership(dealerIdStr);
+
+          // Immediately fetch dealer data (users and services)
+          console.log('🔧 [FLAG PATTERN] Service Order Edit: Auto-loading dealer data');
+          fetchDealerData(dealerIdStr);
+
+          // Reset flag to prevent re-execution
+          setNeedsAutopopulate(false);
+          console.log('✅ [FLAG PATTERN] Auto-population completed, flag reset');
+        } else {
+          console.warn('⚠️ Dealer not found in accessible dealerships:', dealerIdStr);
+          setNeedsAutopopulate(false);
+        }
+      } else {
+        console.warn('⚠️ No dealerId found in order');
+        setNeedsAutopopulate(false);
+      }
+    }
+  }, [needsAutopopulate, dealerships.length, order]);
 
   const fetchDealerships = async () => {
     try {

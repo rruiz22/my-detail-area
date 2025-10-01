@@ -77,9 +77,11 @@ export interface ServiceOrder {
   createdAt: string;
   updatedAt: string;
   dueDate?: string;
-  assignedTo?: string;
+  assignedTo?: string; // User name (populated from JOIN)
+  assigned_group_id?: string; // User ID from database (required for modal edit)
   notes?: string;
   customOrderNumber?: string;
+  dealerId?: number; // Dealer ID from Supabase (required for modal auto-population)
   // Enhanced fields from JOINs
   dealershipName?: string;
   assignedGroupName?: string;
@@ -118,8 +120,10 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   updatedAt: supabaseOrder.updated_at,
   dueDate: supabaseOrder.due_date || undefined,
   assignedTo: 'Unassigned', // Will be overwritten in refreshData
+  assigned_group_id: supabaseOrder.assigned_group_id || undefined, // User ID for modal edit
   notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
+  dealerId: supabaseOrder.dealer_id, // Map dealer_id for modal auto-population
   // Enhanced fields from manual JOINs (will be set in refreshData)
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
