@@ -1,23 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Activity,
+  AlertTriangle,
+  Calendar,
+  CheckCircle,
   Clock,
   Edit,
-  MessageSquare,
   FileText,
-  User,
-  CheckCircle,
-  AlertTriangle,
+  MessageSquare,
   Paperclip,
   QrCode,
-  UserCheck,
-  Calendar
+  UserCheck
 } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '@/integrations/supabase/client';
 
 interface ActivityItem {
   id: string;
@@ -40,6 +39,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
   const { t } = useTranslation();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchRecentActivity = useCallback(async () => {
     try {
@@ -96,21 +96,75 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
       const allActivities: ActivityItem[] = [];
 
+      // OPTIMIZATION: Collect all user IDs first, then fetch profiles once
+      const allUserIds: string[] = [];
+
+      // Collect user IDs from comments
+      if (commentsResult.status === 'fulfilled' && commentsResult.value.data) {
+        commentsResult.value.data.forEach((comment: any) => {
+          if (comment.user_id) allUserIds.push(comment.user_id);
+        });
+      }
+
+      // Collect user IDs from attachments
+      if (attachmentsResult.status === 'fulfilled' && attachmentsResult.value.data) {
+        attachmentsResult.value.data.forEach((attachment: any) => {
+          if (attachment.uploaded_by) allUserIds.push(attachment.uploaded_by);
+        });
+      }
+
+      // Collect user IDs from activity logs
+      if (activityLogResult.status === 'fulfilled' && activityLogResult.value.data) {
+        activityLogResult.value.data.forEach((log: any) => {
+          if (log.user_id) allUserIds.push(log.user_id);
+        });
+      }
+
+      // Fetch all user profiles in ONE query
+      const uniqueUserIds = [...new Set(allUserIds)];
+      let userProfiles: Record<string, any> = {};
+
+      if (uniqueUserIds.length > 0) {
+        try {
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, first_name, last_name, email')
+            .in('id', uniqueUserIds);
+
+          if (profiles) {
+            userProfiles = profiles.reduce((acc, profile) => {
+              acc[profile.id] = profile;
+              return acc;
+            }, {} as Record<string, any>);
+          }
+        } catch (profileError) {
+          console.warn('Failed to fetch user profiles:', profileError);
+          // Continue without profiles - will fall back to generic names
+        }
+      }
+
+      // Helper function to get user name
+      const getUserName = (userId: string | null | undefined): string => {
+        if (!userId) return 'System';
+        const profile = userProfiles[userId];
+        if (!profile) return 'Team Member';
+
+        const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+        return fullName || profile.email || 'Team Member';
+      };
+
       // Process Comments
       if (commentsResult.status === 'fulfilled' && commentsResult.value.data) {
         const comments = commentsResult.value.data;
         const commentActivities = comments.map((comment: any) => {
-          // Use a generic user name since we're not fetching profile info
-          const userName = 'Team Member';
-
           return {
             id: `comment-${comment.id}`,
             action: comment.comment_type === 'internal' ? 'Added internal note' : 'Added comment',
             description: (comment.comment_text || '').substring(0, 80) + (((comment.comment_text || '').length > 80) ? '...' : ''),
-            user_name: userName,
+            user_name: getUserName(comment.user_id),
             user_id: comment.user_id,
             created_at: comment.created_at,
-            action_type: comment.comment_type === 'internal' ? 'note' : 'comment',
+            action_type: (comment.comment_type === 'internal' ? 'note' : 'comment') as ActivityItem['action_type'],
             metadata: comment
           };
         });
@@ -121,14 +175,11 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       if (attachmentsResult.status === 'fulfilled' && attachmentsResult.value.data) {
         const attachments = attachmentsResult.value.data;
         const fileActivities = attachments.map((attachment: any) => {
-          // Use a generic user name since we're not fetching profile info
-          const userName = 'Team Member';
-
           return {
             id: `file-${attachment.id}`,
             action: 'Uploaded file',
             description: `Attached: ${attachment.file_name}`,
-            user_name: userName,
+            user_name: getUserName(attachment.uploaded_by),
             user_id: attachment.uploaded_by,
             created_at: attachment.created_at,
             action_type: 'file_upload' as const,
@@ -153,7 +204,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
             id: `order-update-${order.id}`,
             action: 'Order updated',
             description: 'Order information was modified',
-            user_name: 'System', // Could be enhanced to track who made the change
+            user_name: 'System',
             created_at: order.updated_at,
             action_type: 'edit',
             metadata: { timeDiff: Math.floor(timeDiff / 1000) }
@@ -165,31 +216,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       if (activityLogResult.status === 'fulfilled' && activityLogResult.value.data) {
         const activityLogs = activityLogResult.value.data;
 
-        // Get unique user IDs and fetch their profiles
-        const userIds = [...new Set(activityLogs.map((log: any) => log.user_id).filter(Boolean))];
-        let userProfiles: Record<string, any> = {};
-
-        if (userIds.length > 0) {
-          const { data: profiles } = await supabase
-            .from('profiles')
-            .select('id, first_name, last_name, email')
-            .in('id', userIds);
-
-          if (profiles) {
-            userProfiles = profiles.reduce((acc, profile) => {
-              acc[profile.id] = profile;
-              return acc;
-            }, {} as Record<string, any>);
-          }
-        }
-
         const activityLogItems = activityLogs.map((log: any) => {
-          // Get user name from fetched profiles
-          const profile = log.user_id ? userProfiles[log.user_id] : null;
-          const userName = profile
-            ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.email || 'Team Member'
-            : 'System';
-
           // Map activity_type to action_type for UI display
           const activityTypeMap: Record<string, ActivityItem['action_type']> = {
             'status_changed': 'status_change',
@@ -214,7 +241,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
             description: log.field_name
               ? `Changed ${log.field_name.replace(/_/g, ' ')}`
               : log.description || '',
-            user_name: userName,
+            user_name: getUserName(log.user_id),
             user_id: log.user_id,
             created_at: log.created_at,
             action_type: actionType,
@@ -233,9 +260,12 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
         .slice(0, 10); // Increased limit to 10
 
       setActivities(sortedActivities);
+      setError(null); // Clear any previous errors
       console.log('📊 Recent activities loaded:', sortedActivities.length);
     } catch (error) {
       console.error('Error fetching recent activity:', error);
+      setError('Failed to load activity. Please try again.');
+      // Keep existing activities if any, don't clear them on error
     } finally {
       setLoading(false);
     }
@@ -308,7 +338,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
     const now = new Date();
     const date = new Date(dateString);
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -328,12 +358,23 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
           )}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-3">
         {loading ? (
           <div className="text-center py-4">
             <div className="animate-spin w-6 h-6 border-2 border-gray-700 border-t-transparent rounded-full mx-auto"></div>
             <p className="text-xs text-muted-foreground mt-2">Loading activity...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-4 text-red-600">
+            <AlertTriangle className="h-8 w-8 mx-auto mb-2" />
+            <p className="text-sm font-medium mb-2">{error}</p>
+            <button
+              onClick={() => fetchRecentActivity()}
+              className="text-xs underline hover:no-underline transition-all"
+            >
+              Click to retry
+            </button>
           </div>
         ) : activities.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
@@ -344,15 +385,15 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
         ) : (
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {activities.map((activity) => (
-              <div 
-                key={activity.id} 
+              <div
+                key={activity.id}
                 className={`p-3 rounded-lg border-l-2 ${getActivityColor(activity.action_type)}`}
               >
                 <div className="flex items-start gap-2">
                   <div className="flex-shrink-0 mt-0.5">
                     {getActivityIcon(activity.action_type)}
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-medium">{activity.action}</span>
@@ -361,7 +402,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
                         {getTimeAgo(activity.created_at)}
                       </div>
                     </div>
-                    
+
                     <p className="text-xs text-muted-foreground mb-2">
                       {activity.description}
                     </p>
@@ -397,7 +438,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
             ))}
           </div>
         )}
-        
+
         {/* Activity Summary */}
         <div className="pt-2 border-t text-center">
           <p className="text-xs text-muted-foreground">
