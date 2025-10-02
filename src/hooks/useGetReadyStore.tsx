@@ -31,16 +31,17 @@ interface GetReadyStore {
   // Selected states
   selectedStepId: string | null;
   selectedVehicleId: string | null;
-  
+  selectedVehiclesByStep: Record<string, string>; // Memory: stepId -> vehicleId
+
   // View states
   currentView: 'overview' | 'details' | 'approvals' | 'reports';
   splitLayout: boolean;
-  
+
   // Filters
   searchTerm: string;
   priorityFilter: string | null;
   statusFilter: string | null;
-  
+
   // Actions
   setSelectedStepId: (stepId: string | null) => void;
   setSelectedVehicleId: (vehicleId: string | null) => void;
@@ -58,15 +59,37 @@ export const useGetReadyStore = create<GetReadyStore>()(
       // Initial state
       selectedStepId: null,
       selectedVehicleId: null,
+      selectedVehiclesByStep: {},
       currentView: 'overview',
       splitLayout: true,
       searchTerm: '',
       priorityFilter: null,
       statusFilter: null,
-      
+
       // Actions
-      setSelectedStepId: (stepId) => set({ selectedStepId: stepId }),
-      setSelectedVehicleId: (vehicleId) => set({ selectedVehicleId: vehicleId }),
+      setSelectedStepId: (stepId) => set((state) => ({
+        selectedStepId: stepId,
+        // Restore vehicle selection for this step (if exists)
+        selectedVehicleId: stepId ? (state.selectedVehiclesByStep[stepId] || null) : null,
+      })),
+      setSelectedVehicleId: (vehicleId) => set((state) => {
+        const newSelectedVehiclesByStep = { ...state.selectedVehiclesByStep };
+
+        if (state.selectedStepId) {
+          if (vehicleId) {
+            // Save vehicle for current step
+            newSelectedVehiclesByStep[state.selectedStepId] = vehicleId;
+          } else {
+            // Clear vehicle from current step if deselected
+            delete newSelectedVehiclesByStep[state.selectedStepId];
+          }
+        }
+
+        return {
+          selectedVehicleId: vehicleId,
+          selectedVehiclesByStep: newSelectedVehiclesByStep,
+        };
+      }),
       setCurrentView: (view) => set({ currentView: view }),
       setSplitLayout: (split) => set({ splitLayout: split }),
       setSearchTerm: (term) => set({ searchTerm: term }),
@@ -75,6 +98,7 @@ export const useGetReadyStore = create<GetReadyStore>()(
       reset: () => set({
         selectedStepId: null,
         selectedVehicleId: null,
+        selectedVehiclesByStep: {},
         currentView: 'overview',
         splitLayout: true,
         searchTerm: '',
@@ -88,6 +112,7 @@ export const useGetReadyStore = create<GetReadyStore>()(
         currentView: state.currentView,
         splitLayout: state.splitLayout,
         selectedStepId: state.selectedStepId,
+        selectedVehiclesByStep: state.selectedVehiclesByStep,
       }),
     }
   )
