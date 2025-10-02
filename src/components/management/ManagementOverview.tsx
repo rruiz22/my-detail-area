@@ -28,7 +28,7 @@ export const ManagementOverview: React.FC = () => {
       icon: Users,
       label: t('management.user_management'),
       description: t('user_management.description'),
-      action: () => navigate('/users'),
+      action: () => navigate('/dealerships'), // Changed from /users - user management now in each dealer page
       color: 'text-blue-600 bg-blue-100'
     },
     {

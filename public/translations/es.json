@@ -1105,8 +1105,12 @@
       "back_to_list": "Volver a Concesionarios",
       "tabs": {
         "overview": "Vista General",
+        "overview_short": "Vista",
         "groups": "Grupos",
-        "users": "Usuarios"
+        "users": "Usuarios",
+        "users_short": "Users",
+        "invitations": "Invitaciones",
+        "invitations_short": "Invita"
       }
     },
     "tabs": {
@@ -1149,9 +1153,15 @@
     "dealer_service_advisor": "Asesor de Servicio",
     "dealer_sales_manager": "Gerente de Ventas",
     "dealer_service_manager": "Gerente de Servicio",
+    "detail_super_manager": "Super Gerente de Detalle",
+    "detail_admin": "Administrador de Detalle",
     "system_admin": "Administrador del Sistema"
   },
   "invitations": {
+    "all_invitations": "Todas las Invitaciones",
+    "dealer_invitations": "Invitaciones del Concesionario",
+    "manage_invitations_desc": "Gestiona invitaciones de usuarios y rastrea su estado",
+    "manage_dealer_invitations_desc": "Gestiona invitaciones para este concesionario específico",
     "send_invitation": "Enviar Invitación",
     "email": "Correo Electrónico",
     "email_placeholder": "Ingresa dirección de correo",
@@ -1290,6 +1300,8 @@
       "view_details": "Ver Detalles",
       "edit_vehicle": "Editar Vehículo",
       "advance_step": "Avanzar Paso",
+      "move_to_step": "Mover a Paso",
+      "change_step": "Cambiar Paso",
       "actions": "Acciones"
     },
     "work_items": {
@@ -1566,7 +1578,9 @@
         "model_required": "El modelo es obligatorio",
         "save_failed": "Error al guardar el vehículo. Por favor intente nuevamente.",
         "delete_failed": "Error al eliminar el vehículo. Por favor intente nuevamente.",
-        "move_failed": "Error al mover el vehículo. Por favor intente nuevamente."
+        "move_failed": "Error al mover el vehículo. Por favor intente nuevamente.",
+        "already_last_step": "El vehículo ya está en el último paso",
+        "no_next_step": "No hay un paso siguiente disponible"
       },
       "success": {
         "created": "Vehículo creado exitosamente",
@@ -1616,7 +1630,9 @@
       "step_delete_failed_has_vehicles": "No se puede eliminar un paso con vehículos activos",
       "step_archive_failed": "Error al archivar el paso",
       "delete_confirm_title": "Eliminar Paso",
-      "delete_confirm_message": "¿Está seguro de que desea eliminar {{stepName}}? Esta acción no se puede deshacer."
+      "delete_confirm_message": "¿Está seguro de que desea eliminar {{stepName}}? Esta acción no se puede deshacer.",
+      "steps_reordered": "Pasos reordenados exitosamente",
+      "steps_reorder_failed": "Error al reordenar los pasos"
     },
     "templates": {
       "title": "Plantillas de Trabajos",
@@ -1641,7 +1657,13 @@
       "confirm_delete": "¿Está seguro de que desea eliminar esta plantilla?",
       "template_form_description": "Configure los detalles de la plantilla a continuación",
       "work_items_created": "{{count}} trabajos creados desde plantillas",
-      "error_creating_work_items": "Error al crear trabajos desde plantillas"
+      "error_creating_work_items": "Error al crear trabajos desde plantillas",
+      "associated_step": "Paso Asociado",
+      "select_step": "Seleccionar un paso",
+      "global_template": "Plantilla Global (Todos los Pasos)",
+      "step_association_help": "Las plantillas globales se crean cuando se agrega un vehículo. Las plantillas específicas de paso se crean cuando un vehículo entra en ese paso.",
+      "templates_reordered": "Plantillas reordenadas exitosamente",
+      "error_reordering": "Error al reordenar las plantillas"
     }
   }
 }

@@ -209,8 +209,8 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
         {/* Enhanced Vehicle List with Detail Panel Below */}
         <div className="flex-1 flex flex-col gap-4 overflow-hidden">
-          {/* Vehicle List - Fixed height with scroll */}
-          <div className="flex-none h-[500px] overflow-hidden">
+          {/* Vehicle List - Fixed height to show 4 rows with infinite scroll */}
+          <div className="flex-none">
             <GetReadyVehicleList
               searchQuery={searchQuery}
               selectedStep={selectedStep}

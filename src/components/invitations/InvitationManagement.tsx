@@ -50,7 +50,11 @@ interface Invitation {
 
 type InvitationStatus = 'all' | 'pending' | 'accepted' | 'expired' | 'cancelled';
 
-export const InvitationManagement: React.FC = () => {
+interface InvitationManagementProps {
+  dealerId?: number; // Optional: filter invitations by dealer_id
+}
+
+export const InvitationManagement: React.FC<InvitationManagementProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -68,10 +72,13 @@ export const InvitationManagement: React.FC = () => {
     try {
       setLoading(true);
 
-      console.log('📥 [INVITATIONS] Starting fetch...');
+      console.log('📥 [INVITATIONS] Starting fetch...', {
+        dealerId,
+        scope: dealerId ? 'dealer-specific' : 'global'
+      });
 
       // Query with JOINs to get dealership and inviter info
-      const { data, error } = await supabase
+      let query = supabase
         .from('dealer_invitations')
         .select(`
           *,
@@ -83,8 +90,14 @@ export const InvitationManagement: React.FC = () => {
             first_name,
             last_name
           )
-        `)
-        .order('created_at', { ascending: false });
+        `);
+
+      // Filter by dealer_id if provided (dealer-specific view)
+      if (dealerId) {
+        query = query.eq('dealer_id', dealerId);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       console.log('🧪 [INVITATIONS] Complete query result:', {
         hasError: !!error,
@@ -123,7 +136,7 @@ export const InvitationManagement: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [t, toast]);
+  }, [t, toast, dealerId]);
 
   // Filter invitations by status
   const getFilteredInvitations = () => {
@@ -386,9 +399,13 @@ export const InvitationManagement: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Invitation Management</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {dealerId ? t('invitations.dealer_invitations') : t('invitations.all_invitations')}
+            </h2>
             <p className="text-muted-foreground">
-              Manage user invitations and track their status
+              {dealerId
+                ? t('invitations.manage_dealer_invitations_desc')
+                : t('invitations.manage_invitations_desc')}
             </p>
           </div>
           <div className="flex gap-2">
@@ -618,7 +635,7 @@ export const InvitationManagement: React.FC = () => {
         <DealerInvitationModal
           isOpen={isInviteModalOpen}
           onClose={() => setIsInviteModalOpen(false)}
-          dealerId={selectedDealership || null}
+          dealerId={dealerId || selectedDealership || null}
           onInvitationSent={() => {
             fetchInvitations();
             setIsInviteModalOpen(false);

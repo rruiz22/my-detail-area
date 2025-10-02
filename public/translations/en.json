@@ -1379,8 +1379,12 @@
       "back_to_list": "Back to Dealerships",
       "tabs": {
         "overview": "Overview",
+        "overview_short": "Over",
         "groups": "Groups",
-        "users": "Users"
+        "users": "Users",
+        "users_short": "Users",
+        "invitations": "Invitations",
+        "invitations_short": "Invites"
       }
     },
     "tabs": {
@@ -1423,9 +1427,15 @@
     "dealer_service_advisor": "Service Advisor",
     "dealer_sales_manager": "Sales Manager",
     "dealer_service_manager": "Service Manager",
+    "detail_super_manager": "Detail Super Manager",
+    "detail_admin": "Detail Administrator",
     "system_admin": "System Administrator"
   },
   "invitations": {
+    "all_invitations": "All Invitations",
+    "dealer_invitations": "Dealer Invitations",
+    "manage_invitations_desc": "Manage user invitations and track their status",
+    "manage_dealer_invitations_desc": "Manage invitations for this specific dealership",
     "send_invitation": "Send Invitation",
     "email": "Email",
     "email_placeholder": "Enter email address",
@@ -1545,6 +1555,8 @@
       "view_details": "View Details",
       "edit_vehicle": "Edit Vehicle",
       "advance_step": "Advance Step",
+      "move_to_step": "Move to Step",
+      "change_step": "Change Step",
       "actions": "Actions"
     },
     "work_items": {
@@ -1821,7 +1833,9 @@
         "model_required": "Model is required",
         "save_failed": "Failed to save vehicle. Please try again.",
         "delete_failed": "Failed to delete vehicle. Please try again.",
-        "move_failed": "Failed to move vehicle. Please try again."
+        "move_failed": "Failed to move vehicle. Please try again.",
+        "already_last_step": "Vehicle is already in the last step",
+        "no_next_step": "There is no next step available"
       },
       "success": {
         "created": "Vehicle created successfully",
@@ -1871,7 +1885,9 @@
       "step_delete_failed_has_vehicles": "Cannot delete step with active vehicles",
       "step_archive_failed": "Failed to archive step",
       "delete_confirm_title": "Delete Step",
-      "delete_confirm_message": "Are you sure you want to delete {{stepName}}? This action cannot be undone."
+      "delete_confirm_message": "Are you sure you want to delete {{stepName}}? This action cannot be undone.",
+      "steps_reordered": "Steps reordered successfully",
+      "steps_reorder_failed": "Failed to reorder steps"
     },
     "templates": {
       "title": "Work Item Templates",
@@ -1896,7 +1912,13 @@
       "confirm_delete": "Are you sure you want to delete this template?",
       "template_form_description": "Configure the template details below",
       "work_items_created": "{{count}} work items created from templates",
-      "error_creating_work_items": "Failed to create work items from templates"
+      "error_creating_work_items": "Failed to create work items from templates",
+      "associated_step": "Associated Step",
+      "select_step": "Select a step",
+      "global_template": "Global Template (All Steps)",
+      "step_association_help": "Global templates are created when a vehicle is added. Step-specific templates are created when a vehicle enters that step.",
+      "templates_reordered": "Templates reordered successfully",
+      "error_reordering": "Failed to reorder templates"
     }
   }
 }

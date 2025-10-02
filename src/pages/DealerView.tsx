@@ -10,7 +10,8 @@ import {
   Users,
   ArrowLeft,
   Wrench,
-  Settings
+  Settings,
+  Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +22,7 @@ import { DealerRoles } from '@/components/dealer/DealerRoles';
 import { DealerUsers } from '@/components/dealer/DealerUsers';
 import { DealerServices } from '@/components/dealer/DealerServices';
 import { DealerModules } from '@/components/dealer/DealerModules';
+import { InvitationManagement } from '@/components/invitations/InvitationManagement';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -107,7 +109,7 @@ const DealerView = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.overview')}</span>
@@ -122,6 +124,11 @@ const DealerView = () => {
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.users')}</span>
               <span className="sm:hidden">{t('dealer.view.tabs.users_short')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="invitations" className="flex items-center space-x-2">
+              <Mail className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('dealer.view.tabs.invitations')}</span>
+              <span className="sm:hidden">{t('dealer.view.tabs.invitations_short')}</span>
             </TabsTrigger>
             <TabsTrigger value="services" className="flex items-center space-x-2">
               <Wrench className="h-4 w-4" />
@@ -173,6 +180,10 @@ const DealerView = () => {
                 <DealerUsers dealerId={id} />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="invitations" className="space-y-6">
+            <InvitationManagement dealerId={parseInt(id)} />
           </TabsContent>
 
           <TabsContent value="services" className="space-y-6">

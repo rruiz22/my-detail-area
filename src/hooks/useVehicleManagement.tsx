@@ -1,3 +1,4 @@
+// Vehicle Management Hook - Updated 2025-10-01
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -26,6 +27,14 @@ export function useVehicleManagement() {
   const { t } = useTranslation();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
+
+  console.log('[useVehicleManagement] Hook called with:', {
+    hasDealership: !!currentDealership,
+    dealershipId: currentDealership?.id,
+    hasQueryClient: !!queryClient,
+    hasTranslation: !!t,
+    timestamp: new Date().toISOString()
+  });
 
   // Create Vehicle
   const createVehicleMutation = useMutation({
@@ -200,6 +209,14 @@ export function useVehicleManagement() {
       console.error('Failed to move vehicle:', error);
       toast.error(t('get_ready.vehicle_form.errors.move_failed'));
     },
+  });
+
+  console.log('[useVehicleManagement] moveVehicleMutation:', {
+    exists: !!moveVehicleMutation,
+    hasMutate: !!moveVehicleMutation?.mutate,
+    mutateType: typeof moveVehicleMutation?.mutate,
+    isPending: moveVehicleMutation?.isPending,
+    keys: moveVehicleMutation ? Object.keys(moveVehicleMutation) : []
   });
 
   return {

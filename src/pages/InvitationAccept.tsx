@@ -197,13 +197,16 @@ export function InvitationAccept() {
 
   const getRoleDisplayName = (roleName: string) => {
     const roleMap: Record<string, string> = {
-      dealer_user: t('roles.dealer_user'),
+      system_admin: t('roles.system_admin'),
+      dealer_admin: t('roles.dealer_admin'),
+      dealer_manager: t('roles.dealer_manager'),
       dealer_salesperson: t('roles.dealer_salesperson'),
       dealer_service_advisor: t('roles.dealer_service_advisor'),
       dealer_sales_manager: t('roles.dealer_sales_manager'),
       dealer_service_manager: t('roles.dealer_service_manager'),
-      dealer_manager: t('roles.dealer_manager'),
-      dealer_admin: t('roles.dealer_admin'),
+      dealer_user: t('roles.dealer_user'),
+      detail_super_manager: t('roles.detail_super_manager'),
+      detail_admin: t('roles.detail_admin'),
     };
     return roleMap[roleName] || roleName;
   };

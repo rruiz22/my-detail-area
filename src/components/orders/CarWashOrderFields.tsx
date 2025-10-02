@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tag, Droplets, User } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Droplets, Tag, User } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
 
@@ -15,6 +15,9 @@ interface CarWashOrderFieldsProps {
     service_type?: string;
     serviceType?: string;
     [key: string]: unknown;
+    id: string;
+    dealer_id: string | number;
+    status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   };
 }
 

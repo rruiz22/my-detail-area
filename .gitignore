@@ -37,3 +37,5 @@ fix_*.sql
 create_*.sql
 diagnostic_*.sql
 src/utils/debug*.js
+
+nul

@@ -5,15 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useGetReady } from '@/hooks/useGetReady';
-import { useGetReadyVehiclesList } from '@/hooks/useGetReadyVehicles';
+import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
+import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { cn } from '@/lib/utils';
 import {
     AlertTriangle,
-    ArrowRight,
     Car,
+    Check,
     CheckCircle,
+    ChevronRight,
     Clock,
     Edit,
     Eye,
@@ -22,8 +25,9 @@ import {
     User,
     XCircle
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 interface GetReadyVehicleListProps {
   searchQuery: string;
@@ -49,6 +53,9 @@ export function GetReadyVehicleList({
   const { setSelectedVehicleId, selectedVehicleId } = useGetReadyStore();
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
 
+  // Get vehicle management functions
+  const { moveVehicleToStep, isMoving } = useVehicleManagement();
+
   // Action handlers
   const handleViewDetails = (vehicleId: string) => {
     setSelectedVehicleId(vehicleId);
@@ -59,13 +66,52 @@ export function GetReadyVehicleList({
     console.log('Edit vehicle:', vehicleId);
   };
 
-  const handleAdvanceStep = (vehicleId: string) => {
-    // TODO: Implement advance to next step functionality
-    console.log('Advance step for vehicle:', vehicleId);
+  const handleMoveToStep = (vehicleId: string, currentStepId: string, newStepId: string) => {
+    // Prevent moving to the same step
+    if (currentStepId === newStepId) {
+      return;
+    }
+
+    // Check if moveVehicleToStep function is available
+    if (!moveVehicleToStep) {
+      console.error('moveVehicleToStep function is not available');
+      toast.error('Unable to move vehicle. Please try again.');
+      return;
+    }
+
+    // Move vehicle to new step
+    moveVehicleToStep({ id: vehicleId, stepId: newStepId });
   };
 
-  // Fetch real vehicles from Supabase
-  const { data: vehicles = [], isLoading } = useGetReadyVehiclesList({
+  const handleAdvanceStep = (vehicleId: string, currentStepId: string) => {
+    // Find current step
+    const availableSteps = steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index);
+    const currentStepIndex = availableSteps.findIndex(s => s.id === currentStepId);
+
+    if (currentStepIndex === -1) {
+      console.error('Current step not found');
+      return;
+    }
+
+    // Check if there's a next step
+    if (currentStepIndex >= availableSteps.length - 1) {
+      // Already at last step
+      return;
+    }
+
+    // Get next step
+    const nextStep = availableSteps[currentStepIndex + 1];
+    handleMoveToStep(vehicleId, currentStepId, nextStep.id);
+  };
+
+  // Fetch real vehicles from Supabase with infinite scroll
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetReadyVehiclesInfinite({
     searchQuery,
     selectedStep,
     selectedWorkflow,
@@ -73,6 +119,29 @@ export function GetReadyVehicleList({
     sortBy,
     sortOrder
   });
+
+  // Flatten pages into single array
+  const vehicles = data?.pages.flatMap(page => page.vehicles) ?? [];
+
+  // Intersection observer ref for infinite scroll
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const getSLAStatusIcon = (status: string) => {
     switch (status) {
@@ -129,9 +198,9 @@ export function GetReadyVehicleList({
 
   if (viewMode === 'grid') {
     return (
-      <div className={cn("space-y-4", className)}>
+      <div className={cn("space-y-4 flex flex-col h-full", className)}>
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex-none flex items-center justify-between">
           <h3 className="text-lg font-medium">
             Vehicles ({vehicles.length})
           </h3>
@@ -153,47 +222,64 @@ export function GetReadyVehicleList({
           </div>
         </div>
 
-        {/* Grid View */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {vehicles.map((vehicle) => (
-            <Card key={vehicle.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
+        {/* Grid View with max 3 rows visible, then infinite scroll */}
+        <div className="flex-1 overflow-auto p-1" style={{ maxHeight: 'calc(3 * 300px)' }}>
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            {vehicles.map((vehicle) => (
+            <Card
+              key={vehicle.id}
+              className={cn(
+                "hover:shadow-md transition-all cursor-pointer",
+                selectedVehicleId === vehicle.id && "ring-2 ring-primary shadow-lg"
+              )}
+              onClick={() => handleViewDetails(vehicle.id)}
+            >
+              <CardHeader className="pb-2">
+                {/* Vehicle Image */}
+                <div className="mb-2">
+                  <Avatar className="h-32 w-full rounded">
+                    <AvatarImage
+                      src={vehicle.images[0]}
+                      alt={`${vehicle.make} ${vehicle.model}`}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="rounded">
+                      <Car className="h-8 w-8 text-muted-foreground" />
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+
                 <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="text-base">{vehicle.stock_number}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.trim}
+                  <div className="space-y-0.5 flex-1 min-w-0">
+                    <CardTitle className="text-sm truncate">{vehicle.stock_number}</CardTitle>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {vehicle.year} {vehicle.make} {vehicle.model}
                     </p>
                   </div>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
+                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" disabled={isMoving}>
+                        <MoreHorizontal className="h-3.5 w-3.5" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>{t('get_ready.actions.actions')}</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => handleViewDetails(vehicle.id)}>
+                      <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleViewDetails(vehicle.id); }}>
                         <Eye className="h-4 w-4 mr-2" />
                         {t('get_ready.actions.view_details')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleEditVehicle(vehicle.id)}>
+                      <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEditVehicle(vehicle.id); }}>
                         <Edit className="h-4 w-4 mr-2" />
                         {t('get_ready.actions.edit_vehicle')}
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleAdvanceStep(vehicle.id)}>
-                        <ArrowRight className="h-4 w-4 mr-2" />
-                        {t('get_ready.actions.advance_step')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-2 pt-2">
                 {/* Status and Progress */}
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline" className={getWorkflowColor(vehicle.workflow_type)}>
+                <div className="flex items-center justify-between gap-2">
+                  <Badge variant="outline" className={cn("text-xs", getWorkflowColor(vehicle.workflow_type))}>
                     {t(`get_ready.workflow.${vehicle.workflow_type}`)}
                   </Badge>
                   <div className="flex items-center gap-1">
@@ -204,13 +290,76 @@ export function GetReadyVehicleList({
                   </div>
                 </div>
 
-                <Progress value={vehicle.progress} className="h-2" />
+                <Progress value={vehicle.progress} className="h-1.5" />
 
                 {/* Key Metrics */}
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  <div className="col-span-2" onClick={(e) => e.stopPropagation()}>
                     <span className="text-muted-foreground">Step:</span>
-                    <div className="font-medium">{vehicle.step_name}</div>
+                    <div className="flex items-center gap-1">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-auto py-0.5 px-1 text-xs hover:bg-accent justify-start flex-1"
+                            disabled={isMoving}
+                          >
+                            <div className="flex items-center gap-1.5">
+                              <div
+                                className="w-2 h-2 rounded-full flex-shrink-0"
+                                style={{ backgroundColor: steps.find(s => s.id === vehicle.step_id)?.color }}
+                              />
+                              <span className="font-medium truncate">{vehicle.step_name}</span>
+                            </div>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          <DropdownMenuLabel>{t('get_ready.actions.change_step')}</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          {steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index).map((step) => (
+                            <DropdownMenuItem
+                              key={step.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveToStep(vehicle.id, vehicle.step_id, step.id);
+                              }}
+                              disabled={step.id === vehicle.step_id}
+                            >
+                              <div className="flex items-center gap-2 w-full">
+                                <div
+                                  className="w-3 h-3 rounded-full flex-shrink-0"
+                                  style={{ backgroundColor: step.color }}
+                                />
+                                <span className="flex-1">{step.name}</span>
+                                {step.id === vehicle.step_id && (
+                                  <Check className="h-4 w-4 text-primary" />
+                                )}
+                              </div>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      {/* Quick advance to next step button */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-5 w-5 p-0 flex-shrink-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAdvanceStep(vehicle.id, vehicle.step_id);
+                        }}
+                        disabled={isMoving || (() => {
+                          const availableSteps = steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index);
+                          const currentStepIndex = availableSteps.findIndex(s => s.id === vehicle.step_id);
+                          return currentStepIndex >= availableSteps.length - 1;
+                        })()}
+                        title={t('get_ready.actions.advance_step')}
+                      >
+                        <ChevronRight className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                   <div>
                     <span className="text-muted-foreground">T2L:</span>
@@ -227,16 +376,17 @@ export function GetReadyVehicleList({
                 </div>
 
                 {/* Assigned To */}
-                <div className="flex items-center gap-2 pt-2 border-t">
-                  <User className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">{vehicle.assigned_to}</span>
-                  <Badge size="sm" className={getPriorityColor(vehicle.priority)}>
+                <div className="flex items-center gap-1.5 pt-1.5 border-t">
+                  <User className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                  <span className="text-xs text-muted-foreground truncate flex-1">{vehicle.assigned_to}</span>
+                  <Badge size="sm" className={cn("text-xs", getPriorityColor(vehicle.priority))}>
                     {vehicle.priority}
                   </Badge>
                 </div>
               </CardContent>
             </Card>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -269,42 +419,88 @@ export function GetReadyVehicleList({
       </div>
 
       {/* Table */}
-      <Card className="h-full flex flex-col">
+      <Card className="flex flex-col h-[380px]">
         <div className="flex-none p-4 border-b">
           <p className="text-sm text-muted-foreground">
             {t('get_ready.table.click_to_view')}
           </p>
         </div>
+
+        {/* Single Table with Sticky Header */}
         <div className="flex-1 overflow-auto">
-          <Table>
-            <TableHeader className="sticky top-0 bg-background z-10">
-              <TableRow>
-                <TableHead className="w-[100px]">{t('get_ready.table.image')}</TableHead>
-                <TableHead>{t('get_ready.table.stock')}</TableHead>
-                <TableHead>{t('get_ready.table.vehicle')}</TableHead>
-                <TableHead>{t('get_ready.table.step')}</TableHead>
-                <TableHead>Workflow</TableHead>
-                <TableHead>T2L</TableHead>
-                <TableHead>{t('get_ready.table.days_in_step')}</TableHead>
-                <TableHead>DTF</TableHead>
-                <TableHead>{t('get_ready.table.priority')}</TableHead>
-                <TableHead>Progress</TableHead>
-                <TableHead>Assigned</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {vehicles.map((vehicle) => (
-                <TableRow
-                  key={vehicle.id}
-                  onClick={() => handleViewDetails(vehicle.id)}
-                  className={cn(
-                    "cursor-pointer hover:bg-muted/50 transition-colors",
-                    selectedVehicleId === vehicle.id && "bg-primary/10 border-l-4 border-l-primary"
-                  )}
-                >
+          <TooltipProvider>
+            <Table>
+              <TableHeader className="sticky top-0 bg-background z-20 shadow-sm border-b">
+                <TableRow>
+                  <TableHead className="w-[70px] text-center">{t('get_ready.table.image')}</TableHead>
+                  <TableHead className="w-[100px] text-center">{t('get_ready.table.stock')}</TableHead>
+                  <TableHead className="w-[200px] text-center">{t('get_ready.table.vehicle')}</TableHead>
+                  <TableHead className="w-[140px] text-center">{t('get_ready.table.step')}</TableHead>
+                  <TableHead className="w-[110px] text-center">Workflow</TableHead>
+                  <TableHead className="w-[80px] text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">T2L</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Time to Line (Days)</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableHead>
+                  <TableHead className="w-[80px] text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">DIS</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Days in Step</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableHead>
+                  <TableHead className="w-[80px] text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">DTF</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Days to Frontline</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableHead>
+                  <TableHead className="w-[100px] text-center">{t('get_ready.table.priority')}</TableHead>
+                  <TableHead className="w-[120px] text-center">Progress</TableHead>
+                  <TableHead className="w-[130px] text-center">Assigned</TableHead>
+                  <TableHead className="w-[100px] text-center">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+              {vehicles.length === 0 && !isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={12} className="text-center py-12">
+                    <div className="text-muted-foreground">
+                      <Car className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <h3 className="text-lg font-medium mb-2">
+                        {t('get_ready.no_vehicles.title')}
+                      </h3>
+                      <p className="text-sm">
+                        {t('get_ready.no_vehicles.description')}
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <>
+                {vehicles.map((vehicle) => (
+                  <TableRow
+                    key={vehicle.id}
+                    onClick={() => handleViewDetails(vehicle.id)}
+                    className={cn(
+                      "cursor-pointer hover:bg-muted/50 transition-colors",
+                      selectedVehicleId === vehicle.id && "bg-primary/10 border-l-4 border-l-primary"
+                    )}
+                  >
                 {/* Image */}
-                <TableCell>
+                <TableCell className="w-[70px]">
                   <Avatar className="h-10 w-14 rounded">
                     <AvatarImage src={vehicle.images[0]} alt={`${vehicle.make} ${vehicle.model}`} />
                     <AvatarFallback>
@@ -314,42 +510,99 @@ export function GetReadyVehicleList({
                 </TableCell>
 
                 {/* Stock Number */}
-                <TableCell className="font-medium">
+                <TableCell className="w-[100px] font-medium">
                   {vehicle.stock_number}
                 </TableCell>
 
                 {/* Vehicle Info */}
-                <TableCell>
-                  <div>
-                    <div className="font-medium">
+                <TableCell className="w-[200px]">
+                  <div className="space-y-0.5">
+                    <div className="font-medium whitespace-nowrap overflow-hidden text-ellipsis">
                       {vehicle.year} {vehicle.make} {vehicle.model}
                     </div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-muted-foreground whitespace-nowrap overflow-hidden text-ellipsis">
                       {vehicle.trim} • {vehicle.vin.slice(-6)}
                     </div>
                   </div>
                 </TableCell>
 
                 {/* Step */}
-                <TableCell>
+                <TableCell className="w-[140px]" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: steps.find(s => s.id === vehicle.step_id)?.color }}
-                    />
-                    {vehicle.step_name}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-auto py-1 px-2 hover:bg-accent"
+                          disabled={isMoving}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: steps.find(s => s.id === vehicle.step_id)?.color }}
+                            />
+                            <span>{vehicle.step_name}</span>
+                          </div>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start">
+                        <DropdownMenuLabel>{t('get_ready.actions.change_step')}</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index).map((step) => (
+                          <DropdownMenuItem
+                            key={step.id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMoveToStep(vehicle.id, vehicle.step_id, step.id);
+                            }}
+                            disabled={step.id === vehicle.step_id}
+                          >
+                            <div className="flex items-center gap-2 w-full">
+                              <div
+                                className="w-3 h-3 rounded-full flex-shrink-0"
+                                style={{ backgroundColor: step.color }}
+                              />
+                              <span className="flex-1">{step.name}</span>
+                              {step.id === vehicle.step_id && (
+                                <Check className="h-4 w-4 text-primary" />
+                              )}
+                            </div>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    {/* Quick advance to next step button */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 w-7 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAdvanceStep(vehicle.id, vehicle.step_id);
+                      }}
+                      disabled={isMoving || (() => {
+                        const availableSteps = steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index);
+                        const currentStepIndex = availableSteps.findIndex(s => s.id === vehicle.step_id);
+                        return currentStepIndex >= availableSteps.length - 1;
+                      })()}
+                      title={t('get_ready.actions.advance_step')}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
                   </div>
                 </TableCell>
 
                 {/* Workflow */}
-                <TableCell>
+                <TableCell className="w-[110px]">
                   <Badge variant="outline" className={getWorkflowColor(vehicle.workflow_type)}>
                     {t(`get_ready.workflow.${vehicle.workflow_type}`)}
                   </Badge>
                 </TableCell>
 
                 {/* T2L */}
-                <TableCell>
+                <TableCell className="w-[80px]">
                   <div className="flex items-center gap-1">
                     {getSLAStatusIcon(vehicle.sla_status)}
                     <span className="font-medium">{vehicle.t2l}d</span>
@@ -357,84 +610,85 @@ export function GetReadyVehicleList({
                 </TableCell>
 
                 {/* Days in Step */}
-                <TableCell>
+                <TableCell className="w-[80px]">
                   <span className="font-medium">{vehicle.days_in_step}d</span>
                 </TableCell>
 
                 {/* Days to Frontline */}
-                <TableCell>
+                <TableCell className="w-[80px]">
                   <span className="font-medium">{vehicle.days_to_frontline}d</span>
                 </TableCell>
 
                 {/* Priority */}
-                <TableCell>
+                <TableCell className="w-[100px]">
                   <Badge size="sm" className={getPriorityColor(vehicle.priority)}>
                     {vehicle.priority}
                   </Badge>
                 </TableCell>
 
                 {/* Progress */}
-                <TableCell>
-                  <div className="w-24">
-                    <div className="flex items-center gap-2">
-                      <Progress value={vehicle.progress} className="h-2" />
-                      <span className="text-xs text-muted-foreground w-8">
-                        {vehicle.progress}%
-                      </span>
-                    </div>
+                <TableCell className="w-[120px]">
+                  <div className="flex items-center gap-2">
+                    <Progress value={vehicle.progress} className="h-2 flex-1" />
+                    <span className="text-xs text-muted-foreground w-8">
+                      {vehicle.progress}%
+                    </span>
                   </div>
                 </TableCell>
 
                 {/* Assigned */}
-                <TableCell>
+                <TableCell className="w-[130px]">
                   <div className="text-sm">{vehicle.assigned_to}</div>
                 </TableCell>
 
                 {/* Actions */}
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>{t('get_ready.actions.actions')}</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => handleViewDetails(vehicle.id)}>
-                        <Eye className="h-4 w-4 mr-2" />
-                        {t('get_ready.actions.view_details')}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleEditVehicle(vehicle.id)}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        {t('get_ready.actions.edit_vehicle')}
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleAdvanceStep(vehicle.id)}>
-                        <ArrowRight className="h-4 w-4 mr-2" />
-                        {t('get_ready.actions.advance_step')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <TableCell className="w-[100px] text-center" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-end gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewDetails(vehicle.id);
+                      }}
+                      title={t('get_ready.actions.view_details')}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditVehicle(vehicle.id);
+                      }}
+                      title={t('get_ready.actions.edit_vehicle')}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                ))}
+                {/* Loading indicator for next page */}
+                {isFetchingNextPage && (
+                  <TableRow>
+                    <TableCell colSpan={12} className="text-center py-4">
+                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                )}
+                </>
+              )}
+              </TableBody>
+            </Table>
+            {/* Infinite scroll trigger */}
+            <div ref={loadMoreRef} className="h-4" />
+          </TooltipProvider>
         </div>
       </Card>
-
-      {/* Empty State */}
-      {vehicles.length === 0 && (
-        <Card>
-          <CardContent className="py-8">
-            <div className="text-center text-muted-foreground">
-              <Car className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <h3 className="text-lg font-medium mb-2">{t('get_ready.no_vehicles.title')}</h3>
-              <p>{t('get_ready.no_vehicles.description')}</p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

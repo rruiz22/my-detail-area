@@ -38,7 +38,6 @@ import SalesOrders from "./pages/SalesOrders";
 import ServiceOrders from "./pages/ServiceOrders";
 import Settings from "./pages/Settings";
 import Stock from "./pages/Stock";
-import Users from "./pages/Users";
 import VinScanner from "./pages/VinScanner";
 import AdminDashboard from "./pages/AdminDashboard";
 
@@ -96,7 +95,6 @@ const AppRoutes = () => {
           />
           <Route path="contacts" element={<Contacts />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="users" element={<Users />} />
           <Route path="management" element={<Management />} />
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="phase3" element={<Phase3Dashboard />} />

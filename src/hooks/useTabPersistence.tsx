@@ -49,8 +49,8 @@ export const TAB_CONFIGS = {
   },
   dealer_view: {
     key: 'dealer',
-    defaultTab: 'overview', 
-    validTabs: ['overview', 'groups', 'users', 'services', 'categories', 'modules']
+    defaultTab: 'overview',
+    validTabs: ['overview', 'groups', 'users', 'invitations', 'services', 'categories', 'modules']
   }
 } as const;
 

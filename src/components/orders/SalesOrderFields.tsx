@@ -4,6 +4,9 @@ import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
 interface SalesOrderFieldsProps {
   order: {
     [key: string]: unknown;
+    id: string;
+    dealer_id: string | number;
+    status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   };
 }
 

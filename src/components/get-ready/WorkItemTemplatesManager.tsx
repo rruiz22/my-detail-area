@@ -42,6 +42,7 @@ import {
   type CreateTemplateInput
 } from '@/hooks/useWorkItemTemplates';
 import type { WorkItemType } from '@/hooks/useVehicleWorkItems';
+import { useGetReadySteps } from '@/hooks/useGetReady';
 
 const WORK_TYPES: { value: WorkItemType; label: string }[] = [
   { value: 'mechanical', label: 'Mechanical' },
@@ -287,9 +288,10 @@ function TemplateFormDialog({ open, onOpenChange, template }: TemplateFormDialog
   const { t } = useTranslation();
   const createTemplate = useCreateTemplate();
   const updateTemplate = useUpdateTemplate();
+  const { data: steps = [] } = useGetReadySteps();
   const isEditMode = !!template;
 
-  const [formData, setFormData] = useState<CreateTemplateInput>({
+  const [formData, setFormData] = useState<CreateTemplateInput & { step_id?: string | null }>({
     name: template?.name || '',
     description: template?.description || '',
     work_type: template?.work_type || 'detailing',
@@ -299,6 +301,7 @@ function TemplateFormDialog({ open, onOpenChange, template }: TemplateFormDialog
     approval_required: template?.approval_required || false,
     auto_assign: template?.auto_assign !== undefined ? template.auto_assign : true,
     order_index: template?.order_index || 0,
+    step_id: (template as any)?.step_id || null,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -333,18 +336,18 @@ function TemplateFormDialog({ open, onOpenChange, template }: TemplateFormDialog
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">{t('get_ready.work_items.title')} *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => updateField('name', e.target.value)}
-                  placeholder={t('get_ready.work_items.title_placeholder')}
-                  required
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="name">{t('get_ready.work_items.title')} *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => updateField('name', e.target.value)}
+                placeholder={t('get_ready.work_items.title_placeholder')}
+                required
+              />
+            </div>
 
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="work_type">{t('get_ready.work_items.work_type')} *</Label>
                 <Select value={formData.work_type} onValueChange={(value) => updateField('work_type', value)}>
@@ -359,6 +362,31 @@ function TemplateFormDialog({ open, onOpenChange, template }: TemplateFormDialog
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="step_id">{t('get_ready.templates.associated_step')}</Label>
+                <Select
+                  value={formData.step_id || 'none'}
+                  onValueChange={(value) => updateField('step_id', value === 'none' ? null : value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('get_ready.templates.select_step')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">
+                      {t('get_ready.templates.global_template')}
+                    </SelectItem>
+                    {steps.filter(s => s.id !== 'all').map((step) => (
+                      <SelectItem key={step.id} value={step.id}>
+                        {step.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {t('get_ready.templates.step_association_help')}
+                </p>
               </div>
             </div>
 

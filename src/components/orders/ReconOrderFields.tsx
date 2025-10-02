@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Hash, Package, RefreshCw } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
 
@@ -14,6 +14,9 @@ interface ReconOrderFieldsProps {
     recon_type?: string;
     reconType?: string;
     [key: string]: unknown;
+    id: string;
+    dealer_id: string | number;
+    status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   };
 }
 

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
@@ -301,5 +301,154 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
     enabled: !!currentDealership?.id,
     staleTime: 1000 * 30, // 30 seconds
     refetchInterval: 1000 * 60, // 1 minute
+  });
+}
+
+// Hook for infinite scroll vehicle list
+const PAGE_SIZE = 10;
+
+export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters = {}) {
+  const { currentDealership } = useAccessibleDealerships();
+  const {
+    searchQuery = '',
+    selectedStep = 'all',
+    selectedWorkflow = 'all',
+    selectedPriority = 'all',
+    sortBy = 'created_at',
+    sortOrder = 'desc'
+  } = filters;
+
+  return useInfiniteQuery({
+    queryKey: [
+      'get-ready-vehicles',
+      'infinite',
+      currentDealership?.id,
+      searchQuery,
+      selectedStep,
+      selectedWorkflow,
+      selectedPriority,
+      sortBy,
+      sortOrder
+    ],
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!currentDealership?.id) {
+        console.warn('No dealership selected for vehicle list query');
+        return { vehicles: [], hasMore: false };
+      }
+
+      // Build base query
+      let query = supabase
+        .from('get_ready_vehicles')
+        .select(`
+          id,
+          stock_number,
+          vin,
+          vehicle_year,
+          vehicle_make,
+          vehicle_model,
+          vehicle_trim,
+          step_id,
+          workflow_type,
+          priority,
+          status,
+          assigned_to,
+          notes,
+          intake_date,
+          created_at,
+          updated_at,
+          get_ready_steps!inner (
+            name,
+            color,
+            order_index
+          )
+        `)
+        .eq('dealer_id', currentDealership.id);
+
+      // Apply step filter
+      if (selectedStep && selectedStep !== 'all') {
+        query = query.eq('step_id', selectedStep);
+      }
+
+      // Apply workflow filter
+      if (selectedWorkflow && selectedWorkflow !== 'all') {
+        query = query.eq('workflow_type', selectedWorkflow);
+      }
+
+      // Apply priority filter
+      if (selectedPriority && selectedPriority !== 'all') {
+        query = query.eq('priority', selectedPriority);
+      }
+
+      // Apply search filter
+      if (searchQuery) {
+        const term = searchQuery.toLowerCase();
+        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
+      }
+
+      // Apply sorting
+      const ascending = sortOrder === 'asc';
+      if (sortBy === 'days_in_step') {
+        query = query.order('intake_date', { ascending: !ascending });
+      } else if (sortBy === 'stock_number') {
+        query = query.order('stock_number', { ascending });
+      } else {
+        query = query.order(sortBy as any, { ascending });
+      }
+
+      // Add pagination
+      query = query.range(pageParam * PAGE_SIZE, (pageParam + 1) * PAGE_SIZE - 1);
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching vehicle list:', error);
+        throw error;
+      }
+
+      if (!data) return { vehicles: [], hasMore: false };
+
+      // Transform data
+      const vehicles = data.map((vehicle: any) => {
+        const daysInStep = Math.floor((new Date().getTime() - new Date(vehicle.intake_date).getTime()) / (1000 * 60 * 60 * 24));
+
+        return {
+          id: vehicle.id,
+          stock_number: vehicle.stock_number,
+          vin: vehicle.vin,
+          year: vehicle.vehicle_year,
+          make: vehicle.vehicle_make,
+          model: vehicle.vehicle_model,
+          trim: vehicle.vehicle_trim || '',
+          step_id: vehicle.step_id,
+          step_name: vehicle.get_ready_steps?.name || 'Unknown',
+          workflow_type: vehicle.workflow_type,
+          priority: vehicle.priority,
+          days_in_step: daysInStep,
+          days_to_frontline: 0,
+          sla_status: 'on_track',
+          t2l: 0,
+          holding_cost: 0,
+          assigned_to: vehicle.assigned_to || 'Unassigned',
+          notes: vehicle.notes || '',
+          progress: 0,
+          created_at: vehicle.created_at,
+          updated_at: vehicle.updated_at,
+          images: [],
+          work_items: 0,
+          media_count: 0,
+        };
+      });
+
+      return {
+        vehicles,
+        hasMore: data.length === PAGE_SIZE
+      };
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasMore ? allPages.length : undefined;
+    },
+    enabled: !!currentDealership?.id,
+    staleTime: 1000 * 30,
   });
 }

@@ -58,11 +58,16 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     const handleMouseMove = (e: MouseEvent) => {
       if (!panelRef.current) return;
 
-      const panelRect = panelRef.current.getBoundingClientRect();
-      const newHeight = e.clientY - panelRect.top;
+      // Get the parent container to calculate available space
+      const parentRect = panelRef.current.parentElement?.getBoundingClientRect();
+      if (!parentRect) return;
+
+      // Calculate new max height from bottom of parent to mouse position
+      // This allows dragging up to increase height, down to decrease
+      const newMaxHeight = parentRect.bottom - e.clientY;
 
       // Clamp between MIN and MAX
-      const clampedHeight = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, newHeight));
+      const clampedHeight = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, newMaxHeight));
       setPanelHeight(clampedHeight);
     };
 
@@ -179,8 +184,8 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   return (
     <div
       ref={panelRef}
-      className={cn("flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300 relative", className)}
-      style={{ height: `${panelHeight}px` }}
+      className={cn("flex-1 flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300 relative min-h-0", className)}
+      style={{ maxHeight: `${panelHeight}px` }}
     >
       {/* Resize Handle */}
       <div

@@ -83,12 +83,13 @@ export function LandingHeader() {
                         {t('navigation.settings')}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    {/* DEPRECATED: User management moved to individual dealer pages (/dealers/:id → Invitations tab) */}
+                    {/* <DropdownMenuItem asChild>
                       <Link to="/users" className="gap-2">
                         <User className="h-4 w-4" />
                         {t('pages.user_management')}
                       </Link>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="gap-2 text-destructive focus:text-destructive"

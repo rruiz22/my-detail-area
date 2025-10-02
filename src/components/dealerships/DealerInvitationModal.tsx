@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,28 +31,25 @@ interface DealerInvitationModalProps {
   onInvitationSent?: () => void;
 }
 
-const DEALER_ROLES = [
-  {
-    value: 'viewer',
-    key: 'viewer',
-    description: 'Read-only access to basic modules'
-  },
-  {
-    value: 'dealer_user',
-    key: 'dealer_user',
-    description: 'Standard user access to dealership modules'
-  },
-  {
-    value: 'dealer_manager',
-    key: 'dealer_manager',
-    description: 'Manager access with extended permissions'
-  },
-  {
-    value: 'dealer_admin',
-    key: 'dealer_admin',
-    description: 'Full administrative access to dealership'
-  },
-];
+interface CustomRole {
+  id: string;
+  role_name: string;
+  display_name: string;
+  description: string | null;
+}
+
+// LEGACY: Hardcoded roles - Replaced with dealer_custom_roles system
+// Roles are now loaded dynamically from dealer_custom_roles table per dealership
+// Each dealership creates their own custom roles via the Roles tab
+// const DEALER_ROLES = [
+//   { value: 'dealer_user', key: 'dealer_user', description: 'Standard user access to dealership modules' },
+//   { value: 'dealer_salesperson', key: 'dealer_salesperson', description: 'Sales representative with order management access' },
+//   { value: 'dealer_service_advisor', key: 'dealer_service_advisor', description: 'Service advisor with service order access' },
+//   { value: 'dealer_sales_manager', key: 'dealer_sales_manager', description: 'Sales manager with sales team oversight' },
+//   { value: 'dealer_service_manager', key: 'dealer_service_manager', description: 'Service manager with service team oversight' },
+//   { value: 'dealer_manager', key: 'dealer_manager', description: 'General manager with extended permissions' },
+//   { value: 'dealer_admin', key: 'dealer_admin', description: 'Full administrative access to dealership' },
+// ];
 
 export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
   isOpen,
@@ -69,6 +66,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
   const [selectedRole, setSelectedRole] = useState<string>('');
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(dealerId || null);
   const [loading, setLoading] = useState(false);
+  const [customRoles, setCustomRoles] = useState<CustomRole[]>([]);
+  const [loadingRoles, setLoadingRoles] = useState(false);
 
   // Reset state when modal opens/closes or dealerId prop changes
   useEffect(() => {
@@ -84,6 +83,43 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       setSelectedDealerId(dealerId || null);
     }
   }, [isOpen, dealerId, dealerships, dealershipsLoading]);
+
+  // Fetch custom roles for the selected dealership
+  const fetchCustomRoles = useCallback(async () => {
+    if (!selectedDealerId) {
+      setCustomRoles([]);
+      return;
+    }
+
+    try {
+      setLoadingRoles(true);
+      console.log('🔍 [CUSTOM ROLES] Fetching for dealer:', selectedDealerId);
+
+      const { data, error } = await supabase
+        .from('dealer_custom_roles')
+        .select('id, role_name, display_name, description')
+        .eq('dealer_id', selectedDealerId)
+        .eq('is_active', true)
+        .order('display_name');
+
+      if (error) throw error;
+
+      console.log('✅ [CUSTOM ROLES] Loaded:', data?.length || 0, 'roles');
+      setCustomRoles(data || []);
+    } catch (error) {
+      console.error('❌ [CUSTOM ROLES] Error:', error);
+      setCustomRoles([]);
+    } finally {
+      setLoadingRoles(false);
+    }
+  }, [selectedDealerId]);
+
+  // Load custom roles when modal opens or dealer changes
+  useEffect(() => {
+    if (isOpen && selectedDealerId) {
+      fetchCustomRoles();
+    }
+  }, [isOpen, selectedDealerId, fetchCustomRoles]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,14 +168,17 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
         .single();
 
       const dealershipName = dealershipData?.name || 'Dealership';
-      const roleName = DEALER_ROLES.find(role => role.value === selectedRole)?.key || selectedRole;
+
+      // Get role display name from custom roles
+      const selectedRoleData = customRoles.find(role => role.role_name === selectedRole);
+      const roleDisplayName = selectedRoleData?.display_name || selectedRole;
 
       // Prepare email data
       const emailData = {
         invitationId: invitationData.id,
         to: email,
         dealershipName,
-        roleName: t(`roles.${roleName}`, roleName),
+        roleName: roleDisplayName,
         inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name
           ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
           : user?.email?.split('@')[0] || 'Team Member',
@@ -213,7 +252,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
     return dealership?.name || `Dealership #${selectedDealerId}`;
   };
 
-  const selectedRoleInfo = DEALER_ROLES.find(role => role.value === selectedRole);
+  // Find selected role info from custom roles instead of hardcoded DEALER_ROLES
+  const selectedRoleInfo = customRoles.find(role => role.role_name === selectedRole);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -285,27 +325,51 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
 
           <div className="space-y-2">
             <Label htmlFor="role">{t('invitations.role')} *</Label>
-            <Select value={selectedRole} onValueChange={setSelectedRole} disabled={loading}>
+            <Select
+              value={selectedRole}
+              onValueChange={setSelectedRole}
+              disabled={loading || loadingRoles || !selectedDealerId}
+            >
               <SelectTrigger>
-                <SelectValue placeholder={t('invitations.select_role')} />
+                <SelectValue placeholder={
+                  loadingRoles
+                    ? t('common.loading')
+                    : customRoles.length === 0
+                      ? 'No custom roles available'
+                      : t('invitations.select_role')
+                } />
               </SelectTrigger>
               <SelectContent>
-                {DEALER_ROLES.map((role) => (
-                  <SelectItem key={role.value} value={role.value}>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{t(`invitations.${role.key}`)}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {role.description}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
+                {loadingRoles ? (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin mx-auto mb-2" />
+                    {t('common.loading')}
+                  </div>
+                ) : customRoles.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    No custom roles created yet. Create roles first in Roles tab.
+                  </div>
+                ) : (
+                  customRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.role_name}>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{role.display_name}</span>
+                        {role.description && (
+                          <span className="text-xs text-muted-foreground">
+                            {role.description}
+                          </span>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
             {selectedRoleInfo && (
               <div className="p-3 bg-muted/50 rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  <strong>{t(`invitations.${selectedRoleInfo.key}`)}:</strong> {selectedRoleInfo.description}
+                  <strong>{selectedRoleInfo.display_name}:</strong>{' '}
+                  {selectedRoleInfo.description || 'No description'}
                 </p>
               </div>
             )}

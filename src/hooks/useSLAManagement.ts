@@ -2,106 +2,32 @@ import { useMemo, useCallback } from 'react';
 import type { OrderData } from '@/types/order';
 import { getOrderDateSummary } from '@/utils/orderDateUtils';
 
-interface BusinessHours {
-  monday: { start: number; end: number };
-  tuesday: { start: number; end: number };
-  wednesday: { start: number; end: number };
-  thursday: { start: number; end: number };
-  friday: { start: number; end: number };
-  saturday: { start: number; end: number };
-  sunday: { start: number; end: number };
-}
-
 interface SLAConfig {
-  sales_orders: number; // hours
-  service_orders: number; // hours
-  recon_orders: number; // hours
-  car_wash_orders: number; // hours
+  sales_orders: number; // hours (24/7 real-time)
+  service_orders: number; // hours (24/7 real-time)
+  recon_orders: number; // hours (24/7 real-time)
+  car_wash_orders: number; // hours (24/7 real-time)
 }
 
 interface SLAStatus {
   isWithinSLA: boolean;
-  timeRemaining: number; // in hours
+  timeRemaining: number; // in hours (24/7 real-time)
   percentageUsed: number; // 0-100
   status: 'on_track' | 'at_risk' | 'overdue' | 'completed';
   escalationLevel: 'none' | 'warning' | 'critical' | 'emergency';
-  businessHoursRemaining: number;
-  nextBusinessDay?: Date;
 }
 
 export function useSLAManagement(order: OrderData) {
-  // Business hours configuration (Monday-Friday 8AM-6PM, Saturday 8AM-5PM)
-  const businessHours: BusinessHours = {
-    monday: { start: 8, end: 18 },
-    tuesday: { start: 8, end: 18 },
-    wednesday: { start: 8, end: 18 },
-    thursday: { start: 8, end: 18 },
-    friday: { start: 8, end: 18 },
-    saturday: { start: 8, end: 17 },
-    sunday: { start: 0, end: 0 } // Closed
-  };
-
-  // SLA hours by order type
+  // SLA hours by order type (24/7 real-time calculation)
   const slaConfig: SLAConfig = {
-    sales_orders: 72, // 3 business days
-    service_orders: 48, // 2 business days
-    recon_orders: 96, // 4 business days
+    sales_orders: 72, // 72 hours (3 days 24/7)
+    service_orders: 48, // 48 hours (2 days 24/7)
+    recon_orders: 96, // 96 hours (4 days 24/7)
     car_wash_orders: 4 // 4 hours same day
   };
 
-  // Calculate business hours between two dates
-  const calculateBusinessHours = useCallback((startDate: Date, endDate: Date): number => {
-    let current = new Date(startDate);
-    let totalHours = 0;
 
-    while (current < endDate) {
-      const dayOfWeek = current.getDay(); // 0 = Sunday, 1 = Monday, etc.
-      const dayName = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dayOfWeek] as keyof BusinessHours;
-      const dayHours = businessHours[dayName];
-
-      if (dayHours.start < dayHours.end) { // Business day
-        const dayStart = new Date(current);
-        dayStart.setHours(dayHours.start, 0, 0, 0);
-
-        const dayEnd = new Date(current);
-        dayEnd.setHours(dayHours.end, 0, 0, 0);
-
-        const effectiveStart = current > dayStart ? current : dayStart;
-        const effectiveEnd = endDate < dayEnd ? endDate : dayEnd;
-
-        if (effectiveStart < effectiveEnd) {
-          totalHours += (effectiveEnd.getTime() - effectiveStart.getTime()) / (1000 * 60 * 60);
-        }
-      }
-
-      // Move to next day
-      current.setDate(current.getDate() + 1);
-      current.setHours(0, 0, 0, 0);
-    }
-
-    return totalHours;
-  }, []);
-
-  // Get next business day
-  const getNextBusinessDay = useCallback((fromDate: Date): Date => {
-    const next = new Date(fromDate);
-    next.setDate(next.getDate() + 1);
-
-    while (true) {
-      const dayOfWeek = next.getDay();
-      const dayName = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dayOfWeek] as keyof BusinessHours;
-      const dayHours = businessHours[dayName];
-
-      if (dayHours.start < dayHours.end) { // Is business day
-        next.setHours(dayHours.start, 0, 0, 0);
-        return next;
-      }
-
-      next.setDate(next.getDate() + 1);
-    }
-  }, []);
-
-  // Calculate SLA status
+  // Calculate SLA status (24/7 real-time)
   const slaStatus = useMemo((): SLAStatus => {
     // Handle completed orders
     if (order.status === 'completed') {
@@ -116,8 +42,7 @@ export function useSLAManagement(order: OrderData) {
         timeRemaining: 0,
         percentageUsed: 100,
         status: 'completed',
-        escalationLevel: 'none',
-        businessHoursRemaining: 0
+        escalationLevel: 'none'
       };
     }
 
@@ -128,12 +53,11 @@ export function useSLAManagement(order: OrderData) {
         timeRemaining: 0,
         percentageUsed: 0,
         status: 'completed',
-        escalationLevel: 'none',
-        businessHoursRemaining: 0
+        escalationLevel: 'none'
       };
     }
 
-    // Handle active orders - existing logic
+    // Handle active orders with 24/7 real-time calculation
     const { created, due } = getOrderDateSummary(order);
 
     console.log('🏗️ [SLA DEBUG] Date summary:', { created, due });
@@ -145,8 +69,7 @@ export function useSLAManagement(order: OrderData) {
         timeRemaining: 0,
         percentageUsed: 0,
         status: 'on_track',
-        escalationLevel: 'none',
-        businessHoursRemaining: 0
+        escalationLevel: 'none'
       };
     }
 
@@ -187,18 +110,17 @@ export function useSLAManagement(order: OrderData) {
         timeRemaining: 0,
         percentageUsed,
         status: 'completed',
-        escalationLevel: timeToComplete <= timeToDue ? 'none' : 'critical',
-        businessHoursRemaining: 0
+        escalationLevel: timeToComplete <= timeToDue ? 'none' : 'critical'
       };
     }
 
-    // Calculate current progress using calendar time (not business hours)
+    // Calculate current progress using 24/7 real-time hours
     const timeElapsed = now.getTime() - createdAt.getTime();
     const timeToDue = dueDate.getTime() - createdAt.getTime();
     const percentageUsed = (timeElapsed / timeToDue) * 100;
     const hoursRemaining = Math.max(0, (dueDate.getTime() - now.getTime()) / (1000 * 60 * 60));
 
-    console.log('⏰ [SLA PROGRESS]', {
+    console.log('⏰ [SLA PROGRESS - 24/7]', {
       timeElapsed: Math.round(timeElapsed / (1000 * 60 * 60)),
       timeToDue: Math.round(timeToDue / (1000 * 60 * 60)),
       percentageUsed: Math.round(percentageUsed),
@@ -232,11 +154,9 @@ export function useSLAManagement(order: OrderData) {
       timeRemaining: hoursRemaining,
       percentageUsed,
       status,
-      escalationLevel,
-      businessHoursRemaining: hoursRemaining,
-      nextBusinessDay: hoursRemaining <= 8 ? getNextBusinessDay(now) : undefined
+      escalationLevel
     };
-  }, [order, calculateBusinessHours, getNextBusinessDay]);
+  }, [order]);
 
   // Generate SLA recommendations
   const getSLARecommendations = useCallback((): string[] => {
@@ -308,7 +228,6 @@ export function useSLAManagement(order: OrderData) {
     slaStatus,
     getSLARecommendations,
     getSLAColors,
-    businessHours,
     slaConfig
   };
 }

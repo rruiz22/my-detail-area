@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useStepManagement } from '@/hooks/useStepManagement';
 import { GetReadyStep } from '@/types/getReady';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface StepFormModalProps {
@@ -46,6 +46,29 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Update form data when step prop changes (for edit mode)
+  useEffect(() => {
+    if (step) {
+      setFormData({
+        name: step.name || '',
+        description: step.description || '',
+        color: step.color || DEFAULT_COLORS[0],
+        sla_hours: step.sla_hours?.toString() || '24',
+        cost_per_day: step.cost_per_day?.toString() || '0',
+      });
+    } else {
+      // Reset form for create mode
+      setFormData({
+        name: '',
+        description: '',
+        color: DEFAULT_COLORS[0],
+        sla_hours: '24',
+        cost_per_day: '0',
+      });
+    }
+    setErrors({});
+  }, [step]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};

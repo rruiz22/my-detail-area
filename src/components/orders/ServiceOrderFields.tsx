@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Hash, Wrench, FileText, Tag } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileText, Tag, Wrench } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
 
@@ -13,6 +13,9 @@ interface ServiceOrderFieldsProps {
     repair_order?: string;
     tag?: string;
     [key: string]: unknown;
+    id: string;
+    dealer_id: string | number;
+    status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   };
 }
 

@@ -19,6 +19,7 @@ export interface WorkItemTemplate {
   is_active: boolean;
   auto_assign: boolean;
   order_index: number;
+  step_id?: string | null; // Optional: associates template with specific step
   created_at: string;
   updated_at: string;
 }
@@ -33,6 +34,7 @@ export interface CreateTemplateInput {
   approval_required?: boolean;
   auto_assign?: boolean;
   order_index?: number;
+  step_id?: string | null;
 }
 
 export interface UpdateTemplateInput extends Partial<CreateTemplateInput> {
@@ -197,6 +199,7 @@ export function useCreateTemplate() {
           approval_required: input.approval_required || false,
           auto_assign: input.auto_assign !== undefined ? input.auto_assign : true,
           order_index: input.order_index || 0,
+          step_id: input.step_id || null,
           is_active: true,
         })
         .select()
@@ -243,6 +246,7 @@ export function useUpdateTemplate() {
       if (input.approval_required !== undefined) updateData.approval_required = input.approval_required;
       if (input.auto_assign !== undefined) updateData.auto_assign = input.auto_assign;
       if (input.order_index !== undefined) updateData.order_index = input.order_index;
+      if (input.step_id !== undefined) updateData.step_id = input.step_id;
 
       const { data, error } = await supabase
         .from('work_item_templates')
@@ -458,6 +462,7 @@ export function useDuplicateTemplate() {
           approval_required: original.approval_required,
           auto_assign: false, // Disabled by default for copies
           order_index: original.order_index + 1,
+          step_id: original.step_id || null,
           is_active: true,
         })
         .select()

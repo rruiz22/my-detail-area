@@ -1,29 +1,69 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { safeFormatDate } from '@/utils/dateUtils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+/**
+ * @deprecated This component is deprecated as of Phase 2 (October 2025)
+ *
+ * ⚠️ MIGRATION REQUIRED ⚠️
+ *
+ * Please use UnifiedOrderDetailModal instead:
+ *
+ * ```typescript
+ * import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+ *
+ * <UnifiedOrderDetailModal
+ *   orderType="sales" // or "service", "recon", "carwash"
+ *   order={order}
+ *   open={open}
+ *   onClose={onClose}
+ *   onEdit={onEdit}
+ *   onDelete={onDelete}
+ *   onStatusChange={onStatusChange}
+ * />
+ * ```
+ *
+ * Benefits of UnifiedOrderDetailModal:
+ * - Unified type system (UnifiedOrderData)
+ * - Better performance
+ * - Support for all order types in one component
+ * - Active maintenance and updates
+ * - Comprehensive test coverage
+ * - Modern UI components
+ *
+ * This component will be removed in Phase 3 (November 2025)
+ * Migration guide: /docs/MODAL_MIGRATION_GUIDE.md
+ */
+
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  X, 
-  User, 
-  Car, 
-  Phone, 
-  Mail, 
-  Calendar, 
-  Clock, 
-  DollarSign, 
-  Package,
-  MapPin,
-  FileText,
-  Edit,
-  Trash2
-} from 'lucide-react';
-import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import { Order } from '@/hooks/useOrderManagement';
+import { safeFormatDate } from '@/utils/dateUtils';
+import {
+  Calendar,
+  Car,
+  Clock,
+  DollarSign,
+  Edit,
+  FileText,
+  Mail,
+  Package,
+  Phone,
+  Trash2,
+  User,
+  X
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { OrderTasksSection } from './OrderTasksSection';
+
+// Development warning for deprecated component
+if (process.env.NODE_ENV === 'development') {
+  console.warn(
+    '⚠️ OrderDetailModal is deprecated!\n' +
+    'Please migrate to UnifiedOrderDetailModal.\n' +
+    'See /docs/MODAL_MIGRATION_GUIDE.md for details.\n' +
+    'This component will be removed in Phase 3 (November 2025).'
+  );
+}
 
 interface OrderDetailModalProps {
   order: Order | null;

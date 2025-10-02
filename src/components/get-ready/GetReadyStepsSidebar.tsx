@@ -217,7 +217,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                       )}
                       style={{ backgroundColor: !isActive ? step.color : undefined }}
                     >
-                      {step.name === 'All' ? <Icon className="h-3 w-3" /> : index}
+                      {step.name === 'All' ? <Icon className="h-3 w-3" /> : step.order_index}
                     </div>
                     {/* SLA Status Indicator */}
                     {slaStatus !== 'green' && (

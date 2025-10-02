@@ -1105,8 +1105,12 @@
       "back_to_list": "Voltar para Concessionárias",
       "tabs": {
         "overview": "Visão Geral",
+        "overview_short": "Visão",
         "groups": "Grupos",
-        "users": "Usuários"
+        "users": "Usuários",
+        "users_short": "Users",
+        "invitations": "Convites",
+        "invitations_short": "Conv"
       }
     },
     "tabs": {
@@ -1149,9 +1153,15 @@
     "dealer_service_advisor": "Consultor de Serviço",
     "dealer_sales_manager": "Gerente de Vendas",
     "dealer_service_manager": "Gerente de Serviço",
+    "detail_super_manager": "Super Gerente de Detalhe",
+    "detail_admin": "Administrador de Detalhe",
     "system_admin": "Administrador do Sistema"
   },
   "invitations": {
+    "all_invitations": "Todos os Convites",
+    "dealer_invitations": "Convites da Concessionária",
+    "manage_invitations_desc": "Gerencie convites de usuários e acompanhe seu status",
+    "manage_dealer_invitations_desc": "Gerencie convites para esta concessionária específica",
     "send_invitation": "Enviar Convite",
     "email": "E-mail",
     "email_placeholder": "Digite o endereço de e-mail",
@@ -1290,6 +1300,8 @@
       "view_details": "Ver Detalhes",
       "edit_vehicle": "Editar Veículo",
       "advance_step": "Avançar Etapa",
+      "move_to_step": "Mover para Etapa",
+      "change_step": "Mudar Etapa",
       "actions": "Ações"
     },
     "work_items": {
@@ -1566,7 +1578,9 @@
         "model_required": "O modelo é obrigatório",
         "save_failed": "Falha ao salvar o veículo. Por favor tente novamente.",
         "delete_failed": "Falha ao excluir o veículo. Por favor tente novamente.",
-        "move_failed": "Falha ao mover o veículo. Por favor tente novamente."
+        "move_failed": "Falha ao mover o veículo. Por favor tente novamente.",
+        "already_last_step": "O veículo já está na última etapa",
+        "no_next_step": "Não há próxima etapa disponível"
       },
       "success": {
         "created": "Veículo criado com sucesso",
@@ -1616,7 +1630,9 @@
       "step_delete_failed_has_vehicles": "Não é possível excluir etapa com veículos ativos",
       "step_archive_failed": "Falha ao arquivar etapa",
       "delete_confirm_title": "Excluir Etapa",
-      "delete_confirm_message": "Tem certeza de que deseja excluir {{stepName}}? Esta ação não pode ser desfeita."
+      "delete_confirm_message": "Tem certeza de que deseja excluir {{stepName}}? Esta ação não pode ser desfeita.",
+      "steps_reordered": "Etapas reordenadas com sucesso",
+      "steps_reorder_failed": "Falha ao reordenar etapas"
     },
     "templates": {
       "title": "Modelos de Trabalho",
@@ -1641,7 +1657,13 @@
       "confirm_delete": "Tem certeza de que deseja excluir este modelo?",
       "template_form_description": "Configure os detalhes do modelo abaixo",
       "work_items_created": "{{count}} trabalhos criados a partir de modelos",
-      "error_creating_work_items": "Falha ao criar trabalhos a partir de modelos"
+      "error_creating_work_items": "Falha ao criar trabalhos a partir de modelos",
+      "associated_step": "Etapa Associada",
+      "select_step": "Selecionar uma etapa",
+      "global_template": "Modelo Global (Todas as Etapas)",
+      "step_association_help": "Modelos globais são criados quando um veículo é adicionado. Modelos específicos de etapa são criados quando um veículo entra nessa etapa.",
+      "templates_reordered": "Modelos reordenados com sucesso",
+      "error_reordering": "Falha ao reordenar modelos"
     }
   }
 }

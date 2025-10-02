@@ -1,11 +1,54 @@
-import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
+/**
+ * @deprecated This component is deprecated as of Phase 2 (October 2025)
+ *
+ * ⚠️ MIGRATION REQUIRED ⚠️
+ *
+ * Please use UnifiedOrderDetailModal instead:
+ *
+ * ```typescript
+ * import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+ *
+ * <UnifiedOrderDetailModal
+ *   orderType="sales" // or "service", "recon", "carwash"
+ *   order={order}
+ *   open={open}
+ *   onClose={onClose}
+ *   onEdit={onEdit}
+ *   onDelete={onDelete}
+ *   onStatusChange={onStatusChange}
+ * />
+ * ```
+ *
+ * Benefits of UnifiedOrderDetailModal:
+ * - Unified type system (UnifiedOrderData)
+ * - Better performance optimization
+ * - Consistent behavior across all order types
+ * - Active maintenance and updates
+ * - Comprehensive test coverage
+ * - Built-in error boundaries
+ *
+ * This component will be removed in Phase 3 (November 2025)
+ * Migration guide: /docs/MODAL_MIGRATION_GUIDE.md
+ */
+
 import { useOrderModalData } from '@/hooks/useOrderModalData';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
+import { supabase } from '@/integrations/supabase/client';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
 import { ErrorBoundaryModal } from './ErrorBoundaryModal';
+
+// Development warning for deprecated component
+if (process.env.NODE_ENV === 'development') {
+  console.warn(
+    '⚠️ OptimizedEnhancedOrderDetailModal is deprecated!\n' +
+    'Please migrate to UnifiedOrderDetailModal.\n' +
+    'See /docs/MODAL_MIGRATION_GUIDE.md for details.\n' +
+    'This component will be removed in Phase 3 (November 2025).'
+  );
+}
 
 // Enhanced TypeScript interfaces
 interface OrderAttachment {
@@ -69,7 +112,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 }: EnhancedOrderDetailModalProps) {
   const { t } = useTranslation();
   const { startMeasure, endMeasure, recordMetric } = usePerformanceMonitor();
-  
+
   const [editingNotes, setEditingNotes] = useState(false);
   const [editingInternalNotes, setEditingInternalNotes] = useState(false);
   const [notes, setNotes] = useState(order?.notes || '');
@@ -88,9 +131,9 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
   }, [open, startMeasure, endMeasure, recordMetric]);
 
   // Enhanced data fetching with performance monitoring and error handling
-  const { 
-    data: modalData, 
-    loading: dataLoading, 
+  const {
+    data: modalData,
+    loading: dataLoading,
     error: dataError,
     addAttachment: handleAttachmentUploaded,
     removeAttachment: handleAttachmentDeleted,
@@ -299,7 +342,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
   // Custom comparison function for optimal re-render prevention
   if (!prevProps.order && !nextProps.order) return true;
   if (!prevProps.order || !nextProps.order) return false;
-  
+
   return (
     prevProps.order.id === nextProps.order.id &&
     prevProps.order.status === nextProps.order.status &&

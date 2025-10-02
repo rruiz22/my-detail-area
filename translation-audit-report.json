@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 529,
-  "totalStrings": 5320,
-  "hardcodedStrings": 1179,
-  "translatedStrings": 4141,
+  "scannedFiles": 531,
+  "totalStrings": 5329,
+  "hardcodedStrings": 1180,
+  "translatedStrings": 4149,
   "issues": {
     "critical": [
       {
@@ -3492,256 +3492,266 @@
         "file": "src\\components\\invitations\\InvitationManagement.tsx",
         "hardcodedStrings": [
           {
-            "text": "Invitation Management",
-            "line": 389,
-            "context": "388: <div>\n389: <h2 className=\"text-2xl font-bold tracking-tight\">Invitation Management</h2>\n390: <p className=\"text-muted-foreground\">"
-          },
-          {
-            "text": "Manage user invitations and track their status",
-            "line": 390,
-            "context": "389: <h2 className=\"text-2xl font-bold tracking-tight\">Invitation Management</h2>\n390: <p className=\"text-muted-foreground\">\n391: Manage user invitations and track their status"
-          },
-          {
             "text": "Templates",
-            "line": 400,
-            "context": "399: >\n400: <Mail className=\"h-4 w-4\" />\n401: Templates"
+            "line": 417,
+            "context": "416: >\n417: <Mail className=\"h-4 w-4\" />\n418: Templates"
           },
           {
             "text": "Send Invitation",
-            "line": 407,
-            "context": "406: >\n407: <Send className=\"h-4 w-4\" />\n408: Send Invitation"
+            "line": 424,
+            "context": "423: >\n424: <Send className=\"h-4 w-4\" />\n425: Send Invitation"
           },
           {
             "text": "Total",
-            "line": 419,
-            "context": "418: <div>\n419: <p className=\"text-sm font-medium text-muted-foreground\">Total</p>\n420: <p className=\"text-2xl font-bold\">{stats.total}</p>"
+            "line": 436,
+            "context": "435: <div>\n436: <p className=\"text-sm font-medium text-muted-foreground\">Total</p>\n437: <p className=\"text-2xl font-bold\">{stats.total}</p>"
           },
           {
             "text": "Pending",
-            "line": 431,
-            "context": "430: <div>\n431: <p className=\"text-sm font-medium text-muted-foreground\">Pending</p>\n432: <p className=\"text-2xl font-bold\">{stats.pending}</p>"
+            "line": 448,
+            "context": "447: <div>\n448: <p className=\"text-sm font-medium text-muted-foreground\">Pending</p>\n449: <p className=\"text-2xl font-bold\">{stats.pending}</p>"
           },
           {
             "text": "Accepted",
-            "line": 443,
-            "context": "442: <div>\n443: <p className=\"text-sm font-medium text-muted-foreground\">Accepted</p>\n444: <p className=\"text-2xl font-bold\">{stats.accepted}</p>"
+            "line": 460,
+            "context": "459: <div>\n460: <p className=\"text-sm font-medium text-muted-foreground\">Accepted</p>\n461: <p className=\"text-2xl font-bold\">{stats.accepted}</p>"
           },
           {
             "text": "Expired",
-            "line": 455,
-            "context": "454: <div>\n455: <p className=\"text-sm font-medium text-muted-foreground\">Expired</p>\n456: <p className=\"text-2xl font-bold\">{stats.expired}</p>"
+            "line": 472,
+            "context": "471: <div>\n472: <p className=\"text-sm font-medium text-muted-foreground\">Expired</p>\n473: <p className=\"text-2xl font-bold\">{stats.expired}</p>"
           },
           {
             "text": "Invitee",
-            "line": 479,
-            "context": "478: <TableRow>\n479: <TableHead>Invitee</TableHead>\n480: <TableHead>Role</TableHead>"
+            "line": 496,
+            "context": "495: <TableRow>\n496: <TableHead>Invitee</TableHead>\n497: <TableHead>Role</TableHead>"
           },
           {
             "text": "Role",
-            "line": 480,
-            "context": "479: <TableHead>Invitee</TableHead>\n480: <TableHead>Role</TableHead>\n481: <TableHead>Dealership</TableHead>"
+            "line": 497,
+            "context": "496: <TableHead>Invitee</TableHead>\n497: <TableHead>Role</TableHead>\n498: <TableHead>Dealership</TableHead>"
           },
           {
             "text": "Dealership",
-            "line": 481,
-            "context": "480: <TableHead>Role</TableHead>\n481: <TableHead>Dealership</TableHead>\n482: <TableHead>Inviter</TableHead>"
+            "line": 498,
+            "context": "497: <TableHead>Role</TableHead>\n498: <TableHead>Dealership</TableHead>\n499: <TableHead>Inviter</TableHead>"
           },
           {
             "text": "Inviter",
-            "line": 482,
-            "context": "481: <TableHead>Dealership</TableHead>\n482: <TableHead>Inviter</TableHead>\n483: <TableHead>Status</TableHead>"
+            "line": 499,
+            "context": "498: <TableHead>Dealership</TableHead>\n499: <TableHead>Inviter</TableHead>\n500: <TableHead>Status</TableHead>"
           },
           {
             "text": "Status",
-            "line": 483,
-            "context": "482: <TableHead>Inviter</TableHead>\n483: <TableHead>Status</TableHead>\n484: <TableHead>Sent</TableHead>"
+            "line": 500,
+            "context": "499: <TableHead>Inviter</TableHead>\n500: <TableHead>Status</TableHead>\n501: <TableHead>Sent</TableHead>"
           },
           {
             "text": "Sent",
-            "line": 484,
-            "context": "483: <TableHead>Status</TableHead>\n484: <TableHead>Sent</TableHead>\n485: <TableHead>Expires</TableHead>"
+            "line": 501,
+            "context": "500: <TableHead>Status</TableHead>\n501: <TableHead>Sent</TableHead>\n502: <TableHead>Expires</TableHead>"
           },
           {
             "text": "Expires",
-            "line": 485,
-            "context": "484: <TableHead>Sent</TableHead>\n485: <TableHead>Expires</TableHead>\n486: <TableHead className=\"text-right\">Actions</TableHead>"
+            "line": 502,
+            "context": "501: <TableHead>Sent</TableHead>\n502: <TableHead>Expires</TableHead>\n503: <TableHead className=\"text-right\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 486,
-            "context": "485: <TableHead>Expires</TableHead>\n486: <TableHead className=\"text-right\">Actions</TableHead>\n487: </TableRow>"
+            "line": 503,
+            "context": "502: <TableHead>Expires</TableHead>\n503: <TableHead className=\"text-right\">Actions</TableHead>\n504: </TableRow>"
           },
           {
             "text": "No invitations found",
-            "line": 495,
-            "context": "494: <Mail className=\"h-8 w-8 text-muted-foreground\" />\n495: <p className=\"text-muted-foreground\">No invitations found</p>\n496: </div>"
+            "line": 512,
+            "context": "511: <Mail className=\"h-8 w-8 text-muted-foreground\" />\n512: <p className=\"text-muted-foreground\">No invitations found</p>\n513: </div>"
           },
           {
             "text": "Expired",
-            "line": 552,
-            "context": "551: <div className=\"flex items-center gap-1 text-red-600\">\n552: <AlertCircle className=\"h-4 w-4\" />\n553: Expired"
+            "line": 569,
+            "context": "568: <div className=\"flex items-center gap-1 text-red-600\">\n569: <AlertCircle className=\"h-4 w-4\" />\n570: Expired"
           },
           {
             "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      setInvitations(data || []);\r\n\r\n      console.log(",
-            "line": 105,
-            "context": "104: if (error) {\n105: console.error('❌ [INVITATIONS] Database error:', error);\n106: throw error;"
+            "line": 118,
+            "context": "117: if (error) {\n118: console.error('❌ [INVITATIONS] Database error:', error);\n119: throw error;"
           },
           {
             "text": ", updateError);\r\n        throw updateError;\r\n      }\r\n\r\n      console.log(",
-            "line": 216,
-            "context": "215: if (updateError) {\n216: console.error('❌ [RESEND INVITATION] Database update error:', updateError);\n217: throw updateError;"
+            "line": 229,
+            "context": "228: if (updateError) {\n229: console.error('❌ [RESEND INVITATION] Database update error:', updateError);\n230: throw updateError;"
           }
         ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 119,
+            "line": 132,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 252,
+            "line": 265,
             "exists": false
           },
           {
             "key": "invitations.invitation_updated_email_failed",
-            "line": 253,
+            "line": 266,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 258,
+            "line": 271,
             "exists": false
           },
           {
             "key": "invitations.invitation_resent",
-            "line": 259,
+            "line": 272,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 266,
+            "line": 279,
             "exists": false
           },
           {
             "key": "invitations.error_resending",
-            "line": 267,
+            "line": 280,
             "exists": true
           },
           {
             "key": "invitations.confirm_cancel",
-            "line": 275,
+            "line": 288,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 290,
+            "line": 303,
             "exists": false
           },
           {
             "key": "invitations.cancelled_successfully",
-            "line": 291,
+            "line": 304,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 297,
+            "line": 310,
             "exists": false
           },
           {
             "key": "invitations.error_cancelling",
-            "line": 298,
+            "line": 311,
             "exists": true
           },
           {
             "key": "invitations.confirm_delete",
-            "line": 306,
+            "line": 319,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 321,
+            "line": 334,
             "exists": false
           },
           {
             "key": "invitations.deleted_successfully",
-            "line": 322,
+            "line": 335,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 328,
+            "line": 341,
             "exists": false
           },
           {
             "key": "invitations.error_deleting",
-            "line": 329,
+            "line": 342,
+            "exists": true
+          },
+          {
+            "key": "invitations.dealer_invitations",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "invitations.all_invitations",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "invitations.manage_dealer_invitations_desc",
+            "line": 407,
+            "exists": true
+          },
+          {
+            "key": "invitations.manage_invitations_desc",
+            "line": 408,
             "exists": true
           },
           {
             "key": "roles.${invitation.role_name}",
-            "line": 518,
+            "line": 535,
             "exists": false
           },
           {
             "key": "invitations.cancel_invitation",
-            "line": 588,
+            "line": 605,
             "exists": true
           },
           {
             "key": "invitations.delete_invitation",
-            "line": 599,
+            "line": 616,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.error",
-            "line": 119,
-            "context": "118: toast({\n119: title: t('common.error'),\n120: description: error instanceof Error ? error.message : 'Error loading invitations',"
+            "line": 132,
+            "context": "131: toast({\n132: title: t('common.error'),\n133: description: error instanceof Error ? error.message : 'Error loading invitations',"
           },
           {
             "key": "common.success",
-            "line": 252,
-            "context": "251: toast({\n252: title: t('common.success'),\n253: description: t('invitations.invitation_updated_email_failed'),"
+            "line": 265,
+            "context": "264: toast({\n265: title: t('common.success'),\n266: description: t('invitations.invitation_updated_email_failed'),"
           },
           {
             "key": "common.success",
-            "line": 258,
-            "context": "257: toast({\n258: title: t('common.success'),\n259: description: t('invitations.invitation_resent'),"
+            "line": 271,
+            "context": "270: toast({\n271: title: t('common.success'),\n272: description: t('invitations.invitation_resent'),"
           },
           {
             "key": "common.error",
-            "line": 266,
-            "context": "265: toast({\n266: title: t('common.error'),\n267: description: error instanceof Error ? error.message : t('invitations.error_resending'),"
+            "line": 279,
+            "context": "278: toast({\n279: title: t('common.error'),\n280: description: error instanceof Error ? error.message : t('invitations.error_resending'),"
           },
           {
             "key": "common.success",
-            "line": 290,
-            "context": "289: toast({\n290: title: t('common.success'),\n291: description: t('invitations.cancelled_successfully'),"
+            "line": 303,
+            "context": "302: toast({\n303: title: t('common.success'),\n304: description: t('invitations.cancelled_successfully'),"
           },
           {
             "key": "common.error",
-            "line": 297,
-            "context": "296: toast({\n297: title: t('common.error'),\n298: description: error instanceof Error ? error.message : t('invitations.error_cancelling'),"
+            "line": 310,
+            "context": "309: toast({\n310: title: t('common.error'),\n311: description: error instanceof Error ? error.message : t('invitations.error_cancelling'),"
           },
           {
             "key": "common.success",
-            "line": 321,
-            "context": "320: toast({\n321: title: t('common.success'),\n322: description: t('invitations.deleted_successfully'),"
+            "line": 334,
+            "context": "333: toast({\n334: title: t('common.success'),\n335: description: t('invitations.deleted_successfully'),"
           },
           {
             "key": "common.error",
-            "line": 328,
-            "context": "327: toast({\n328: title: t('common.error'),\n329: description: error instanceof Error ? error.message : t('invitations.error_deleting'),"
+            "line": 341,
+            "context": "340: toast({\n341: title: t('common.error'),\n342: description: error instanceof Error ? error.message : t('invitations.error_deleting'),"
           },
           {
             "key": "roles.${invitation.role_name}",
-            "line": 518,
-            "context": "517: <TableCell>\n518: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, invitation.role_name)}</Badge>\n519: </TableCell>"
+            "line": 535,
+            "context": "534: <TableCell>\n535: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, invitation.role_name)}</Badge>\n536: </TableCell>"
           }
         ],
-        "coverage": 50,
+        "coverage": 57,
         "severity": "high"
       },
       {
@@ -7497,160 +7507,170 @@
         "hardcodedStrings": [
           {
             "text": "Table",
-            "line": 143,
-            "context": "142: onClick={() => setViewMode('table')}\n143: >\n144: Table"
+            "line": 212,
+            "context": "211: onClick={() => setViewMode('table')}\n212: >\n213: Table"
           },
           {
             "text": "Grid",
-            "line": 150,
-            "context": "149: onClick={() => setViewMode('grid')}\n150: >\n151: Grid"
+            "line": 219,
+            "context": "218: onClick={() => setViewMode('grid')}\n219: >\n220: Grid"
           },
           {
             "text": "Table",
-            "line": 258,
-            "context": "257: onClick={() => setViewMode('table')}\n258: >\n259: Table"
+            "line": 408,
+            "context": "407: onClick={() => setViewMode('table')}\n408: >\n409: Table"
           },
           {
             "text": "Grid",
-            "line": 265,
-            "context": "264: onClick={() => setViewMode('grid')}\n265: >\n266: Grid"
+            "line": 415,
+            "context": "414: onClick={() => setViewMode('grid')}\n415: >\n416: Grid"
           },
           {
             "text": "Workflow",
-            "line": 286,
-            "context": "285: <TableHead>{t('get_ready.table.step')}</TableHead>\n286: <TableHead>Workflow</TableHead>\n287: <TableHead>T2L</TableHead>"
+            "line": 439,
+            "context": "438: <TableHead className=\"w-[140px] text-center\">{t('get_ready.table.step')}</TableHead>\n439: <TableHead className=\"w-[110px] text-center\">Workflow</TableHead>\n440: <TableHead className=\"w-[80px] text-center\">"
+          },
+          {
+            "text": "Days in Step",
+            "line": 456,
+            "context": "455: <TooltipContent>\n456: <p>Days in Step</p>\n457: </TooltipContent>"
+          },
+          {
+            "text": "Days to Frontline",
+            "line": 466,
+            "context": "465: <TooltipContent>\n466: <p>Days to Frontline</p>\n467: </TooltipContent>"
           },
           {
             "text": "Progress",
-            "line": 291,
-            "context": "290: <TableHead>{t('get_ready.table.priority')}</TableHead>\n291: <TableHead>Progress</TableHead>\n292: <TableHead>Assigned</TableHead>"
+            "line": 471,
+            "context": "470: <TableHead className=\"w-[100px] text-center\">{t('get_ready.table.priority')}</TableHead>\n471: <TableHead className=\"w-[120px] text-center\">Progress</TableHead>\n472: <TableHead className=\"w-[130px] text-center\">Assigned</TableHead>"
           },
           {
             "text": "Assigned",
-            "line": 292,
-            "context": "291: <TableHead>Progress</TableHead>\n292: <TableHead>Assigned</TableHead>\n293: <TableHead className=\"text-right\">Actions</TableHead>"
+            "line": 472,
+            "context": "471: <TableHead className=\"w-[120px] text-center\">Progress</TableHead>\n472: <TableHead className=\"w-[130px] text-center\">Assigned</TableHead>\n473: <TableHead className=\"w-[100px] text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 293,
-            "context": "292: <TableHead>Assigned</TableHead>\n293: <TableHead className=\"text-right\">Actions</TableHead>\n294: </TableRow>"
+            "line": 473,
+            "context": "472: <TableHead className=\"w-[130px] text-center\">Assigned</TableHead>\n473: <TableHead className=\"w-[100px] text-center\">Actions</TableHead>\n474: </TableRow>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 124,
+            "line": 193,
             "exists": true
           },
           {
             "key": "get_ready.actions.actions",
-            "line": 175,
+            "line": 266,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 178,
+            "line": 269,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 182,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.advance_step",
-            "line": 187,
+            "line": 273,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 197,
+            "line": 283,
             "exists": false
           },
           {
+            "key": "get_ready.actions.change_step",
+            "line": 318,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.advance_step",
+            "line": 358,
+            "exists": true
+          },
+          {
             "key": "get_ready.table.click_to_view",
-            "line": 275,
+            "line": 425,
             "exists": true
           },
           {
             "key": "get_ready.table.image",
-            "line": 282,
+            "line": 435,
             "exists": true
           },
           {
             "key": "get_ready.table.stock",
-            "line": 283,
+            "line": 436,
             "exists": true
           },
           {
             "key": "get_ready.table.vehicle",
-            "line": 284,
+            "line": 437,
             "exists": true
           },
           {
             "key": "get_ready.table.step",
-            "line": 285,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.days_in_step",
-            "line": 288,
+            "line": 438,
             "exists": true
           },
           {
             "key": "get_ready.table.priority",
-            "line": 290,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 347,
-            "exists": false
-          },
-          {
-            "key": "get_ready.actions.actions",
-            "line": 402,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.view_details",
-            "line": 405,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.edit_vehicle",
-            "line": 409,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.advance_step",
-            "line": 414,
+            "line": 470,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.title",
-            "line": 432,
+            "line": 483,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 433,
+            "line": 486,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.change_step",
+            "line": 550,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.advance_step",
+            "line": 590,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 600,
+            "exists": false
+          },
+          {
+            "key": "get_ready.actions.view_details",
+            "line": 655,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.edit_vehicle",
+            "line": 667,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 197,
-            "context": "196: <Badge variant=\"outline\" className={getWorkflowColor(vehicle.workflow_type)}>\n197: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n198: </Badge>"
+            "line": 283,
+            "context": "282: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n283: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n284: </Badge>"
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 347,
-            "context": "346: <Badge variant=\"outline\" className={getWorkflowColor(vehicle.workflow_type)}>\n347: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n348: </Badge>"
+            "line": 600,
+            "context": "599: <Badge variant=\"outline\" className={getWorkflowColor(vehicle.workflow_type)}>\n600: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n601: </Badge>"
           }
         ],
-        "coverage": 71,
+        "coverage": 67,
         "severity": "medium"
       },
       {
@@ -8153,6 +8173,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "2023 Honda Civic",
+            "line": 174,
+            "context": "173: customer_email: 'john.doe@example.com',\n174: vehicle_info: '2023 Honda Civic',\n175: vehicleYear: '2023',"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\tests\\config\\performance-setup.ts",
         "hardcodedStrings": [
           {
@@ -8236,57 +8270,6 @@
           }
         ],
         "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\pages\\Users.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "System users who can log in and access the application",
-            "line": 27,
-            "context": "26: </p>\n27: <p className=\"text-xs text-muted-foreground mt-1\">\n28: System users who can log in and access the application"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "pages.user_management",
-            "line": 22,
-            "exists": true
-          },
-          {
-            "key": "pages.user_management_desc",
-            "line": 25,
-            "exists": false
-          },
-          {
-            "key": "users.invite_user",
-            "line": 41,
-            "exists": false
-          },
-          {
-            "key": "users.add_new",
-            "line": 51,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "pages.user_management_desc",
-            "line": 25,
-            "context": "24: <p className=\"text-muted-foreground mt-2\">\n25: {t('pages.user_management_desc')}\n26: </p>"
-          },
-          {
-            "key": "users.invite_user",
-            "line": 41,
-            "context": "40: <UserPlus className=\"h-4 w-4\" />\n41: {t('users.invite_user')}\n42: </Button>"
-          },
-          {
-            "key": "users.add_new",
-            "line": 51,
-            "context": "50: <UserPlus className=\"h-4 w-4\" />\n51: {t('users.add_new')}\n52: </Button>"
-          }
-        ],
-        "coverage": 80,
         "severity": "low"
       },
       {
@@ -9217,173 +9200,188 @@
             "exists": true
           },
           {
-            "key": "roles.dealer_user",
+            "key": "roles.system_admin",
             "line": 200,
             "exists": true
           },
           {
-            "key": "roles.dealer_salesperson",
+            "key": "roles.dealer_admin",
             "line": 201,
             "exists": true
           },
           {
-            "key": "roles.dealer_service_advisor",
+            "key": "roles.dealer_manager",
             "line": 202,
             "exists": true
           },
           {
-            "key": "roles.dealer_sales_manager",
+            "key": "roles.dealer_salesperson",
             "line": 203,
             "exists": true
           },
           {
-            "key": "roles.dealer_service_manager",
+            "key": "roles.dealer_service_advisor",
             "line": 204,
             "exists": true
           },
           {
-            "key": "roles.dealer_manager",
+            "key": "roles.dealer_sales_manager",
             "line": 205,
             "exists": true
           },
           {
-            "key": "roles.dealer_admin",
+            "key": "roles.dealer_service_manager",
             "line": 206,
             "exists": true
           },
           {
+            "key": "roles.dealer_user",
+            "line": 207,
+            "exists": true
+          },
+          {
+            "key": "roles.detail_super_manager",
+            "line": 208,
+            "exists": true
+          },
+          {
+            "key": "roles.detail_admin",
+            "line": 209,
+            "exists": true
+          },
+          {
             "key": "invitations.accept.expires_in_hours",
-            "line": 219,
+            "line": 222,
             "exists": true
           },
           {
             "key": "invitations.accept.expires_in_days",
-            "line": 221,
+            "line": 224,
             "exists": true
           },
           {
             "key": "invitations.accept.verifying",
-            "line": 231,
+            "line": 234,
             "exists": true
           },
           {
             "key": "invitations.accept.invalid_title",
-            "line": 245,
+            "line": 248,
             "exists": true
           },
           {
             "key": "invitations.accept.not_found_description",
-            "line": 247,
+            "line": 250,
             "exists": true
           },
           {
             "key": "invitations.accept.go_to_start",
-            "line": 255,
+            "line": 258,
             "exists": true
           },
           {
             "key": "invitations.accept.already_accepted_title",
-            "line": 269,
+            "line": 272,
             "exists": true
           },
           {
             "key": "invitations.accept.already_accepted_description",
-            "line": 271,
+            "line": 274,
             "exists": true
           },
           {
             "key": "invitations.accept.go_to_dashboard",
-            "line": 279,
+            "line": 282,
             "exists": true
           },
           {
             "key": "invitations.accept.title",
-            "line": 292,
+            "line": 295,
             "exists": true
           },
           {
             "key": "invitations.accept.subtitle",
-            "line": 294,
+            "line": 297,
             "exists": true
           },
           {
             "key": "invitations.accept.dealership_label",
-            "line": 305,
+            "line": 308,
             "exists": true
           },
           {
             "key": "invitations.accept.role_label",
-            "line": 313,
+            "line": 316,
             "exists": true
           },
           {
             "key": "invitations.accept.invited_by",
-            "line": 322,
+            "line": 325,
             "exists": true
           },
           {
             "key": "invitations.accept.expires_prefix",
-            "line": 331,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.expiration_warning",
             "line": 334,
             "exists": true
           },
           {
-            "key": "invitations.accept.auth_instructions",
-            "line": 345,
+            "key": "invitations.accept.expiration_warning",
+            "line": 337,
             "exists": true
           },
           {
-            "key": "invitations.accept.step_1",
+            "key": "invitations.accept.auth_instructions",
             "line": 348,
             "exists": true
           },
           {
+            "key": "invitations.accept.step_1",
+            "line": 351,
+            "exists": true
+          },
+          {
             "key": "invitations.accept.step_2",
-            "line": 349,
+            "line": 352,
             "exists": true
           },
           {
             "key": "invitations.accept.create_account",
-            "line": 358,
+            "line": 361,
             "exists": true
           },
           {
             "key": "invitations.accept.sign_in",
-            "line": 365,
+            "line": 368,
             "exists": true
           },
           {
             "key": "invitations.accept.email_mismatch_detail",
-            "line": 373,
+            "line": 376,
             "exists": true
           },
           {
             "key": "invitations.accept.but_logged_as",
-            "line": 373,
+            "line": 376,
             "exists": true
           },
           {
             "key": "invitations.accept.switch_account",
-            "line": 381,
+            "line": 384,
             "exists": true
           },
           {
             "key": "invitations.accept.accepting",
-            "line": 394,
+            "line": 397,
             "exists": true
           },
           {
             "key": "invitations.accept.accept_button",
-            "line": 399,
+            "line": 402,
             "exists": true
           },
           {
             "key": "invitations.accept.decline",
-            "line": 410,
+            "line": 413,
             "exists": true
           }
         ],
@@ -10222,170 +10220,170 @@
         "hardcodedStrings": [
           {
             "text": "Active",
-            "line": 91,
-            "context": "90: <Badge variant=\"outline\">ID: {id}</Badge>\n91: <Badge variant=\"secondary\">Active</Badge>\n92: </div>"
+            "line": 93,
+            "context": "92: <Badge variant=\"outline\">ID: {id}</Badge>\n93: <Badge variant=\"secondary\">Active</Badge>\n94: </div>"
           },
           {
             "text": "Roles",
-            "line": 118,
-            "context": "117: <Shield className=\"h-4 w-4\" />\n118: <span className=\"hidden sm:inline\">Roles</span>\n119: <span className=\"sm:hidden\">Roles</span>"
+            "line": 120,
+            "context": "119: <Shield className=\"h-4 w-4\" />\n120: <span className=\"hidden sm:inline\">Roles</span>\n121: <span className=\"sm:hidden\">Roles</span>"
           },
           {
             "text": "Roles",
-            "line": 119,
-            "context": "118: <span className=\"hidden sm:inline\">Roles</span>\n119: <span className=\"sm:hidden\">Roles</span>\n120: </TabsTrigger>"
+            "line": 121,
+            "context": "120: <span className=\"hidden sm:inline\">Roles</span>\n121: <span className=\"sm:hidden\">Roles</span>\n122: </TabsTrigger>"
           },
           {
             "text": ", error);\r\n      }\r\n    };\r\n\r\n    fetchDealerInfo();\r\n  }, [id]);\r\n\r\n  if (!id) {\r\n    return (\r\n      <div>\r\n        <div className=",
-            "line": 52,
-            "context": "51: } catch (error) {\n52: console.error('Error fetching dealer info:', error);\n53: }"
+            "line": 54,
+            "context": "53: } catch (error) {\n54: console.error('Error fetching dealer info:', error);\n55: }"
           }
         ],
         "translationCalls": [
           {
             "key": "dealer.view.not_found",
-            "line": 64,
+            "line": 66,
             "exists": true
           },
           {
             "key": "dealer.view.not_found_desc",
-            "line": 65,
+            "line": 67,
             "exists": true
           },
           {
             "key": "dealer.view.back_to_list",
-            "line": 69,
+            "line": 71,
             "exists": true
           },
           {
             "key": "dealer.view.back",
-            "line": 86,
+            "line": 88,
             "exists": true
           },
           {
             "key": "dealer.view.loading",
-            "line": 99,
+            "line": 101,
             "exists": true
           },
           {
             "key": "dealer.view.subtitle",
-            "line": 102,
+            "line": 104,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.overview",
-            "line": 113,
+            "line": 115,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.overview_short",
-            "line": 114,
-            "exists": false
+            "line": 116,
+            "exists": true
           },
           {
             "key": "dealer.view.tabs.users",
-            "line": 123,
+            "line": 125,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.users_short",
-            "line": 124,
-            "exists": false
+            "line": 126,
+            "exists": true
           },
           {
-            "key": "dealer.tabs.services",
-            "line": 128,
+            "key": "dealer.view.tabs.invitations",
+            "line": 130,
+            "exists": true
+          },
+          {
+            "key": "dealer.view.tabs.invitations_short",
+            "line": 131,
             "exists": true
           },
           {
             "key": "dealer.tabs.services",
-            "line": 129,
-            "exists": true
-          },
-          {
-            "key": "dealer.modules.title",
-            "line": 134,
-            "exists": true
-          },
-          {
-            "key": "dealer.modules.title",
             "line": 135,
             "exists": true
           },
           {
+            "key": "dealer.tabs.services",
+            "line": 136,
+            "exists": true
+          },
+          {
+            "key": "dealer.modules.title",
+            "line": 141,
+            "exists": true
+          },
+          {
+            "key": "dealer.modules.title",
+            "line": 142,
+            "exists": true
+          },
+          {
             "key": "dealer.view.overview.title",
-            "line": 145,
+            "line": 152,
             "exists": false
           },
           {
             "key": "dealer.view.overview.description",
-            "line": 148,
+            "line": 155,
             "exists": false
           },
           {
             "key": "dealer.view.users.title",
-            "line": 166,
+            "line": 173,
             "exists": false
           },
           {
             "key": "dealer.view.users.description",
-            "line": 169,
+            "line": 176,
             "exists": false
           },
           {
             "key": "services.title",
-            "line": 183,
+            "line": 194,
             "exists": false
           },
           {
             "key": "services.subtitle",
-            "line": 186,
+            "line": 197,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "dealer.view.tabs.overview_short",
-            "line": 114,
-            "context": "113: <span className=\"hidden sm:inline\">{t('dealer.view.tabs.overview')}</span>\n114: <span className=\"sm:hidden\">{t('dealer.view.tabs.overview_short')}</span>\n115: </TabsTrigger>"
-          },
-          {
-            "key": "dealer.view.tabs.users_short",
-            "line": 124,
-            "context": "123: <span className=\"hidden sm:inline\">{t('dealer.view.tabs.users')}</span>\n124: <span className=\"sm:hidden\">{t('dealer.view.tabs.users_short')}</span>\n125: </TabsTrigger>"
-          },
-          {
             "key": "dealer.view.overview.title",
-            "line": 145,
-            "context": "144: <BarChart3 className=\"h-5 w-5\" />\n145: <span>{t('dealer.view.overview.title')}</span>\n146: </CardTitle>"
+            "line": 152,
+            "context": "151: <BarChart3 className=\"h-5 w-5\" />\n152: <span>{t('dealer.view.overview.title')}</span>\n153: </CardTitle>"
           },
           {
             "key": "dealer.view.overview.description",
-            "line": 148,
-            "context": "147: <CardDescription>\n148: {t('dealer.view.overview.description')}\n149: </CardDescription>"
+            "line": 155,
+            "context": "154: <CardDescription>\n155: {t('dealer.view.overview.description')}\n156: </CardDescription>"
           },
           {
             "key": "dealer.view.users.title",
-            "line": 166,
-            "context": "165: <Users className=\"h-5 w-5\" />\n166: <span>{t('dealer.view.users.title')}</span>\n167: </CardTitle>"
+            "line": 173,
+            "context": "172: <Users className=\"h-5 w-5\" />\n173: <span>{t('dealer.view.users.title')}</span>\n174: </CardTitle>"
           },
           {
             "key": "dealer.view.users.description",
-            "line": 169,
-            "context": "168: <CardDescription>\n169: {t('dealer.view.users.description')}\n170: </CardDescription>"
+            "line": 176,
+            "context": "175: <CardDescription>\n176: {t('dealer.view.users.description')}\n177: </CardDescription>"
           },
           {
             "key": "services.title",
-            "line": 183,
-            "context": "182: <Wrench className=\"h-5 w-5\" />\n183: <span>{t('services.title')}</span>\n184: </CardTitle>"
+            "line": 194,
+            "context": "193: <Wrench className=\"h-5 w-5\" />\n194: <span>{t('services.title')}</span>\n195: </CardTitle>"
           },
           {
             "key": "services.subtitle",
-            "line": 186,
-            "context": "185: <CardDescription>\n186: {t('services.subtitle')}\n187: </CardDescription>"
+            "line": 197,
+            "context": "196: <CardDescription>\n197: {t('services.subtitle')}\n198: </CardDescription>"
           }
         ],
-        "coverage": 83,
+        "coverage": 85,
         "severity": "low"
       },
       {
@@ -11372,115 +11370,105 @@
         "translationCalls": [
           {
             "key": "get_ready.templates.work_items_created",
-            "line": 163,
+            "line": 165,
             "exists": true
           },
           {
             "key": "get_ready.templates.error_creating_work_items",
-            "line": 168,
+            "line": 170,
             "exists": true
           },
           {
             "key": "get_ready.templates.template_created",
-            "line": 210,
+            "line": 213,
             "exists": true
           },
           {
             "key": "get_ready.templates.error_creating",
-            "line": 214,
+            "line": 217,
             "exists": true
           },
           {
             "key": "get_ready.templates.template_updated",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "get_ready.templates.error_updating",
             "line": 264,
             "exists": true
           },
           {
-            "key": "get_ready.templates.template_deleted",
-            "line": 293,
+            "key": "get_ready.templates.error_updating",
+            "line": 268,
             "exists": true
           },
           {
-            "key": "get_ready.templates.error_deleting",
+            "key": "get_ready.templates.template_deleted",
             "line": 297,
             "exists": true
           },
           {
-            "key": "get_ready.templates.template_updated",
-            "line": 332,
+            "key": "get_ready.templates.error_deleting",
+            "line": 301,
             "exists": true
           },
           {
-            "key": "get_ready.templates.error_updating",
+            "key": "get_ready.templates.template_updated",
             "line": 336,
             "exists": true
           },
           {
-            "key": "get_ready.templates.template_updated",
-            "line": 371,
+            "key": "get_ready.templates.error_updating",
+            "line": 340,
             "exists": true
           },
           {
-            "key": "get_ready.templates.error_updating",
+            "key": "get_ready.templates.template_updated",
             "line": 375,
             "exists": true
           },
           {
+            "key": "get_ready.templates.error_updating",
+            "line": 379,
+            "exists": true
+          },
+          {
             "key": "get_ready.templates.templates_reordered",
-            "line": 414,
-            "exists": false
+            "line": 418,
+            "exists": true
           },
           {
             "key": "get_ready.templates.error_reordering",
-            "line": 418,
-            "exists": false
+            "line": 422,
+            "exists": true
           },
           {
             "key": "get_ready.templates.template_duplicated",
-            "line": 471,
+            "line": 476,
             "exists": false
           },
           {
             "key": "get_ready.templates.error_duplicating",
-            "line": 475,
+            "line": 480,
             "exists": false
           },
           {
             "key": "get_ready.work_items.templates_added",
-            "line": 544,
+            "line": 549,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_adding_from_templates",
-            "line": 549,
+            "line": 554,
             "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "get_ready.templates.templates_reordered",
-            "line": 414,
-            "context": "413: queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });\n414: toast.success(t('get_ready.templates.templates_reordered'));\n415: },"
-          },
-          {
-            "key": "get_ready.templates.error_reordering",
-            "line": 418,
-            "context": "417: console.error('Error reordering templates:', error);\n418: toast.error(t('get_ready.templates.error_reordering'));\n419: },"
-          },
-          {
             "key": "get_ready.templates.template_duplicated",
-            "line": 471,
-            "context": "470: queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });\n471: toast.success(t('get_ready.templates.template_duplicated'));\n472: },"
+            "line": 476,
+            "context": "475: queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });\n476: toast.success(t('get_ready.templates.template_duplicated'));\n477: },"
           },
           {
             "key": "get_ready.templates.error_duplicating",
-            "line": 475,
-            "context": "474: console.error('Error duplicating template:', error);\n475: toast.error(t('get_ready.templates.error_duplicating'));\n476: },"
+            "line": 480,
+            "context": "479: console.error('Error duplicating template:', error);\n480: toast.error(t('get_ready.templates.error_duplicating'));\n481: },"
           }
         ],
         "coverage": 100,
@@ -13786,22 +13774,22 @@
           },
           {
             "key": "pages.user_management",
-            "line": 89,
+            "line": 90,
             "exists": true
           },
           {
             "key": "app.logout",
-            "line": 98,
+            "line": 99,
             "exists": false
           },
           {
             "key": "landing.navigation.learn_more",
-            "line": 107,
+            "line": 108,
             "exists": false
           },
           {
             "key": "landing.navigation.start_trial",
-            "line": 110,
+            "line": 111,
             "exists": false
           }
         ],
@@ -13838,18 +13826,18 @@
           },
           {
             "key": "app.logout",
-            "line": 98,
-            "context": "97: <LogOut className=\"h-4 w-4\" />\n98: {t('app.logout')}\n99: </DropdownMenuItem>"
+            "line": 99,
+            "context": "98: <LogOut className=\"h-4 w-4\" />\n99: {t('app.logout')}\n100: </DropdownMenuItem>"
           },
           {
             "key": "landing.navigation.learn_more",
-            "line": 107,
-            "context": "106: <Button variant=\"outline\" size=\"sm\">\n107: {t('landing.navigation.learn_more')}\n108: </Button>"
+            "line": 108,
+            "context": "107: <Button variant=\"outline\" size=\"sm\">\n108: {t('landing.navigation.learn_more')}\n109: </Button>"
           },
           {
             "key": "landing.navigation.start_trial",
-            "line": 110,
-            "context": "109: <Button asChild size=\"sm\">\n110: <Link to=\"/auth\">{t('landing.navigation.start_trial')}</Link>\n111: </Button>"
+            "line": 111,
+            "context": "110: <Button asChild size=\"sm\">\n111: <Link to=\"/auth\">{t('landing.navigation.start_trial')}</Link>\n112: </Button>"
           }
         ],
         "coverage": 100,
@@ -28929,92 +28917,92 @@
         "hardcodedStrings": [
           {
             "text": ", orderDetailsQuery.error);\r\n      toast.error(t(",
-            "line": 473,
-            "context": "472: if (orderDetailsQuery.error) {\n473: console.error('Order polling error:', orderDetailsQuery.error);\n474: toast.error(t('orders.polling_error') || 'Failed to refresh order data');"
+            "line": 364,
+            "context": "363: if (orderDetailsQuery.error) {\n364: console.error('Order polling error:', orderDetailsQuery.error);\n365: toast.error(t('orders.polling_error') || 'Failed to refresh order data');"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.edit",
-            "line": 297,
+            "line": 188,
             "exists": true
           },
           {
             "key": "common.unassigned",
-            "line": 319,
+            "line": 210,
             "exists": false
           },
           {
             "key": "orders.polling_error",
-            "line": 474,
+            "line": 365,
             "exists": true
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 554,
+            "line": 445,
             "exists": false
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 567,
+            "line": 458,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 575,
+            "line": 466,
             "exists": false
           },
           {
             "key": "orders.print",
-            "line": 668,
+            "line": 559,
             "exists": false
           },
           {
             "key": "orders.download",
-            "line": 677,
+            "line": 568,
             "exists": false
           },
           {
             "key": "common.close",
-            "line": 688,
+            "line": 579,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.unassigned",
-            "line": 319,
-            "context": "318: <div className=\"text-sm font-medium text-gray-700\">\n319: {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || t('common.unassigned')}\n320: </div>"
+            "line": 210,
+            "context": "209: <div className=\"text-sm font-medium text-gray-700\">\n210: {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || t('common.unassigned')}\n211: </div>"
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 554,
-            "context": "553: \n554: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n555: }, [orderData, t]);"
+            "line": 445,
+            "context": "444: \n445: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n446: }, [orderData, t]);"
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 567,
-            "context": "566: <DialogTitle className=\"sr-only\">\n567: {t('orders.order_details_modal_title', {\n568: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 458,
+            "context": "457: <DialogTitle className=\"sr-only\">\n458: {t('orders.order_details_modal_title', {\n459: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 575,
-            "context": "574: <DialogDescription className=\"sr-only\">\n575: {t('orders.order_details_description', {\n576: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
+            "line": 466,
+            "context": "465: <DialogDescription className=\"sr-only\">\n466: {t('orders.order_details_description', {\n467: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.print",
-            "line": 668,
-            "context": "667: <Printer className=\"h-4 w-4\" />\n668: {t('orders.print')}\n669: </Button>"
+            "line": 559,
+            "context": "558: <Printer className=\"h-4 w-4\" />\n559: {t('orders.print')}\n560: </Button>"
           },
           {
             "key": "orders.download",
-            "line": 677,
-            "context": "676: <Download className=\"h-4 w-4\" />\n677: {t('orders.download')}\n678: </Button>"
+            "line": 568,
+            "context": "567: <Download className=\"h-4 w-4\" />\n568: {t('orders.download')}\n569: </Button>"
           },
           {
             "key": "common.close",
-            "line": 688,
-            "context": "687: >\n688: {t('common.close')}\n689: </Button>"
+            "line": 579,
+            "context": "578: >\n579: {t('common.close')}\n580: </Button>"
           }
         ],
         "coverage": 90,
@@ -30223,90 +30211,90 @@
         "translationCalls": [
           {
             "key": "data_table.no_stock",
-            "line": 29,
+            "line": 32,
             "exists": true
           },
           {
             "key": "common.not_assigned",
-            "line": 34,
+            "line": 37,
             "exists": true
           },
           {
             "key": "common.not_specified",
-            "line": 35,
+            "line": 38,
             "exists": false
           },
           {
             "key": "recon_orders.recon_information",
-            "line": 52,
+            "line": 55,
             "exists": false
           },
           {
             "key": "recon_orders.service_performer",
-            "line": 62,
+            "line": 65,
             "exists": false
           },
           {
             "key": "common.assigned",
-            "line": 72,
+            "line": 75,
             "exists": true
           },
           {
             "key": "common.not_assigned",
-            "line": 72,
+            "line": 75,
             "exists": true
           },
           {
             "key": "common.stock_number",
-            "line": 83,
+            "line": 86,
             "exists": false
           },
           {
             "key": "common.available",
-            "line": 93,
+            "line": 96,
             "exists": false
           },
           {
             "key": "common.not_assigned",
-            "line": 93,
+            "line": 96,
             "exists": true
           },
           {
             "key": "recon_orders.recon_type",
-            "line": 104,
+            "line": 107,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.not_specified",
-            "line": 35,
-            "context": "34: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n35: reconType: order.recon_type || order.reconType || t('common.not_specified'),\n36: hasServicePerformer: !!(order.service_performer || order.servicePerformer)"
+            "line": 38,
+            "context": "37: servicePerformer: order.service_performer || order.servicePerformer || t('common.not_assigned'),\n38: reconType: order.recon_type || order.reconType || t('common.not_specified'),\n39: hasServicePerformer: !!(order.service_performer || order.servicePerformer)"
           },
           {
             "key": "recon_orders.recon_information",
-            "line": 52,
-            "context": "51: <RefreshCw className=\"h-5 w-5 text-gray-700\" />\n52: {t('recon_orders.recon_information')}\n53: </CardTitle>"
+            "line": 55,
+            "context": "54: <RefreshCw className=\"h-5 w-5 text-gray-700\" />\n55: {t('recon_orders.recon_information')}\n56: </CardTitle>"
           },
           {
             "key": "recon_orders.service_performer",
-            "line": 62,
-            "context": "61: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n62: {t('recon_orders.service_performer')}\n63: </p>"
+            "line": 65,
+            "context": "64: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n65: {t('recon_orders.service_performer')}\n66: </p>"
           },
           {
             "key": "common.stock_number",
-            "line": 83,
-            "context": "82: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n83: {t('common.stock_number')}\n84: </p>"
+            "line": 86,
+            "context": "85: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n86: {t('common.stock_number')}\n87: </p>"
           },
           {
             "key": "common.available",
-            "line": 93,
-            "context": "92: >\n93: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n94: </Badge>"
+            "line": 96,
+            "context": "95: >\n96: {stockInfo.hasStock ? t('common.available') : t('common.not_assigned')}\n97: </Badge>"
           },
           {
             "key": "recon_orders.recon_type",
-            "line": 104,
-            "context": "103: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n104: {t('recon_orders.recon_type')}\n105: </p>"
+            "line": 107,
+            "context": "106: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n107: {t('recon_orders.recon_type')}\n108: </p>"
           }
         ],
         "coverage": 100,
@@ -30316,14 +30304,19 @@
         "file": "src\\components\\orders\\RecentActivityBlock.tsx",
         "hardcodedStrings": [
           {
+            "text": "Click to retry",
+            "line": 375,
+            "context": "374: className=\"text-xs underline hover:no-underline transition-all\"\n375: >\n376: Click to retry"
+          },
+          {
             "text": "No recent activity",
-            "line": 341,
-            "context": "340: <Activity className=\"h-8 w-8 mx-auto mb-2 opacity-50\" />\n341: <p className=\"text-sm\">No recent activity</p>\n342: <p className=\"text-xs\">Activity will appear here</p>"
+            "line": 382,
+            "context": "381: <Activity className=\"h-8 w-8 mx-auto mb-2 opacity-50\" />\n382: <p className=\"text-sm\">No recent activity</p>\n383: <p className=\"text-xs\">Activity will appear here</p>"
           },
           {
             "text": "Activity will appear here",
-            "line": 342,
-            "context": "341: <p className=\"text-sm\">No recent activity</p>\n342: <p className=\"text-xs\">Activity will appear here</p>\n343: </div>"
+            "line": 383,
+            "context": "382: <p className=\"text-sm\">No recent activity</p>\n383: <p className=\"text-xs\">Activity will appear here</p>\n384: </div>"
           }
         ],
         "translationCalls": [],
@@ -30958,142 +30951,142 @@
         "hardcodedStrings": [
           {
             "text": "Resumen de la Orden",
-            "line": 290,
-            "context": "289: <CardHeader className=\"pb-4\">\n290: <CardTitle>Resumen de la Orden</CardTitle>\n291: </CardHeader>"
+            "line": 330,
+            "context": "329: <CardHeader className=\"pb-4\">\n330: <CardTitle>Resumen de la Orden</CardTitle>\n331: </CardHeader>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.edit",
-            "line": 97,
+            "line": 137,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 107,
+            "line": 147,
             "exists": false
           },
           {
             "key": "orders.customerInfo",
-            "line": 131,
+            "line": 171,
             "exists": false
           },
           {
             "key": "orders.customerName",
-            "line": 138,
+            "line": 178,
             "exists": true
           },
           {
             "key": "orders.customerEmail",
-            "line": 145,
+            "line": 185,
             "exists": false
           },
           {
             "key": "orders.customerPhone",
-            "line": 156,
+            "line": 196,
             "exists": false
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 173,
+            "line": 213,
             "exists": true
           },
           {
             "key": "orders.year",
-            "line": 181,
+            "line": 221,
             "exists": false
           },
           {
             "key": "orders.make",
-            "line": 189,
+            "line": 229,
             "exists": false
           },
           {
             "key": "orders.model",
-            "line": 197,
+            "line": 237,
             "exists": false
           },
           {
             "key": "orders.stockNumber",
-            "line": 215,
+            "line": 255,
             "exists": false
           },
           {
             "key": "orders.additionalInfo",
-            "line": 224,
+            "line": 264,
             "exists": false
           },
           {
             "key": "orders.services",
-            "line": 239,
+            "line": 279,
             "exists": true
           },
           {
             "key": "orders.noServices",
-            "line": 261,
+            "line": 301,
             "exists": false
           },
           {
             "key": "orders.notes",
-            "line": 273,
+            "line": 313,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.edit",
-            "line": 97,
-            "context": "96: <Edit className=\"w-4 h-4\" />\n97: {t('common.edit')}\n98: </Button>"
+            "line": 137,
+            "context": "136: <Edit className=\"w-4 h-4\" />\n137: {t('common.edit')}\n138: </Button>"
           },
           {
             "key": "common.delete",
-            "line": 107,
-            "context": "106: <Trash2 className=\"w-4 h-4\" />\n107: {t('common.delete')}\n108: </Button>"
+            "line": 147,
+            "context": "146: <Trash2 className=\"w-4 h-4\" />\n147: {t('common.delete')}\n148: </Button>"
           },
           {
             "key": "orders.customerInfo",
-            "line": 131,
-            "context": "130: <User className=\"w-5 h-5\" />\n131: {t('orders.customerInfo')}\n132: </CardTitle>"
+            "line": 171,
+            "context": "170: <User className=\"w-5 h-5\" />\n171: {t('orders.customerInfo')}\n172: </CardTitle>"
           },
           {
             "key": "orders.customerEmail",
-            "line": 145,
-            "context": "144: <label className=\"text-sm font-medium text-muted-foreground\">\n145: {t('orders.customerEmail')}\n146: </label>"
+            "line": 185,
+            "context": "184: <label className=\"text-sm font-medium text-muted-foreground\">\n185: {t('orders.customerEmail')}\n186: </label>"
           },
           {
             "key": "orders.customerPhone",
-            "line": 156,
-            "context": "155: <label className=\"text-sm font-medium text-muted-foreground\">\n156: {t('orders.customerPhone')}\n157: </label>"
+            "line": 196,
+            "context": "195: <label className=\"text-sm font-medium text-muted-foreground\">\n196: {t('orders.customerPhone')}\n197: </label>"
           },
           {
             "key": "orders.year",
-            "line": 181,
-            "context": "180: <label className=\"text-sm font-medium text-muted-foreground\">\n181: {t('orders.year')}\n182: </label>"
+            "line": 221,
+            "context": "220: <label className=\"text-sm font-medium text-muted-foreground\">\n221: {t('orders.year')}\n222: </label>"
           },
           {
             "key": "orders.make",
-            "line": 189,
-            "context": "188: <label className=\"text-sm font-medium text-muted-foreground\">\n189: {t('orders.make')}\n190: </label>"
+            "line": 229,
+            "context": "228: <label className=\"text-sm font-medium text-muted-foreground\">\n229: {t('orders.make')}\n230: </label>"
           },
           {
             "key": "orders.model",
-            "line": 197,
-            "context": "196: <label className=\"text-sm font-medium text-muted-foreground\">\n197: {t('orders.model')}\n198: </label>"
+            "line": 237,
+            "context": "236: <label className=\"text-sm font-medium text-muted-foreground\">\n237: {t('orders.model')}\n238: </label>"
           },
           {
             "key": "orders.stockNumber",
-            "line": 215,
-            "context": "214: <label className=\"text-sm font-medium text-muted-foreground\">\n215: {t('orders.stockNumber')}\n216: </label>"
+            "line": 255,
+            "context": "254: <label className=\"text-sm font-medium text-muted-foreground\">\n255: {t('orders.stockNumber')}\n256: </label>"
           },
           {
             "key": "orders.additionalInfo",
-            "line": 224,
-            "context": "223: <label className=\"text-sm font-medium text-muted-foreground\">\n224: {t('orders.additionalInfo')}\n225: </label>"
+            "line": 264,
+            "context": "263: <label className=\"text-sm font-medium text-muted-foreground\">\n264: {t('orders.additionalInfo')}\n265: </label>"
           },
           {
             "key": "orders.noServices",
-            "line": 261,
-            "context": "260: <p className=\"text-muted-foreground italic\">\n261: {t('orders.noServices')}\n262: </p>"
+            "line": 301,
+            "context": "300: <p className=\"text-muted-foreground italic\">\n301: {t('orders.noServices')}\n302: </p>"
           }
         ],
         "coverage": 94,
@@ -31750,52 +31743,52 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n        return `$${amount.toFixed(2)}`;\r\n      }\r\n    };\r\n  }, []);\r\n\r\n  const getPriorityColor = useMemo(() => (priority: string) => {\r\n    const normalizedPriority = priority?.toLowerCase();\r\n    switch (normalizedPriority) {\r\n      case ",
-            "line": 228,
-            "context": "227: } catch (error) {\n228: console.warn('Currency formatting error:', error);\n229: return `$${amount.toFixed(2)}`;"
+            "line": 271,
+            "context": "270: } catch (error) {\n271: console.warn('Currency formatting error:', error);\n272: return `$${amount.toFixed(2)}`;"
           }
         ],
         "translationCalls": [
           {
             "key": "messages.notes_updated_successfully",
-            "line": 164,
+            "line": 207,
             "exists": false
           },
           {
             "key": "messages.error_updating_notes",
-            "line": 181,
+            "line": 224,
             "exists": false
           },
           {
             "key": "attachments.uploadSuccess",
-            "line": 193,
+            "line": 236,
             "exists": false
           },
           {
             "key": "attachments.deleteSuccess",
-            "line": 207,
+            "line": 250,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "messages.notes_updated_successfully",
-            "line": 164,
-            "context": "163: \n164: toast.success(t('messages.notes_updated_successfully'));\n165: recordMetric('notes-update-success', 1);"
+            "line": 207,
+            "context": "206: \n207: toast.success(t('messages.notes_updated_successfully'));\n208: recordMetric('notes-update-success', 1);"
           },
           {
             "key": "messages.error_updating_notes",
-            "line": 181,
-            "context": "180: console.error('Error updating notes:', error);\n181: toast.error(t('messages.error_updating_notes'));\n182: recordMetric('notes-update-error', 1);"
+            "line": 224,
+            "context": "223: console.error('Error updating notes:', error);\n224: toast.error(t('messages.error_updating_notes'));\n225: recordMetric('notes-update-error', 1);"
           },
           {
             "key": "attachments.uploadSuccess",
-            "line": 193,
-            "context": "192: handleAttachmentUploaded(newAttachment);\n193: toast.success(t('attachments.uploadSuccess'));\n194: recordMetric('attachment-upload-success', 1);"
+            "line": 236,
+            "context": "235: handleAttachmentUploaded(newAttachment);\n236: toast.success(t('attachments.uploadSuccess'));\n237: recordMetric('attachment-upload-success', 1);"
           },
           {
             "key": "attachments.deleteSuccess",
-            "line": 207,
-            "context": "206: handleAttachmentDeleted(attachmentId);\n207: toast.success(t('attachments.deleteSuccess'));\n208: recordMetric('attachment-delete-success', 1);"
+            "line": 250,
+            "context": "249: handleAttachmentDeleted(attachmentId);\n250: toast.success(t('attachments.deleteSuccess'));\n251: recordMetric('attachment-delete-success', 1);"
           }
         ],
         "coverage": 80,
@@ -31882,45 +31875,45 @@
         "translationCalls": [
           {
             "key": "messages.notes_updated_successfully",
-            "line": 86,
+            "line": 128,
             "exists": false
           },
           {
             "key": "messages.error_updating_notes",
-            "line": 95,
+            "line": 137,
             "exists": false
           },
           {
             "key": "attachments.uploadSuccess",
-            "line": 102,
+            "line": 144,
             "exists": false
           },
           {
             "key": "attachments.deleteSuccess",
-            "line": 107,
+            "line": 149,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "messages.notes_updated_successfully",
-            "line": 86,
-            "context": "85: \n86: toast.success(t('messages.notes_updated_successfully'));\n87: "
+            "line": 128,
+            "context": "127: \n128: toast.success(t('messages.notes_updated_successfully'));\n129: "
           },
           {
             "key": "messages.error_updating_notes",
-            "line": 95,
-            "context": "94: console.error('Error updating notes:', error);\n95: toast.error(t('messages.error_updating_notes'));\n96: }"
+            "line": 137,
+            "context": "136: console.error('Error updating notes:', error);\n137: toast.error(t('messages.error_updating_notes'));\n138: }"
           },
           {
             "key": "attachments.uploadSuccess",
-            "line": 102,
-            "context": "101: handleAttachmentUploaded(newAttachment);\n102: toast.success(t('attachments.uploadSuccess'));\n103: }, [handleAttachmentUploaded, t]);"
+            "line": 144,
+            "context": "143: handleAttachmentUploaded(newAttachment);\n144: toast.success(t('attachments.uploadSuccess'));\n145: }, [handleAttachmentUploaded, t]);"
           },
           {
             "key": "attachments.deleteSuccess",
-            "line": 107,
-            "context": "106: handleAttachmentDeleted(attachmentId);\n107: toast.success(t('attachments.deleteSuccess'));\n108: }, [handleAttachmentDeleted, t]);"
+            "line": 149,
+            "context": "148: handleAttachmentDeleted(attachmentId);\n149: toast.success(t('attachments.deleteSuccess'));\n150: }, [handleAttachmentDeleted, t]);"
           }
         ],
         "coverage": 100,
@@ -32469,85 +32462,85 @@
         "translationCalls": [
           {
             "key": "common.not_assigned",
-            "line": 30,
+            "line": 33,
             "exists": true
           },
           {
             "key": "common.not_assigned",
-            "line": 32,
+            "line": 35,
             "exists": true
           },
           {
             "key": "car_wash_orders.standard_wash",
-            "line": 35,
+            "line": 38,
             "exists": false
           },
           {
             "key": "car_wash_orders.car_wash_information",
-            "line": 54,
+            "line": 57,
             "exists": false
           },
           {
             "key": "car_wash_orders.service_performer",
-            "line": 64,
+            "line": 67,
             "exists": false
           },
           {
             "key": "common.assigned",
-            "line": 74,
+            "line": 77,
             "exists": true
           },
           {
             "key": "common.not_assigned",
-            "line": 74,
+            "line": 77,
             "exists": true
           },
           {
             "key": "common.assigned",
-            "line": 95,
+            "line": 98,
             "exists": true
           },
           {
             "key": "common.not_assigned",
-            "line": 95,
+            "line": 98,
             "exists": true
           },
           {
             "key": "car_wash_orders.service_type",
-            "line": 106,
+            "line": 109,
             "exists": false
           },
           {
             "key": "car_wash_orders.waiter",
-            "line": 114,
+            "line": 117,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "car_wash_orders.standard_wash",
-            "line": 35,
-            "context": "34: isWaiter: order.is_waiter || order.isWaiter || false,\n35: serviceType: order.service_type || order.serviceType || t('car_wash_orders.standard_wash')\n36: }), ["
+            "line": 38,
+            "context": "37: isWaiter: order.is_waiter || order.isWaiter || false,\n38: serviceType: order.service_type || order.serviceType || t('car_wash_orders.standard_wash')\n39: }), ["
           },
           {
             "key": "car_wash_orders.car_wash_information",
-            "line": 54,
-            "context": "53: <Droplets className=\"h-5 w-5 text-gray-700\" />\n54: {t('car_wash_orders.car_wash_information')}\n55: </CardTitle>"
+            "line": 57,
+            "context": "56: <Droplets className=\"h-5 w-5 text-gray-700\" />\n57: {t('car_wash_orders.car_wash_information')}\n58: </CardTitle>"
           },
           {
             "key": "car_wash_orders.service_performer",
-            "line": 64,
-            "context": "63: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n64: {t('car_wash_orders.service_performer')}\n65: </p>"
+            "line": 67,
+            "context": "66: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n67: {t('car_wash_orders.service_performer')}\n68: </p>"
           },
           {
             "key": "car_wash_orders.service_type",
-            "line": 106,
-            "context": "105: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n106: {t('car_wash_orders.service_type')}\n107: </p>"
+            "line": 109,
+            "context": "108: <p className=\"text-xs text-muted-foreground uppercase tracking-wide\">\n109: {t('car_wash_orders.service_type')}\n110: </p>"
           },
           {
             "key": "car_wash_orders.waiter",
-            "line": 114,
-            "context": "113: <Badge variant=\"secondary\" className=\"text-xs\">\n114: {t('car_wash_orders.waiter')}\n115: </Badge>"
+            "line": 117,
+            "context": "116: <Badge variant=\"secondary\" className=\"text-xs\">\n117: {t('car_wash_orders.waiter')}\n118: </Badge>"
           }
         ],
         "coverage": 100,
@@ -37252,7 +37245,7 @@
           {
             "key": "user_management.description",
             "line": 30,
-            "context": "29: label: t('management.user_management'),\n30: description: t('user_management.description'),\n31: action: () => navigate('/users'),"
+            "context": "29: label: t('management.user_management'),\n30: description: t('user_management.description'),\n31: action: () => navigate('/dealerships'), // Changed from /users - user management now in each dealer page"
           },
           {
             "key": "management.dealership_management",
@@ -37474,185 +37467,205 @@
         "hardcodedStrings": [
           {
             "text": "Auto",
-            "line": 224,
-            "context": "223: {template.auto_assign && (\n224: <Badge variant=\"secondary\" className=\"text-xs\">\n225: Auto"
+            "line": 225,
+            "context": "224: {template.auto_assign && (\n225: <Badge variant=\"secondary\" className=\"text-xs\">\n226: Auto"
           },
           {
             "text": "Active",
-            "line": 258,
-            "context": "257: <div className=\"flex items-center gap-2\">\n258: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n259: Active"
+            "line": 259,
+            "context": "258: <div className=\"flex items-center gap-2\">\n259: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n260: Active"
           },
           {
             "text": "Normal",
-            "line": 385,
-            "context": "384: <SelectItem value=\"1\">Low</SelectItem>\n385: <SelectItem value=\"2\">Normal</SelectItem>\n386: <SelectItem value=\"3\">High</SelectItem>"
+            "line": 413,
+            "context": "412: <SelectItem value=\"1\">Low</SelectItem>\n413: <SelectItem value=\"2\">Normal</SelectItem>\n414: <SelectItem value=\"3\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 386,
-            "context": "385: <SelectItem value=\"2\">Normal</SelectItem>\n386: <SelectItem value=\"3\">High</SelectItem>\n387: </SelectContent>"
+            "line": 414,
+            "context": "413: <SelectItem value=\"2\">Normal</SelectItem>\n414: <SelectItem value=\"3\">High</SelectItem>\n415: </SelectContent>"
           },
           {
             "text": "Active\r\n          ",
-            "line": 258,
-            "context": "257: <div className=\"flex items-center gap-2\">\n258: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n259: Active"
+            "line": 259,
+            "context": "258: <div className=\"flex items-center gap-2\">\n259: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n260: Active"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.templates.title",
-            "line": 98,
+            "line": 99,
             "exists": true
           },
           {
             "key": "get_ready.templates.subtitle",
-            "line": 101,
+            "line": 102,
             "exists": true
           },
           {
             "key": "get_ready.templates.add_template",
-            "line": 106,
+            "line": 107,
             "exists": true
           },
           {
             "key": "get_ready.templates.preview",
-            "line": 115,
+            "line": 116,
             "exists": true
           },
           {
             "key": "get_ready.templates.preview_desc",
-            "line": 118,
+            "line": 119,
             "exists": true
           },
           {
             "key": "get_ready.templates.active_templates",
-            "line": 128,
+            "line": 129,
             "exists": true
           },
           {
             "key": "get_ready.templates.no_templates",
-            "line": 134,
-            "exists": true
-          },
-          {
-            "key": "get_ready.templates.create_first",
             "line": 135,
             "exists": true
           },
           {
+            "key": "get_ready.templates.create_first",
+            "line": 136,
+            "exists": true
+          },
+          {
             "key": "get_ready.templates.inactive_templates",
-            "line": 156,
+            "line": 157,
             "exists": true
           },
           {
             "key": "get_ready.templates.confirm_delete",
-            "line": 208,
+            "line": 209,
             "exists": true
           },
           {
             "key": "get_ready.templates.auto_assign",
-            "line": 247,
+            "line": 248,
             "exists": true
           },
           {
             "key": "get_ready.templates.edit_template",
-            "line": 328,
-            "exists": true
-          },
-          {
-            "key": "get_ready.templates.add_template",
-            "line": 328,
-            "exists": true
-          },
-          {
-            "key": "get_ready.templates.template_form_description",
             "line": 331,
             "exists": true
           },
           {
+            "key": "get_ready.templates.add_template",
+            "line": 331,
+            "exists": true
+          },
+          {
+            "key": "get_ready.templates.template_form_description",
+            "line": 334,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.title",
-            "line": 338,
+            "line": 340,
             "exists": true
           },
           {
             "key": "get_ready.work_items.title_placeholder",
-            "line": 343,
+            "line": 345,
             "exists": true
           },
           {
             "key": "get_ready.work_items.work_type",
-            "line": 349,
+            "line": 352,
             "exists": true
           },
           {
-            "key": "get_ready.work_items.description",
-            "line": 366,
+            "key": "get_ready.templates.associated_step",
+            "line": 368,
             "exists": true
           },
           {
-            "key": "get_ready.work_items.description_placeholder",
-            "line": 371,
+            "key": "get_ready.templates.select_step",
+            "line": 374,
             "exists": true
           },
           {
-            "key": "get_ready.work_items.priority",
+            "key": "get_ready.templates.global_template",
             "line": 378,
             "exists": true
           },
           {
+            "key": "get_ready.templates.step_association_help",
+            "line": 388,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.description",
+            "line": 394,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.description_placeholder",
+            "line": 399,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.priority",
+            "line": 406,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.estimated_hours",
-            "line": 392,
+            "line": 420,
             "exists": true
           },
           {
             "key": "get_ready.work_items.estimated_cost",
-            "line": 404,
+            "line": 432,
             "exists": true
           },
           {
             "key": "get_ready.templates.auto_assign",
-            "line": 424,
+            "line": 452,
             "exists": true
           },
           {
             "key": "get_ready.templates.auto_assign_desc",
-            "line": 426,
+            "line": 454,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approval_required",
-            "line": 438,
+            "line": 466,
             "exists": true
           },
           {
             "key": "common.actions.cancel",
-            "line": 446,
+            "line": 474,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 449,
+            "line": 477,
             "exists": true
           },
           {
             "key": "common.actions.save",
-            "line": 449,
+            "line": 477,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.actions.cancel",
-            "line": 446,
-            "context": "445: <Button type=\"button\" variant=\"outline\" onClick={() => onOpenChange(false)}>\n446: {t('common.actions.cancel')}\n447: </Button>"
+            "line": 474,
+            "context": "473: <Button type=\"button\" variant=\"outline\" onClick={() => onOpenChange(false)}>\n474: {t('common.actions.cancel')}\n475: </Button>"
           },
           {
             "key": "common.actions.save",
-            "line": 449,
-            "context": "448: <Button type=\"submit\" disabled={createTemplate.isPending || updateTemplate.isPending}>\n449: {createTemplate.isPending || updateTemplate.isPending ? t('common.loading') : t('common.actions.save')}\n450: </Button>"
+            "line": 477,
+            "context": "476: <Button type=\"submit\" disabled={createTemplate.isPending || updateTemplate.isPending}>\n477: {createTemplate.isPending || updateTemplate.isPending ? t('common.loading') : t('common.actions.save')}\n478: </Button>"
           }
         ],
-        "coverage": 85,
+        "coverage": 86,
         "severity": "low"
       },
       {
@@ -38021,67 +38034,67 @@
         "hardcodedStrings": [
           {
             "text": "Default",
-            "line": 137,
-            "context": "136: {step.is_default && (\n137: <Badge variant=\"outline\" className=\"bg-gray-50 text-gray-700 border-gray-200\">\n138: Default"
+            "line": 282,
+            "context": "281: {step.is_default && (\n282: <Badge variant=\"outline\" className=\"bg-gray-50 text-gray-700 border-gray-200\">\n283: Default"
           },
           {
             "text": "Vehicles",
-            "line": 194,
-            "context": "193: <div>\n194: <p className=\"text-xs text-gray-500\">Vehicles</p>\n195: <p className=\"text-sm font-semibold text-gray-900\">"
+            "line": 339,
+            "context": "338: <div>\n339: <p className=\"text-xs text-gray-500\">Vehicles</p>\n340: <p className=\"text-sm font-semibold text-gray-900\">"
           }
         ],
         "translationCalls": [
           {
             "key": "messages.error.generic",
-            "line": 71,
+            "line": 126,
             "exists": false
           },
           {
             "key": "get_ready.setup.no_steps_title",
-            "line": 85,
+            "line": 140,
             "exists": true
           },
           {
             "key": "get_ready.setup.no_steps_description",
-            "line": 88,
+            "line": 143,
             "exists": true
           },
           {
             "key": "get_ready.setup.add_step",
-            "line": 101,
+            "line": 156,
             "exists": true
           },
           {
             "key": "get_ready.setup.delete_confirm_title",
-            "line": 218,
+            "line": 195,
             "exists": true
           },
           {
             "key": "get_ready.setup.delete_confirm_message",
-            "line": 220,
+            "line": 197,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 225,
+            "line": 202,
             "exists": true
           },
           {
             "key": "common.status.loading",
-            "line": 232,
+            "line": 209,
             "exists": true
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 232,
+            "line": 209,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "messages.error.generic",
-            "line": 71,
-            "context": "70: <p className=\"text-sm font-medium\">\n71: {t('messages.error.generic')}\n72: </p>"
+            "line": 126,
+            "context": "125: <p className=\"text-sm font-medium\">\n126: {t('messages.error.generic')}\n127: </p>"
           }
         ],
         "coverage": 82,
@@ -39765,190 +39778,170 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 93,
+            "line": 129,
             "exists": false
           },
           {
             "key": "messages.required_field",
-            "line": 94,
+            "line": 130,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 102,
+            "line": 138,
             "exists": false
           },
           {
             "key": "invitations.accept.auth_required_desc",
-            "line": 103,
+            "line": 139,
             "exists": true
           },
           {
-            "key": "roles.${roleName}",
-            "line": 142,
-            "exists": false
-          },
-          {
             "key": "common.success",
-            "line": 172,
+            "line": 211,
             "exists": false
           },
           {
             "key": "invitations.invitation_created_email_failed",
-            "line": 173,
+            "line": 212,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 178,
+            "line": 217,
             "exists": false
           },
           {
             "key": "invitations.invitation_sent",
-            "line": 179,
+            "line": 218,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 192,
+            "line": 231,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 193,
+            "line": 232,
             "exists": true
           },
           {
             "key": "invitations.send_invitation",
-            "line": 224,
+            "line": 264,
             "exists": true
           },
           {
             "key": "invitations.invite_user_to",
-            "line": 228,
+            "line": 268,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 238,
+            "line": 278,
             "exists": true
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 246,
+            "line": 286,
             "exists": false
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 253,
+            "line": 293,
             "exists": false
           },
           {
             "key": "invitations.email",
-            "line": 267,
+            "line": 307,
             "exists": true
           },
           {
             "key": "invitations.email_placeholder",
-            "line": 273,
+            "line": 313,
             "exists": true
           },
           {
             "key": "invitations.role",
-            "line": 287,
-            "exists": true
-          },
-          {
-            "key": "invitations.select_role",
-            "line": 290,
-            "exists": true
-          },
-          {
-            "key": "invitations.${role.key}",
-            "line": 296,
-            "exists": false
-          },
-          {
-            "key": "invitations.${selectedRoleInfo.key}",
-            "line": 308,
-            "exists": false
-          },
-          {
-            "key": "common.cancel",
-            "line": 321,
-            "exists": false
-          },
-          {
-            "key": "invitations.sending",
             "line": 327,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 336,
+            "exists": true
+          },
+          {
+            "key": "invitations.select_role",
+            "line": 339,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 346,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 385,
+            "exists": false
+          },
+          {
+            "key": "invitations.sending",
+            "line": 391,
+            "exists": true
+          },
+          {
             "key": "invitations.send",
-            "line": 332,
+            "line": 396,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.error",
-            "line": 93,
-            "context": "92: toast({\n93: title: t('common.error'),\n94: description: t('messages.required_field'),"
+            "line": 129,
+            "context": "128: toast({\n129: title: t('common.error'),\n130: description: t('messages.required_field'),"
           },
           {
             "key": "messages.required_field",
-            "line": 94,
-            "context": "93: title: t('common.error'),\n94: description: t('messages.required_field'),\n95: variant: 'destructive',"
+            "line": 130,
+            "context": "129: title: t('common.error'),\n130: description: t('messages.required_field'),\n131: variant: 'destructive',"
           },
           {
             "key": "common.error",
-            "line": 102,
-            "context": "101: toast({\n102: title: t('common.error'),\n103: description: t('invitations.accept.auth_required_desc'),"
-          },
-          {
-            "key": "roles.${roleName}",
-            "line": 142,
-            "context": "141: dealershipName,\n142: roleName: t(`roles.${roleName}`, roleName),\n143: inviterName: user?.user_metadata?.first_name && user?.user_metadata?.last_name"
+            "line": 138,
+            "context": "137: toast({\n138: title: t('common.error'),\n139: description: t('invitations.accept.auth_required_desc'),"
           },
           {
             "key": "common.success",
-            "line": 172,
-            "context": "171: toast({\n172: title: t('common.success'),\n173: description: t('invitations.invitation_created_email_failed'),"
+            "line": 211,
+            "context": "210: toast({\n211: title: t('common.success'),\n212: description: t('invitations.invitation_created_email_failed'),"
           },
           {
             "key": "common.success",
-            "line": 178,
-            "context": "177: toast({\n178: title: t('common.success'),\n179: description: t('invitations.invitation_sent'),"
+            "line": 217,
+            "context": "216: toast({\n217: title: t('common.success'),\n218: description: t('invitations.invitation_sent'),"
           },
           {
             "key": "common.error",
-            "line": 192,
-            "context": "191: toast({\n192: title: t('common.error'),\n193: description: error.message || t('messages.error'),"
+            "line": 231,
+            "context": "230: toast({\n231: title: t('common.error'),\n232: description: error.message || t('messages.error'),"
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 246,
-            "context": "245: <div className=\"space-y-2\">\n246: <Label htmlFor=\"dealership\">{t('dealerships.select_dealership')} *</Label>\n247: <Select"
+            "line": 286,
+            "context": "285: <div className=\"space-y-2\">\n286: <Label htmlFor=\"dealership\">{t('dealerships.select_dealership')} *</Label>\n287: <Select"
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 253,
-            "context": "252: <SelectTrigger>\n253: <SelectValue placeholder={t('dealerships.select_dealership')} />\n254: </SelectTrigger>"
-          },
-          {
-            "key": "invitations.${role.key}",
-            "line": 296,
-            "context": "295: <div className=\"flex flex-col\">\n296: <span className=\"font-medium\">{t(`invitations.${role.key}`)}</span>\n297: <span className=\"text-xs text-muted-foreground\">"
-          },
-          {
-            "key": "invitations.${selectedRoleInfo.key}",
-            "line": 308,
-            "context": "307: <p className=\"text-sm text-muted-foreground\">\n308: <strong>{t(`invitations.${selectedRoleInfo.key}`)}:</strong> {selectedRoleInfo.description}\n309: </p>"
+            "line": 293,
+            "context": "292: <SelectTrigger>\n293: <SelectValue placeholder={t('dealerships.select_dealership')} />\n294: </SelectTrigger>"
           },
           {
             "key": "common.cancel",
-            "line": 321,
-            "context": "320: >\n321: {t('common.cancel')}\n322: </Button>"
+            "line": 385,
+            "context": "384: >\n385: {t('common.cancel')}\n386: </Button>"
           }
         ],
         "coverage": 100,
@@ -44171,7 +44164,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "26 Modal components need translation",
+      "description": "27 Modal components need translation",
       "files": [
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
         "src\\components\\dealerships\\DealershipModal.tsx",
@@ -44186,6 +44179,7 @@
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
+        "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
         "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\orders\\OrderDetailModal.tsx",
@@ -44200,7 +44194,7 @@
         "src\\components\\get-ready\\vendors\\VendorFormModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx"
       ],
-      "estimatedEffort": "13 hours"
+      "estimatedEffort": "14 hours"
     },
     {
       "priority": "MEDIUM",
@@ -44221,19 +44215,19 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "282 Component components need translation",
+      "description": "281 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
-        "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
         "src\\components\\users\\password\\PasswordActivityLog.tsx",
         "src\\components\\detail-hub\\ReportsCenter.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
+        "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
@@ -44254,6 +44248,7 @@
         "src\\components\\followers\\UniversalFollowButton.tsx",
         "src\\components\\users\\UserDashboard.tsx",
         "src\\components\\scanner\\enhanced\\VinAnalyzer.tsx",
+        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
         "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\dev\\OrderNumberMigrationTool.tsx",
@@ -44262,7 +44257,6 @@
         "src\\hooks\\useChatPermissions.tsx",
         "src\\hooks\\useChatMessages.tsx",
         "src\\components\\sales\\OrderPreviewPanel.tsx",
-        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\pages\\Management.tsx",
         "src\\hooks\\useChatNotifications.tsx",
         "src\\components\\ProtectedLayout.tsx",
@@ -44316,6 +44310,7 @@
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\productivity\\ProductivityTodos.tsx",
         "src\\components\\orders\\TeamCommunicationBlock.tsx",
+        "src\\components\\orders\\RecentActivityBlock.tsx",
         "src\\components\\orders\\EnhancedOrderDetailLayout.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
         "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
@@ -44339,7 +44334,6 @@
         "src\\components\\scanner\\QuickScanMode.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
-        "src\\components\\orders\\RecentActivityBlock.tsx",
         "src\\components\\get-ready\\StepsList.tsx",
         "src\\components\\attachments\\FileUpload.tsx",
         "src\\components\\attachments\\AttachmentsList.tsx",
@@ -44348,7 +44342,6 @@
         "src\\tests\\config\\performance-setup.ts",
         "src\\test\\validation\\phase4-integration.test.ts",
         "src\\services\\supabaseQueryOptimizer.ts",
-        "src\\pages\\Users.tsx",
         "src\\pages\\Settings.tsx",
         "src\\pages\\QRRedirect.tsx",
         "src\\pages\\GetReadySetup.tsx",
@@ -44511,7 +44504,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2876 translation keys are referenced but missing",
+      "description": "2866 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "144 hours"
     }

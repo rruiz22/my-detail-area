@@ -150,14 +150,61 @@ export function useStepManagement() {
     },
   });
 
+  // Reorder Steps
+  const reorderStepsMutation = useMutation({
+    mutationFn: async (steps: Array<{ id: string; order_index: number }>) => {
+      // First, set all order_index to temporary negative values to avoid unique constraint conflicts
+      const tempUpdates = steps.map(({ id }, index) =>
+        supabase
+          .from('get_ready_steps')
+          .update({ order_index: -(index + 1000), updated_at: new Date().toISOString() })
+          .eq('id', id)
+      );
+
+      const tempResults = await Promise.all(tempUpdates);
+      const tempErrors = tempResults.filter(r => r.error);
+
+      if (tempErrors.length > 0) {
+        throw tempErrors[0].error;
+      }
+
+      // Then, update to final order_index values
+      const finalUpdates = steps.map(({ id, order_index }) =>
+        supabase
+          .from('get_ready_steps')
+          .update({ order_index, updated_at: new Date().toISOString() })
+          .eq('id', id)
+      );
+
+      const finalResults = await Promise.all(finalUpdates);
+      const finalErrors = finalResults.filter(r => r.error);
+
+      if (finalErrors.length > 0) {
+        throw finalErrors[0].error;
+      }
+
+      return finalResults;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      toast.success(t('get_ready.setup.steps_reordered'));
+    },
+    onError: (error: Error) => {
+      console.error('Failed to reorder steps:', error);
+      toast.error(t('get_ready.setup.steps_reorder_failed'));
+    },
+  });
+
   return {
     createStep: createStepMutation.mutate,
     updateStep: updateStepMutation.mutate,
     deleteStep: deleteStepMutation.mutate,
     archiveStep: archiveStepMutation.mutate,
+    reorderSteps: reorderStepsMutation.mutate,
     isCreating: createStepMutation.isPending,
     isUpdating: updateStepMutation.isPending,
     isDeleting: deleteStepMutation.isPending,
     isArchiving: archiveStepMutation.isPending,
+    isReordering: reorderStepsMutation.isPending,
   };
 }

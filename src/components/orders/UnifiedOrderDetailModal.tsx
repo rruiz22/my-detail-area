@@ -1,21 +1,26 @@
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { usePermissionContext } from '@/contexts/PermissionContext';
+import { usePrintOrder } from '@/hooks/usePrintOrder';
+import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
-import { safeFormatDate } from '@/utils/dateUtils';
 import {
+  Download,
   Edit2,
-  Printer,
-  Download
+  Printer
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { usePermissionContext } from '@/contexts/PermissionContext';
-import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
-import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { OrderTasksSection } from './OrderTasksSection';
 import { SkeletonLoader } from './SkeletonLoader';
+
+// Phase 2: Import unified types
+import type { OrderData as SystemOrderData } from '@/types/order';
+import {
+  UnifiedOrderData
+} from '@/types/unifiedOrder';
 
 // Type-specific field components
 import { CarWashOrderFields } from './CarWashOrderFields';
@@ -28,83 +33,13 @@ import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
 import { FollowersBlock } from './FollowersBlock';
 import { RecentActivityBlock } from './RecentActivityBlock';
 import { ScheduleViewBlock } from './ScheduleViewBlock';
+import { ServicesDisplay } from './ServicesDisplay';
 import { SimpleNotesDisplay } from './SimpleNotesDisplay';
 import { TeamCommunicationBlock } from './TeamCommunicationBlock';
-import { ServicesDisplay } from './ServicesDisplay';
 
-// Service item interface
-interface ServiceItem {
-  id: string;
-  name: string;
-  price?: number;
-}
-
-// Enhanced TypeScript interfaces for better type safety
-// Support both snake_case (direct from DB) and camelCase (from useOrderManagement transform)
-interface OrderData {
-  id: string;
-  // Order identifiers (support both formats)
-  order_number?: string;
-  orderNumber?: string;
-
-  // Customer information (support both formats)
-  customer_name?: string;
-  customer_phone?: string;
-  customerName?: string;
-  customerPhone?: string;
-
-  // Vehicle information (support both formats)
-  vehicle_year?: string | number;
-  vehicle_make?: string;
-  vehicle_model?: string;
-  vehicle_vin?: string;
-  vehicle_info?: string; // New unified VIN display field
-  vehicle_trim?: string;
-  stock_number?: string;
-  vehicleYear?: string | number;
-  vehicleMake?: string;
-  vehicleModel?: string;
-  vehicleVin?: string;
-  vehicleTrim?: string;
-  stockNumber?: string;
-
-  // Service-specific fields
-  po?: string; // Purchase Order
-  ro?: string; // Repair Order
-  tag?: string; // TAG field
-  services?: ServiceItem[] | string;
-  total_amount?: number;
-  totalAmount?: number;
-
-  // Assignment fields (support both formats)
-  assigned_to?: string;
-  assignedTo?: string;
-  assigned_group_id?: string; // User ID for modal edit
-
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
-  dealer_id: string | number;
-  dealership_name?: string;
-  advisor?: string;
-  salesperson?: string;
-  service_performer?: string; // For Recon and Car Wash
-  notes?: string;
-  internal_notes?: string;
-  priority?: string;
-  created_at?: string;
-  updated_at?: string;
-  estimated_completion?: string;
-  due_date?: string; // For Sales/Service
-  date_service_complete?: string; // For Recon/Car Wash
-  // QR and Links (support both formats)
-  qr_slug?: string;
-  short_url?: string;
-  qr_code_url?: string;
-  qrCodeUrl?: string;
-  short_link?: string;
-  shortLink?: string;
-  qr_generation_status?: 'pending' | 'generating' | 'completed' | 'failed';
-  qrGenerationStatus?: 'pending' | 'generating' | 'completed' | 'failed';
-}
+// Alias for backward compatibility and internal use
+// Now OrderData refers to the unified type definition
+type OrderData = UnifiedOrderData;
 
 interface Attachment {
   id: string;
@@ -166,60 +101,16 @@ interface UnifiedOrderDetailModalProps {
 }
 
 // Data normalization function - converts snake_case DB fields to camelCase
-function normalizeOrderData(data: any): Partial<OrderData> {
+function normalizeOrderData(data: Record<string, unknown>): Partial<OrderData> {
   if (!data) return {};
 
   return {
-    id: data.id,
-    // Order identifiers
-    orderNumber: data.order_number || data.orderNumber,
-    // Customer information
-    customerName: data.customer_name || data.customerName,
-    customerPhone: data.customer_phone || data.customerPhone,
-    // Vehicle information
-    vehicleYear: data.vehicle_year || data.vehicleYear,
-    vehicleMake: data.vehicle_make || data.vehicleMake,
-    vehicleModel: data.vehicle_model || data.vehicleModel,
-    vehicleVin: data.vehicle_vin || data.vehicleVin,
-    vehicleInfo: data.vehicle_info || data.vehicleInfo,
-    vehicleTrim: data.vehicle_trim || data.vehicleTrim,
-    stockNumber: data.stock_number || data.stockNumber,
-    // Service-specific fields
-    po: data.po,
-    ro: data.ro,
-    tag: data.tag,
-    services: data.services,
-    totalAmount: data.total_amount || data.totalAmount,
-    // Assignment (assigned_group_id contains the user ID)
-    assignedTo: data.assignedTo || data.assigned_to,
-    assigned_to: data.assignedTo || data.assigned_to, // Keep both formats
-    assigned_group_id: data.assigned_group_id, // User ID for modal edit
-    // Status and management
-    status: data.status,
-    dealer_id: data.dealer_id,
-    dealership_name: data.dealership_name || data.dealershipName,
-    advisor: data.advisor,
-    salesperson: data.salesperson,
-    service_performer: data.service_performer || data.servicePerformer,
-    notes: data.notes,
-    internal_notes: data.internal_notes || data.internalNotes,
-    priority: data.priority,
-    // Dates
-    created_at: data.created_at || data.createdAt,
-    updated_at: data.updated_at || data.updatedAt,
-    estimated_completion: data.estimated_completion || data.estimatedCompletion,
-    due_date: data.due_date || data.dueDate,
-    date_service_complete: data.date_service_complete || data.dateServiceComplete,
-    // QR and Links
-    qr_slug: data.qr_slug || data.qrSlug,
-    short_url: data.short_url || data.shortUrl,
-    qr_code_url: data.qr_code_url || data.qrCodeUrl,
-    qrCodeUrl: data.qr_code_url || data.qrCodeUrl,
-    short_link: data.short_link || data.shortLink,
-    shortLink: data.short_link || data.shortLink,
-    qr_generation_status: data.qr_generation_status || data.qrGenerationStatus,
-    qrGenerationStatus: data.qr_generation_status || data.qrGenerationStatus,
-  };
+    ...data,
+    // Just spread all data and let TypeScript handle the rest
+    id: data.id as string,
+    status: data.status as OrderData['status'],
+    dealer_id: data.dealer_id as string | number,
+  } as Partial<OrderData>;
 }
 
 // Custom hook for QR props normalization
@@ -324,7 +215,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
             <ServicesDisplay
               services={Array.isArray(order.services) ? order.services : []}
               totalAmount={order.total_amount || order.totalAmount}
-              dealerId={order.dealer_id}
+              dealerId={Number(order.dealer_id)}
               variant="kanban"
               className="mt-1"
             />
@@ -335,7 +226,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
         <div className="text-right">
           {onStatusChange && (
             <StatusBadgeInteractive
-              status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold'}
+              status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
               orderId={order.id}
               dealerId={effectiveDealerId}
               canUpdateStatus={true}
@@ -459,7 +350,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
         ...normalized,
         // Preserve critical transformed fields that might be lost
         services: normalized.services !== undefined ? normalized.services : prev.services,
-        vehicleInfo: normalized.vehicleInfo || prev.vehicleInfo,
+        vehicle_info: normalized.vehicle_info || prev.vehicle_info,
         // Preserve assignedTo if polling data doesn't have it (user name is transformed from JOIN, not in raw DB)
         assignedTo: normalized.assignedTo || prev.assignedTo,
         assigned_to: normalized.assigned_to || prev.assigned_to,
@@ -600,7 +491,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   {/* Row 1: Type-specific fields + Schedule View (Two blocks side by side) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <OrderTypeFields orderType={orderType} order={orderData} />
-                    <ScheduleViewBlock order={orderData} />
+                    <ScheduleViewBlock order={orderData as SystemOrderData} />
                   </div>
 
                   {/* Row 2: Simple Notes Display (Full width) */}
@@ -661,7 +552,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => previewPrint(orderData)}
+                  onClick={() => previewPrint({...orderData, dealer_id: Number(orderData.dealer_id)} as unknown as SystemOrderData)}
                   className="flex items-center gap-2"
                 >
                   <Printer className="h-4 w-4" />
@@ -670,7 +561,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
                 <Button
                   variant="outline"
-                  onClick={() => printOrder(orderData)}
+                  onClick={() => printOrder({...orderData, dealer_id: Number(orderData.dealer_id)} as unknown as SystemOrderData)}
                   className="flex items-center gap-2"
                 >
                   <Download className="h-4 w-4" />
