@@ -34,6 +34,7 @@
 import { useOrderModalData } from '@/hooks/useOrderModalData';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { supabase } from '@/integrations/supabase/client';
+import { OrderData } from '@/types/order';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -50,7 +51,6 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
-// Enhanced TypeScript interfaces
 interface OrderAttachment {
   id: string;
   order_id: string;
@@ -63,33 +63,6 @@ interface OrderAttachment {
   description: string | null;
   created_at: string;
   updated_at: string;
-}
-
-interface OrderData {
-  id: string;
-  order_number?: string;
-  custom_order_number?: string;
-  customer_name?: string;
-  customer_phone?: string;
-  vehicle_year?: string | number;
-  vehicle_make?: string;
-  vehicle_model?: string;
-  vehicle_vin?: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
-  dealer_id: string | number;
-  dealership_name?: string;
-  advisor?: string;
-  salesperson?: string;
-  notes?: string;
-  internal_notes?: string;
-  priority?: string;
-  created_at?: string;
-  updated_at?: string;
-  estimated_completion?: string;
-  qr_slug?: string;
-  short_url?: string;
-  qr_code_url?: string;
-  short_link?: string;
 }
 
 interface EnhancedOrderDetailModalProps {
@@ -143,7 +116,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
     getCacheSize
   } = useOrderModalData({
     orderId: order?.id || '',
-    qrSlug: order?.qr_slug || '',
+    qrSlug: order?.qrSlug || '',
     enabled: open && !!order // Only fetch when modal is open and order exists
   });
 
@@ -206,6 +179,12 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 
       toast.success(t('messages.notes_updated_successfully'));
       recordMetric('notes-update-success', 1);
+
+      // 🔔 Dispatch event to trigger RecentActivityBlock refresh
+      // This ensures immediate update even if Realtime has a delay
+      window.dispatchEvent(new CustomEvent('orderNotesUpdated', {
+        detail: { orderId: order.id, field, value }
+      }));
 
       if (field === 'notes') {
         setEditingNotes(false);

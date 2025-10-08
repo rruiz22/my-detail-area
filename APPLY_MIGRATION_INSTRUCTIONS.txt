@@ -1,0 +1,114 @@
+═══════════════════════════════════════════════════════════════════════════════
+  INSTRUCCIONES PARA APLICAR MIGRACIÓN - order_activity_log Foreign Key
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJETIVO: Agregar foreign key entre order_activity_log y orders
+
+📍 TU PROYECTO SUPABASE:
+   URL: https://swfnnrpzpkdypbrzmgnr.supabase.co
+   Dashboard: https://supabase.com/dashboard/project/swfnnrpzpkdypbrzmgnr
+
+───────────────────────────────────────────────────────────────────────────────
+PASO 1: Abrir SQL Editor
+───────────────────────────────────────────────────────────────────────────────
+
+1. Ve a: https://supabase.com/dashboard/project/swfnnrpzpkdypbrzmgnr/sql/new
+2. Crea un nuevo query
+
+───────────────────────────────────────────────────────────────────────────────
+PASO 2: Copiar y Pegar el SQL
+───────────────────────────────────────────────────────────────────────────────
+
+Copia TODA la siguiente migración SQL y pégala en el editor:
+
+───────────────────────────────────────────────────────────────────────────────
+
+-- Migration: Add foreign key constraint to order_activity_log
+-- Date: 2025-10-08
+-- Purpose: Fix Supabase relationship error between order_activity_log and orders
+
+-- Step 1: Check for orphaned records
+DO $$
+DECLARE
+  orphaned_count INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO orphaned_count
+  FROM order_activity_log oal
+  WHERE NOT EXISTS (
+    SELECT 1 FROM orders o WHERE o.id = oal.order_id
+  );
+
+  IF orphaned_count > 0 THEN
+    RAISE NOTICE 'Found % orphaned records in order_activity_log', orphaned_count;
+    RAISE NOTICE 'These records will be deleted to maintain referential integrity';
+  ELSE
+    RAISE NOTICE 'No orphaned records found - proceeding with FK creation';
+  END IF;
+END $$;
+
+-- Step 2: Delete orphaned records (if any)
+DELETE FROM order_activity_log
+WHERE order_id NOT IN (SELECT id FROM orders);
+
+-- Step 3: Add the foreign key constraint
+ALTER TABLE public.order_activity_log
+ADD CONSTRAINT order_activity_log_order_id_fkey
+FOREIGN KEY (order_id)
+REFERENCES public.orders(id)
+ON DELETE CASCADE;
+
+-- Step 4: Create index for better query performance
+CREATE INDEX IF NOT EXISTS idx_order_activity_log_order_id
+ON public.order_activity_log(order_id);
+
+-- Step 5: Verify the constraint was created successfully
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.table_constraints
+    WHERE constraint_name = 'order_activity_log_order_id_fkey'
+    AND table_name = 'order_activity_log'
+  ) THEN
+    RAISE NOTICE 'Foreign key constraint successfully created!';
+  ELSE
+    RAISE EXCEPTION 'Failed to create foreign key constraint';
+  END IF;
+END $$;
+
+───────────────────────────────────────────────────────────────────────────────
+PASO 3: Ejecutar
+───────────────────────────────────────────────────────────────────────────────
+
+1. Haz clic en el botón "Run" (▶️) en el SQL Editor
+2. Espera a que termine (debería tomar < 5 segundos)
+
+───────────────────────────────────────────────────────────────────────────────
+PASO 4: Verificar Resultado Esperado
+───────────────────────────────────────────────────────────────────────────────
+
+Deberías ver mensajes como:
+
+  ✅ NOTICE: No orphaned records found - proceeding with FK creation
+  ✅ NOTICE: Foreign key constraint successfully created!
+  ✅ Success. No rows returned
+
+Si ves ERROR, copia el mensaje de error y avísame.
+
+───────────────────────────────────────────────────────────────────────────────
+PASO 5: Probar en la Aplicación
+───────────────────────────────────────────────────────────────────────────────
+
+1. Vuelve a http://localhost:8080/dashboard
+2. Presiona Ctrl+Shift+R para recargar (hard refresh)
+3. Abre DevTools (F12) → Console
+4. Verifica que NO aparezcan más errores PGRST200
+
+✅ SI TODO FUNCIONA:
+   - Widget "Recent Activity" debe mostrar datos
+   - No errores en consola relacionados con order_activity_log
+
+❌ SI HAY PROBLEMAS:
+   - Copia el mensaje de error y avísame
+
+═══════════════════════════════════════════════════════════════════════════════

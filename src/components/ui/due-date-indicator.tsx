@@ -100,7 +100,7 @@ export function DueDateIndicator({
 
   return (
     <div className={cn("flex flex-col items-center gap-1 text-center", className)}>
-      {/* Status Badge */}
+      {/* Status Badge - Primera fila */}
       <Badge
         variant={getBadgeVariant(timeStatus.status)}
         className={cn(
@@ -116,21 +116,10 @@ export function DueDateIndicator({
         </div>
       </Badge>
 
-      {/* Time Countdown - Solo para órdenes activas */}
-      {!['completed', 'cancelled'].includes(orderStatus || '') && timeStatus.formattedTime && (
-        <div className={cn(
-          "flex items-center gap-1 text-sm font-semibold justify-center",
-          timeStatus.color
-        )}>
-          <Clock className="w-4 h-4" />
-          <span className="whitespace-nowrap">{timeStatus.formattedTime}</span>
-        </div>
-      )}
-
-      {/* Date and Time Display */}
+      {/* Date and Time Display - Segunda fila (más notable) */}
       {showDateTime && dueDate && (
-        <div className="text-xs text-muted-foreground text-center">
-          <Calendar className="w-3 h-3 mr-1 text-gray-700 inline" />
+        <div className="text-sm font-semibold text-foreground text-center">
+          <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
           {new Date(dueDate).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric'
@@ -139,6 +128,17 @@ export function DueDateIndicator({
             minute: '2-digit',
             hour12: true
           })}
+        </div>
+      )}
+
+      {/* Time Countdown - Tercera fila (Solo para órdenes activas) */}
+      {!['completed', 'cancelled'].includes(orderStatus || '') && timeStatus.formattedTime && (
+        <div className={cn(
+          "flex items-center gap-1 text-xs font-semibold justify-center",
+          timeStatus.color
+        )}>
+          <Clock className="w-3.5 h-3.5" />
+          <span className="whitespace-nowrap">{timeStatus.formattedTime}</span>
         </div>
       )}
     </div>

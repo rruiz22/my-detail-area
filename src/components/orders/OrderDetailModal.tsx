@@ -120,7 +120,7 @@ export function OrderDetailModal({
         <DialogHeader className="flex flex-row items-center justify-between p-6 pb-4 border-b">
           <div className="flex items-center gap-4">
             <DialogTitle className="text-2xl font-bold">
-              Orden #{order.customOrderNumber}
+              Orden #{order.id}
             </DialogTitle>
             <Badge variant={order.status === 'completed' ? 'default' : order.status === 'pending' ? 'secondary' : 'outline'}>
               {order.status}
@@ -282,7 +282,7 @@ export function OrderDetailModal({
                 <CardContent>
                   {order.services && order.services.length > 0 ? (
                     <div className="space-y-2">
-                      {order.services.map((service: any, index: number) => (
+                      {order.services.map((service: { name?: string; description?: string; price?: number }, index: number) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                           <div>
                             <p className="font-medium">{service.name || `Service ${index + 1}`}</p>
@@ -401,7 +401,7 @@ export function OrderDetailModal({
               {/* Tasks & Reminders Section */}
               <OrderTasksSection
                 orderId={order.id}
-                orderNumber={order.customOrderNumber}
+                orderNumber={order.id}
                 customerName={order.customerName}
               />
             </div>

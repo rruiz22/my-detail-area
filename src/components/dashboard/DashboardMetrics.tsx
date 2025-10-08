@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { useDashboardData } from '@/hooks/useDashboardData';
 
 interface MetricCardProps {
   title: string;
@@ -95,6 +96,7 @@ const MetricCard = ({
 
 export function DashboardMetrics() {
   const { t, i18n } = useTranslation();
+  const { data: dashboardData, isLoading } = useDashboardData();
 
   const formatCurrency = (amount: number) => {
     const currencyMap = {
@@ -110,99 +112,65 @@ export function DashboardMetrics() {
     }).format(amount);
   };
 
-  // Mock data - in real app this would come from API/database
-  const metrics = {
-    totalOrders: 142,
-    pendingOrders: 23,
-    completedToday: 18,
-    revenue: 15420.50,
-    activeVehicles: 89,
-    avgProcessingTime: '2.4h',
-    customerSatisfaction: 95,
-    teamEfficiency: 87
+  // Use real data from database (respects RLS policies automatically)
+  const metrics = dashboardData?.overall || {
+    totalOrders: 0,
+    pendingOrders: 0,
+    completedToday: 0,
+    revenue: 0,
+    activeVehicles: 0
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map(i => (
+          <Card key={i} className="animate-pulse">
+            <CardHeader className="pb-2">
+              <div className="h-4 bg-muted rounded w-24"></div>
+            </CardHeader>
+            <CardContent>
+              <div className="h-8 bg-muted rounded w-16"></div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <MetricCard
         title={t('dashboard.metrics.total_orders')}
         value={metrics.totalOrders}
-        change={12}
-        trend="up"
         icon={<Car className="w-4 h-4" />}
         color="primary"
         subtitle={t('dashboard.metrics.orders_this_month')}
       />
-      
+
       <MetricCard
         title={t('dashboard.metrics.pending_orders')}
         value={metrics.pendingOrders}
-        change={-5}
-        trend="down"
         icon={<Clock className="w-4 h-4" />}
         color="warning"
         subtitle={t('dashboard.metrics.awaiting_processing')}
       />
-      
+
       <MetricCard
         title={t('dashboard.metrics.completed_today')}
         value={metrics.completedToday}
-        change={8}
-        trend="up"
         icon={<CheckCircle className="w-4 h-4" />}
         color="success"
         subtitle={t('dashboard.metrics.finished_today')}
       />
-      
+
       <MetricCard
         title={t('dashboard.metrics.revenue')}
         value={formatCurrency(metrics.revenue)}
-        change={15}
-        trend="up"
         icon={<DollarSign className="w-4 h-4" />}
         color="success"
-        subtitle={t('dashboard.metrics.monthly_revenue')}
-      />
-      
-      <MetricCard
-        title={t('dashboard.metrics.active_vehicles')}
-        value={metrics.activeVehicles}
-        icon={<Car className="w-4 h-4" />}
-        color="secondary"
-        subtitle={t('dashboard.metrics.in_process')}
-        progress={74}
-      />
-      
-      <MetricCard
-        title={t('dashboard.metrics.avg_processing')}
-        value={metrics.avgProcessingTime}
-        change={-12}
-        trend="up" // Faster processing is good
-        icon={<Timer className="w-4 h-4" />}
-        color="primary"
-        subtitle={t('dashboard.metrics.per_order')}
-      />
-      
-      <MetricCard
-        title={t('dashboard.metrics.satisfaction')}
-        value={`${metrics.customerSatisfaction}%`}
-        change={3}
-        trend="up"
-        icon={<Users className="w-4 h-4" />}
-        color="success"
-        subtitle={t('dashboard.metrics.customer_rating')}
-        progress={metrics.customerSatisfaction}
-      />
-      
-      <MetricCard
-        title={t('dashboard.metrics.efficiency')}
-        value={`${metrics.teamEfficiency}%`}
-        change={7}
-        trend="up"
-        icon={<Target className="w-4 h-4" />}
-        color="primary"
-        subtitle={t('dashboard.metrics.team_performance')}
-        progress={metrics.teamEfficiency}
+        subtitle={t('dashboard.metrics.total_revenue')}
       />
     </div>
   );

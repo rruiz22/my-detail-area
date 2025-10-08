@@ -243,24 +243,49 @@ export default function Auth() {
       const invitation = searchParams.get('invitation');
       if (!invitation) return;
 
-      const { error } = await supabase
-        .rpc('accept_dealer_invitation', {
-          token_input: invitation
-        });
+      // Wait for authentication session to be established
+      // This is critical because signUp doesn't immediately authenticate the user
+      let attempts = 0;
+      const maxAttempts = 10; // 5 seconds total (500ms * 10)
 
-      if (error) {
-        toast({
-          title: t('auth.signup.invitation_accept_error'),
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: t('auth.signup.success_title'),
-          description: t('auth.signup.invitation_accepted'),
-          variant: "default",
-        });
+      while (attempts < maxAttempts) {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          // Session is ready, now we can accept the invitation
+          const { error } = await supabase
+            .rpc('accept_dealer_invitation', {
+              token_input: invitation
+            });
+
+          if (error) {
+            toast({
+              title: t('auth.signup.invitation_accept_error'),
+              description: error.message,
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: t('auth.signup.success_title'),
+              description: t('auth.signup.invitation_accepted'),
+              variant: "default",
+            });
+          }
+          return; // Success - exit function
+        }
+
+        // Wait 500ms before next attempt
+        await new Promise(resolve => setTimeout(resolve, 500));
+        attempts++;
       }
+
+      // If we got here, session never became available - email confirmation is required
+      // Show informative message instead of error
+      toast({
+        title: t('auth.signup.success_title'),
+        description: t('auth.signup.email_confirmation_pending_with_invitation'),
+        variant: "default",
+      });
     } catch (error: any) {
       toast({
         title: t('auth.signup.invitation_accept_error'),

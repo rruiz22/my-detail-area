@@ -298,8 +298,12 @@ export default function SalesOrders() {
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold">{t('pages.sales_orders')}</h1>
           </div>
-          
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-4">
+            <LiveTimer
+              lastRefresh={managementLastRefresh}
+              isRefreshing={loading}
+            />
             <Button
               variant="outline"
               size="sm"
@@ -358,23 +362,10 @@ export default function SalesOrders() {
                     {filteredOrders.length}
                   </Badge>
                 </div>
-                
-                {/* Last Update Info */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <LiveTimer
-                    lastRefresh={managementLastRefresh}
-                    isRefreshing={loading}
-                  />
-                  
-                  {/* Mobile-friendly info */}
-                  <div className="text-xs text-muted-foreground sm:hidden">
-                    {searchTerm && `Searching: "${searchTerm}"`}
-                  </div>
-                </div>
-                
-                {/* Search Context - Desktop */}
+
+                {/* Search Context */}
                 {searchTerm && (
-                  <div className="text-center hidden sm:block">
+                  <div className="text-center">
                     <p className="text-sm text-muted-foreground">
                       Showing results matching "{searchTerm}"
                     </p>

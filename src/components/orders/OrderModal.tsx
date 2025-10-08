@@ -192,26 +192,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const isEditing = Boolean(order);
   const requiresDueDate = !isEditing && ['sales', 'service'].includes(formData.orderType);
 
-  // Custom setters with detailed logging and stack trace
   const setSelectedDealershipWithLog = (value: string) => {
-    console.log('🔧 setSelectedDealership called with:', value);
-    console.trace('🔍 STACK TRACE for setSelectedDealership:');
     setSelectedDealership(value);
   };
 
   const setSelectedAssignedToWithLog = (value: string) => {
-    console.log('🔧 setSelectedAssignedTo called with:', value);
-    console.trace('🔍 STACK TRACE for setSelectedAssignedTo:');
     setSelectedAssignedTo(value);
   };
-
-  // Debug effect to monitor state changes
-  useEffect(() => {
-    console.log('🔧 State changed - selectedDealership:', selectedDealership);
-    console.log('🔧 State changed - selectedAssignedTo:', selectedAssignedTo);
-    console.log('🔧 State changed - dealerships count:', dealerships.length);
-    console.log('🔧 State changed - assignedUsers count:', assignedUsers.length);
-  }, [selectedDealership, selectedAssignedTo, dealerships.length, assignedUsers.length]);
 
   useEffect(() => {
     if (open) {
@@ -220,31 +207,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       if (order) {
         // Prevent double initialization in React Strict Mode
         if (currentOrderId.current === order.id && editModeInitialized.current) {
-          console.log('🔧 Edit mode already initialized for order:', order.id);
           return;
         }
 
-        console.log('🔧 Initializing edit mode for order:', order.id);
         currentOrderId.current = order.id;
         editModeInitialized.current = true;
-
-        // Comprehensive ID field investigation
-        console.log('🔍 All order fields:', Object.keys(order));
-        console.log('🔍 Dealership fields:', {
-          dealer_id: order.dealer_id,
-          dealerId: order.dealerId,
-          dealership_id: order.dealership_id,
-          dealer: order.dealer,
-          dealershipId: order.dealershipId
-        });
-        console.log('🔍 Assignment fields:', {
-          assigned_user_id: order.assigned_user_id,
-          assigned_group_id: order.assigned_group_id,
-          assignedUserId: order.assignedUserId,
-          assignedGroupId: order.assignedGroupId,
-          assignedContactId: order.assignedContactId,
-          assigned_contact_id: order.assigned_contact_id
-        });
 
         // Helper function to safely extract field values with fallbacks
         const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = '') => {
@@ -264,19 +231,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           if (value === null || value === undefined) return '';
           return String(value);
         };
-
-        // Debug logging for field mapping
-        console.log('🔧 VIN mapping:', {
-          vehicleVin: order.vehicleVin,
-          vehicle_vin: order.vehicle_vin,
-          result: getFieldValue(order.vehicleVin, order.vehicle_vin)
-        });
-
-        console.log('🔧 Stock mapping:', {
-          stockNumber: order.stockNumber,
-          stock_number: order.stock_number,
-          result: getFieldValue(order.stockNumber, order.stock_number)
-        });
 
         setFormData({
           // Basic order info
@@ -322,17 +276,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // For assigned to, we have the name directly
         const assignedToName = order.assignedTo;
 
-        console.log('🔧 Edit mode - Services:', servicesData);
-        console.log('🔧 Edit mode - Dealership Name:', dealershipName);
-        console.log('🔧 Edit mode - Assigned To Name:', assignedToName);
-
         setSelectedServices(servicesData);
 
         // We'll set dealership after fetchDealerships() finds the ID
         // We'll set assignedTo after fetchDealerData() loads the users and finds the ID
       } else if (!order && !editModeInitialized.current) {
         // Only reset form for new order when order is explicitly null/undefined AND not in edit mode
-        console.log('🔧 Resetting form for new order');
         editModeInitialized.current = false;
         currentOrderId.current = null;
         setFormData({
@@ -384,19 +333,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // Try to find by dealer_id first (most reliable)
         if (order.dealer_id || order.dealerId) {
           dealershipId = (order.dealer_id || order.dealerId).toString();
-          console.log('🔧 Found dealership by ID:', dealershipId);
         }
         // Fallback to finding by name
         else if (order.dealershipName) {
           const matchingDealer = dealerships.find(d => d.name === order.dealershipName);
           if (matchingDealer) {
             dealershipId = matchingDealer.id.toString();
-            console.log('🔧 Found dealership by name:', order.dealershipName, '→', dealershipId);
           }
         }
-
-        // Dealership setting moved to separate useEffect that waits for options to load
-        console.log('🔧 Dealership setting will be handled by separate useEffect');
       }
     } catch (error) {
       console.error('Error fetching dealerships:', error);
@@ -406,7 +350,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const fetchDealerData = async (dealershipId: string) => {
     if (!dealershipId) return;
-    
+
     setLoading(true);
     try {
       // Get users from dealer memberships with their profiles
@@ -430,6 +374,15 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           })
       ]);
 
+      if (usersResult.error) {
+        console.error('Error fetching users:', usersResult.error);
+      }
+
+      if (servicesResult.error) {
+        console.error('Error fetching services:', servicesResult.error);
+        toast.error('Error loading services');
+      }
+
       if (usersResult.data) {
         const users = usersResult.data.map((membership: DealerMembership) => ({
           id: membership.profiles.id,
@@ -438,16 +391,18 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         }));
 
         setAssignedUsers(users);
-
-        // Assigned user setting moved to separate useEffect (same as dealership fix)
-        console.log('🔧 Assigned user setting will be handled by separate useEffect after users load');
+      } else {
+        setAssignedUsers([]);
       }
 
       if (servicesResult.data) {
         setServices(servicesResult.data);
+      } else {
+        setServices([]);
       }
     } catch (error) {
       console.error('Error fetching dealer data:', error);
+      toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
     }
@@ -462,26 +417,21 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   // CRITICAL: Set dealership ONLY after dealerships options are loaded
   useEffect(() => {
     if (order && dealerships.length > 0 && !selectedDealership) {
-      console.log('🔧 Dealerships loaded, attempting to set dealer for order:', order.id);
-
       let dealershipId = null;
 
       // Try dealer_id first (most reliable)
       if (order.dealer_id || order.dealerId) {
         dealershipId = (order.dealer_id || order.dealerId).toString();
-        console.log('🔧 Using dealer_id:', dealershipId);
       }
       // Fallback to name search
       else if (order.dealershipName) {
         const matchingDealer = dealerships.find(d => d.name === order.dealershipName);
         if (matchingDealer) {
           dealershipId = matchingDealer.id.toString();
-          console.log('🔧 Found dealer by name:', order.dealershipName, '→', dealershipId);
         }
       }
 
       if (dealershipId) {
-        console.log('🔧 Setting dealership AFTER options loaded:', dealershipId);
         setSelectedDealership(dealershipId);
         fetchDealerData(dealershipId);
       }
@@ -491,36 +441,26 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   // CRITICAL: Set assigned user ONLY after users are loaded (same fix as dealership)
   useEffect(() => {
     if (order && assignedUsers.length > 0 && !selectedAssignedTo) {
-      console.log('🔧 Users loaded, attempting to set assigned user for order:', order.id);
-
       let matchingUser = null;
 
       // Try to find by ID first (most reliable)
       const assignedId = order.assigned_group_id || order.assigned_contact_id || order.assignedGroupId || order.assignedContactId;
       if (assignedId) {
         matchingUser = assignedUsers.find(user => user.id === assignedId);
-        console.log('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
       }
 
       // Fallback to name search
       if (!matchingUser && order.assignedTo && order.assignedTo !== 'Unassigned') {
         matchingUser = assignedUsers.find(user => user.name === order.assignedTo);
-        console.log('🔧 Searching by name:', order.assignedTo, 'found:', matchingUser?.name);
       }
 
       if (matchingUser) {
-        console.log('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
         setSelectedAssignedTo(matchingUser.id);
-      } else {
-        console.warn('⚠️ Could not find assigned user:', order.assignedTo);
       }
     }
   }, [assignedUsers.length, order, selectedAssignedTo]);
 
   const handleDealershipChange = (dealershipId: string) => {
-    console.log('🔧 handleDealershipChange called with:', dealershipId);
-    console.trace('🔍 Stack trace for handleDealershipChange:');
-
     setSelectedDealershipWithLog(dealershipId);
     setSelectedAssignedToWithLog('');
     setAssignedUsers([]);
@@ -752,7 +692,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           return false;
         }
       } catch (capacityError) {
-        console.warn('Capacity check failed:', capacityError);
         // Continue with order creation even if capacity check fails
         toast.warning(t('validation.capacityCheckFailed'));
       }
@@ -791,7 +730,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             return;
           }
         } catch (slotError) {
-          console.warn('Slot reservation failed:', slotError);
           toast.warning(t('validation.slotReservationWarning'));
           // Continue with order creation even if slot reservation fails
         }
@@ -1070,14 +1008,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                                     >
                                       {service.name}
                                     </Label>
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                                      <Badge variant="outline" className="text-xs px-2 py-0">
-                                        {t(`services.categories.${service.category}`)}
-                                      </Badge>
-                                      {service.duration && (
-                                        <span>• {service.duration} {t('services.minutes')}</span>
-                                      )}
-                                    </div>
+                                    {service.duration && (
+                                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                                        <span>{service.duration} {t('services.minutes')}</span>
+                                      </div>
+                                    )}
                                     {service.description && (
                                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                                         {service.description}
@@ -1176,7 +1111,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                 onClick={onClose}
                 className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
               >
-                {t('common.cancel')}
+                {t('common.actions.cancel')}
               </Button>
               <Button
                 type="submit"
@@ -1198,7 +1133,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     {order ? t('orders.updating') : t('orders.creating')}
                   </>
                 ) : (
-                  order ? t('common.update') : t('common.create')
+                  order ? t('common.actions.update') : t('common.actions.create')
                 )}
               </Button>
             </div>

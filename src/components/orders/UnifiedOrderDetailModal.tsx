@@ -320,6 +320,14 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     }
   }, [canEditOrder, onEdit, orderData]);
 
+  // Safe mapper for print functions
+  const mapToPrintOrderData = useCallback((data: OrderData) => {
+    return {
+      ...data,
+      dealer_id: Number(data.dealer_id) || Number(effectiveDealerId)
+    };
+  }, [effectiveDealerId]);
+
   // Smart polling for order details when modal is open
   const orderDetailsQuery = useOrderDetailsPolling(
     ['order', order?.id || ''],
@@ -552,7 +560,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => previewPrint({...orderData, dealer_id: Number(orderData.dealer_id)} as unknown as SystemOrderData)}
+                  onClick={() => previewPrint(mapToPrintOrderData(orderData))}
                   className="flex items-center gap-2"
                 >
                   <Printer className="h-4 w-4" />
@@ -561,7 +569,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
                 <Button
                   variant="outline"
-                  onClick={() => printOrder({...orderData, dealer_id: Number(orderData.dealer_id)} as unknown as SystemOrderData)}
+                  onClick={() => printOrder(mapToPrintOrderData(orderData))}
                   className="flex items-center gap-2"
                 >
                   <Download className="h-4 w-4" />

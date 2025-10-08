@@ -13,10 +13,63 @@ import {
   MessageSquare,
   Paperclip,
   QrCode,
-  UserCheck
+  UserCheck,
+  Code
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { RealtimeChannel } from '@supabase/supabase-js';
+
+interface ActivityMetadata {
+  timeDiff?: number;
+  [key: string]: unknown;
+}
+
+interface UserProfile {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  email: string;
+}
+
+interface OrderComment {
+  id: string;
+  order_id: string;
+  user_id: string | null;
+  comment_text: string;
+  comment_type: 'comment' | 'internal';
+  created_at: string;
+  updated_at: string;
+}
+
+interface OrderAttachment {
+  id: string;
+  order_id: string;
+  file_name: string;
+  uploaded_by: string | null;
+  upload_context: string | null;
+  created_at: string;
+}
+
+interface ActivityLog {
+  id: string;
+  order_id: string;
+  user_id: string | null;
+  activity_type: string;
+  field_name: string | null;
+  old_value: string | null;
+  new_value: string | null;
+  description: string | null;
+  created_at: string;
+  metadata: ActivityMetadata | null;
+}
+
+interface OrderData {
+  id: string;
+  created_at: string;
+  customer_name: string | null;
+  status: string;
+}
 
 interface ActivityItem {
   id: string;
@@ -28,11 +81,21 @@ interface ActivityItem {
   action_type: 'status_change' | 'comment' | 'note' | 'edit' | 'file_upload' | 'qr_regeneration' | 'assignment_change' | 'due_date_change';
   old_value?: string;
   new_value?: string;
-  metadata?: any;
+  metadata?: ActivityMetadata | OrderComment | OrderAttachment | ActivityLog;
 }
 
 interface RecentActivityBlockProps {
   orderId: string;
+}
+
+interface DebugInfo {
+  commentsCount: number;
+  attachmentsCount: number;
+  activityLogCount: number;
+  orderDataFetched: boolean;
+  profilesFetched: number;
+  totalActivities: number;
+  errors: string[];
 }
 
 export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
@@ -40,132 +103,203 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showDebug, setShowDebug] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<DebugInfo>({
+    commentsCount: 0,
+    attachmentsCount: 0,
+    activityLogCount: 0,
+    orderDataFetched: false,
+    profilesFetched: 0,
+    totalActivities: 0,
+    errors: []
+  });
 
   const fetchRecentActivity = useCallback(async () => {
     try {
       setLoading(true);
+      const errors: string[] = [];
+
+      console.log(`🔍 [RecentActivity] Fetching activity for order: ${orderId}`);
 
       // Fetch all activity sources in parallel
-      const [commentsResult, attachmentsResult, orderHistoryResult, activityLogResult] = await Promise.allSettled([
-        // 1. Comments and Internal Notes (without JOIN - we'll fetch user info separately)
+      const [commentsResult, attachmentsResult, activityLogResult, orderDataResult] = await Promise.allSettled([
+        // 1. Comments and Internal Notes
         supabase
           .from('order_comments')
-          .select(`
-            id,
-            order_id,
-            user_id,
-            comment_text,
-            comment_type,
-            created_at,
-            updated_at
-          `)
+          .select('id, order_id, user_id, comment_text, comment_type, parent_comment_id, created_at, updated_at')
           .eq('order_id', orderId)
           .order('created_at', { ascending: false })
           .limit(10),
 
-        // 2. File Attachments (without JOIN - we'll fetch user info separately)
+        // 2. File Attachments
         supabase
           .from('order_attachments')
-          .select(`
-            id,
-            order_id,
-            file_name,
-            uploaded_by,
-            upload_context,
-            created_at
-          `)
+          .select('id, order_id, file_name, uploaded_by, upload_context, created_at')
           .eq('order_id', orderId)
           .order('created_at', { ascending: false })
           .limit(5),
 
-        // 3. Order Updates (by checking updated_at vs created_at)
-        supabase
-          .from('orders')
-          .select('id, created_at, updated_at, status, assigned_group_id')
-          .eq('id', orderId)
-          .single(),
-
-        // 4. Order Activity Log (change tracking)
+        // 3. Order Activity Log
         supabase
           .from('order_activity_log')
           .select('id, order_id, user_id, activity_type, field_name, old_value, new_value, description, created_at, metadata')
           .eq('order_id', orderId)
           .order('created_at', { ascending: false })
-          .limit(20)
+          .limit(20),
+
+        // 4. FALLBACK: Order Data (for "Order Created" activity)
+        supabase
+          .from('orders')
+          .select('id, created_at, customer_name, status')
+          .eq('id', orderId)
+          .single()
       ]);
 
       const allActivities: ActivityItem[] = [];
 
-      // OPTIMIZATION: Collect all user IDs first, then fetch profiles once
+      // Debug tracking
+      let commentsCount = 0;
+      let attachmentsCount = 0;
+      let activityLogCount = 0;
+      let orderDataFetched = false;
+
+      // OPTIMIZATION: Collect all user IDs first
       const allUserIds: string[] = [];
 
-      // Collect user IDs from comments
-      if (commentsResult.status === 'fulfilled' && commentsResult.value.data) {
-        commentsResult.value.data.forEach((comment: any) => {
-          if (comment.user_id) allUserIds.push(comment.user_id);
-        });
+      // Process Comments
+      if (commentsResult.status === 'fulfilled') {
+        if (commentsResult.value.error) {
+          console.error('❌ [Comments] RLS Error:', commentsResult.value.error);
+          errors.push(`Comments: ${commentsResult.value.error.message}`);
+        } else if (commentsResult.value.data) {
+          commentsCount = commentsResult.value.data.length;
+          console.log(`✅ [Comments] Loaded ${commentsCount} comments`);
+          (commentsResult.value.data as OrderComment[]).forEach((comment) => {
+            if (comment.user_id) allUserIds.push(comment.user_id);
+          });
+        }
+      } else {
+        console.error('❌ [Comments] Promise rejected:', commentsResult.reason);
+        errors.push(`Comments: Promise rejected`);
       }
 
-      // Collect user IDs from attachments
-      if (attachmentsResult.status === 'fulfilled' && attachmentsResult.value.data) {
-        attachmentsResult.value.data.forEach((attachment: any) => {
-          if (attachment.uploaded_by) allUserIds.push(attachment.uploaded_by);
-        });
+      // Process Attachments
+      if (attachmentsResult.status === 'fulfilled') {
+        if (attachmentsResult.value.error) {
+          console.error('❌ [Attachments] RLS Error:', attachmentsResult.value.error);
+          errors.push(`Attachments: ${attachmentsResult.value.error.message}`);
+        } else if (attachmentsResult.value.data) {
+          attachmentsCount = attachmentsResult.value.data.length;
+          console.log(`✅ [Attachments] Loaded ${attachmentsCount} attachments`);
+          (attachmentsResult.value.data as OrderAttachment[]).forEach((attachment) => {
+            if (attachment.uploaded_by) allUserIds.push(attachment.uploaded_by);
+          });
+        }
+      } else {
+        console.error('❌ [Attachments] Promise rejected:', attachmentsResult.reason);
+        errors.push(`Attachments: Promise rejected`);
       }
 
-      // Collect user IDs from activity logs
-      if (activityLogResult.status === 'fulfilled' && activityLogResult.value.data) {
-        activityLogResult.value.data.forEach((log: any) => {
-          if (log.user_id) allUserIds.push(log.user_id);
-        });
+      // Process Activity Log
+      if (activityLogResult.status === 'fulfilled') {
+        if (activityLogResult.value.error) {
+          console.error('❌ [ActivityLog] RLS Error:', activityLogResult.value.error);
+          errors.push(`Activity Log: ${activityLogResult.value.error.message}`);
+        } else if (activityLogResult.value.data) {
+          activityLogCount = activityLogResult.value.data.length;
+          console.log(`✅ [ActivityLog] Loaded ${activityLogCount} log entries`);
+          (activityLogResult.value.data as ActivityLog[]).forEach((log) => {
+            if (log.user_id) allUserIds.push(log.user_id);
+          });
+        }
+      } else {
+        console.error('❌ [ActivityLog] Promise rejected:', activityLogResult.reason);
+        errors.push(`Activity Log: Promise rejected`);
+      }
+
+      // Process Order Data (Fallback)
+      if (orderDataResult.status === 'fulfilled') {
+        if (orderDataResult.value.error) {
+          console.error('❌ [OrderData] Error:', orderDataResult.value.error);
+          errors.push(`Order Data: ${orderDataResult.value.error.message}`);
+        } else if (orderDataResult.value.data) {
+          orderDataFetched = true;
+          const orderData = orderDataResult.value.data as OrderData;
+          // Note: orders table doesn't have created_by field
+          console.log(`✅ [OrderData] Loaded order created_at: ${orderData.created_at}`);
+        }
+      } else {
+        console.error('❌ [OrderData] Promise rejected:', orderDataResult.reason);
+        errors.push(`Order Data: Promise rejected`);
       }
 
       // Fetch all user profiles in ONE query
       const uniqueUserIds = [...new Set(allUserIds)];
-      let userProfiles: Record<string, any> = {};
+      let userProfiles: Record<string, UserProfile> = {};
+      let profilesFetched = 0;
 
       if (uniqueUserIds.length > 0) {
         try {
-          const { data: profiles } = await supabase
+          const { data: profiles, error: profileError } = await supabase
             .from('profiles')
             .select('id, first_name, last_name, email')
             .in('id', uniqueUserIds);
 
-          if (profiles) {
+          if (profileError) {
+            console.error('❌ [Profiles] Error:', profileError);
+            errors.push(`Profiles: ${profileError.message}`);
+          } else if (profiles) {
+            profilesFetched = profiles.length;
             userProfiles = profiles.reduce((acc, profile) => {
               acc[profile.id] = profile;
               return acc;
-            }, {} as Record<string, any>);
+            }, {} as Record<string, UserProfile>);
+            console.log(`✅ [Profiles] Loaded ${profilesFetched} user profiles`);
           }
         } catch (profileError) {
-          console.warn('Failed to fetch user profiles:', profileError);
-          // Continue without profiles - will fall back to generic names
+          console.warn('⚠️  [Profiles] Failed to fetch:', profileError);
+          errors.push(`Profiles: Failed to fetch`);
         }
       }
 
       // Helper function to get user name
       const getUserName = (userId: string | null | undefined): string => {
-        if (!userId) return 'System';
+        if (!userId) return t('recent_activity.user.system');
         const profile = userProfiles[userId];
-        if (!profile) return 'Team Member';
+        if (!profile) return t('recent_activity.user.team_member');
 
         const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
-        return fullName || profile.email || 'Team Member';
+        return fullName || profile.email || t('recent_activity.user.team_member');
       };
 
       // Process Comments
       if (commentsResult.status === 'fulfilled' && commentsResult.value.data) {
-        const comments = commentsResult.value.data;
-        const commentActivities = comments.map((comment: any) => {
+        const comments = commentsResult.value.data as OrderComment[];
+        const commentActivities = comments.map((comment) => {
+          // Determine if this is a reply
+          const isReply = !!comment.parent_comment_id;
+
+          // Choose appropriate action text
+          let action: string;
+          if (comment.comment_type === 'internal') {
+            action = isReply
+              ? t('recent_activity.actions.replied_to_internal_note')
+              : t('recent_activity.actions.added_internal_note');
+          } else {
+            action = isReply
+              ? t('recent_activity.actions.replied_to_comment')
+              : t('recent_activity.actions.added_comment');
+          }
+
           return {
             id: `comment-${comment.id}`,
-            action: comment.comment_type === 'internal' ? 'Added internal note' : 'Added comment',
+            action,
             description: (comment.comment_text || '').substring(0, 80) + (((comment.comment_text || '').length > 80) ? '...' : ''),
             user_name: getUserName(comment.user_id),
-            user_id: comment.user_id,
+            user_id: comment.user_id || undefined,
             created_at: comment.created_at,
             action_type: (comment.comment_type === 'internal' ? 'note' : 'comment') as ActivityItem['action_type'],
-            metadata: comment
+            metadata: { ...comment, isReply }
           };
         });
         allActivities.push(...commentActivities);
@@ -173,51 +307,25 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
       // Process File Attachments
       if (attachmentsResult.status === 'fulfilled' && attachmentsResult.value.data) {
-        const attachments = attachmentsResult.value.data;
-        const fileActivities = attachments.map((attachment: any) => {
-          return {
-            id: `file-${attachment.id}`,
-            action: 'Uploaded file',
-            description: `Attached: ${attachment.file_name}`,
-            user_name: getUserName(attachment.uploaded_by),
-            user_id: attachment.uploaded_by,
-            created_at: attachment.created_at,
-            action_type: 'file_upload' as const,
-            new_value: attachment.file_name,
-            metadata: attachment
-          };
-        });
+        const attachments = attachmentsResult.value.data as OrderAttachment[];
+        const fileActivities = attachments.map((attachment) => ({
+          id: `file-${attachment.id}`,
+          action: t('recent_activity.actions.uploaded_file'),
+          description: t('recent_activity.files.attached', { filename: attachment.file_name }),
+          user_name: getUserName(attachment.uploaded_by),
+          user_id: attachment.uploaded_by || undefined,
+          created_at: attachment.created_at,
+          action_type: 'file_upload' as const,
+          new_value: attachment.file_name,
+          metadata: attachment
+        }));
         allActivities.push(...fileActivities);
       }
 
-      // Process Order Updates (detect if order was edited)
-      if (orderHistoryResult.status === 'fulfilled' && orderHistoryResult.value.data) {
-        const order = orderHistoryResult.value.data;
-
-        // If updated_at is significantly different from created_at, it was edited
-        const createdTime = new Date(order.created_at).getTime();
-        const updatedTime = new Date(order.updated_at).getTime();
-        const timeDiff = updatedTime - createdTime;
-
-        if (timeDiff > 60000) { // More than 1 minute difference
-          allActivities.push({
-            id: `order-update-${order.id}`,
-            action: 'Order updated',
-            description: 'Order information was modified',
-            user_name: 'System',
-            created_at: order.updated_at,
-            action_type: 'edit',
-            metadata: { timeDiff: Math.floor(timeDiff / 1000) }
-          });
-        }
-      }
-
-      // Process Activity Log (track all order changes)
+      // Process Activity Log
       if (activityLogResult.status === 'fulfilled' && activityLogResult.value.data) {
-        const activityLogs = activityLogResult.value.data;
-
-        const activityLogItems = activityLogs.map((log: any) => {
-          // Map activity_type to action_type for UI display
+        const activityLogs = activityLogResult.value.data as ActivityLog[];
+        const activityLogItems = activityLogs.map((log) => {
           const activityTypeMap: Record<string, ActivityItem['action_type']> = {
             'status_changed': 'status_change',
             'assignment_changed': 'assignment_change',
@@ -231,8 +339,6 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
           };
 
           const actionType = activityTypeMap[log.activity_type] || 'edit';
-
-          // Use description from log or generate from activity_type
           const action = log.description || log.activity_type.replace(/_/g, ' ');
 
           return {
@@ -242,70 +348,158 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
               ? `Changed ${log.field_name.replace(/_/g, ' ')}`
               : log.description || '',
             user_name: getUserName(log.user_id),
-            user_id: log.user_id,
+            user_id: log.user_id || undefined,
             created_at: log.created_at,
             action_type: actionType,
-            old_value: log.old_value,
-            new_value: log.new_value,
-            metadata: log.metadata
+            old_value: log.old_value || undefined,
+            new_value: log.new_value || undefined,
+            metadata: log.metadata || undefined
           };
         });
 
         allActivities.push(...activityLogItems);
       }
 
+      // FALLBACK: If NO activities from any source, create "Order Created" from order data
+      if (allActivities.length === 0 && orderDataResult.status === 'fulfilled' && orderDataResult.value.data) {
+        const orderData = orderDataResult.value.data as OrderData;
+        console.log('📌 [Fallback] Creating synthetic "Order Created" activity');
+
+        allActivities.push({
+          id: `order-created-${orderData.id}`,
+          action: t('recent_activity.actions.order_created'),
+          description: t('recent_activity.actions.initial_creation'),
+          user_name: t('recent_activity.user.system'), // orders table doesn't have created_by
+          created_at: orderData.created_at,
+          action_type: 'edit',
+          metadata: { fallback: true, customer_name: orderData.customer_name }
+        });
+      }
+
       // Sort all activities by date (most recent first) and limit
       const sortedActivities = allActivities
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-        .slice(0, 10); // Increased limit to 10
+        .slice(0, 10);
 
       setActivities(sortedActivities);
-      setError(null); // Clear any previous errors
-      console.log('📊 Recent activities loaded:', sortedActivities.length);
+      setDebugInfo({
+        commentsCount,
+        attachmentsCount,
+        activityLogCount,
+        orderDataFetched,
+        profilesFetched,
+        totalActivities: sortedActivities.length,
+        errors
+      });
+      setError(null);
+      console.log(`📊 [RecentActivity] Total activities loaded: ${sortedActivities.length}`);
     } catch (error) {
-      console.error('Error fetching recent activity:', error);
+      console.error('💥 [RecentActivity] Critical error:', error);
       setError('Failed to load activity. Please try again.');
-      // Keep existing activities if any, don't clear them on error
+      setDebugInfo(prev => ({ ...prev, errors: [...prev.errors, 'Critical error in fetch'] }));
     } finally {
       setLoading(false);
     }
-  }, [orderId]);
+  }, [orderId, t]);
 
   useEffect(() => {
     fetchRecentActivity();
 
-    // Listen for real-time activity updates
+    // REAL-TIME: Subscribe to Supabase changes
+    console.log(`🔔 [RealtimeSubscription] Setting up for order: ${orderId}`);
+
+    let channel: RealtimeChannel | null = null;
+
+    try {
+      channel = supabase
+        .channel(`order-activity-${orderId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'order_activity_log',
+            filter: `order_id=eq.${orderId}`
+          },
+          (payload) => {
+            console.log('🔔 [Realtime] Activity log changed:', payload);
+            fetchRecentActivity();
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'order_comments',
+            filter: `order_id=eq.${orderId}`
+          },
+          (payload) => {
+            console.log('🔔 [Realtime] Comment changed:', payload);
+            fetchRecentActivity();
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'order_attachments',
+            filter: `order_id=eq.${orderId}`
+          },
+          (payload) => {
+            console.log('🔔 [Realtime] Attachment changed:', payload);
+            fetchRecentActivity();
+          }
+        )
+        .subscribe((status) => {
+          console.log(`🔔 [Realtime] Subscription status: ${status}`);
+        });
+    } catch (realtimeError) {
+      console.error('⚠️  [Realtime] Failed to subscribe:', realtimeError);
+    }
+
+    // Legacy window event listeners (keep for backward compatibility)
     const handleActivityUpdate = () => {
+      console.log('📢 [WindowEvent] Activity update triggered');
       fetchRecentActivity();
     };
 
     window.addEventListener('orderStatusUpdated', handleActivityUpdate);
     window.addEventListener('orderCommentAdded', handleActivityUpdate);
+    window.addEventListener('orderAttachmentAdded', handleActivityUpdate);
+    window.addEventListener('orderNotesUpdated', handleActivityUpdate);
 
     return () => {
+      console.log('🧹 [Cleanup] Unsubscribing from realtime and window events');
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
       window.removeEventListener('orderStatusUpdated', handleActivityUpdate);
       window.removeEventListener('orderCommentAdded', handleActivityUpdate);
+      window.removeEventListener('orderAttachmentAdded', handleActivityUpdate);
+      window.removeEventListener('orderNotesUpdated', handleActivityUpdate);
     };
   }, [orderId, fetchRecentActivity]);
 
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'status_change':
-        return <CheckCircle className="h-4 w-4 text-green-600" />;
+        return <CheckCircle className="h-4 w-4 text-emerald-500" />;
       case 'comment':
         return <MessageSquare className="h-4 w-4 text-gray-700" />;
       case 'note':
-        return <FileText className="h-4 w-4 text-amber-600" />;
+        return <FileText className="h-4 w-4 text-amber-500" />;
       case 'edit':
-        return <Edit className="h-4 w-4 text-purple-600" />;
+        return <Edit className="h-4 w-4 text-gray-600" />;
       case 'file_upload':
-        return <Paperclip className="h-4 w-4 text-orange-600" />;
+        return <Paperclip className="h-4 w-4 text-gray-600" />;
       case 'qr_regeneration':
-        return <QrCode className="h-4 w-4 text-indigo-600" />;
+        return <QrCode className="h-4 w-4 text-indigo-500" />;
       case 'assignment_change':
-        return <UserCheck className="h-4 w-4 text-teal-600" />;
+        return <UserCheck className="h-4 w-4 text-gray-600" />;
       case 'due_date_change':
-        return <Calendar className="h-4 w-4 text-pink-600" />;
+        return <Calendar className="h-4 w-4 text-gray-600" />;
       default:
         return <Activity className="h-4 w-4 text-gray-600" />;
     }
@@ -314,23 +508,23 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
   const getActivityColor = (type: string) => {
     switch (type) {
       case 'status_change':
-        return 'border-l-green-500 bg-green-50/30';
+        return 'border-l-emerald-500 bg-emerald-50/30';
       case 'comment':
         return 'border-l-indigo-500 bg-indigo-50/30';
       case 'note':
         return 'border-l-amber-500 bg-amber-50/30';
       case 'edit':
-        return 'border-l-purple-500 bg-purple-50/30';
+        return 'border-l-gray-400 bg-gray-50/30';
       case 'file_upload':
-        return 'border-l-orange-500 bg-orange-50/30';
+        return 'border-l-gray-400 bg-gray-50/30';
       case 'qr_regeneration':
         return 'border-l-indigo-500 bg-indigo-50/30';
       case 'assignment_change':
-        return 'border-l-teal-500 bg-teal-50/30';
+        return 'border-l-gray-400 bg-gray-50/30';
       case 'due_date_change':
-        return 'border-l-pink-500 bg-pink-50/30';
+        return 'border-l-gray-400 bg-gray-50/30';
       default:
-        return 'border-l-gray-500 bg-gray-50/30';
+        return 'border-l-gray-400 bg-gray-50/30';
     }
   };
 
@@ -339,10 +533,10 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
     const date = new Date(dateString);
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
 
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    return `${Math.floor(diffInMinutes / 1440)}d ago`;
+    if (diffInMinutes < 1) return t('recent_activity.time.just_now');
+    if (diffInMinutes < 60) return t('recent_activity.time.minutes_ago', { count: diffInMinutes });
+    if (diffInMinutes < 1440) return t('recent_activity.time.hours_ago', { count: Math.floor(diffInMinutes / 60) });
+    return t('recent_activity.time.days_ago', { count: Math.floor(diffInMinutes / 1440) });
   };
 
   return (
@@ -350,40 +544,70 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2">
           <Activity className="h-5 w-5 text-gray-700" />
-          Recent Activity
+          {t('recent_activity.title')}
           {activities.length > 0 && (
             <Badge variant="outline" className="text-xs">
               {activities.length}
             </Badge>
           )}
+          {debugInfo.errors.length > 0 && (
+            <button
+              onClick={() => setShowDebug(!showDebug)}
+              className="ml-auto text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+            >
+              <Code className="h-3 w-3" />
+              {showDebug ? t('recent_activity.hide_debug') : t('recent_activity.show_debug')}
+            </button>
+          )}
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-3">
+        {/* Debug Information */}
+        {showDebug && (
+          <div className="bg-gray-100 p-3 rounded text-xs space-y-1 font-mono">
+            <div className="font-bold text-gray-700">{t('recent_activity.debug_mode')}</div>
+            <div>📊 {t('recent_activity.sources.comments')}: {debugInfo.commentsCount}</div>
+            <div>📎 {t('recent_activity.sources.attachments')}: {debugInfo.attachmentsCount}</div>
+            <div>📝 {t('recent_activity.sources.activity_log')}: {debugInfo.activityLogCount}</div>
+            <div>🗂️ {t('recent_activity.sources.order_data')}: {debugInfo.orderDataFetched ? '✅' : '❌'}</div>
+            <div>👥 Profiles: {debugInfo.profilesFetched}</div>
+            <div>✅ Total Activities: {debugInfo.totalActivities}</div>
+            {debugInfo.errors.length > 0 && (
+              <div className="mt-2 pt-2 border-t border-gray-300">
+                <div className="font-bold text-red-600">Errors:</div>
+                {debugInfo.errors.map((err, idx) => (
+                  <div key={idx} className="text-red-600">❌ {err}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {loading ? (
           <div className="text-center py-4">
             <div className="animate-spin w-6 h-6 border-2 border-gray-700 border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-xs text-muted-foreground mt-2">Loading activity...</p>
+            <p className="text-xs text-muted-foreground mt-2">{t('recent_activity.loading')}</p>
           </div>
         ) : error ? (
-          <div className="text-center py-4 text-red-600">
+          <div className="text-center py-4 text-red-500">
             <AlertTriangle className="h-8 w-8 mx-auto mb-2" />
-            <p className="text-sm font-medium mb-2">{error}</p>
+            <p className="text-sm font-medium mb-2">{t('recent_activity.error_loading')}</p>
             <button
               onClick={() => fetchRecentActivity()}
               className="text-xs underline hover:no-underline transition-all"
             >
-              Click to retry
+              {t('recent_activity.retry')}
             </button>
           </div>
         ) : activities.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
             <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No recent activity</p>
-            <p className="text-xs">Activity will appear here</p>
+            <p className="text-sm">{t('recent_activity.no_activity')}</p>
+            <p className="text-xs">{t('recent_activity.no_activity_description')}</p>
           </div>
         ) : (
-          <div className="space-y-2 max-h-80 overflow-y-auto">
+          <div className="space-y-2 max-h-[500px] overflow-y-auto">
             {activities.map((activity) => (
               <div
                 key={activity.id}
@@ -412,12 +636,12 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
                       <div className="text-xs bg-background/50 p-2 rounded mb-2">
                         {activity.old_value && activity.new_value ? (
                           <div className="flex items-center gap-2">
-                            <span className="text-red-600 line-through">{activity.old_value}</span>
+                            <span className="text-red-500 line-through">{activity.old_value}</span>
                             <span className="text-muted-foreground">→</span>
-                            <span className="text-green-600 font-medium">{activity.new_value}</span>
+                            <span className="text-emerald-600 font-medium">{activity.new_value}</span>
                           </div>
                         ) : activity.new_value ? (
-                          <span className="text-green-600 font-medium">{activity.new_value}</span>
+                          <span className="text-emerald-600 font-medium">{activity.new_value}</span>
                         ) : null}
                       </div>
                     )}
@@ -429,7 +653,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
                         </AvatarFallback>
                       </Avatar>
                       <span className="text-xs text-muted-foreground">
-                        by {activity.user_name}
+                        {t('recent_activity.user.by', { name: activity.user_name })}
                       </span>
                     </div>
                   </div>
@@ -442,7 +666,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
         {/* Activity Summary */}
         <div className="pt-2 border-t text-center">
           <p className="text-xs text-muted-foreground">
-            Last activity: {activities[0] ? getTimeAgo(activities[0].created_at) : 'None'}
+            {t('recent_activity.last_activity')}: {activities[0] ? getTimeAgo(activities[0].created_at) : t('recent_activity.none')}
           </p>
         </div>
       </CardContent>

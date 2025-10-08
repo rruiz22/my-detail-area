@@ -310,7 +310,11 @@
   "dashboard": {
     "hero": {
       "welcome": "Bem-vindo ao MyDetailArea",
-      "subtitle": "Otimize as operações da sua concessionária com ferramentas e insights poderosos"
+      "subtitle": "Otimize as operações da sua concessionária com ferramentas e insights poderosos",
+      "new_order": "Novo Pedido",
+      "view_pending": "Ver Pendentes ({{count}})",
+      "get_ready": "Get Ready",
+      "team_chat": "Chat da Equipe"
     },
     "actions": {
       "create_order": "Criar Pedido",
@@ -332,6 +336,7 @@
       "awaiting_processing": "Aguardando processamento",
       "finished_today": "Finalizados hoje",
       "monthly_revenue": "Receita mensal",
+      "total_revenue": "Receita total",
       "in_process": "Em processo",
       "per_order": "Por pedido",
       "customer_rating": "Avaliação do cliente",
@@ -353,13 +358,18 @@
       "in_progress": "Em Andamento",
       "completed": "Concluído",
       "efficiency": "Eficiência",
-      "total_orders": "Pedidos Totais"
+      "total_orders": "Pedidos Totais",
+      "no_orders_yet": "Nenhum pedido ainda",
+      "create_first_order": "Crie seu primeiro pedido para começar",
+      "create_order": "Criar Pedido"
     },
     "activity": {
       "recent_activity": "Atividade Recente",
       "filter": "Filtrar",
       "all": "Todas",
       "vehicle": "Veículo",
+      "customer": "Cliente",
+      "no_recent_activity": "Nenhuma atividade recente",
       "order_created": "Pedido Criado",
       "order_updated": "Pedido Atualizado",
       "order_completed": "Pedido Concluído",
@@ -368,7 +378,16 @@
       "status_changed_desc": "Status do pedido alterado para Em Andamento",
       "recon_completed_desc": "Trabalho de recondicionamento concluído com sucesso",
       "car_wash_created_desc": "Pedido de serviço de lavagem criado",
-      "user_logged_in_desc": "Usuário fez login no sistema"
+      "user_logged_in_desc": "Usuário fez login no sistema",
+      "status_changed": "Status do pedido alterado",
+      "due_date_changed": "Data de entrega atualizada",
+      "priority_changed": "Prioridade alterada",
+      "assignment_changed": "Atribuição alterada",
+      "customer_updated": "Informações do cliente atualizadas",
+      "services_updated": "Serviços atualizados",
+      "amount_updated": "Valor atualizado",
+      "notes_updated": "Notas atualizadas",
+      "changed_from_to": "de {{from}} para {{to}}"
     },
     "quick_tools": {
       "title": "Ferramentas de Acesso Rápido",
@@ -716,7 +735,14 @@
     "reset_to_defaults": "Configuração restaurada para padrões",
     "config_imported": "Configuração importada com sucesso",
     "invalid_config_file": "Arquivo de configuração inválido",
-    "cache_cleared": "Cache limpo com sucesso"
+    "cache_cleared": "Cache limpo com sucesso",
+    "status": {
+      "pending": "Pendente",
+      "in_progress": "Em Andamento",
+      "completed": "Concluído",
+      "cancelled": "Cancelado",
+      "on_hold": "Em Espera"
+    }
   },
   "layout": {
     "search_placeholder": "Pesquisar pedidos..."
@@ -987,6 +1013,60 @@
     "unique_visitors": "Visitantes Únicos",
     "last_accessed": "Último acesso"
   },
+  "recent_activity": {
+    "title": "Atividade Recente",
+    "loading": "Carregando atividade...",
+    "no_activity": "Sem atividade recente",
+    "no_activity_description": "A atividade aparecerá aqui",
+    "error_loading": "Falha ao carregar atividade. Por favor, tente novamente.",
+    "retry": "Clique para tentar novamente",
+    "last_activity": "Última atividade",
+    "none": "Nenhuma",
+    "debug_mode": "Modo Debug",
+    "show_debug": "Mostrar Detalhes Técnicos",
+    "hide_debug": "Ocultar Detalhes Técnicos",
+    "actions": {
+      "added_comment": "Adicionou comentário",
+      "added_internal_note": "Adicionou nota interna",
+      "replied_to_comment": "Respondeu ao comentário",
+      "replied_to_internal_note": "Respondeu à nota interna",
+      "uploaded_file": "Enviou arquivo",
+      "order_updated": "Pedido atualizado",
+      "order_info_modified": "Informações do pedido modificadas",
+      "status_changed": "Status alterado",
+      "assignment_changed": "Atribuição alterada",
+      "due_date_changed": "Data de vencimento alterada",
+      "notes_updated": "Notas atualizadas",
+      "order_created": "Pedido criado",
+      "priority_changed": "Prioridade alterada",
+      "customer_updated": "Cliente atualizado",
+      "services_updated": "Serviços atualizados",
+      "amount_updated": "Valor atualizado",
+      "changed_field": "Alterou {{field}}",
+      "initial_creation": "Criação inicial do pedido"
+    },
+    "files": {
+      "attached": "Anexou: {{filename}}"
+    },
+    "user": {
+      "by": "por {{name}}",
+      "system": "Sistema",
+      "team_member": "Membro da Equipe",
+      "creator": "Criador do Pedido"
+    },
+    "time": {
+      "just_now": "Agora mesmo",
+      "minutes_ago": "{{count}}m atrás",
+      "hours_ago": "{{count}}h atrás",
+      "days_ago": "{{count}}d atrás"
+    },
+    "sources": {
+      "comments": "Comentários",
+      "attachments": "Anexos",
+      "activity_log": "Registro de Atividade",
+      "order_data": "Dados do Pedido"
+    }
+  },
   "auth": {
     "app_title": "My Detail Area",
     "app_subtitle": "Plataforma de Operações da Concessionária",
@@ -1044,7 +1124,10 @@
       "success_title": "Conta Criada",
       "check_email": "Por favor, verifique seu email para confirmação",
       "invitation_accepted": "Conta criada e convite aceito com sucesso!",
-      "invitation_accept_error": "Conta criada mas falhou ao aceitar o convite"
+      "invitation_accept_error": "Conta criada mas falhou ao aceitar o convite",
+      "account_created": "Conta Criada",
+      "check_email_to_continue": "Por favor, verifique seu email para confirmar sua conta e completar o convite",
+      "email_confirmation_pending_with_invitation": "Conta criada com sucesso! Por favor, verifique seu email para confirmar sua conta. Após a confirmação, você poderá aceitar o convite para se juntar à concessionária."
     }
   },
   "order_comments": {
@@ -1111,6 +1194,10 @@
         "users_short": "Users",
         "invitations": "Convites",
         "invitations_short": "Conv"
+      },
+      "users": {
+        "title": "Usuários da Concessionária",
+        "description": "Gerencie as associações e acessos de usuários para esta concessionária"
       }
     },
     "tabs": {
@@ -1142,6 +1229,39 @@
       "no_services_data": "Nenhum dado de serviços disponível",
       "calculating": "Calculando...",
       "error_loading_kpis": "Erro ao carregar métricas de desempenho"
+    },
+    "users": {
+      "title": "Gestão de Usuários",
+      "description": "Gerencie usuários da concessionária, associações e permissões de acesso",
+      "invite_user": "Convidar Usuário",
+      "table": {
+        "user": "Usuário",
+        "email": "E-mail",
+        "status": "Status",
+        "groups": "Grupos",
+        "joined": "Entrou em"
+      },
+      "no_users": "Nenhum usuário encontrado",
+      "error_loading_users": "Erro ao carregar usuários",
+      "user_deactivated": "Usuário desativado com sucesso",
+      "user_activated": "Usuário ativado com sucesso",
+      "error_updating_status": "Erro ao atualizar status do usuário",
+      "groups_updated": "Grupos de usuário atualizados com sucesso",
+      "error_updating_groups": "Erro ao atualizar grupos de usuário",
+      "manage_groups": "Gerenciar Grupos",
+      "manage_groups_desc": "Gerenciar associações de grupos para",
+      "deactivate": "Desativar Usuário",
+      "activate": "Ativar Usuário",
+      "no_role": "Sem função atribuída",
+      "edit_role": "Editar Função",
+      "change_role": "Alterar Função do Usuário",
+      "change_role_desc": "Atualizar a função atribuída a este usuário",
+      "select_new_role": "Selecionar nova função",
+      "current_role": "Função atual",
+      "new_role": "Nova função",
+      "role_updated": "Função do usuário atualizada com sucesso",
+      "error_updating_role": "Erro ao atualizar função do usuário",
+      "no_role_selected": "Por favor selecione uma função"
     }
   },
   "roles": {
@@ -1155,7 +1275,29 @@
     "dealer_service_manager": "Gerente de Serviço",
     "detail_super_manager": "Super Gerente de Detalhe",
     "detail_admin": "Administrador de Detalhe",
-    "system_admin": "Administrador do Sistema"
+    "system_admin": "Administrador do Sistema",
+    "delete_role": "Excluir Função",
+    "cannot_delete_role": "Não É Possível Excluir Função",
+    "role_has_users": "Esta função tem {{count}} usuário(s) atribuído(s). Por favor, reatribua os usuários antes de excluir.",
+    "confirm_delete_role": "Excluir '{{name}}'?",
+    "delete_warning": "Esta ação não pode ser desfeita. A função será desativada permanentemente.",
+    "role_deleted": "Função '{{name}}' excluída com sucesso",
+    "error_deleting_role": "Erro ao excluir função",
+    "cannot_delete_has_users": "Não é possível excluir - {{count}} usuário(s) atribuído(s)"
+  },
+  "permissions": {
+    "granular_permissions": "Permissões Especiais",
+    "granular_permissions_desc": "Capacidades adicionais além do acesso a módulos",
+    "can_access_internal_notes": "Acessar notas internas",
+    "can_access_internal_notes_desc": "Pode visualizar e criar notas internas em pedidos",
+    "can_view_pricing": "Visualizar preços",
+    "can_view_pricing_desc": "Pode ver informações de preços e custos",
+    "can_delete_orders": "Excluir pedidos",
+    "can_delete_orders_desc": "Pode excluir permanentemente pedidos",
+    "can_export_reports": "Exportar relatórios",
+    "can_export_reports_desc": "Pode exportar dados e gerar relatórios",
+    "can_change_order_status": "Alterar status do pedido",
+    "can_change_order_status_desc": "Pode modificar o status do pedido (pendente, em andamento, concluído, etc.)"
   },
   "invitations": {
     "all_invitations": "Todos os Convites",

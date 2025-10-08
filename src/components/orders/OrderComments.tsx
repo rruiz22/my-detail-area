@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { MessageSquare, Lock, Send } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
+import { Lock, MessageSquare, Send } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -40,7 +40,7 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
         .from('order_comments')
         .select('*')
         .eq('order_id', orderId)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
@@ -151,7 +151,7 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
             onChange={(e) => setNewComment(e.target.value)}
             className="min-h-[80px]"
           />
-          
+
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
               <Button
@@ -172,7 +172,7 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
                 </Button>
               )}
             </div>
-            
+
             <Button
               onClick={addComment}
               disabled={loading || !newComment.trim()}

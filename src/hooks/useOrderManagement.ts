@@ -523,17 +523,73 @@ export const useOrderManagement = (activeTab: string) => {
 
   const createOrder = useCallback(async (orderData: OrderFormData) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
       console.log('Creating order with data:', orderData);
-      
+
       // Determine order type from data or default to sales
       const orderType = (orderData.order_type || 'sales') as OrderType;
-      
+
       // Generate order number using new service
       const orderNumber = await orderNumberService.generateOrderNumber(orderType, orderData.dealer_id);
+
+      // Determine created_by_group_id from user's groups/roles
+      let createdByGroupId: string | null = null;
+
+      if (enhancedUser) {
+        console.log('📌 [createOrder] enhancedUser DEBUG:', {
+          has_is_system_admin: 'is_system_admin' in enhancedUser,
+          has_custom_roles: 'custom_roles' in enhancedUser,
+          has_groups: 'groups' in enhancedUser,
+          has_role: 'role' in enhancedUser,
+          is_system_admin: ('is_system_admin' in enhancedUser) ? (enhancedUser as any).is_system_admin : undefined,
+          custom_roles_count: ('custom_roles' in enhancedUser) ? (enhancedUser as any).custom_roles?.length : 0,
+          groups_count: ('groups' in enhancedUser) ? (enhancedUser as any).groups?.length : 0,
+          // Show first role/group details if exists
+          first_custom_role: ('custom_roles' in enhancedUser && (enhancedUser as any).custom_roles?.length > 0)
+            ? (enhancedUser as any).custom_roles[0]
+            : null,
+          first_group: ('groups' in enhancedUser && (enhancedUser as any).groups?.length > 0)
+            ? (enhancedUser as any).groups[0]
+            : null,
+        });
+        console.log('📌 [createOrder] Full enhancedUser object:', JSON.stringify(enhancedUser, null, 2));
+
+        // Custom Roles System (EnhancedUserV2)
+        if ('is_system_admin' in enhancedUser && 'custom_roles' in enhancedUser) {
+          // System admins don't need a group assignment
+          if ((enhancedUser as any).is_system_admin) {
+            console.log('✅ System admin - created_by_group_id will be null (admin access)');
+            // createdByGroupId remains null for system admins
+          }
+          // Use first active custom role if available
+          else if (enhancedUser.custom_roles && enhancedUser.custom_roles.length > 0) {
+            createdByGroupId = enhancedUser.custom_roles[0].id;
+            console.log('📌 Using Custom Role system - created_by_group_id:', createdByGroupId);
+          } else {
+            console.log('⚠️ Custom Roles system active but user has no roles assigned');
+          }
+        }
+        // Legacy System (EnhancedUser)
+        else if ('groups' in enhancedUser && 'role' in enhancedUser) {
+          // System admins don't need a group assignment
+          if ((enhancedUser as any).role === 'system_admin') {
+            console.log('✅ System admin (legacy) - created_by_group_id will be null (admin access)');
+            // createdByGroupId remains null for system admins
+          }
+          // Use first active group if available
+          else if (enhancedUser.groups && enhancedUser.groups.length > 0) {
+            createdByGroupId = enhancedUser.groups[0].id;
+            console.log('📌 Using Legacy system - created_by_group_id:', createdByGroupId);
+          } else {
+            console.log('⚠️ Legacy system active but user has no groups assigned');
+          }
+        }
+      } else {
+        console.log('⚠️ No enhancedUser available for created_by_group_id assignment');
+      }
 
       // orderData is already in snake_case format from transformToDbFormat in the modal
       const newOrder = {
@@ -542,6 +598,8 @@ export const useOrderManagement = (activeTab: string) => {
         order_type: orderType, // Use determined order type
         status: 'pending', // Default status
         dealer_id: orderData.dealer_id || 5, // Ensure dealer_id is set
+        created_by: user.id, // ✅ Track which USER created the order (for followers)
+        created_by_group_id: createdByGroupId, // Track which GROUP the user belonged to when creating
       };
 
       console.log('Inserting order to DB:', newOrder);

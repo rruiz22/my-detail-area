@@ -44,6 +44,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { safeFormatDateOnly } from '@/utils/dateUtils';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
+import { EditUserRoleModal } from './EditUserRoleModal';
 
 interface DealerUsersProps {
   dealerId: string;
@@ -51,8 +52,10 @@ interface DealerUsersProps {
 
 interface DealerMembership {
   id: string;
+  user_id: string;
   is_active: boolean;
   joined_at: string;
+  custom_role_id: string | null;
   profiles: {
     first_name: string | null;
     last_name: string | null;
@@ -66,6 +69,11 @@ interface DealerMembership {
       slug: string;
     };
   }>;
+  dealer_custom_roles: {
+    id: string;
+    role_name: string;
+    display_name: string;
+  } | null;
 }
 
 interface DealerGroup {
@@ -82,6 +90,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   const [loading, setLoading] = useState(true);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showManageGroupsModal, setShowManageGroupsModal] = useState(false);
+  const [showEditRoleModal, setShowEditRoleModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<DealerMembership | null>(null);
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
 
@@ -91,13 +100,16 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
         .from('dealer_memberships')
         .select(`
           id,
+          user_id,
           is_active,
           joined_at,
+          custom_role_id,
           profiles(first_name, last_name, email),
           dealer_membership_groups(
             group_id,
             dealer_groups(id, name, slug)
-          )
+          ),
+          dealer_custom_roles(id, role_name, display_name)
         `)
         .eq('dealer_id', parseInt(dealerId))
         .order('joined_at', { ascending: false });
@@ -170,6 +182,11 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       user.dealer_membership_groups.map(mg => mg.dealer_groups.id)
     );
     setShowManageGroupsModal(true);
+  };
+
+  const handleEditUserRole = (user: DealerMembership) => {
+    setSelectedUser(user);
+    setShowEditRoleModal(true);
   };
 
   const handleSaveUserGroups = async () => {
@@ -301,11 +318,19 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
+                        {user.dealer_custom_roles && (
+                          <Badge variant="default" className="text-xs">
+                            {user.dealer_custom_roles.display_name}
+                          </Badge>
+                        )}
                         {user.dealer_membership_groups.map((mg) => (
                           <Badge key={mg.group_id} variant="outline" className="text-xs">
                             {mg.dealer_groups.name}
                           </Badge>
                         ))}
+                        {!user.dealer_custom_roles && user.dealer_membership_groups.length === 0 && (
+                          <span className="text-xs text-muted-foreground">{t('dealer.users.no_role')}</span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -319,6 +344,10 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleEditUserRole(user)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            {t('dealer.users.edit_role')}
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleManageUserGroups(user)}>
                             <Shield className="h-4 w-4 mr-2" />
                             {t('dealer.users.manage_groups')}
@@ -353,6 +382,20 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
         onClose={() => setShowInviteModal(false)}
         dealerId={parseInt(dealerId)} // Fixed dealership from route
         onInvitationSent={fetchUsers}
+      />
+
+      {/* Edit User Role Modal */}
+      <EditUserRoleModal
+        open={showEditRoleModal}
+        onClose={() => setShowEditRoleModal(false)}
+        user={selectedUser ? {
+          id: selectedUser.id,
+          user_id: selectedUser.user_id,
+          profiles: selectedUser.profiles,
+          dealer_custom_roles: selectedUser.dealer_custom_roles
+        } : null}
+        dealerId={parseInt(dealerId)}
+        onRoleUpdated={fetchUsers}
       />
 
       {/* Manage User Groups Modal */}

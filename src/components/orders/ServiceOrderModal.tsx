@@ -291,7 +291,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   const fetchDealerData = async (dealershipId: string) => {
     if (!dealershipId) return;
 
-    console.log('🔍 ServiceOrderModal: Fetching dealer data for dealership:', dealershipId);
     setLoading(true);
     try {
       const [usersResult, servicesResult] = await Promise.all([
@@ -314,14 +313,17 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           })
       ]);
 
-      console.log('📊 Users query result:', {
-        error: usersResult.error,
-        count: usersResult.data?.length,
-        data: usersResult.data
-      });
-
       if (usersResult.error) {
-        console.error('❌ Error fetching users:', usersResult.error);
+        console.error('Error fetching users:', usersResult.error);
+      }
+
+      if (servicesResult.error) {
+        console.error('Error fetching services:', servicesResult.error);
+        toast({
+          title: t('common.error'),
+          description: t('orders.services_fetch_error') || 'Error loading services',
+          variant: 'destructive'
+        });
       }
 
       if (usersResult.data) {
@@ -331,22 +333,23 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           email: membership.profiles.email
         }));
 
-        console.log('✅ Mapped users:', mappedUsers);
         setAssignedUsers(mappedUsers);
       } else {
-        console.warn('⚠️ No users found for dealership:', dealershipId);
         setAssignedUsers([]);
       }
 
       if (servicesResult.data) {
-        console.log('✅ Services loaded:', servicesResult.data.length);
         setServices(servicesResult.data);
       } else {
-        console.warn('⚠️ No services found');
         setServices([]);
       }
     } catch (error) {
-      console.error('❌ Error fetching dealer data:', error);
+      console.error('Error fetching dealer data:', error);
+      toast({
+        title: t('common.error'),
+        description: t('common.unexpected_error') || 'An unexpected error occurred',
+        variant: 'destructive'
+      });
     } finally {
       setLoading(false);
     }

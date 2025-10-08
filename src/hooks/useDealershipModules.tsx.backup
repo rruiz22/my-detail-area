@@ -24,14 +24,7 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
   const [error, setError] = useState<string | null>(null);
 
   const refreshModules = useCallback(async () => {
-    if (!dealerId) {
-      // If no dealerId provided, immediately set loading to false with empty modules
-      // This allows the fail-open logic to work correctly
-      setLoading(false);
-      setModules([]);
-      setError(null);
-      return;
-    }
+    if (!dealerId) return;
 
     try {
       setLoading(true);
@@ -90,24 +83,8 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
   }, [dealerId]);
 
   const hasModuleAccess = useCallback((module: AppModule): boolean => {
-    // Security: If no dealership modules are configured yet (new dealership or no explicit config),
-    // allow access by default. This makes the system "fail-open" for module configuration,
-    // while still enforcing role-based permissions (which are checked separately).
-    // This prevents blocking users when dealership_modules table is empty.
-    if (modules.length === 0) {
-      console.log(`[hasModuleAccess] No modules configured - allowing ${module} by default (permissions still enforced)`);
-      return true;
-    }
-
-    // If modules ARE configured, check if this specific module is enabled
     const moduleData = modules.find(m => m.module === module);
-    const isEnabled = moduleData?.is_enabled || false;
-
-    if (!isEnabled) {
-      console.log(`[hasModuleAccess] Module ${module} is explicitly disabled for dealership`);
-    }
-
-    return isEnabled;
+    return moduleData?.is_enabled || false;
   }, [modules]);
 
   useEffect(() => {

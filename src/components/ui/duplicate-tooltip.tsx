@@ -202,31 +202,24 @@ export function DuplicateTooltip({
   const tooltipContent = useMemo(() => {
     try {
       return (
-        <div className="max-w-sm min-w-64">
-          {/* Header with error state */}
-          <div className="mb-3">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-sm text-foreground">
-                Duplicate {fieldLabel}
-              </p>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              <span className="font-medium">{value}</span> • {orders.length} orders found
+        <div className="w-[500px]">
+          {/* Header */}
+          <div className="mb-3 pb-2 border-b border-border">
+            <p className="font-semibold text-sm text-foreground flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500" />
+              Duplicate {fieldLabel}: <span className="font-mono">{value}</span>
             </p>
-            {tooltipError && (
-              <p className="text-xs text-destructive mt-1 flex items-center gap-1">
-                <AlertTriangle className="w-3 h-3" />
-                {tooltipError}
-              </p>
-            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              {orders.length} orders found
+            </p>
           </div>
-          
-          {/* Orders list */}
-          <div className="space-y-2 max-h-48 overflow-y-auto">
+
+          {/* Orders table - Inline format */}
+          <div className="space-y-1.5 max-h-64 overflow-y-auto custom-scrollbar">
             {displayOrders.map((order, index) => (
-              <div 
+              <div
                 key={`${order.id}-${index}`}
-                className="flex items-center justify-between gap-2 p-2 rounded-md hover:bg-accent/70 cursor-pointer text-xs transition-colors border border-transparent hover:border-accent-foreground/20"
+                className="group flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent/70 cursor-pointer transition-all border border-transparent hover:border-accent-foreground/20"
                 onClick={() => handleOrderClick(order)}
                 role="button"
                 tabIndex={0}
@@ -237,43 +230,61 @@ export function DuplicateTooltip({
                   }
                 }}
               >
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate text-foreground">
-                    {getOrderNumber(order)}
-                  </div>
-                  <div className="flex items-center gap-1 text-muted-foreground mt-1">
-                    <Calendar className="w-3 h-3" />
-                    <span>{formatDate(order.createdAt)}</span>
-                    {order.dealershipName && (
-                      <>
-                        <span className="mx-1">•</span>
-                        <span className="truncate">{order.dealershipName}</span>
-                      </>
-                    )}
-                  </div>
+                {/* Order Number */}
+                <div className="font-semibold text-sm text-foreground w-20 flex-shrink-0">
+                  {getOrderNumber(order)}
                 </div>
-                
-                <Badge 
-                  className={cn("text-xs px-2 py-1", getStatusColor(order.status))}
+
+                {/* L8V */}
+                {field === 'vehicleVin' && order.vehicleVin && (
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <span className="text-[10px] text-muted-foreground/60">L8V:</span>
+                    <span className="font-mono text-xs font-semibold text-foreground">{order.vehicleVin.slice(-8)}</span>
+                  </div>
+                )}
+
+                {/* Stock Number */}
+                {field === 'stockNumber' && order.stockNumber && (
+                  <div className="font-mono text-xs font-semibold text-foreground flex-shrink-0">
+                    {order.stockNumber}
+                  </div>
+                )}
+
+                {/* Date */}
+                <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
+                  <Calendar className="w-3 h-3" />
+                  <span>{formatDate(order.createdAt)}</span>
+                </div>
+
+                {/* Dealership */}
+                {order.dealershipName && (
+                  <div className="text-xs text-muted-foreground truncate flex-1 min-w-0">
+                    {order.dealershipName}
+                  </div>
+                )}
+
+                {/* Status Badge */}
+                <Badge
+                  className={cn("text-[11px] px-2 py-0.5 flex-shrink-0", getStatusColor(order.status))}
                   variant="secondary"
                 >
                   {formatStatusText(order.status)}
                 </Badge>
               </div>
             ))}
-            
+
             {remainingCount > 0 && (
-              <div className="text-center text-xs text-muted-foreground pt-2 border-t border-border">
+              <div className="text-center text-xs text-muted-foreground pt-2 mt-2 border-t border-border">
                 <Badge variant="outline" className="text-xs">
                   + {remainingCount} more orders
                 </Badge>
               </div>
             )}
           </div>
-          
-          <div className="mt-3 pt-2 border-t border-border text-xs text-muted-foreground text-center">
-            <div className="flex items-center justify-center gap-1">
-              <Eye className="w-3 h-3" />
+
+          <div className="mt-3 pt-2 border-t border-border text-xs text-muted-foreground/80 text-center">
+            <div className="flex items-center justify-center gap-1.5">
+              <Eye className="w-3.5 h-3.5" />
               Click any order to view details
             </div>
           </div>
@@ -347,40 +358,32 @@ export function DuplicateTooltip({
       }}
     >
       <TooltipTrigger asChild>
-        <div 
-          className="inline-block relative"
+        <div
+          className="inline-block"
           data-tooltip-field={field}
           data-tooltip-value={value}
           data-tooltip-count={orders.length}
           data-is-mobile={isMobile}
           onTouchStart={handleTouchStart}
           onPointerDown={handlePointerDown}
-          style={{
-            // Ensure touch targets are large enough on mobile
-            minHeight: isMobile ? '44px' : 'auto',
-            minWidth: isMobile ? '44px' : 'auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
         >
           {children}
         </div>
       </TooltipTrigger>
-      <TooltipContent 
-        side="top" 
+      <TooltipContent
+        side="top"
         align="center"
         className={cn(
-          // Enhanced z-index and positioning
-          "z-[9999] max-w-none p-4 bg-popover/95 backdrop-blur-sm border border-border shadow-2xl",
+          // Glass morphism styling
+          "z-[9999] max-w-none p-4 bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-lg",
           // Better mobile support
           "data-[side=bottom]:animate-in data-[side=bottom]:slide-in-from-top-2",
           "data-[side=top]:animate-in data-[side=top]:slide-in-from-bottom-2",
-          "data-[side=left]:animate-in data-[side=left]:slide-in-from-right-2", 
+          "data-[side=left]:animate-in data-[side=left]:slide-in-from-right-2",
           "data-[side=right]:animate-in data-[side=right]:slide-in-from-left-2",
           // Smooth animations
-          "animate-in fade-in-0 zoom-in-95 duration-200",
-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-200"
+          "animate-in fade-in-0 zoom-in-95 duration-150",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-100"
         )}
         sideOffset={8}
         data-duplicate-tooltip="true"

@@ -18,7 +18,7 @@ import {
   Building2
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { formatDistanceToNow, format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { useRecentActivity } from '@/hooks/useRecentActivity';
 
@@ -26,7 +26,6 @@ export function RecentActivity() {
   const { t, i18n } = useTranslation();
   const [filter, setFilter] = useState<string>('all');
   const [showFilters, setShowFilters] = useState<boolean>(true);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const { data: activities = [], isLoading, refetch } = useRecentActivity(20);
 
   // Get locale for date-fns
@@ -70,7 +69,7 @@ export function RecentActivity() {
     };
   };
 
-  // Translate and format values (status, dates, etc)
+  // Translate status values
   const translateValue = (value: string | null, fieldName: string | null): string => {
     if (!value) return 'N/A';
 
@@ -91,20 +90,7 @@ export function RecentActivity() {
       return translated;
     }
 
-    // If it's a date/timestamp field, format it nicely
-    if (fieldName === 'due_date' || value.includes('T') || value.includes('+')) {
-      try {
-        const date = new Date(value);
-        if (!isNaN(date.getTime())) {
-          // Format as: Oct 7, 2:00 PM
-          return format(date, 'MMM d, h:mm a', { locale: getLocale() });
-        }
-      } catch (e) {
-        // If parsing fails, continue to return raw value
-      }
-    }
-
-    // For other fields, return as is
+    // For other fields, return as is (could be dates, numbers, etc)
     return value;
   };
 
@@ -164,16 +150,10 @@ export function RecentActivity() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={async () => {
-                console.log('[RecentActivity] Refresh button clicked');
-                setIsRefreshing(true);
-                await refetch();
-                // Keep animation visible for at least 500ms
-                setTimeout(() => setIsRefreshing(false), 500);
-              }}
-              disabled={isLoading || isRefreshing}
+              onClick={() => refetch()}
+              disabled={isLoading}
             >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>
@@ -181,41 +161,41 @@ export function RecentActivity() {
         {/* Filter Badges - Collapsible */}
         {showFilters && (
           <div className="flex flex-wrap gap-2 pt-2">
-            <Badge
-              variant={filter === 'all' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('all')}
-            >
-              {t('dashboard.activity.all')}
-            </Badge>
-            <Badge
-              variant={filter === 'Sales' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Sales')}
-            >
-              {t('dashboard.departments.sales')}
-            </Badge>
-            <Badge
-              variant={filter === 'Service' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Service')}
-            >
-              {t('dashboard.departments.service')}
-            </Badge>
-            <Badge
-              variant={filter === 'Recon' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Recon')}
-            >
-              {t('dashboard.departments.recon')}
-            </Badge>
-            <Badge
-              variant={filter === 'Car Wash' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Car Wash')}
-            >
-              {t('dashboard.departments.car_wash')}
-            </Badge>
+          <Badge 
+            variant={filter === 'all' ? 'default' : 'secondary'} 
+            className="cursor-pointer"
+            onClick={() => setFilter('all')}
+          >
+            {t('dashboard.activity.all')}
+          </Badge>
+          <Badge 
+            variant={filter === 'Sales' ? 'default' : 'secondary'} 
+            className="cursor-pointer"
+            onClick={() => setFilter('Sales')}
+          >
+            {t('dashboard.departments.sales')}
+          </Badge>
+          <Badge 
+            variant={filter === 'Service' ? 'default' : 'secondary'} 
+            className="cursor-pointer"
+            onClick={() => setFilter('Service')}
+          >
+            {t('dashboard.departments.service')}
+          </Badge>
+          <Badge 
+            variant={filter === 'Recon' ? 'default' : 'secondary'} 
+            className="cursor-pointer"
+            onClick={() => setFilter('Recon')}
+          >
+            {t('dashboard.departments.recon')}
+          </Badge>
+          <Badge
+            variant={filter === 'Car Wash' ? 'default' : 'secondary'}
+            className="cursor-pointer"
+            onClick={() => setFilter('Car Wash')}
+          >
+            {t('dashboard.departments.car_wash')}
+          </Badge>
           </div>
         )}
       </CardHeader>

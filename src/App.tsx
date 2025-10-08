@@ -65,40 +65,152 @@ const AppRoutes = () => {
         <Route path="/" element={<ProtectedLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="sales" element={<SalesOrders />} />
-          <Route path="service" element={<ServiceOrders />} />
-          <Route path="recon" element={<ReconOrders />} />
-          <Route path="carwash" element={<CarWash />} />
-          <Route path="stock" element={<Stock />} />
-          <Route path="productivity" element={<Productivity />} />
-          <Route path="detail-hub/*" element={<DetailHub />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="vin-scanner" element={<VinScanner />} />
-          <Route path="nfc-tracking" element={<NFCTracking />} />
-          <Route path="reports" element={<Reports />} />
+          <Route
+            path="sales"
+            element={
+              <PermissionGuard module="sales_orders" permission="view" checkDealerModule={true}>
+                <SalesOrders />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="service"
+            element={
+              <PermissionGuard module="service_orders" permission="view" checkDealerModule={true}>
+                <ServiceOrders />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="recon"
+            element={
+              <PermissionGuard module="recon_orders" permission="view" checkDealerModule={true}>
+                <ReconOrders />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="carwash"
+            element={
+              <PermissionGuard module="car_wash" permission="view" checkDealerModule={true}>
+                <CarWash />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock"
+            element={
+              <PermissionGuard module="stock" permission="view" checkDealerModule={true}>
+                <Stock />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="productivity"
+            element={
+              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+                <Productivity />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="detail-hub/*"
+            element={
+              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+                <DetailHub />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="chat"
+            element={
+              <PermissionGuard module="chat" permission="view" checkDealerModule={true}>
+                <Chat />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="vin-scanner"
+            element={
+              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+                <VinScanner />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="nfc-tracking"
+            element={
+              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+                <NFCTracking />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <PermissionGuard module="reports" permission="view" checkDealerModule={true}>
+                <Reports />
+              </PermissionGuard>
+            }
+          />
           <Route
             path="settings"
             element={
-              <PermissionGuard module="settings" permission="view">
+              <PermissionGuard module="settings" permission="view" checkDealerModule={true}>
                 <Settings />
               </PermissionGuard>
             }
           />
-          <Route path="dealerships" element={<Dealerships />} />
+          <Route
+            path="dealerships"
+            element={
+              <PermissionGuard module="dealerships" permission="view" checkDealerModule={true}>
+                <Dealerships />
+              </PermissionGuard>
+            }
+          />
           <Route
             path="dealers/:id"
             element={
-              <PermissionGuard module="dealerships" permission="admin">
+              <PermissionGuard module="dealerships" permission="admin" checkDealerModule={true}>
                 <DealerView />
               </PermissionGuard>
             }
           />
-          <Route path="contacts" element={<Contacts />} />
+          <Route
+            path="contacts"
+            element={
+              <PermissionGuard module="contacts" permission="view" checkDealerModule={true}>
+                <Contacts />
+              </PermissionGuard>
+            }
+          />
           <Route path="profile" element={<Profile />} />
-          <Route path="management" element={<Management />} />
-          <Route path="admin" element={<AdminDashboard />} />
+          <Route
+            path="management"
+            element={
+              <PermissionGuard module="management" permission="admin" checkDealerModule={true}>
+                <Management />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="admin"
+            element={
+              <PermissionGuard module="management" permission="admin" checkDealerModule={true}>
+                <AdminDashboard />
+              </PermissionGuard>
+            }
+          />
           <Route path="phase3" element={<Phase3Dashboard />} />
-          <Route path="get-ready/*" element={<GetReady />} />
+          <Route
+            path="get-ready/*"
+            element={
+              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+                <GetReady />
+              </PermissionGuard>
+            }
+          />
           <Route path="debug/tooltips" element={<TooltipTester />} />
           <Route path="debug/duplicate-tooltips" element={<DuplicateTooltipTester />} />
         </Route>

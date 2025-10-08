@@ -5,28 +5,26 @@
  * Uses smart polling instead of 4 separate real-time subscriptions for modal data.
  */
 
-import { useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback } from 'react';
 
 // Import comprehensive order types for consistency
 import type {
-  OrderAttachment,
-  OrderActivity,
-  OrderComment,
-  OrderFollower,
-  OrderModalData,
-  QRAnalytics
+    OrderActivity,
+    OrderAttachment,
+    OrderComment,
+    OrderFollower,
+    OrderModalData,
+    QRAnalytics
 } from '@/types/order';
 
 // Re-export types for backward compatibility
 export type {
-  OrderAttachment,
-  OrderActivity,
-  OrderComment,
-  OrderFollower,
-  OrderModalData,
-  QRAnalytics
+    OrderActivity, OrderAttachment, OrderComment,
+    OrderFollower,
+    OrderModalData,
+    QRAnalytics
 };
 
 interface UseOrderModalDataProps {
@@ -84,7 +82,7 @@ export const useOrderModalData = ({
             )
           `)
           .eq('order_id', orderId)
-          .order('created_at', { ascending: true }),
+          .order('created_at', { ascending: false }),
 
         // Recent activities
         supabase

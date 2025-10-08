@@ -127,6 +127,12 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 
       toast.success(t('messages.notes_updated_successfully'));
 
+      // 🔔 Dispatch event to trigger RecentActivityBlock refresh
+      // This ensures immediate update even if Realtime has a delay
+      window.dispatchEvent(new CustomEvent('orderNotesUpdated', {
+        detail: { orderId: order.id, field, value }
+      }));
+
       if (field === 'notes') {
         setEditingNotes(false);
       } else {

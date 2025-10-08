@@ -296,7 +296,11 @@ export const DealershipManagement: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {filteredDealerships.map((dealership) => (
-                  <TableRow key={dealership.id}>
+                  <TableRow
+                    key={dealership.id}
+                    onDoubleClick={() => handleViewDealer(dealership)}
+                    className="cursor-pointer hover:bg-muted/50"
+                  >
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">

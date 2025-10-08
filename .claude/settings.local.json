@@ -21,7 +21,8 @@
       "Bash(npx supabase functions:*)",
       "Bash(dir:*)",
       "Bash(find:*)",
-      "Bash(npm run build:dev:*)"
+      "Bash(npm run build:dev:*)",
+      "Bash(npx supabase:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePermissions, AppModule, PermissionLevel } from '@/hooks/usePermissions';
+import { useDealershipModules } from '@/hooks/useDealershipModules';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
@@ -21,6 +22,8 @@ interface PermissionGuardProps {
   // Optional order-specific checks
   order?: Order;
   requireOrderAccess?: boolean;
+  // Optional dealer module check
+  checkDealerModule?: boolean;
 }
 
 export const PermissionGuard: React.FC<PermissionGuardProps> = ({
@@ -29,12 +32,20 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   children,
   fallback,
   order,
-  requireOrderAccess = false
+  requireOrderAccess = false,
+  checkDealerModule = false
 }) => {
-  const { hasPermission, canEditOrder, canDeleteOrder, loading } = usePermissions();
+  const { hasPermission, canEditOrder, canDeleteOrder, loading, enhancedUser } = usePermissions();
   const { t } = useTranslation();
 
-  if (loading) {
+  // Get dealership modules only if needed
+  const userDealershipId = (enhancedUser as any)?.dealership_id || 0;
+  const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(
+    checkDealerModule ? userDealershipId : 0
+  );
+
+  if (loading || (checkDealerModule && modulesLoading)) {
     return (
       <div className="animate-pulse">
         <div className="h-4 bg-muted rounded w-20"></div>
@@ -59,6 +70,14 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
       }
     } else {
       hasAccess = moduleAccess;
+    }
+
+    // Additional check: Verify dealer has module enabled (if checkDealerModule is true)
+    if (hasAccess && checkDealerModule && !isSystemAdmin) {
+      const dealerHasModule = hasModuleAccess(module);
+      if (!dealerHasModule) {
+        hasAccess = false;
+      }
     }
   } catch (error) {
     console.error('Error checking permission:', error);

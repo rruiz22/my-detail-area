@@ -164,25 +164,49 @@ export function InvitationAccept() {
     setAccepting(true);
 
     try {
-      const { error } = await supabase
-        .rpc('accept_dealer_invitation', {
-          token_input: token,
-        });
+      // Wait for authentication session to be established
+      let attempts = 0;
+      const maxAttempts = 10; // 5 seconds total (500ms * 10)
 
-      if (error) {
-        console.error('Supabase RPC error:', error);
-        throw new Error(error.message || 'Error accepting invitation');
+      while (attempts < maxAttempts) {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          // Session is ready, now we can accept the invitation
+          const { error } = await supabase
+            .rpc('accept_dealer_invitation', {
+              token_input: token,
+            });
+
+          if (error) {
+            console.error('Supabase RPC error:', error);
+            throw new Error(error.message || 'Error accepting invitation');
+          }
+
+          toast({
+            title: t('common.success'),
+            description: t('invitations.accept.success_message', { dealership: invitation.dealership_name }),
+          });
+
+          // Small delay to ensure toast is visible before navigation
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1000);
+
+          return; // Success - exit function
+        }
+
+        // Wait 500ms before next attempt
+        await new Promise(resolve => setTimeout(resolve, 500));
+        attempts++;
       }
 
+      // If we got here, session never became available
       toast({
-        title: t('common.success'),
-        description: t('invitations.accept.success_message', { dealership: invitation.dealership_name }),
+        title: t('auth.signup.account_created'),
+        description: t('auth.signup.invitation_accept_error') + ' - ' + t('auth.signup.check_email_to_continue'),
+        variant: 'destructive',
       });
-
-      // Small delay to ensure toast is visible before navigation
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 1000);
     } catch (err: any) {
       console.error('Error accepting invitation:', err);
       toast({

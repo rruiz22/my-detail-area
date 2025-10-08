@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Clock, CheckCircle, AlertCircle, DollarSign, Plus, Users, Settings, BarChart3, Zap } from "lucide-react";
+import { TrendingUp, Clock, CheckCircle, AlertCircle, DollarSign, Plus, Users, Settings, BarChart3, Zap, MessageCircle, AlertTriangle } from "lucide-react";
 import { getDashboardMetrics, mockOrders } from "@/lib/mockData";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -12,16 +12,19 @@ import { useNavigate } from 'react-router-dom';
 import { DashboardMetrics } from '@/components/dashboard/DashboardMetrics';
 import { DepartmentOverview } from '@/components/dashboard/DepartmentOverview';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { usePermissions } from '@/hooks/usePermissions';
 export default function Dashboard() {
   console.log('🟢 Dashboard component is RENDERING');
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const metrics = getDashboardMetrics();
-  const recentOrders = mockOrders.slice(0, 5);
   const notifications = useNotifications();
-  
+  const { data: dashboardData } = useDashboardData();
+  const { hasPermission } = usePermissions();
+
+  const pendingCount = dashboardData?.overall.pendingOrders || 0;
+
   const handleQuickAction = (action: string, route?: string) => {
-    notifications.showSuccess(t('dashboard.actions.success', { action }), t('dashboard.actions.started'));
     if (route) {
       navigate(route);
     }
@@ -37,30 +40,62 @@ export default function Dashboard() {
             <h1 className="text-3xl font-bold mb-2">{t('dashboard.hero.welcome')}</h1>
             <p className="text-xl opacity-90">{t('dashboard.hero.subtitle')}</p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button 
-                variant="secondary" 
-                onClick={() => handleQuickAction(t('dashboard.actions.create_order'), '/vin-scanner')}
-                className="button-enhanced"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {t('dashboard.actions.create_order')}
-              </Button>
-              <Button 
-                variant="outline" 
-                className="border-white/20 text-primary-foreground hover:bg-white/10"
-                onClick={() => handleQuickAction(t('dashboard.actions.view_reports'), '/reports')}
-              >
-                <BarChart3 className="h-4 w-4 mr-2" />
-                {t('dashboard.actions.view_reports')}
-              </Button>
-              <Button 
-                variant="outline" 
-                className="border-white/20 text-primary-foreground hover:bg-white/10"
-                onClick={() => handleQuickAction(t('dashboard.actions.manage_users'), '/users')}
-              >
-                <Users className="h-4 w-4 mr-2" />
-                {t('dashboard.actions.manage_users')}
-              </Button>
+              {/* New Order - Always show if user has any order type permission */}
+              {(hasPermission('sales_orders', 'edit') ||
+                hasPermission('service_orders', 'edit') ||
+                hasPermission('recon_orders', 'edit') ||
+                hasPermission('car_wash', 'edit')) && (
+                <Button
+                  variant="secondary"
+                  onClick={() => handleQuickAction('create_order', '/vin-scanner')}
+                  className="button-enhanced"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  {t('dashboard.hero.new_order')}
+                </Button>
+              )}
+
+              {/* View Pending Orders - Show count from real data */}
+              {pendingCount > 0 && (
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-primary-foreground hover:bg-white/10"
+                  onClick={() => {
+                    // Navigate to first available order type with pending filter
+                    if (hasPermission('sales_orders', 'view')) navigate('/sales?filter=pending');
+                    else if (hasPermission('service_orders', 'view')) navigate('/service?filter=pending');
+                    else if (hasPermission('recon_orders', 'view')) navigate('/recon?filter=pending');
+                    else navigate('/carwash?filter=pending');
+                  }}
+                >
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  {t('dashboard.hero.view_pending', { count: pendingCount })}
+                </Button>
+              )}
+
+              {/* Get Ready - Workflow Management */}
+              {hasPermission('productivity', 'view') && (
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-primary-foreground hover:bg-white/10"
+                  onClick={() => handleQuickAction('get_ready', '/get-ready')}
+                >
+                  <Zap className="h-4 w-4 mr-2" />
+                  {t('dashboard.hero.get_ready')}
+                </Button>
+              )}
+
+              {/* Team Chat */}
+              {hasPermission('chat', 'view') && (
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-primary-foreground hover:bg-white/10"
+                  onClick={() => handleQuickAction('team_chat', '/chat')}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  {t('dashboard.hero.team_chat')}
+                </Button>
+              )}
             </div>
           </div>
         </div>

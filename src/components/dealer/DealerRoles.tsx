@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CreateRoleModal } from './CreateRoleModal';
 import { EditRoleModal } from './EditRoleModal';
+import { confirmDelete, showError, showSuccess } from '@/utils/sweetalert';
 
 interface DealerRolesProps {
   dealerId: string;
@@ -20,6 +21,7 @@ interface CustomRole {
   description: string | null;
   is_active: boolean;
   permissions: RolePermission[];
+  users_count?: number;
 }
 
 interface RolePermission {
@@ -50,17 +52,27 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
 
       if (rolesError) throw rolesError;
 
-      // Fetch permissions for each role
+      // Fetch permissions and user counts for each role
       const rolesWithPermissions = await Promise.all(
         (rolesData || []).map(async (role) => {
+          // Get module permissions
           const { data: permissionsData } = await supabase
             .from('dealer_role_permissions')
             .select('module, permission_level')
             .eq('role_id', role.id);
 
+          // Get count of users with this role
+          const { count: usersCount } = await supabase
+            .from('user_custom_role_assignments')
+            .select('id', { count: 'exact', head: true })
+            .eq('custom_role_id', role.id)
+            .eq('is_active', true);
+
           return {
             ...role,
-            permissions: permissionsData || []
+            granularPermissions: role.permissions || {}, // Keep JSONB permissions
+            permissions: permissionsData || [], // Module permissions array
+            users_count: usersCount || 0
           };
         })
       );
@@ -81,6 +93,53 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
   useEffect(() => {
     fetchRoles();
   }, [fetchRoles]);
+
+  const handleDeleteRole = async (role: CustomRole) => {
+    // Check if role has users assigned
+    if (role.users_count && role.users_count > 0) {
+      await showError(
+        t('roles.cannot_delete_role'),
+        t('roles.role_has_users', { count: role.users_count, name: role.display_name }),
+        t('common.action_buttons.close')
+      );
+      return;
+    }
+
+    // Confirm deletion with SweetAlert
+    const result = await confirmDelete(
+      t('roles.confirm_delete_role', { name: role.display_name }),
+      t('roles.delete_warning'),
+      t('common.action_buttons.delete'),
+      t('common.action_buttons.cancel')
+    );
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      // Soft delete: set is_active = false
+      const { error } = await supabase
+        .from('dealer_custom_roles')
+        .update({ is_active: false, updated_at: new Date().toISOString() })
+        .eq('id', role.id);
+
+      if (error) throw error;
+
+      await showSuccess(
+        t('common.success'),
+        t('roles.role_deleted', { name: role.display_name })
+      );
+
+      fetchRoles();
+    } catch (error) {
+      console.error('Error deleting role:', error);
+      await showError(
+        t('common.error'),
+        t('roles.error_deleting_role')
+      );
+    }
+  };
 
   const getPermissionBadgeColor = (level: string) => {
     switch (level) {
@@ -144,7 +203,17 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteRole(role)}
+                    disabled={role.users_count && role.users_count > 0}
+                    className={role.users_count && role.users_count > 0 ? 'opacity-50 cursor-not-allowed' : ''}
+                    title={role.users_count && role.users_count > 0
+                      ? t('roles.cannot_delete_has_users', { count: role.users_count })
+                      : t('roles.delete_role')
+                    }
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -154,7 +223,7 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Users className="h-4 w-4" />
-                  <span>0 users</span>
+                  <span>{role.users_count || 0} {role.users_count === 1 ? 'user' : 'users'}</span>
                 </div>
                 <div>
                   <div className="text-sm font-medium mb-2">Permissions:</div>

@@ -322,7 +322,11 @@
   "dashboard": {
     "hero": {
       "welcome": "Welcome to MyDetailArea",
-      "subtitle": "Streamline your dealership operations with powerful tools and insights"
+      "subtitle": "Streamline your dealership operations with powerful tools and insights",
+      "new_order": "New Order",
+      "view_pending": "View Pending ({{count}})",
+      "get_ready": "Get Ready",
+      "team_chat": "Team Chat"
     },
     "actions": {
       "create_order": "Create Order",
@@ -344,6 +348,7 @@
       "awaiting_processing": "Awaiting processing",
       "finished_today": "Finished today",
       "monthly_revenue": "Monthly revenue",
+      "total_revenue": "Total revenue",
       "in_process": "In process",
       "per_order": "Per order",
       "customer_rating": "Customer rating",
@@ -365,13 +370,18 @@
       "in_progress": "In Progress",
       "completed": "Completed",
       "efficiency": "Efficiency",
-      "total_orders": "Total Orders"
+      "total_orders": "Total Orders",
+      "no_orders_yet": "No orders yet",
+      "create_first_order": "Create your first order to get started",
+      "create_order": "Create Order"
     },
     "activity": {
       "recent_activity": "Recent Activity",
       "filter": "Filter",
       "all": "All",
       "vehicle": "Vehicle",
+      "customer": "Customer",
+      "no_recent_activity": "No recent activity",
       "order_created": "Order Created",
       "order_updated": "Order Updated",
       "order_completed": "Order Completed",
@@ -380,7 +390,16 @@
       "status_changed_desc": "Order status changed to In Progress",
       "recon_completed_desc": "Reconditioning work completed successfully",
       "car_wash_created_desc": "Car wash service order created",
-      "user_logged_in_desc": "User logged into the system"
+      "user_logged_in_desc": "User logged into the system",
+      "status_changed": "Order status changed",
+      "due_date_changed": "Due date updated",
+      "priority_changed": "Priority changed",
+      "assignment_changed": "Assignment changed",
+      "customer_updated": "Customer information updated",
+      "services_updated": "Services updated",
+      "amount_updated": "Amount updated",
+      "notes_updated": "Notes updated",
+      "changed_from_to": "from {{from}} to {{to}}"
     },
     "quick_tools": {
       "title": "Quick Access Tools",
@@ -655,7 +674,14 @@
     "reset_defaults": "Reset to Defaults",
     "export_config": "Export Config",
     "import_config": "Import Config",
-    "config_note": "Configuration is automatically saved to localStorage"
+    "config_note": "Configuration is automatically saved to localStorage",
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "on_hold": "On Hold"
+    }
   },
   "followers": {
     "title": "Followers",
@@ -809,7 +835,10 @@
       "success_title": "Account Created",
       "check_email": "Please check your email for verification",
       "invitation_accepted": "Account created and invitation accepted successfully!",
-      "invitation_accept_error": "Account created but failed to accept invitation"
+      "invitation_accept_error": "Account created but failed to accept invitation",
+      "account_created": "Account Created",
+      "check_email_to_continue": "Please check your email to verify your account and complete the invitation",
+      "email_confirmation_pending_with_invitation": "Account created successfully! Please check your email to confirm your account. After confirmation, you'll be able to accept the invitation to join the dealership."
     }
   },
   "sticker_scanner": {
@@ -1358,6 +1387,60 @@
     "unique_visitors": "Unique Visitors",
     "last_accessed": "Last accessed"
   },
+  "recent_activity": {
+    "title": "Recent Activity",
+    "loading": "Loading activity...",
+    "no_activity": "No recent activity",
+    "no_activity_description": "Activity will appear here",
+    "error_loading": "Failed to load activity. Please try again.",
+    "retry": "Click to retry",
+    "last_activity": "Last activity",
+    "none": "None",
+    "debug_mode": "Debug Mode",
+    "show_debug": "Show Technical Details",
+    "hide_debug": "Hide Technical Details",
+    "actions": {
+      "added_comment": "Added comment",
+      "added_internal_note": "Added internal note",
+      "replied_to_comment": "Replied to comment",
+      "replied_to_internal_note": "Replied to internal note",
+      "uploaded_file": "Uploaded file",
+      "order_updated": "Order updated",
+      "order_info_modified": "Order information was modified",
+      "status_changed": "Status changed",
+      "assignment_changed": "Assignment changed",
+      "due_date_changed": "Due date changed",
+      "notes_updated": "Notes updated",
+      "order_created": "Order created",
+      "priority_changed": "Priority changed",
+      "customer_updated": "Customer updated",
+      "services_updated": "Services updated",
+      "amount_updated": "Amount updated",
+      "changed_field": "Changed {{field}}",
+      "initial_creation": "Initial order creation"
+    },
+    "files": {
+      "attached": "Attached: {{filename}}"
+    },
+    "user": {
+      "by": "by {{name}}",
+      "system": "System",
+      "team_member": "Team Member",
+      "creator": "Order Creator"
+    },
+    "time": {
+      "just_now": "Just now",
+      "minutes_ago": "{{count}}m ago",
+      "hours_ago": "{{count}}h ago",
+      "days_ago": "{{count}}d ago"
+    },
+    "sources": {
+      "comments": "Comments",
+      "attachments": "Attachments",
+      "activity_log": "Activity Log",
+      "order_data": "Order Data"
+    }
+  },
   "service_orders": {
     "po_number": "PO Number",
     "ro_number": "RO Number",
@@ -1385,6 +1468,10 @@
         "users_short": "Users",
         "invitations": "Invitations",
         "invitations_short": "Invites"
+      },
+      "users": {
+        "title": "Dealership Users",
+        "description": "Manage user memberships and access for this dealership"
       }
     },
     "tabs": {
@@ -1416,6 +1503,39 @@
       "no_services_data": "No services data available",
       "calculating": "Calculating...",
       "error_loading_kpis": "Error loading performance metrics"
+    },
+    "users": {
+      "title": "User Management",
+      "description": "Manage dealership users, memberships, and access permissions",
+      "invite_user": "Invite User",
+      "table": {
+        "user": "User",
+        "email": "Email",
+        "status": "Status",
+        "groups": "Groups",
+        "joined": "Joined"
+      },
+      "no_users": "No users found",
+      "error_loading_users": "Error loading users",
+      "user_deactivated": "User deactivated successfully",
+      "user_activated": "User activated successfully",
+      "error_updating_status": "Error updating user status",
+      "groups_updated": "User groups updated successfully",
+      "error_updating_groups": "Error updating user groups",
+      "manage_groups": "Manage Groups",
+      "manage_groups_desc": "Manage group memberships for",
+      "deactivate": "Deactivate User",
+      "activate": "Activate User",
+      "no_role": "No role assigned",
+      "edit_role": "Edit Role",
+      "change_role": "Change User Role",
+      "change_role_desc": "Update the role assigned to this user",
+      "select_new_role": "Select new role",
+      "current_role": "Current role",
+      "new_role": "New role",
+      "role_updated": "User role updated successfully",
+      "error_updating_role": "Error updating user role",
+      "no_role_selected": "Please select a role"
     }
   },
   "roles": {
@@ -1429,7 +1549,29 @@
     "dealer_service_manager": "Service Manager",
     "detail_super_manager": "Detail Super Manager",
     "detail_admin": "Detail Administrator",
-    "system_admin": "System Administrator"
+    "system_admin": "System Administrator",
+    "delete_role": "Delete Role",
+    "cannot_delete_role": "Cannot Delete Role",
+    "role_has_users": "This role has {{count}} user(s) assigned. Please reassign users before deleting.",
+    "confirm_delete_role": "Delete '{{name}}'?",
+    "delete_warning": "This action cannot be undone. The role will be permanently deactivated.",
+    "role_deleted": "Role '{{name}}' deleted successfully",
+    "error_deleting_role": "Error deleting role",
+    "cannot_delete_has_users": "Cannot delete - {{count}} user(s) assigned"
+  },
+  "permissions": {
+    "granular_permissions": "Special Permissions",
+    "granular_permissions_desc": "Additional capabilities beyond module access",
+    "can_access_internal_notes": "Access internal notes",
+    "can_access_internal_notes_desc": "Can view and create internal notes on orders",
+    "can_view_pricing": "View pricing",
+    "can_view_pricing_desc": "Can see pricing information and costs",
+    "can_delete_orders": "Delete orders",
+    "can_delete_orders_desc": "Can permanently delete orders",
+    "can_export_reports": "Export reports",
+    "can_export_reports_desc": "Can export data and generate reports",
+    "can_change_order_status": "Change order status",
+    "can_change_order_status_desc": "Can modify order status (pending, in progress, complete, etc.)"
   },
   "invitations": {
     "all_invitations": "All Invitations",

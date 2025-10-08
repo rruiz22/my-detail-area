@@ -54,6 +54,13 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     canAccessInternal
   } = useOrderComments(orderId);
 
+  // Ensure activeTab is 'comments' if user doesn't have access to internal notes
+  React.useEffect(() => {
+    if (!canAccessInternal && activeTab === 'internal') {
+      setActiveTab('comments');
+    }
+  }, [canAccessInternal, activeTab]);
+
   // Handle adding comment/note with attachments
   const handleAddMessage = async () => {
     if (!newMessage.trim()) return;
@@ -160,7 +167,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     }
 
     return (
-      <div className="space-y-4 max-h-64 overflow-y-auto">
+      <div className="space-y-4 max-h-[500px] overflow-y-auto">
         {messages.map((message) => (
           <div key={message.id} className="space-y-3">
             {/* Parent Comment/Note */}
@@ -336,7 +343,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
 
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className={`grid w-full ${canAccessInternal ? 'grid-cols-2' : 'grid-cols-1'}`}>
             <TabsTrigger value="comments" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
               {t('order_comments.comments', 'Comments')}

@@ -44,7 +44,14 @@ export interface CustomRoleWithPermissions {
   role_name: string;
   display_name: string;
   dealer_id: number;
-  permissions: Map<AppModule, PermissionLevel>;
+  permissions: Map<AppModule, PermissionLevel>; // Module permissions
+  granularPermissions?: {
+    can_access_internal_notes?: boolean;
+    can_view_pricing?: boolean;
+    can_delete_orders?: boolean;
+    can_export_reports?: boolean;
+    can_change_order_status?: boolean;
+  };
 }
 
 export interface EnhancedUserV2 {
@@ -151,7 +158,8 @@ export const usePermissions = () => {
             id,
             role_name,
             display_name,
-            dealer_id
+            dealer_id,
+            permissions
           )
         `)
         .eq('user_id', user.id)
@@ -210,8 +218,9 @@ export const usePermissions = () => {
           role_name: role.role_name,
           display_name: role.display_name,
           dealer_id: role.dealer_id,
-          permissions: permissionsMap
-        });
+          permissions: permissionsMap, // Module permissions (Map)
+          granularPermissions: (role as any).permissions || {} // JSONB permissions
+        } as any);
       });
 
       const allPermissions = new Map<AppModule, PermissionLevel>();
@@ -224,12 +233,16 @@ export const usePermissions = () => {
       };
 
       rolesMap.forEach(role => {
-        role.permissions.forEach((level, module) => {
-          const existingLevel = allPermissions.get(module);
-          if (!existingLevel || permissionHierarchy[level] > permissionHierarchy[existingLevel]) {
-            allPermissions.set(module, level);
-          }
-        });
+        // Handle Map format (legacy module permissions)
+        if (role.permissions instanceof Map) {
+          role.permissions.forEach((level, module) => {
+            const existingLevel = allPermissions.get(module);
+            if (!existingLevel || permissionHierarchy[level] > permissionHierarchy[existingLevel]) {
+              allPermissions.set(module, level);
+            }
+          });
+        }
+        // JSONB format doesn't have module-level permissions, handled separately
       });
 
       return {

@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Building2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const DealershipFilter = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { dealerships, loading } = useAccessibleDealerships();
   const [selectedDealerId, setSelectedDealerId] = useState<number | 'all'>('all');
 
@@ -34,8 +36,9 @@ export const DealershipFilter = () => {
     return null;
   }
 
-  // Single dealer user - don't show filter
-  if (dealerships.length === 1) {
+  // Single dealer user - don't show filter (EXCEPT for system_admin)
+  // system_admin should always see the filter to manage multiple dealerships
+  if (dealerships.length === 1 && user?.role !== 'system_admin') {
     return null;
   }
 

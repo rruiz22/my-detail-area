@@ -13,7 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Loader2 } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
+import { Loader2, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -25,7 +27,7 @@ interface EditRoleModalProps {
     role_name: string;
     display_name: string;
     description: string | null;
-    permissions: Array<{ module: string; permission_level: string }>;
+    permissions: Array<{ module: string; permission_level: string }> | any;
   } | null;
   onRoleUpdated: () => void;
 }
@@ -65,16 +67,41 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
   const [description, setDescription] = useState('');
   const [permissions, setPermissions] = useState<Record<string, string>>({});
 
+  // Granular permissions state
+  const [granularPermissions, setGranularPermissions] = useState({
+    can_access_internal_notes: false,
+    can_view_pricing: false,
+    can_delete_orders: false,
+    can_export_reports: false,
+    can_change_order_status: false
+  });
+
   useEffect(() => {
     if (role) {
       setDisplayName(role.display_name);
       setDescription(role.description || '');
 
-      const permsMap: Record<string, string> = {};
-      role.permissions.forEach(p => {
-        permsMap[p.module] = p.permission_level;
-      });
-      setPermissions(permsMap);
+      // Load module permissions (array format)
+      if (Array.isArray(role.permissions)) {
+        const permsMap: Record<string, string> = {};
+        role.permissions.forEach(p => {
+          permsMap[p.module] = p.permission_level;
+        });
+        setPermissions(permsMap);
+      }
+
+      // Load granular permissions (JSONB format)
+      const roleData = role as any;
+      const granPerms = roleData.granularPermissions || roleData.permissions;
+      if (granPerms && typeof granPerms === 'object' && !Array.isArray(granPerms)) {
+        setGranularPermissions({
+          can_access_internal_notes: granPerms.can_access_internal_notes || false,
+          can_view_pricing: granPerms.can_view_pricing || false,
+          can_delete_orders: granPerms.can_delete_orders || false,
+          can_export_reports: granPerms.can_export_reports || false,
+          can_change_order_status: granPerms.can_change_order_status || false
+        });
+      }
     }
   }, [role]);
 
@@ -103,12 +130,13 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
     setLoading(true);
 
     try {
-      // Update role
+      // Update role with granular permissions
       const { error: roleError } = await supabase
         .from('dealer_custom_roles')
         .update({
           display_name: displayName,
           description: description || null,
+          permissions: granularPermissions
         })
         .eq('id', role.id);
 
@@ -225,6 +253,108 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <Separator className="my-6" />
+
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Shield className="h-5 w-5 text-emerald-600" />
+              <Label className="text-base font-semibold">{t('permissions.granular_permissions')}</Label>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">{t('permissions.granular_permissions_desc')}</p>
+
+            <div className="border rounded-lg p-4 space-y-4">
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="can_access_internal_notes"
+                  checked={granularPermissions.can_access_internal_notes}
+                  onCheckedChange={(checked) =>
+                    setGranularPermissions(prev => ({ ...prev, can_access_internal_notes: checked as boolean }))
+                  }
+                />
+                <div className="flex-1">
+                  <Label htmlFor="can_access_internal_notes" className="font-medium cursor-pointer">
+                    {t('permissions.can_access_internal_notes')}
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('permissions.can_access_internal_notes_desc')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="can_change_order_status"
+                  checked={granularPermissions.can_change_order_status}
+                  onCheckedChange={(checked) =>
+                    setGranularPermissions(prev => ({ ...prev, can_change_order_status: checked as boolean }))
+                  }
+                />
+                <div className="flex-1">
+                  <Label htmlFor="can_change_order_status" className="font-medium cursor-pointer">
+                    {t('permissions.can_change_order_status')}
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('permissions.can_change_order_status_desc')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="can_view_pricing"
+                  checked={granularPermissions.can_view_pricing}
+                  onCheckedChange={(checked) =>
+                    setGranularPermissions(prev => ({ ...prev, can_view_pricing: checked as boolean }))
+                  }
+                />
+                <div className="flex-1">
+                  <Label htmlFor="can_view_pricing" className="font-medium cursor-pointer">
+                    {t('permissions.can_view_pricing')}
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('permissions.can_view_pricing_desc')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="can_delete_orders"
+                  checked={granularPermissions.can_delete_orders}
+                  onCheckedChange={(checked) =>
+                    setGranularPermissions(prev => ({ ...prev, can_delete_orders: checked as boolean }))
+                  }
+                />
+                <div className="flex-1">
+                  <Label htmlFor="can_delete_orders" className="font-medium cursor-pointer">
+                    {t('permissions.can_delete_orders')}
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('permissions.can_delete_orders_desc')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="can_export_reports"
+                  checked={granularPermissions.can_export_reports}
+                  onCheckedChange={(checked) =>
+                    setGranularPermissions(prev => ({ ...prev, can_export_reports: checked as boolean }))
+                  }
+                />
+                <div className="flex-1">
+                  <Label htmlFor="can_export_reports" className="font-medium cursor-pointer">
+                    {t('permissions.can_export_reports')}
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('permissions.can_export_reports_desc')}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 

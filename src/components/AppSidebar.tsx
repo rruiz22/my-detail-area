@@ -6,6 +6,7 @@ import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGrou
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useDealershipModules } from "@/hooks/useDealershipModules";
 import { isSystemAdmin } from "@/utils/permissions";
 import { LiveClock } from "@/components/ui/live-clock";
 import { getSystemTimezone } from "@/utils/dateUtils";
@@ -14,6 +15,13 @@ export function AppSidebar() {
   const { enhancedUser, getAllowedOrderTypes, hasPermission } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
+
+  // Get user's dealership_id to check enabled modules
+  const userDealershipId = (enhancedUser as any)?.dealership_id;
+  const isAdmin = (enhancedUser as any)?.is_system_admin || false;
+
+  // Load dealership modules (only if user has a dealership)
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(userDealershipId || 0);
 
   // Core Operations - Filtered by user's allowed order types
   const coreNavItems = React.useMemo(() => {
@@ -65,22 +73,30 @@ export function AppSidebar() {
       title: t('navigation.get_ready'),
       url: "/get-ready",
       icon: Zap,
-      module: 'productivity'
+      module: 'productivity' as const
     }, {
       title: t('navigation.stock'),
       url: "/stock",
       icon: Package,
-      module: 'stock'
+      module: 'stock' as const
     }, {
       title: t('navigation.detail_hub'),
       url: "/detail-hub",
       icon: Clock,
-      module: 'productivity'
+      module: 'productivity' as const
     }];
 
-    // Filter by permissions
-    return baseItems.filter(item => hasPermission(item.module, 'view'));
-  }, [t, hasPermission]);
+    // Filter by permissions AND dealer enabled modules
+    // Security: Two-layer validation ensures proper access control:
+    // 1. hasPermission() - Role-based permissions (ALWAYS checked first - primary security layer)
+    // 2. hasModuleAccess() - Dealership module configuration (defaults to true if not configured)
+    // This allows new dealerships without explicit module config to function normally,
+    // while still enforcing strict role-based permissions for all users
+    return baseItems.filter(item =>
+      hasPermission(item.module, 'view') &&
+      (isAdmin || hasModuleAccess(item.module))
+    );
+  }, [t, hasPermission, isAdmin, hasModuleAccess]);
 
   // Tools & Communication
   const toolsNavItems = React.useMemo(() => {
@@ -88,27 +104,30 @@ export function AppSidebar() {
       title: t('chat.title'),
       url: "/chat",
       icon: MessageCircle,
-      module: 'chat'
+      module: 'chat' as const
     }, {
       title: t('contacts.title'),
       url: "/contacts",
       icon: Users2,
-      module: 'contacts'
+      module: 'contacts' as const
     }, {
       title: t('vin_scanner_hub.title'),
       url: "/vin-scanner",
       icon: QrCode,
-      module: 'productivity'
+      module: 'productivity' as const
     }, {
       title: t('nfc_tracking.title'),
       url: "/nfc-tracking",
       icon: Nfc,
-      module: 'productivity'
+      module: 'productivity' as const
     }];
 
-    // Filter by permissions
-    return baseItems.filter(item => hasPermission(item.module, 'view'));
-  }, [t, hasPermission]);
+    // Filter by permissions AND dealer enabled modules
+    return baseItems.filter(item =>
+      hasPermission(item.module, 'view') &&
+      (isAdmin || hasModuleAccess(item.module))
+    );
+  }, [t, hasPermission, isAdmin, hasModuleAccess]);
 
   // Productivity
   const productivityNavItems = React.useMemo(() => {
@@ -116,7 +135,7 @@ export function AppSidebar() {
       title: t('navigation.productivity'),
       url: "/productivity",
       icon: Calendar,
-      module: 'productivity'
+      module: 'productivity' as const
     }, {
       title: t('profile.title'),
       url: "/profile",
@@ -124,9 +143,12 @@ export function AppSidebar() {
       module: null // Profile always accessible
     }];
 
-    // Filter by permissions
-    return baseItems.filter(item => !item.module || hasPermission(item.module, 'view'));
-  }, [t, hasPermission]);
+    // Filter by permissions AND dealer enabled modules (except Profile which is always accessible)
+    return baseItems.filter(item =>
+      !item.module ||
+      (hasPermission(item.module, 'view') && (isAdmin || hasModuleAccess(item.module)))
+    );
+  }, [t, hasPermission, isAdmin, hasModuleAccess]);
 
   // Management & Reports - Filtered by permissions
   const managementNavItems = React.useMemo(() => {
@@ -135,29 +157,32 @@ export function AppSidebar() {
         title: t('admin.administration'),
         url: "/admin",
         icon: Shield,
-        module: 'management',
-        permission: 'admin',
+        module: 'management' as const,
+        permission: 'admin' as const,
         description: t('admin.administration_description')
       },
       {
         title: t('navigation.reports'),
         url: "/reports",
         icon: FileText,
-        module: 'reports',
-        permission: 'view'
+        module: 'reports' as const,
+        permission: 'view' as const
       },
       {
         title: t('navigation.settings'),
         url: "/settings",
         icon: Settings,
-        module: 'settings',
-        permission: 'view'
+        module: 'settings' as const,
+        permission: 'view' as const
       }
     ];
 
-    // Filter items based on permissions
-    return baseItems.filter(item => hasPermission(item.module, item.permission));
-  }, [t, hasPermission]);
+    // Filter by permissions AND dealer enabled modules
+    return baseItems.filter(item =>
+      hasPermission(item.module, item.permission) &&
+      (isAdmin || hasModuleAccess(item.module))
+    );
+  }, [t, hasPermission, isAdmin, hasModuleAccess]);
 
   // System Admin - only navigation items
   const systemAdminNavItems = React.useMemo(() => {
@@ -271,12 +296,13 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Workflow Management */}
-        <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.workflow_management')}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {workflowNavItems.map(item => (
+        {/* Workflow Management - Only show if has items */}
+        {workflowNavItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.workflow_management')}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {workflowNavItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   {collapsed ? (
                     <Tooltip>
@@ -309,10 +335,12 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+          </SidebarGroup>
+        )}
 
-        {/* Tools & Communication */}
-        <SidebarGroup>
+        {/* Tools & Communication - Only show if has items */}
+        {toolsNavItems.length > 0 && (
+          <SidebarGroup>
           <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.tools_communication')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -349,10 +377,12 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+          </SidebarGroup>
+        )}
 
-        {/* Productivity */}
-        <SidebarGroup>
+        {/* Productivity - Only show if has items */}
+        {productivityNavItems.length > 0 && (
+          <SidebarGroup>
           <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.productivity_section')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -389,11 +419,13 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+          </SidebarGroup>
+        )}
 
-        {/* Administration & Reports */}
-        <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.administration_reports')}</SidebarGroupLabel>
+        {/* Administration & Reports - Only show if has items */}
+        {managementNavItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.administration_reports')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {managementNavItems.map(item => (
@@ -430,6 +462,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        )}
 
         {/* System Administration */}
         {systemAdminNavItems.length > 0 && (

@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePermissions } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface OrderComment {
   id: string;
@@ -40,23 +41,42 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const { enhancedUser } = usePermissions();
 
-  // Check if user can access internal notes - Admins have full access
-  const canAccessInternal = true; // For system admin, grant full access
+  // Check if user can access internal notes based on custom role permissions
+  const canAccessInternal = (() => {
+    if (!user || !enhancedUser) return false;
 
-  // More restrictive logic for non-admins (commented for reference):
-  // const canAccessInternal = user?.user_type === 'detail' ||
-  //                          user?.user_type === 'admin' ||
-  //                          user?.user_type === 'system_admin' ||
-  //                          user?.role === 'dealer_admin' ||
-  //                          user?.role === 'dealer_manager' ||
-  //                          user?.role === 'admin';
+    // System admins always have access
+    if ((enhancedUser as any).is_system_admin) return true;
+
+    // Check if any of user's custom roles has can_access_internal_notes permission
+    const customRoles = (enhancedUser as any).custom_roles;
+    if (customRoles && Array.isArray(customRoles)) {
+      return customRoles.some((role: any) => {
+        // Check granularPermissions (JSONB)
+        const granPerms = role.granularPermissions;
+        if (granPerms && typeof granPerms === 'object') {
+          return granPerms.can_access_internal_notes === true;
+        }
+        return false;
+      });
+    }
+
+    return false;
+  })();
 
   // Debug permissions
+  const customRoles = (enhancedUser as any)?.custom_roles;
   console.log('🔐 Internal notes access check:', {
     userId: user?.id,
-    userType: user?.user_type,
-    role: user?.role,
+    customRolesCount: customRoles?.length || 0,
+    isSystemAdmin: (enhancedUser as any)?.is_system_admin,
+    rolePermissions: customRoles?.map((r: any) => ({
+      role: r.display_name,
+      hasGranular: !!r.granularPermissions,
+      canAccessInternal: r.granularPermissions?.can_access_internal_notes
+    })),
     canAccessInternal
   });
 
@@ -114,7 +134,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           updated_at
         `)
         .eq('order_id', orderId)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
 
       if (commentsError) {
         console.error('❌ Error fetching comments:', commentsError);
@@ -218,7 +238,8 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           order_id: orderId,
           user_id: user.id,
           comment_text: text.trim(),
-          comment_type: type
+          comment_type: type,
+          parent_comment_id: parentId || null
         })
         .select()
         .single();
@@ -232,6 +253,11 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
 
       // Refresh comments to get the new one with profile data
       await fetchComments();
+
+      // Dispatch custom event to notify other components (like RecentActivityBlock)
+      window.dispatchEvent(new CustomEvent('orderCommentAdded', {
+        detail: { orderId, type: 'comment_added' }
+      }));
 
     } catch (err) {
       console.error(`❌ Failed to add ${type}:`, err);

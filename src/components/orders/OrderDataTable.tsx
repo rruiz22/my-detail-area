@@ -330,8 +330,8 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         {formatOrderNumber(order)}
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground mt-1">
-                        <Building2 className="w-4 h-4 mr-2 text-gray-700" />
-                        <span>{order.dealershipName || t('data_table.unknown_dealer')}</span>
+                        <Building2 className="w-4 h-4 mr-2 text-gray-700 flex-shrink-0" />
+                        <span className="whitespace-nowrap truncate">{order.dealershipName || t('data_table.unknown_dealer')}</span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
@@ -358,46 +358,49 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-2 rounded">
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</label>
-                      <div className="text-sm font-semibold text-foreground">
+                      <div className="text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
                         {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
                       </div>
-                      <div className="relative inline-block mt-1">
-                        <DuplicateTooltip
-                          orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
-                          field="vehicleVin"
-                          value={order.vehicleVin || ''}
-                          onOrderClick={onView}
-                          debug={import.meta.env.DEV}
+                      <DuplicateTooltip
+                        orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
+                        field="vehicleVin"
+                        value={order.vehicleVin || ''}
+                        onOrderClick={onView}
+                        debug={import.meta.env.DEV}
+                      >
+                        <span
+                          className="inline-flex items-baseline gap-2 cursor-pointer hover:text-orange-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis mt-1 leading-none"
+                          onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
+                          title={order.vehicleVin ? `Last 8 VIN - Tap to copy full: ${order.vehicleVin}` : 'No VIN'}
                         >
-                          <div 
-                            className="text-xs font-mono text-muted-foreground cursor-pointer hover:text-orange-600 transition-colors"
-                            onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
-                            title="Tap to copy VIN"
-                          >
-                            {order.vehicleVin || t('data_table.vin_not_provided')}
-                          </div>
-                        </DuplicateTooltip>
-                        <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} />
-                      </div>
+                          {order.vehicleVin ? (
+                            <>
+                              <span className="text-xs text-muted-foreground/60">L8V: </span>
+                              <span className="font-mono text-base font-semibold text-foreground">{order.vehicleVin.slice(-8)}</span>
+                              <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} inline={true} />
+                            </>
+                          ) : (
+                            <span className="text-sm text-muted-foreground">{t('data_table.vin_not_provided')}</span>
+                          )}
+                        </span>
+                      </DuplicateTooltip>
                     </div>
                     <div className="p-2 rounded">
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                         {tabType === 'service' ? 'Tag' : 'Stock'}
                       </label>
-                      <div className="relative inline-block">
-                        <DuplicateTooltip
-                          orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
-                          field="stockNumber"
-                          value={order.stockNumber || ''}
-                          onOrderClick={onView}
-                          debug={import.meta.env.DEV}
-                        >
-                          <div className="text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors">
-                            {order.stockNumber || t('data_table.no_stock')}
-                          </div>
-                        </DuplicateTooltip>
-                        <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} />
-                      </div>
+                      <DuplicateTooltip
+                        orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
+                        field="stockNumber"
+                        value={order.stockNumber || ''}
+                        onOrderClick={onView}
+                        debug={import.meta.env.DEV}
+                      >
+                        <span className="inline-flex items-baseline gap-2 text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
+                          {order.stockNumber || t('data_table.no_stock')}
+                          <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
+                        </span>
+                      </DuplicateTooltip>
                       <div className="flex items-center text-xs text-muted-foreground mt-1">
                         <User className="w-3 h-3 mr-1 text-green-600" />
                         {order.assignedTo || t('data_table.unassigned')}
@@ -458,29 +461,31 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
             </Card>
           );
         })}
-        
+
         {/* Mobile Pagination */}
-        <div className="flex justify-center space-x-2 pt-4">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <span className="flex items-center px-3 text-sm text-muted-foreground">
-{t('data_table.page_of', { current: currentPage, total: Math.ceil(orders.length / itemsPerPage) })}
-          </span>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(orders.length / itemsPerPage), prev + 1))}
-            disabled={currentPage >= Math.ceil(orders.length / itemsPerPage)}
-          >
-            Next
-          </Button>
-        </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center space-x-2 pt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="flex items-center px-3 text-sm text-muted-foreground">
+              {t('data_table.page_of', { current: currentPage, total: totalPages })}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage >= totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Desktop/Tablet Table Layout */}
@@ -496,9 +501,9 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="w-16 font-medium text-foreground text-center">#</TableHead>
-                <TableHead className="font-medium text-foreground text-center">Order ID</TableHead>
+                <TableHead className="w-[140px] font-medium text-foreground text-center">Order ID</TableHead>
                 <TableHead className="font-medium text-foreground text-center">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>
-                <TableHead className="font-medium text-foreground text-center">Vehicle</TableHead>
+                <TableHead className="max-w-[200px] font-medium text-foreground text-center">Vehicle</TableHead>
                 <TableHead className="font-medium text-foreground text-center">{t('orders.services')}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Due</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Status</TableHead>
@@ -528,40 +533,38 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     onDoubleClick={() => onView(order)}
                   >
                     {/* Row Number */}
-                    <TableCell className="py-4 text-center text-sm font-medium text-muted-foreground">
+                    <TableCell className="py-2 text-center text-sm font-medium text-muted-foreground">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </TableCell>
-                    
+
                     {/* Column 1: Order ID & Dealer */}
-                    <TableCell className="py-4 text-center">
+                    <TableCell className="py-2 text-center w-[140px]">
                       <div className="space-y-1">
                         <div className="text-base font-bold text-foreground">
                           {formatOrderNumber(order)}
                         </div>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">
-                          <Building2 className="w-3 h-3 mr-1 text-gray-700" />
-                          <span>{order.dealershipName || t('data_table.unknown_dealer')}</span>
+                          <Building2 className="w-3 h-3 mr-1 text-gray-700 flex-shrink-0" />
+                          <span className="whitespace-nowrap truncate">{order.dealershipName || t('data_table.unknown_dealer')}</span>
                         </div>
                       </div>
                     </TableCell>
 
                     {/* Column 2: Stock & Assigned User */}
-                    <TableCell className="py-4 text-center">
-                      <div className="space-y-1">
-                        <div className="relative inline-block">
-                          <DuplicateTooltip
-                            orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
-                            field="stockNumber"
-                            value={order.stockNumber || ''}
-                            onOrderClick={onView}
-                            debug={import.meta.env.DEV}
-                          >
-                            <div className="text-base font-bold text-foreground cursor-pointer hover:text-gray-700 transition-colors">
-                              {order.stockNumber || t('data_table.no_stock')}
-                            </div>
-                          </DuplicateTooltip>
-                          <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} />
-                        </div>
+                    <TableCell className="py-2 text-center">
+                      <div className="space-y-0">
+                        <DuplicateTooltip
+                          orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
+                          field="stockNumber"
+                          value={order.stockNumber || ''}
+                          onOrderClick={onView}
+                          debug={import.meta.env.DEV}
+                        >
+                          <span className="inline-flex items-baseline gap-2 text-base font-bold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
+                            {order.stockNumber || t('data_table.no_stock')}
+                            <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
+                          </span>
+                        </DuplicateTooltip>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">
                           <User className="w-3 h-3 mr-1 text-green-600" />
                           <span>{order.assignedTo || 'Unassigned'}</span>
@@ -570,38 +573,40 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 3: Vehicle & VIN */}
-                    <TableCell className="py-4 text-center">
-                      <div className="space-y-1">
-                        <div className="text-base font-bold text-foreground">
+                    <TableCell className="py-2 text-center max-w-[200px]">
+                      <div className="space-y-0">
+                        <div className="text-base font-bold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
                           {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
                           {order.vehicleTrim && ` (${order.vehicleTrim})`}
                         </div>
-                        <div className="flex items-center justify-center text-sm text-muted-foreground">
-                          <Hash className="w-3 h-3 mr-1 text-orange-600" />
-                          <div className="relative inline-block">
-                            <DuplicateTooltip
-                              orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
-                              field="vehicleVin"
-                              value={order.vehicleVin || ''}
-                              onOrderClick={onView}
-                              debug={import.meta.env.DEV}
-                            >
-                              <span 
-                                className="font-mono text-xs cursor-pointer hover:bg-orange-50 hover:text-orange-700 px-2 py-1 rounded transition-colors"
-                                onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
-                                title="Click to copy VIN"
-                              >
-                                {order.vehicleVin || t('data_table.vin_not_provided')}
-                              </span>
-                            </DuplicateTooltip>
-                            <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} />
-                          </div>
-                        </div>
+                        <DuplicateTooltip
+                          orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
+                          field="vehicleVin"
+                          value={order.vehicleVin || ''}
+                          onOrderClick={onView}
+                          debug={import.meta.env.DEV}
+                        >
+                          <span
+                            className="inline-flex items-baseline gap-2 cursor-pointer hover:bg-orange-50 px-2 py-0.5 rounded transition-colors whitespace-nowrap text-sm text-muted-foreground leading-none"
+                            onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
+                            title={order.vehicleVin ? `Last 8 VIN - Click to copy full: ${order.vehicleVin}` : 'No VIN'}
+                          >
+                            {order.vehicleVin ? (
+                              <>
+                                <span className="text-xs text-muted-foreground/60">L8V: </span>
+                                <span className="font-mono text-base font-semibold text-foreground">{order.vehicleVin.slice(-8)}</span>
+                                <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} inline={true} />
+                              </>
+                            ) : (
+                              <span className="text-sm">{t('data_table.vin_not_provided')}</span>
+                            )}
+                          </span>
+                        </DuplicateTooltip>
                       </div>
                     </TableCell>
 
                     {/* Column 4: Services */}
-                    <TableCell className="py-4 text-left">
+                    <TableCell className="py-2 text-left">
                       <ServicesDisplay
                         services={order.services}
                         totalAmount={order.totalAmount || order.total_amount}
@@ -613,27 +618,29 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 6: Due Date/Time - Dynamic Countdown */}
-                    <TableCell className="table-due-date-cell">
-                      <DueDateIndicator
-                        dueDate={order.dueDate}
-                        orderStatus={order.status}
-                        orderType={tabType}
-                        compact={false}
-                        showDateTime={true}
-                        className="due-date-indicator-table min-w-[140px] whitespace-nowrap"
-                      />
+                    <TableCell className="py-2 text-center">
+                      <div className="flex flex-col items-center justify-center h-full">
+                        <DueDateIndicator
+                          dueDate={order.dueDate}
+                          orderStatus={order.status}
+                          orderType={tabType}
+                          compact={false}
+                          showDateTime={true}
+                          className="due-date-indicator-table min-w-[140px] whitespace-nowrap"
+                        />
 
-                      {/* Fallback time display if no due date */}
-                      {!order.dueDate && (
-                        <div className="text-sm text-muted-foreground text-center due-date-details">
-                          <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
-                          {order.dueTime || t('data_table.no_time_set')}
-                        </div>
-                      )}
+                        {/* Fallback time display if no due date */}
+                        {!order.dueDate && (
+                          <div className="text-sm text-muted-foreground text-center due-date-details">
+                            <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
+                            {order.dueTime || t('data_table.no_time_set')}
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
 
                     {/* Column 6: Interactive Status */}
-                    <TableCell className="py-4 text-center">
+                    <TableCell className="py-2 text-center">
                       <div className="flex flex-col items-center gap-2">
                         <StatusBadgeInteractive
                           status={order.status}
@@ -646,7 +653,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     </TableCell>
 
                     {/* Column 7: Action Buttons (Simplified) */}
-                    <TableCell className="py-4 text-center">
+                    <TableCell className="py-2 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Button
                           variant="ghost"
@@ -713,6 +720,31 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
             </TableBody>
           </Table>
         </CardContent>
+
+        {/* Desktop Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 py-4 border-t">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="flex items-center px-3 text-sm text-muted-foreground">
+              {t('data_table.page_of', { current: currentPage, total: totalPages })}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage >= totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </Card>
     </>
   );
