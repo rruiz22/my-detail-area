@@ -332,7 +332,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           {formatOrderNumber(order)}
                         </span>
                         {/* Comments Indicator */}
-                        {order.comments && order.comments > 0 && (
+                        {typeof order.comments === 'number' && order.comments > 0 && (
                           <CommentsTooltip
                             orderId={order.id}
                             count={order.comments}
@@ -561,7 +561,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                             {formatOrderNumber(order)}
                           </span>
                           {/* Comments Indicator */}
-                          {order.comments && order.comments > 0 && (
+                          {typeof order.comments === 'number' && order.comments > 0 && (
                             <CommentsTooltip
                               orderId={order.id}
                               count={order.comments}

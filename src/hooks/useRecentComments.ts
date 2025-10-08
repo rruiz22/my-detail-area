@@ -30,41 +30,50 @@ export const useRecentComments = ({
       try {
         logger.dev('Fetching recent comments preview', { orderId, limit });
 
-        const { data, error } = await supabase
+        // Fetch comments first
+        const { data: commentsData, error: commentsError } = await supabase
           .from('order_comments')
-          .select(`
-            id,
-            comment_text,
-            created_at,
-            user_id,
-            profiles!inner (
-              first_name,
-              last_name,
-              email,
-              avatar_seed
-            )
-          `)
+          .select('id, comment_text, created_at, user_id')
           .eq('order_id', orderId)
           .eq('comment_type', 'public')
           .order('created_at', { ascending: false })
           .limit(limit);
 
-        if (error) {
-          logger.error('Failed to fetch recent comments', error, { orderId });
-          throw error;
+        if (commentsError) {
+          logger.error('Failed to fetch recent comments', commentsError, { orderId });
+          throw commentsError;
         }
 
+        if (!commentsData || commentsData.length === 0) {
+          return [];
+        }
+
+        // Fetch profiles separately
+        const userIds = [...new Set(commentsData.map(c => c.user_id))];
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, first_name, last_name, email, avatar_seed')
+          .in('id', userIds);
+
+        // Create profile map
+        const profileMap = new Map(
+          (profilesData || []).map(p => [p.id, p])
+        );
+
         // Transform data to flat structure
-        const comments: RecentComment[] = (data || []).map(comment => ({
-          id: comment.id,
-          comment_text: comment.comment_text,
-          created_at: comment.created_at,
-          user_id: comment.user_id,
-          user_first_name: (comment.profiles as any)?.first_name || '',
-          user_last_name: (comment.profiles as any)?.last_name || '',
-          user_email: (comment.profiles as any)?.email || '',
-          avatar_seed: (comment.profiles as any)?.avatar_seed
-        }));
+        const comments: RecentComment[] = commentsData.map(comment => {
+          const profile = profileMap.get(comment.user_id);
+          return {
+            id: comment.id,
+            comment_text: comment.comment_text,
+            created_at: comment.created_at,
+            user_id: comment.user_id,
+            user_first_name: profile?.first_name || '',
+            user_last_name: profile?.last_name || '',
+            user_email: profile?.email || '',
+            avatar_seed: profile?.avatar_seed
+          };
+        });
 
         logger.dev('Recent comments fetched', { count: comments.length });
         return comments;

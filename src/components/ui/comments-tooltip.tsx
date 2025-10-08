@@ -126,12 +126,13 @@ export function CommentsTooltip({
             >
               {/* Avatar */}
               <div className="flex-shrink-0">
-                <AvatarSystem
-                  seed={comment.avatar_seed || comment.user_id}
-                  firstName={comment.user_first_name}
-                  lastName={comment.user_last_name}
-                  size="sm"
-                />
+                <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                  <AvatarSystem
+                    seed={comment.avatar_seed || comment.user_id}
+                    firstName={comment.user_first_name}
+                    lastName={comment.user_last_name}
+                  />
+                </div>
               </div>
 
               {/* Comment content */}
