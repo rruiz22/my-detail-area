@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 535,
-  "totalStrings": 5409,
-  "hardcodedStrings": 1181,
-  "translatedStrings": 4228,
+  "scannedFiles": 537,
+  "totalStrings": 5412,
+  "hardcodedStrings": 1183,
+  "translatedStrings": 4229,
   "issues": {
     "critical": [
       {
@@ -6976,197 +6976,197 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 360,
-            "context": "359: <div className=\"p-2 rounded\">\n360: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n361: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
+            "line": 376,
+            "context": "375: <div className=\"p-2 rounded\">\n376: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n377: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
           },
           {
             "text": "Previous",
-            "line": 473,
-            "context": "472: disabled={currentPage === 1}\n473: >\n474: Previous"
+            "line": 489,
+            "context": "488: disabled={currentPage === 1}\n489: >\n490: Previous"
           },
           {
             "text": "Next",
-            "line": 484,
-            "context": "483: disabled={currentPage >= totalPages}\n484: >\n485: Next"
+            "line": 500,
+            "context": "499: disabled={currentPage >= totalPages}\n500: >\n501: Next"
           },
           {
             "text": "Order ID",
-            "line": 504,
-            "context": "503: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n504: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n505: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>"
+            "line": 520,
+            "context": "519: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n520: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 506,
-            "context": "505: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>\n506: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n507: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+            "line": 522,
+            "context": "521: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>\n522: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n523: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
           },
           {
             "text": "Status",
-            "line": 509,
-            "context": "508: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>\n509: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n510: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+            "line": 525,
+            "context": "524: <TableHead className=\"font-medium text-foreground text-center\">Due</TableHead>\n525: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n526: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 510,
-            "context": "509: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n510: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n511: </TableRow>"
+            "line": 526,
+            "context": "525: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n526: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n527: </TableRow>"
           },
           {
             "text": "Previous",
-            "line": 732,
-            "context": "731: disabled={currentPage === 1}\n732: >\n733: Previous"
+            "line": 763,
+            "context": "762: disabled={currentPage === 1}\n763: >\n764: Previous"
           },
           {
             "text": "Next",
-            "line": 743,
-            "context": "742: disabled={currentPage >= totalPages}\n743: >\n744: Next"
+            "line": 774,
+            "context": "773: disabled={currentPage >= totalPages}\n774: >\n775: Next"
           }
         ],
         "translationCalls": [
           {
             "key": "data_table.days_overdue",
-            "line": 278,
+            "line": 279,
             "exists": false
           },
           {
             "key": "data_table.due_today",
-            "line": 280,
+            "line": 281,
             "exists": true
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 282,
+            "line": 283,
             "exists": false
           },
           {
             "key": "data_table.due_in_days",
-            "line": 284,
+            "line": 285,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 301,
+            "line": 302,
             "exists": true
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 334,
+            "line": 350,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 383,
+            "line": 399,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 400,
+            "line": 416,
             "exists": true
           },
           {
             "key": "data_table.unassigned",
-            "line": 406,
+            "line": 422,
             "exists": true
           },
           {
             "key": "data_table.view",
-            "line": 430,
+            "line": 446,
             "exists": true
           },
           {
             "key": "data_table.edit",
-            "line": 442,
+            "line": 458,
             "exists": true
           },
           {
             "key": "data_table.delete",
-            "line": 455,
+            "line": 471,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 477,
+            "line": 493,
             "exists": true
           },
           {
             "key": "data_table.orders_count",
-            "line": 495,
+            "line": 511,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 507,
+            "line": 523,
             "exists": true
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 548,
+            "line": 579,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 564,
+            "line": 595,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 601,
+            "line": 632,
             "exists": true
           },
           {
             "key": "data_table.no_time_set",
-            "line": 636,
+            "line": 667,
             "exists": true
           },
           {
             "key": "data_table.view_details",
-            "line": 663,
+            "line": 694,
             "exists": true
           },
           {
             "key": "data_table.edit_order",
-            "line": 675,
+            "line": 706,
             "exists": true
           },
           {
             "key": "data_table.print_order",
-            "line": 686,
+            "line": 717,
             "exists": true
           },
           {
             "key": "data_table.delete_order",
-            "line": 698,
+            "line": 729,
             "exists": true
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 714,
+            "line": 745,
             "exists": true
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 715,
+            "line": 746,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 736,
+            "line": 767,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "data_table.days_overdue",
-            "line": 278,
-            "context": "277: if (diffDays < 0) {\n278: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n279: } else if (diffDays === 0) {"
+            "line": 279,
+            "context": "278: if (diffDays < 0) {\n279: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n280: } else if (diffDays === 0) {"
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 282,
-            "context": "281: } else if (diffDays === 1) {\n282: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n283: } else {"
+            "line": 283,
+            "context": "282: } else if (diffDays === 1) {\n283: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n284: } else {"
           },
           {
             "key": "data_table.due_in_days",
-            "line": 284,
-            "context": "283: } else {\n284: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n285: }"
+            "line": 285,
+            "context": "284: } else {\n285: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n286: }"
           }
         ],
         "coverage": 74,
@@ -17520,6 +17520,30 @@
             "text": "Close",
             "line": 47,
             "context": "46: <X className=\"h-4 w-4\" />\n47: <span className=\"sr-only\">Close</span>\n48: </DialogPrimitive.Close>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\ui\\comments-tooltip.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Failed to load comments",
+            "line": 89,
+            "context": "88: <div className=\"text-sm text-destructive flex items-center gap-2\">\n89: <AlertTriangle className=\"w-4 h-4\" />\n90: Failed to load comments"
+          },
+          {
+            "text": "No comments yet",
+            "line": 155,
+            "context": "154: {comments.length === 0 && (\n155: <div className=\"text-center py-4 text-xs text-muted-foreground\">\n156: No comments yet"
+          },
+          {
+            "text": "View all comments",
+            "line": 175,
+            "context": "174: <div className=\"flex items-center justify-center gap-1.5 font-medium\">\n175: <Eye className=\"w-3.5 h-3.5\" />\n176: View all comments"
           }
         ],
         "translationCalls": [],
@@ -29059,98 +29083,102 @@
       },
       {
         "file": "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
-        "hardcodedStrings": [
-          {
-            "text": ", orderDetailsQuery.error);\r\n      toast.error(t(",
-            "line": 372,
-            "context": "371: if (orderDetailsQuery.error) {\n372: console.error('Order polling error:', orderDetailsQuery.error);\n373: toast.error(t('orders.polling_error') || 'Failed to refresh order data');"
-          }
-        ],
+        "hardcodedStrings": [],
         "translationCalls": [
           {
+            "key": "orders.new_order",
+            "line": 158,
+            "exists": false
+          },
+          {
             "key": "orders.edit",
-            "line": 188,
+            "line": 197,
             "exists": true
           },
           {
             "key": "common.unassigned",
-            "line": 210,
+            "line": 219,
             "exists": false
           },
           {
             "key": "orders.polling_error",
-            "line": 373,
+            "line": 403,
             "exists": true
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 453,
+            "line": 483,
             "exists": false
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 466,
+            "line": 496,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 474,
+            "line": 504,
             "exists": false
           },
           {
             "key": "orders.print",
-            "line": 567,
+            "line": 597,
             "exists": false
           },
           {
             "key": "orders.download",
-            "line": 576,
+            "line": 606,
             "exists": false
           },
           {
             "key": "common.close",
-            "line": 587,
+            "line": 617,
             "exists": false
           }
         ],
         "missingKeys": [
           {
+            "key": "orders.new_order",
+            "line": 158,
+            "context": "157: const orderNumber = useMemo(() =>\n158: order.orderNumber || order.order_number || t('orders.new_order'),\n159: [order.orderNumber, order.order_number, t]"
+          },
+          {
             "key": "common.unassigned",
-            "line": 210,
-            "context": "209: <div className=\"text-sm font-medium text-gray-700\">\n210: {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || t('common.unassigned')}\n211: </div>"
+            "line": 219,
+            "context": "218: <div className=\"text-sm font-medium text-gray-700\">\n219: {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || t('common.unassigned')}\n220: </div>"
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 453,
-            "context": "452: \n453: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n454: }, [orderData, t]);"
+            "line": 483,
+            "context": "482: \n483: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n484: }, [orderData, t]);"
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 466,
-            "context": "465: <DialogTitle className=\"sr-only\">\n466: {t('orders.order_details_modal_title', {\n467: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 496,
+            "context": "495: <DialogTitle className=\"sr-only\">\n496: {t('orders.order_details_modal_title', {\n497: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 474,
-            "context": "473: <DialogDescription className=\"sr-only\">\n474: {t('orders.order_details_description', {\n475: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
+            "line": 504,
+            "context": "503: <DialogDescription className=\"sr-only\">\n504: {t('orders.order_details_description', {\n505: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.print",
-            "line": 567,
-            "context": "566: <Printer className=\"h-4 w-4\" />\n567: {t('orders.print')}\n568: </Button>"
+            "line": 597,
+            "context": "596: <Printer className=\"h-4 w-4\" />\n597: {t('orders.print')}\n598: </Button>"
           },
           {
             "key": "orders.download",
-            "line": 576,
-            "context": "575: <Download className=\"h-4 w-4\" />\n576: {t('orders.download')}\n577: </Button>"
+            "line": 606,
+            "context": "605: <Download className=\"h-4 w-4\" />\n606: {t('orders.download')}\n607: </Button>"
           },
           {
             "key": "common.close",
-            "line": 587,
-            "context": "586: >\n587: {t('common.close')}\n588: </Button>"
+            "line": 617,
+            "context": "616: >\n617: {t('common.close')}\n618: </Button>"
           }
         ],
-        "coverage": 90,
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -44538,7 +44566,6 @@
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
-        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\orders\\OrderDetailModal.tsx",
         "src\\components\\orders\\OptimizedOrderModal.tsx",
@@ -44547,6 +44574,7 @@
         "src\\components\\followers\\AddFollowerModal.tsx",
         "src\\components\\contacts\\ContactModal.tsx",
         "src\\components\\stock\\VehicleDetailsModal.tsx",
+        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "src\\components\\get-ready\\AddFromTemplatesModal.tsx",
         "src\\components\\get-ready\\vendors\\VendorFormModal.tsx",
@@ -44573,7 +44601,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "281 Component components need translation",
+      "description": "282 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -44664,6 +44692,7 @@
         "src\\contexts\\PermissionContext.tsx",
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\sidebar.tsx",
+        "src\\components\\ui\\comments-tooltip.tsx",
         "src\\components\\scanner\\specialized\\DealershipStickerScanner.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\productivity\\ProductivityTodos.tsx",
@@ -44862,7 +44891,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2855 translation keys are referenced but missing",
+      "description": "2856 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "143 hours"
     }
