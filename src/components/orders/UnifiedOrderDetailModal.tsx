@@ -1,10 +1,12 @@
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
+import { logger } from '@/utils/logger';
 import {
   Download,
   Edit2,
@@ -86,10 +88,6 @@ interface ModalData {
 
 type OrderType = 'sales' | 'service' | 'recon' | 'carwash';
 
-// Constants for default values
-const DEFAULT_DEALER_ID = '1';
-const DEFAULT_DEALERSHIP_NAME = 'Premium Auto';
-
 interface UnifiedOrderDetailModalProps {
   orderType: OrderType;
   order: OrderData;
@@ -104,12 +102,23 @@ interface UnifiedOrderDetailModalProps {
 function normalizeOrderData(data: Record<string, unknown>): Partial<OrderData> {
   if (!data) return {};
 
+  // Validate critical fields
+  if (!data.id || typeof data.id !== 'string') {
+    logger.error('Invalid order data: missing or invalid id', null, { data });
+    throw new Error('Invalid order data: missing or invalid id');
+  }
+
+  // Validate status
+  const validStatuses = ['pending', 'in_progress', 'completed', 'cancelled', 'on_hold'];
+  const status = typeof data.status === 'string' && validStatuses.includes(data.status)
+    ? data.status as OrderData['status']
+    : 'pending' as OrderData['status'];
+
   return {
     ...data,
-    // Just spread all data and let TypeScript handle the rest
-    id: data.id as string,
-    status: data.status as OrderData['status'],
-    dealer_id: data.dealer_id as string | number,
+    id: data.id,
+    status,
+    dealer_id: data.dealer_id ? String(data.dealer_id) : undefined,
   } as Partial<OrderData>;
 }
 
@@ -119,7 +128,7 @@ const useQRProps = (orderData: OrderData) => {
     qrCodeUrl: orderData.qr_code_url || orderData.qrCodeUrl,
     shortLink: orderData.short_link || orderData.shortLink,
     qrGenerationStatus: orderData.qr_generation_status || orderData.qrGenerationStatus
-  }), [orderData.qr_code_url, orderData.qrCodeUrl, orderData.short_link, orderData.shortLink, orderData.qr_generation_status, orderData.qrGenerationStatus]);
+  }), [orderData]);
 };
 
 
@@ -146,8 +155,8 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
   const { t } = useTranslation();
 
   const orderNumber = useMemo(() =>
-    order.orderNumber || order.order_number || 'New Order',
-    [order.orderNumber, order.order_number]
+    order.orderNumber || order.order_number || t('orders.new_order'),
+    [order.orderNumber, order.order_number, t]
   );
 
   // Get status background class (memoized)
@@ -223,7 +232,7 @@ const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
         </div>
 
         {/* Right: Status Dropdown */}
-        <div className="text-right">
+        <div className="text-right" aria-live="polite" aria-atomic="true">
           {onStatusChange && (
             <StatusBadgeInteractive
               status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
@@ -279,6 +288,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   isLoadingData = false
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { hasPermission } = usePermissionContext();
   const { printOrder, previewPrint } = usePrintOrder();
   const [orderData, setOrderData] = useState(order);
@@ -290,11 +300,13 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   // Custom hook for normalized QR props
   const qrProps = useQRProps(orderData);
 
-  // Compute effective dealer ID - prefer orderData, fallback to DEFAULT
-  const effectiveDealerId = useMemo(() =>
-    orderData.dealer_id ? String(orderData.dealer_id) : DEFAULT_DEALER_ID,
-    [orderData.dealer_id]
-  );
+  // Compute effective dealer ID - prefer orderData, fallback to user's dealership
+  const effectiveDealerId = useMemo(() => {
+    if (orderData.dealer_id) return String(orderData.dealer_id);
+    if (user?.dealershipId) return String(user.dealershipId);
+    logger.warn('No dealer ID available for order', { orderId: orderData.id });
+    return ''; // Empty string instead of hardcoded default
+  }, [orderData.dealer_id, user?.dealershipId, orderData.id]);
 
   // Check if user can edit orders
   const canEditOrder = useMemo(() => {
@@ -332,16 +344,26 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   const orderDetailsQuery = useOrderDetailsPolling(
     ['order', order?.id || ''],
     async () => {
-      if (!order?.id) return order;
+      if (!order?.id) {
+        throw new Error('Order ID is required for polling');
+      }
 
-      console.log(`🔄 Polling order details for ${order.id}`);
+      logger.dev(`🔄 Polling order details for ${order.id}`);
       const { data, error } = await supabase
         .from('orders')
         .select('*')
         .eq('id', order.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        logger.error('Failed to fetch order details', error, { orderId: order.id });
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error(`Order ${order.id} not found`);
+      }
+
       return data;
     },
     open && !!order?.id
@@ -349,30 +371,38 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
   // Update orderData when polling returns new data
   useEffect(() => {
+    let isMounted = true;
+
     if (orderDetailsQuery.data && orderDetailsQuery.data.id === order?.id) {
       // Normalize polling data to prevent snake_case overwriting camelCase
       const normalized = normalizeOrderData(orderDetailsQuery.data);
 
-      setOrderData(prev => ({
-        ...prev,
-        ...normalized,
-        // Preserve critical transformed fields that might be lost
-        services: normalized.services !== undefined ? normalized.services : prev.services,
-        vehicle_info: normalized.vehicle_info || prev.vehicle_info,
-        // Preserve assignedTo if polling data doesn't have it (user name is transformed from JOIN, not in raw DB)
-        assignedTo: normalized.assignedTo || prev.assignedTo,
-        assigned_to: normalized.assigned_to || prev.assigned_to,
-      }));
+      if (isMounted) {
+        setOrderData(prev => ({
+          ...prev,
+          ...normalized,
+          // Preserve critical transformed fields that might be lost
+          services: normalized.services !== undefined ? normalized.services : prev.services,
+          vehicle_info: normalized.vehicle_info || prev.vehicle_info,
+          // Preserve assignedTo if polling data doesn't have it (user name is transformed from JOIN, not in raw DB)
+          assignedTo: normalized.assignedTo || prev.assignedTo,
+          assigned_to: normalized.assigned_to || prev.assigned_to,
+        }));
+      }
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [orderDetailsQuery.data, order?.id]);
 
   // Error handling for polling failures
   useEffect(() => {
     if (orderDetailsQuery.error) {
-      console.error('Order polling error:', orderDetailsQuery.error);
-      toast.error(t('orders.polling_error') || 'Failed to refresh order data');
+      logger.error('Order polling error', orderDetailsQuery.error, { orderId: order?.id });
+      toast.error(t('orders.polling_error'));
     }
-  }, [orderDetailsQuery.error, t]);
+  }, [orderDetailsQuery.error, t, order?.id]);
 
   // Enhanced scroll behavior with better error handling
   useEffect(() => {
@@ -395,7 +425,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           }
         }
       } catch (error) {
-        console.warn('Failed to scroll to modal top:', error);
+        logger.warn('Failed to scroll to modal top', { error });
       }
     };
 
@@ -413,7 +443,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           ['pending', 'in_progress', 'completed', 'cancelled', 'on_hold'];
 
         if (!validStatuses.includes(newStatus as typeof validStatuses[number])) {
-          console.error('Invalid status:', newStatus);
+          logger.error('Invalid status value', null, { newStatus, orderId: orderData.id });
           return;
         }
 
@@ -427,7 +457,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             : prev
         ));
       } catch (error) {
-        console.error('Failed to update order status:', error);
+        logger.error('Failed to update order status', error, { orderId: orderData.id, newStatus });
         // Optionally show toast notification here
       }
     },

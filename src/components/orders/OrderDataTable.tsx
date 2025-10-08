@@ -52,6 +52,7 @@ import {
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
 import { DueDateIndicator, useDueDateAttention } from '@/components/ui/due-date-indicator';
+import { CommentsTooltip } from '@/components/ui/comments-tooltip';
 import {
   isSameDayOrder,
   isTimeBasedOrder,
@@ -326,8 +327,23 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                   {/* Header Row */}
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="text-lg font-bold text-foreground">
-                        {formatOrderNumber(order)}
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-foreground">
+                          {formatOrderNumber(order)}
+                        </span>
+                        {/* Comments Indicator */}
+                        {order.comments && order.comments > 0 && (
+                          <CommentsTooltip
+                            orderId={order.id}
+                            count={order.comments}
+                            onViewAllClick={() => onView(order)}
+                          >
+                            <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors">
+                              <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
+                              <span className="text-xs font-semibold text-blue-600">{order.comments}</span>
+                            </span>
+                          </CommentsTooltip>
+                        )}
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground mt-1">
                         <Building2 className="w-4 h-4 mr-2 text-gray-700 flex-shrink-0" />
@@ -540,8 +556,23 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                     {/* Column 1: Order ID & Dealer */}
                     <TableCell className="py-2 text-center w-[140px]">
                       <div className="space-y-1">
-                        <div className="text-base font-bold text-foreground">
-                          {formatOrderNumber(order)}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-base font-bold text-foreground">
+                            {formatOrderNumber(order)}
+                          </span>
+                          {/* Comments Indicator */}
+                          {order.comments && order.comments > 0 && (
+                            <CommentsTooltip
+                              orderId={order.id}
+                              count={order.comments}
+                              onViewAllClick={() => onView(order)}
+                            >
+                              <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors">
+                                <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
+                                <span className="text-xs font-semibold text-blue-600">{order.comments}</span>
+                              </span>
+                            </CommentsTooltip>
+                          )}
                         </div>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">
                           <Building2 className="w-3 h-3 mr-1 text-gray-700 flex-shrink-0" />

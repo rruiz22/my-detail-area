@@ -174,11 +174,16 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
     dealershipName: 'Unknown Dealer',
     assignedGroupName: undefined,
     createdByGroupName: undefined,
-    dueTime: primaryDate ? new Date(primaryDate).toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
+    dueTime: primaryDate ? new Date(primaryDate).toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: true 
+      hour12: true
     }) : undefined,
+
+    // Comments count from aggregation
+    comments: Array.isArray((supabaseOrder as any).order_comments) && (supabaseOrder as any).order_comments[0]?.count
+      ? (supabaseOrder as any).order_comments[0].count
+      : 0,
   };
 };
 
@@ -382,7 +387,7 @@ export const useOrderManagement = (activeTab: string) => {
       // CRITICAL: Filter orders by user's assigned dealer(s) for multi-dealer support
       let ordersQuery = supabase
         .from('orders')
-        .select('*')
+        .select('*, order_comments(count)')
         .eq('order_type', 'sales')
         .order('created_at', { ascending: false });
 
@@ -762,7 +767,7 @@ export const useOrderManagement = (activeTab: string) => {
       // Apply same dealer filtering logic as refreshData
       let ordersQuery = supabase
         .from('orders')
-        .select('*')
+        .select('*, order_comments(count)')
         .eq('order_type', 'sales')
         .order('created_at', { ascending: false });
 

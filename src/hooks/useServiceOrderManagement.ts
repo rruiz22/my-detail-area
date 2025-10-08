@@ -133,6 +133,10 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
     minute: '2-digit',
     hour12: true
   }) : undefined,
+  // Comments count from aggregation
+  comments: Array.isArray((supabaseOrder as any).order_comments) && (supabaseOrder as any).order_comments[0]?.count
+    ? (supabaseOrder as any).order_comments[0].count
+    : 0,
 });
 
 export const useServiceOrderManagement = (activeTab: string) => {
@@ -260,7 +264,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
       // Apply same dealer filtering logic as Sales Orders
       let ordersQuery = supabase
         .from('orders')
-        .select('*')
+        .select('*, order_comments(count)')
         .eq('order_type', 'service')
         .order('created_at', { ascending: false });
 
