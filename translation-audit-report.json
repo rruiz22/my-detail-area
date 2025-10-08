@@ -17537,13 +17537,13 @@
           },
           {
             "text": "No comments yet",
-            "line": 155,
-            "context": "154: {comments.length === 0 && (\n155: <div className=\"text-center py-4 text-xs text-muted-foreground\">\n156: No comments yet"
+            "line": 156,
+            "context": "155: {comments.length === 0 && (\n156: <div className=\"text-center py-4 text-xs text-muted-foreground\">\n157: No comments yet"
           },
           {
             "text": "View all comments",
-            "line": 175,
-            "context": "174: <div className=\"flex items-center justify-center gap-1.5 font-medium\">\n175: <Eye className=\"w-3.5 h-3.5\" />\n176: View all comments"
+            "line": 176,
+            "context": "175: <div className=\"flex items-center justify-center gap-1.5 font-medium\">\n176: <Eye className=\"w-3.5 h-3.5\" />\n177: View all comments"
           }
         ],
         "translationCalls": [],
