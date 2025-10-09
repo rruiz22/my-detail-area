@@ -62,6 +62,102 @@ interface DealershipInfo {
   website?: string;
 }
 
+// Complete inline styles for production compatibility
+const PRINT_STYLES = `
+  /* Base layout */
+  .print-order-layout {
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    max-width: 8.5in;
+    margin: 0 auto;
+    padding: 0.5in;
+    background: white;
+    color: black;
+    line-height: 1.4;
+  }
+
+  /* Print media queries */
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.5in;
+    }
+
+    * {
+      -webkit-print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body { margin: 0; padding: 0; background: white !important; width: 8.5in; }
+    .no-print, nav, .sidebar, .footer, button, .modal-overlay, .dialog-overlay, .preview-actions { display: none !important; }
+
+    .print-order-layout { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0.3in 0.5in !important; font-size: 12pt; line-height: 1.3; }
+    .print-header { border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 20px; display: grid; grid-template-columns: 2fr 1fr; align-items: center; gap: 20px; }
+    .dealership-name { font-size: 24pt; font-weight: bold; margin: 0 0 8px 0; color: #000; }
+    .dealership-address { font-size: 11pt; margin: 4px 0; color: #333; }
+    .dealership-contact { font-size: 10pt; color: #666; }
+    .order-header { text-align: right; }
+    .order-title { font-size: 18pt; font-weight: bold; margin: 0 0 8px 0; color: #000; }
+    .order-number-plain { font-size: 20pt; font-weight: bold; margin-bottom: 8px; color: #000; }
+    .print-date { font-size: 10pt; color: #666; }
+    .customer-vehicle-section { margin-bottom: 20px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .section-title { font-size: 14pt; font-weight: bold; margin: 0 0 12px 0; padding: 8px 0; border-bottom: 2px solid #ccc; color: #000; }
+    .info-table { width: 100%; }
+    .info-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; padding: 6px 0; border-bottom: 1px solid #eee; }
+    .label { font-weight: bold; color: #333; white-space: nowrap; }
+    .value { color: #000; }
+    .services-section { margin-bottom: 20px; }
+    .services-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .services-table th { background: #f8f8f8; padding: 12px 8px; text-align: left; border: 1px solid #ddd; font-weight: bold; font-size: 11pt; }
+    .services-table td { padding: 10px 8px; border: 1px solid #ddd; font-size: 11pt; }
+    .service-name { width: 35%; font-weight: bold; }
+    .service-description { width: 65%; color: #666; }
+    .service-notes-block { margin-top: 20px; padding: 16px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; }
+    .notes-label { font-size: 11pt; font-weight: bold; margin: 0 0 12px 0; color: #333; }
+    .notes-write-space { border: 1px solid #ccc; background: white; min-height: 100px; padding: 12px; border-radius: 4px; }
+    .notes-write-space p { margin: 10px 0; min-height: 30px; border-bottom: 1.5px solid #ccc; }
+    .qr-section { text-align: center; }
+    .qr-container { border: 1px solid #ddd; padding: 16px; display: inline-block; border-radius: 8px; }
+    .qr-instructions { margin: 8px 0 4px 0; font-size: 10pt; color: #666; }
+    .qr-url { font-size: 9pt; font-family: 'Courier New', monospace; color: #666; word-break: break-all; }
+    .notes-section { margin-bottom: 30px; }
+    .notes-content { padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; white-space: pre-wrap; font-size: 11pt; line-height: 1.4; }
+    .print-footer { border-top: 1px solid #ddd; padding-top: 20px; text-align: center; font-size: 10pt; color: #666; page-break-inside: avoid; }
+    .footer-info p { margin: 4px 0; }
+  }
+
+  /* Screen preview styles */
+  @media screen {
+    .print-order-layout { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: 1px solid #ddd; border-radius: 8px; background: white; }
+    .print-header { display: grid; grid-template-columns: 2fr 1fr; align-items: center; gap: 20px; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+    .dealership-name { font-size: 1.8rem; font-weight: bold; margin: 0 0 8px 0; }
+    .dealership-address { margin: 4px 0; color: #666; }
+    .dealership-contact { font-size: 0.9rem; color: #666; }
+    .order-header { text-align: right; }
+    .order-title { font-size: 1.4rem; font-weight: bold; margin: 0 0 8px 0; }
+    .order-number-plain { font-size: 1.6rem; font-weight: bold; margin-bottom: 8px; color: #000; }
+    .print-date { font-size: 0.85rem; color: #666; }
+    .customer-vehicle-section, .services-section, .order-details-section, .notes-section { margin-bottom: 30px; }
+    .info-grid, .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .section-title { font-size: 1.1rem; font-weight: bold; margin: 0 0 12px 0; padding: 8px 0; border-bottom: 2px solid #ccc; }
+    .info-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; padding: 6px 0; border-bottom: 1px solid #eee; }
+    .label { font-weight: bold; color: #333; white-space: nowrap; }
+    .value { color: #000; }
+    .services-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .services-table th, .services-table td { padding: 10px 8px; border: 1px solid #ddd; text-align: left; }
+    .services-table th { background: #f8f8f8; font-weight: bold; }
+    .service-notes-block { margin-top: 20px; padding: 16px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; }
+    .notes-label { font-size: 0.95rem; font-weight: bold; margin: 0 0 12px 0; color: #333; }
+    .notes-write-space { border: 1px solid #ccc; background: white; min-height: 100px; padding: 12px; border-radius: 4px; }
+    .notes-write-space p { margin: 10px 0; min-height: 30px; border-bottom: 1.5px solid #ccc; }
+    .qr-section { text-align: center; }
+    .qr-container { border: 1px solid #ddd; padding: 16px; display: inline-block; border-radius: 8px; }
+    .notes-content { padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; white-space: pre-wrap; }
+    .print-footer { border-top: 1px solid #ddd; padding-top: 20px; text-align: center; font-size: 0.85rem; color: #666; }
+  }
+`;
+
 export const usePrintOrder = () => {
 
   // Fetch complete order data for printing
@@ -356,7 +452,7 @@ export const usePrintOrder = () => {
             <link rel="icon" type="image/svg+xml" href="/favicon-mda.svg" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Work Order ${completeOrder.custom_order_number || completeOrder.orderNumber || completeOrder.order_number}</title>
-            <link rel="stylesheet" href="/src/styles/print.css">
+            <style>${PRINT_STYLES}</style>
           </head>
           <body>
             ${printContent}
@@ -418,7 +514,7 @@ export const usePrintOrder = () => {
             <link rel="icon" type="image/svg+xml" href="/favicon-mda.svg" />
             <title>Print Preview - Order ${completeOrder.custom_order_number || completeOrder.orderNumber || completeOrder.order_number}</title>
             <style>
-              /* Preview styles */
+              /* Preview-specific styles */
               body { margin: 20px; background: #f5f5f5; font-family: 'Arial', 'Helvetica', sans-serif; }
 
               .preview-actions {
@@ -442,40 +538,9 @@ export const usePrintOrder = () => {
                 background: #f0f0f0;
               }
 
-              /* Inline critical print styles for font consistency */
-              .print-order-layout {
-                font-family: 'Arial', 'Helvetica', sans-serif;
-                max-width: 8.5in;
-                margin: 0 auto;
-                padding: 0.5in;
-                background: white;
-                color: black;
-                line-height: 1.4;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                border: 1px solid #ddd;
-                border-radius: 8px;
-              }
-
-              /* Print-specific overrides */
-              @media print {
-                @page {
-                  size: letter;
-                  margin: 0.5in;
-                }
-                body { margin: 0; padding: 0; background: white !important; }
-                .preview-actions { display: none !important; }
-                .print-order-layout {
-                  width: 100% !important;
-                  max-width: none !important;
-                  margin: 0 !important;
-                  padding: 0.3in 0.5in !important;
-                  box-shadow: none !important;
-                  border: none !important;
-                  border-radius: 0 !important;
-                }
-              }
+              /* Complete print styles inline for production */
+              ${PRINT_STYLES}
             </style>
-            <link rel="stylesheet" href="/src/styles/print.css">
           </head>
           <body>
             <div class="preview-actions">
