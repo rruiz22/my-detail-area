@@ -80,7 +80,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       // Create the deep link to our redirect endpoint
       // Use BASE_URL from environment variables (configured in Supabase Dashboard)
-      const appUrl = Deno.env.get("BASE_URL") || "https://app.mydetailarea.com";
+      let appUrl = Deno.env.get("BASE_URL") || "https://dds.mydetailarea.com";
+
+      // Remove trailing slash if present to avoid double slashes
+      if (appUrl.endsWith('/')) {
+        appUrl = appUrl.slice(0, -1);
+      }
+
       const redirectUrl = `${appUrl}/sales?order=${orderId}`;
       const deepLink = redirectUrl; // Same as redirect URL - direct redirect
 
