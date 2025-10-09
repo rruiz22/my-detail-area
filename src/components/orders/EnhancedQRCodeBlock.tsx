@@ -188,10 +188,10 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
     }
   }, [qrData?.shortUrl, shortLink, t]);
 
-  // Memoize QR URL calculation - prioritize shortLink prop
+  // Memoize QR URL calculation - prioritize local state for regeneration
   const qrUrl = useMemo(() => {
-    return shortLink || qrData?.shortUrl || '';
-  }, [shortLink, qrData?.shortUrl]);
+    return qrData?.shortUrl || shortLink || '';
+  }, [qrData?.shortUrl, shortLink]);
 
   // Memoize analytics display formatting (keep for system, don't display)
   const formattedAnalytics = useMemo(() => {
