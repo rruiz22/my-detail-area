@@ -1689,63 +1689,63 @@
         "hardcodedStrings": [
           {
             "text": "WORK ORDER",
-            "line": 208,
-            "context": "207: <div class=\"order-header\">\n208: <h2 class=\"order-title\">WORK ORDER</h2>\n209: <div class=\"order-number-plain\">#${orderNumber}</div>"
+            "line": 304,
+            "context": "303: <div class=\"order-header\">\n304: <h2 class=\"order-title\">WORK ORDER</h2>\n305: <div class=\"order-number-plain\">#${orderNumber}</div>"
           },
           {
             "text": "Customer Information",
-            "line": 224,
-            "context": "223: <div class=\"customer-info\">\n224: <h3 class=\"section-title\">Customer Information</h3>\n225: <div class=\"info-table\">"
+            "line": 320,
+            "context": "319: <div class=\"customer-info\">\n320: <h3 class=\"section-title\">Customer Information</h3>\n321: <div class=\"info-table\">"
           },
           {
             "text": "Vehicle Information",
-            "line": 246,
-            "context": "245: <div class=\"vehicle-info\">\n246: <h3 class=\"section-title\">Vehicle Information</h3>\n247: <div class=\"info-table\">"
+            "line": 342,
+            "context": "341: <div class=\"vehicle-info\">\n342: <h3 class=\"section-title\">Vehicle Information</h3>\n343: <div class=\"info-table\">"
           },
           {
             "text": "Services Requested",
-            "line": 277,
-            "context": "276: <section class=\"services-section\">\n277: <h3 class=\"section-title\">Services Requested</h3>\n278: <table class=\"services-table\">"
+            "line": 373,
+            "context": "372: <section class=\"services-section\">\n373: <h3 class=\"section-title\">Services Requested</h3>\n374: <table class=\"services-table\">"
           },
           {
             "text": "Service",
-            "line": 281,
-            "context": "280: <tr>\n281: <th class=\"service-name\">Service</th>\n282: <th class=\"service-description\">Description</th>"
+            "line": 377,
+            "context": "376: <tr>\n377: <th class=\"service-name\">Service</th>\n378: <th class=\"service-description\">Description</th>"
           },
           {
             "text": "Description",
-            "line": 282,
-            "context": "281: <th class=\"service-name\">Service</th>\n282: <th class=\"service-description\">Description</th>\n283: </tr>"
+            "line": 378,
+            "context": "377: <th class=\"service-name\">Service</th>\n378: <th class=\"service-description\">Description</th>\n379: </tr>"
           },
           {
             "text": "Customer Notes",
-            "line": 304,
-            "context": "303: <div class=\"notes-block\">\n304: <h3 class=\"section-title\">Customer Notes</h3>\n305: <div class=\"notes-content\">${order.notes}</div>"
+            "line": 400,
+            "context": "399: <div class=\"notes-block\">\n400: <h3 class=\"section-title\">Customer Notes</h3>\n401: <div class=\"notes-content\">${order.notes}</div>"
           },
           {
             "text": "Order Tracking",
-            "line": 311,
-            "context": "310: <section class=\"qr-section\">\n311: <h3 class=\"section-title\">Order Tracking</h3>\n312: <div class=\"qr-container\" style=\"text-align: center; margin: 20px 0;\">"
+            "line": 407,
+            "context": "406: <section class=\"qr-section\">\n407: <h3 class=\"section-title\">Order Tracking</h3>\n408: <div class=\"qr-container\" style=\"text-align: center; margin: 20px 0;\">"
           },
           {
             "text": "Scan for order status",
-            "line": 318,
-            "context": "317: />\n318: <p class=\"qr-instructions\" style=\"margin: 12px 0 4px 0; font-size: 12px; color: #666; font-weight: bold;\">Scan for order status</p>\n319: <p class=\"qr-url\" style=\"margin: 0; font-size: 11px; color: #888; word-break: break-all;\">${order.short_link}</p>"
+            "line": 414,
+            "context": "413: />\n414: <p class=\"qr-instructions\" style=\"margin: 12px 0 4px 0; font-size: 12px; color: #666; font-weight: bold;\">Scan for order status</p>\n415: <p class=\"qr-url\" style=\"margin: 0; font-size: 11px; color: #888; word-break: break-all;\">${order.short_link}</p>"
           },
           {
             "text": "QR Code",
-            "line": 315,
-            "context": "314: src=\"https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(order.short_link)}\"\n315: alt=\"QR Code\"\n316: style=\"width: 120px; height: 120px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;\""
+            "line": 411,
+            "context": "410: src=\"https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(order.short_link)}\"\n411: alt=\"QR Code\"\n412: style=\"width: 120px; height: 120px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;\""
           },
           {
             "text": ", error);\r\n      toast.error(`Failed to print order: ${error}`);\r\n    }\r\n  }, [fetchCompleteOrderData, generatePrintHTML]);\r\n\r\n  // Quick print without internal notes\r\n  const printOrderQuick = useCallback(async (order: OrderData) => {\r\n    await printOrder(order, false);\r\n  }, [printOrder]);\r\n\r\n  // Admin print with internal notes\r\n  const printOrderAdmin = useCallback(async (order: OrderData) => {\r\n    await printOrder(order, true);\r\n  }, [printOrder]);\r\n\r\n  // Print preview (opens in new tab for review)\r\n  const previewPrint = useCallback(async (order: OrderData) => {\r\n    try {\r\n      const { order: completeOrder, services, dealership } = await fetchCompleteOrderData(order.id);\r\n\r\n      // Generate HTML content (QR code now uses public API)\r\n      const printContent = generatePrintHTML(completeOrder, services, dealership);\r\n\r\n      // Calculate centered position\r\n      const width = 900;\r\n      const height = 700;\r\n      const left = (screen.width - width) / 2;\r\n      const top = (screen.height - height) / 2;\r\n\r\n      const previewWindow = window.open(",
-            "line": 378,
-            "context": "377: } catch (error) {\n378: console.error('Print order error:', error);\n379: toast.error(`Failed to print order: ${error}`);"
+            "line": 474,
+            "context": "473: } catch (error) {\n474: console.error('Print order error:', error);\n475: toast.error(`Failed to print order: ${error}`);"
           },
           {
             "text": ", error);\r\n      toast.error(",
-            "line": 498,
-            "context": "497: } catch (error) {\n498: console.error('Print preview error:', error);\n499: toast.error('Failed to open print preview');"
+            "line": 563,
+            "context": "562: } catch (error) {\n563: console.error('Print preview error:', error);\n564: toast.error('Failed to open print preview');"
           }
         ],
         "translationCalls": [],
