@@ -63,6 +63,7 @@ import { getOrderAnimationClass } from '@/utils/orderAnimationUtils';
 import { formatOrderNumber } from '@/utils/orderUtils';
 import { ServicesDisplay } from './ServicesDisplay';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
+import { SkeletonLoader } from './SkeletonLoader';
 import { cn } from '@/lib/utils';
 import '@/styles/order-animations.css';
 
@@ -295,14 +296,30 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
   if (loading) {
     return (
-      <Card className="border-border shadow-sm">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center">
-            <Loader2 className="w-6 h-6 animate-spin mr-2" />
-            <span>{t('common.loading')}</span>
-          </div>
-        </CardContent>
-      </Card>
+      <>
+        {/* Mobile Skeleton */}
+        <div className="block lg:hidden space-y-4">
+          {[...Array(5)].map((_, i) => (
+            <Card key={i} className="border-border shadow-sm">
+              <CardContent className="p-4">
+                <div className="space-y-3 animate-pulse">
+                  <div className="h-4 bg-muted rounded w-20" />
+                  <div className="h-3 bg-muted rounded w-32" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="h-16 bg-muted rounded" />
+                    <div className="h-16 bg-muted rounded" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Desktop Skeleton */}
+        <div className="hidden lg:block">
+          <SkeletonLoader variant="table" rows={10} />
+        </div>
+      </>
     );
   }
 

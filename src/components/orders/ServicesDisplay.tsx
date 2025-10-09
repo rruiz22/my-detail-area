@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { usePermissionContext } from '@/contexts/PermissionContext';
-import { supabase } from '@/integrations/supabase/client';
+import { useServices } from '@/contexts/ServicesContext';
 
 // Service data interface
 interface OrderService {
@@ -30,7 +30,6 @@ interface OrderService {
   name: string;
   price?: number;
   description?: string;
-  category?: string;
   duration?: number;
 }
 
@@ -85,18 +84,31 @@ export function ServicesDisplay({
 }: ServicesDisplayProps) {
   const { t } = useTranslation();
   const { hasPermission } = usePermissionContext();
+  const { getServices, loading: servicesLoading } = useServices();
 
-  // Fetch real service data from dealer_services table
-  const { services: processedServices, loading } = useOrderServices(services, dealerId);
+  // Process services using global cache (instant lookup)
+  const processedServices = useMemo(() => {
+    if (!services || !Array.isArray(services) || services.length === 0) {
+      return [];
+    }
+
+    // If already enriched objects
+    if (services.length > 0 && typeof services[0] === 'object' && 'name' in services[0]) {
+      return services as OrderService[];
+    }
+
+    // Lookup from global cache (O(1) per service)
+    return getServices(services as string[]);
+  }, [services, getServices]);
 
   // Check if user can view pricing
   const canViewPrices = showPrices ?? hasPermission('orders', 'view_pricing');
 
-  // Show loading state
-  if (loading) {
+  // Show loading state only if global cache is still loading
+  if (servicesLoading && processedServices.length === 0) {
     return (
       <div className={`text-xs text-muted-foreground ${className}`}>
-        Loading services...
+        Loading...
       </div>
     );
   }
@@ -216,53 +228,3 @@ export function ServicesDisplay({
 
   return null;
 }
-
-// Hook to fetch and enrich services data from dealer_services table
-export const useOrderServices = (orderServices: string[] | OrderService[] | null, dealerId?: number) => {
-  const [enrichedServices, setEnrichedServices] = React.useState<OrderService[]>([]);
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    const fetchServiceDetails = async () => {
-      if (!orderServices || !Array.isArray(orderServices) || orderServices.length === 0) {
-        setEnrichedServices([]);
-        return;
-      }
-
-      // If already enriched objects
-      if (orderServices.length > 0 && typeof orderServices[0] === 'object' && 'name' in orderServices[0]) {
-        setEnrichedServices(orderServices as OrderService[]);
-        return;
-      }
-
-      // Fetch from dealer_services table using IDs
-      setLoading(true);
-      try {
-        const { data: services, error } = await supabase
-          .from('dealer_services')
-          .select('id, name, description, price, duration')
-          .in('id', orderServices as string[]);
-
-        if (error) throw error;
-
-        setEnrichedServices(services || []);
-      } catch (error) {
-        console.error('Error fetching service details:', error);
-        // Fallback to basic display
-        setEnrichedServices((orderServices as string[]).map((serviceId, index) => ({
-          id: serviceId,
-          name: `Service ${index + 1}`,
-          price: 0,
-          description: null,
-          category: 'general'
-        })));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchServiceDetails();
-  }, [orderServices, dealerId]);
-
-  return { services: enrichedServices, loading };
-};

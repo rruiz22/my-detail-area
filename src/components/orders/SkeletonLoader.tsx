@@ -1,18 +1,21 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 
 interface SkeletonLoaderProps {
-  variant?: 'vehicle-info' | 'schedule-view' | 'qr-code' | 'activity' | 'notes';
+  variant?: 'vehicle-info' | 'schedule-view' | 'qr-code' | 'activity' | 'notes' | 'table';
   className?: string;
+  rows?: number;
 }
 
 // Memoized skeleton component for performance
-export const SkeletonLoader = React.memo(function SkeletonLoader({ 
-  variant = 'vehicle-info', 
-  className 
+export const SkeletonLoader = React.memo(function SkeletonLoader({
+  variant = 'vehicle-info',
+  className,
+  rows = 10
 }: SkeletonLoaderProps) {
-  
+
   const baseSkeletonClass = "bg-muted animate-pulse rounded";
   
   if (variant === 'vehicle-info') {
@@ -211,6 +214,76 @@ export const SkeletonLoader = React.memo(function SkeletonLoader({
     );
   }
   
+  if (variant === 'table') {
+    return (
+      <Card className={cn("border-border shadow-sm", className)}>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="w-16"><div className={cn(baseSkeletonClass, "h-4 w-4")} /></TableHead>
+                <TableHead className="w-[140px]"><div className={cn(baseSkeletonClass, "h-4 w-20")} /></TableHead>
+                <TableHead><div className={cn(baseSkeletonClass, "h-4 w-16")} /></TableHead>
+                <TableHead><div className={cn(baseSkeletonClass, "h-4 w-20")} /></TableHead>
+                <TableHead><div className={cn(baseSkeletonClass, "h-4 w-20")} /></TableHead>
+                <TableHead><div className={cn(baseSkeletonClass, "h-4 w-16")} /></TableHead>
+                <TableHead><div className={cn(baseSkeletonClass, "h-4 w-16")} /></TableHead>
+                <TableHead><div className={cn(baseSkeletonClass, "h-4 w-20")} /></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(rows)].map((_, index) => (
+                <TableRow key={index} className="border-border">
+                  <TableCell className="py-2 text-center">
+                    <div className={cn(baseSkeletonClass, "h-4 w-4 mx-auto")} />
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className="space-y-1">
+                      <div className={cn(baseSkeletonClass, "h-4 w-16 mx-auto")} />
+                      <div className={cn(baseSkeletonClass, "h-3 w-24 mx-auto")} />
+                    </div>
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className="space-y-1">
+                      <div className={cn(baseSkeletonClass, "h-4 w-16 mx-auto")} />
+                      <div className={cn(baseSkeletonClass, "h-3 w-20 mx-auto")} />
+                    </div>
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className="space-y-1">
+                      <div className={cn(baseSkeletonClass, "h-4 w-24 mx-auto")} />
+                      <div className={cn(baseSkeletonClass, "h-3 w-20 mx-auto")} />
+                    </div>
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className={cn(baseSkeletonClass, "h-4 w-20 mx-auto")} />
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className="space-y-1">
+                      <div className={cn(baseSkeletonClass, "h-5 w-20 mx-auto")} />
+                      <div className={cn(baseSkeletonClass, "h-3 w-24 mx-auto")} />
+                      <div className={cn(baseSkeletonClass, "h-3 w-16 mx-auto")} />
+                    </div>
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className={cn(baseSkeletonClass, "h-6 w-20 mx-auto rounded-full")} />
+                  </TableCell>
+                  <TableCell className="py-2">
+                    <div className="flex items-center justify-center gap-1">
+                      <div className={cn(baseSkeletonClass, "h-8 w-8")} />
+                      <div className={cn(baseSkeletonClass, "h-8 w-8")} />
+                      <div className={cn(baseSkeletonClass, "h-8 w-8")} />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    );
+  }
+
   // Default skeleton
   return (
     <div className={cn("space-y-4", className)}>

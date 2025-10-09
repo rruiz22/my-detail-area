@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
+import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
@@ -227,20 +228,22 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <PermissionProvider>
-          <GlobalChatWrapper>
-            <NotificationProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter
-              future={{
-                v7_startTransition: false,
-                v7_relativeSplatPath: true
-              }}
-            >
-                <AppRoutes />
-            </BrowserRouter>
-           </NotificationProvider>
-           </GlobalChatWrapper>
+          <ServicesProvider>
+            <GlobalChatWrapper>
+              <NotificationProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter
+                future={{
+                  v7_startTransition: false,
+                  v7_relativeSplatPath: true
+                }}
+              >
+                  <AppRoutes />
+              </BrowserRouter>
+             </NotificationProvider>
+             </GlobalChatWrapper>
+          </ServicesProvider>
         </PermissionProvider>
       </AuthProvider>
     </TooltipProvider>

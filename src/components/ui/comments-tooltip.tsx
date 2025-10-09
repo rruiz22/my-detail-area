@@ -84,7 +84,7 @@ export function CommentsTooltip({
   const tooltipContent = useMemo(() => {
     if (error) {
       return (
-        <div className="w-80 p-3">
+        <div className="w-[500px]">
           <div className="text-sm text-destructive flex items-center gap-2">
             <AlertTriangle className="w-4 h-4" />
             Failed to load comments
@@ -95,7 +95,7 @@ export function CommentsTooltip({
 
     if (isLoading) {
       return (
-        <div className="w-80 p-3">
+        <div className="w-[500px]">
           <div className="text-sm text-muted-foreground flex items-center gap-2">
             <Clock className="w-4 h-4 animate-spin" />
             Loading comments...
@@ -105,49 +105,57 @@ export function CommentsTooltip({
     }
 
     return (
-      <div className="w-[400px]">
+      <div className="w-[500px]">
         {/* Header */}
         <div className="mb-3 pb-2 border-b border-border">
           <p className="font-semibold text-sm text-foreground flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-blue-500" />
             {count} {count === 1 ? 'Comment' : 'Comments'}
           </p>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-muted-foreground mt-1">
             Showing {Math.min(maxPreview, comments.length)} most recent
           </p>
         </div>
 
-        {/* Comments list */}
-        <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-2">
+        {/* Comments list - Inline format matching duplicates */}
+        <div className="space-y-1.5 max-h-64 overflow-y-auto custom-scrollbar">
           {comments.map((comment) => (
             <div
               key={comment.id}
-              className="flex gap-2.5 p-2 rounded-md hover:bg-accent/50 transition-colors"
+              className="group flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent cursor-pointer transition-all border border-transparent hover:border-accent-foreground"
+              onClick={handleViewAllClick}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleViewAllClick();
+                }
+              }}
             >
               {/* Avatar */}
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                  <AvatarSystem
-                    seed={comment.avatar_seed || comment.user_id}
-                    firstName={comment.user_first_name}
-                    lastName={comment.user_last_name}
-                  />
-                </div>
+              <div className="flex-shrink-0 w-7 h-7 rounded-full overflow-hidden">
+                <AvatarSystem
+                  seed={comment.avatar_seed || comment.user_id}
+                  firstName={comment.user_first_name}
+                  lastName={comment.user_last_name}
+                />
               </div>
 
-              {/* Comment content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="font-semibold text-xs text-foreground truncate">
-                    {getUserName(comment)}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground flex-shrink-0">
-                    {formatRelativeTime(comment.created_at)}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {truncateText(comment.comment_text, 80)}
-                </p>
+              {/* User Name */}
+              <div className="font-semibold text-sm text-foreground w-24 flex-shrink-0 truncate">
+                {getUserName(comment)}
+              </div>
+
+              {/* Time */}
+              <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
+                <Clock className="w-3 h-3" />
+                <span>{formatRelativeTime(comment.created_at)}</span>
+              </div>
+
+              {/* Comment Text */}
+              <div className="text-xs text-muted-foreground truncate flex-1 min-w-0">
+                {truncateText(comment.comment_text, 60)}
               </div>
             </div>
           ))}
@@ -160,21 +168,10 @@ export function CommentsTooltip({
         </div>
 
         {/* Footer */}
-        <div
-          className="mt-3 pt-2 border-t border-border text-xs text-blue-600 hover:text-blue-700 text-center cursor-pointer transition-colors"
-          onClick={handleViewAllClick}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleViewAllClick();
-            }
-          }}
-        >
-          <div className="flex items-center justify-center gap-1.5 font-medium">
+        <div className="mt-3 pt-2 border-t border-border text-xs text-muted-foreground/80 text-center">
+          <div className="flex items-center justify-center gap-1.5">
             <Eye className="w-3.5 h-3.5" />
-            View all comments
+            Click any comment to view order details
           </div>
         </div>
       </div>
@@ -195,13 +192,7 @@ export function CommentsTooltip({
       <TooltipContent
         side="top"
         align="center"
-        className={cn(
-          // Glass morphism styling
-          "z-[9999] max-w-none p-4 bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-lg",
-          // Smooth animations
-          "animate-in fade-in-0 zoom-in-95 duration-150",
-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-100"
-        )}
+        className="max-w-none p-4"
         sideOffset={8}
         onPointerDownOutside={() => setIsOpen(false)}
         onEscapeKeyDown={() => setIsOpen(false)}

@@ -520,6 +520,9 @@
     "regenerate_qr": "Regenerar QR",
     "scan_for_quick_access": "Escanea para acceso rápido",
     "edit": "Editar Orden",
+    "share_order": "Compartir Orden",
+    "delete_order": "Eliminar Orden",
+    "print": "Imprimir",
     "create": "Crear Orden",
     "polling_error": "Error al actualizar datos de la orden",
     "customer_information": "Información del Cliente",
@@ -1165,7 +1168,10 @@
     "reply_placeholder": "Escribir una respuesta...",
     "selectAssignedTo": "Seleccionar asignado",
     "selectClient": "Seleccionar concesionario",
-    "selectClientFirst": "Seleccionar un concesionario primero"
+    "selectClientFirst": "Seleccionar un concesionario primero",
+    "status_updated_successfully": "Estado actualizado exitosamente",
+    "status_change_failed": "Error al actualizar el estado",
+    "new_order": "Nueva Orden"
   },
   "service_orders": {
     "po_number": "Número PO",

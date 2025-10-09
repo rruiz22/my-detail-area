@@ -11,7 +11,6 @@ import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { toast } from 'sonner';
-import { getSystemTimezone } from '@/utils/dateUtils';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 
 // New improved components
@@ -55,6 +54,7 @@ export default function SalesOrders() {
 
   const {
     orders,
+    allOrders,
     tabCounts,
     filters,
     loading,
@@ -151,103 +151,23 @@ export default function SalesOrders() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     try {
-      // Find the order being updated
-      const order = orders.find(o => o.id === orderId);
+      // Status change should ONLY update status, nothing else
+      const updateData: any = { status: newStatus };
 
-      let updateData: any = { status: newStatus };
-
-      // If order has a due_date that might be causing validation issues, fix it
-      if (order?.dueDate) {
-        const dueDate = new Date(order.dueDate);
-        const now = new Date();
-
-        // Check if due_date is in the past or outside business hours
-        const hour = dueDate.getHours();
-        const isPast = dueDate < now;
-        const outsideBusinessHours = hour < 8 || hour >= 18;
-
-        if (isPast || outsideBusinessHours) {
-          console.log('🕐 Due date issue detected, auto-fixing for status change');
-
-          // Get system timezone for accurate calculations
-          const systemTimezone = getSystemTimezone();
-          console.log('🌍 System timezone detected:', systemTimezone);
-
-          // Create date in system timezone
-          const now = new Date();
-          const currentLocalTime = new Date(now.toLocaleString('en-US', { timeZone: systemTimezone }));
-
-          console.log('🕐 Current times:', {
-            utc: now.toISOString(),
-            local: currentLocalTime.toLocaleString(),
-            timezone: systemTimezone
-          });
-
-          // Set to tomorrow 9 AM in local timezone
-          const targetLocal = new Date(currentLocalTime);
-          targetLocal.setDate(targetLocal.getDate() + 1);
-          targetLocal.setHours(9, 0, 0, 0);
-
-          // Skip Sunday
-          if (targetLocal.getDay() === 0) {
-            targetLocal.setDate(targetLocal.getDate() + 1);
-          }
-
-          // Convert back to UTC for database storage
-          const targetUTC = new Date(targetLocal.toLocaleString('en-US', { timeZone: 'UTC' }));
-
-          updateData.due_date = targetUTC.toISOString();
-
-          console.log('🔧 TIMEZONE-AWARE Auto-corrected due_date:', {
-            original: order.dueDate,
-            targetLocal: targetLocal.toLocaleString(),
-            targetUTC: targetUTC.toISOString(),
-            systemTimezone: systemTimezone,
-            localHour: targetLocal.getHours(),
-            utcHour: targetUTC.getUTCHours()
-          });
-
-          toast.info(t('orders.due_date_auto_corrected', 'Due date automatically adjusted to next business day'));
-        }
-      }
-
-      // Optimistic update - Update UI immediately
-      const updatedOrder = orders.find(o => o.id === orderId);
-      if (updatedOrder) {
-        // Trigger immediate state update for responsive UI
-        window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-          detail: { orderId, newStatus, timestamp: Date.now() }
-        }));
-      }
-
+      // Update DB - queryClient.refetchQueries inside updateOrder will trigger UI update
       await updateOrder(orderId, updateData);
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
+      // Dispatch event to notify other components (polling listens to this)
       window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
         detail: { orderId, newStatus, timestamp: Date.now() }
       }));
 
       toast.success(t('orders.status_updated_successfully'));
 
-      // Refresh table data immediately after successful status change
-      setTimeout(() => refreshData(), 100);
+      // No refreshData() call - polling system handles update automatically
     } catch (error) {
       console.error('Status change failed:', error);
-
-      // Handle specific business validation errors
-      if (error?.message?.includes('Invalid due date')) {
-        toast.error(t('orders.status_change_failed_due_date', {
-          message: 'Due date must be during business hours (8 AM - 6 PM) with 1+ hour advance notice'
-        }));
-      } else if (error?.message?.includes('business hours')) {
-        toast.error(t('orders.status_change_failed_business_hours'));
-      } else {
-        toast.error(t('orders.status_change_failed'));
-      }
-
-      // Trigger refresh to revert any optimistic UI updates
-      setTimeout(() => refreshData(), 100);
+      toast.error(t('orders.status_change_failed'));
 
       // Re-throw error so kanban can handle rollback if needed
       throw error;
@@ -345,8 +265,9 @@ export default function SalesOrders() {
         {/* Main Content Area */}
         <div className="space-y-6">
           {activeFilter === 'dashboard' ? (
-            <SmartDashboard 
-              tabCounts={tabCounts} 
+            <SmartDashboard
+              allOrders={allOrders}
+              tabCounts={tabCounts}
               onCardClick={handleCardClick}
             />
           ) : (

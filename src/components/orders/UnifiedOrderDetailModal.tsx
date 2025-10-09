@@ -8,9 +8,10 @@ import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/utils/logger';
 import {
-  Download,
   Edit2,
-  Printer
+  Printer,
+  Share2,
+  Trash2
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +39,7 @@ import { ScheduleViewBlock } from './ScheduleViewBlock';
 import { ServicesDisplay } from './ServicesDisplay';
 import { SimpleNotesDisplay } from './SimpleNotesDisplay';
 import { TeamCommunicationBlock } from './TeamCommunicationBlock';
+import { UnifiedOrderHeaderV2 } from './UnifiedOrderHeaderV2';
 
 // Alias for backward compatibility and internal use
 // Now OrderData refers to the unified type definition
@@ -94,6 +96,7 @@ interface UnifiedOrderDetailModalProps {
   open: boolean;
   onClose: () => void;
   onEdit?: (order: OrderData) => void;
+  onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
   isLoadingData?: boolean;
 }
@@ -132,122 +135,6 @@ const useQRProps = (orderData: OrderData) => {
 };
 
 
-// Header Components
-interface UnifiedOrderHeaderProps {
-  order: OrderData;
-  orderType: OrderType;
-  vehicleDisplayName: string;
-  effectiveDealerId: string; // Required for StatusBadgeInteractive
-  onStatusChange?: (orderId: string, newStatus: string) => void; // Optional to match parent interface
-  canEditOrder?: boolean;
-  onEdit?: () => void;
-}
-
-const UnifiedOrderHeader = memo(function UnifiedOrderHeader({
-  order,
-  orderType,
-  vehicleDisplayName,
-  effectiveDealerId,
-  onStatusChange,
-  canEditOrder,
-  onEdit
-}: UnifiedOrderHeaderProps) {
-  const { t } = useTranslation();
-
-  const orderNumber = useMemo(() =>
-    order.orderNumber || order.order_number || t('orders.new_order'),
-    [order.orderNumber, order.order_number, t]
-  );
-
-  // Get status background class (memoized)
-  const getStatusBackgroundClass = useMemo(() => {
-    switch (order.status?.toLowerCase()) {
-      case 'pending':
-        return 'bg-yellow-50 border-l-4 border-yellow-500';
-      case 'in_progress':
-        return 'bg-indigo-50 border-l-4 border-indigo-500';
-      case 'completed':
-        return 'bg-green-50 border-l-4 border-green-500';
-      case 'cancelled':
-        return 'bg-red-50 border-l-4 border-red-500';
-      case 'on_hold':
-        return 'bg-orange-50 border-l-4 border-orange-500';
-      default:
-        return 'bg-gray-50 border-l-4 border-gray-500';
-    }
-  }, [order.status]);
-
-  return (
-    <div className={`${getStatusBackgroundClass} rounded-lg p-4 mb-6 shadow-sm`}>
-      <div className="grid grid-cols-3 items-center gap-4">
-        {/* Left: Order Number with Edit Button */}
-        <div className="text-left flex items-center gap-3">
-          <h2 className="text-lg font-bold text-gray-900">
-            #{orderNumber}
-          </h2>
-          {/* Edit Button */}
-          {canEditOrder && onEdit && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onEdit}
-              className="flex items-center gap-2 bg-white hover:bg-gray-50 border-gray-300 text-gray-700 hover:text-gray-900 shadow-sm"
-            >
-              <Edit2 className="h-4 w-4" />
-              {t('orders.edit')}
-            </Button>
-          )}
-        </div>
-
-        {/* Center: Main Information */}
-        <div className="text-center space-y-1">
-          {/* Stock + VIN - First Row (Prominent Title Style) */}
-          <h1 className="text-xl font-bold text-gray-900 font-mono">
-            {order.stockNumber || order.stock_number} - {(() => {
-              const vin = order.vehicleVin || order.vehicle_vin;
-              return vin && vin.length >= 8 ? vin.slice(-8) : (vin || 'N/A');
-            })()}
-          </h1>
-
-          {/* Vehicle Info - Second Row (Subtitle Style) */}
-          <div className="text-lg font-semibold text-gray-700">
-            {vehicleDisplayName}
-          </div>
-
-          {/* Assigned To - Third Row */}
-          <div className="text-sm font-medium text-gray-700">
-            {order.assigned_to || order.assignedTo || order.salesperson || order.service_performer || t('common.unassigned')}
-          </div>
-
-          {/* Services - Fourth Row */}
-          <div className="flex justify-center">
-            <ServicesDisplay
-              services={Array.isArray(order.services) ? order.services : []}
-              totalAmount={order.total_amount || order.totalAmount}
-              dealerId={Number(order.dealer_id)}
-              variant="kanban"
-              className="mt-1"
-            />
-          </div>
-        </div>
-
-        {/* Right: Status Dropdown */}
-        <div className="text-right" aria-live="polite" aria-atomic="true">
-          {onStatusChange && (
-            <StatusBadgeInteractive
-              status={order.status as 'pending' | 'in_progress' | 'completed' | 'cancelled'}
-              orderId={order.id}
-              dealerId={effectiveDealerId}
-              canUpdateStatus={true}
-              onStatusChange={onStatusChange}
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-});
-
 // Order Type Fields Component Wrapper
 interface OrderTypeFieldsProps {
   orderType: OrderType;
@@ -284,13 +171,14 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   open,
   onClose,
   onEdit,
+  onDelete,
   onStatusChange,
   isLoadingData = false
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { hasPermission } = usePermissionContext();
-  const { printOrder, previewPrint } = usePrintOrder();
+  const { previewPrint } = usePrintOrder();
   const [orderData, setOrderData] = useState(order);
 
   useEffect(() => {
@@ -325,12 +213,57 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     return hasPermission(targetModule, 'edit');
   }, [onEdit, hasPermission, orderType]);
 
+  // Check if user can delete orders
+  const canDeleteOrder = useMemo(() => {
+    if (!onDelete) {
+      return false;
+    }
+
+    const permissionModuleMap = {
+      sales: 'sales_orders',
+      service: 'service_orders',
+      recon: 'recon_orders',
+      carwash: 'car_wash'
+    } as const;
+
+    const targetModule = permissionModuleMap[orderType];
+    return hasPermission(targetModule, 'delete');
+  }, [onDelete, hasPermission, orderType]);
+
   // Handle edit button click
   const handleEdit = useCallback(() => {
     if (canEditOrder && onEdit) {
       onEdit(orderData);
     }
   }, [canEditOrder, onEdit, orderData]);
+
+  // Handle share button click - copy link to clipboard
+  const handleShare = useCallback(async () => {
+    try {
+      const shortLink = qrProps.shortLink;
+      if (!shortLink) {
+        toast.error(t('orders.no_link_available', { defaultValue: 'No link available to share' }));
+        return;
+      }
+
+      await navigator.clipboard.writeText(shortLink);
+      toast.success(t('order_detail.copy_link', { defaultValue: 'Link copied to clipboard' }));
+    } catch (error) {
+      logger.error('Failed to copy link to clipboard', error);
+      toast.error(t('order_detail.copy_failed', { defaultValue: 'Failed to copy link' }));
+    }
+  }, [qrProps.shortLink, t]);
+
+  // Handle delete button click
+  const handleDelete = useCallback(() => {
+    if (canDeleteOrder && onDelete) {
+      // Confirm before deleting
+      if (window.confirm(t('messages.confirm_delete_order', { defaultValue: 'Are you sure you want to delete this order?' }))) {
+        onDelete(orderData.id);
+        onClose(); // Close modal after delete
+      }
+    }
+  }, [canDeleteOrder, onDelete, orderData.id, onClose, t]);
 
   // Safe mapper for print functions
   const mapToPrintOrderData = useCallback((data: OrderData) => {
@@ -512,11 +445,10 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           {/* Unified Content Container - Single Scroll */}
           <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
             <div className="p-6" id="unified-modal-top">
-              {/* Unified Header - Conditional based on order type */}
-              <UnifiedOrderHeader
+              {/* Unified Header - Card Grid Design */}
+              <UnifiedOrderHeaderV2
                 order={orderData}
                 orderType={orderType}
-                vehicleDisplayName={vehicleDisplayName}
                 effectiveDealerId={effectiveDealerId}
                 onStatusChange={handleStatusChange}
                 canEditOrder={canEditOrder}
@@ -583,27 +515,57 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             </div>
           </div>
 
-          {/* Footer with Print Actions and Close Button */}
+          {/* Footer with Actions */}
           <footer className="flex-none border-t bg-background p-4">
-            <div className="flex justify-between">
-              {/* Print Actions */}
-              <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row justify-between gap-3">
+              {/* Left Actions */}
+              <div className="flex flex-wrap gap-2">
+                {/* Edit Button */}
+                {canEditOrder && (
+                  <Button
+                    variant="outline"
+                    onClick={handleEdit}
+                    className="flex items-center gap-2"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                    {t('orders.edit')}
+                  </Button>
+                )}
+
+                {/* Share Button */}
+                <Button
+                  variant="outline"
+                  onClick={handleShare}
+                  disabled={!qrProps.shortLink}
+                  className="flex items-center gap-2"
+                >
+                  <Share2 className="h-4 w-4" />
+                  {t('orders.share_order')}
+                </Button>
+
+                {/* Delete Button */}
+                {canDeleteOrder && (
+                  <Button
+                    variant="outline"
+                    onClick={handleDelete}
+                    className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    {t('orders.delete_order')}
+                  </Button>
+                )}
+
+                {/* Separator */}
+                <div className="hidden sm:block w-px bg-border self-stretch mx-1" />
+
+                {/* Print Action */}
                 <Button
                   variant="outline"
                   onClick={() => previewPrint(mapToPrintOrderData(orderData))}
                   className="flex items-center gap-2"
                 >
                   <Printer className="h-4 w-4" />
-                  {t('orders.print')}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={() => printOrder(mapToPrintOrderData(orderData))}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  {t('orders.download')}
+                  <span className="hidden sm:inline">{t('orders.print')}</span>
                 </Button>
               </div>
 
@@ -614,7 +576,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 size="lg"
                 className="min-w-[120px]"
               >
-                {t('common.close')}
+                {t('common.action_buttons.close')}
               </Button>
             </div>
           </footer>

@@ -58,7 +58,7 @@ export function StatusBadgeInteractive({
   if (!canUpdateStatus) {
     return (
       <div className="flex items-center gap-1">
-        <Badge className={`${currentStatusConfig.color} px-3 py-1.5`}>
+        <Badge className={`${currentStatusConfig.color} px-3 py-1 rounded-sm`}>
           {t(currentStatusConfig.label)}
         </Badge>
         <Lock className="w-3 h-3 text-muted-foreground" />
@@ -76,26 +76,23 @@ export function StatusBadgeInteractive({
             className="h-auto p-0 hover:bg-transparent"
             aria-label="Change order status"
           >
-            <Badge className={`${currentStatusConfig.color} hover:opacity-80 cursor-pointer px-3 py-1.5`}>
+            <Badge className={`${currentStatusConfig.color} hover:opacity-80 cursor-pointer px-3 py-1 rounded-sm`}>
               {t(currentStatusConfig.label)}
               <ChevronDown className="w-3 h-3 ml-1" />
             </Badge>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="min-w-[150px] bg-popover border border-border">
+        <DropdownMenuContent align="center" className="min-w-[140px] p-1">
           {STATUS_OPTIONS.map((option) => (
             <DropdownMenuItem
               key={option.value}
               onClick={() => handleStatusSelect(option.value)}
               disabled={option.value === status.toLowerCase()}
-              className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+              className={`cursor-pointer justify-center font-medium text-sm px-3 py-2 rounded-sm ${option.color} ${
+                option.value === status.toLowerCase() ? 'opacity-50' : 'hover:opacity-90'
+              }`}
             >
-              <Badge 
-                variant="secondary" 
-                className={`${option.color} mr-2 pointer-events-none px-3 py-1.5`}
-              >
-                {t(option.label)}
-              </Badge>
+              {t(option.label)}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

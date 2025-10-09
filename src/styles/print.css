@@ -16,6 +16,28 @@
 
 /* Print media queries */
 @media print {
+  /* Page setup for 8.5x11" letter size - remove browser headers/footers */
+  @page {
+    size: letter;
+    margin: 0.5in;
+    /* Remove default browser headers and footers */
+    margin-top: 0.5in;
+    margin-bottom: 0.5in;
+  }
+
+  /* Additional directive to remove headers/footers in supported browsers */
+  @page :first {
+    margin-top: 0.5in;
+  }
+
+  @page :left {
+    margin-left: 0.5in;
+  }
+
+  @page :right {
+    margin-right: 0.5in;
+  }
+
   /* Reset browser print styles */
   * {
     -webkit-print-color-adjust: exact !important;
@@ -27,6 +49,7 @@
     margin: 0;
     padding: 0;
     background: white !important;
+    width: 8.5in;
   }
 
   /* Hide non-print elements */
@@ -40,21 +63,21 @@
     display: none !important;
   }
 
-  /* Print layout container */
+  /* Print layout container - reduced padding to fit in one page */
   .print-order-layout {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
-    padding: 0.5in !important;
+    padding: 0.3in 0.5in !important; /* Reduced top/bottom padding */
     font-size: 12pt;
     line-height: 1.3;
   }
 
-  /* Header Section */
+  /* Header Section - reduced spacing */
   .print-header {
     border-bottom: 3px solid #000;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     align-items: center;
@@ -100,14 +123,21 @@
     margin-bottom: 8px;
   }
 
+  .order-number-plain {
+    font-size: 20pt;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
   .print-date {
     font-size: 10pt;
     color: #666;
   }
 
-  /* Customer & Vehicle Section */
+  /* Customer & Vehicle Section - reduced spacing */
   .customer-vehicle-section {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .info-grid {
@@ -132,6 +162,7 @@
   .info-row {
     display: grid;
     grid-template-columns: 100px 1fr;
+    gap: 12px;
     padding: 6px 0;
     border-bottom: 1px solid #eee;
   }
@@ -139,10 +170,18 @@
   .label {
     font-weight: bold;
     color: #333;
+    white-space: nowrap;
   }
 
   .value {
     color: #000;
+  }
+
+  .value.blank-line {
+    border-bottom: 1px solid #333;
+    min-height: 16px;
+    display: inline-block;
+    min-width: 200px;
   }
 
   .status-badge {
@@ -152,9 +191,9 @@
     font-weight: bold;
   }
 
-  /* Services Section */
+  /* Services Section - reduced spacing */
   .services-section {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .services-table {
@@ -179,37 +218,43 @@
   }
 
   .service-name {
-    width: 40%;
+    width: 35%;
     font-weight: bold;
   }
 
   .service-description {
-    width: 40%;
+    width: 65%;
     color: #666;
   }
 
-  .service-price {
-    width: 20%;
-    text-align: right;
-    font-family: 'Courier New', monospace;
+  /* Service notes block for handwritten notes */
+  .service-notes-block {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
   }
 
-  .total-row {
-    background: #f0f0f0;
+  .notes-label {
+    font-size: 11pt;
     font-weight: bold;
+    margin: 0 0 12px 0;
+    color: #333;
   }
 
-  .total-label {
-    text-align: right;
-    font-size: 12pt;
-    padding: 12px 8px;
+  .notes-write-space {
+    border: 1px solid #ccc;
+    background: white;
+    min-height: 100px;
+    padding: 12px;
+    border-radius: 4px;
   }
 
-  .total-amount {
-    text-align: right;
-    font-size: 14pt;
-    font-weight: bold;
-    font-family: 'Courier New', monospace;
+  .notes-write-space p {
+    margin: 10px 0;
+    min-height: 30px;
+    border-bottom: 1.5px solid #ccc;
   }
 
   /* Order Details Section */
@@ -374,6 +419,42 @@
     margin-bottom: 8px;
   }
 
+  .order-number-plain {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #000;
+  }
+
+  .service-notes-block {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
+  }
+
+  .notes-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+    color: #333;
+  }
+
+  .notes-write-space {
+    border: 1px solid #ccc;
+    background: white;
+    min-height: 100px;
+    padding: 12px;
+    border-radius: 4px;
+  }
+
+  .notes-write-space p {
+    margin: 10px 0;
+    min-height: 30px;
+    border-bottom: 1.5px solid #ccc;
+  }
+
   .print-date {
     font-size: 0.85rem;
     color: #666;
@@ -404,6 +485,7 @@
   .info-row {
     display: grid;
     grid-template-columns: 100px 1fr;
+    gap: 12px;
     padding: 6px 0;
     border-bottom: 1px solid #eee;
   }
@@ -411,10 +493,18 @@
   .label {
     font-weight: bold;
     color: #333;
+    white-space: nowrap;
   }
 
   .value {
     color: #000;
+  }
+
+  .value.blank-line {
+    border-bottom: 1px solid #333;
+    min-height: 16px;
+    display: inline-block;
+    min-width: 200px;
   }
 
   .services-table {
@@ -435,16 +525,6 @@
     font-weight: bold;
   }
 
-  .service-price,
-  .total-amount {
-    text-align: right;
-    font-family: 'Courier New', monospace;
-  }
-
-  .total-row {
-    background: #f0f0f0;
-    font-weight: bold;
-  }
 
   .qr-section {
     text-align: center;

@@ -453,29 +453,23 @@ export const useOrderManagement = (activeTab: string) => {
 
       console.log(`📊 Fetched ${orders?.length || 0} orders for dealer ${enhancedUser.dealership_id}`);
 
-      // Fetch dealerships data separately
-      const { data: dealerships, error: dealershipsError } = await supabase
-        .from('dealerships')
-        .select('id, name');
+      // Fetch related data in PARALLEL for better performance
+      const [
+        { data: dealerships, error: dealershipsError },
+        { data: userProfiles, error: profilesError },
+        { data: dealerGroups, error: groupsError }
+      ] = await Promise.all([
+        supabase.from('dealerships').select('id, name'),
+        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.from('dealer_groups').select('id, name')
+      ]);
 
       if (dealershipsError) {
         console.error('Error fetching dealerships:', dealershipsError);
       }
-
-      // Fetch user profiles data separately for assignments
-      const { data: userProfiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, email');
-
       if (profilesError) {
         console.error('Error fetching user profiles:', profilesError);
       }
-
-      // Fetch dealer groups data separately
-      const { data: dealerGroups, error: groupsError } = await supabase
-        .from('dealer_groups')
-        .select('id, name');
-
       if (groupsError) {
         console.error('Error fetching dealer groups:', groupsError);
       }
@@ -826,10 +820,32 @@ export const useOrderManagement = (activeTab: string) => {
       const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
-      // Enrich orders with related data
-      const enrichedOrders = await Promise.all(
-        orders.map(order => enrichOrderData(order))
-      );
+      // Batch fetch related data for ALL orders (3 queries instead of N×3)
+      const [dealershipsRes, profilesRes, groupsRes] = await Promise.all([
+        supabase.from('dealerships').select('id, name'),
+        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.from('dealer_groups').select('id, name')
+      ]);
+
+      // Create lookup maps for O(1) enrichment
+      const dealershipMap = new Map(dealershipsRes.data?.map(d => [d.id, d.name]) || []);
+      const userMap = new Map(profilesRes.data?.map(u => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
+      const groupMap = new Map(groupsRes.data?.map(g => [g.id, g.name]) || []);
+
+      // Enrich all orders using maps (instant, no queries)
+      const enrichedOrders = orders.map(order => {
+        const transformedOrder = transformOrder(order);
+        transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
+        transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+        transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+        transformedOrder.assignedTo = order.assigned_group_id
+          ? userMap.get(order.assigned_group_id) || 'Unknown User'
+          : 'Unassigned';
+        return transformedOrder;
+      });
 
       return enrichedOrders;
     },
@@ -958,6 +974,7 @@ export const useOrderManagement = (activeTab: string) => {
 
   return {
     orders,
+    allOrders,
     tabCounts,
     filters,
     loading,

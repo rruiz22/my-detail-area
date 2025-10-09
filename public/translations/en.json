@@ -509,6 +509,9 @@
     "legacy_order_qr_desc": "QR code for easy order access",
     "generate_qr_legacy": "Generate QR Code",
     "edit": "Edit Order",
+    "share_order": "Share Order",
+    "delete_order": "Delete Order",
+    "print": "Print",
     "create": "Create Order",
     "polling_error": "Failed to refresh order data",
     "customer_information": "Customer Information",
@@ -538,7 +541,10 @@
     "save_failed": "Failed to save order",
     "selectAssignedTo": "Select an assignee",
     "selectClient": "Select a dealership",
-    "selectClientFirst": "Select a dealership first"
+    "selectClientFirst": "Select a dealership first",
+    "status_updated_successfully": "Status updated successfully",
+    "status_change_failed": "Failed to update status",
+    "new_order": "New Order"
   },
   "due_date": {
     "title": "Due Date & Time",

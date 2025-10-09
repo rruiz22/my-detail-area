@@ -219,7 +219,7 @@ export function DuplicateTooltip({
             {displayOrders.map((order, index) => (
               <div
                 key={`${order.id}-${index}`}
-                className="group flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent/70 cursor-pointer transition-all border border-transparent hover:border-accent-foreground/20"
+                className="group flex items-center gap-3 px-3 py-2 rounded-md hover:bg-accent cursor-pointer transition-all border border-transparent hover:border-accent-foreground"
                 onClick={() => handleOrderClick(order)}
                 role="button"
                 tabIndex={0}
@@ -373,18 +373,7 @@ export function DuplicateTooltip({
       <TooltipContent
         side="top"
         align="center"
-        className={cn(
-          // Glass morphism styling
-          "z-[9999] max-w-none p-4 bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-lg",
-          // Better mobile support
-          "data-[side=bottom]:animate-in data-[side=bottom]:slide-in-from-top-2",
-          "data-[side=top]:animate-in data-[side=top]:slide-in-from-bottom-2",
-          "data-[side=left]:animate-in data-[side=left]:slide-in-from-right-2",
-          "data-[side=right]:animate-in data-[side=right]:slide-in-from-left-2",
-          // Smooth animations
-          "animate-in fade-in-0 zoom-in-95 duration-150",
-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-100"
-        )}
+        className="max-w-none p-4"
         sideOffset={8}
         data-duplicate-tooltip="true"
         data-field={field}

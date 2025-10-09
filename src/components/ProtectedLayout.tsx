@@ -98,7 +98,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 mb-24">
            {(() => {
              console.log('🎯 [OUTLET DEBUG] Rendering content for:', {
                pathname: location.pathname,
@@ -110,26 +110,14 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
            })()}
           </main>
 
-          {/* Footer */}
-          <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 px-6 py-4">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span>© 2025 My Detail Area</span>
-                <span>•</span>
-                <span>Enterprise Dealership Management</span>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm">
-                <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-                  Privacy Policy
-                </Button>
-                <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-                  Terms of Service
-                </Button>
-                <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-                  Support
-                </Button>
-              </div>
+          {/* Footer - Minimalist */}
+          <footer className="border-t bg-background px-6 py-3">
+            <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
+              <span>© 2025 My Detail Area</span>
+              <span>•</span>
+              <span>Privacy Policy</span>
+              <span>•</span>
+              <span>Terms of Service</span>
             </div>
           </footer>
         </div>
