@@ -1,12 +1,11 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReady } from '@/hooks/useGetReady';
+import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { cn } from '@/lib/utils';
-import { Download, MoreHorizontal, Plus, RefreshCw, Search } from 'lucide-react';
+import { Download, MoreHorizontal, Plus, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -15,8 +14,8 @@ import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
 import { GetReadyVehicleList } from './GetReadyVehicleList';
 import { GetReadyWorkflowActions } from './GetReadyWorkflowActions';
 import { VehicleDetailPanel } from './VehicleDetailPanel';
-import { VehicleTable } from './VehicleTable';
 import { VehicleFormModal } from './VehicleFormModal';
+import { VehicleTable } from './VehicleTable';
 
 interface GetReadySplitContentProps {
   className?: string;
@@ -218,6 +217,10 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
               selectedPriority={selectedPriority}
               sortBy={sortBy}
               sortOrder={sortOrder}
+              onEditVehicle={(vehicleId) => {
+                setEditingVehicleId(vehicleId);
+                setVehicleFormOpen(true);
+              }}
             />
           </div>
 

@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { compressImage, shouldCompressImage } from '@/utils/imageCompression';
 
 export interface AttachmentUploadResult {
   success: boolean;
@@ -28,23 +29,44 @@ export const useAttachments = (orderId: string) => {
     });
   };
 
-  // Upload single file
-  const uploadFile = async (file: File, uploadContext: string = 'comment'): Promise<AttachmentUploadResult> => {
+  // Upload single file with optional comment linking
+  const uploadFile = async (
+    file: File,
+    uploadContext: string = 'comment',
+    commentId?: string
+  ): Promise<AttachmentUploadResult> => {
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
 
     try {
-      console.log('📎 Uploading file:', file.name);
+      console.log('📎 Uploading file:', file.name, commentId ? `linked to comment ${commentId}` : '(order-level)');
 
-      const fileData = await fileToBase64(file);
+      // Compress image if needed
+      let fileToUpload = file;
+      if (shouldCompressImage(file)) {
+        console.log('🗜️ Compressing image before upload...');
+        try {
+          fileToUpload = await compressImage(file, {
+            maxWidth: 1920,
+            maxHeight: 1920,
+            quality: 0.85
+          });
+        } catch (compressionError) {
+          console.warn('⚠️ Compression failed, using original:', compressionError);
+          // Continue with original file if compression fails
+        }
+      }
+
+      const fileData = await fileToBase64(fileToUpload);
 
       const payload = {
         orderId,
+        commentId,  // Link to comment if provided
         fileName: file.name,
         fileData,
-        mimeType: file.type,
-        fileSize: file.size,
+        mimeType: fileToUpload.type,
+        fileSize: fileToUpload.size,
         uploadContext,
         description: `Uploaded via order comments`
       };
@@ -76,15 +98,19 @@ export const useAttachments = (orderId: string) => {
     }
   };
 
-  // Upload multiple files
-  const uploadFiles = async (files: File[], uploadContext: string = 'comment'): Promise<AttachmentUploadResult[]> => {
+  // Upload multiple files with optional comment linking
+  const uploadFiles = async (
+    files: File[],
+    uploadContext: string = 'comment',
+    commentId?: string
+  ): Promise<AttachmentUploadResult[]> => {
     if (files.length === 0) return [];
 
     setUploading(true);
     try {
-      console.log(`📎 Uploading ${files.length} files...`);
+      console.log(`📎 Uploading ${files.length} files...`, commentId ? `linked to comment ${commentId}` : '');
 
-      const uploadPromises = files.map(file => uploadFile(file, uploadContext));
+      const uploadPromises = files.map(file => uploadFile(file, uploadContext, commentId));
       const results = await Promise.allSettled(uploadPromises);
 
       const uploadResults: AttachmentUploadResult[] = results.map((result, index) => {
@@ -117,9 +143,12 @@ export const useAttachments = (orderId: string) => {
     }
   };
 
-  // Upload selected files and clear selection
-  const uploadSelectedFiles = async (uploadContext: string = 'comment'): Promise<AttachmentUploadResult[]> => {
-    const results = await uploadFiles(selectedFiles, uploadContext);
+  // Upload selected files and clear selection with optional comment linking
+  const uploadSelectedFiles = async (
+    uploadContext: string = 'comment',
+    commentId?: string
+  ): Promise<AttachmentUploadResult[]> => {
+    const results = await uploadFiles(selectedFiles, uploadContext, commentId);
 
     // Clear successful uploads from selection
     const successfulCount = results.filter(r => r.success).length;
@@ -143,13 +172,115 @@ export const useAttachments = (orderId: string) => {
     setSelectedFiles([]);
   }, []);
 
+  // Delete attachment from storage and database
+  const deleteAttachment = useCallback(async (attachmentId: string, filePath: string): Promise<boolean> => {
+    if (!user) {
+      toast.error('User not authenticated');
+      return false;
+    }
+
+    try {
+      console.log('🗑️ Deleting attachment:', attachmentId);
+
+      // 1. Delete from Supabase Storage
+      const { error: storageError } = await supabase.storage
+        .from('order-attachments')
+        .remove([filePath]);
+
+      if (storageError) {
+        console.error('❌ Storage delete failed:', storageError);
+        // Continue to delete DB record even if storage fails
+      }
+
+      // 2. Delete from database
+      const { error: dbError } = await supabase
+        .from('order_attachments')
+        .delete()
+        .eq('id', attachmentId);
+
+      if (dbError) {
+        console.error('❌ DB delete failed:', dbError);
+        toast.error('Failed to delete attachment');
+        return false;
+      }
+
+      console.log('✅ Attachment deleted successfully');
+      toast.success('Attachment deleted successfully');
+      return true;
+
+    } catch (error: unknown) {
+      console.error('❌ Delete error:', error);
+      toast.error('Failed to delete attachment');
+      return false;
+    }
+  }, [user]);
+
+  // Validate file before adding
+  const validateFile = useCallback((file: File): { valid: boolean; error?: string } => {
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_TYPES = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+      'application/pdf',
+      'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
+      'application/zip', 'application/x-zip-compressed'
+    ];
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        valid: false,
+        error: `File too large. Maximum size is ${Math.round(MAX_FILE_SIZE / 1024 / 1024)}MB`
+      };
+    }
+
+    // Check file type
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return {
+        valid: false,
+        error: `File type not allowed. Please use images, PDFs, Word documents, or text files.`
+      };
+    }
+
+    return { valid: true };
+  }, []);
+
+  // Enhanced addFiles with validation
+  const addFilesWithValidation = useCallback((newFiles: File[]) => {
+    const MAX_FILES_PER_COMMENT = 5;
+
+    // Check total file limit
+    if (selectedFiles.length + newFiles.length > MAX_FILES_PER_COMMENT) {
+      toast.error(`Maximum ${MAX_FILES_PER_COMMENT} files per comment`);
+      return;
+    }
+
+    // Validate each file
+    const validFiles: File[] = [];
+    for (const file of newFiles) {
+      const validation = validateFile(file);
+      if (validation.valid) {
+        validFiles.push(file);
+      } else {
+        toast.error(`${file.name}: ${validation.error}`);
+      }
+    }
+
+    if (validFiles.length > 0) {
+      setSelectedFiles(prev => [...prev, ...validFiles]);
+    }
+  }, [selectedFiles, validateFile]);
+
   return {
     selectedFiles,
     uploading,
     addFiles,
+    addFilesWithValidation,
     removeFile,
     clearFiles,
     uploadFiles,
-    uploadSelectedFiles
+    uploadSelectedFiles,
+    deleteAttachment,
+    validateFile
   };
 };

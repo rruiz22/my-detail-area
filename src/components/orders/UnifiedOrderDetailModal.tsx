@@ -8,9 +8,9 @@ import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/utils/logger';
 import {
+  Copy,
   Edit2,
   Printer,
-  Share2,
   Trash2
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
@@ -518,7 +518,21 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           {/* Footer with Actions */}
           <footer className="flex-none border-t bg-background p-4">
             <div className="flex flex-col sm:flex-row justify-between gap-3">
-              {/* Left Actions */}
+              {/* Left: Delete Only */}
+              <div className="flex gap-2">
+                {canDeleteOrder && (
+                  <Button
+                    variant="outline"
+                    onClick={handleDelete}
+                    className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    {t('orders.delete_order')}
+                  </Button>
+                )}
+              </div>
+
+              {/* Right: All Other Actions */}
               <div className="flex flex-wrap gap-2">
                 {/* Edit Button */}
                 {canEditOrder && (
@@ -532,31 +546,16 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   </Button>
                 )}
 
-                {/* Share Button */}
+                {/* Copy Button */}
                 <Button
                   variant="outline"
                   onClick={handleShare}
                   disabled={!qrProps.shortLink}
                   className="flex items-center gap-2"
                 >
-                  <Share2 className="h-4 w-4" />
+                  <Copy className="h-4 w-4" />
                   {t('orders.share_order')}
                 </Button>
-
-                {/* Delete Button */}
-                {canDeleteOrder && (
-                  <Button
-                    variant="outline"
-                    onClick={handleDelete}
-                    className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    {t('orders.delete_order')}
-                  </Button>
-                )}
-
-                {/* Separator */}
-                <div className="hidden sm:block w-px bg-border self-stretch mx-1" />
 
                 {/* Print Action */}
                 <Button
@@ -567,17 +566,17 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   <Printer className="h-4 w-4" />
                   <span className="hidden sm:inline">{t('orders.print')}</span>
                 </Button>
-              </div>
 
-              {/* Close Button */}
-              <Button
-                variant="destructive"
-                onClick={onClose}
-                size="lg"
-                className="min-w-[120px]"
-              >
-                {t('common.action_buttons.close')}
-              </Button>
+                {/* Close Button */}
+                <Button
+                  variant="destructive"
+                  onClick={onClose}
+                  size="lg"
+                  className="min-w-[120px]"
+                >
+                  {t('common.action_buttons.close')}
+                </Button>
+              </div>
             </div>
           </footer>
         </div>

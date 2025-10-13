@@ -1,5 +1,7 @@
 {
   "common": {
+    "success": "Success",
+    "error": "Error",
     "access_denied": "Access Denied",
     "insufficient_permissions": "You don't have permission to access this resource",
     "back_to_dashboard": "Back to Dashboard",
@@ -74,6 +76,7 @@
     },
     "selected": "selected",
     "refresh": "Refresh",
+    "data_refreshed": "Data refreshed",
     "new_order": "New Order",
     "calendar": "Calendar",
     "unknown_error": "Unknown error",
@@ -411,6 +414,8 @@
   },
   "pages": {
     "sales_orders": "Sales Orders",
+    "service_orders": "Service Orders",
+    "recon_orders": "Recon Orders",
     "user_management": {
       "title": "Users & Groups Management",
       "manage_description": "Manage users, roles, and group assignments",
@@ -509,10 +514,13 @@
     "legacy_order_qr_desc": "QR code for easy order access",
     "generate_qr_legacy": "Generate QR Code",
     "edit": "Edit Order",
-    "share_order": "Share Order",
+    "share_order": "Copy Order",
     "delete_order": "Delete Order",
     "print": "Print",
     "create": "Create Order",
+    "create_service_order": "Create Service Order",
+    "edit_service_order": "Edit Service Order",
+    "clientInfo": "Customer Info",
     "polling_error": "Failed to refresh order data",
     "customer_information": "Customer Information",
     "customerName": "Customer Name",
@@ -553,7 +561,8 @@
     "validation": {
       "no_slots_available": "No time slots available",
       "closed_sundays": "Closed on Sundays",
-      "same_day_notice": "Same-day appointments require immediate processing"
+      "same_day_notice": "Same-day appointments require immediate processing",
+      "business_hours_only": "Business hours only"
     }
   },
   "services": {
@@ -1256,6 +1265,14 @@
     "decoded": "Decoded",
     "auto_populated": "Auto-populated from VIN"
   },
+  "completion_date": {
+    "select_date": "Select date"
+  },
+  "car_wash": {
+    "service_date": "Service Date",
+    "select_service_date": "Select service date",
+    "service_date_help": "Date when the car wash service was completed"
+  },
   "schedule_view": {
     "schedule_timeline": "Schedule Timeline",
     "order_progress": "Order Progress",
@@ -1456,6 +1473,93 @@
     "tag": "Tag",
     "service_information": "Service Information"
   },
+  "recon": {
+    "new_recon_order": "New Recon Order",
+    "error_fetching_orders": "Failed to fetch recon orders",
+    "error_creating_order": "Failed to create recon order",
+    "order_created_successfully": "Recon order created successfully",
+    "error_updating_order": "Failed to update recon order",
+    "order_updated_successfully": "Recon order updated successfully",
+    "error_deleting_order": "Failed to delete recon order",
+    "order_deleted_successfully": "Recon order deleted successfully",
+    "create_recon_order": "Create Recon Order",
+    "edit_recon_order": "Edit Recon Order",
+    "create_order": "Create Order",
+    "stock_number": "Stock Number",
+    "enter_stock_number": "Enter stock number",
+    "stock_number_required": "Stock number is required",
+    "vehicle_display": "Vehicle Display",
+    "auto_generated_vehicle_info": "Auto-generated from VIN or manual entry",
+    "updates_automatically": "Updates automatically from year/make/model",
+    "acquisition_cost": "Acquisition Cost",
+    "recon_cost": "Recon Cost",
+    "acquisition_source": "Acquisition Source",
+    "condition_grade": "Condition Grade",
+    "recon_category": "Recon Category",
+    "enter_acquisition_cost": "Enter acquisition cost",
+    "enter_recon_cost": "Enter estimated recon cost",
+    "acquisition_sources": {
+      "trade_in": "Trade-In",
+      "auction": "Auction",
+      "dealer_swap": "Dealer Swap",
+      "wholesale": "Wholesale",
+      "lease_return": "Lease Return",
+      "other": "Other"
+    },
+    "condition_grades": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor"
+    },
+    "recon_categories": {
+      "mechanical": "Mechanical",
+      "cosmetic": "Cosmetic",
+      "full_recon": "Full Recon",
+      "detail_only": "Detail Only",
+      "inspection": "Inspection Only"
+    },
+    "needs_approval": "Needs Approval",
+    "ready_for_sale": "Ready for Sale",
+    "recon_instructions": "Recon instructions and notes",
+    "recon_details": "Recon Details",
+    "dealer_required": "Dealership is required",
+    "loading_dealerships": "Loading dealerships...",
+    "no_dealerships_with_recon_access": "No dealerships with recon access",
+    "vehicle_info_required": "Vehicle information is required",
+    "invalid_cost_format": "Invalid cost format",
+    "completion_date": "Completion Date",
+    "select_completion_date": "Select completion date",
+    "completion_date_help": "Date when the reconditioning was completed",
+    "dashboard": {
+      "title": "Recon Dashboard",
+      "subtitle": "Vehicle reconditioning overview and metrics",
+      "updated": "Updated",
+      "pending_vehicles": "Pending Vehicles",
+      "awaiting_work": "Awaiting Work",
+      "in_progress": "In Progress",
+      "being_reconditioned": "Being Reconditioned",
+      "needs_approval": "Needs Approval",
+      "manager_review": "Manager Review Required",
+      "high_priority": "High Priority",
+      "ready_for_sale": "Ready for Sale",
+      "ready_to_sell": "Ready to Sell",
+      "completed_vehicles": "Completed Vehicles",
+      "condition_distribution": "Condition Distribution",
+      "acquisition_sources": "Acquisition Sources",
+      "unknown": "Unknown"
+    }
+  },
+  "recon_defaults": {
+    "default_customer": "Recon Department",
+    "default_service": "Vehicle Reconditioning",
+    "default_advisor": "Recon Team",
+    "default_department": "Reconditioning"
+  },
+  "recon_orders": {
+    "title": "Recon Orders",
+    "description": "Manage vehicle reconditioning orders"
+  },
   "dealer": {
     "view": {
       "back": "Back to Dealerships",
@@ -1651,6 +1755,16 @@
     "clipboard_error": "Unable to read from clipboard.",
     "clipboard_no_vin": "No complete VIN was found in your clipboard.",
     "clipboard_unsupported": "Clipboard access is not available in this browser."
+  },
+  "sweetalert": {
+    "confirm_delete": "Delete Order?",
+    "delete_warning": "This action cannot be undone. The order will be permanently deleted.",
+    "confirm_status": "Change Status?",
+    "success": "Success!",
+    "error": "Error",
+    "info": "Information",
+    "yes_delete": "Yes, delete it!",
+    "cancel": "Cancel"
   },
   "get_ready": {
     "tabs": {

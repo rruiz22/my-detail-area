@@ -1,6 +1,11 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { supabase } from "../_shared/supabase.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// Create Supabase client with SERVICE_ROLE_KEY for server operations
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,6 +14,7 @@ const corsHeaders = {
 
 interface UploadRequest {
   orderId: string;
+  commentId?: string; // Optional: link to specific comment
   fileName: string;
   fileData: string; // base64 encoded
   mimeType: string;
@@ -26,7 +32,7 @@ serve(async (req) => {
   try {
     console.log('Upload attachment request received');
     
-    const { orderId, fileName, fileData, mimeType, fileSize, description, uploadContext = 'general' }: UploadRequest = await req.json();
+    const { orderId, commentId, fileName, fileData, mimeType, fileSize, description, uploadContext = 'general' }: UploadRequest = await req.json();
 
     // Validate required fields
     if (!orderId || !fileName || !fileData || !mimeType || !fileSize) {
@@ -104,6 +110,7 @@ serve(async (req) => {
       .from('order_attachments')
       .insert({
         order_id: orderId,
+        comment_id: commentId || null, // Link to comment if provided
         file_name: fileName,
         file_path: uniqueFileName,
         file_size: fileSize,

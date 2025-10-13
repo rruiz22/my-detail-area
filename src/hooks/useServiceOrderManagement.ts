@@ -7,6 +7,7 @@ import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@/integrations/supabase/types';
+import { isDateInWeek } from '@/utils/weekUtils';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -53,6 +54,7 @@ interface ServiceTabCounts {
   in_process: number;
   completed: number;
   cancelled: number;
+  week: number;
 }
 
 // Service Order specific interface
@@ -139,7 +141,7 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
     : 0,
 });
 
-export const useServiceOrderManagement = (activeTab: string) => {
+export const useServiceOrderManagement = (activeTab: string, weekOffset: number = 0) => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
   const [allOrders, setAllOrders] = useState<ServiceOrder[]>([]); // Keep full dataset
   const [filters, setFilters] = useState<ServiceOrderFilters>({
@@ -175,8 +177,12 @@ export const useServiceOrderManagement = (activeTab: string) => {
       in_process: allOrders.filter(order => order.status === 'in_progress').length,
       completed: allOrders.filter(order => order.status === 'completed').length,
       cancelled: allOrders.filter(order => order.status === 'cancelled').length,
+      week: allOrders.filter(order => {
+        const orderDate = new Date(order.dueDate || order.createdAt);
+        return isDateInWeek(orderDate, weekOffset);
+      }).length,
     };
-  }, [allOrders]);
+  }, [allOrders, weekOffset]);
 
   const filteredOrders = useMemo(() => {
     let filtered = [...allOrders];
@@ -188,6 +194,12 @@ export const useServiceOrderManagement = (activeTab: string) => {
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       switch (activeTab) {
+        case 'week':
+          filtered = filtered.filter(order => {
+            const orderDate = new Date(order.dueDate || order.createdAt);
+            return isDateInWeek(orderDate, weekOffset);
+          });
+          break;
         case 'today':
           filtered = filtered.filter(order => {
             const orderDate = new Date(order.dueDate || order.createdAt);
@@ -251,7 +263,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
     }
 
     return filtered;
-  }, [allOrders, activeTab, filters]);
+  }, [allOrders, activeTab, weekOffset, filters]);
 
   // Smart polling for service order data (replaces real-time subscription and initial refresh)
   const serviceOrdersPollingQuery = useOrderPolling(
@@ -404,6 +416,7 @@ export const useServiceOrderManagement = (activeTab: string) => {
         due_date: orderData.dueDate || null, // Use due_date, NOT sla_deadline
         dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
         notes: orderData.notes,
+        created_by: user.id, // Track creator for auto-follower
       };
 
       console.log('Inserting service order to DB:', insertData);

@@ -1,33 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { safeParseDate } from '@/utils/dateUtils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
-import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Loader2, Zap, AlertCircle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { usePermissionContext } from '@/contexts/PermissionContext';
+import { canViewPricing } from '@/utils/permissions';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { formatVehicleDisplay, createVehicleDisplay } from '@/utils/vehicleUtils';
-import { safeParseDate } from '@/utils/dateUtils';
-import { Car, Calendar, FileText, Package, Building2 } from 'lucide-react';
-import type { ReconOrder } from '@/hooks/useReconOrderManagement';
+import { CompletionDatePicker } from '@/components/ui/completion-date-picker';
+import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { toast } from 'sonner';
 
 interface OrderFormData {
   // Order identification
   orderNumber: string;
   orderType: string;
   status: string;
-  
-  // Customer information (vehicle owner)
-  customerName: string;
-  customerEmail?: string;
-  customerPhone?: string;
-  
+
   // Vehicle information
   vehicleVin: string;
   vehicleYear: string;
@@ -35,574 +34,798 @@ interface OrderFormData {
   vehicleModel: string;
   vehicleInfo: string;
   stockNumber: string;
-  
+
   // Assignment information (employee responsible)
   assignedGroupId?: string;
   assignedContactId?: string;
-  salesperson?: string;
-  
+
   // Order details
   notes: string;
   internalNotes?: string;
   priority?: string;
+  completedAt?: Date; // Completion date for recon orders
   dueDate?: Date;
   slaDeadline?: Date;
   scheduledDate?: Date;
   scheduledTime?: string;
-  dealerId: string;
+}
+
+interface DealershipInfo {
+  id: number;
+  name: string;
+  subdomain?: string;
+}
+
+interface DealerService {
+  id: string;
+  name: string;
+  description?: string;
+  price?: number;
+}
+
+interface OrderData {
+  id?: string;
+  orderNumber?: string;
+  order_number?: string;
+  orderType?: string;
+  order_type?: string;
+  status?: string;
+  priority?: string;
+  vehicleVin?: string;
+  vehicle_vin?: string;
+  vehicleYear?: string | number;
+  vehicle_year?: string | number;
+  vehicleMake?: string;
+  vehicle_make?: string;
+  vehicleModel?: string;
+  vehicle_model?: string;
+  vehicleInfo?: string;
+  vehicle_info?: string;
+  stockNumber?: string;
+  stock_number?: string;
+  assignedGroupId?: string;
+  assigned_group_id?: string;
+  assignedContactId?: string;
+  assigned_contact_id?: string;
+  notes?: string;
+  internalNotes?: string;
+  internal_notes?: string;
+  completedAt?: Date | string;
+  completed_at?: Date | string;
+  dueDate?: string | Date;
+  due_date?: string | Date;
+  slaDeadline?: string | Date;
+  sla_deadline?: string | Date;
+  scheduledDate?: string | Date;
+  scheduled_date?: string | Date;
+  scheduledTime?: string;
+  scheduled_time?: string;
+  dealerId?: number;
+  dealer_id?: number;
+  services?: string[];
 }
 
 interface ReconOrderModalProps {
-  isOpen: boolean;
+  order?: OrderData;
+  open: boolean;
   onClose: () => void;
-  onSubmit: (orderData: any) => Promise<void>;
-  order?: ReconOrder | null;
-  mode: 'create' | 'edit';
+  onSave: (orderData: OrderData) => void;
+  mode?: 'create' | 'edit';
 }
 
-export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  order,
-  mode
-}) => {
+export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, onClose, onSave, mode = 'create' }) => {
   const { t } = useTranslation();
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const { decodeVin, loading: isDecodingVin } = useVinDecoding();
-  const { dealerships, loading: loadingDealerships, filterByModule } = useAccessibleDealerships();
+  const { roles } = usePermissionContext();
+  const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
+  // Form state
   const [formData, setFormData] = useState<OrderFormData>({
     orderNumber: '',
-    orderType: 'recon',
-    status: 'pending',
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
     vehicleModel: '',
     vehicleInfo: '',
     stockNumber: '',
+    orderType: 'recon',
+    status: 'pending',
     assignedGroupId: '',
     assignedContactId: '',
-    salesperson: '',
     notes: '',
     internalNotes: '',
     priority: 'normal',
+    completedAt: undefined,
     dueDate: undefined,
     slaDeadline: undefined,
     scheduledDate: undefined,
-    scheduledTime: '',
-    dealerId: ''
+    scheduledTime: ''
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [reconDealerships, setReconDealerships] = useState<any[]>([]);
+  const [selectedDealership, setSelectedDealership] = useState('');
 
-  // Reset form when modal opens
+  const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
+  const isGlobalFilterActive = globalDealerFilter && globalDealerFilter !== 'all';
+  const isDealerFieldReadOnly = Boolean(isGlobalFilterActive);
+
+  // Refs to prevent double-setting in Strict Mode
+  const editModeInitialized = useRef(false);
+  const currentOrderId = useRef<string | null>(null);
+  const [dealerships, setDealerships] = useState<DealershipInfo[]>([]);
+  const [services, setServices] = useState<DealerService[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [vinDecoded, setVinDecoded] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  const canViewPrices = canViewPricing(roles);
+
+  const isEditing = Boolean(order);
+
+  const setSelectedDealershipWithLog = (value: string) => {
+    setSelectedDealership(value);
+  };
+
   useEffect(() => {
-    if (isOpen) {
-      if (mode === 'edit' && order) {
+    if (open) {
+      fetchDealerships();
+
+      if (order) {
+        // Prevent double initialization in React Strict Mode
+        if (currentOrderId.current === order.id && editModeInitialized.current) {
+          return;
+        }
+
+        currentOrderId.current = order.id;
+        editModeInitialized.current = true;
+
+        // Helper function to safely extract field values with fallbacks
+        const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = '') => {
+          return camelCase ?? snakeCase ?? defaultValue;
+        };
+
+        // Helper function to safely parse dates
+        const parseDateField = (camelCaseDate: unknown, snakeCaseDate: unknown) => {
+          const dateValue = camelCaseDate || snakeCaseDate;
+          if (!dateValue) return undefined;
+          const parsed = safeParseDate(dateValue);
+          return parsed || undefined;
+        };
+
+        // Helper function to safely convert to string
+        const toStringValue = (value: unknown) => {
+          if (value === null || value === undefined) return '';
+          return String(value);
+        };
+
         setFormData({
-          orderNumber: order.orderNumber || '',
+          // Basic order info
+          orderNumber: getFieldValue(order.orderNumber, order.order_number),
           orderType: 'recon',
-          status: order.status || 'pending',
-          customerName: '',
-          customerEmail: '',
-          customerPhone: '',
-          vehicleVin: order.vehicleVin || '',
-          vehicleYear: order.vehicleYear?.toString() || '',
-          vehicleMake: order.vehicleMake || '',
-          vehicleModel: order.vehicleModel || '',
-          vehicleInfo: order.vehicleInfo || '',
-          stockNumber: order.stockNumber || '',
-          assignedGroupId: '',
-          assignedContactId: order.assignedContactId || '',
-          salesperson: '',
-          notes: order.notes || '',
-          internalNotes: '',
-          priority: order.priority || 'normal',
-          dueDate: undefined,
-          slaDeadline: undefined,
-          scheduledDate: undefined,
-          scheduledTime: '',
-          dealerId: order.dealerId?.toString() || ''
+          status: getFieldValue(order.status, order.status, 'pending'),
+          priority: getFieldValue(order.priority, order.priority, 'normal'),
+
+          // Vehicle information - handle both individual and consolidated fields
+          vehicleVin: getFieldValue(order.vehicleVin, order.vehicle_vin),
+          vehicleYear: toStringValue(getFieldValue(order.vehicleYear, order.vehicle_year)),
+          vehicleMake: getFieldValue(order.vehicleMake, order.vehicle_make),
+          vehicleModel: getFieldValue(order.vehicleModel, order.vehicle_model),
+          vehicleInfo: getFieldValue(order.vehicleInfo, order.vehicle_info),
+          stockNumber: getFieldValue(order.stockNumber, order.stock_number),
+
+          // Assignment information
+          assignedGroupId: getFieldValue(order.assignedGroupId, order.assigned_group_id),
+          assignedContactId: getFieldValue(order.assignedContactId, order.assigned_contact_id),
+
+          // Notes
+          notes: getFieldValue(order.notes, order.notes),
+          internalNotes: getFieldValue(order.internalNotes, order.internal_notes),
+
+          // Date fields - handle proper parsing
+          completedAt: parseDateField(order.completedAt, order.completed_at),
+          dueDate: parseDateField(order.dueDate, order.due_date),
+          slaDeadline: parseDateField(order.slaDeadline, order.sla_deadline),
+          scheduledDate: parseDateField(order.scheduledDate, order.scheduled_date),
+          scheduledTime: getFieldValue(order.scheduledTime, order.scheduled_time)
         });
-      } else {
+
+        // Set related data with proper fallbacks
+        const servicesData = Array.isArray(order.services) ? order.services : [];
+        setSelectedServices(servicesData);
+      } else if (!order && !editModeInitialized.current) {
+        // Only reset form for new order when order is explicitly null/undefined AND not in edit mode
+        editModeInitialized.current = false;
+        currentOrderId.current = null;
         setFormData({
           orderNumber: '',
-          orderType: 'recon',
-          status: 'pending',
-          customerName: '',
-          customerEmail: '',
-          customerPhone: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
           vehicleModel: '',
           vehicleInfo: '',
           stockNumber: '',
+          orderType: 'recon',
+          status: 'pending',
           assignedGroupId: '',
           assignedContactId: '',
-          salesperson: '',
           notes: '',
           internalNotes: '',
           priority: 'normal',
+          completedAt: undefined,
           dueDate: undefined,
           slaDeadline: undefined,
           scheduledDate: undefined,
-          scheduledTime: '',
-          dealerId: ''
+          scheduledTime: ''
         });
+        setSelectedServices([]);
+        setSelectedDealershipWithLog('');
       }
-      setErrors({});
     }
-  }, [isOpen, mode, order]);
+  }, [order?.id, open]); // Only re-run if order ID changes or modal opens
 
-  // Load recon-enabled dealerships
-  useEffect(() => {
-    const loadReconDealerships = async () => {
-      if (!loadingDealerships && dealerships.length > 0) {
-        const filtered = await filterByModule('recon_orders');
-        setReconDealerships(filtered);
-        
-        // Auto-select if only one dealership available
-        if (filtered.length === 1 && !formData.dealerId) {
-          setFormData(prev => ({ ...prev, dealerId: filtered[0].id.toString() }));
+  const fetchDealerships = async () => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return;
+
+      const { data, error } = await supabase.rpc('get_user_accessible_dealers', {
+        user_uuid: user.user.id
+      });
+
+      if (error) throw error;
+      const dealerships = data || [];
+      setDealerships(dealerships);
+
+      // If in edit mode, find dealership by ID or name
+      if (order) {
+        let dealershipId = null;
+
+        // Try to find by dealer_id first (most reliable)
+        if (order.dealer_id || order.dealerId) {
+          dealershipId = (order.dealer_id || order.dealerId).toString();
         }
       }
-    };
-    
-    loadReconDealerships();
-  }, [dealerships, loadingDealerships, filterByModule, formData.dealerId]);
+    } catch (error) {
+      console.error('Error fetching dealerships:', error);
+    }
+  };
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+
+  const fetchDealerData = async (dealershipId: string) => {
+    if (!dealershipId) return;
+
+    setLoading(true);
+    try {
+      // Get services for Recon Dept
+      const { data: servicesResult, error: servicesError } = await supabase
+        .rpc('get_dealer_services_by_department', {
+          p_dealer_id: parseInt(dealershipId),
+          p_department_name: 'Recon Dept'
+        });
+
+      if (servicesError) {
+        console.error('Error fetching services:', servicesError);
+        toast.error('Error loading services');
+      }
+
+      if (servicesResult) {
+        setServices(servicesResult);
+      } else {
+        setServices([]);
+      }
+    } catch (error) {
+      console.error('Error fetching dealer data:', error);
+      toast.error('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!order && isGlobalFilterActive && globalDealerFilter && dealerships.length > 0 && !selectedDealership) {
+      handleDealershipChange(globalDealerFilter);
+    }
+  }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
+
+  // CRITICAL: Set dealership ONLY after dealerships options are loaded
+  useEffect(() => {
+    if (order && dealerships.length > 0 && !selectedDealership) {
+      let dealershipId = null;
+
+      // Try dealer_id first (most reliable)
+      if (order.dealer_id || order.dealerId) {
+        dealershipId = (order.dealer_id || order.dealerId).toString();
+      }
+
+      if (dealershipId) {
+        setSelectedDealership(dealershipId);
+        fetchDealerData(dealershipId);
+      }
+    }
+  }, [dealerships.length, order, selectedDealership]);
+
+  const handleDealershipChange = (dealershipId: string) => {
+    setSelectedDealershipWithLog(dealershipId);
+    setServices([]);
+    setSelectedServices([]);
+
+    if (dealershipId) {
+      fetchDealerData(dealershipId);
     }
   };
 
   const handleVinChange = async (vin: string) => {
     handleInputChange('vehicleVin', vin);
-    
-    if (vin.length === 17) {
-      try {
-        const decodedData = await decodeVin(vin);
-        if (decodedData) {
-          // Auto-populate vehicle info field with decoded data including trim
-          const trimInfo = decodedData.trim ? ` (${decodedData.trim})` : '';
-          const vehicleDesc = `${decodedData.year || ''} ${decodedData.make || ''} ${decodedData.model || ''}${trimInfo}`.trim();
-          
-          handleInputChange('vehicleYear', decodedData.year || '');
-          handleInputChange('vehicleMake', decodedData.make || '');
-          handleInputChange('vehicleModel', decodedData.model || '');
-          handleInputChange('vehicleInfo', vehicleDesc);
 
-          toast({
-            title: t('common.success'),
-            description: t('orders.vin_decoded_successfully'),
-          });
-        }
-      } catch (error) {
-        console.error('Error decoding VIN:', error);
-        toast({
-          title: t('common.error'),
-          description: t('orders.vin_decode_error'),
-          variant: 'destructive',
-        });
+    if (vin.length === 17 && !vinDecoded) {
+      const vehicleData = await decodeVin(vin);
+      if (vehicleData) {
+        // Update both individual fields (for filtering) and consolidated vehicle_info (primary field)
+        setFormData(prev => ({
+          ...prev,
+          vehicleYear: vehicleData.year,
+          vehicleMake: vehicleData.make,
+          vehicleModel: vehicleData.model,
+          vehicleInfo: vehicleData.vehicleInfo // Consolidated field from VIN service
+        }));
+        setVinDecoded(true);
+      }
+    } else if (vin.length !== 17) {
+      setVinDecoded(false);
+      // Clear VIN-derived data when VIN becomes invalid
+      if (vin.length === 0) {
+        setFormData(prev => ({
+          ...prev,
+          vehicleYear: '',
+          vehicleMake: '',
+          vehicleModel: '',
+          vehicleInfo: ''
+        }));
       }
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+  const handleInputChange = (field: keyof OrderFormData, value: string | Date | undefined) => {
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
 
-    if (!formData.stockNumber.trim()) {
-      newErrors.stockNumber = t('recon.stock_number_required');
+      // If individual vehicle fields are manually changed, update consolidated vehicle_info
+      if (['vehicleYear', 'vehicleMake', 'vehicleModel'].includes(field)) {
+        const year = field === 'vehicleYear' ? value : prev.vehicleYear;
+        const make = field === 'vehicleMake' ? value : prev.vehicleMake;
+        const model = field === 'vehicleModel' ? value : prev.vehicleModel;
+
+        // Build consolidated vehicle_info only if we have year, make, and model
+        if (year && make && model) {
+          newData.vehicleInfo = `${year} ${make} ${model}`;
+        } else if (!year && !make && !model) {
+          newData.vehicleInfo = '';
+        }
+      }
+
+      return newData;
+    });
+  };
+
+  const handleServiceToggle = (serviceId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedServices(prev => [...prev, serviceId]);
+    } else {
+      setSelectedServices(prev => prev.filter(id => id !== serviceId));
+    }
+  };
+
+  const transformToDbFormat = (formData: OrderFormData) => {
+    // Ensure vehicle_info is properly set as the primary field
+    let vehicleInfo = formData.vehicleInfo;
+
+    // Fallback: if vehicle_info is empty but individual fields exist, construct it
+    if (!vehicleInfo && formData.vehicleYear && formData.vehicleMake && formData.vehicleModel) {
+      vehicleInfo = `${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}`;
     }
 
+    return {
+      // Use camelCase to match ReconOrderData interface
+      stockNumber: formData.stockNumber || undefined,
+      vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
+      vehicleMake: formData.vehicleMake || undefined,
+      vehicleModel: formData.vehicleModel || undefined,
+      vehicleVin: formData.vehicleVin || undefined,
+      vehicleInfo: vehicleInfo || undefined,
+      status: formData.status || 'pending',
+      notes: formData.notes || undefined,
+      internalNotes: formData.internalNotes || undefined,
+      completedAt: formData.completedAt,
+      dealerId: selectedDealership ? parseInt(selectedDealership) : undefined,
+      services: selectedServices || [],
+      totalAmount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
+        const service = services.find((s: any) => s.id === serviceId);
+        return total + (service?.price || 0);
+      }, 0) : 0
+    };
+  };
+
+  const validateForm = async (): Promise<boolean> => {
+    // Validate VIN (always required)
     if (!formData.vehicleVin.trim()) {
-      newErrors.vehicleVin = t('orders.vin_required');
-    } else if (formData.vehicleVin.length !== 17) {
-      newErrors.vehicleVin = t('orders.vin_invalid_length');
+      toast.error(t('validation.vinRequired'));
+      return false;
+    }
+    if (formData.vehicleVin.length !== 17) {
+      toast.error(t('validation.vinInvalidLength'));
+      return false;
     }
 
-    if (!formData.vehicleMake.trim()) {
-      newErrors.vehicleMake = t('orders.make_required');
+    // Validate dealership selection
+    if (!selectedDealership) {
+      toast.error(t('validation.dealershipRequired'));
+      return false;
     }
 
-    if (!formData.vehicleModel.trim()) {
-      newErrors.vehicleModel = t('orders.model_required');
+    // Validate stock number (always required)
+    if (!formData.stockNumber.trim()) {
+      toast.error(t('validation.stockNumberRequired'));
+      return false;
     }
 
-    if (!formData.dealerId) {
-      newErrors.dealerId = t('recon.dealer_required');
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      toast({
-        title: t('common.error'),
-        description: t('common.please_fix_errors'),
-        variant: 'destructive',
-      });
-      return;
-    }
 
-    setIsSubmitting(true);
+    setSubmitting(true);
 
     try {
-      const transformedData = {
-        // Map frontend camelCase to backend snake_case
-        order_number: formData.orderNumber,
-        customer_name: formData.customerName || 'Trade-in Vehicle',
-        customer_email: formData.customerEmail || null,
-        customer_phone: formData.customerPhone || null,
-        vehicle_vin: formData.vehicleVin || null,
-        vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
-        vehicle_make: formData.vehicleMake || null,
-        vehicle_model: formData.vehicleModel || null,
-        vehicle_info: formData.vehicleInfo || null,
-        stock_number: formData.stockNumber || null,
-        order_type: formData.orderType,
-        status: formData.status,
-        assigned_group_id: formData.assignedGroupId || null,
-        assigned_contact_id: formData.assignedContactId || null,
-        salesperson: formData.salesperson || null,
-        notes: formData.notes || null,
-        internal_notes: formData.internalNotes || null,
-        priority: formData.priority || 'normal',
-        due_date: formData.dueDate || null,
-        sla_deadline: formData.slaDeadline || null,
-        scheduled_date: formData.scheduledDate || null,
-        scheduled_time: formData.scheduledTime || null,
-        dealer_id: formData.dealerId ? parseInt(formData.dealerId) : null
-      };
+      // Validate form first
+      const isValid = await validateForm();
+      if (!isValid) {
+        setSubmitting(false);
+        return;
+      }
 
-      await onSubmit(transformedData);
-      onClose();
+      // Proceed directly to order creation without confirmation
+      const dbData = transformToDbFormat(formData);
+
+      console.log('📤 Modal sending data to hook:', {
+        dealerId: dbData.dealerId,
+        services: dbData.services,
+        servicesLength: dbData.services?.length,
+        servicesContent: JSON.stringify(dbData.services),
+        selectedServicesState: selectedServices,
+        selectedServicesContent: JSON.stringify(selectedServices),
+        selectedServicesLength: selectedServices.length
+      });
+
+      // Show immediate success feedback
+      toast.success(t('orders.creating_order'));
+
+      onSave(dbData);
+
     } catch (error) {
-      console.error('Error submitting recon order:', error);
+      console.error('Submit error:', error);
+      toast.error(t('orders.creation_failed'));
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
 
+  const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
+    const service = services.find((s: any) => s.id === serviceId);
+    return total + (service?.price || 0);
+  }, 0) : 0;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Package className="h-5 w-5" />
-            {mode === 'create' ? t('recon.create_recon_order') : t('recon.edit_recon_order')}
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent
+        className="max-w-7xl max-h-[95vh] w-[95vw] sm:w-[90vw] md:w-[85vw] p-0 mx-2 sm:mx-4"
+        aria-describedby="recon-order-modal-description"
+      >
+        <DialogHeader className="p-4 sm:p-6 pb-0">
+          <DialogTitle className="text-lg sm:text-xl font-semibold">
+            {order ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
           </DialogTitle>
-          <DialogDescription className="sr-only">
-            {mode === 'create' ? t('recon.create_recon_order') : t('recon.edit_recon_order')}
-          </DialogDescription>
+          <div id="recon-order-modal-description" className="text-sm text-muted-foreground">
+            {order ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
+          </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Column 1 - Vehicle Identification */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Car className="h-4 w-4" />
-                  {t('orders.vehicle_information')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="stockNumber">{t('recon.stock_number')} *</Label>
-                  <Input
-                    id="stockNumber"
-                    value={formData.stockNumber}
-                    onChange={(e) => handleInputChange('stockNumber', e.target.value)}
-                    placeholder={t('recon.enter_stock_number')}
-                    className={errors.stockNumber ? 'border-destructive' : ''}
-                  />
-                  {errors.stockNumber && (
-                    <p className="text-sm text-destructive mt-1">{errors.stockNumber}</p>
-                  )}
-                </div>
+        <ScrollArea className="max-h-[calc(95vh-100px)] sm:max-h-[calc(95vh-120px)] px-4 sm:px-6">
+          <form onSubmit={handleSubmit} className="space-y-6 pb-6">
+            {/* Single Responsive Container */}
+            <Card className="border-border">
+              <CardContent className="px-4 sm:px-6 pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
 
-                <div>
-                  <Label htmlFor="vehicleVin">{t('orders.vin')} *</Label>
-                  <VinInputWithScanner
-                    value={formData.vehicleVin}
-                    onChange={(e) => handleVinChange(e.target.value)}
-                    placeholder={t('orders.enter_vin')}
-                    disabled={isDecodingVin}
-                    className={errors.vehicleVin ? 'border-destructive' : ''}
-                  />
-                  {isDecodingVin && (
-                    <p className="text-sm text-muted-foreground mt-1">{t('orders.decoding_vin')}</p>
-                  )}
-                  {errors.vehicleVin && (
-                    <p className="text-sm text-destructive mt-1">{errors.vehicleVin}</p>
-                  )}
-                </div>
+                  {/* Column 1: Dealership Information */}
+                  <div className="space-y-4">
+                    <div className="border-b border-border pb-2 mb-3">
+                      <h3 className="text-sm sm:text-base font-medium text-foreground">
+                        {t('sales_orders.dealership')}
+                      </h3>
+                    </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                      {isDealerFieldReadOnly && (
+                        <Badge variant="secondary" className="text-xs">
+                          {t('dealerships.auto_selected')}
+                        </Badge>
+                      )}
+                    </div>
+                    <Select
+                      value={selectedDealership}
+                      onValueChange={handleDealershipChange}
+                      disabled={loading || isDealerFieldReadOnly}
+                    >
+                      <SelectTrigger className="border-input bg-background">
+                        <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
+                      </SelectTrigger>
+                       <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
+                         {dealerships.map((dealer: any) => (
+                           <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                             {dealer.name} - {dealer.city}, {dealer.state}
+                           </SelectItem>
+                         ))}
+                       </SelectContent>
+                    </Select>
+                  </div>
+                  </div>
 
-                <div>
-                  <Label htmlFor="vehicleDisplay">{t('recon.vehicle_display')}</Label>
-                  <Input
-                    id="vehicleDisplay"
-                    value={createVehicleDisplay(formData)}
-                    readOnly
-                    placeholder={t('recon.auto_generated_vehicle_info')}
-                    className="bg-muted"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {t('recon.updates_automatically')}
-                  </p>
+                  {/* Column 2: Vehicle Information */}
+                  <div className="space-y-4">
+                    <div className="border-b border-border pb-2 mb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
+                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto">
+                          <Zap className="w-3 h-3 mr-1" />
+                          {t('sales_orders.vin_decoded_successfully')}
+                        </Badge>}
+                      </div>
+                    </div>
+                  <div>
+                    <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>
+                    <Input
+                      id="stockNumber"
+                      value={formData.stockNumber}
+                      onChange={(e) => handleInputChange('stockNumber', e.target.value)}
+                      className="border-input bg-background"
+                      placeholder="ST-001"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                      {t('orders.vin')}
+                      {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                    </Label>
+                    <VinInputWithScanner
+                      id="vehicleVin"
+                      name="vehicleVin"
+                      value={formData.vehicleVin}
+                      onChange={(e) => handleVinChange(e.target.value)}
+                      onVinScanned={handleVinChange}
+                      className="border-input bg-background font-mono"
+                      stickerMode={true}
+                    />
+                    {vinError && (
+                      <div className="flex items-center gap-1 text-sm text-destructive mt-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {vinError}
+                      </div>
+                    )}
+                    {formData.vehicleVin.length > 0 && formData.vehicleVin.length < 17 && (
+                      <div className="text-sm text-muted-foreground mt-1">
+                        {17 - formData.vehicleVin.length} characters remaining
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Consolidated Vehicle Info */}
+                  <div>
+                    <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
+                    <Input
+                      id="vehicleInfo"
+                      value={formData.vehicleInfo}
+                      onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
+                      className="border-input bg-background"
+                      placeholder="2025 BMW X6 (xDrive40i)"
+                    />
+                    {!formData.vehicleInfo && (
+                      <div className="text-sm text-muted-foreground mt-1">
+                        {t('sales_orders.manual_vehicle_entry')}
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  {/* Completion Date - Recon Specific */}
+                  <div>
+                    <Label htmlFor="completionDate">{t('recon.completion_date')}</Label>
+                    <CompletionDatePicker
+                      value={formData.completedAt}
+                      onChange={(date) => handleInputChange('completedAt', date)}
+                      placeholder={t('recon.select_completion_date')}
+                      allowPastDates={true}
+                    />
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {t('recon.completion_date_help')}
+                    </div>
+                  </div>
+
+                  </div>
+
+                  {/* Column 3: Services & Notes */}
+                  <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-1">
+                    <div className="border-b border-border pb-2 mb-3">
+                      <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
+                    </div>
+                  <div>
+                    <Label className="text-sm font-medium">
+                      {t('orders.services')}
+                      {selectedDealership && services.length > 0 && (
+                        <span className="text-muted-foreground ml-1">
+                          ({services.length} {t('orders.available')})
+                        </span>
+                      )}
+                    </Label>
+
+                    {!selectedDealership ? (
+                      <div className="p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground">
+                        {t('orders.selectDealershipFirst')}
+                      </div>
+                    ) : loading ? (
+                      <div className="p-4 border border-border rounded-lg text-center">
+                        <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2" />
+                        <div className="text-sm text-muted-foreground">{t('common.loading')}</div>
+                      </div>
+                    ) : (
+                      <ScrollArea className="h-48 sm:h-64 border border-border rounded-lg p-3 bg-background">
+                        <div className="space-y-3">
+                          {services.length === 0 ? (
+                            <div className="text-center text-muted-foreground py-8">
+                              {t('orders.noServicesAvailable')}
+                            </div>
+                          ) : (
+                            services.map((service: any) => (
+                              <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
+                                <div className="flex items-start space-x-3 flex-1">
+                                  <Checkbox
+                                    id={service.id}
+                                    checked={selectedServices.includes(service.id)}
+                                    onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                    className="mt-1"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <Label
+                                      htmlFor={service.id}
+                                      className="font-medium text-sm cursor-pointer"
+                                    >
+                                      {service.name}
+                                    </Label>
+                                    {service.duration && (
+                                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                                        <span>{service.duration} {t('services.minutes')}</span>
+                                      </div>
+                                    )}
+                                    {service.description && (
+                                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                        {service.description}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                                {canViewPrices && service.price && (
+                                  <div className="text-right shrink-0 ml-3">
+                                    <span className="font-semibold text-sm">
+                                      ${service.price.toFixed(2)}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </ScrollArea>
+                    )}
+                  </div>
+
+                  {canViewPrices && selectedServices.length > 0 && (
+                    <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold text-sm">{t('orders.total')}</span>
+                        <span className="font-bold text-lg text-primary">
+                          ${totalPrice.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {selectedServices.length} {t('orders.servicesSelected')}
+                      </div>
+                    </div>
+                  )}
+
+                  <Separator />
+
+                  <div>
+                    <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
+                    <Textarea
+                      id="notes"
+                      value={formData.notes}
+                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                      rows={4}
+                      className="border-input bg-background resize-none"
+                      placeholder={t('orders.notesPlaceholder')}
+                    />
+                  </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Column 2 - Vehicle Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Car className="h-4 w-4" />
-                  {t('orders.vehicle_details')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="vehicleMake">{t('orders.make')} *</Label>
-                  <Input
-                    id="vehicleMake"
-                    value={formData.vehicleMake}
-                    onChange={(e) => handleInputChange('vehicleMake', e.target.value)}
-                    placeholder={t('orders.make')}
-                    className={errors.vehicleMake ? 'border-destructive' : ''}
-                  />
-                  {errors.vehicleMake && (
-                    <p className="text-sm text-destructive mt-1">{errors.vehicleMake}</p>
-                  )}
-                </div>
+            <Separator className="my-6" />
 
-                <div>
-                  <Label htmlFor="vehicleModel">{t('orders.model')} *</Label>
-                  <Input
-                    id="vehicleModel"
-                    value={formData.vehicleModel}
-                    onChange={(e) => handleInputChange('vehicleModel', e.target.value)}
-                    placeholder={t('orders.model')}
-                    className={errors.vehicleModel ? 'border-destructive' : ''}
-                  />
-                  {errors.vehicleModel && (
-                    <p className="text-sm text-destructive mt-1">{errors.vehicleModel}</p>
-                  )}
-                </div>
+            {/* Hidden fields with default values for later editing in order details */}
+            <div className="hidden">
+              <input
+                type="hidden"
+                name="internal_notes"
+                value={formData.internalNotes || ''}
+                onChange={(e) => handleInputChange('internalNotes', e.target.value)}
+              />
+              <input
+                type="hidden"
+                name="sla_deadline"
+                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''}
+                onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input
+                type="hidden"
+                name="scheduled_date"
+                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''}
+                onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
+              />
+              <input
+                type="hidden"
+                name="scheduled_time"
+                value={formData.scheduledTime || ''}
+                onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
+              />
+            </div>
 
-                <div>
-                  <Label htmlFor="vehicleYear">{t('orders.year')}</Label>
-                  <Input
-                    id="vehicleYear"
-                    value={formData.vehicleYear}
-                    onChange={(e) => handleInputChange('vehicleYear', e.target.value)}
-                    placeholder={t('orders.year')}
-                    type="number"
-                    min="1900"
-                    max={new Date().getFullYear() + 1}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="vehicleInfo">{t('orders.additional_vehicle_info')}</Label>
-                  <Input
-                    id="vehicleInfo"
-                    value={formData.vehicleInfo}
-                    onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
-                    placeholder={t('orders.engine_transmission_etc')}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Column 3 - Order Management */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  {t('orders.order_management')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="dealerId">{t('orders.dealership')} *</Label>
-                  <Select
-                    value={formData.dealerId.toString()}
-                    onValueChange={(value) => handleInputChange('dealerId', value)}
-                    disabled={loadingDealerships}
-                  >
-                    <SelectTrigger className={errors.dealerId ? 'border-destructive' : ''}>
-                      <SelectValue placeholder={
-                        loadingDealerships 
-                          ? t('recon.loading_dealerships') 
-                          : reconDealerships.length === 0 
-                            ? t('recon.no_dealerships_with_recon_access')
-                            : t('orders.select_dealership')
-                      } />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {reconDealerships.map(dealer => (
-                        <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                          {dealer.name} - {dealer.city}, {dealer.state}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {loadingDealerships && (
-                    <p className="text-sm text-muted-foreground mt-1">{t('recon.loading_dealerships')}</p>
-                  )}
-                  {!loadingDealerships && reconDealerships.length === 0 && (
-                    <p className="text-sm text-muted-foreground mt-1">{t('recon.no_dealerships_with_recon_access')}</p>
-                  )}
-                  {errors.dealerId && (
-                    <p className="text-sm text-destructive mt-1">{errors.dealerId}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="status">{t('orders.status')}</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => handleInputChange('status', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('orders.select_status')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">{t('orders.pending')}</SelectItem>
-                      <SelectItem value="in-progress">{t('orders.in_progress')}</SelectItem>
-                      <SelectItem value="needs-approval">{t('recon.needs_approval')}</SelectItem>
-                      <SelectItem value="ready-for-sale">{t('recon.ready_for_sale')}</SelectItem>
-                      <SelectItem value="completed">{t('orders.completed')}</SelectItem>
-                      <SelectItem value="cancelled">{t('orders.cancelled')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="priority">{t('orders.priority')}</Label>
-                  <Select
-                    value={formData.priority}
-                    onValueChange={(value) => handleInputChange('priority', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('orders.select_priority')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">{t('orders.low')}</SelectItem>
-                      <SelectItem value="normal">{t('orders.normal')}</SelectItem>
-                      <SelectItem value="high">{t('orders.high')}</SelectItem>
-                      <SelectItem value="urgent">{t('orders.urgent')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Notes Section - Full Width */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                {t('orders.notes_and_instructions')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div>
-                <Label htmlFor="notes">{t('orders.public_notes')}</Label>
-                <Textarea
-                  id="notes"
-                  value={formData.notes}
-                  onChange={(e) => handleInputChange('notes', e.target.value)}
-                  placeholder={t('recon.recon_instructions')}
-                  rows={3}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Hidden fields with default values for later editing in order details */}
-          <div className="hidden">
-            <input 
-              type="hidden" 
-              name="customer_name" 
-              value={formData.customerName || ''} 
-              onChange={(e) => handleInputChange('customerName', e.target.value)}
-            />
-            <input 
-              type="hidden" 
-              name="customer_email" 
-              value={formData.customerEmail || ''} 
-              onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-            />
-            <input 
-              type="hidden" 
-              name="customer_phone" 
-              value={formData.customerPhone || ''} 
-              onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-            />
-            <input 
-              type="hidden" 
-              name="salesperson" 
-              value={formData.salesperson || ''} 
-              onChange={(e) => handleInputChange('salesperson', e.target.value)}
-            />
-            <input 
-              type="hidden" 
-              name="internal_notes" 
-              value={formData.internalNotes || ''} 
-              onChange={(e) => handleInputChange('internalNotes', e.target.value)}
-            />
-            <input 
-              type="hidden" 
-              name="sla_deadline" 
-              value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
-              onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
-            />
-            <input 
-              type="hidden" 
-              name="scheduled_date" 
-              value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
-              onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
-            />
-            <input 
-              type="hidden" 
-              name="scheduled_time" 
-              value={formData.scheduledTime || ''} 
-              onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
-            />
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={onClose}>
-              {t('common.cancel')}
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? t('common.processing') : (
-                mode === 'create' ? t('recon.create_order') : t('common.save_changes')
-              )}
-            </Button>
-          </div>
-        </form>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-border">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button
+                type="submit"
+                disabled={
+                  submitting ||
+                  !selectedDealership ||
+                  !formData.vehicleVin ||
+                  !formData.stockNumber ||
+                  selectedServices.length === 0
+                }
+                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {order ? t('orders.updating') : t('orders.creating')}
+                  </>
+                ) : (
+                  order ? t('common.action_buttons.update') : t('recon.create_order')
+                )}
+              </Button>
+            </div>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

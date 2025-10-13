@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -10,6 +10,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { ImagePreviewModal } from './ImagePreviewModal';
 
 interface FilePreviewProps {
   file: File;
@@ -19,6 +20,7 @@ interface FilePreviewProps {
 
 export function FilePreview({ file, onRemove, className }: FilePreviewProps) {
   const { t } = useTranslation();
+  const [showPreview, setShowPreview] = useState(false);
 
   // Get file type icon
   const getFileIcon = (mimeType: string) => {
@@ -100,10 +102,7 @@ export function FilePreview({ file, onRemove, className }: FilePreviewProps) {
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0"
-            onClick={() => {
-              // Open image in new tab for preview
-              window.open(previewUrl, '_blank');
-            }}
+            onClick={() => setShowPreview(true)}
             title={t('attachments.preview', 'Preview')}
           >
             <Eye className="h-3 w-3" />
@@ -120,6 +119,16 @@ export function FilePreview({ file, onRemove, className }: FilePreviewProps) {
           <X className="h-3 w-3" />
         </Button>
       </div>
+
+      {/* Image Preview Modal */}
+      {previewUrl && (
+        <ImagePreviewModal
+          imageUrl={showPreview ? previewUrl : null}
+          imageName={file.name}
+          open={showPreview}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
     </div>
   );
 }

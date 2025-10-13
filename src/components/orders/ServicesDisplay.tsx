@@ -197,24 +197,18 @@ export function ServicesDisplay({
     );
   }
 
-  // Kanban variant - Service name with + indicator
+  // Kanban variant - Show all services as badges
   if (variant === 'kanban') {
-    const serviceCount = processedServices.length;
-
-    if (serviceCount === 0) return null;
-
-    const firstService = processedServices[0];
-    const hasMore = serviceCount > 1;
+    if (processedServices.length === 0) return null;
 
     return (
-      <div className={`flex items-center gap-2 ${className}`}>
-        <Badge variant="outline" className="flex items-center gap-1 text-xs">
-          {getServiceIcon(firstService.name)}
-          <span className="font-semibold">{firstService.name}</span>
-          {hasMore && (
-            <span className="text-muted-foreground">+{serviceCount - 1}</span>
-          )}
-        </Badge>
+      <div className={`flex flex-wrap gap-2 ${className}`}>
+        {processedServices.map((service) => (
+          <Badge key={service.id} variant="outline" className="flex items-center gap-1 text-xs">
+            {getServiceIcon(service.name)}
+            <span className="font-semibold">{service.name}</span>
+          </Badge>
+        ))}
 
         {canViewPrices && totalAmount && totalAmount > 0 && (
           <Badge variant="outline" className="flex items-center gap-1 text-xs">

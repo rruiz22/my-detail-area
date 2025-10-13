@@ -4,6 +4,7 @@ import { FileText, Tag, Wrench } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
+import { ServicesDisplay } from './ServicesDisplay';
 
 interface ServiceOrderFieldsProps {
   order: {
@@ -68,36 +69,42 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-3">
-          {serviceInfo.map((info, index) => {
-            const Icon = info.icon;
-            return (
-              <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
+        <CardContent className="space-y-4">
+          {/* PO, RO, TAG inline */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {serviceInfo.map((info, index) => {
+              const Icon = info.icon;
+              return (
+                <div key={index} className="flex items-start gap-2 p-3 rounded-lg bg-muted/30">
+                  <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                       {info.label}
                     </p>
-                    <span className="text-xs text-muted-foreground">
-                      ({info.fullLabel})
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium font-mono">
+                    <p className="text-sm font-medium font-mono truncate">
                       {info.value}
                     </p>
-                    <Badge
-                      variant={info.hasValue ? 'default' : 'outline'}
-                      className="text-xs"
-                    >
-                      {info.hasValue ? t('common.assigned') : t('common.not_assigned')}
-                    </Badge>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+
+          {/* Services/Work Requested */}
+          {order.services && Array.isArray(order.services) && order.services.length > 0 && (
+            <div className="pt-3 border-t border-border">
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                  {t('orders.services')} ({order.services.length})
+                </p>
+                <ServicesDisplay
+                  services={order.services}
+                  variant="kanban"
+                  showPrices={false}
+                />
               </div>
-            );
-          })}
+            </div>
+          )}
         </CardContent>
       </Card>
 

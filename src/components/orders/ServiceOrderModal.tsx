@@ -25,26 +25,28 @@ interface OrderFormData {
   orderNumber: string;
   orderType: string;
   status: string;
-  
+
   // Customer information (vehicle owner)
   customerName: string;
-  
+  customerPhone?: string;
+  customerEmail?: string;
+
   // Vehicle information
   vehicleVin: string;
   vehicleYear: string;
   vehicleMake: string;
   vehicleModel: string;
   vehicleInfo: string;
-  
+
   // Service order specific fields
   po: string;
   ro: string;
   tag: string;
-  
+
   // Assignment information (employee responsible)
   assignedGroupId?: string;
   salesperson?: string;
-  
+
   // Order details
   notes: string;
   internalNotes?: string;
@@ -378,7 +380,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   const handleVinChange = async (vin: string) => {
     handleInputChange('vehicleVin', vin);
-    
+
     if (vin.length === 17 && !vinDecoded) {
       const vehicleData = await decodeVin(vin);
       if (vehicleData) {
@@ -458,7 +460,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
           <form onSubmit={handleSubmit} className="space-y-6 pb-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
+
               {/* Dealership & Customer Information */}
               <Card className="border-border">
                 <CardHeader className="pb-3">
@@ -467,7 +469,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                 <CardContent className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                      <Label htmlFor="dealership">
+                        {t('sales_orders.dealership')} <span className="text-red-500">*</span>
+                      </Label>
                       {isDealerFieldReadOnly && (
                         <Badge variant="secondary" className="text-xs">
                           {t('dealerships.auto_selected')}
@@ -493,19 +497,21 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                   </div>
 
                    <div>
-                     <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
+                     <Label htmlFor="assignedTo">
+                       {t('sales_orders.assigned_to')} <span className="text-red-500">*</span>
+                     </Label>
                       <Select
                         value={selectedAssignedTo || ""}
-                        onValueChange={handleAssignedToChange} 
+                        onValueChange={handleAssignedToChange}
                         disabled={loading || !selectedDealership}
                       >
                         <SelectTrigger className="border-input bg-background">
                           <SelectValue placeholder={
-                            !selectedDealership 
-                              ? t('orders.selectClient') 
-                              : loading 
-                                ? t('common.loading') 
-                                : t('orders.selectClient')
+                            !selectedDealership
+                              ? t('sales_orders.select_dealership_first')
+                              : loading
+                                ? t('common.loading')
+                                : t('sales_orders.select_assignee')
                           } />
                         </SelectTrigger>
                        <SelectContent className="bg-popover border border-border max-h-[200px]">
@@ -521,7 +527,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                   <Separator />
 
                    <div>
-                     <Label htmlFor="customerName">{t('orders.customerName')}</Label>
+                     <Label htmlFor="customerName">
+                       {t('orders.customerName')} <span className="text-red-500">*</span>
+                     </Label>
                      <Input
                        id="customerName"
                        value={formData.customerName}
@@ -531,41 +539,83 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                      />
                    </div>
 
+                   <div>
+                     <Label htmlFor="customerPhone">
+                       {t('forms.labels.phone')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
+                     </Label>
+                     <Input
+                       id="customerPhone"
+                       type="tel"
+                       value={formData.customerPhone || ''}
+                       onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+                       className="border-input bg-background"
+                       placeholder="(555) 123-4567"
+                     />
+                   </div>
+
+                   <div>
+                     <Label htmlFor="customerEmail">
+                       {t('forms.labels.email')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
+                     </Label>
+                     <Input
+                       id="customerEmail"
+                       type="email"
+                       value={formData.customerEmail || ''}
+                       onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                       className="border-input bg-background"
+                       placeholder="customer@example.com"
+                     />
+                   </div>
 
                    {/* Service Order Specific Fields */}
                    <Separator />
-                   
+
                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                      <div>
-                       <Label htmlFor="po">{t('service_orders.po_number')}</Label>
+                       <Label htmlFor="po">
+                         {t('service_orders.po_number')} <span className="text-red-500">*</span>
+                       </Label>
                        <Input
                          id="po"
                          value={formData.po}
                          onChange={(e) => handleInputChange('po', e.target.value)}
                          className="border-input bg-background"
-                         placeholder="PO-2025-001"
+                         inputMode="numeric"
+                         pattern="[0-9]*"
+                         placeholder="001"
+                         required
                        />
                      </div>
-                     
+
                      <div>
-                       <Label htmlFor="ro">{t('service_orders.ro_number')}</Label>
+                       <Label htmlFor="ro">
+                         {t('service_orders.ro_number')} <span className="text-red-500">*</span>
+                       </Label>
                        <Input
                          id="ro"
                          value={formData.ro}
                          onChange={(e) => handleInputChange('ro', e.target.value)}
                          className="border-input bg-background"
-                         placeholder="RO-2025-001"
+                         inputMode="numeric"
+                         pattern="[0-9]*"
+                         placeholder="001"
+                         required
                        />
                      </div>
-                     
+
                      <div>
-                       <Label htmlFor="tag">{t('service_orders.tag_number')}</Label>
+                       <Label htmlFor="tag">
+                         {t('service_orders.tag_number')} <span className="text-red-500">*</span>
+                       </Label>
                        <Input
                          id="tag"
                          value={formData.tag}
                          onChange={(e) => handleInputChange('tag', e.target.value)}
                          className="border-input bg-background"
-                         placeholder="TAG-001"
+                         inputMode="numeric"
+                         pattern="[0-9]*"
+                         placeholder="001"
+                         required
                        />
                      </div>
                    </div>
@@ -586,7 +636,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                 <CardContent className="space-y-4">
                   <div>
                     <Label htmlFor="vehicleVin" className="flex items-center gap-2">
-                      {t('orders.vin')}
+                      {t('orders.vin')} <span className="text-red-500">*</span>
                       {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                     </Label>
                     <VinInputWithScanner
@@ -621,7 +671,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
                    {/* Due Date & Time Section */}
                    <div className="space-y-4">
-                     <Label className="text-base font-medium">{t('due_date.title')}</Label>
+                     <Label className="text-base font-medium">
+                       {t('due_date.title')} <span className="text-red-500">*</span>
+                     </Label>
                      <div>
                        <DueDateTimePicker
                          value={formData.dueDate}
@@ -645,14 +697,14 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                 <CardContent className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium">
-                      {t('orders.services')} 
+                      {t('orders.services')} <span className="text-red-500">*</span>
                       {selectedDealership && services.length > 0 && (
                         <span className="text-muted-foreground ml-1">
                           ({services.length} {t('orders.available')})
                         </span>
                       )}
                     </Label>
-                    
+
                     {!selectedDealership ? (
                       <div className="text-sm text-muted-foreground mt-2 p-3 bg-muted rounded-md">
                         {t('orders.selectDealershipFirst')}
@@ -734,16 +786,30 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
             {/* Footer Actions */}
             <div className="flex justify-end gap-3 pt-4 border-t border-border">
               <Button type="button" variant="outline" onClick={onClose}>
-                {t('common.cancel')}
+                {t('common.action_buttons.cancel')}
               </Button>
-              <Button type="submit" disabled={loading || !formData.customerName}>
+              <Button
+                type="submit"
+                disabled={
+                  loading ||
+                  !formData.customerName ||
+                  !selectedDealership ||
+                  !selectedAssignedTo ||
+                  !formData.vehicleVin ||
+                  !formData.po ||
+                  !formData.ro ||
+                  !formData.tag ||
+                  !formData.dueDate ||
+                  selectedServices.length === 0
+                }
+              >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {t('common.saving')}
+                    {order ? t('orders.updating') : t('orders.creating')}
                   </>
                 ) : (
-                  order ? t('common.save') : t('common.create')
+                  order ? t('common.action_buttons.update') : t('common.action_buttons.create')
                 )}
               </Button>
             </div>

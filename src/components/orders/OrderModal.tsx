@@ -27,10 +27,12 @@ interface OrderFormData {
   orderNumber: string;
   orderType: string;
   status: string;
-  
+
   // Customer information (vehicle owner)
   customerName: string;
-  
+  customerPhone?: string;
+  customerEmail?: string;
+
   // Vehicle information
   vehicleVin: string;
   vehicleYear: string;
@@ -143,6 +145,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [formData, setFormData] = useState<OrderFormData>({
     orderNumber: '',
     customerName: '',
+    customerPhone: '',
+    customerEmail: '',
     vehicleVin: '',
     vehicleYear: '',
     vehicleMake: '',
@@ -241,6 +245,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
           // Customer information
           customerName: getFieldValue(order.customerName, order.customer_name),
+          customerPhone: getFieldValue(order.customerPhone, order.customer_phone),
+          customerEmail: getFieldValue(order.customerEmail, order.customer_email),
 
           // Vehicle information - handle both individual and consolidated fields
           vehicleVin: getFieldValue(order.vehicleVin, order.vehicle_vin),
@@ -287,6 +293,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         setFormData({
           orderNumber: '',
           customerName: '',
+          customerPhone: '',
+          customerEmail: '',
           vehicleVin: '',
           vehicleYear: '',
           vehicleMake: '',
@@ -561,9 +569,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       // Map frontend camelCase to backend snake_case
       order_number: formData.orderNumber || null,
       customer_name: formData.customerName || null,
-      customer_email: null, // Removed field - always null
-      customer_phone: null, // Removed field - always null
-      
+      customer_email: formData.customerEmail || null,
+      customer_phone: formData.customerPhone || null,
+
       // Vehicle information fields
       vehicle_vin: formData.vehicleVin || null,
       vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
@@ -775,10 +783,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           <form onSubmit={handleSubmit} className="space-y-6 pb-6">
             {/* Single Responsive Container */}
             <Card className="border-border">
-              <CardHeader className="pb-3 px-4 sm:px-6">
-                <CardTitle className="text-base sm:text-lg">{order ? t('orders.edit') : t('orders.create')}</CardTitle>
-              </CardHeader>
-              <CardContent className="px-4 sm:px-6">
+              <CardContent className="px-4 sm:px-6 pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
               
                   {/* Column 1: Dealership & Assignment Information */}
@@ -846,7 +851,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   {/* Customer Information Section */}
                   <div className="space-y-4">
                     <Label className="text-sm font-medium text-foreground">{t('orders.customer_information')}</Label>
-                    
+
                     <div>
                       <Label htmlFor="customerName">{t('orders.customerName')}</Label>
                       <Input
@@ -855,6 +860,34 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         onChange={(e) => handleInputChange('customerName', e.target.value)}
                         className="border-input bg-background"
                         placeholder={t('orders.customerNamePlaceholder')}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="customerPhone">
+                        {t('forms.labels.phone')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
+                      </Label>
+                      <Input
+                        id="customerPhone"
+                        type="tel"
+                        value={formData.customerPhone || ''}
+                        onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="customerEmail">
+                        {t('forms.labels.email')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
+                      </Label>
+                      <Input
+                        id="customerEmail"
+                        type="email"
+                        value={formData.customerEmail || ''}
+                        onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder="customer@example.com"
                       />
                     </div>
 
@@ -895,7 +928,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       value={formData.stockNumber}
                       onChange={(e) => handleInputChange('stockNumber', e.target.value)}
                       className="border-input bg-background"
-                      placeholder="ST-2025-001"
+                      placeholder="ST-001"
                     />
                   </div>
 
@@ -1111,7 +1144,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                 onClick={onClose}
                 className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
               >
-                {t('common.actions.cancel')}
+                {t('common.action_buttons.cancel')}
               </Button>
               <Button
                 type="submit"
@@ -1133,7 +1166,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     {order ? t('orders.updating') : t('orders.creating')}
                   </>
                 ) : (
-                  order ? t('common.actions.update') : t('common.actions.create')
+                  order ? t('common.action_buttons.update') : t('common.action_buttons.create')
                 )}
               </Button>
             </div>

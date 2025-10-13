@@ -82,7 +82,7 @@ export const subscriptionLimits = {
 
 // Polling intervals configuration
 export const pollingConfig = {
-  orders: 60000,                    // Order list refresh every 60 seconds
+  orders: 180000,                   // Order list refresh every 3 minutes
   orderDetails: 30000,              // Individual order details every 30 seconds
   systemStats: 120000,              // System statistics every 2 minutes
   activities: 300000,               // Activity feeds every 5 minutes

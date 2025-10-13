@@ -89,9 +89,9 @@ export function DueDateIndicator({
     return (
       <div className={cn("flex items-center gap-1", className)}>
         <div className={cn("flex items-center gap-1", timeStatus.color)}>
-          {getIcon(timeStatus.status)}
+          {getIcon(timeStatus.status, orderStatus)}
           <span className="text-sm font-semibold whitespace-nowrap">
-            {formatCountdown(timeStatus.timeRemaining)}
+            {timeStatus.formattedTime}
           </span>
         </div>
       </div>

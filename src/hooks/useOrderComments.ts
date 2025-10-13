@@ -29,7 +29,7 @@ export interface OrderCommentsHookResult {
   internalNotes: OrderComment[];
   loading: boolean;
   error: string | null;
-  addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<void>;
+  addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;
   refreshComments: () => Promise<void>;
   commentsCount: number;
   internalNotesCount: number;
@@ -220,9 +220,11 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     }
   }, [orderId]);
 
-  // Add a new comment or internal note
-  const addComment = useCallback(async (text: string, type: 'public' | 'internal', parentId?: string) => {
-    if (!user || !orderId || !text.trim()) return;
+  // Add a new comment or internal note - returns comment.id for attachment linking
+  const addComment = useCallback(async (text: string, type: 'public' | 'internal', parentId?: string): Promise<string> => {
+    if (!user || !orderId || !text.trim()) {
+      throw new Error('Missing required parameters');
+    }
 
     // Check permissions for internal notes
     if (type === 'internal' && !canAccessInternal) {
@@ -249,15 +251,18 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
         throw error;
       }
 
-      console.log(`✅ ${type} added successfully${parentId ? ' as reply' : ''}`);
+      const commentId = data.id;
+      console.log(`✅ ${type} added successfully${parentId ? ' as reply' : ''} - ID: ${commentId}`);
 
       // Refresh comments to get the new one with profile data
       await fetchComments();
 
       // Dispatch custom event to notify other components (like RecentActivityBlock)
       window.dispatchEvent(new CustomEvent('orderCommentAdded', {
-        detail: { orderId, type: 'comment_added' }
+        detail: { orderId, commentId, type: 'comment_added' }
       }));
+
+      return commentId;
 
     } catch (err) {
       console.error(`❌ Failed to add ${type}:`, err);

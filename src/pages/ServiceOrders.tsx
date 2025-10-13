@@ -7,6 +7,7 @@ import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useSweetAlert } from '@/hooks/useSweetAlert';
 
 // New improved components
 import { SmartDashboard } from '@/components/sales/SmartDashboard';
@@ -20,6 +21,7 @@ import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
 export default function ServiceOrders() {
   console.log('🔵 ServiceOrders component is RENDERING');
   const { t } = useTranslation();
+  const { confirmDelete } = useSweetAlert();
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('service_orders');
@@ -31,6 +33,7 @@ export default function ServiceOrders() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
+  const [weekOffset, setWeekOffset] = useState(0);
 
   const {
     orders,
@@ -43,7 +46,7 @@ export default function ServiceOrders() {
     createOrder,
     updateOrder,
     deleteOrder,
-  } = useServiceOrderManagement(activeFilter);
+  } = useServiceOrderManagement(activeFilter, weekOffset);
 
   // Real-time updates are handled by useServiceOrderManagement hook
   // Keep lastRefresh for UI purposes
@@ -74,8 +77,14 @@ export default function ServiceOrders() {
   };
 
   const handleDeleteOrder = async (orderId: string) => {
-    if (confirm(t('messages.confirm_delete_order'))) {
-      await deleteOrder(orderId);
+    const confirmed = await confirmDelete();
+
+    if (confirmed) {
+      try {
+        await deleteOrder(orderId);
+      } catch (error) {
+        console.error('❌ Delete failed:', error);
+      }
     }
   };
 
@@ -167,6 +176,8 @@ export default function ServiceOrders() {
           onViewModeChange={setViewMode}
           showFilters={showFilters}
           onToggleFilters={() => setShowFilters(!showFilters)}
+          weekOffset={weekOffset}
+          onWeekChange={setWeekOffset}
         />
 
         {/* Filters */}
@@ -182,6 +193,7 @@ export default function ServiceOrders() {
         <div className="space-y-6">
           {activeFilter === 'dashboard' ? (
             <SmartDashboard
+              allOrders={orders}
               tabCounts={tabCounts}
               onCardClick={handleCardClick}
             />

@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Paperclip } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FilePreview } from './FilePreview';
+import { DragDropZone } from './DragDropZone';
 
 interface FileSelectorProps {
   selectedFiles: File[];
   onFilesSelected: (files: File[]) => void;
+  onFilesSelectedWithValidation?: (files: File[]) => void;
   onRemoveFile: (index: number) => void;
   disabled?: boolean;
   className?: string;
@@ -15,6 +17,7 @@ interface FileSelectorProps {
 export function FileSelector({
   selectedFiles,
   onFilesSelected,
+  onFilesSelectedWithValidation,
   onRemoveFile,
   disabled = false,
   className
@@ -28,7 +31,13 @@ export function FileSelector({
     if (!files || files.length === 0) return;
 
     const newFiles = Array.from(files);
-    onFilesSelected([...selectedFiles, ...newFiles]);
+
+    // Use validation if available, otherwise fallback to regular
+    if (onFilesSelectedWithValidation) {
+      onFilesSelectedWithValidation(newFiles);
+    } else {
+      onFilesSelected(newFiles);
+    }
 
     // Clear the input
     if (fileInputRef.current) {
@@ -41,47 +50,62 @@ export function FileSelector({
     onRemoveFile(index);
   };
 
+  // Handle files dropped
+  const handleFilesDropped = (files: File[]) => {
+    if (onFilesSelectedWithValidation) {
+      onFilesSelectedWithValidation(files);
+    } else {
+      onFilesSelected(files);
+    }
+  };
+
   return (
-    <div className={className}>
-      {/* Hidden file input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        multiple
-        onChange={handleFileSelect}
-        style={{ display: 'none' }}
-        accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt,.zip"
-      />
+    <DragDropZone
+      onFilesDropped={handleFilesDropped}
+      disabled={disabled}
+      className={className}
+    >
+      <div>
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+          accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt,.zip"
+        />
 
-      {/* File selection button */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => fileInputRef.current?.click()}
-        disabled={disabled}
-        className="text-xs"
-      >
-        <Paperclip className="h-3 w-3 mr-1" />
-        {t('attachments.attach', 'Attach')}
-      </Button>
+        {/* File selection button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={disabled}
+          className="text-xs"
+        >
+          <Paperclip className="h-3 w-3 mr-1" />
+          {t('attachments.attach', 'Attach')}
+        </Button>
 
-      {/* Selected files preview */}
-      {selectedFiles.length > 0 && (
-        <div className="mt-3 space-y-2">
-          <div className="text-xs text-muted-foreground">
-            {t('attachments.selected_files', '{{count}} files selected', { count: selectedFiles.length })}
+        {/* Selected files preview */}
+        {selectedFiles.length > 0 && (
+          <div className="mt-3 space-y-2">
+            <div className="text-xs text-muted-foreground">
+              {t('attachments.selected_files', '{{count}} files selected', { count: selectedFiles.length })}
+            </div>
+            <div className="space-y-2">
+              {selectedFiles.map((file, index) => (
+                <FilePreview
+                  key={`${file.name}-${index}`}
+                  file={file}
+                  onRemove={() => removeFile(index)}
+                />
+              ))}
+            </div>
           </div>
-          <div className="space-y-2">
-            {selectedFiles.map((file, index) => (
-              <FilePreview
-                key={`${file.name}-${index}`}
-                file={file}
-                onRemove={() => removeFile(index)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </DragDropZone>
   );
 }

@@ -477,4 +477,14 @@ All colors MUST be HSL.
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground) / 0.5);
   }
+
+  /* Sonner Toast - Solo z-index para máxima prioridad visual */
+  /* Mantener por encima de modales (z-1051), sticky headers (z-40) y todo el contenido */
+  [data-sonner-toaster] {
+    z-index: 99999 !important;
+  }
+
+  [data-sonner-toast] {
+    z-index: 99999 !important;
+  }
 }

@@ -13,7 +13,7 @@ export const LiveTimer = ({
   lastRefresh,
   isRefreshing = false,
   className = '',
-  refreshInterval = 60
+  refreshInterval = 180
 }: LiveTimerProps) => {
   const { t } = useTranslation();
   const countdown = useRefreshCountdown(lastRefresh, refreshInterval);

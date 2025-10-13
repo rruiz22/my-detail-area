@@ -1,10 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { orderNumberService } from '@/services/orderNumberService';
+import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -30,10 +32,11 @@ interface ReconOrderData {
   vehicleInfo?: string;
   status?: string;
   priority?: string;
-  services?: ReconServiceItem[];
+  services?: string[]; // Array of service UUIDs
   totalAmount?: number;
   notes?: string;
   internalNotes?: string;
+  completedAt?: Date; // Completion date for recon
   dealerId: number | string;
   assignedContactId?: string | number;
   acquisitionCost?: number;
@@ -56,7 +59,7 @@ export interface ReconOrder {
   orderType: string;
   status: string;
   priority?: string;
-  services: ReconServiceItem[];
+  services: string[]; // Array of service UUIDs
   totalAmount?: number;
   notes?: string;
   internalNotes?: string;
@@ -85,31 +88,6 @@ export interface ReconOrder {
   dueTime?: string;
 }
 
-interface ReconOrderFilters {
-  search: string;
-  status: string;
-  make: string;
-  model: string;
-  reconCategory: string;
-  conditionGrade: string;
-  dateRange: {
-    from?: Date;
-    to?: Date;
-  };
-}
-
-interface TabCounts {
-  all: number;
-  today: number;
-  tomorrow: number;
-  pending: number;
-  in_process: number;
-  completed: number;
-  cancelled: number;
-  needsApproval: number;
-  readyForSale: number;
-}
-
 // Transform Supabase order to ReconOrder interface
 const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
   id: supabaseOrder.id,
@@ -123,7 +101,7 @@ const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
   orderType: supabaseOrder.order_type || 'recon',
   status: supabaseOrder.status,
   priority: supabaseOrder.priority,
-  services: (supabaseOrder.services as ReconServiceItem[]) || [],
+  services: Array.isArray(supabaseOrder.services) ? supabaseOrder.services as string[] : [],
   totalAmount: supabaseOrder.total_amount,
   notes: supabaseOrder.notes,
   internalNotes: supabaseOrder.internal_notes,
@@ -138,168 +116,47 @@ const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
   statusChangedBy: supabaseOrder.status_changed_by,
   createdByGroupId: supabaseOrder.created_by_group_id,
   assignedGroupId: supabaseOrder.assigned_group_id,
-  // Extract recon-specific data from services/metadata if available
-  acquisitionCost: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'acquisition_cost')?.value as number,
-  reconCost: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'recon_cost')?.value as number,
-  acquisitionSource: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'acquisition_source')?.value as string || 'trade-in',
-  conditionGrade: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'condition_grade')?.value as string || 'good',
-  reconCategory: (supabaseOrder.services as ReconServiceItem[])?.find(s => s.type === 'recon_category')?.value as string || 'full-recon',
+  // Recon-specific fields from services metadata (if stored as ReconServiceItem)
+  acquisitionCost: undefined,
+  reconCost: undefined,
+  acquisitionSource: undefined,
+  conditionGrade: undefined,
+  reconCategory: undefined,
   // Enhanced fields from manual JOINs (will be set in refreshData)
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
   createdByGroupName: undefined,
   assignedTo: 'Unassigned',
-  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', {
+    hour: '2-digit',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   }) : undefined,
 });
 
-export const useReconOrderManagement = (activeTab: string = 'all') => {
-  const [orders, setOrders] = useState<ReconOrder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<ReconOrderFilters>({
-    search: '',
-    status: 'all',
-    make: 'all',
-    model: 'all',
-    reconCategory: 'all',
-    conditionGrade: 'all',
-    dateRange: {}
-  });
+export const useReconOrderManagement = () => {
+  const [allOrders, setAllOrders] = useState<ReconOrder[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  const { toast } = useToast();
   const { t } = useTranslation();
-  const { user, enhancedUser } = useAuth();
+  const { user } = useAuth();
+  const { enhancedUser } = usePermissions();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();
 
-  // Calculate tab counts with recon-specific tabs
-  const tabCounts = useMemo((): TabCounts => {
-    const today = new Date().toDateString();
-    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toDateString();
+  // Check if polling should be enabled
+  const isPollingEnabled = !!(user && enhancedUser);
 
-    return {
-      all: orders.length,
-      today: orders.filter(order => 
-        order.dueDate && new Date(order.dueDate).toDateString() === today
-      ).length,
-      tomorrow: orders.filter(order => 
-        order.dueDate && new Date(order.dueDate).toDateString() === tomorrow
-      ).length,
-      pending: orders.filter(order => order.status === 'pending').length,
-      in_process: orders.filter(order => order.status === 'in_progress').length,
-      completed: orders.filter(order => order.status === 'completed').length,
-      cancelled: orders.filter(order => order.status === 'cancelled').length,
-      needsApproval: orders.filter(order => order.status === 'needs_approval').length,
-      readyForSale: orders.filter(order => order.status === 'ready_for_sale').length,
-    };
-  }, [orders]);
+  // Smart polling for recon order data (replaces real-time subscription and initial refresh)
+  const reconOrdersPollingQuery = useOrderPolling(
+    ['orders', 'recon'],
+    async () => {
+      if (!user || !enhancedUser) {
+        console.log('⚠️ Polling skipped - no user or enhancedUser');
+        return [];
+      }
 
-  // Filter orders based on active tab and additional filters
-  const filteredOrders = useMemo(() => {
-    let filtered = [...orders];
-
-    // Apply tab filter
-    const today = new Date().toDateString();
-    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toDateString();
-
-    switch (activeTab) {
-      case 'today':
-        filtered = filtered.filter(order => 
-          order.dueDate && new Date(order.dueDate).toDateString() === today
-        );
-        break;
-      case 'tomorrow':
-        filtered = filtered.filter(order => 
-          order.dueDate && new Date(order.dueDate).toDateString() === tomorrow
-        );
-        break;
-      case 'pending':
-        filtered = filtered.filter(order => order.status === 'pending');
-        break;
-      case 'in_process':
-        filtered = filtered.filter(order => order.status === 'in_progress');
-        break;
-      case 'completed':
-        filtered = filtered.filter(order => order.status === 'completed');
-        break;
-      case 'cancelled':
-        filtered = filtered.filter(order => order.status === 'cancelled');
-        break;
-      case 'needsApproval':
-        filtered = filtered.filter(order => order.status === 'needs_approval');
-        break;
-      case 'readyForSale':
-        filtered = filtered.filter(order => order.status === 'ready_for_sale');
-        break;
-      default:
-        // 'all' - no additional filtering
-        break;
-    }
-
-    // Apply search filter
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      filtered = filtered.filter(order =>
-        order.orderNumber.toLowerCase().includes(searchLower) ||
-        order.stockNumber?.toLowerCase().includes(searchLower) ||
-        order.vehicleVin?.toLowerCase().includes(searchLower) ||
-        order.vehicleMake?.toLowerCase().includes(searchLower) ||
-        order.vehicleModel?.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Apply status filter
-    if (filters.status !== 'all') {
-      filtered = filtered.filter(order => order.status === filters.status);
-    }
-
-    // Apply make filter
-    if (filters.make !== 'all') {
-      filtered = filtered.filter(order => order.vehicleMake === filters.make);
-    }
-
-    // Apply model filter
-    if (filters.model !== 'all') {
-      filtered = filtered.filter(order => order.vehicleModel === filters.model);
-    }
-
-    // Apply recon category filter
-    if (filters.reconCategory !== 'all') {
-      filtered = filtered.filter(order => order.reconCategory === filters.reconCategory);
-    }
-
-    // Apply condition grade filter
-    if (filters.conditionGrade !== 'all') {
-      filtered = filtered.filter(order => order.conditionGrade === filters.conditionGrade);
-    }
-
-    // Apply date range filter
-    if (filters.dateRange.from || filters.dateRange.to) {
-      filtered = filtered.filter(order => {
-        const orderDate = new Date(order.createdAt);
-        const fromDate = filters.dateRange.from;
-        const toDate = filters.dateRange.to;
-
-        if (fromDate && orderDate < fromDate) return false;
-        if (toDate && orderDate > toDate) return false;
-        return true;
-      });
-    }
-
-    return filtered;
-  }, [orders, activeTab, filters]);
-
-  // Fetch recon orders from Supabase
-  const refreshData = async () => {
-    if (!user || !enhancedUser) return;
-
-    try {
-      setLoading(true);
-
-      console.log('🔄 Recon refreshData: Fetching recon orders...');
 
       // Apply same dealer filtering logic as other modules
       let ordersQuery = supabase
@@ -328,12 +185,12 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
             ordersQuery = ordersQuery.eq('dealer_id', 5);
           } else {
             const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
-            console.log(`🏢 Recon refreshData - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            console.log(`🏢 Recon Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown
-          console.log(`🎯 Recon refreshData - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          console.log(`🎯 Recon Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
           ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
         }
       } else {
@@ -342,16 +199,7 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       }
 
       const { data: orders, error } = await ordersQuery;
-
-      if (error) {
-        console.error('Error fetching recon orders:', error);
-        toast({
-          title: t('common.error'),
-          description: t('recon.error_fetching_orders'),
-          variant: 'destructive',
-        });
-        return;
-      }
+      if (error) throw error;
 
       // Fetch dealerships data separately
       const { data: dealerships, error: dealershipsError } = await supabase
@@ -386,28 +234,32 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         return transformedOrder;
       });
 
-      setOrders(transformedOrders);
-    } catch (error) {
-      console.error('Error fetching recon orders:', error);
-      toast({
-        title: t('common.error'),
-        description: t('recon.error_fetching_orders'),
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+      return transformedOrders;
+    },
+    isPollingEnabled  // Use reactive variable
+  );
 
-  // Update filters
-  const updateFilters = (newFilters: Partial<ReconOrderFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
-  };
+  // Simplified refreshData - uses polling query for consistency
+  const refreshData = useCallback(async () => {
+    await reconOrdersPollingQuery.refetch();
+    toast({
+      description: t('common.data_refreshed') || 'Data refreshed',
+      variant: 'default'
+    });
+  }, [reconOrdersPollingQuery, t]);
+
 
   // Create new recon order
-  const createOrder = async (orderData: ReconOrderData) => {
+  const createOrder = useCallback(async (orderData: ReconOrderData) => {
     try {
-      console.log('Creating recon order with data:', orderData);
+      console.log('📥 Hook received orderData:', {
+        dealerId: orderData.dealerId,
+        services: orderData.services,
+        servicesLength: orderData.services?.length,
+        servicesType: typeof orderData.services,
+        isArray: Array.isArray(orderData.services),
+        fullData: orderData
+      });
 
       // Validate dealerId before conversion
       if (!orderData.dealerId) {
@@ -419,26 +271,14 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         throw new Error('Invalid dealership ID');
       }
 
-      // Use database function to generate sequential order number  
+      // Use database function to generate recon order number
       const { data: orderNumberData, error: numberError } = await supabase
-        .rpc('generate_service_order_number'); // Reusing service order number for now
+        .rpc('generate_recon_order_number');
 
       if (numberError || !orderNumberData) {
         console.error('Error generating recon order number:', numberError);
         throw new Error('Failed to generate recon order number');
       }
-
-      // Prepare services array with recon-specific data
-      const services: ReconServiceItem[] = [
-        ...(orderData.services || []),
-        { type: 'acquisition_cost', value: orderData.acquisitionCost },
-        { type: 'recon_cost', value: orderData.reconCost },
-        { type: 'acquisition_source', value: orderData.acquisitionSource },
-        { type: 'condition_grade', value: orderData.conditionGrade },
-        { type: 'recon_category', value: orderData.reconCategory },
-      ].filter((service): service is ReconServiceItem =>
-        service.value !== undefined && service.value !== null
-      );
 
       const insertData: SupabaseOrderInsert = {
         customer_name: orderData.stockNumber || 'Recon Vehicle',
@@ -451,18 +291,25 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         order_type: 'recon',
         order_number: orderNumberData,
         status: orderData.status || 'pending',
-        priority: orderData.priority || 'normal',
-        services: services,
-        total_amount: orderData.totalAmount || orderData.reconCost,
+        priority: 'normal',
+        services: orderData.services || [],
+        total_amount: orderData.totalAmount,
         notes: orderData.notes,
         internal_notes: orderData.internalNotes,
+        completed_at: orderData.completedAt ? orderData.completedAt.toISOString() : null,
         dealer_id: dealerIdNumber,
-        assigned_contact_id: orderData.assignedContactId &&
-          orderData.assignedContactId !== "1" &&
-          orderData.assignedContactId !== 1
-            ? orderData.assignedContactId.toString()
-            : null
+        assigned_contact_id: null,
+        created_by: user.id,
       };
+
+      console.log('💾 Sending to Supabase:', {
+        services: insertData.services,
+        servicesLength: insertData.services?.length,
+        servicesType: typeof insertData.services,
+        isArray: Array.isArray(insertData.services),
+        servicesContent: JSON.stringify(insertData.services),
+        fullInsertData: insertData
+      });
 
       const { data, error } = await supabase
         .from('orders')
@@ -473,16 +320,17 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       if (error) {
         console.error('Error creating recon order:', error);
         toast({
-          title: t('common.error'),
           description: t('recon.error_creating_order'),
-          variant: 'destructive',
+          variant: 'destructive'
         });
         return null;
       }
 
       const newOrder = transformReconOrder(data);
-      setOrders(prev => [newOrder, ...prev]);
-      
+
+      // Optimistic update: Add order immediately to UI
+      setAllOrders(prev => [newOrder, ...prev]);
+
       // Auto-generate QR code and shortlink
       try {
         await generateQR(data.id, data.order_number, data.dealer_id);
@@ -491,10 +339,10 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         console.error('Failed to generate QR code:', qrError);
         // Don't fail the order creation if QR generation fails
       }
-      
+
       toast({
-        title: t('common.success'),
         description: t('recon.order_created_successfully'),
+        variant: 'default'
       });
 
       // Invalidate React Query cache to refresh order list
@@ -504,29 +352,16 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
     } catch (error) {
       console.error('Error creating recon order:', error);
       toast({
-        title: t('common.error'),
         description: t('recon.error_creating_order'),
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return null;
     }
-  };
+  }, [user, generateQR, queryClient, t]);
 
   // Update existing recon order
-  const updateOrder = async (orderId: string, orderData: Partial<ReconOrderData>) => {
+  const updateOrder = useCallback(async (orderId: string, orderData: Partial<ReconOrderData>) => {
     try {
-      // Prepare services array with recon-specific data
-      const services: ReconServiceItem[] = [
-        ...(orderData.services || []),
-        { type: 'acquisition_cost', value: orderData.acquisitionCost },
-        { type: 'recon_cost', value: orderData.reconCost },
-        { type: 'acquisition_source', value: orderData.acquisitionSource },
-        { type: 'condition_grade', value: orderData.conditionGrade },
-        { type: 'recon_category', value: orderData.reconCategory },
-      ].filter((service): service is ReconServiceItem =>
-        service.value !== undefined && service.value !== null
-      );
-
       const updateData: SupabaseOrderUpdate = {
         customer_name: orderData.stockNumber || 'Recon Vehicle',
         stock_number: orderData.stockNumber,
@@ -536,12 +371,13 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
         vehicle_vin: orderData.vehicleVin,
         vehicle_info: orderData.vehicleInfo,
         status: orderData.status,
-        priority: orderData.priority,
-        services: services,
-        total_amount: orderData.totalAmount || orderData.reconCost,
+        priority: 'normal',
+        services: orderData.services || [],
+        total_amount: orderData.totalAmount,
         notes: orderData.notes,
         internal_notes: orderData.internalNotes,
-        assigned_contact_id: orderData.assignedContactId?.toString()
+        completed_at: orderData.completedAt ? (orderData.completedAt instanceof Date ? orderData.completedAt.toISOString() : orderData.completedAt) : null,
+        assigned_contact_id: null
       };
 
       const { data, error } = await supabase
@@ -554,35 +390,40 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       if (error) {
         console.error('Error updating recon order:', error);
         toast({
-          title: t('common.error'),
           description: t('recon.error_updating_order'),
-          variant: 'destructive',
+          variant: 'destructive'
         });
         return null;
       }
 
+      const updatedOrder = transformReconOrder(data);
+
+      // Optimistic update: Update order immediately in UI
+      setAllOrders(prev =>
+        prev.map(order => order.id === orderId ? updatedOrder : order)
+      );
+
       toast({
-        title: t('common.success'),
         description: t('recon.order_updated_successfully'),
+        variant: 'default'
       });
 
       // Invalidate React Query cache to force fresh data from polling
       await queryClient.refetchQueries({ queryKey: ['orders', 'recon'] });
 
-      return transformReconOrder(data);
+      return updatedOrder;
     } catch (error) {
       console.error('Error updating recon order:', error);
       toast({
-        title: t('common.error'),
         description: t('recon.error_updating_order'),
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return null;
     }
-  };
+  }, [queryClient, t]);
 
   // Delete recon order
-  const deleteOrder = async (orderId: string) => {
+  const deleteOrder = useCallback(async (orderId: string) => {
     try {
       const { error } = await supabase
         .from('orders')
@@ -592,18 +433,18 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
       if (error) {
         console.error('Error deleting recon order:', error);
         toast({
-          title: t('common.error'),
           description: t('recon.error_deleting_order'),
-          variant: 'destructive',
+          variant: 'destructive'
         });
         return false;
       }
 
-      setOrders(prev => prev.filter(order => order.id !== orderId));
+      // Optimistic update: Remove order immediately from UI
+      setAllOrders(prev => prev.filter(order => order.id !== orderId));
 
       toast({
-        title: t('common.success'),
         description: t('recon.order_deleted_successfully'),
+        variant: 'default'
       });
 
       // Invalidate React Query cache to refresh order list
@@ -613,85 +454,106 @@ export const useReconOrderManagement = (activeTab: string = 'all') => {
     } catch (error) {
       console.error('Error deleting recon order:', error);
       toast({
-        title: t('common.error'),
         description: t('recon.error_deleting_order'),
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return false;
     }
-  };
+  }, [queryClient, t]);
 
-  // Load data on mount and tab change
+  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
+  // useEffect(() => {
+  //   if (user && enhancedUser) {
+  //     refreshData();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user, enhancedUser]); // Dependencies: user, enhancedUser
+
+  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
+  // useEffect(() => {
+  //   const channel = supabase
+  //     .channel('recon_orders_realtime')
+  //     .on(
+  //       'postgres_changes',
+  //       {
+  //         event: '*',
+  //         schema: 'public',
+  //         table: 'orders',
+  //         filter: 'order_type=eq.recon'
+  //       },
+  //       async (payload) => {
+  //         console.log('Recon order real-time update:', payload);
+  //
+  //         if (payload.eventType === 'INSERT') {
+  //           const newOrder = transformReconOrder(payload.new as SupabaseOrder);
+  //           setOrders(prevOrders => [newOrder, ...prevOrders]);
+  //         } else if (payload.eventType === 'UPDATE') {
+  //           const updatedOrder = transformReconOrder(payload.new as SupabaseOrder);
+  //           setOrders(prevOrders =>
+  //             prevOrders.map(order =>
+  //               order.id === updatedOrder.id ? updatedOrder : order
+  //             )
+  //           );
+  //         } else if (payload.eventType === 'DELETE') {
+  //           setOrders(prevOrders =>
+  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
+  //           );
+  //         }
+  //       }
+  //     )
+  //     .subscribe();
+
+  //   // Also listen for T2L metrics changes
+  //   const t2lChannel = supabase
+  //     .channel('recon_t2l_realtime')
+  //     .on(
+  //       'postgres_changes',
+  //       {
+  //         event: '*',
+  //         schema: 'public',
+  //         table: 'recon_t2l_metrics'
+  //       },
+  //       () => {
+  //         console.log('T2L metrics updated, data will refresh automatically via main subscription');
+  //         // Let the main useOrderManagement hook handle the refresh to avoid conflicts
+  //       }
+  //     )
+  //     .subscribe();
+
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //     supabase.removeChannel(t2lChannel);
+  //   };
+  // }, []);
+
+  // Trigger initial fetch when enhancedUser becomes available
   useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+    if (user && enhancedUser && !reconOrdersPollingQuery.data) {
+      reconOrdersPollingQuery.refetch();
+    }
+  }, [user, enhancedUser, reconOrdersPollingQuery]);
 
-  // Real-time subscription for recon orders
+  // Update allOrders when polling data changes (silent, no loading state)
   useEffect(() => {
-    const channel = supabase
-      .channel('recon_orders_realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'orders',
-          filter: 'order_type=eq.recon'
-        },
-        async (payload) => {
-          console.log('Recon order real-time update:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            const newOrder = transformReconOrder(payload.new as SupabaseOrder);
-            setOrders(prevOrders => [newOrder, ...prevOrders]);
-          } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformReconOrder(payload.new as SupabaseOrder);
-            setOrders(prevOrders =>
-              prevOrders.map(order =>
-                order.id === updatedOrder.id ? updatedOrder : order
-              )
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders =>
-              prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-            );
-          }
-        }
-      )
-      .subscribe();
+    if (reconOrdersPollingQuery.data) {
+      setAllOrders(reconOrdersPollingQuery.data);
+    }
+  }, [reconOrdersPollingQuery.data]);
 
-    // Also listen for T2L metrics changes
-    const t2lChannel = supabase
-      .channel('recon_t2l_realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'recon_t2l_metrics'
-        },
-        () => {
-          console.log('T2L metrics updated, data will refresh automatically via main subscription');
-          // Let the main useOrderManagement hook handle the refresh to avoid conflicts
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-      supabase.removeChannel(t2lChannel);
-    };
-  }, []);
+  // Update lastRefresh when polling completes
+  useEffect(() => {
+    if (!reconOrdersPollingQuery.isFetching && reconOrdersPollingQuery.dataUpdatedAt) {
+      setLastRefresh(new Date(reconOrdersPollingQuery.dataUpdatedAt));
+    }
+  }, [reconOrdersPollingQuery.isFetching, reconOrdersPollingQuery.dataUpdatedAt]);
 
   return {
-    orders: filteredOrders,
-    tabCounts,
-    filters,
+    orders: allOrders,
     loading,
+    lastRefresh,
     refreshData,
-    updateFilters,
     createOrder,
     updateOrder,
     deleteOrder
   };
-};
+}; 

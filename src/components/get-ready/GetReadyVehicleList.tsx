@@ -7,8 +7,8 @@ import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useGetReady } from '@/hooks/useGetReady';
-import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
+import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { cn } from '@/lib/utils';
 import {
@@ -25,7 +25,7 @@ import {
     User,
     XCircle
 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -37,6 +37,7 @@ interface GetReadyVehicleListProps {
   sortBy: string;
   sortOrder: 'asc' | 'desc';
   className?: string;
+  onEditVehicle?: (vehicleId: string) => void;
 }
 
 export function GetReadyVehicleList({
@@ -46,7 +47,8 @@ export function GetReadyVehicleList({
   selectedPriority,
   sortBy,
   sortOrder,
-  className
+  className,
+  onEditVehicle
 }: GetReadyVehicleListProps) {
   const { t } = useTranslation();
   const { steps } = useGetReady();
@@ -62,8 +64,12 @@ export function GetReadyVehicleList({
   };
 
   const handleEditVehicle = (vehicleId: string) => {
-    // TODO: Open edit modal - will be connected to parent component's modal
-    console.log('Edit vehicle:', vehicleId);
+    // Call parent component's edit handler if provided
+    if (onEditVehicle) {
+      onEditVehicle(vehicleId);
+    } else {
+      console.log('Edit vehicle:', vehicleId);
+    }
   };
 
   const handleMoveToStep = (vehicleId: string, currentStepId: string, newStepId: string) => {
@@ -206,14 +212,14 @@ export function GetReadyVehicleList({
           </h3>
           <div className="flex items-center gap-2">
             <Button
-              variant={viewMode === 'table' ? 'default' : 'outline'}
+              variant="outline"
               size="sm"
               onClick={() => setViewMode('table')}
             >
               Table
             </Button>
             <Button
-              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              variant="default"
               size="sm"
               onClick={() => setViewMode('grid')}
             >
@@ -379,7 +385,7 @@ export function GetReadyVehicleList({
                 <div className="flex items-center gap-1.5 pt-1.5 border-t">
                   <User className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                   <span className="text-xs text-muted-foreground truncate flex-1">{vehicle.assigned_to}</span>
-                  <Badge size="sm" className={cn("text-xs", getPriorityColor(vehicle.priority))}>
+                  <Badge className={cn("text-xs", getPriorityColor(vehicle.priority))}>
                     {vehicle.priority}
                   </Badge>
                 </div>
@@ -402,14 +408,14 @@ export function GetReadyVehicleList({
         </h3>
         <div className="flex items-center gap-2">
           <Button
-            variant={viewMode === 'table' ? 'default' : 'outline'}
+            variant="default"
             size="sm"
             onClick={() => setViewMode('table')}
           >
             Table
           </Button>
           <Button
-            variant={viewMode === 'grid' ? 'default' : 'outline'}
+            variant="outline"
             size="sm"
             onClick={() => setViewMode('grid')}
           >
@@ -621,7 +627,7 @@ export function GetReadyVehicleList({
 
                 {/* Priority */}
                 <TableCell className="w-[100px]">
-                  <Badge size="sm" className={getPriorityColor(vehicle.priority)}>
+                  <Badge className={getPriorityColor(vehicle.priority)}>
                     {vehicle.priority}
                   </Badge>
                 </TableCell>

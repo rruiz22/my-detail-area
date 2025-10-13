@@ -12,7 +12,10 @@ import {
   Edit2,
   Hash,
   Building2,
-  Wrench
+  Wrench,
+  Settings,
+  Droplets,
+  Car
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -39,6 +42,8 @@ interface Order {
   customer_phone?: string;
   dueDate?: string;
   due_date?: string;
+  completedAt?: string | Date;
+  completed_at?: string | Date;
   dealershipName?: string;
   services?: any[];
 }
@@ -79,7 +84,13 @@ export function UnifiedOrderHeaderV2({
   const customerName = order.customerName || order.customer_name || '';
   const customerEmail = order.customerEmail || order.customer_email;
   const customerPhone = order.customerPhone || order.customer_phone;
-  const dueDate = order.dueDate || order.due_date;
+
+  // For recon and carwash orders, use completed_at instead of due_date
+  const usesCompleteDate = orderType === 'recon' || orderType === 'carwash';
+  const displayDate = usesCompleteDate
+    ? (order.completedAt || order.completed_at)
+    : (order.dueDate || order.due_date);
+  const dateLabel = usesCompleteDate ? 'Complete Date' : 'Due Date';
 
   // Get enriched services from global cache
   const enrichedServices = useMemo(() => {
@@ -95,7 +106,24 @@ export function UnifiedOrderHeaderV2({
   }, [order.services, getServices]);
 
   const servicesCount = enrichedServices.length;
-  const firstService = enrichedServices.length > 0 ? enrichedServices[0].name : null;
+
+  // Helper to get service icon
+  const getServiceIcon = (serviceName: string) => {
+    const name = serviceName.toLowerCase();
+    if (name.includes('oil') || name.includes('change')) {
+      return <Droplets className="h-3.5 w-3.5 text-blue-600" />;
+    }
+    if (name.includes('brake') || name.includes('pad')) {
+      return <Settings className="h-3.5 w-3.5 text-red-600" />;
+    }
+    if (name.includes('inspection') || name.includes('check')) {
+      return <Settings className="h-3.5 w-3.5 text-green-600" />;
+    }
+    if (name.includes('wash') || name.includes('clean') || name.includes('detail')) {
+      return <Car className="h-3.5 w-3.5 text-blue-500" />;
+    }
+    return <Wrench className="h-3.5 w-3.5 text-gray-600" />;
+  };
 
   return (
     <div className="bg-background pb-4">
@@ -131,24 +159,21 @@ export function UnifiedOrderHeaderV2({
 
         {/* Cell 3: Services */}
         <Card className="border-border shadow-md hover:shadow-lg transition-shadow">
-          <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[120px]">
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-2 tracking-wide">Services</div>
-            <div className="flex items-center gap-1.5 mb-1">
-              <Wrench className="w-4 h-4 text-blue-600" />
-              <span className="font-bold text-2xl text-foreground">{servicesCount}</span>
+          <CardContent className="p-6 flex flex-col items-center justify-start min-h-[120px]">
+            <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-3 tracking-wide">
+              Services ({servicesCount})
             </div>
-            {firstService && (
-              <div className="text-sm text-foreground font-semibold truncate max-w-full">
-                {firstService}
-              </div>
-            )}
-            {servicesCount > 1 && (
-              <div className="text-[10px] text-muted-foreground/70 mt-1">
-                +{servicesCount - 1} more
-              </div>
-            )}
-            {servicesCount === 0 && (
+            {servicesCount === 0 ? (
               <div className="text-xs text-muted-foreground font-medium">No services</div>
+            ) : (
+              <div className="flex flex-col gap-2 w-full">
+                {enrichedServices.map((service) => (
+                  <Badge key={service.id} variant="outline" className="text-sm px-3 py-1.5 justify-center font-semibold flex items-center gap-2">
+                    {getServiceIcon(service.name)}
+                    {service.name}
+                  </Badge>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
@@ -193,14 +218,14 @@ export function UnifiedOrderHeaderV2({
           </CardContent>
         </Card>
 
-        {/* Cell 5: Due Date */}
+        {/* Cell 5: Date (Due Date or Complete Date for Recon) */}
         <Card className="border-border shadow-md hover:shadow-lg transition-shadow">
           <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[120px]">
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-2 tracking-wide">Due Date</div>
-            {dueDate ? (
+            <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-2 tracking-wide">{dateLabel}</div>
+            {displayDate ? (
               <>
                 <div className="font-bold text-base text-foreground">
-                  {new Date(dueDate).toLocaleDateString('en-US', {
+                  {new Date(displayDate).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
@@ -209,7 +234,7 @@ export function UnifiedOrderHeaderV2({
                 <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                   <Calendar className="w-4 h-4" />
                   <span className="font-medium">
-                    {new Date(dueDate).toLocaleTimeString('en-US', {
+                    {new Date(displayDate).toLocaleTimeString('en-US', {
                       hour: 'numeric',
                       minute: '2-digit',
                       hour12: true

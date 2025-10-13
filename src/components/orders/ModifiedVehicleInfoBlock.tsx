@@ -128,26 +128,7 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
           })}
         </div>
 
-        {/* VIN Decode Status */}
-        <div className="pt-3 border-t">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">{t('vehicle_info.vin_status')}</span>
-            </div>
-            <Badge
-              variant={decodeStatus.status === 'success' ? 'default' : 'outline'}
-              className="text-xs"
-            >
-              {decodeStatus.text}
-            </Badge>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            {decodeStatus.desc}
-          </p>
-        </div>
-
-        {/* Vehicle Image Display - Replaces Display Preview */}
+        {/* Vehicle Image Display */}
         <div className="pt-3 border-t">
           <div className="flex items-center gap-2 mb-2">
             <Image className="h-4 w-4 text-muted-foreground" />

@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { ImagePreviewModal } from './ImagePreviewModal';
+import { useAttachments } from '@/hooks/useAttachments';
 
 interface Attachment {
   id: string;
@@ -35,6 +37,7 @@ interface Attachment {
 
 interface AttachmentsListProps {
   orderId: string;
+  commentId?: string; // Optional: filter by specific comment
   context?: string;
   className?: string;
   onAttachmentChange?: () => void;
@@ -42,14 +45,17 @@ interface AttachmentsListProps {
 
 export function AttachmentsList({
   orderId,
+  commentId,
   context = 'comment',
   className,
   onAttachmentChange
 }: AttachmentsListProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { deleteAttachment } = useAttachments(orderId);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [loading, setLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState<{ url: string; name: string } | null>(null);
 
   // Fetch attachments
   const fetchAttachments = async () => {
@@ -59,12 +65,13 @@ export function AttachmentsList({
     try {
       console.log('📎 Fetching attachments for order:', orderId);
 
-      // Get attachments data filtered by context
+      // Get attachments data filtered by comment_id and/or context
       let query = supabase
         .from('order_attachments')
         .select(`
           id,
           order_id,
+          comment_id,
           file_name,
           file_path,
           file_size,
@@ -76,6 +83,11 @@ export function AttachmentsList({
           created_at
         `)
         .eq('order_id', orderId);
+
+      // Filter by comment_id if specified (most specific filter)
+      if (commentId) {
+        query = query.eq('comment_id', commentId);
+      }
 
       // Filter by context if specified
       if (context && context !== 'all') {
@@ -171,6 +183,53 @@ export function AttachmentsList({
     }
   };
 
+  // Preview attachment (for images) - using signed URL
+  const previewAttachment = async (attachment: Attachment) => {
+    try {
+      console.log('👁️ Previewing attachment:', attachment.fileName);
+
+      // Use signed URL for secure access (valid for 1 hour)
+      const { data, error } = await supabase.storage
+        .from('order-attachments')
+        .createSignedUrl(attachment.filePath, 3600);
+
+      if (error) {
+        console.error('❌ Preview error:', error);
+        toast.error('Failed to load image');
+        return;
+      }
+
+      if (!data.signedUrl) {
+        console.error('❌ No signed URL returned');
+        toast.error('Failed to generate image URL');
+        return;
+      }
+
+      console.log('✅ Signed URL created for preview');
+      setPreviewImage({ url: data.signedUrl, name: attachment.fileName });
+
+    } catch (error) {
+      console.error('❌ Preview error:', error);
+      toast.error('Failed to load image');
+    }
+  };
+
+  // Handle delete with confirmation
+  const handleDelete = async (attachment: Attachment) => {
+    if (!window.confirm(t('attachments.confirm_delete', 'Are you sure you want to delete this file?'))) {
+      return;
+    }
+
+    const success = await deleteAttachment(attachment.id, attachment.filePath);
+    if (success) {
+      // Real-time will auto-refresh, but we can optimistically update
+      setAttachments(prev => prev.filter(a => a.id !== attachment.id));
+      if (onAttachmentChange) {
+        onAttachmentChange();
+      }
+    }
+  };
+
   // Get file type icon
   const getFileIcon = (mimeType: string, size: number = 16) => {
     const iconProps = { className: `h-${size/4} w-${size/4}` };
@@ -219,6 +278,9 @@ export function AttachmentsList({
   useEffect(() => {
     fetchAttachments();
 
+    // Debounced refresh to avoid spam
+    let refreshTimeout: NodeJS.Timeout | null = null;
+
     // Set up real-time subscription for attachments
     const subscription = supabase
       .channel(`attachments-${orderId}`)
@@ -229,15 +291,30 @@ export function AttachmentsList({
         filter: `order_id=eq.${orderId}`
       }, (payload) => {
         console.log('📡 Real-time attachment update:', payload.eventType);
-        // Refresh attachments when changes occur
-        fetchAttachments();
+
+        // Debounce refresh to avoid spam (wait 300ms)
+        if (refreshTimeout) clearTimeout(refreshTimeout);
+        refreshTimeout = setTimeout(() => {
+          fetchAttachments();
+        }, 300);
       })
       .subscribe();
 
+    // Listen for custom attachment upload events for immediate refresh
+    const handleAttachmentUploaded = ((e: CustomEvent) => {
+      console.log('📢 Custom event: Attachment uploaded', e.detail);
+      // Immediate refresh without debounce
+      fetchAttachments();
+    }) as EventListener;
+
+    window.addEventListener('attachmentUploaded', handleAttachmentUploaded);
+
     return () => {
+      if (refreshTimeout) clearTimeout(refreshTimeout);
       subscription.unsubscribe();
+      window.removeEventListener('attachmentUploaded', handleAttachmentUploaded);
     };
-  }, [orderId]);
+  }, [orderId, commentId, context]);
 
   if (loading) {
     return (
@@ -252,13 +329,14 @@ export function AttachmentsList({
   }
 
   return (
-    <div className={`space-y-2 mt-2 ${className}`}>
-      <div className="text-xs text-muted-foreground">
-        {t('attachments.count', '{{count}} attachments', { count: attachments.length })}
-      </div>
+    <>
+      <div className={`space-y-2 mt-2 ${className}`}>
+        <div className="text-xs text-muted-foreground">
+          {t('attachments.count', '{{count}} attachments', { count: attachments.length })}
+        </div>
 
-      <div className="space-y-1">
-        {attachments.map((attachment) => (
+        <div className="space-y-1">
+          {attachments.map((attachment) => (
           <div
             key={attachment.id}
             className="flex items-center gap-2 p-2 bg-muted/20 rounded border text-xs"
@@ -278,10 +356,7 @@ export function AttachmentsList({
                   variant="ghost"
                   size="sm"
                   className="h-6 w-6 p-0"
-                  onClick={() => {
-                    // TODO: Implement image preview modal
-                    toast.info('Image preview coming soon');
-                  }}
+                  onClick={() => previewAttachment(attachment)}
                   title={t('attachments.preview', 'Preview')}
                 >
                   <Eye className="h-3 w-3" />
@@ -302,11 +377,8 @@ export function AttachmentsList({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
-                  onClick={() => {
-                    // TODO: Implement delete functionality
-                    toast.info('Delete functionality coming soon');
-                  }}
+                  className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => handleDelete(attachment)}
                   title={t('attachments.delete', 'Delete')}
                 >
                   <Trash2 className="h-3 w-3" />
@@ -315,7 +387,31 @@ export function AttachmentsList({
             </div>
           </div>
         ))}
+        </div>
       </div>
-    </div>
+
+      {/* Image Preview Modal */}
+      <ImagePreviewModal
+        imageUrl={previewImage?.url || null}
+        imageName={previewImage?.name}
+        open={!!previewImage}
+        onClose={() => {
+          if (previewImage?.url) {
+            URL.revokeObjectURL(previewImage.url);
+          }
+          setPreviewImage(null);
+        }}
+        onDownload={() => {
+          if (previewImage) {
+            const link = document.createElement('a');
+            link.href = previewImage.url;
+            link.download = previewImage.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }}
+      />
+    </>
   );
 }

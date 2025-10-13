@@ -5,20 +5,23 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   Activity,
   AlertTriangle,
+  ArrowRight,
   Calendar,
   CheckCircle,
   Clock,
+  Code,
   Edit,
   FileText,
   MessageSquare,
   Paperclip,
   QrCode,
-  UserCheck,
-  Code
+  UserCheck
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { format } from 'date-fns';
+import { es, ptBR } from 'date-fns/locale';
 
 interface ActivityMetadata {
   timeDiff?: number;
@@ -81,6 +84,7 @@ interface ActivityItem {
   action_type: 'status_change' | 'comment' | 'note' | 'edit' | 'file_upload' | 'qr_regeneration' | 'assignment_change' | 'due_date_change';
   old_value?: string;
   new_value?: string;
+  field_name?: string;
   metadata?: ActivityMetadata | OrderComment | OrderAttachment | ActivityLog;
 }
 
@@ -99,7 +103,7 @@ interface DebugInfo {
 }
 
 export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,6 +117,45 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
     totalActivities: 0,
     errors: []
   });
+
+  // Get locale for date-fns
+  const getLocale = () => {
+    switch (i18n.language) {
+      case 'es': return es;
+      case 'pt-BR': return ptBR;
+      default: return undefined;
+    }
+  };
+
+  // Translate and format values (status, dates, etc) - from Dashboard
+  const translateValue = (value: string | null | undefined, fieldName: string | null): string => {
+    if (!value) return 'N/A';
+
+    // If it's a status field, format nicely
+    if (fieldName === 'status') {
+      // Convert snake_case to Title Case (in_progress → In Progress)
+      return value
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    }
+
+    // If it's a date/timestamp field, format it nicely
+    if (fieldName === 'due_date' || value.includes('T') || value.includes('+')) {
+      try {
+        const date = new Date(value);
+        if (!isNaN(date.getTime())) {
+          // Format as: Oct 7, 2:00 PM
+          return format(date, 'MMM d, h:mm a', { locale: getLocale() });
+        }
+      } catch (e) {
+        // If parsing fails, continue to return raw value
+      }
+    }
+
+    // For other fields, return as is
+    return value;
+  };
 
   const fetchRecentActivity = useCallback(async () => {
     try {
@@ -339,7 +382,18 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
           };
 
           const actionType = activityTypeMap[log.activity_type] || 'edit';
-          const action = log.description || log.activity_type.replace(/_/g, ' ');
+          let action = log.description || log.activity_type.replace(/_/g, ' ');
+
+          // Format values in action text (e.g., "from in_progress to pending" → "from In Progress to Pending")
+          if (log.old_value && log.new_value && log.field_name) {
+            const formattedOld = translateValue(log.old_value, log.field_name);
+            const formattedNew = translateValue(log.new_value, log.field_name);
+
+            // Replace raw values in description with formatted ones
+            action = action
+              .replace(log.old_value, formattedOld)
+              .replace(log.new_value, formattedNew);
+          }
 
           return {
             id: `activity-log-${log.id}`,
@@ -353,6 +407,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
             action_type: actionType,
             old_value: log.old_value || undefined,
             new_value: log.new_value || undefined,
+            field_name: log.field_name || undefined,
             metadata: log.metadata || undefined
           };
         });
@@ -613,8 +668,9 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
                 key={activity.id}
                 className={`p-3 rounded-lg border-l-2 ${getActivityColor(activity.action_type)}`}
               >
-                <div className="flex items-start gap-2">
-                  <div className="flex-shrink-0 mt-0.5">
+                <div className="flex items-start gap-3">
+                  {/* Icon with circle background - Dashboard style */}
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-1">
                     {getActivityIcon(activity.action_type)}
                   </div>
 
@@ -631,17 +687,23 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
                       {activity.description}
                     </p>
 
-                    {/* Show old/new values if available */}
+                    {/* Show old/new values if available - Dashboard style */}
                     {(activity.old_value || activity.new_value) && (
-                      <div className="text-xs bg-background/50 p-2 rounded mb-2">
+                      <div className="flex items-center gap-2 flex-wrap mb-2">
                         {activity.old_value && activity.new_value ? (
-                          <div className="flex items-center gap-2">
-                            <span className="text-red-500 line-through">{activity.old_value}</span>
-                            <span className="text-muted-foreground">→</span>
-                            <span className="text-emerald-600 font-medium">{activity.new_value}</span>
-                          </div>
+                          <>
+                            <Badge variant="outline" className="text-xs bg-red-50 text-red-700 border-red-200">
+                              {translateValue(activity.old_value, activity.field_name || null)}
+                            </Badge>
+                            <ArrowRight className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                            <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                              {translateValue(activity.new_value, activity.field_name || null)}
+                            </Badge>
+                          </>
                         ) : activity.new_value ? (
-                          <span className="text-emerald-600 font-medium">{activity.new_value}</span>
+                          <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                            {translateValue(activity.new_value, activity.field_name || null)}
+                          </Badge>
                         ) : null}
                       </div>
                     )}

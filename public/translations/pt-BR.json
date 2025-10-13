@@ -1,5 +1,7 @@
 {
   "common": {
+    "success": "Sucesso",
+    "error": "Erro",
     "access_denied": "Acesso Negado",
     "insufficient_permissions": "Você não tem permissão para acessar este recurso",
     "back_to_dashboard": "Voltar ao Painel",
@@ -67,6 +69,7 @@
     },
     "selected": "selecionados",
     "refresh": "Atualizar",
+    "data_refreshed": "Dados atualizados",
     "new_order": "Novo Pedido",
     "calendar": "Calendário",
     "unknown_error": "Erro desconhecido",
@@ -399,6 +402,8 @@
   },
   "pages": {
     "sales_orders": "Pedidos de Vendas",
+    "service_orders": "Pedidos de Serviço",
+    "recon_orders": "Pedidos de Recondicionamento",
     "user_management": {
       "title": "Gestão de Usuários e Grupos",
       "manage_description": "Gerenciar usuários, funções e atribuições de grupos",
@@ -520,10 +525,13 @@
     "regenerate_qr": "Regenerar QR",
     "scan_for_quick_access": "Escaneie para acesso rápido",
     "edit": "Editar Pedido",
-    "share_order": "Compartilhar Pedido",
+    "share_order": "Copiar Pedido",
     "delete_order": "Excluir Pedido",
     "print": "Imprimir",
     "create": "Criar Pedido",
+    "create_service_order": "Criar Pedido de Serviço",
+    "edit_service_order": "Editar Pedido de Serviço",
+    "clientInfo": "Info do Cliente",
     "polling_error": "Falha ao atualizar dados do pedido",
     "customer_information": "Informações do Cliente",
     "customerName": "Nome do Cliente",
@@ -558,7 +566,8 @@
     "validation": {
       "no_slots_available": "Não há horários disponíveis",
       "closed_sundays": "Fechado aos domingos",
-      "same_day_notice": "Agendamentos no mesmo dia requerem processamento imediato"
+      "same_day_notice": "Agendamentos no mesmo dia requerem processamento imediato",
+      "business_hours_only": "Apenas horário comercial"
     }
   },
   "services": {
@@ -907,6 +916,14 @@
     "decoded": "Decodificado",
     "auto_populated": "Preenchido automaticamente pelo VIN"
   },
+  "completion_date": {
+    "select_date": "Selecionar data"
+  },
+  "car_wash": {
+    "service_date": "Data do Serviço",
+    "select_service_date": "Selecionar data do serviço",
+    "service_date_help": "Data em que o serviço de lavagem foi concluído"
+  },
   "schedule_view": {
     "schedule_timeline": "Cronograma Programado",
     "order_progress": "Progresso do Pedido",
@@ -1182,6 +1199,90 @@
     "tag": "Etiqueta",
     "service_information": "Informações do Serviço"
   },
+  "recon": {
+    "new_recon_order": "Novo Pedido de Recondicionamento",
+    "error_fetching_orders": "Falha ao buscar pedidos de recondicionamento",
+    "error_creating_order": "Falha ao criar pedido de recondicionamento",
+    "order_created_successfully": "Pedido de recondicionamento criado com sucesso",
+    "error_updating_order": "Falha ao atualizar pedido de recondicionamento",
+    "order_updated_successfully": "Pedido de recondicionamento atualizado com sucesso",
+    "error_deleting_order": "Falha ao excluir pedido de recondicionamento",
+    "order_deleted_successfully": "Pedido de recondicionamento excluído com sucesso",
+    "create_recon_order": "Criar Pedido de Recondicionamento",
+    "edit_recon_order": "Editar Pedido de Recondicionamento",
+    "create_order": "Criar Pedido",
+    "stock_number": "Número de Estoque",
+    "enter_stock_number": "Digite o número de estoque",
+    "stock_number_required": "O número de estoque é obrigatório",
+    "vehicle_display": "Apresentação do Veículo",
+    "auto_generated_vehicle_info": "Auto-gerado a partir do VIN ou entrada manual",
+    "updates_automatically": "Atualiza automaticamente a partir de ano/marca/modelo",
+    "acquisition_cost": "Custo de Aquisição",
+    "recon_cost": "Custo de Recondicionamento",
+    "acquisition_source": "Fonte de Aquisição",
+    "condition_grade": "Grau de Condição",
+    "recon_category": "Categoria de Recondicionamento",
+    "enter_acquisition_cost": "Digite o custo de aquisição",
+    "enter_recon_cost": "Digite o custo estimado de recondicionamento",
+    "acquisition_sources": {
+      "trade_in": "Troca",
+      "auction": "Leilão",
+      "dealer_swap": "Troca entre Concessionárias",
+      "wholesale": "Atacado",
+      "lease_return": "Devolução de Arrendamento",
+      "other": "Outro"
+    },
+    "condition_grades": {
+      "excellent": "Excelente",
+      "good": "Bom",
+      "fair": "Regular",
+      "poor": "Ruim"
+    },
+    "recon_categories": {
+      "mechanical": "Mecânico",
+      "cosmetic": "Cosmético",
+      "full_recon": "Recondicionamento Completo",
+      "detail_only": "Apenas Detalhamento",
+      "inspection": "Apenas Inspeção"
+    },
+    "needs_approval": "Precisa de Aprovação",
+    "ready_for_sale": "Pronto para Venda",
+    "recon_instructions": "Instruções e notas de recondicionamento",
+    "recon_details": "Detalhes do Recondicionamento",
+    "dealer_required": "A concessionária é obrigatória",
+    "loading_dealerships": "Carregando concessionárias...",
+    "no_dealerships_with_recon_access": "Nenhuma concessionária com acesso ao recondicionamento",
+    "vehicle_info_required": "As informações do veículo são obrigatórias",
+    "invalid_cost_format": "Formato de custo inválido",
+    "dashboard": {
+      "title": "Painel de Recondicionamento",
+      "subtitle": "Visão geral e métricas de recondicionamento veicular",
+      "updated": "Atualizado",
+      "pending_vehicles": "Veículos Pendentes",
+      "awaiting_work": "Aguardando Trabalho",
+      "in_progress": "Em Andamento",
+      "being_reconditioned": "Sendo Recondicionados",
+      "needs_approval": "Requer Aprovação",
+      "manager_review": "Revisão do Gerente Necessária",
+      "high_priority": "Alta Prioridade",
+      "ready_for_sale": "Prontos para Venda",
+      "ready_to_sell": "Prontos para Vender",
+      "completed_vehicles": "Veículos Concluídos",
+      "condition_distribution": "Distribuição de Condição",
+      "acquisition_sources": "Fontes de Aquisição",
+      "unknown": "Desconhecido"
+    }
+  },
+  "recon_defaults": {
+    "default_customer": "Departamento de Recondicionamento",
+    "default_service": "Recondicionamento de Veículo",
+    "default_advisor": "Equipe de Recondicionamento",
+    "default_department": "Recondicionamento"
+  },
+  "recon_orders": {
+    "title": "Pedidos de Recondicionamento",
+    "description": "Gerenciar pedidos de recondicionamento de veículos"
+  },
   "dealer": {
     "view": {
       "back": "Voltar para Concessionárias",
@@ -1396,6 +1497,16 @@
     "confidence_label": "Confiança",
     "sticker_hint": "Aponte a câmera para o adesivo do VIN e mantenha firme.",
     "plate_hint": "Aponte a câmera para que a placa do VIN preencha o guia."
+  },
+  "sweetalert": {
+    "confirm_delete": "Excluir Pedido?",
+    "delete_warning": "Esta ação não pode ser desfeita. O pedido será excluído permanentemente.",
+    "confirm_status": "Mudar Status?",
+    "success": "Sucesso!",
+    "error": "Erro",
+    "info": "Informação",
+    "yes_delete": "Sim, excluir",
+    "cancel": "Cancelar"
   },
   "get_ready": {
     "tabs": {
@@ -1781,6 +1892,16 @@
       "delete_confirm_message": "Tem certeza de que deseja excluir {{stepName}}? Esta ação não pode ser desfeita.",
       "steps_reordered": "Etapas reordenadas com sucesso",
       "steps_reorder_failed": "Falha ao reordenar etapas"
+    },
+    "sweetalert": {
+      "confirm_delete": "Excluir Pedido?",
+      "delete_warning": "Esta ação não pode ser desfeita. O pedido será excluído permanentemente.",
+      "confirm_status": "Mudar Status?",
+      "success": "Sucesso!",
+      "error": "Erro",
+      "info": "Informação",
+      "yes_delete": "Sim, excluir",
+      "cancel": "Cancelar"
     },
     "templates": {
       "title": "Modelos de Trabalho",

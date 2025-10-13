@@ -61,7 +61,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     }
   }, [canAccessInternal, activeTab]);
 
-  // Handle adding comment/note with attachments
+  // Handle adding comment/note with attachments - ENTERPRISE ORDER
   const handleAddMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -69,21 +69,34 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     try {
       const currentAttachments = activeTab === 'comments' ? commentsAttachments : internalAttachments;
 
-      // 1. Upload selected files first (if any)
-      if (currentAttachments.selectedFiles.length > 0) {
-        console.log(`📎 Uploading ${currentAttachments.selectedFiles.length} files with ${activeTab}...`);
-        await currentAttachments.uploadSelectedFiles(
-          activeTab === 'comments' ? 'public_comment' : 'internal_note'
-        );
-      }
-
-      // 2. Add comment/note
-      await addComment(
+      // 1. Create comment FIRST to get comment.id
+      const commentId = await addComment(
         newMessage.trim(),
         activeTab === 'comments' ? 'public' : 'internal'
       );
 
-      // 3. Clear message and files
+      console.log(`✅ Comment created with ID: ${commentId}`);
+
+      // 2. Upload selected files LINKED to the comment (if any)
+      if (currentAttachments.selectedFiles.length > 0) {
+        console.log(`📎 Uploading ${currentAttachments.selectedFiles.length} files linked to comment ${commentId}...`);
+        await currentAttachments.uploadSelectedFiles(
+          activeTab === 'comments' ? 'public_comment' : 'internal_note',
+          commentId  // Link files to this comment
+        );
+
+        // Wait for real-time to propagate (500ms)
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Dispatch event to force immediate refresh
+        window.dispatchEvent(new CustomEvent('attachmentUploaded', {
+          detail: { orderId, commentId }
+        }));
+
+        console.log('📡 Attachment upload completed, event dispatched');
+      }
+
+      // 3. Clear message and files AFTER everything completes
       setNewMessage('');
       currentAttachments.clearFiles();
 
@@ -93,6 +106,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
           : t('order_comments.note_added', 'Internal note added successfully')
       );
     } catch (error) {
+      console.error('❌ Failed to add message with attachments:', error);
       toast.error(
         activeTab === 'comments'
           ? t('order_comments.comment_failed', 'Failed to add comment')
@@ -209,6 +223,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
               {/* Show attachments for this comment */}
               <AttachmentsList
                 orderId={orderId}
+                commentId={message.id}
                 context={type === 'internal' ? 'internal_note' : 'public_comment'}
               />
 
@@ -391,14 +406,17 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <FileSelector
-                    selectedFiles={commentsAttachments.selectedFiles}
-                    onFilesSelected={commentsAttachments.addFiles}
-                    onRemoveFile={commentsAttachments.removeFile}
-                    disabled={loading || commentsLoading}
-                  />
-                  <Button variant="outline" size="sm" className="text-xs">
+                <div className="flex items-start gap-2">
+                  <div className="flex-1">
+                    <FileSelector
+                      selectedFiles={commentsAttachments.selectedFiles}
+                      onFilesSelected={commentsAttachments.addFiles}
+                      onFilesSelectedWithValidation={commentsAttachments.addFilesWithValidation}
+                      onRemoveFile={commentsAttachments.removeFile}
+                      disabled={loading || commentsLoading}
+                    />
+                  </div>
+                  <Button variant="outline" size="sm" className="text-xs flex-shrink-0">
                     <AtSign className="h-3 w-3 mr-1" />
                     {t('order_comments.mention', 'Mention')}
                   </Button>
@@ -464,15 +482,18 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <FileSelector
-                      selectedFiles={internalAttachments.selectedFiles}
-                      onFilesSelected={internalAttachments.addFiles}
-                      onRemoveFile={internalAttachments.removeFile}
-                      disabled={loading || commentsLoading}
-                      className="border-amber-300"
-                    />
-                    <Button variant="outline" size="sm" className="text-xs border-amber-300">
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                      <FileSelector
+                        selectedFiles={internalAttachments.selectedFiles}
+                        onFilesSelected={internalAttachments.addFiles}
+                        onFilesSelectedWithValidation={internalAttachments.addFilesWithValidation}
+                        onRemoveFile={internalAttachments.removeFile}
+                        disabled={loading || commentsLoading}
+                        className="border-amber-300"
+                      />
+                    </div>
+                    <Button variant="outline" size="sm" className="text-xs border-amber-300 flex-shrink-0">
                       <AtSign className="h-3 w-3 mr-1" />
                       {t('order_comments.mention_team', 'Mention Team')}
                     </Button>

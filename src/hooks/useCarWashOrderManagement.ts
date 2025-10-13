@@ -32,27 +32,8 @@ interface CarWashOrderData {
   services?: CarWashServiceItem[];
   totalAmount?: number;
   notes?: string;
+  completedAt?: Date; // Service completion date
   dealerId: number | string;
-}
-
-// CarWash filters interface
-interface CarWashOrderFilters {
-  search: string;
-  status: string;
-  dealership: string;
-  dateRange: { from: Date | null; to: Date | null };
-}
-
-// CarWash tab counts
-interface CarWashTabCounts {
-  today: number;
-  week: number;
-  all: number;
-  pending: number;
-  in_process: number;
-  completed: number;
-  cancelled: number;
-  waiter: number;
 }
 
 // Unified CarWash Order type for components
@@ -69,6 +50,7 @@ export interface CarWashOrder {
   isWaiter?: boolean;
   createdAt: string;
   updatedAt: string;
+  completedAt?: string; // Service completion date
   totalAmount?: number;
   services?: CarWashServiceItem[];
   notes?: string;
@@ -98,6 +80,7 @@ const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
   isWaiter: supabaseOrder.priority === 'urgent',
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
+  completedAt: supabaseOrder.completed_at || undefined,
   totalAmount: supabaseOrder.total_amount || undefined,
   services: (supabaseOrder.services as CarWashServiceItem[]) || [],
   notes: supabaseOrder.notes || undefined,
@@ -109,133 +92,20 @@ const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
   assignedGroupName: undefined,
   createdByGroupName: undefined,
   assignedTo: 'Unassigned',
-  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
+  dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', {
+    hour: '2-digit',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   }) : undefined,
   dueDate: supabaseOrder.sla_deadline || supabaseOrder.due_date || undefined,
 });
 
-export const useCarWashOrderManagement = (activeTab: string) => {
+export const useCarWashOrderManagement = () => {
   const [orders, setOrders] = useState<CarWashOrder[]>([]);
-  const [tabCounts, setTabCounts] = useState<CarWashTabCounts>({
-    today: 0,
-    week: 0,
-    all: 0,
-    pending: 0,
-    in_progress: 0,
-    completed: 0,
-    cancelled: 0,
-    waiter: 0,
-  });
-  const [filters, setFilters] = useState<CarWashOrderFilters>({
-    search: '',
-    status: '',
-    dealership: '',
-    dateRange: { from: null, to: null },
-  });
   const [loading, setLoading] = useState(false);
   const { user, enhancedUser } = useAuth();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();
-
-  const calculateTabCounts = useMemo(() => (allOrders: CarWashOrder[]): CarWashTabCounts => {
-    const today = new Date();
-    const weekFromNow = new Date(today);
-    weekFromNow.setDate(weekFromNow.getDate() + 7);
-
-    return {
-      today: allOrders.filter(order => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate.toDateString() === today.toDateString();
-      }).length,
-      week: allOrders.filter(order => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= today && orderDate <= weekFromNow;
-      }).length,
-      all: allOrders.length,
-      pending: allOrders.filter(order => order.status === 'pending').length,
-      in_process: allOrders.filter(order => order.status === 'in_progress').length,
-      completed: allOrders.filter(order => order.status === 'completed').length,
-      cancelled: allOrders.filter(order => order.status === 'cancelled').length,
-      waiter: allOrders.filter(order => order.isWaiter).length,
-    };
-  }, []);
-
-  const filterOrders = useMemo(() => (allOrders: CarWashOrder[], tab: string, currentFilters: CarWashOrderFilters) => {
-    let filtered = [...allOrders];
-
-    // Apply tab-specific filtering
-    if (tab !== 'dashboard' && tab !== 'all') {
-      const today = new Date();
-      const weekFromNow = new Date(today);
-      weekFromNow.setDate(weekFromNow.getDate() + 7);
-
-      switch (tab) {
-        case 'today':
-          filtered = filtered.filter(order => {
-            const orderDate = new Date(order.createdAt);
-            return orderDate.toDateString() === today.toDateString();
-          });
-          break;
-        case 'week':
-          filtered = filtered.filter(order => {
-            const orderDate = new Date(order.createdAt);
-            return orderDate >= today && orderDate <= weekFromNow;
-          });
-          break;
-        case 'pending':
-          filtered = filtered.filter(order => order.status === 'pending');
-          break;
-        case 'in_process':
-          filtered = filtered.filter(order => order.status === 'in_progress');
-          break;
-        case 'completed':
-          filtered = filtered.filter(order => order.status === 'completed');
-          break;
-        case 'cancelled':
-          filtered = filtered.filter(order => order.status === 'cancelled');
-          break;
-        case 'waiter':
-          filtered = filtered.filter(order => order.isWaiter);
-          break;
-      }
-    }
-
-    // Apply global filters
-    if (currentFilters.search) {
-      const searchLower = currentFilters.search.toLowerCase();
-      filtered = filtered.filter(order =>
-        order.id?.toLowerCase().includes(searchLower) ||
-        order.vehicleVin?.toLowerCase().includes(searchLower) ||
-        order.stockNumber?.toLowerCase().includes(searchLower) ||
-        order.tag?.toLowerCase().includes(searchLower) ||
-        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
-      );
-    }
-
-    if (currentFilters.status) {
-      filtered = filtered.filter(order => order.status === currentFilters.status);
-    }
-
-    if (currentFilters.dealership) {
-      filtered = filtered.filter(order => order.dealerId.toString() === currentFilters.dealership);
-    }
-
-    if (currentFilters.dateRange?.from) {
-      const fromDate = new Date(currentFilters.dateRange.from);
-      filtered = filtered.filter(order => new Date(order.createdAt) >= fromDate);
-    }
-
-    if (currentFilters.dateRange?.to) {
-      const toDate = new Date(currentFilters.dateRange.to);
-      toDate.setHours(23, 59, 59, 999);
-      filtered = filtered.filter(order => new Date(order.createdAt) <= toDate);
-    }
-
-    return filtered;
-  }, []);
 
   const refreshData = useCallback(async () => {
     if (!user || !enhancedUser) return;
@@ -325,20 +195,13 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         return transformedOrder;
       });
 
-      const filtered = filterOrders(allOrders, activeTab, filters);
-
-      setOrders(filtered);
-      setTabCounts(calculateTabCounts(allOrders));
+      setOrders(allOrders);
     } catch (error) {
       console.error('Error in refreshData:', error);
     } finally {
       setLoading(false);
     }
-  }, [activeTab, filters, filterOrders, calculateTabCounts, user, enhancedUser]);
-
-  const updateFilters = useCallback((newFilters: Partial<CarWashOrderFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
-  }, []);
+  }, [user, enhancedUser]);
 
   const createOrder = useCallback(async (orderData: CarWashOrderData) => {
     if (!user) return;
@@ -373,6 +236,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         services: orderData.services || [],
         total_amount: orderData.totalAmount || 0,
         notes: orderData.notes,
+        completed_at: orderData.completedAt ? orderData.completedAt.toISOString() : null,
         dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
       };
 
@@ -440,6 +304,7 @@ export const useCarWashOrderManagement = (activeTab: string) => {
         services: updateDataRaw.services,
         total_amount: updateDataRaw.totalAmount,
         notes: updateDataRaw.notes,
+        completed_at: updateDataRaw.completedAt ? (updateDataRaw.completedAt instanceof Date ? updateDataRaw.completedAt.toISOString() : updateDataRaw.completedAt) : undefined,
       };
 
       const { data, error } = await supabase
@@ -533,10 +398,6 @@ export const useCarWashOrderManagement = (activeTab: string) => {
               prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
             );
           }
-          
-          // Recalculate tab counts
-          const allOrders = [...orders];
-          setTabCounts(calculateTabCounts(allOrders));
         }
       )
       .subscribe();
@@ -544,14 +405,11 @@ export const useCarWashOrderManagement = (activeTab: string) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, orders, calculateTabCounts]);
+  }, [user]);
 
   return {
     orders,
-    tabCounts,
-    filters,
     loading,
-    updateFilters,
     refreshData,
     createOrder,
     updateOrder,

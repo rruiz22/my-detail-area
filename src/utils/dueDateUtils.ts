@@ -81,16 +81,27 @@ export function calculateTimeStatus(dueDate: string | null, orderStatus?: string
   const diffMs = due.getTime() - now.getTime();
   const diffHours = diffMs / (1000 * 60 * 60);
 
-  // Format time remaining or overdue
+  // Format time remaining or overdue (user-friendly with days)
   const formatTime = (ms: number, isOverdue: boolean = false): string => {
     const totalMinutes = Math.abs(ms / (1000 * 60));
-    const hours = Math.floor(totalMinutes / 60);
+    const totalHours = Math.floor(totalMinutes / 60);
     const minutes = Math.floor(totalMinutes % 60);
-    
-    if (isOverdue) {
-      return hours > 0 ? `${hours}h ${minutes}m overdue` : `${minutes}m overdue`;
+    const days = Math.floor(totalHours / 24);
+    const hours = totalHours % 24;
+
+    let timeStr = '';
+
+    // Build time string
+    if (days > 0) {
+      timeStr = hours > 0 ? `${days}d ${hours}h` : `${days}d`;
+    } else if (hours > 0) {
+      timeStr = minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+    } else {
+      timeStr = `${minutes}m`;
     }
-    return hours > 0 ? `${hours}h ${minutes}m left` : `${minutes}m left`;
+
+    // Add context
+    return isOverdue ? `${timeStr} overdue` : `${timeStr} left`;
   };
 
   if (diffHours > 4) {
@@ -184,11 +195,27 @@ export function getAttentionRowClasses(attentionLevel: AttentionLevel): string {
  */
 export function formatCountdown(milliseconds: number): string {
   const totalMinutes = Math.abs(milliseconds / (1000 * 60));
-  const hours = Math.floor(totalMinutes / 60);
+  const totalHours = Math.floor(totalMinutes / 60);
   const minutes = Math.floor(totalMinutes % 60);
-  
-  if (hours > 0) {
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const days = Math.floor(totalHours / 24);
+  const hours = totalHours % 24;
+
+  // More than 1 day
+  if (days > 0) {
+    if (hours > 0) {
+      return `${days}d ${hours}h`;
+    }
+    return `${days}d`;
   }
+
+  // More than 1 hour
+  if (hours > 0) {
+    if (minutes > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${hours}h`;
+  }
+
+  // Less than 1 hour
   return `${minutes}m`;
 }

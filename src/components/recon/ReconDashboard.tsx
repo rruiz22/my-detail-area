@@ -1,17 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Car, 
-  DollarSign, 
-  TrendingUp, 
-  Clock, 
-  AlertTriangle, 
+import {
+  Car,
+  Clock,
+  AlertTriangle,
   CheckCircle,
-  BarChart3,
-  Target,
-  Calculator,
-  Timer
+  BarChart3
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { safeFormatDateOnly } from '@/utils/dateUtils';
@@ -24,14 +19,8 @@ interface ReconDashboardProps {
 }
 
 interface ReconMetrics {
-  totalRevenue: number;
-  totalCost: number;
-  averageProfit: number;
-  profitMargin: number;
   averageReconTime: number;
-  roiPercentage: number;
-  highMarginVehicles: number;
-  readyForSaleValue: number;
+  readyForSaleCount: number;
 }
 
 export function ReconDashboard({ orders, tabCounts, onCardClick }: ReconDashboardProps) {
@@ -41,19 +30,7 @@ export function ReconDashboard({ orders, tabCounts, onCardClick }: ReconDashboar
   const calculateMetrics = (): ReconMetrics => {
     const completedOrders = orders.filter(order => order.status === 'completed');
     const readyForSaleOrders = orders.filter(order => order.status === 'ready_for_sale');
-    
-    const totalRevenue = completedOrders.reduce((sum, order) => 
-      sum + (order.totalAmount || 0), 0);
-    
-    const totalCost = completedOrders.reduce((sum, order) => 
-      sum + (order.acquisitionCost || 0) + (order.reconCost || 0), 0);
-    
-    const averageProfit = completedOrders.length > 0 ? 
-      (totalRevenue - totalCost) / completedOrders.length : 0;
-    
-    const profitMargin = totalRevenue > 0 ? 
-      ((totalRevenue - totalCost) / totalRevenue) * 100 : 0;
-    
+
     const averageReconTime = completedOrders.length > 0 ?
       completedOrders.reduce((sum, order) => {
         if (order.completedAt && order.createdAt) {
@@ -62,28 +39,12 @@ export function ReconDashboard({ orders, tabCounts, onCardClick }: ReconDashboar
         }
         return sum;
       }, 0) / completedOrders.length : 0;
-    
-    const roiPercentage = totalCost > 0 ? 
-      ((totalRevenue - totalCost) / totalCost) * 100 : 0;
-    
-    const highMarginVehicles = completedOrders.filter(order => {
-      const profit = (order.totalAmount || 0) - (order.acquisitionCost || 0) - (order.reconCost || 0);
-      const margin = (order.totalAmount || 0) > 0 ? (profit / (order.totalAmount || 0)) * 100 : 0;
-      return margin > 20;
-    }).length;
-    
-    const readyForSaleValue = readyForSaleOrders.reduce((sum, order) => 
-      sum + (order.totalAmount || 0), 0);
+
+    const readyForSaleCount = readyForSaleOrders.length;
 
     return {
-      totalRevenue,
-      totalCost,
-      averageProfit,
-      profitMargin,
       averageReconTime,
-      roiPercentage,
-      highMarginVehicles,
-      readyForSaleValue
+      readyForSaleCount
     };
   };
 
@@ -131,8 +92,8 @@ export function ReconDashboard({ orders, tabCounts, onCardClick }: ReconDashboar
       icon: CheckCircle,
       color: 'text-success',
       bgColor: 'bg-success/10',
-      trend: `$${Math.round(metrics.readyForSaleValue).toLocaleString()}`,
-      subtitle: t('recon.dashboard.inventory_value'),
+      trend: t('recon.dashboard.ready_to_sell'),
+      subtitle: t('recon.dashboard.completed_vehicles'),
       urgent: 0
     }
   ];
@@ -205,75 +166,6 @@ export function ReconDashboard({ orders, tabCounts, onCardClick }: ReconDashboar
         })}
       </div>
 
-      {/* Financial Metrics Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <Card className="border-border shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
-              {t('recon.dashboard.profit_margin')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{metrics.profitMargin.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">{t('recon.dashboard.average_margin')}</p>
-            <div className="text-xs text-success mt-1">
-              ${Math.round(metrics.averageProfit).toLocaleString()} {t('recon.dashboard.avg_profit')}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              {t('recon.dashboard.roi')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{metrics.roiPercentage.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">{t('recon.dashboard.return_investment')}</p>
-            <div className="text-xs text-primary mt-1">
-              {metrics.highMarginVehicles} {t('recon.dashboard.high_margin_vehicles')}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Timer className="h-4 w-4" />
-              {t('recon.dashboard.cycle_time')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{metrics.averageReconTime.toFixed(1)}d</div>
-            <p className="text-xs text-muted-foreground">{t('recon.dashboard.average_completion')}</p>
-            <div className="text-xs text-warning mt-1">
-              {t('recon.dashboard.target')} 5-7d
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Target className="h-4 w-4" />
-              {t('recon.dashboard.inventory_value')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              ${Math.round(metrics.readyForSaleValue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">{t('recon.dashboard.ready_vehicles')}</p>
-            <div className="text-xs text-success mt-1">
-              {tabCounts.readyForSale || 0} {t('recon.dashboard.units_ready')}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Condition Grade Distribution */}
@@ -312,7 +204,7 @@ export function ReconDashboard({ orders, tabCounts, onCardClick }: ReconDashboar
         <Card className="border-border shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
+              <BarChart3 className="h-4 w-4" />
               {t('recon.dashboard.acquisition_sources')}
             </CardTitle>
           </CardHeader>

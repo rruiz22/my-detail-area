@@ -1,39 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw, Clock } from 'lucide-react';
+import { Plus, RefreshCw, Search, List, Kanban, Calendar as CalendarIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
 import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
 import { useTranslation } from 'react-i18next';
-import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
-import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import { useViewModePersistence } from '@/hooks/useTabPersistence';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
-import { Badge } from '@/components/ui/badge';
 
 export default function CarWash() {
   const { t } = useTranslation();
+
   // Persistent state
-  const [activeFilter, setActiveFilter] = useTabPersistence('car_wash');
   const [viewMode, setViewMode] = useViewModePersistence('car_wash');
-  const [searchTerm, setSearchTerm] = useSearchPersistence('car_wash');
-  
+
   // Non-persistent UI state
+  const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
 
   const {
     orders,
-    tabCounts,
-    filters,
     loading,
-    updateFilters,
     refreshData,
     createOrder,
     updateOrder,
     deleteOrder,
-  } = useCarWashOrderManagement(activeFilter);
+  } = useCarWashOrderManagement();
 
   // Real-time updates are handled by useCarWashOrderManagement hook
 
@@ -99,14 +96,7 @@ export default function CarWash() {
     }
   };
 
-  // Custom filter options for CarWash
-  const carWashTabCounts = {
-    ...tabCounts,
-    dashboard: tabCounts.all,
-    all: tabCounts.all,
-  };
-
-  // Filter orders based on search term and show waiter priority
+  // Filter orders based on search term
   const filteredOrders = orders.filter((order: any) => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
@@ -117,16 +107,7 @@ export default function CarWash() {
       order.tag?.toLowerCase().includes(searchLower) ||
       `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
     );
-  }).map((order: any) => ({
-    ...order,
-    // Add waiter badge to display
-    waiterBadge: order.isWaiter ? (
-      <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
-        <Clock className="w-3 h-3 mr-1" />
-        {t('car_wash_orders.waiter')}
-      </Badge>
-    ) : null
-  }));
+  });
 
   return (
     <>
@@ -135,14 +116,8 @@ export default function CarWash() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold">{t('pages.car_wash')}</h1>
-            {tabCounts.waiter > 0 && (
-              <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
-                <Clock className="w-3 h-3 mr-1" />
-                {tabCounts.waiter} {t('car_wash_orders.waiting')}
-              </Badge>
-            )}
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -160,16 +135,54 @@ export default function CarWash() {
           </div>
         </div>
 
-        {/* Quick Filter Bar - Car Wash specific filters */}
-        <QuickFilterBar
-          activeFilter={activeFilter}
-          tabCounts={carWashTabCounts}
-          onFilterChange={setActiveFilter}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-        />
+        {/* Search and View Mode Bar */}
+        <Card className="border-border shadow-sm">
+          <div className="p-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+              {/* Search */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder={t('layout.search_placeholder')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-background"
+                />
+              </div>
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-muted/50 rounded-lg p-1">
+                <Button
+                  size="sm"
+                  variant={viewMode === 'table' ? 'default' : 'ghost'}
+                  onClick={() => setViewMode('table')}
+                  className="h-8 px-2 sm:px-3"
+                >
+                  <List className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Table</span>
+                </Button>
+                <Button
+                  size="sm"
+                  variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                  onClick={() => setViewMode('kanban')}
+                  className="h-8 px-2 sm:px-3"
+                >
+                  <Kanban className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Kanban</span>
+                </Button>
+                <Button
+                  size="sm"
+                  variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                  onClick={() => setViewMode('calendar')}
+                  className="h-8 px-2 sm:px-3"
+                >
+                  <CalendarIcon className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{t('common.calendar')}</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
 
         {/* Main Content - Orders Table/Calendar */}
         <div className="space-y-6">
@@ -190,7 +203,7 @@ export default function CarWash() {
               onEdit={handleEditOrder}
               onDelete={handleDeleteOrder}
               onView={handleViewOrder}
-              tabType={activeFilter}
+              tabType="carwash"
             />
           )}
         </div>

@@ -15,6 +15,8 @@ import { Loader2, AlertCircle, Zap, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { CompletionDatePicker } from '@/components/ui/completion-date-picker';
+import { Separator } from '@/components/ui/separator';
 
 interface OrderFormData {
   // Order identification
@@ -49,6 +51,7 @@ interface OrderFormData {
   notes: string;
   internalNotes?: string;
   priority?: string;
+  completedAt?: Date; // Completion date for car wash
   dueDate?: Date;
   slaDeadline?: Date;
   scheduledDate?: Date;
@@ -89,6 +92,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     notes: '',
     internalNotes: '',
     priority: 'normal',
+    completedAt: undefined,
     dueDate: undefined,
     slaDeadline: undefined,
     scheduledDate: undefined,
@@ -141,6 +145,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           notes: order.notes || '',
           internalNotes: order.internalNotes || order.internal_notes || '',
           priority: order.priority || 'normal',
+          completedAt: order.completedAt || order.completed_at ? safeParseDate(order.completedAt || order.completed_at) || undefined : undefined,
           dueDate: order.dueDate ? safeParseDate(order.dueDate) || undefined : undefined,
           slaDeadline: order.slaDeadline ? safeParseDate(order.slaDeadline) || undefined : undefined,
           scheduledDate: order.scheduledDate ? safeParseDate(order.scheduledDate) || undefined : undefined,
@@ -172,6 +177,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           notes: '',
           internalNotes: '',
           priority: 'normal',
+          completedAt: undefined,
           dueDate: undefined,
           slaDeadline: undefined,
           scheduledDate: undefined,
@@ -291,7 +297,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     notes: formData.notes || null,
     internal_notes: formData.internalNotes || null,
     priority: formData.priority || 'normal',
-    due_date: formData.dueDate || null,
+    completed_at: formData.completedAt || null,
     sla_deadline: formData.slaDeadline || null,
     scheduled_date: formData.scheduledDate || null,
     scheduled_time: formData.scheduledTime || null,
@@ -423,6 +429,22 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                       className="border-input bg-background"
                       placeholder="LOT-A1"
                     />
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Service Date - Car Wash Specific */}
+                <div>
+                  <Label htmlFor="completionDate">{t('car_wash.service_date')}</Label>
+                  <CompletionDatePicker
+                    value={formData.completedAt}
+                    onChange={(date) => handleInputChange('completedAt', date)}
+                    placeholder={t('car_wash.select_service_date')}
+                    allowPastDates={true}
+                  />
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {t('car_wash.service_date_help')}
                   </div>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { Calendar, Clock, AlertCircle, BarChart3, List, Kanban, Filter, Search }
 import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { WeekNavigator } from '@/components/ui/WeekNavigator';
 
 interface FilterOption {
   id: string;
@@ -24,9 +25,11 @@ interface QuickFilterBarProps {
   onViewModeChange: (mode: 'kanban' | 'table' | 'calendar') => void;
   showFilters?: boolean;
   onToggleFilters?: () => void;
+  weekOffset?: number;
+  onWeekChange?: (offset: number) => void;
 }
 
-export function QuickFilterBar({ 
+export function QuickFilterBar({
   activeFilter,
   tabCounts,
   onFilterChange,
@@ -35,7 +38,9 @@ export function QuickFilterBar({
   viewMode,
   onViewModeChange,
   showFilters = false,
-  onToggleFilters
+  onToggleFilters,
+  weekOffset = 0,
+  onWeekChange
 }: QuickFilterBarProps) {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
@@ -58,11 +63,12 @@ export function QuickFilterBar({
     }
   }, [isMobile, viewMode, onViewModeChange]);
 
-  const filterOptions: FilterOption[] = [
+  // All possible filter options
+  const allFilterOptions: FilterOption[] = [
     {
       id: 'dashboard',
       label: 'Overview',
-      count: 0, // Remove count badge
+      count: 0,
       icon: BarChart3,
       color: 'bg-primary/10 text-primary border-primary/20'
     },
@@ -104,11 +110,19 @@ export function QuickFilterBar({
     {
       id: 'all',
       label: 'All Orders',
-      count: 0, // Remove count badge
+      count: 0,
       icon: List,
       color: 'bg-muted/50 text-foreground border-border'
     }
   ];
+
+  // Filter to only show options that exist in tabCounts (or are always visible like dashboard/all)
+  const filterOptions = allFilterOptions.filter(option => {
+    // Always show dashboard and all
+    if (option.id === 'dashboard' || option.id === 'all') return true;
+    // Show only if the field exists in tabCounts (not undefined)
+    return tabCounts[option.id] !== undefined;
+  });
 
   return (
     <Card className="border-border shadow-sm">
@@ -222,19 +236,29 @@ export function QuickFilterBar({
 
         {/* Active Filter Indicator */}
         {activeFilter !== 'dashboard' && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>Active filter:</span>
-            <Badge variant="secondary" className="bg-primary/10 text-primary">
-              {filterOptions.find(f => f.id === activeFilter)?.label}
-            </Badge>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onFilterChange('dashboard')}
-              className="h-auto p-1 text-xs text-muted-foreground hover:text-foreground"
-            >
-              Clear
-            </Button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>Active filter:</span>
+              <Badge variant="secondary" className="bg-primary/10 text-primary">
+                {filterOptions.find(f => f.id === activeFilter)?.label}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onFilterChange('dashboard')}
+                className="h-auto p-1 text-xs text-muted-foreground hover:text-foreground"
+              >
+                Clear
+              </Button>
+            </div>
+
+            {/* Week Navigator - Only show when Week filter is active */}
+            {activeFilter === 'week' && onWeekChange && (
+              <WeekNavigator
+                weekOffset={weekOffset}
+                onWeekChange={onWeekChange}
+              />
+            )}
           </div>
         )}
       </div>

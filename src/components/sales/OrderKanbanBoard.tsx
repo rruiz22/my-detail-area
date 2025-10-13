@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { 
-  MoreHorizontal, 
-  Calendar, 
-  Clock, 
+import {
+  MoreHorizontal,
+  Calendar,
+  Clock,
   AlertTriangle,
   Edit,
   Eye,
@@ -25,6 +25,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { getStatusRowColor, getStatusBorder } from '@/utils/statusUtils';
 import { ServicesDisplay } from '@/components/orders/ServicesDisplay';
+import { DueDateIndicator } from '@/components/ui/due-date-indicator';
 
 interface OrderKanbanBoardProps {
   orders: Order[];
@@ -314,30 +315,32 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                           {/* Services Badge */}
                           <ServicesDisplay
                             services={order.services}
-                            totalAmount={order.totalAmount || order.total_amount}
                             dealerId={order.dealer_id}
                             variant="kanban"
+                            showPrices={false}
                             className="mt-2"
                           />
 
                           {/* Vehicle Info */}
                           {order.vehicleInfo && (
-                            <div className="text-xs text-muted-foreground truncate" title={order.vehicleInfo}>
+                            <div className="text-sm font-bold text-foreground truncate mt-1" title={order.vehicleInfo}>
                               {order.vehicleInfo}
                             </div>
                           )}
                         </div>
 
-                        {/* Right Column: Stock & VIN */}
+                        {/* Right Column: Stock/Tag & VIN */}
                         <div className="space-y-1 text-right">
                           {order.stockNumber && (
                             <div className="text-xs font-medium text-foreground">
+                              <span className="text-muted-foreground/60 text-[10px]">Tag: </span>
                               {order.stockNumber}
                             </div>
                           )}
                           {order.vehicleVin && (
-                            <div className="text-xs text-muted-foreground font-mono">
-                              {order.vehicleVin.slice(-8)}
+                            <div className="text-xs font-mono">
+                              <span className="text-muted-foreground/60">L8V: </span>
+                              <span className="font-semibold text-foreground">{order.vehicleVin.slice(-8)}</span>
                             </div>
                           )}
                         </div>
@@ -346,13 +349,14 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
                       {/* Footer: Badges + Actions */}
                       <div className="flex items-center justify-between pt-1 border-t border-border">
                         <div className="flex items-center gap-1">
-                          {dueInfo && (
-                            <Badge
-                              variant={dueInfo.variant === 'warning' ? 'secondary' : dueInfo.variant}
-                              className={`text-xs px-1 py-0 h-4 ${dueInfo.variant === 'warning' ? 'bg-warning/20 text-warning border-warning' : ''}`}
-                            >
-                              {dueInfo.text}
-                            </Badge>
+                          {/* Use DueDateIndicator component same as table (hide for completed/cancelled) */}
+                          {order.status !== 'completed' && order.status !== 'cancelled' && (
+                            <DueDateIndicator
+                              dueDate={order.dueDate}
+                              orderStatus={order.status}
+                              orderType="service"
+                              compact={true}
+                            />
                           )}
                           {order.priority && order.priority !== 'normal' && (
                             <Badge

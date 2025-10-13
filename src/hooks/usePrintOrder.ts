@@ -28,6 +28,9 @@ interface OrderData {
   vehicle_vin?: string;
   stockNumber?: string;
   stock_number?: string;
+  po?: string;
+  ro?: string;
+  tag?: string;
   status: string;
   created_at?: string;
   due_date?: string;
@@ -163,6 +166,9 @@ export const usePrintOrder = () => {
   // Fetch complete order data for printing
   const fetchCompleteOrderData = useCallback(async (orderId: string) => {
     try {
+      // Get current user for print info
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+
       // Fetch order details
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
@@ -173,7 +179,7 @@ export const usePrintOrder = () => {
       if (orderError) throw orderError;
 
       // Fetch dealership info and user profiles in parallel
-      const [dealershipResult, userProfilesResult] = await Promise.all([
+      const [dealershipResult, userProfilesResult, currentUserProfile] = await Promise.all([
         supabase
           .from('dealerships')
           .select('id, name, address, phone, email, website')
@@ -181,7 +187,12 @@ export const usePrintOrder = () => {
           .single(),
         supabase
           .from('profiles')
-          .select('id, first_name, last_name, email')
+          .select('id, first_name, last_name, email'),
+        currentUser ? supabase
+          .from('profiles')
+          .select('first_name, last_name, email')
+          .eq('id', currentUser.id)
+          .single() : Promise.resolve({ data: null })
       ]);
 
       if (dealershipResult.error) throw dealershipResult.error;
@@ -215,6 +226,13 @@ export const usePrintOrder = () => {
         }
       }
 
+      // Get printed by user name
+      let printedBy = 'System';
+      if (currentUserProfile.data) {
+        const profile = currentUserProfile.data;
+        printedBy = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.email || 'Unknown User';
+      }
+
       // Add resolved assigned person to order data
       const enrichedOrder = {
         ...orderData,
@@ -224,7 +242,8 @@ export const usePrintOrder = () => {
       return {
         order: enrichedOrder,
         services,
-        dealership
+        dealership,
+        printedBy
       };
 
     } catch (error) {
@@ -234,7 +253,7 @@ export const usePrintOrder = () => {
   }, []);
 
   // Generate HTML content for printing
-  const generatePrintHTML = useCallback((order: OrderData, services: OrderService[], dealership: DealershipInfo) => {
+  const generatePrintHTML = useCallback((order: OrderData, services: OrderService[], dealership: DealershipInfo, printedBy: string = 'System') => {
     // Order number logic - matches UI display in UnifiedOrderHeaderV2
     const getOrderNumber = (order: OrderData): string => {
       // Priority: orderNumber (frontend) > order_number (DB) > fallback
@@ -253,6 +272,12 @@ export const usePrintOrder = () => {
     const vehicleVin = order.vehicleVin || order.vehicle_vin || '';
     const stockNumber = order.stockNumber || order.stock_number || '';
     const assignedPerson = getAssignedPerson(order);
+
+    // Service Order specific fields
+    const po = order.po || '';
+    const ro = order.ro || '';
+    const tag = order.tag || '';
+    const hasServiceFields = po || ro || tag;
 
     // Format dates for customer-friendly display
     const formatDate = (dateString: string | undefined) => {
@@ -303,14 +328,16 @@ export const usePrintOrder = () => {
           <div class="order-header">
             <h2 class="order-title">WORK ORDER</h2>
             <div class="order-number-plain">#${orderNumber}</div>
-            <div class="print-date">Printed: ${new Date().toLocaleString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true
-            })}</div>
+            <div class="print-date" style="white-space: nowrap;">
+              Printed: ${new Date().toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              })} by ${printedBy}
+            </div>
           </div>
         </header>
 
@@ -368,6 +395,28 @@ export const usePrintOrder = () => {
           </div>
         </section>
 
+        ${hasServiceFields ? `
+        <section style="margin-bottom: 15px;">
+          <h3 class="section-title" style="margin-bottom: 8px; padding: 4px 0;">Service Information</h3>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+            ${po ? `
+            <div class="info-row" style="padding: 4px 0;">
+              <span class="label">PO:</span>
+              <span class="value">${po}</span>
+            </div>` : ''}
+            ${ro ? `
+            <div class="info-row" style="padding: 4px 0;">
+              <span class="label">RO:</span>
+              <span class="value">${ro}</span>
+            </div>` : ''}
+            ${tag ? `
+            <div class="info-row" style="padding: 4px 0;">
+              <span class="label">TAG:</span>
+              <span class="value">${tag}</span>
+            </div>` : ''}
+          </div>
+        </section>` : ''}
+
         ${services.length > 0 ? `
         <section class="services-section">
           <h3 class="section-title">Services Requested</h3>
@@ -386,33 +435,31 @@ export const usePrintOrder = () => {
           <!-- Notes Section for Customer/Technician -->
           <div class="service-notes-block">
             <h4 class="notes-label">Additional Notes / Instructions:</h4>
+            ${order.notes ? `
+            <div class="notes-content" style="border: 1px solid #ccc; background: white; padding: 12px; border-radius: 4px; min-height: 60px;">
+              ${order.notes}
+            </div>
+            ` : `
             <div class="notes-write-space">
               <p>&nbsp;</p>
               <p>&nbsp;</p>
               <p>&nbsp;</p>
             </div>
-          </div>
-        </section>` : ''}
-
-        ${order.notes ? `
-        <section class="notes-section">
-          <div class="notes-block">
-            <h3 class="section-title">Customer Notes</h3>
-            <div class="notes-content">${order.notes}</div>
+            `}
           </div>
         </section>` : ''}
 
         ${order.short_link ? `
         <section class="qr-section">
           <h3 class="section-title">Order Tracking</h3>
-          <div class="qr-container" style="text-align: center; margin: 20px 0;">
+          <div class="qr-container" style="text-align: center; margin: 15px 0;">
             <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(order.short_link)}"
+              src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(order.short_link)}"
               alt="QR Code"
-              style="width: 120px; height: 120px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;"
+              style="width: 90px; height: 90px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;"
             />
-            <p class="qr-instructions" style="margin: 12px 0 4px 0; font-size: 12px; color: #666; font-weight: bold;">Scan for order status</p>
-            <p class="qr-url" style="margin: 0; font-size: 11px; color: #888; word-break: break-all;">${order.short_link}</p>
+            <p class="qr-instructions" style="margin: 8px 0 2px 0; font-size: 10px; color: #666; font-weight: bold;">Scan for order status</p>
+            <p class="qr-url" style="margin: 0; font-size: 9px; color: #888; word-break: break-all;">${order.short_link}</p>
           </div>
         </section>` : ''}
 
@@ -431,10 +478,10 @@ export const usePrintOrder = () => {
       toast.loading('Preparing order for printing...');
 
       // Fetch complete data
-      const { order: completeOrder, services, dealership } = await fetchCompleteOrderData(order.id);
+      const { order: completeOrder, services, dealership, printedBy } = await fetchCompleteOrderData(order.id);
 
       // Generate HTML content (QR code now uses public API)
-      const printContent = generatePrintHTML(completeOrder, services, dealership);
+      const printContent = generatePrintHTML(completeOrder, services, dealership, printedBy);
 
       // Create print window
       const printWindow = window.open('', '_blank', 'width=800,height=600');
@@ -489,10 +536,10 @@ export const usePrintOrder = () => {
   // Print preview (opens in new tab for review)
   const previewPrint = useCallback(async (order: OrderData) => {
     try {
-      const { order: completeOrder, services, dealership } = await fetchCompleteOrderData(order.id);
+      const { order: completeOrder, services, dealership, printedBy } = await fetchCompleteOrderData(order.id);
 
       // Generate HTML content (QR code now uses public API)
-      const printContent = generatePrintHTML(completeOrder, services, dealership);
+      const printContent = generatePrintHTML(completeOrder, services, dealership, printedBy);
 
       // Calculate centered position
       const width = 900;

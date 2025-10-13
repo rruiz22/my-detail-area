@@ -231,22 +231,30 @@ const App = () => (
           <ServicesProvider>
             <GlobalChatWrapper>
               <NotificationProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter
-                future={{
-                  v7_startTransition: false,
-                  v7_relativeSplatPath: true
-                }}
-              >
+                <BrowserRouter
+                  future={{
+                    v7_startTransition: false,
+                    v7_relativeSplatPath: true
+                  }}
+                >
                   <AppRoutes />
-              </BrowserRouter>
-             </NotificationProvider>
-             </GlobalChatWrapper>
+                </BrowserRouter>
+              </NotificationProvider>
+            </GlobalChatWrapper>
           </ServicesProvider>
         </PermissionProvider>
       </AuthProvider>
     </TooltipProvider>
+    {/* Sistema de toast antiguo reactivado para comparación */}
+    <Toaster />
+    {/* Sonner comentado para comparación
+    <Sonner
+      position="top-right"
+      expand={true}
+      closeButton
+      richColors
+    />
+    */}
   </QueryClientProvider>
 );
 

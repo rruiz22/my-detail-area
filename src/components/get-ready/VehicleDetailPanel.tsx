@@ -1,28 +1,29 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Wrench,
-  Image,
-  MessageSquare,
-  Users,
-  Clock,
-  DollarSign,
-  AlertTriangle,
-  Circle,
-  X,
-  GripHorizontal
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useVehicleDetail } from '@/hooks/useGetReadyVehicles';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
-import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
+import { useVehicleDetail } from '@/hooks/useGetReadyVehicles';
+import { useVehicleMedia } from '@/hooks/useVehicleMedia';
+import { useWorkItems } from '@/hooks/useVehicleWorkItems';
+import { supabase } from '@/integrations/supabase/client';
+import { cn } from '@/lib/utils';
+import {
+    AlertTriangle,
+    Circle,
+    Clock,
+    DollarSign,
+    GripHorizontal,
+    Image,
+    MessageSquare,
+    Users,
+    Wrench,
+    X
+} from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { VehicleMediaTab } from './tabs/VehicleMediaTab';
 import { VehicleVendorsTab } from './tabs/VehicleVendorsTab';
-import { useWorkItems } from '@/hooks/useVehicleWorkItems';
-import { useVehicleMedia } from '@/hooks/useVehicleMedia';
+import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
 
 interface VehicleDetailPanelProps {
   className?: string;
@@ -107,18 +108,66 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { data: mediaFiles = [] } = useVehicleMedia(selectedVehicleId || '');
 
   // Calculate counts for each tab
+  // State for additional counts
+  const [notesCount, setNotesCount] = React.useState(0);
+  const [timelineCount, setTimelineCount] = React.useState(0);
+
+  // Fetch notes count
+  React.useEffect(() => {
+    if (!selectedVehicleId) return;
+
+    const fetchNotesCount = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('vehicle_notes')
+          .select('*', { count: 'exact', head: true })
+          .eq('vehicle_id', selectedVehicleId);
+
+        if (!error && count !== null) {
+          setNotesCount(count);
+        }
+      } catch (err) {
+        console.error('Error fetching notes count:', err);
+      }
+    };
+
+    fetchNotesCount();
+  }, [selectedVehicleId]);
+
+  // Fetch timeline count
+  React.useEffect(() => {
+    if (!selectedVehicleId) return;
+
+    const fetchTimelineCount = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('vehicle_timeline_events')
+          .select('*', { count: 'exact', head: true })
+          .eq('vehicle_id', selectedVehicleId);
+
+        if (!error && count !== null) {
+          setTimelineCount(count);
+        }
+      } catch (err) {
+        console.error('Error fetching timeline count:', err);
+      }
+    };
+
+    fetchTimelineCount();
+  }, [selectedVehicleId]);
+
   const counts = React.useMemo(() => {
     const workItemsWithVendors = workItems.filter(wi => wi.assigned_vendor_id);
 
     return {
       workItems: workItems.length,
       media: mediaFiles.length,
-      notes: 0, // TODO: Implement notes count when notes feature is ready
+      notes: notesCount,
       vendors: workItemsWithVendors.length,
-      timeline: 0, // TODO: Implement timeline count when timeline feature is ready
-      appraisal: 0 // TODO: Implement appraisal count when appraisal feature is ready
+      timeline: timelineCount,
+      appraisal: 0 // Appraisal feature not yet implemented in database
     };
-  }, [workItems, mediaFiles]);
+  }, [workItems, mediaFiles, notesCount, timelineCount]);
 
   const handleClose = () => {
     setSelectedVehicleId(null);

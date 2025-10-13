@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { QrCode, ClipboardCheck } from 'lucide-react';
+import { QrCode } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ModernVinScanner } from '@/components/scanner/modern/ModernVinScanner';
 import { cn } from '@/lib/utils';
@@ -28,7 +28,6 @@ export function VinInputWithScanner({
 }: VinInputWithScannerProps) {
   const { t } = useTranslation();
   const [scannerOpen, setScannerOpen] = useState(false);
-  const [clipboardError, setClipboardError] = useState<string | null>(null);
 
   const triggerChange = (value: string) => {
     props.onChange?.({
@@ -55,30 +54,6 @@ export function VinInputWithScanner({
     triggerChange(normalized);
   };
 
-  const handlePasteFromClipboard = async () => {
-    setClipboardError(null);
-
-    if (!navigator?.clipboard?.readText) {
-      setClipboardError(t('vin_input.clipboard_unsupported', 'Clipboard access is not available in this browser.'));
-      return;
-    }
-
-    try {
-      const text = await navigator.clipboard.readText();
-      const normalized = normalizeVin(text);
-
-      if (normalized.length !== VIN_LENGTH) {
-        setClipboardError(t('vin_input.clipboard_no_vin', 'No complete VIN was found in your clipboard.'));
-        return;
-      }
-
-      propagateVin(normalized);
-    } catch (error) {
-      console.error('Clipboard error while pasting VIN:', error);
-      setClipboardError(t('vin_input.clipboard_error', 'Unable to read from clipboard.'));
-    }
-  };
-
   return (
     <>
       <div className="space-y-2">
@@ -86,38 +61,22 @@ export function VinInputWithScanner({
           <Input
             {...props}
             onChange={handleInputChange}
-            className={cn('pr-24 font-mono tracking-wide uppercase', className)}
+            className={cn('pr-10 font-mono tracking-wide uppercase', className)}
             placeholder={t('vin_input.placeholder', 'Enter 17-character VIN')}
             maxLength={VIN_LENGTH}
           />
           <div className="absolute inset-y-0 right-1 flex items-center gap-1">
             <Button
               type="button"
-              variant="outline"
-              size="sm"
-              className="h-8 px-2"
-              onClick={handlePasteFromClipboard}
-            >
-              <ClipboardCheck className="h-3.5 w-3.5" />
-              <span className="ml-1 hidden sm:inline">{t('vin_input.paste_button', 'Paste VIN')}</span>
-            </Button>
-            <Button
-              type="button"
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0"
-              onClick={() => {
-                setClipboardError(null);
-                setScannerOpen(true);
-              }}
+              onClick={() => setScannerOpen(true)}
             >
               <QrCode className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        {clipboardError && (
-          <p className="text-xs text-destructive">{clipboardError}</p>
-        )}
       </div>
 
       <ModernVinScanner
