@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 554,
-  "totalStrings": 5440,
-  "hardcodedStrings": 1254,
-  "translatedStrings": 4186,
+  "scannedFiles": 553,
+  "totalStrings": 5410,
+  "hardcodedStrings": 1253,
+  "translatedStrings": 4157,
   "issues": {
     "critical": [
       {
@@ -4101,206 +4101,221 @@
         "file": "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "hardcodedStrings": [
           {
-            "text": "Table",
-            "line": 210,
-            "context": "209: onClick={() => setViewMode('table')}\n210: >\n211: Table"
-          },
-          {
-            "text": "Grid",
-            "line": 217,
-            "context": "216: onClick={() => setViewMode('grid')}\n217: >\n218: Grid"
+            "text": "Promise",
+            "line": 42,
+            "context": "41: onEditVehicle?: (vehicleId: string) => void;\n42: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n43: }"
           },
           {
             "text": "Table",
-            "line": 415,
-            "context": "414: onClick={() => setViewMode('table')}\n415: >\n416: Table"
+            "line": 224,
+            "context": "223: onClick={() => setViewMode('table')}\n224: >\n225: Table"
           },
           {
             "text": "Grid",
-            "line": 422,
-            "context": "421: onClick={() => setViewMode('grid')}\n422: >\n423: Grid"
+            "line": 231,
+            "context": "230: onClick={() => setViewMode('grid')}\n231: >\n232: Grid"
+          },
+          {
+            "text": "Table",
+            "line": 437,
+            "context": "436: onClick={() => setViewMode('table')}\n437: >\n438: Table"
+          },
+          {
+            "text": "Grid",
+            "line": 444,
+            "context": "443: onClick={() => setViewMode('grid')}\n444: >\n445: Grid"
           },
           {
             "text": "Workflow",
-            "line": 440,
-            "context": "439: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n440: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n441: <TableHead className=\"w-[100px] text-center py-2 bg-background\">"
+            "line": 462,
+            "context": "461: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n462: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n463: <TableHead className=\"w-[100px] text-center py-2 bg-background\">"
           },
           {
             "text": "In Process",
-            "line": 444,
-            "context": "443: <TooltipTrigger asChild>\n444: <span className=\"cursor-help\">In Process</span>\n445: </TooltipTrigger>"
+            "line": 466,
+            "context": "465: <TooltipTrigger asChild>\n466: <span className=\"cursor-help\">In Process</span>\n467: </TooltipTrigger>"
           },
           {
             "text": "Time in Process",
-            "line": 447,
-            "context": "446: <TooltipContent>\n447: <p className=\"font-semibold\">Time in Process</p>\n448: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>"
+            "line": 469,
+            "context": "468: <TooltipContent>\n469: <p className=\"font-semibold\">Time in Process</p>\n470: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>"
           },
           {
             "text": "Total time from intake to current step",
-            "line": 448,
-            "context": "447: <p className=\"font-semibold\">Time in Process</p>\n448: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>\n449: </TooltipContent>"
+            "line": 470,
+            "context": "469: <p className=\"font-semibold\">Time in Process</p>\n470: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>\n471: </TooltipContent>"
           },
           {
             "text": "Step Time",
-            "line": 455,
-            "context": "454: <TooltipTrigger asChild>\n455: <span className=\"cursor-help\">Step Time</span>\n456: </TooltipTrigger>"
+            "line": 477,
+            "context": "476: <TooltipTrigger asChild>\n477: <span className=\"cursor-help\">Step Time</span>\n478: </TooltipTrigger>"
           },
           {
             "text": "Current Step Time",
-            "line": 458,
-            "context": "457: <TooltipContent>\n458: <p className=\"font-semibold\">Current Step Time</p>\n459: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>"
+            "line": 480,
+            "context": "479: <TooltipContent>\n480: <p className=\"font-semibold\">Current Step Time</p>\n481: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>"
           },
           {
             "text": "Time spent in current step",
-            "line": 459,
-            "context": "458: <p className=\"font-semibold\">Current Step Time</p>\n459: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>\n460: </TooltipContent>"
+            "line": 481,
+            "context": "480: <p className=\"font-semibold\">Current Step Time</p>\n481: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>\n482: </TooltipContent>"
           },
           {
             "text": "To Frontline",
-            "line": 466,
-            "context": "465: <TooltipTrigger asChild>\n466: <span className=\"cursor-help\">To Frontline</span>\n467: </TooltipTrigger>"
+            "line": 488,
+            "context": "487: <TooltipTrigger asChild>\n488: <span className=\"cursor-help\">To Frontline</span>\n489: </TooltipTrigger>"
           },
           {
             "text": "Days to Frontline",
-            "line": 469,
-            "context": "468: <TooltipContent>\n469: <p className=\"font-semibold\">Days to Frontline</p>\n470: <p className=\"text-xs text-muted-foreground\">Estimated days remaining until frontline ready</p>"
+            "line": 491,
+            "context": "490: <TooltipContent>\n491: <p className=\"font-semibold\">Days to Frontline</p>\n492: <p className=\"text-xs text-muted-foreground\">Estimated days remaining until frontline ready</p>"
           },
           {
             "text": "Estimated days remaining until frontline ready",
-            "line": 470,
-            "context": "469: <p className=\"font-semibold\">Days to Frontline</p>\n470: <p className=\"text-xs text-muted-foreground\">Estimated days remaining until frontline ready</p>\n471: </TooltipContent>"
+            "line": 492,
+            "context": "491: <p className=\"font-semibold\">Days to Frontline</p>\n492: <p className=\"text-xs text-muted-foreground\">Estimated days remaining until frontline ready</p>\n493: </TooltipContent>"
           },
           {
             "text": "Progress",
-            "line": 475,
-            "context": "474: <TableHead className=\"w-[100px] text-center py-2 bg-background\">{t('get_ready.table.priority')}</TableHead>\n475: <TableHead className=\"w-[120px] text-center py-2 bg-background\">Progress</TableHead>\n476: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>"
+            "line": 497,
+            "context": "496: <TableHead className=\"w-[100px] text-center py-2 bg-background\">{t('get_ready.table.priority')}</TableHead>\n497: <TableHead className=\"w-[120px] text-center py-2 bg-background\">Progress</TableHead>\n498: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>"
           },
           {
             "text": "Assigned",
-            "line": 476,
-            "context": "475: <TableHead className=\"w-[120px] text-center py-2 bg-background\">Progress</TableHead>\n476: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>\n477: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>"
+            "line": 498,
+            "context": "497: <TableHead className=\"w-[120px] text-center py-2 bg-background\">Progress</TableHead>\n498: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>\n499: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 477,
-            "context": "476: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>\n477: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n478: </TableRow>"
+            "line": 499,
+            "context": "498: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>\n499: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n500: </TableRow>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 191,
+            "line": 205,
             "exists": true
           },
           {
             "key": "get_ready.actions.actions",
-            "line": 268,
+            "line": 282,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 271,
+            "line": 285,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 275,
+            "line": 289,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.delete_vehicle",
+            "line": 297,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 285,
+            "line": 307,
             "exists": false
           },
           {
             "key": "get_ready.actions.change_step",
-            "line": 320,
+            "line": 342,
             "exists": true
           },
           {
             "key": "get_ready.actions.advance_step",
-            "line": 360,
+            "line": 382,
             "exists": true
           },
           {
             "key": "get_ready.table.click_to_view",
-            "line": 407,
+            "line": 429,
             "exists": true
           },
           {
             "key": "get_ready.table.image",
-            "line": 436,
+            "line": 458,
             "exists": true
           },
           {
             "key": "get_ready.table.stock",
-            "line": 437,
+            "line": 459,
             "exists": true
           },
           {
             "key": "get_ready.table.vehicle",
-            "line": 438,
+            "line": 460,
             "exists": true
           },
           {
             "key": "get_ready.table.step",
-            "line": 439,
+            "line": 461,
             "exists": true
           },
           {
             "key": "get_ready.table.priority",
-            "line": 474,
+            "line": 496,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.title",
-            "line": 487,
+            "line": 509,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 490,
+            "line": 512,
             "exists": true
           },
           {
             "key": "get_ready.actions.change_step",
-            "line": 555,
+            "line": 577,
             "exists": true
           },
           {
             "key": "get_ready.actions.advance_step",
-            "line": 595,
+            "line": 617,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 605,
+            "line": 627,
             "exists": false
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 657,
+            "line": 679,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 669,
+            "line": 691,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.delete_vehicle",
+            "line": 703,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 285,
-            "context": "284: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n285: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n286: </Badge>"
+            "line": 307,
+            "context": "306: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n307: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n308: </Badge>"
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 605,
-            "context": "604: <Badge variant=\"outline\" className={cn(\"text-xs h-5\", getWorkflowColor(vehicle.workflow_type))}>\n605: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n606: </Badge>"
+            "line": 627,
+            "context": "626: <Badge variant=\"outline\" className={cn(\"text-xs h-5\", getWorkflowColor(vehicle.workflow_type))}>\n627: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n628: </Badge>"
           }
         ],
-        "coverage": 54,
+        "coverage": 55,
         "severity": "high"
       },
       {
@@ -4308,164 +4323,174 @@
         "hardcodedStrings": [
           {
             "text": "Quick Actions",
-            "line": 148,
-            "context": "147: <CardTitle className=\"flex items-center gap-2\">\n148: <MoreHorizontal className=\"h-5 w-5\" />\n149: Quick Actions"
+            "line": 169,
+            "context": "168: <CardTitle className=\"flex items-center gap-2\">\n169: <MoreHorizontal className=\"h-5 w-5\" />\n170: Quick Actions"
           },
           {
             "text": "Active Alerts",
-            "line": 160,
-            "context": "159: <CardHeader>\n160: <CardTitle>Active Alerts</CardTitle>\n161: </CardHeader>"
+            "line": 181,
+            "context": "180: <CardHeader>\n181: <CardTitle>Active Alerts</CardTitle>\n182: </CardHeader>"
           },
           {
             "text": "All Types",
-            "line": 247,
-            "context": "246: <SelectContent>\n247: <SelectItem value=\"all\">All Types</SelectItem>\n248: <SelectItem value=\"standard\">{t('get_ready.workflow.standard')}</SelectItem>"
+            "line": 268,
+            "context": "267: <SelectContent>\n268: <SelectItem value=\"all\">All Types</SelectItem>\n269: <SelectItem value=\"standard\">{t('get_ready.workflow.standard')}</SelectItem>"
           },
           {
             "text": "All Priorities",
-            "line": 260,
-            "context": "259: <SelectContent>\n260: <SelectItem value=\"all\">All Priorities</SelectItem>\n261: <SelectItem value=\"low\">Low</SelectItem>"
+            "line": 281,
+            "context": "280: <SelectContent>\n281: <SelectItem value=\"all\">All Priorities</SelectItem>\n282: <SelectItem value=\"low\">Low</SelectItem>"
           },
           {
             "text": "Normal",
-            "line": 262,
-            "context": "261: <SelectItem value=\"low\">Low</SelectItem>\n262: <SelectItem value=\"normal\">Normal</SelectItem>\n263: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 283,
+            "context": "282: <SelectItem value=\"low\">Low</SelectItem>\n283: <SelectItem value=\"normal\">Normal</SelectItem>\n284: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 263,
-            "context": "262: <SelectItem value=\"normal\">Normal</SelectItem>\n263: <SelectItem value=\"high\">High</SelectItem>\n264: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 284,
+            "context": "283: <SelectItem value=\"normal\">Normal</SelectItem>\n284: <SelectItem value=\"high\">High</SelectItem>\n285: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 264,
-            "context": "263: <SelectItem value=\"high\">High</SelectItem>\n264: <SelectItem value=\"urgent\">Urgent</SelectItem>\n265: </SelectContent>"
+            "line": 285,
+            "context": "284: <SelectItem value=\"high\">High</SelectItem>\n285: <SelectItem value=\"urgent\">Urgent</SelectItem>\n286: </SelectContent>"
           },
           {
             "text": "Days in Step",
-            "line": 275,
-            "context": "274: <SelectContent>\n275: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n276: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>"
+            "line": 296,
+            "context": "295: <SelectContent>\n296: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n297: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>"
           },
           {
             "text": "Days to Finish",
-            "line": 276,
-            "context": "275: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n276: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>\n277: <SelectItem value=\"priority_score\">Priority Score</SelectItem>"
+            "line": 297,
+            "context": "296: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n297: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>\n298: <SelectItem value=\"priority_score\">Priority Score</SelectItem>"
           },
           {
             "text": "Priority Score",
-            "line": 277,
-            "context": "276: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>\n277: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n278: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+            "line": 298,
+            "context": "297: <SelectItem value=\"days_to_frontline\">Days to Finish</SelectItem>\n298: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n299: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
           },
           {
             "text": "SLA Status",
-            "line": 278,
-            "context": "277: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n278: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n279: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+            "line": 299,
+            "context": "298: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n299: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n300: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
           },
           {
             "text": "Stock Number",
-            "line": 279,
-            "context": "278: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n279: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n280: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+            "line": 300,
+            "context": "299: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n300: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n301: <SelectItem value=\"created_at\">Date Added</SelectItem>"
           },
           {
             "text": "Date Added",
-            "line": 280,
-            "context": "279: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n280: <SelectItem value=\"created_at\">Date Added</SelectItem>\n281: </SelectContent>"
+            "line": 301,
+            "context": "300: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n301: <SelectItem value=\"created_at\">Date Added</SelectItem>\n302: </SelectContent>"
           },
           {
             "text": "Clear Filters",
-            "line": 297,
-            "context": "296: {hasActiveFilters && (\n297: <Button variant=\"ghost\" size=\"sm\" className=\"h-9\" onClick={clearFilters}>\n298: Clear Filters"
+            "line": 318,
+            "context": "317: {hasActiveFilters && (\n318: <Button variant=\"ghost\" size=\"sm\" className=\"h-9\" onClick={clearFilters}>\n319: Clear Filters"
           },
           {
             "text": "Workflow",
-            "line": 244,
-            "context": "243: <SelectTrigger className=\"w-32 h-9\">\n244: <SelectValue placeholder=\"Workflow\" />\n245: </SelectTrigger>"
+            "line": 265,
+            "context": "264: <SelectTrigger className=\"w-32 h-9\">\n265: <SelectValue placeholder=\"Workflow\" />\n266: </SelectTrigger>"
           },
           {
             "text": "Priority",
-            "line": 257,
-            "context": "256: <SelectTrigger className=\"w-32 h-9\">\n257: <SelectValue placeholder=\"Priority\" />\n258: </SelectTrigger>"
+            "line": 278,
+            "context": "277: <SelectTrigger className=\"w-32 h-9\">\n278: <SelectValue placeholder=\"Priority\" />\n279: </SelectTrigger>"
           },
           {
             "text": "Clear Filters\n            ",
-            "line": 297,
-            "context": "296: {hasActiveFilters && (\n297: <Button variant=\"ghost\" size=\"sm\" className=\"h-9\" onClick={clearFilters}>\n298: Clear Filters"
+            "line": 318,
+            "context": "317: {hasActiveFilters && (\n318: <Button variant=\"ghost\" size=\"sm\" className=\"h-9\" onClick={clearFilters}>\n319: Clear Filters"
           }
         ],
         "translationCalls": [
           {
             "key": "common.data_refreshed",
-            "line": 69,
+            "line": 71,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 75,
+            "line": 77,
             "exists": true
           },
           {
             "key": "common.actions.export_success",
-            "line": 109,
+            "line": 111,
             "exists": true
           },
           {
             "key": "common.actions.export_failed",
-            "line": 115,
+            "line": 117,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_deleted",
+            "line": 129,
+            "exists": true
+          },
+          {
+            "key": "get_ready.delete_failed",
+            "line": 138,
             "exists": true
           },
           {
             "key": "common.actions.refresh",
-            "line": 195,
-            "exists": true
-          },
-          {
-            "key": "common.actions.exporting",
-            "line": 203,
-            "exists": true
-          },
-          {
-            "key": "common.actions.export",
-            "line": 203,
-            "exists": true
-          },
-          {
-            "key": "common.actions.export",
-            "line": 208,
-            "exists": true
-          },
-          {
-            "key": "common.actions.export_csv",
-            "line": 212,
-            "exists": true
-          },
-          {
-            "key": "common.actions.export_excel",
             "line": 216,
             "exists": true
           },
           {
+            "key": "common.actions.exporting",
+            "line": 224,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export",
+            "line": 224,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export",
+            "line": 229,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export_csv",
+            "line": 233,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export_excel",
+            "line": 237,
+            "exists": true
+          },
+          {
             "key": "get_ready.vehicle_form.add_vehicle",
-            "line": 226,
+            "line": 247,
             "exists": true
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 248,
+            "line": 269,
             "exists": true
           },
           {
             "key": "get_ready.workflow.express",
-            "line": 249,
+            "line": 270,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 250,
+            "line": 271,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 45,
+        "coverage": 48,
         "severity": "high"
       },
       {
@@ -8448,8 +8473,27 @@
         "hardcodedStrings": [
           {
             "text": "No image data provided",
-            "line": 108,
-            "context": "107: type: 'SCAN_ERROR',\n108: payload: { error: 'No image data provided', taskId }\n109: } as VinOcrResponse);"
+            "line": 127,
+            "context": "126: type: 'SCAN_ERROR',\n127: payload: { error: 'No image data provided', taskId }\n128: } as VinOcrResponse);"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\utils\\vinValidation.ts",
+        "hardcodedStrings": [
+          {
+            "text": "VIN is empty",
+            "line": 110,
+            "context": "109: confidence: 0,\n110: error: 'VIN is empty'\n111: };"
+          },
+          {
+            "text": "VIN contains invalid characters (I, O, or Q)",
+            "line": 128,
+            "context": "127: confidence: 0.1,\n128: error: 'VIN contains invalid characters (I, O, or Q)'\n129: };"
           }
         ],
         "translationCalls": [],
@@ -11907,45 +11951,55 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 17,
-            "context": "16: interface UseVinScannerReturn {\n17: scanVin: (imageFile: Blob | File | string, options?: VinScanOptions) => Promise<string[]>;\n18: loading: boolean;"
+            "line": 26,
+            "context": "25: interface UseVinScannerReturn {\n26: scanVin: (imageFile: Blob | File | string, options?: VinScanOptions) => Promise<string[]>;\n27: loading: boolean;"
           },
           {
             "text": ", err);\r\n      const errorMessage = err instanceof Error ? err.message : ",
-            "line": 134,
-            "context": "133: } catch (err) {\n134: console.error('VIN scanning error:', err);\n135: const errorMessage = err instanceof Error ? err.message : 'Unknown error';"
+            "line": 133,
+            "context": "132: } catch (err) {\n133: console.error('VIN scanning error:', err);\n134: const errorMessage = err instanceof Error ? err.message : 'Unknown error';"
           }
         ],
         "translationCalls": [
           {
             "key": "vin_scanner_errors.no_vin_found",
-            "line": 127,
+            "line": 126,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.status_invalid",
-            "line": 129,
+            "line": 128,
             "exists": true
           },
           {
+            "key": "vin_scanner_errors.timeout",
+            "line": 137,
+            "exists": false
+          },
+          {
             "key": "vin_scanner_errors.processing_error",
-            "line": 136,
+            "line": 139,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "vin_scanner_errors.no_vin_found",
-            "line": 127,
-            "context": "126: if (unique.length === 0) {\n127: setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));\n128: } else if (!unique.some(isValidVin)) {"
+            "line": 126,
+            "context": "125: if (unique.length === 0) {\n126: setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));\n127: } else if (!unique.some(isValidVin)) {"
+          },
+          {
+            "key": "vin_scanner_errors.timeout",
+            "line": 137,
+            "context": "136: if (errorMessage.includes('timeout')) {\n137: setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));\n138: } else {"
           },
           {
             "key": "vin_scanner_errors.processing_error",
-            "line": 136,
-            "context": "135: const errorMessage = err instanceof Error ? err.message : 'Unknown error';\n136: setError(t('vin_scanner_errors.processing_error', 'Unable to process VIN image.') + ': ' + errorMessage);\n137: return [];"
+            "line": 139,
+            "context": "138: } else {\n139: setError(t('vin_scanner_errors.processing_error', 'Unable to process VIN image.') + ': ' + errorMessage);\n140: }"
           }
         ],
-        "coverage": 60,
+        "coverage": 67,
         "severity": "low"
       },
       {
@@ -16840,142 +16894,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\ui\\vin-barcode-scanner.tsx",
-        "hardcodedStrings": [
-          {
-            "text": ", e)}\r\n                  />\r\n                  \r\n                  {cameraLoading && (\r\n                    <div className=",
-            "line": 283,
-            "context": "282: onPlaying={() => console.log('▶️ Video is playing')}\n283: onError={(e) => console.error('💥 Video element error:', e)}\n284: />"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "vinScanner.permissionDenied",
-            "line": 145,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.noCamera",
-            "line": 147,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.cameraError",
-            "line": 149,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.captureError",
-            "line": 189,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.title",
-            "line": 224,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.instruction",
-            "line": 227,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.detected",
-            "line": 244,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.initializingCamera",
-            "line": 290,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.capture",
-            "line": 310,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.instruction",
-            "line": 332,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.startCamera",
-            "line": 350,
-            "exists": false
-          },
-          {
-            "key": "vinScanner.uploadImage",
-            "line": 362,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "vinScanner.permissionDenied",
-            "line": 145,
-            "context": "144: if (err.name === 'NotAllowedError') {\n145: setErrorMessage(t('vinScanner.permissionDenied'));\n146: } else if (err.name === 'NotFoundError') {"
-          },
-          {
-            "key": "vinScanner.noCamera",
-            "line": 147,
-            "context": "146: } else if (err.name === 'NotFoundError') {\n147: setErrorMessage(t('vinScanner.noCamera'));\n148: } else {"
-          },
-          {
-            "key": "vinScanner.cameraError",
-            "line": 149,
-            "context": "148: } else {\n149: setErrorMessage(t('vinScanner.cameraError'));\n150: }"
-          },
-          {
-            "key": "vinScanner.captureError",
-            "line": 189,
-            "context": "188: console.error('📸 Capture failed:', err);\n189: setErrorMessage(t('vinScanner.captureError'));\n190: }"
-          },
-          {
-            "key": "vinScanner.title",
-            "line": 224,
-            "context": "223: <Camera className=\"h-5 w-5\" />\n224: {t('vinScanner.title')}\n225: </DialogTitle>"
-          },
-          {
-            "key": "vinScanner.instruction",
-            "line": 227,
-            "context": "226: <DialogDescription id=\"vin-scanner-desc\">\n227: {t('vinScanner.instruction')}\n228: </DialogDescription>"
-          },
-          {
-            "key": "vinScanner.detected",
-            "line": 244,
-            "context": "243: <p className=\"text-sm font-medium\">\n244: {t('vinScanner.detected')} ({detectedVins.length})\n245: </p>"
-          },
-          {
-            "key": "vinScanner.initializingCamera",
-            "line": 290,
-            "context": "289: <Loader2 className=\"h-8 w-8 animate-spin mx-auto mb-2\" />\n290: <p className=\"text-sm\">{t('vinScanner.initializingCamera')}</p>\n291: </div>"
-          },
-          {
-            "key": "vinScanner.capture",
-            "line": 310,
-            "context": "309: <Camera className=\"h-4 w-4 mr-2\" />\n310: {t('vinScanner.capture')}\n311: </>"
-          },
-          {
-            "key": "vinScanner.instruction",
-            "line": 332,
-            "context": "331: <p className=\"text-sm text-muted-foreground mb-6\">\n332: {cameraLoading ? 'Starting camera...' : t('vinScanner.instruction')}\n333: </p>"
-          },
-          {
-            "key": "vinScanner.startCamera",
-            "line": 350,
-            "context": "349: <Camera className=\"h-4 w-4 mr-2\" />\n350: {t('vinScanner.startCamera')}\n351: </>"
-          },
-          {
-            "key": "vinScanner.uploadImage",
-            "line": 362,
-            "context": "361: <Upload className=\"h-4 w-4 mr-2\" />\n362: {t('vinScanner.uploadImage')}\n363: </Button>"
-          }
-        ],
-        "coverage": 92,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\ui\\vehicle-search-input.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -18873,187 +18791,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\scanner\\specialized\\DealershipStickerScanner.tsx",
-        "hardcodedStrings": [
-          {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 106,
-            "context": "105: } catch (error) {\n106: console.error('Camera error:', error);\n107: toast.error(t('sticker_scanner.camera_error'));"
-          },
-          {
-            "text": ", error);\r\n      }\r\n    }, 2000); // Check every 2 seconds\r\n  }, [cameraActive, processing]);\r\n\r\n  const stopAutoDetection = useCallback(() => {\r\n    if (autoScanRef.current) {\r\n      clearInterval(autoScanRef.current);\r\n      autoScanRef.current = null;\r\n    }\r\n  }, []);\r\n\r\n  // Detect sticker in current video frame\r\n  const detectStickerInFrame = useCallback(async () => {\r\n    if (!videoRef.current || !canvasRef.current || !processorRef.current) return;\r\n\r\n    const video = videoRef.current;\r\n    const canvas = canvasRef.current;\r\n    const ctx = canvas.getContext(",
-            "line": 132,
-            "context": "131: } catch (error) {\n132: console.error('Auto-detection error:', error);\n133: }"
-          },
-          {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 249,
-            "context": "248: } catch (error) {\n249: console.error('Sticker scan error:', error);\n250: toast.error(t('sticker_scanner.scan_failed'));"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "sticker_scanner.camera_error",
-            "line": 107,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.vin_detected",
-            "line": 233,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.confidence",
-            "line": 234,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.scan_failed",
-            "line": 250,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.title",
-            "line": 297,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.subtitle",
-            "line": 299,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.sticker_mode",
-            "line": 307,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.processing_sticker",
-            "line": 320,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.auto_detect",
-            "line": 336,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.detect_sticker",
-            "line": 346,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.attempts",
-            "line": 351,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.templates",
-            "line": 354,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.barcode_area",
-            "line": 385,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.vin_area",
-            "line": 391,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.info_area",
-            "line": 397,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.sticker_detected",
-            "line": 419,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.camera_starting",
-            "line": 449,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.position_sticker",
-            "line": 451,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.start_camera",
-            "line": 456,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.template",
-            "line": 475,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.processing_time",
-            "line": 476,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.sticker_detected",
-            "line": 494,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.looking_for_sticker",
-            "line": 501,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.optimized_for_dealership",
-            "line": 508,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.processing",
-            "line": 523,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.scan_sticker",
-            "line": 528,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.ready_to_scan",
-            "line": 536,
-            "exists": true
-          },
-          {
-            "key": "common.close",
-            "line": 543,
-            "exists": false
-          },
-          {
-            "key": "sticker_scanner.supported_formats",
-            "line": 550,
-            "exists": true
-          },
-          {
-            "key": "sticker_scanner.generic",
-            "line": 550,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "common.close",
-            "line": 543,
-            "context": "542: <Button variant=\"outline\" onClick={onClose}>\n543: {t('common.close')}\n544: </Button>"
-          }
-        ],
-        "coverage": 91,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\scanner\\modern\\VinTargetingGuides.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -19065,7 +18802,7 @@
           {
             "key": "modern_vin_scanner.adjusting_focus",
             "line": 153,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -19073,11 +18810,6 @@
             "key": "modern_vin_scanner.perfect_alignment",
             "line": 152,
             "context": "151: {confidence > 0.8\n152: ? t('modern_vin_scanner.perfect_alignment')\n153: : t('modern_vin_scanner.adjusting_focus')"
-          },
-          {
-            "key": "modern_vin_scanner.adjusting_focus",
-            "line": 153,
-            "context": "152: ? t('modern_vin_scanner.perfect_alignment')\n153: : t('modern_vin_scanner.adjusting_focus')\n154: }"
           }
         ],
         "coverage": 100,
@@ -19165,7 +18897,7 @@
           {
             "key": "modern_vin_scanner.align_vin_sticker",
             "line": 44,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -19173,11 +18905,6 @@
             "key": "modern_vin_scanner.ready_to_capture",
             "line": 43,
             "context": "42: {confidence > 0.8\n43: ? t('modern_vin_scanner.ready_to_capture')\n44: : t('modern_vin_scanner.align_vin_sticker')"
-          },
-          {
-            "key": "modern_vin_scanner.align_vin_sticker",
-            "line": 44,
-            "context": "43: ? t('modern_vin_scanner.ready_to_capture')\n44: : t('modern_vin_scanner.align_vin_sticker')\n45: }"
           }
         ],
         "coverage": 100,
@@ -19188,130 +18915,170 @@
         "hardcodedStrings": [
           {
             "text": ", err);\r\n      setStatus(",
-            "line": 146,
-            "context": "145: } catch (err) {\n146: console.error('Camera access error:', err);\n147: setStatus('error');"
+            "line": 166,
+            "context": "165: } catch (err) {\n166: console.error('💥 Camera access error:', err);\n167: setStatus('error');"
           }
         ],
         "translationCalls": [
           {
             "key": "modern_vin_scanner.status_ready",
-            "line": 143,
+            "line": 160,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.camera_unavailable",
-            "line": 148,
+            "line": 168,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_no_vin",
-            "line": 163,
+            "line": 189,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_success",
-            "line": 172,
+            "line": 198,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_invalid",
-            "line": 176,
+            "line": 202,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_scanning",
-            "line": 184,
+            "line": 210,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_processing_upload",
-            "line": 185,
+            "line": 211,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.action_retry",
-            "line": 271,
+            "line": 297,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.dialog_title",
-            "line": 285,
-            "exists": true
-          },
-          {
-            "key": "modern_vin_scanner.sticker_hint",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "modern_vin_scanner.plate_hint",
-            "line": 290,
-            "exists": true
-          },
-          {
-            "key": "modern_vin_scanner.scan_camera",
-            "line": 302,
-            "exists": true
-          },
-          {
-            "key": "modern_vin_scanner.upload_image",
             "line": 313,
             "exists": true
           },
           {
-            "key": "common.back",
-            "line": 361,
-            "exists": false
+            "key": "modern_vin_scanner.sticker_hint",
+            "line": 317,
+            "exists": true
           },
           {
-            "key": "modern_vin_scanner.status_scanning",
-            "line": 373,
+            "key": "modern_vin_scanner.plate_hint",
+            "line": 318,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.scan_camera",
-            "line": 373,
+            "line": 333,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.upload_image",
+            "line": 346,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.tips_title",
+            "line": 354,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.tip_lighting",
+            "line": 356,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.tip_steady",
+            "line": 357,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.tip_focus",
+            "line": 358,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.tip_glare",
+            "line": 359,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.initializing_camera",
+            "line": 411,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.allow_camera_access",
+            "line": 412,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.scanning_vin",
+            "line": 437,
+            "exists": true
+          },
+          {
+            "key": "common.back",
+            "line": 455,
+            "exists": false
+          },
+          {
+            "key": "modern_vin_scanner.status_scanning",
+            "line": 472,
+            "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.capture",
+            "line": 477,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_success",
-            "line": 386,
+            "line": 492,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.confidence_label",
-            "line": 393,
+            "line": 499,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.action_use_result",
-            "line": 400,
+            "line": 506,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.action_retry",
-            "line": 403,
+            "line": 509,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.dialog_title",
-            "line": 425,
+            "line": 533,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.dialog_subtitle",
-            "line": 427,
+            "line": 536,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.back",
-            "line": 361,
-            "context": "360: <X className=\"w-4 h-4 mr-2\" />\n361: {t('common.back')}\n362: </Button>"
+            "line": 455,
+            "context": "454: <X className=\"w-4 h-4 mr-2\" />\n455: {t('common.back', 'Back')}\n456: </Button>"
           }
         ],
-        "coverage": 96,
+        "coverage": 97,
         "severity": "low"
       },
       {
@@ -42650,7 +42417,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "280 Component components need translation",
+      "description": "279 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -42663,8 +42430,8 @@
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
         "src\\components\\invitations\\InvitationManagement.tsx",
-        "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\components\\get-ready\\GetReadyVehicleList.tsx",
+        "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
         "src\\components\\users\\AdvancedUserFilters.tsx",
@@ -42746,7 +42513,6 @@
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\sidebar.tsx",
         "src\\components\\ui\\comments-tooltip.tsx",
-        "src\\components\\scanner\\specialized\\DealershipStickerScanner.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\productivity\\ProductivityTodos.tsx",
         "src\\components\\orders\\TeamCommunicationBlock.tsx",
@@ -42755,6 +42521,7 @@
         "src\\components\\get-ready\\WorkItemsGroupedTable.tsx",
         "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
         "src\\components\\debug\\TooltipTester.tsx",
+        "src\\utils\\vinValidation.ts",
         "src\\utils\\modalDataCache.ts",
         "src\\test\\integration\\orderProductivityIntegration.test.tsx",
         "src\\pages\\ReconOrders.tsx",
@@ -42795,7 +42562,6 @@
         "src\\contexts\\GlobalChatProvider.tsx",
         "src\\components\\StatusBadgeInteractive.tsx",
         "src\\components\\workflows\\VisualWorkflowBuilder.tsx",
-        "src\\components\\ui\\vin-barcode-scanner.tsx",
         "src\\components\\ui\\sheet.tsx",
         "src\\components\\ui\\duplicate-popover.tsx",
         "src\\components\\ui\\dialog.tsx",
@@ -42938,7 +42704,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2438 translation keys are referenced but missing",
+      "description": "2424 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "122 hours"
     }

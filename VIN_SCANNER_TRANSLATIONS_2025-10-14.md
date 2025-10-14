@@ -1,5 +1,5 @@
 # 🌍 VIN Scanner - Traducciones Agregadas
-**Fecha:** 14 de octubre, 2025  
+**Fecha:** 14 de octubre, 2025
 **Estado:** ✅ Todas las traducciones agregadas en EN, ES, PT-BR
 
 ---
@@ -55,14 +55,14 @@ Se han agregado **13 nuevas translation keys** al componente VIN Scanner para ga
 
 ```
 ✅ public/translations/en.json
-✅ public/translations/es.json  
+✅ public/translations/es.json
 ✅ public/translations/pt-BR.json
 ```
 
 **Sección modificada:** `modern_vin_scanner`
 
-**Traducciones antes:** 21 keys  
-**Traducciones después:** 34 keys  
+**Traducciones antes:** 21 keys
+**Traducciones después:** 34 keys
 **Nuevas keys agregadas:** +13 keys
 
 ### 2. Componente Actualizado
@@ -129,12 +129,12 @@ Se han agregado **13 nuevas translation keys** al componente VIN Scanner para ga
     "subtitle": "...",
     "dialog_title": "...",
     "dialog_subtitle": "...",
-    
+
     // Acciones principales
     "scan_camera": "...",
     "upload_image": "...",
     "capture": "...",                    // 🆕 NUEVO
-    
+
     // Estados del scanner
     "status_ready": "...",
     "status_scanning": "...",
@@ -143,33 +143,33 @@ Se han agregado **13 nuevas translation keys** al componente VIN Scanner para ga
     "status_no_vin": "...",
     "status_invalid": "...",
     "status_error": "...",
-    
+
     // Estados de cámara
     "initializing_camera": "...",        // 🆕 NUEVO
     "allow_camera_access": "...",        // 🆕 NUEVO
     "scanning_vin": "...",               // 🆕 NUEVO
     "camera_unavailable": "...",
-    
+
     // Overlays
     "adjusting_focus": "...",            // 🆕 NUEVO
     "align_vin_sticker": "...",          // 🆕 NUEVO
     "analyzing_image": "...",
-    
+
     // Acciones
     "action_retry": "...",
     "action_use_result": "...",
-    
+
     // Tips
     "tips_title": "...",                 // 🆕 NUEVO
     "tip_lighting": "...",               // 🆕 NUEVO
     "tip_steady": "...",                 // 🆕 NUEVO
     "tip_focus": "...",                  // 🆕 NUEVO
     "tip_glare": "...",                  // 🆕 NUEVO
-    
+
     // Hints
     "sticker_hint": "...",
     "plate_hint": "...",
-    
+
     // Otros
     "confidence_label": "..."
   }
@@ -330,4 +330,3 @@ El componente VIN Scanner ahora está **completamente traducido** en los 3 idiom
 **✅ Traducciones Completas - Sistema 100% Multilingüe**
 
 *Todos los textos del VIN Scanner ahora están completamente traducidos y listos para usuarios internacionales*
-
