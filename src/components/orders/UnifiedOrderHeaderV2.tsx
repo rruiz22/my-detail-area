@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
+import { CompletedDateInline } from '@/components/CompletedDateInline';
 import { useServices } from '@/contexts/ServicesContext';
 import {
   Calendar,
@@ -53,6 +54,7 @@ interface UnifiedOrderHeaderV2Props {
   orderType: 'sales' | 'service' | 'recon' | 'carwash';
   effectiveDealerId: string;
   onStatusChange?: (orderId: string, newStatus: string) => void;
+  onCompletedDateChange?: (orderId: string, newDate: Date | null) => Promise<void>;
   canEditOrder?: boolean;
   onEdit?: () => void;
 }
@@ -62,6 +64,7 @@ export function UnifiedOrderHeaderV2({
   orderType,
   effectiveDealerId,
   onStatusChange,
+  onCompletedDateChange,
   canEditOrder,
   onEdit
 }: UnifiedOrderHeaderV2Props) {
@@ -127,7 +130,7 @@ export function UnifiedOrderHeaderV2({
 
   return (
     <div className="bg-background pb-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ${orderType === 'recon' || orderType === 'carwash' ? 'lg:grid-cols-5' : 'lg:grid-cols-6'} gap-4`}>
         {/* Cell 1: Order Number */}
         <Card className="border-border shadow-md hover:shadow-lg transition-shadow">
           <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[120px]">
@@ -178,70 +181,68 @@ export function UnifiedOrderHeaderV2({
           </CardContent>
         </Card>
 
-        {/* Cell 4: Assigned To + Quick Actions */}
-        <Card className="border-border shadow-md hover:shadow-lg transition-shadow">
-          <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[120px]">
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-2 tracking-wide">Assigned</div>
-            <div className="flex items-center gap-1.5 mb-1">
-              <User className="w-4 h-4 text-emerald-600" />
-              <span className="font-bold text-base text-foreground truncate">{assignedTo}</span>
-            </div>
-            {customerName && (
-              <>
-                <div className="text-sm text-muted-foreground mb-2 truncate max-w-full font-medium">{customerName}</div>
-                <div className="flex items-center gap-2 justify-center">
-                  {customerEmail && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-7 px-2"
-                      title={customerEmail}
-                      onClick={() => window.location.href = `mailto:${customerEmail}`}
-                    >
-                      <Mail className="h-3.5 w-3.5" />
-                    </Button>
-                  )}
-                  {customerPhone && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-7 px-2"
-                      title={customerPhone}
-                      onClick={() => window.location.href = `tel:${customerPhone}`}
-                    >
-                      <Phone className="h-3.5 w-3.5" />
-                    </Button>
-                  )}
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Cell 4: Assigned To + Quick Actions - Hidden for recon and carwash orders */}
+        {orderType !== 'recon' && orderType !== 'carwash' && (
+          <Card className="border-border shadow-md hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[120px]">
+              <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-2 tracking-wide">Assigned</div>
+              <div className="flex items-center gap-1.5 mb-1">
+                <User className="w-4 h-4 text-emerald-600" />
+                <span className="font-bold text-base text-foreground truncate">{assignedTo}</span>
+              </div>
+              {customerName && (
+                <>
+                  <div className="text-sm text-muted-foreground mb-2 truncate max-w-full font-medium">{customerName}</div>
+                  <div className="flex items-center gap-2 justify-center">
+                    {customerEmail && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2"
+                        title={customerEmail}
+                        onClick={() => window.location.href = `mailto:${customerEmail}`}
+                      >
+                        <Mail className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                    {customerPhone && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2"
+                        title={customerPhone}
+                        onClick={() => window.location.href = `tel:${customerPhone}`}
+                      >
+                        <Phone className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Cell 5: Date (Due Date or Complete Date for Recon) */}
+        {/* Cell 5: Date (Due Date or Complete Date for Recon/CarWash) */}
         <Card className="border-border shadow-md hover:shadow-lg transition-shadow">
           <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[120px]">
             <div className="text-[10px] font-semibold text-muted-foreground uppercase mb-2 tracking-wide">{dateLabel}</div>
-            {displayDate ? (
-              <>
-                <div className="font-bold text-base text-foreground">
-                  {new Date(displayDate).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
-                </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                  <Calendar className="w-4 h-4" />
-                  <span className="font-medium">
-                    {new Date(displayDate).toLocaleTimeString('en-US', {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true
-                    })}
-                  </span>
-                </div>
-              </>
+            {usesCompleteDate && onCompletedDateChange ? (
+              <CompletedDateInline
+                completedAt={displayDate}
+                orderId={order.id}
+                orderType={orderType as 'recon' | 'carwash'}
+                onDateChange={onCompletedDateChange}
+                canEdit={canEditOrder || false}
+              />
+            ) : displayDate ? (
+              <div className="font-bold text-base text-foreground">
+                {new Date(displayDate).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </div>
             ) : (
               <div className="text-sm text-muted-foreground font-medium">Not set</div>
             )}

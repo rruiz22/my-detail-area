@@ -1,23 +1,29 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw, Search, List, Kanban, Calendar as CalendarIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
+import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
-import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
-import { useTranslation } from 'react-i18next';
-import { useViewModePersistence } from '@/hooks/useTabPersistence';
-import { LiveTimer } from '@/components/ui/LiveTimer';
-import { useSweetAlert } from '@/hooks/useSweetAlert';
-import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { LiveTimer } from '@/components/ui/LiveTimer';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
+import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
+import { useSweetAlert } from '@/hooks/useSweetAlert';
+import { useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useQueryClient } from '@tanstack/react-query';
+import { Calendar as CalendarIcon, Kanban, List, Plus, RefreshCw, Search } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ReconOrders() {
   const { t } = useTranslation();
   const { confirmDelete } = useSweetAlert();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Persistent state
   const [viewMode, setViewMode] = useViewModePersistence('recon_orders');
@@ -27,6 +33,7 @@ export default function ReconOrders() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<ReconOrder | null>(null);
   const [previewOrder, setPreviewOrder] = useState<ReconOrder | null>(null);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
   const {
     orders,
@@ -73,16 +80,35 @@ export default function ReconOrders() {
   };
 
   const handleSaveOrder = async (orderData: any) => {
+    console.log('🎯 handleSaveOrder called with:', {
+      hasSelectedOrder: !!selectedOrder,
+      selectedOrderId: selectedOrder?.id,
+      orderData: orderData,
+      completedAt: orderData.completedAt,
+      completedAtType: typeof orderData.completedAt,
+      stockNumber: orderData.stockNumber,
+      services: orderData.services
+    });
+
     try {
       if (selectedOrder) {
+        console.log('📝 Calling updateOrder with:', {
+          orderId: selectedOrder.id,
+          orderData: orderData
+        });
         await updateOrder(selectedOrder.id, orderData);
+        console.log('✅ updateOrder completed successfully');
       } else {
+        console.log('➕ Calling createOrder with:', {
+          orderData: orderData
+        });
         await createOrder(orderData);
+        console.log('✅ createOrder completed successfully');
       }
       setShowModal(false);
       refreshData();
     } catch (error) {
-      console.error('Error saving order:', error);
+      console.error('❌ Error in handleSaveOrder:', error);
     }
   };
 
@@ -105,6 +131,46 @@ export default function ReconOrders() {
       throw error;
     }
   };
+
+  const handleUpdate = async (orderId: string, updates: any) => {
+    try {
+      await updateOrder(orderId, updates);
+
+      // Invalidate query cache to trigger silent refetch
+      // This is faster than polling and doesn't cause visible reload
+      queryClient.invalidateQueries({ queryKey: ['orders', 'recon'] });
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderUpdated', {
+        detail: { orderId, updates, timestamp: Date.now() }
+      }));
+    } catch (error) {
+      console.error('Order update failed:', error);
+      throw error;
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      await refreshData();
+      toast({
+        description: t('common.data_refreshed') || 'Data refreshed successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      toast({
+        description: t('common.refresh_failed') || 'Failed to refresh data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
+
+  // Force table view on mobile (disable kanban and calendar)
+  const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   // Transform ReconOrder to Order format for compatibility with OrderKanbanBoard/OrderDataTable
   const transformedOrders = orders.map(order => {
@@ -146,6 +212,8 @@ export default function ReconOrders() {
       updatedAt: order.updatedAt,
       due_date: order.dueDate,
       dueDate: order.dueDate,
+      completed_at: order.completedAt,
+      completedAt: order.completedAt,
       priority: order.priority || 'normal',
       assignedTo: order.assignedTo,
       // Recon specific fields
@@ -184,14 +252,15 @@ export default function ReconOrders() {
           <div className="flex items-center gap-4">
             <LiveTimer
               lastRefresh={lastRefresh}
-              isRefreshing={loading}
+              isRefreshing={isManualRefreshing}
             />
             <Button
               variant="outline"
               size="sm"
-              onClick={refreshData}
+              onClick={handleManualRefresh}
+              disabled={isManualRefreshing}
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>
@@ -218,6 +287,7 @@ export default function ReconOrders() {
 
               {/* View Mode Toggle */}
               <div className="flex items-center bg-muted/50 rounded-lg p-1">
+                {/* Table - Always available */}
                 <Button
                   size="sm"
                   variant={viewMode === 'table' ? 'default' : 'ghost'}
@@ -227,32 +297,40 @@ export default function ReconOrders() {
                   <List className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Table</span>
                 </Button>
-                <Button
-                  size="sm"
-                  variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('kanban')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <Kanban className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Kanban</span>
-                </Button>
-                <Button
-                  size="sm"
-                  variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('calendar')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <CalendarIcon className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{t('common.calendar')}</span>
-                </Button>
+
+                {/* Kanban - Only on desktop */}
+                {!isMobile && (
+                  <Button
+                    size="sm"
+                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                    onClick={() => setViewMode('kanban')}
+                    className="h-8 px-2 sm:px-3"
+                  >
+                    <Kanban className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Kanban</span>
+                  </Button>
+                )}
+
+                {/* Calendar - Only on desktop */}
+                {!isMobile && (
+                  <Button
+                    size="sm"
+                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                    onClick={() => setViewMode('calendar')}
+                    className="h-8 px-2 sm:px-3"
+                  >
+                    <CalendarIcon className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">{t('common.calendar')}</span>
+                  </Button>
+                )}
               </div>
             </div>
           </div>
         </Card>
 
-        {/* Main Content */}
+        {/* Main Content - Mobile forces table */}
         <div className="space-y-6">
-          {viewMode === 'kanban' ? (
+          {effectiveViewMode === 'kanban' ? (
             <OrderKanbanBoard
               orders={filteredOrders}
               onEdit={handleEditOrder}
@@ -260,7 +338,7 @@ export default function ReconOrders() {
               onDelete={handleDeleteOrder}
               onStatusChange={handleStatusChange}
             />
-          ) : viewMode === 'calendar' ? (
+          ) : effectiveViewMode === 'calendar' ? (
             <OrderCalendarView
               orders={filteredOrders}
               loading={loading}
@@ -304,6 +382,7 @@ export default function ReconOrders() {
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}
+            onUpdate={handleUpdate}
           />
         )}
     </div>

@@ -2,28 +2,29 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
-import { useVehicleDetail } from '@/hooks/useGetReadyVehicles';
+import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
+import { useCurrentStepVisit, useVehicleStepHistory, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
-import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
-    AlertTriangle,
-    Circle,
-    Clock,
-    DollarSign,
-    GripHorizontal,
-    Image,
-    MessageSquare,
-    Users,
-    Wrench,
-    X
+  AlertTriangle,
+  Circle,
+  Clock,
+  DollarSign,
+  Image,
+  MessageSquare,
+  Users,
+  Wrench,
+  X
 } from 'lucide-react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { VehicleMediaTab } from './tabs/VehicleMediaTab';
 import { VehicleVendorsTab } from './tabs/VehicleVendorsTab';
 import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
+import { VehicleStepTimeHistory } from './VehicleStepTimeHistory';
 
 interface VehicleDetailPanelProps {
   className?: string;
@@ -34,127 +35,14 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { selectedVehicleId, setSelectedVehicleId } = useGetReadyStore();
   const { data: vehicleDetail, isLoading } = useVehicleDetail(selectedVehicleId);
 
-  // Panel resize functionality
-  const MIN_HEIGHT = 600;  // Minimum height in pixels for desktop
-  const MAX_HEIGHT = 800;  // Maximum height in pixels
-  const DEFAULT_HEIGHT = 500; // Default height in pixels
-
-  const [panelHeight, setPanelHeight] = useState(() => {
-    // Load saved height from localStorage or use default
-    const saved = localStorage.getItem('vehicle-detail-panel-height');
-    return saved ? parseInt(saved, 10) : DEFAULT_HEIGHT;
-  });
-
-  const [isResizing, setIsResizing] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsResizing(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isResizing) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!panelRef.current) return;
-
-      // Get the parent container to calculate available space
-      const parentRect = panelRef.current.parentElement?.getBoundingClientRect();
-      if (!parentRect) return;
-
-      // Calculate new max height from bottom of parent to mouse position
-      // This allows dragging up to increase height, down to decrease
-      const newMaxHeight = parentRect.bottom - e.clientY;
-
-      // Clamp between MIN and MAX
-      const clampedHeight = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, newMaxHeight));
-      setPanelHeight(clampedHeight);
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-      // Save to localStorage
-      localStorage.setItem('vehicle-detail-panel-height', panelHeight.toString());
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isResizing, panelHeight]);
-
-  // Update cursor during resize
-  useEffect(() => {
-    if (isResizing) {
-      document.body.style.cursor = 'ns-resize';
-      document.body.style.userSelect = 'none';
-    } else {
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    }
-
-    return () => {
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    };
-  }, [isResizing]);
-
   // Fetch counts for each tab
   const { data: workItems = [] } = useWorkItems(selectedVehicleId);
   const { data: mediaFiles = [] } = useVehicleMedia(selectedVehicleId || '');
+  const { data: stepHistory = [] } = useVehicleStepHistory(selectedVehicleId);
 
-  // Calculate counts for each tab
-  // State for additional counts
-  const [notesCount, setNotesCount] = React.useState(0);
-  const [timelineCount, setTimelineCount] = React.useState(0);
-
-  // Fetch notes count
-  React.useEffect(() => {
-    if (!selectedVehicleId) return;
-
-    const fetchNotesCount = async () => {
-      try {
-        const { count, error } = await supabase
-          .from('vehicle_notes')
-          .select('*', { count: 'exact', head: true })
-          .eq('vehicle_id', selectedVehicleId);
-
-        if (!error && count !== null) {
-          setNotesCount(count);
-        }
-      } catch (err) {
-        console.error('Error fetching notes count:', err);
-      }
-    };
-
-    fetchNotesCount();
-  }, [selectedVehicleId]);
-
-  // Fetch timeline count
-  React.useEffect(() => {
-    if (!selectedVehicleId) return;
-
-    const fetchTimelineCount = async () => {
-      try {
-        const { count, error } = await supabase
-          .from('vehicle_timeline_events')
-          .select('*', { count: 'exact', head: true })
-          .eq('vehicle_id', selectedVehicleId);
-
-        if (!error && count !== null) {
-          setTimelineCount(count);
-        }
-      } catch (err) {
-        console.error('Error fetching timeline count:', err);
-      }
-    };
-
-    fetchTimelineCount();
-  }, [selectedVehicleId]);
+  // Fetch time tracking data for header
+  const { data: timeToLine } = useVehicleTimeToLine(selectedVehicleId);
+  const { data: currentVisit } = useCurrentStepVisit(selectedVehicleId);
 
   const counts = React.useMemo(() => {
     const workItemsWithVendors = workItems.filter(wi => wi.assigned_vendor_id);
@@ -162,12 +50,12 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     return {
       workItems: workItems.length,
       media: mediaFiles.length,
-      notes: notesCount,
+      notes: 0, // Notes feature not yet implemented in database (vehicle_notes table)
       vendors: workItemsWithVendors.length,
-      timeline: timelineCount,
+      timeline: stepHistory.length,
       appraisal: 0 // Appraisal feature not yet implemented in database
     };
-  }, [workItems, mediaFiles, notesCount, timelineCount]);
+  }, [workItems, mediaFiles, stepHistory]);
 
   const handleClose = () => {
     setSelectedVehicleId(null);
@@ -228,63 +116,100 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     );
   }
 
-  const vehicle = vehicleDetail as Record<string, unknown>;
+  // At this point, vehicleDetail is guaranteed to be non-null due to the checks above
+  const vehicle = vehicleDetail as VehicleDetail;
 
   return (
     <div
-      ref={panelRef}
-      className={cn("flex-1 flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300 relative min-h-0", className)}
-      style={{ maxHeight: `${panelHeight}px` }}
+      className={cn("flex-1 flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300 h-[calc(100vh-12rem)] min-h-[700px]", className)}
     >
-      {/* Resize Handle */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 right-0 h-1.5 cursor-ns-resize hover:bg-primary/20 transition-colors group z-50",
-          isResizing && "bg-primary/30"
-        )}
-        onMouseDown={handleMouseDown}
-      >
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-          <div className={cn(
-            "bg-muted/80 backdrop-blur-sm rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm",
-            isResizing && "opacity-100"
-          )}>
-            <GripHorizontal className="h-3 w-3 text-muted-foreground" />
-          </div>
-        </div>
-      </div>
-
-      {/* Vehicle Header */}
-      <div className="p-4 border-b bg-card/50 relative">
+      {/* Vehicle Header - Enhanced with Time Tracking */}
+      <div className="border-b bg-gradient-to-br from-card/50 to-muted/30 relative">
         {/* Close Button */}
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-2 right-2 h-8 w-8"
+          className="absolute top-2 right-2 h-8 w-8 z-10"
           onClick={handleClose}
           aria-label={t('get_ready.detail_panel.close')}
         >
           <X className="h-4 w-4" />
         </Button>
 
-        <div className="flex items-center justify-between pr-10">
-          <div>
-            <h2 className="text-lg font-semibold">
-              {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
-            </h2>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>Stock: {vehicle.stock_number}</span>
-              <span>•</span>
-              <span>VIN: {vehicle.vin}</span>
+        <div className="p-4">
+          {/* Single Row: Vehicle Info + Time Tracking + Step Badge */}
+          <div className="flex items-center justify-between gap-4 pr-10">
+            {/* Left: Vehicle Info */}
+            <div className="flex-shrink-0">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
+                {vehicle.vehicle_trim && (
+                  <span className="text-sm font-normal text-muted-foreground">({vehicle.vehicle_trim})</span>
+                )}
+              </h2>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                <span className="font-medium">Stock: {vehicle.stock_number}</span>
+                <span>•</span>
+                <span>VIN: {vehicle.vin}</span>
+              </div>
             </div>
-          </div>
-          <div className="text-right">
-            <div className="text-lg font-semibold">
-              ${vehicle.retail_value?.toLocaleString() || 'N/A'}
+
+            {/* Center: Time Tracking Stats */}
+            <div className="flex items-center gap-4 flex-1 justify-center">
+              {/* Time to Front Line */}
+              <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-800">
+                <Clock className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                <div>
+                  <span className="text-xs text-muted-foreground block">{t('get_ready.time_tracking.time_in_process')}</span>
+                  <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-sm">
+                    {timeToLine?.total_hours ? formatTimeDuration(timeToLine.total_hours * 60 * 60 * 1000) : '-'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Work Items - Hidden on small screens */}
+              <div className="hidden md:flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800">
+                <Wrench className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                <div>
+                  <span className="text-xs text-muted-foreground block">{t('get_ready.tabs.work_items')}</span>
+                  <span className="font-bold text-purple-900 dark:text-purple-100 text-sm">
+                    {counts.workItems}
+                  </span>
+                </div>
+              </div>
             </div>
-            <Badge variant="outline" className="text-xs">
-              {vehicle.current_step?.name || 'No Step'}
-            </Badge>
+
+            {/* Right: Current Step Time + Step Badge */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {/* Current Step Time */}
+              <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800">
+                <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                <div>
+                  <span className="text-xs text-muted-foreground block">Current Step</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-sm">
+                      {currentVisit?.current_visit_hours ? formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000) : '-'}
+                    </span>
+                    {currentVisit?.visit_number && currentVisit.visit_number > 1 && (
+                      <span className="text-xs text-muted-foreground">(#{currentVisit.visit_number})</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Step Badge */}
+              <Badge
+                variant="outline"
+                className="text-sm px-3 py-2 font-semibold"
+                style={{
+                  borderColor: vehicle.step_color || '#6B7280',
+                  color: vehicle.step_color || '#6B7280',
+                  borderWidth: '2px'
+                }}
+              >
+                {vehicle.step_name || vehicle.current_step?.name || 'No Step'}
+              </Badge>
+            </div>
           </div>
         </div>
       </div>
@@ -350,16 +275,16 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
           </TabsList>
 
           {/* Work Items Tab */}
-          <TabsContent value="work-items" className="flex-1 overflow-hidden p-4">
+          <TabsContent value="work-items" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
             <VehicleWorkItemsTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
           {/* Media Tab */}
-          <TabsContent value="media" className="flex-1 overflow-hidden p-4">
+          <TabsContent value="media" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
             <VehicleMediaTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="notes" className="flex-1 p-4">
+          <TabsContent value="notes" className="flex-1 px-4 pt-4 pb-6">
             <div className="text-center py-8 text-muted-foreground">
               <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <div className="text-sm">{t('get_ready.notes.coming_soon')}</div>
@@ -367,18 +292,17 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
           </TabsContent>
 
           {/* Vendors Tab - NEW: Full vendor integration */}
-          <TabsContent value="vendors" className="flex-1 overflow-hidden p-4">
+          <TabsContent value="vendors" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
             <VehicleVendorsTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="timeline" className="flex-1 p-4">
-            <div className="text-center py-8 text-muted-foreground">
-              <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <div className="text-sm">{t('get_ready.timeline.coming_soon')}</div>
-            </div>
+          <TabsContent value="timeline" className="flex-1 overflow-auto px-4 pt-4 pb-8">
+            {selectedVehicleId && (
+              <VehicleStepTimeHistory vehicleId={selectedVehicleId} />
+            )}
           </TabsContent>
 
-          <TabsContent value="appraisal" className="flex-1 p-4">
+          <TabsContent value="appraisal" className="flex-1 px-4 pt-4 pb-6">
             <div className="text-center py-8 text-muted-foreground">
               <DollarSign className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <div className="text-sm">{t('get_ready.appraisal.coming_soon')}</div>

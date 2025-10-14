@@ -447,7 +447,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl max-h-[95vh] w-[95vw] p-0" aria-describedby="service-order-modal-description">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] sm:rounded-lg sm:border" aria-describedby="service-order-modal-description">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-xl font-semibold">
             {order ? t('orders.edit_service_order') : t('orders.create_service_order')}

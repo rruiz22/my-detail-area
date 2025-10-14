@@ -274,11 +274,24 @@ export function RecentActivity() {
                             </div>
                           )}
 
-                          {/* Customer and user info */}
+                          {/* Customer/Stock/TAG and user info */}
                           <div className="flex items-center justify-between gap-2 flex-wrap">
-                            {activity.customer_name && (
+                            {/* Show customer_name only for sales/service orders */}
+                            {activity.customer_name && activity.order_type !== 'recon' && activity.order_type !== 'car_wash' && (
                               <p className="text-sm text-muted-foreground">
                                 {t('dashboard.activity.customer')}: {activity.customer_name}
+                              </p>
+                            )}
+                            {/* Show stock_number for recon orders */}
+                            {activity.order_type === 'recon' && activity.stock_number && (
+                              <p className="text-sm text-muted-foreground">
+                                {t('dashboard.activity.stock')}: {activity.stock_number}
+                              </p>
+                            )}
+                            {/* Show TAG for car wash orders */}
+                            {activity.order_type === 'car_wash' && activity.tag && (
+                              <p className="text-sm text-muted-foreground">
+                                TAG: {activity.tag}
                               </p>
                             )}
                             {activity.user_name && (

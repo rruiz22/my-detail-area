@@ -32,6 +32,7 @@
     "priority": {
       "high": "High Priority",
       "medium": "Medium Priority",
+      "normal": "Normal Priority",
       "low": "Low Priority",
       "urgent": "Urgent"
     },
@@ -74,9 +75,20 @@
       "redo": "Redo",
       "select_all": "Select All"
     },
+    "actions": {
+      "refresh": "Refresh",
+      "export": "Export",
+      "export_csv": "Export to CSV",
+      "export_excel": "Export to Excel",
+      "export_pdf": "Export to PDF",
+      "exporting": "Exporting...",
+      "export_success": "Data exported successfully",
+      "export_failed": "Failed to export data"
+    },
     "selected": "selected",
     "refresh": "Refresh",
     "data_refreshed": "Data refreshed",
+    "refresh_failed": "Failed to refresh data",
     "new_order": "New Order",
     "calendar": "Calendar",
     "unknown_error": "Unknown error",
@@ -384,6 +396,7 @@
       "all": "All",
       "vehicle": "Vehicle",
       "customer": "Customer",
+      "stock": "Stock",
       "no_recent_activity": "No recent activity",
       "order_created": "Order Created",
       "order_updated": "Order Updated",
@@ -1240,8 +1253,10 @@
     "unknown_dealer": "Unknown Dealer",
     "unassigned": "Unassigned",
     "no_time_set": "No time set",
+    "no_date_set": "No date set",
     "orders_count": "{{count}} orders",
     "page_of": "Page {{current}} of {{total}}",
+    "showing_range": "Showing {{start}}-{{end}} of {{total}} orders",
     "view": "View",
     "edit": "Edit",
     "delete": "Delete",
@@ -1262,8 +1277,24 @@
     "display_preview": "Display preview"
   },
   "car_wash_orders": {
+    "quick_order": "New Quick Order",
+    "quick_car_wash_order": "Quick Car Wash Order",
+    "edit_order": "Edit Car Wash Order",
+    "dealership": "Dealership",
+    "select_dealership": "Select dealership",
+    "vehicle_display": "Vehicle Information",
+    "stock_number": "Stock Number",
+    "tag": "TAG",
+    "waiter_priority": "Waiter - Customer Waiting",
+    "waiter_description": "This order will be marked as urgent priority (customer is waiting)",
+    "notes_placeholder": "Add any special instructions or details about this car wash service...",
     "decoded": "Decoded",
-    "auto_populated": "Auto-populated from VIN"
+    "auto_populated": "Auto-populated from VIN",
+    "car_wash_information": "Car Wash Information",
+    "service_performer": "Service Performer",
+    "service_type": "Service Type",
+    "waiter": "Waiter",
+    "standard_wash": "Standard Wash"
   },
   "completion_date": {
     "select_date": "Select date"
@@ -1271,7 +1302,13 @@
   "car_wash": {
     "service_date": "Service Date",
     "select_service_date": "Select service date",
-    "service_date_help": "Date when the car wash service was completed"
+    "service_date_help": "Date when the car wash service was completed",
+    "order_created_successfully": "Car wash order created successfully",
+    "order_updated_successfully": "Car wash order updated successfully",
+    "order_deleted_successfully": "Car wash order deleted successfully",
+    "error_creating_order": "Error creating car wash order",
+    "error_updating_order": "Error updating car wash order",
+    "error_deleting_order": "Error deleting car wash order"
   },
   "schedule_view": {
     "schedule_timeline": "Schedule Timeline",
@@ -1780,6 +1817,26 @@
       "timeline": "Timeline",
       "appraisal": "Appraisal"
     },
+    "time_tracking": {
+      "title": "Time Tracking",
+      "total_time_completed": "Total Time (Completed)",
+      "time_in_process": "Time in Process",
+      "days": "days",
+      "hours": "hours",
+      "in_progress": "In Progress",
+      "current_step": "Current Step",
+      "current_visit": "Current Visit",
+      "first_visit": "First Visit",
+      "visit": "Visit",
+      "previous_visits": "Previous Visits",
+      "total_accumulated": "Total Accumulated",
+      "time_by_step": "Time by Step",
+      "current": "Current",
+      "visited_times": "Visited {{count}} times",
+      "no_data": "No time tracking data available",
+      "steps_completed": "Steps Completed",
+      "avg_time_per_step": "Avg Time/Step"
+    },
     "search_placeholder": "Search vehicles...",
     "steps": {
       "title": "Get Ready - Optimized Flow",
@@ -1829,6 +1886,8 @@
       "add_work_item": "Add Work Item",
       "add_from_templates": "Add from Templates",
       "no_items": "No work items yet",
+      "item": "item",
+      "items": "items",
       "templates_modal_title": "Add Work Items from Templates",
       "templates_modal_description": "Select the templates you want to add to this vehicle",
       "no_templates_available": "No active templates available",
@@ -1889,7 +1948,16 @@
       "error_completing": "Error completing work item",
       "error_deleting": "Error deleting work item",
       "error_loading": "Error loading work items",
-      "confirm_delete": "Are you sure you want to delete this work item?"
+      "confirm_delete": "Are you sure you want to delete this work item?",
+      "quick_add_title": "Add Work Item",
+      "quick_add_description": "Choose from templates or create a custom work item",
+      "no_templates_found": "No templates match your search",
+      "no_templates": "No templates available",
+      "create_custom": "Create Custom Work Item",
+      "assigned_to": "Assigned To",
+      "assigned_to_placeholder": "Enter technician name",
+      "edit_title": "Edit Work Item",
+      "edit_description": "Update the work item details"
     },
     "media": {
       "photos": "Photos",
@@ -2113,6 +2181,7 @@
       "subtitle": "Configure workflow steps and settings",
       "workflow_steps": "Workflow Steps",
       "work_item_templates": "Work Item Templates",
+      "sla_configuration": "SLA Configuration",
       "access_denied": "Access Denied",
       "no_steps_title": "No Workflow Steps",
       "no_steps_description": "This dealership doesn't have any workflow steps configured yet",
@@ -2181,6 +2250,214 @@
       "step_association_help": "Global templates are created when a vehicle is added. Step-specific templates are created when a vehicle enters that step.",
       "templates_reordered": "Templates reordered successfully",
       "error_reordering": "Failed to reorder templates"
+    },
+    "sla": {
+      "title": "SLA & Time Goals Configuration",
+      "description": "Configure time goals and alert thresholds for vehicle reconditioning process",
+      "time_goals": {
+        "title": "Time Goals",
+        "description": "Set the target and maximum time goals for completing vehicle reconditioning",
+        "default_label": "Default Time Goal (Days)",
+        "default_help": "Target completion time",
+        "max_label": "Maximum Time Goal (Days)",
+        "max_help": "Upper limit"
+      },
+      "thresholds": {
+        "title": "Alert Thresholds",
+        "description": "Define when vehicles should show different alert levels based on days in current step",
+        "green_label": "Green (On Track)",
+        "warning_label": "Yellow (Warning)",
+        "danger_label": "Red (Critical)"
+      },
+      "preview": {
+        "title": "Preview",
+        "description": "See how different day counts will be categorized",
+        "on_track": "On Track",
+        "warning": "Warning",
+        "critical": "Critical"
+      },
+      "options": {
+        "title": "Additional Options",
+        "enable_notifications": "Enable Notifications",
+        "enable_notifications_help": "Send alerts when vehicles exceed thresholds",
+        "count_weekends": "Count Weekends",
+        "count_weekends_help": "Include weekends in day calculations",
+        "business_hours_only": "Business Hours Only",
+        "business_hours_only_help": "Only count hours during business hours (8 AM - 6 PM)"
+      },
+      "actions": {
+        "save": "Save Configuration",
+        "saving": "Saving...",
+        "saved": "SLA configuration updated successfully",
+        "error": "Failed to update SLA configuration"
+      }
+    }
+  },
+  "stock": {
+    "title": "Stock Inventory",
+    "description": "Vehicle management and analytics",
+    "metrics": {
+      "totalVehicles": "vehicles",
+      "avgPrice": "Average Price",
+      "avgAgeDays": "Average Age",
+      "totalValue": "Total Inventory Value"
+    },
+    "dashboard": {
+      "avg_price": "Average Price",
+      "avg_age_days": "Days on Lot",
+      "inventory_value": "Total Value"
+    },
+    "errors": {
+      "no_access": "No Stock Access",
+      "no_access_description": "Your account doesn't have access to the stock inventory module. Please contact your administrator."
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "export": "Export",
+      "view_details": "View Details"
+    },
+    "tabs": {
+      "inventory": "Inventory",
+      "upload": "Upload",
+      "analytics": "Analytics",
+      "dms_config": "DMS Config",
+      "sync_history": "Sync History"
+    },
+    "inventory": {
+      "title": "Inventory",
+      "no_vehicles": "No vehicles in inventory",
+      "showing_range": "Showing {{start}}-{{end}} of {{total}} vehicles"
+    },
+    "filters": {
+      "search_placeholder": "Search by stock #, VIN, make, model...",
+      "make": "Make",
+      "all_makes": "All Makes",
+      "status": "Status",
+      "all_statuses": "All Statuses"
+    },
+    "status": {
+      "available": "Available",
+      "sold": "Sold",
+      "pending": "Pending",
+      "unknown": "Unknown"
+    },
+    "table": {
+      "stock_number": "Stock #",
+      "vin": "VIN",
+      "vehicle": "Vehicle",
+      "year": "Year",
+      "mileage": "Mileage",
+      "price": "Price",
+      "age_days": "Age (Days)",
+      "status": "Status"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "last_7_days": "Last 7 Days",
+      "last_30_days": "Last 30 Days",
+      "last_90_days": "Last 90 Days",
+      "last_year": "Last Year",
+      "export_report": "Export Report",
+      "avg_inventory_value": "Avg Inventory Value",
+      "avg_days_in_stock": "Avg Days in Stock",
+      "inventory_turnover": "Inventory Turnover",
+      "total_vehicles": "Total Vehicles",
+      "inventory_by_make": "Inventory by Make",
+      "price_distribution": "Price Distribution",
+      "age_analysis": "Age Analysis",
+      "inventory_trends": "Inventory Trends",
+      "total_inventory_value": "Total Inventory Value"
+    },
+    "vehicleDetails": {
+      "title": "Vehicle Details",
+      "stockNumber": "Stock Number",
+      "photos": "Photos",
+      "certified": "Certified",
+      "overview": "Overview",
+      "year": "Year",
+      "make": "Make",
+      "model": "Model",
+      "trim": "Trim",
+      "vin": "VIN",
+      "pricing": "Pricing",
+      "price": "Price",
+      "msrp": "MSRP",
+      "details": "Details",
+      "mileage": "Mileage",
+      "color": "Color",
+      "drivetrain": "Drivetrain",
+      "locationStatus": "Location & Status",
+      "lotLocation": "Lot Location",
+      "dmsStatus": "DMS Status",
+      "objective": "Objective",
+      "ageDays": "Age (Days)",
+      "riskLight": "Risk Light",
+      "leadPerformance": "Lead Performance",
+      "leadsLast7Days": "Leads (Last 7 Days)",
+      "leadsTotal": "Total Leads",
+      "rawData": "Raw Data"
+    },
+    "upload": {
+      "title": "Upload Inventory",
+      "drag_drop_files": "Drag and drop your CSV file here",
+      "drop_files": "Drop files here",
+      "or": "or",
+      "browse_files": "Browse Files",
+      "no_file_chosen": "No file chosen",
+      "files_to_upload": "Files to Upload",
+      "clear_all": "Clear All",
+      "upload_all": "Upload All",
+      "preview": "Preview",
+      "more_rows": "{{count}} more rows",
+      "supported_formats": "Supported formats: CSV (comma-separated values)",
+      "sample_csv": "Sample CSV Template",
+      "sample_csv_description": "Download a sample CSV file with the correct format and required columns",
+      "download_sample": "Download Sample",
+      "uploading": "Uploading...",
+      "success": "Success",
+      "upload_success": "File uploaded successfully",
+      "error": "Error",
+      "upload_failed": "Failed to upload file",
+      "error_message": "An error occurred during upload",
+      "processing": "Processing inventory data...",
+      "invalid_format": "Invalid file format. Please upload a CSV file.",
+      "required_columns": "Required columns: stock_number, vin, year, make, model, price",
+      "max_file_size": "Maximum file size: 10 MB",
+      "status": {
+        "pending": "Pending",
+        "uploading": "Uploading",
+        "success": "Success",
+        "error": "Error"
+      }
+    },
+    "sync_history": {
+      "title": "Sync History",
+      "export": "Export",
+      "search_placeholder": "Search by type, status, or file name...",
+      "all_statuses": "All Statuses",
+      "all_types": "All Types",
+      "date_time": "Date & Time",
+      "type": "Type",
+      "status": "Status",
+      "duration": "Duration",
+      "processed": "Processed",
+      "added": "Added",
+      "updated": "Updated",
+      "removed": "Removed",
+      "file": "File",
+      "no_history": "No sync history available",
+      "types": {
+        "auto_sync": "Auto Sync",
+        "csv_upload": "CSV Upload",
+        "manual_sync": "Manual Sync",
+        "dms_sync": "DMS Sync"
+      },
+      "statuses": {
+        "completed": "Completed",
+        "failed": "Failed",
+        "in_progress": "In Progress",
+        "cancelled": "Cancelled"
+      }
     }
   }
 }

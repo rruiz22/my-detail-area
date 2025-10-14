@@ -1,25 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Plus, RefreshCw, Search, Clock } from 'lucide-react';
-import { OrderFilters } from '@/components/orders/OrderFilters';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { OrderFilters } from '@/components/orders/OrderFilters';
 import { OrderModal } from '@/components/orders/OrderModal';
-import { useOrderManagement } from '@/hooks/useOrderManagement';
-import { useTranslation } from 'react-i18next';
-import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
-import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useOrderManagement } from '@/hooks/useOrderManagement';
+import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useQueryClient } from '@tanstack/react-query';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Plus, RefreshCw } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 // New improved components
-import { SmartDashboard } from '@/components/sales/SmartDashboard';
+import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { OrderPreviewPanel } from '@/components/sales/OrderPreviewPanel';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
+import { SmartDashboard } from '@/components/sales/SmartDashboard';
 
 // Removed TABS - now using QuickFilterBar instead
 
@@ -28,6 +28,9 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 export default function SalesOrders() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
 
@@ -43,7 +46,7 @@ export default function SalesOrders() {
   const [activeFilter, setActiveFilter] = useTabPersistence('sales_orders');
   const [viewMode, setViewMode] = useViewModePersistence('sales_orders');
   const [searchTerm, setSearchTerm] = useSearchPersistence('sales_orders');
-  
+
   // Non-persistent UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -51,6 +54,8 @@ export default function SalesOrders() {
   const [previewOrder, setPreviewOrder] = useState(null);
   const [preSelectedDate, setPreSelectedDate] = useState<Date | null>(null);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [weekOffset, setWeekOffset] = useState(0);
 
   const {
     orders,
@@ -64,10 +69,17 @@ export default function SalesOrders() {
     createOrder,
     updateOrder,
     deleteOrder,
-  } = useOrderManagement(activeFilter);
+  } = useOrderManagement(activeFilter, weekOffset);
 
   // Real-time updates handle most data changes automatically
   // Only manual refresh needed for initial load and special cases
+
+  // Reset week offset when changing to a different filter
+  useEffect(() => {
+    if (activeFilter !== 'week') {
+      setWeekOffset(0);
+    }
+  }, [activeFilter]);
 
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
@@ -83,7 +95,10 @@ export default function SalesOrders() {
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
         console.warn('⚠️ Order not found in current orders list:', orderIdFromUrl);
-        toast.error(t('orders.order_not_found'));
+        toast({
+          description: t('orders.order_not_found'),
+          variant: 'destructive'
+        });
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
@@ -131,10 +146,16 @@ export default function SalesOrders() {
     try {
       if (selectedOrder) {
         await updateOrder(selectedOrder.id, orderData);
-        toast.success(t('orders.updated_successfully'));
+        toast({
+          description: t('orders.updated_successfully'),
+          variant: 'default'
+        });
       } else {
         await createOrder(orderData);
-        toast.success(t('orders.created_successfully'));
+        toast({
+          description: t('orders.created_successfully'),
+          variant: 'default'
+        });
       }
 
       // Close modal immediately for better UX
@@ -145,7 +166,10 @@ export default function SalesOrders() {
 
     } catch (error) {
       console.error('Error saving order:', error);
-      toast.error(t('orders.save_failed'));
+      toast({
+        description: t('orders.save_failed'),
+        variant: 'destructive'
+      });
     }
   };
 
@@ -162,15 +186,63 @@ export default function SalesOrders() {
         detail: { orderId, newStatus, timestamp: Date.now() }
       }));
 
-      toast.success(t('orders.status_updated_successfully'));
+      toast({
+        description: t('orders.status_updated_successfully'),
+        variant: 'default'
+      });
 
       // No refreshData() call - polling system handles update automatically
     } catch (error) {
       console.error('Status change failed:', error);
-      toast.error(t('orders.status_change_failed'));
+      toast({
+        description: t('orders.status_change_failed'),
+        variant: 'destructive'
+      });
 
       // Re-throw error so kanban can handle rollback if needed
       throw error;
+    }
+  };
+
+  const handleUpdate = async (orderId: string, updates: any) => {
+    try {
+      await updateOrder(orderId, updates);
+
+      // Invalidate queries for silent background update
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderUpdated', {
+        detail: { orderId, updates, timestamp: Date.now() }
+      }));
+
+      // No toast here - specific handlers will show appropriate messages
+    } catch (error) {
+      console.error('Order update failed:', error);
+      throw error;
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      // Force refetch of polling query
+      const result = await queryClient.refetchQueries({
+        queryKey: ['orders', 'all']
+      });
+      console.log('🔄 Manual refresh completed:', result);
+      toast({
+        description: t('common.data_refreshed') || 'Data refreshed successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      toast({
+        description: t('common.refresh_failed') || 'Failed to refresh data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsManualRefreshing(false);
     }
   };
 
@@ -186,7 +258,7 @@ export default function SalesOrders() {
     const titleMap: Record<string, string> = {
       dashboard: t('sales_orders.tabs.dashboard'),
       today: t('sales_orders.tabs.today'),
-      tomorrow: t('sales_orders.tabs.tomorrow'), 
+      tomorrow: t('sales_orders.tabs.tomorrow'),
       pending: t('sales_orders.tabs.pending'),
       in_process: t('sales_orders.in_process_orders'),
       week: t('sales_orders.tabs.week'),
@@ -196,6 +268,9 @@ export default function SalesOrders() {
     };
     return titleMap[filter] || filter;
   };
+
+  // Force table view on mobile (disable kanban and calendar)
+  const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   // Filter orders based on search term
   const filteredOrders = orders.filter((order: any) => {
@@ -222,15 +297,15 @@ export default function SalesOrders() {
           <div className="flex items-center gap-4">
             <LiveTimer
               lastRefresh={managementLastRefresh}
-              isRefreshing={loading}
+              isRefreshing={isManualRefreshing}
             />
             <Button
               variant="outline"
               size="sm"
-              onClick={() => refreshData()}
-              disabled={loading}
+              onClick={handleManualRefresh}
+              disabled={isManualRefreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>
@@ -251,6 +326,8 @@ export default function SalesOrders() {
           onViewModeChange={setViewMode}
           showFilters={showFilters}
           onToggleFilters={() => setShowFilters(!showFilters)}
+          weekOffset={weekOffset}
+          onWeekChange={setWeekOffset}
         />
 
         {/* Filters */}
@@ -294,8 +371,8 @@ export default function SalesOrders() {
                 )}
               </div>
 
-              {/* Table/Kanban/Calendar Content */}
-              {viewMode === 'kanban' ? (
+              {/* Table/Kanban/Calendar Content - Mobile forces table */}
+              {effectiveViewMode === 'kanban' ? (
                 <OrderKanbanBoard
                   orders={filteredOrders}
                   onEdit={handleEditOrder}
@@ -303,10 +380,10 @@ export default function SalesOrders() {
                   onDelete={handleDeleteOrder}
                   onStatusChange={handleStatusChange}
                 />
-              ) : viewMode === 'calendar' ? (
+              ) : effectiveViewMode === 'calendar' ? (
                 <OrderCalendarView
                   orders={filteredOrders}
-                  loading={loading}
+                  loading={false}
                   onEdit={handleEditOrder}
                   onView={handleViewOrder}
                   onDelete={handleDeleteOrder}
@@ -316,7 +393,7 @@ export default function SalesOrders() {
               ) : (
                 <OrderDataTable
                   orders={filteredOrders}
-                  loading={loading}
+                  loading={false}
                   onEdit={handleEditOrder}
                   onDelete={handleDeleteOrder}
                   onView={handleViewOrder}
@@ -358,6 +435,7 @@ export default function SalesOrders() {
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}
+            onUpdate={handleUpdate}
           />
         )}
     </div>

@@ -1,51 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from '@/hooks/use-toast';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import { useStockDealerSelection } from '@/hooks/useStockDealerSelection';
-import { StockInventoryTable } from './StockInventoryTable';
-import { StockCSVUploader } from './StockCSVUploader';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StockAnalytics } from './StockAnalytics';
+import { StockCSVUploader } from './StockCSVUploader';
 import { StockDMSConfig } from './StockDMSConfig';
+import { StockInventoryTable } from './StockInventoryTable';
 import { StockSyncHistory } from './StockSyncHistory';
 
-import { 
-  Package, 
-  Upload, 
-  BarChart3, 
-  Settings,
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Calendar,
-  RefreshCw,
-  Building2,
-  ChevronDown
+import {
+    BarChart3,
+    Calendar,
+    DollarSign,
+    Package,
+    RefreshCw,
+    Settings,
+    TrendingUp,
+    Upload
 } from 'lucide-react';
 
 export const StockDashboard: React.FC = () => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('inventory');
-  const {
-    stockDealerships,
-    selectedDealerId,
-    setSelectedDealerId,
-    loading: dealerLoading
-  } = useStockDealerSelection();
-  
-  const { 
-    inventory, 
-    loading: inventoryLoading, 
-    refreshInventory
-  } = useStockManagement(selectedDealerId || undefined);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
-  const selectedDealer = stockDealerships.find(d => d.id === selectedDealerId);
+  const {
+    currentDealership,
+    loading: dealerLoading
+  } = useAccessibleDealerships();
+
+  const {
+    inventory,
+    loading: inventoryLoading,
+    refreshInventory,
+    lastRefresh
+  } = useStockManagement();
+
   const loading = dealerLoading || inventoryLoading;
+
+  // Handle manual refresh with toast
+  const handleManualRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      await refreshInventory();
+      toast({
+        title: t('common.success'),
+        description: t('common.actions.export_success')
+      });
+    } catch (error) {
+      toast({
+        title: t('common.error'),
+        description: t('common.actions.export_failed'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
 
   // Calculate real metrics from inventory data
   const metrics = React.useMemo(() => {
@@ -60,15 +77,15 @@ export const StockDashboard: React.FC = () => {
 
     const validPrices = inventory.filter(v => v.price && v.price > 0);
     const validAges = inventory.filter(v => v.age_days !== null && v.age_days !== undefined);
-    
-    const averagePrice = validPrices.length > 0 
+
+    const averagePrice = validPrices.length > 0
       ? validPrices.reduce((sum, v) => sum + (v.price || 0), 0) / validPrices.length
       : 0;
-      
+
     const averageAgeDays = validAges.length > 0
       ? validAges.reduce((sum, v) => sum + (v.age_days || 0), 0) / validAges.length
       : 0;
-      
+
     const totalValue = inventory.reduce((sum, v) => sum + (v.price || 0), 0);
 
     return {
@@ -123,8 +140,8 @@ export const StockDashboard: React.FC = () => {
     );
   }
 
-  // No stock-enabled dealerships
-  if (!stockDealerships.length) {
+  // No current dealership selected
+  if (!currentDealership) {
     return (
       <div className="space-y-6 p-6">
         <div className="text-center py-12">
@@ -145,50 +162,26 @@ export const StockDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="flex items-center space-x-4">
-            {stockDealerships.length > 1 && (
-              <Select value={selectedDealerId?.toString() || ''} onValueChange={(value) => setSelectedDealerId(parseInt(value))}>
-                <SelectTrigger className="w-[280px]">
-                  <div className="flex items-center space-x-2">
-                    <Building2 className="w-4 h-4 text-muted-foreground" />
-                    <span className="truncate">
-                      {selectedDealer ? selectedDealer.name : 'Select Dealer'}
-                    </span>
-                  </div>
-                  <ChevronDown className="w-4 h-4 opacity-50" />
-                </SelectTrigger>
-                <SelectContent>
-                  {stockDealerships.map((dealer) => (
-                    <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                      <div className="flex items-center space-x-2">
-                        <Building2 className="w-4 h-4" />
-                        <span>{dealer.name}</span>
-                        <Badge variant="outline" className="ml-auto text-xs">
-                          {dealer.city}, {dealer.state}
-                        </Badge>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+          <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t('stock.title')}
+            </h1>
+            <Badge variant="outline" className="ml-2">
+              {inventory.length} {t('stock.metrics.totalVehicles')}
+            </Badge>
           </div>
-          <p className="text-muted-foreground">{t('stock.description')}</p>
-          {selectedDealer && stockDealerships.length === 1 && (
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <Building2 className="w-3 h-3" />
-              <span>{selectedDealer.name} - {selectedDealer.city}, {selectedDealer.state}</span>
-            </div>
-          )}
+          <p className="text-muted-foreground">
+            {t('stock.description')} • {currentDealership.name}
+          </p>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={refreshInventory}
-            disabled={loading || !selectedDealerId}
+            onClick={handleManualRefresh}
+            disabled={isManualRefreshing || !currentDealership}
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
             {t('stock.actions.refresh')}
           </Button>
         </div>
@@ -248,23 +241,23 @@ export const StockDashboard: React.FC = () => {
         </TabsList>
 
         <TabsContent value="inventory" className="space-y-4">
-          <StockInventoryTable dealerId={selectedDealerId || undefined} />
+          <StockInventoryTable dealerId={currentDealership?.id} />
         </TabsContent>
 
         <TabsContent value="upload" className="space-y-4">
-          <StockCSVUploader dealerId={selectedDealerId || undefined} />
+          <StockCSVUploader dealerId={currentDealership?.id} />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <StockAnalytics dealerId={selectedDealerId || undefined} />
+          <StockAnalytics dealerId={currentDealership?.id} />
         </TabsContent>
 
         <TabsContent value="dms" className="space-y-4">
-          <StockDMSConfig dealerId={selectedDealerId || undefined} />
+          <StockDMSConfig dealerId={currentDealership?.id} />
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          <StockSyncHistory dealerId={selectedDealerId || undefined} />
+          <StockSyncHistory dealerId={currentDealership?.id} />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,52 +1,48 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Upload,
-  Image as ImageIcon,
-  Video,
-  FileText,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Star,
-  X,
-  Loader2,
-  Grid3x3,
-  List,
-  Filter,
-} from 'lucide-react';
+    MediaType,
+    useDeleteMedia,
+    useUpdateMedia,
+    useUploadMedia,
+    useVehicleMedia,
+    VehicleMedia,
+} from '@/hooks/useVehicleMedia';
 import { cn } from '@/lib/utils';
 import {
-  useVehicleMedia,
-  useUploadMedia,
-  useUpdateMedia,
-  useDeleteMedia,
-  VehicleMedia,
-  MediaType,
-} from '@/hooks/useVehicleMedia';
+    Edit,
+    FileText,
+    Filter,
+    Grid3x3,
+    Image as ImageIcon,
+    List,
+    Loader2,
+    MoreHorizontal,
+    Trash2,
+    Upload,
+    Video,
+    X
+} from 'lucide-react';
+import React, { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface VehicleMediaTabProps {
   vehicleId: string;
@@ -223,7 +219,7 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
   return (
     <div className={cn('h-full flex flex-col', className)}>
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
         <Card className="p-3">
           <div className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4 text-blue-600" />
@@ -321,13 +317,13 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         className={cn(
-          'flex-1 overflow-y-auto border-2 border-dashed rounded-lg p-4 transition-colors',
+          'flex-1 overflow-y-auto border-2 border-dashed rounded-lg p-4 pb-6 transition-colors',
           isDragging ? 'border-primary bg-primary/5' : 'border-border',
         )}
       >
         {filteredMedia.length > 0 ? (
           viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pb-4">
               {filteredMedia.map((media) => (
                 <Card key={media.id} className="group relative overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
                   {/* Media Preview */}
@@ -410,7 +406,7 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
               ))}
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 pb-4">
               {filteredMedia.map((media) => (
                 <Card key={media.id} className="p-3 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-3">

@@ -1,14 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
-import { usePermissions } from '@/hooks/usePermissions';
+import { toast } from '@/hooks/use-toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
-import { orderNumberService } from '@/services/orderNumberService';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
-import { useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -135,7 +134,6 @@ const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
 });
 
 export const useReconOrderManagement = () => {
-  const [allOrders, setAllOrders] = useState<ReconOrder[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
@@ -239,6 +237,12 @@ export const useReconOrderManagement = () => {
     isPollingEnabled  // Use reactive variable
   );
 
+  // Derive orders directly from polling query using useMemo for silent updates
+  const allOrders = useMemo(() =>
+    reconOrdersPollingQuery.data || [],
+    [reconOrdersPollingQuery.data]
+  );
+
   // Simplified refreshData - uses polling query for consistency
   const refreshData = useCallback(async () => {
     await reconOrdersPollingQuery.refetch();
@@ -254,10 +258,14 @@ export const useReconOrderManagement = () => {
     try {
       console.log('📥 Hook received orderData:', {
         dealerId: orderData.dealerId,
+        stockNumber: orderData.stockNumber,
         services: orderData.services,
         servicesLength: orderData.services?.length,
         servicesType: typeof orderData.services,
         isArray: Array.isArray(orderData.services),
+        completedAt: orderData.completedAt,
+        completedAtType: typeof orderData.completedAt,
+        completedAtValue: orderData.completedAt ? orderData.completedAt.toString() : 'undefined',
         fullData: orderData
       });
 
@@ -281,7 +289,6 @@ export const useReconOrderManagement = () => {
       }
 
       const insertData: SupabaseOrderInsert = {
-        customer_name: orderData.stockNumber || 'Recon Vehicle',
         stock_number: orderData.stockNumber,
         vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
         vehicle_make: orderData.vehicleMake,
@@ -303,11 +310,17 @@ export const useReconOrderManagement = () => {
       };
 
       console.log('💾 Sending to Supabase:', {
+        stock_number: insertData.stock_number,
         services: insertData.services,
         servicesLength: insertData.services?.length,
         servicesType: typeof insertData.services,
         isArray: Array.isArray(insertData.services),
         servicesContent: JSON.stringify(insertData.services),
+        completed_at: insertData.completed_at,
+        completed_at_type: typeof insertData.completed_at,
+        completed_at_value: insertData.completed_at ? insertData.completed_at.toString() : 'null',
+        total_amount: insertData.total_amount,
+        vehicle_info: insertData.vehicle_info,
         fullInsertData: insertData
       });
 
@@ -362,23 +375,89 @@ export const useReconOrderManagement = () => {
   // Update existing recon order
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<ReconOrderData>) => {
     try {
-      const updateData: SupabaseOrderUpdate = {
-        customer_name: orderData.stockNumber || 'Recon Vehicle',
-        stock_number: orderData.stockNumber,
-        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : undefined,
-        vehicle_make: orderData.vehicleMake,
-        vehicle_model: orderData.vehicleModel,
-        vehicle_vin: orderData.vehicleVin,
-        vehicle_info: orderData.vehicleInfo,
-        status: orderData.status,
-        priority: 'normal',
-        services: orderData.services || [],
-        total_amount: orderData.totalAmount,
-        notes: orderData.notes,
-        internal_notes: orderData.internalNotes,
-        completed_at: orderData.completedAt ? (orderData.completedAt instanceof Date ? orderData.completedAt.toISOString() : orderData.completedAt) : null,
-        assigned_contact_id: null
-      };
+      console.log('📥 updateOrder received:', {
+        orderId: orderId,
+        orderData: orderData,
+        completedAt: orderData.completedAt,
+        completedAtType: typeof orderData.completedAt,
+        stockNumber: orderData.stockNumber,
+        services: orderData.services,
+        status: orderData.status
+      });
+
+      // Build updateData dynamically - only include fields explicitly provided
+      // This prevents accidental data loss when doing partial updates (e.g., status change)
+      const updateData: SupabaseOrderUpdate = {};
+
+      // Vehicle and stock information
+      if (orderData.stockNumber !== undefined) {
+        updateData.stock_number = orderData.stockNumber;
+      }
+      if (orderData.vehicleYear !== undefined) {
+        updateData.vehicle_year = parseInt(orderData.vehicleYear.toString());
+      }
+      if (orderData.vehicleMake !== undefined) {
+        updateData.vehicle_make = orderData.vehicleMake;
+      }
+      if (orderData.vehicleModel !== undefined) {
+        updateData.vehicle_model = orderData.vehicleModel;
+      }
+      if (orderData.vehicleVin !== undefined) {
+        updateData.vehicle_vin = orderData.vehicleVin;
+      }
+      if (orderData.vehicleInfo !== undefined) {
+        updateData.vehicle_info = orderData.vehicleInfo;
+      }
+
+      // Order status and priority
+      if (orderData.status !== undefined) {
+        updateData.status = orderData.status;
+      }
+      if (orderData.priority !== undefined) {
+        updateData.priority = orderData.priority;
+      }
+
+      // CRITICAL: Only update services if explicitly provided
+      // This prevents clearing services array during status-only updates
+      if (orderData.services !== undefined) {
+        updateData.services = orderData.services;
+      }
+
+      // Pricing
+      if (orderData.totalAmount !== undefined) {
+        updateData.total_amount = orderData.totalAmount;
+      }
+
+      // Notes
+      if (orderData.notes !== undefined) {
+        updateData.notes = orderData.notes;
+      }
+      if (orderData.internalNotes !== undefined) {
+        updateData.internal_notes = orderData.internalNotes;
+      }
+
+      // Dates
+      if (orderData.completedAt !== undefined) {
+        updateData.completed_at = orderData.completedAt
+          ? (orderData.completedAt instanceof Date ? orderData.completedAt.toISOString() : orderData.completedAt)
+          : null;
+      }
+
+      // Assignment
+      if (orderData.assignedContactId !== undefined) {
+        updateData.assigned_contact_id = orderData.assignedContactId ? orderData.assignedContactId.toString() : null;
+      }
+
+      console.log('💾 Sending UPDATE to Supabase:', {
+        orderId: orderId,
+        updateData: updateData,
+        completed_at: updateData.completed_at,
+        completed_at_type: typeof updateData.completed_at,
+        stock_number: updateData.stock_number,
+        services: updateData.services,
+        status: updateData.status,
+        fieldsToUpdate: Object.keys(updateData)
+      });
 
       const { data, error } = await supabase
         .from('orders')
@@ -395,6 +474,15 @@ export const useReconOrderManagement = () => {
         });
         return null;
       }
+
+      console.log('✅ Supabase UPDATE successful, received data:', {
+        id: data.id,
+        completed_at: data.completed_at,
+        stock_number: data.stock_number,
+        services: data.services,
+        status: data.status,
+        fullData: data
+      });
 
       const updatedOrder = transformReconOrder(data);
 
@@ -533,13 +621,6 @@ export const useReconOrderManagement = () => {
     }
   }, [user, enhancedUser, reconOrdersPollingQuery]);
 
-  // Update allOrders when polling data changes (silent, no loading state)
-  useEffect(() => {
-    if (reconOrdersPollingQuery.data) {
-      setAllOrders(reconOrdersPollingQuery.data);
-    }
-  }, [reconOrdersPollingQuery.data]);
-
   // Update lastRefresh when polling completes
   useEffect(() => {
     if (!reconOrdersPollingQuery.isFetching && reconOrdersPollingQuery.dataUpdatedAt) {
@@ -556,4 +637,4 @@ export const useReconOrderManagement = () => {
     updateOrder,
     deleteOrder
   };
-}; 
+};

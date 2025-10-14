@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
-import { orderNumberService } from '@/services/orderNumberService';
-import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { usePermissions } from '@/hooks/usePermissions';
-import { useQueryClient } from '@tanstack/react-query';
+import { useOrderPolling } from '@/hooks/useSmartPolling';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { isDateInWeek } from '@/utils/weekUtils';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -143,7 +142,6 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
 
 export const useServiceOrderManagement = (activeTab: string, weekOffset: number = 0) => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
-  const [allOrders, setAllOrders] = useState<ServiceOrder[]>([]); // Keep full dataset
   const [filters, setFilters] = useState<ServiceOrderFilters>({
     search: '',
     status: '',
@@ -157,6 +155,109 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
   const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();
+
+  // Smart polling for service order data (replaces real-time subscription and initial refresh)
+  const serviceOrdersPollingQuery = useOrderPolling(
+    ['orders', 'service'],
+    async () => {
+      if (!user || !enhancedUser) return [];
+
+      console.log('🔄 Smart polling: Fetching service orders...');
+
+      // Apply same dealer filtering logic as Sales Orders
+      let ordersQuery = supabase
+        .from('orders')
+        .select('*, order_comments(count)')
+        .eq('order_type', 'service')
+        .order('created_at', { ascending: false });
+
+      // Check global dealer filter
+      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
+      const dealerFilter = savedDealerFilter === 'all' ? 'all' : (savedDealerFilter ? parseInt(savedDealerFilter) : 'all');
+
+      // Handle dealer filtering based on user type and global filter
+      if (enhancedUser.dealership_id === null) {
+        // User is multi-dealer - respect global filter
+        if (dealerFilter === 'all') {
+          // Show all dealers user has access to
+          const { data: userDealerships, error: dealershipError } = await supabase
+            .from('dealer_memberships')
+            .select('dealer_id')
+            .eq('user_id', user.id)
+            .eq('is_active', true);
+
+          if (dealershipError) {
+            console.error('Error fetching user dealerships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', 5);
+          } else {
+            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
+            console.log(`🏢 Service Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
+          }
+        } else {
+          // Filter by specific dealer selected in dropdown
+          console.log(`🎯 Service Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+        }
+      } else {
+        // User has single assigned dealership - ignore global filter
+        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
+      }
+
+      const { data: orders, error } = await ordersQuery;
+      if (error) throw error;
+
+      // Fetch dealerships, profiles, and groups in parallel for better performance
+      const [dealershipsResult, profilesResult, groupsResult] = await Promise.all([
+        supabase.from('dealerships').select('id, name'),
+        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.from('dealer_groups').select('id, name')
+      ]);
+
+      // Create lookup maps for better performance
+      const dealershipMap = new Map(dealershipsResult.data?.map(d => [d.id, d.name]) || []);
+      const userMap = new Map(profilesResult.data?.map(u => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
+      const groupMap = new Map(groupsResult.data?.map(g => [g.id, g.name]) || []);
+
+      // Transform orders with joined data
+      const serviceOrders = (orders || []).map(order => {
+        const transformed = transformServiceOrder(order);
+
+        // DEBUG: Log polling assignment data
+        console.log('🔄 Polling Assignment Debug:', {
+          orderId: order.id,
+          orderNumber: order.order_number,
+          assigned_group_id: order.assigned_group_id,
+          due_date: order.due_date
+        });
+
+        // Add joined data manually
+        transformed.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
+        transformed.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+        transformed.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+
+        // Fix assignment mapping - assigned_group_id contains user IDs
+        transformed.assignedTo = order.assigned_group_id ?
+          userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+
+        console.log('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
+
+        return transformed;
+      });
+
+      return serviceOrders;
+    },
+    !!(user && enhancedUser)
+  );
+
+  // Derive orders directly from polling query using useMemo for silent updates
+  const allOrders = useMemo(() =>
+    serviceOrdersPollingQuery.data || [],
+    [serviceOrdersPollingQuery.data]
+  );
 
   const tabCounts = useMemo((): ServiceTabCounts => {
     const today = new Date();
@@ -265,109 +366,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     return filtered;
   }, [allOrders, activeTab, weekOffset, filters]);
 
-  // Smart polling for service order data (replaces real-time subscription and initial refresh)
-  const serviceOrdersPollingQuery = useOrderPolling(
-    ['orders', 'service'],
-    async () => {
-      if (!user || !enhancedUser) return [];
-
-      console.log('🔄 Smart polling: Fetching service orders...');
-
-      // Apply same dealer filtering logic as Sales Orders
-      let ordersQuery = supabase
-        .from('orders')
-        .select('*, order_comments(count)')
-        .eq('order_type', 'service')
-        .order('created_at', { ascending: false });
-
-      // Check global dealer filter
-      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
-      const dealerFilter = savedDealerFilter === 'all' ? 'all' : (savedDealerFilter ? parseInt(savedDealerFilter) : 'all');
-
-      // Handle dealer filtering based on user type and global filter
-      if (enhancedUser.dealership_id === null) {
-        // User is multi-dealer - respect global filter
-        if (dealerFilter === 'all') {
-          // Show all dealers user has access to
-          const { data: userDealerships, error: dealershipError } = await supabase
-            .from('dealer_memberships')
-            .select('dealer_id')
-            .eq('user_id', user.id)
-            .eq('is_active', true);
-
-          if (dealershipError) {
-            console.error('Error fetching user dealerships:', dealershipError);
-            ordersQuery = ordersQuery.eq('dealer_id', 5);
-          } else {
-            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
-            console.log(`🏢 Service Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
-            ordersQuery = ordersQuery.in('dealer_id', dealerIds);
-          }
-        } else {
-          // Filter by specific dealer selected in dropdown
-          console.log(`🎯 Service Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
-          ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
-        }
-      } else {
-        // User has single assigned dealership - ignore global filter
-        ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
-      }
-
-      // Filter by allowed order types
-      const allowedOrderTypes = getAllowedOrderTypes();
-      if (allowedOrderTypes.length > 0) {
-        ordersQuery = ordersQuery.in('order_type', allowedOrderTypes);
-      }
-
-      const { data: orders, error } = await ordersQuery;
-      if (error) throw error;
-
-      // Fetch related data in parallel (same as refreshData)
-      const [dealershipsResult, profilesResult, groupsResult] = await Promise.all([
-        supabase.from('dealerships').select('id, name'),
-        supabase.from('profiles').select('id, first_name, last_name, email'),
-        supabase.from('dealer_groups').select('id, name')
-      ]);
-
-      // Create lookup maps for better performance
-      const dealershipMap = new Map(dealershipsResult.data?.map(d => [d.id, d.name]) || []);
-      const userMap = new Map(profilesResult.data?.map(u => [
-        u.id,
-        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
-      ]) || []);
-      const groupMap = new Map(groupsResult.data?.map(g => [g.id, g.name]) || []);
-
-      // Transform orders with joined data
-      const serviceOrders = (orders || []).map(order => {
-        const transformed = transformServiceOrder(order);
-
-        // DEBUG: Log polling assignment data
-        console.log('🔄 Polling Assignment Debug:', {
-          orderId: order.id,
-          orderNumber: order.order_number,
-          assigned_group_id: order.assigned_group_id,
-          due_date: order.due_date
-        });
-
-        // Add joined data manually
-        transformed.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
-        transformed.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
-        transformed.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-
-        // Fix assignment mapping - assigned_group_id contains user IDs
-        transformed.assignedTo = order.assigned_group_id ?
-          userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
-
-        console.log('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
-
-        return transformed;
-      });
-
-      return serviceOrders;
-    },
-    !!(user && enhancedUser)
-  );
-
   // Simplified refreshData - uses polling query for consistency
   const refreshData = useCallback(async () => {
     console.log('🔄 Manual refresh triggered - using polling query');
@@ -380,12 +378,12 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
   const createOrder = useCallback(async (orderData: ServiceOrderData) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
       console.log('Creating service order with data:', orderData);
-      
+
       // Use database function to generate sequential order number
       const { data: orderNumberData, error: numberError } = await supabase
         .rpc('generate_service_order_number');
@@ -433,7 +431,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       }
 
       console.log('Service order created successfully:', data);
-      
+
       // Auto-generate QR code and shortlink
       try {
         await generateQR(data.id, data.order_number, data.dealer_id);
@@ -455,28 +453,83 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<ServiceOrderData> & { status?: string }) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
-      const updateData: SupabaseOrderUpdate = {
-        customer_name: orderData.customerName,
-        customer_email: orderData.customerEmail,
-        customer_phone: orderData.customerPhone,
-        vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : undefined,
-        vehicle_make: orderData.vehicleMake,
-        vehicle_model: orderData.vehicleModel,
-        vehicle_vin: orderData.vehicleVin,
-        vehicle_info: orderData.vehicleInfo,
-        po: orderData.po,
-        ro: orderData.ro,
-        tag: orderData.tag,
-        status: orderData.status,
-        services: orderData.services,
-        total_amount: orderData.totalAmount,
-        sla_deadline: orderData.dueDate,
-        notes: orderData.notes,
-      };
+      // Build updateData dynamically - only include fields explicitly provided
+      // This prevents accidental data loss when doing partial updates (e.g., status change)
+      const updateData: SupabaseOrderUpdate = {};
+
+      // Customer information
+      if (orderData.customerName !== undefined) {
+        updateData.customer_name = orderData.customerName;
+      }
+      if (orderData.customerEmail !== undefined) {
+        updateData.customer_email = orderData.customerEmail;
+      }
+      if (orderData.customerPhone !== undefined) {
+        updateData.customer_phone = orderData.customerPhone;
+      }
+
+      // Vehicle information
+      if (orderData.vehicleYear !== undefined) {
+        updateData.vehicle_year = parseInt(orderData.vehicleYear.toString());
+      }
+      if (orderData.vehicleMake !== undefined) {
+        updateData.vehicle_make = orderData.vehicleMake;
+      }
+      if (orderData.vehicleModel !== undefined) {
+        updateData.vehicle_model = orderData.vehicleModel;
+      }
+      if (orderData.vehicleVin !== undefined) {
+        updateData.vehicle_vin = orderData.vehicleVin;
+      }
+      if (orderData.vehicleInfo !== undefined) {
+        updateData.vehicle_info = orderData.vehicleInfo;
+      }
+
+      // Service specific fields
+      if (orderData.po !== undefined) {
+        updateData.po = orderData.po;
+      }
+      if (orderData.ro !== undefined) {
+        updateData.ro = orderData.ro;
+      }
+      if (orderData.tag !== undefined) {
+        updateData.tag = orderData.tag;
+      }
+
+      // Assignment
+      if (orderData.assignedGroupId !== undefined) {
+        updateData.assigned_group_id = orderData.assignedGroupId;
+      }
+
+      // Order status
+      if (orderData.status !== undefined) {
+        updateData.status = orderData.status;
+      }
+
+      // CRITICAL: Only update services if explicitly provided
+      // This prevents clearing services array during status-only updates
+      if (orderData.services !== undefined) {
+        updateData.services = orderData.services;
+      }
+
+      // Pricing
+      if (orderData.totalAmount !== undefined) {
+        updateData.total_amount = orderData.totalAmount;
+      }
+
+      // Dates
+      if (orderData.dueDate !== undefined) {
+        updateData.sla_deadline = orderData.dueDate;
+      }
+
+      // Notes
+      if (orderData.notes !== undefined) {
+        updateData.notes = orderData.notes;
+      }
 
       const { data, error } = await supabase
         .from('orders')
@@ -504,9 +557,9 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
       const { error } = await supabase
         .from('orders')
@@ -576,21 +629,13 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
   //   };
   // }, [user]);
 
-  // Update allOrders when polling data changes
-  useEffect(() => {
-    if (serviceOrdersPollingQuery.data) {
-      setAllOrders(serviceOrdersPollingQuery.data);
-      setLoading(false);
-    }
-  }, [serviceOrdersPollingQuery.data]);
-
   // Update lastRefresh when polling completes
   useEffect(() => {
-    if (!serviceOrdersPollingQuery.isFetching && (serviceOrdersPollingQuery.data || serviceOrdersPollingQuery.error)) {
-      setLastRefresh(new Date());
-      console.log('⏰ Service Orders LastRefresh updated:', new Date().toLocaleTimeString());
+    if (!serviceOrdersPollingQuery.isFetching && serviceOrdersPollingQuery.dataUpdatedAt) {
+      setLastRefresh(new Date(serviceOrdersPollingQuery.dataUpdatedAt));
+      console.log('⏰ Service Orders LastRefresh updated:', new Date(serviceOrdersPollingQuery.dataUpdatedAt).toLocaleTimeString());
     }
-  }, [serviceOrdersPollingQuery.isFetching, serviceOrdersPollingQuery.data, serviceOrdersPollingQuery.error]);
+  }, [serviceOrdersPollingQuery.isFetching, serviceOrdersPollingQuery.dataUpdatedAt]);
 
   return {
     orders: filteredOrders,

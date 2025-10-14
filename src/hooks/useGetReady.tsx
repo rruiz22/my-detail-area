@@ -2,14 +2,15 @@ import { mockVehicles } from '@/data/mockVehicles';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
 import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert } from '@/types/getReady';
-import { useQuery } from '@tanstack/react-query';
+
+import { useOrderPolling } from '@/hooks/useSmartPolling';
 
 export function useGetReadySteps() {
   const { currentDealership } = useAccessibleDealerships();
 
-  return useQuery({
-    queryKey: ['get-ready-steps', currentDealership?.id],
-    queryFn: async (): Promise<GetReadyStep[]> => {
+  return useOrderPolling(
+    ['get-ready-steps', currentDealership?.id],
+    async (): Promise<GetReadyStep[]> => {
       if (!currentDealership?.id) {
         console.warn('No dealership selected, using mock data');
         // Fallback to mock data
@@ -295,18 +296,16 @@ export function useGetReadySteps() {
         };
       });
     },
-    enabled: !!currentDealership?.id,
-    staleTime: 30000,
-    refetchInterval: 60000,
-  });
+    !!currentDealership?.id
+  );
 }
 
 export function useGetReadyKPIs() {
   const { currentDealership } = useAccessibleDealerships();
 
-  return useQuery({
-    queryKey: ['get-ready-kpis', currentDealership?.id],
-    queryFn: async (): Promise<GetReadyKPIs> => {
+  return useOrderPolling(
+    ['get-ready-kpis', currentDealership?.id],
+    async (): Promise<GetReadyKPIs> => {
       if (!currentDealership?.id) {
         console.warn('No dealership selected, using mock KPIs');
         // Fallback to mock data
@@ -398,19 +397,17 @@ export function useGetReadyKPIs() {
         roiImprovement: 0 // Calculate if needed
       };
     },
-    enabled: !!currentDealership?.id,
-    staleTime: 60000,
-    refetchInterval: 300000, // 5 minutes
-  });
+    !!currentDealership?.id
+  );
 }
 
 export function useBottleneckAlerts() {
   const { dealerships } = useAccessibleDealerships();
   const dealerId = dealerships.length > 0 ? dealerships[0].id : 5;
 
-  return useQuery({
-    queryKey: ['bottleneck-alerts', dealerId],
-    queryFn: async (): Promise<BottleneckAlert[]> => {
+  return useOrderPolling(
+    ['bottleneck-alerts', dealerId],
+    async (): Promise<BottleneckAlert[]> => {
       // Mock bottleneck alerts
       const alerts: BottleneckAlert[] = [
         {
@@ -435,18 +432,17 @@ export function useBottleneckAlerts() {
 
       return alerts;
     },
-    staleTime: 30000,
-    refetchInterval: 120000, // 2 minutes
-  });
+    true
+  );
 }
 
 export function useSLAAlerts() {
   const { dealerships } = useAccessibleDealerships();
   const dealerId = dealerships.length > 0 ? dealerships[0].id : 5;
 
-  return useQuery({
-    queryKey: ['sla-alerts', dealerId],
-    queryFn: async (): Promise<SLAAlert[]> => {
+  return useOrderPolling(
+    ['sla-alerts', dealerId],
+    async (): Promise<SLAAlert[]> => {
       // Mock SLA alerts
       const alerts: SLAAlert[] = [
         {
@@ -471,9 +467,8 @@ export function useSLAAlerts() {
 
       return alerts;
     },
-    staleTime: 30000,
-    refetchInterval: 60000, // 1 minute
-  });
+    true
+  );
 }
 
 // Main hook that combines all Get Ready functionality

@@ -26,6 +26,7 @@ import { useRealtimeSchedule } from '@/hooks/useRealtimeSchedule';
 
 interface ScheduleViewBlockProps {
   order: OrderData;
+  orderType?: 'sales' | 'service' | 'recon' | 'carwash';
   onStatusUpdate?: (newStatus: string) => void;
   onDateUpdate?: (field: string, newDate: string) => void;
   enableInteractiveFeatures?: boolean;
@@ -65,6 +66,7 @@ const getProgressColorClass = (status: string): string => {
 // Memoized component to prevent unnecessary re-renders
 export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
   order,
+  orderType,
   onStatusUpdate,
   onDateUpdate,
   enableInteractiveFeatures = false
@@ -208,8 +210,8 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
   const scheduleItems = useMemo(() => {
     console.log('🔍 [SCHEDULE ITEMS] Building schedule items for order:', currentOrder.id);
 
-    // Use enhanced date utilities with fallbacks
-    const items = createScheduleItems(currentOrder, t, orderAge);
+    // Use enhanced date utilities with fallbacks - pass orderType for recon/carwash
+    const items = createScheduleItems(currentOrder, t, orderAge, orderType);
 
     // Convert to expected format and add icons
     const scheduleItemsWithIcons: ScheduleItem[] = items.map((item, index) => {
@@ -235,7 +237,7 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
     });
 
     return scheduleItemsWithIcons;
-  }, [currentOrder, t, orderAge]);
+  }, [currentOrder, t, orderAge, orderType]);
 
   return (
     <Card className="h-full">

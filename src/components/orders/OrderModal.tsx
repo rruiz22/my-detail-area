@@ -767,7 +767,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-7xl max-h-[95vh] w-[95vw] sm:w-[90vw] md:w-[85vw] p-0 mx-2 sm:mx-4"
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] md:w-[85vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="order-modal-description"
       >
         <DialogHeader className="p-4 sm:p-6 pb-0">

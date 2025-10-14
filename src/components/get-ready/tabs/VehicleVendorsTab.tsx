@@ -1,28 +1,27 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
-import {
-  Users,
-  Briefcase,
-  DollarSign,
-  Clock,
-  CheckCircle2,
-  Circle,
-  AlertTriangle,
-  ExternalLink
-} from 'lucide-react';
-import { useWorkItems, useAssignVendorToWorkItem } from '@/hooks/useVehicleWorkItems';
+import { useAssignVendorToWorkItem, useWorkItems } from '@/hooks/useVehicleWorkItems';
 import { useVendors } from '@/hooks/useVendors';
 import { cn } from '@/lib/utils';
+import {
+    AlertTriangle,
+    Briefcase,
+    CheckCircle2,
+    Circle,
+    Clock,
+    DollarSign,
+    Users
+} from 'lucide-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface VehicleVendorsTabProps {
   vehicleId: string;
@@ -123,7 +122,7 @@ export function VehicleVendorsTab({ vehicleId, className }: VehicleVendorsTabPro
     <div className={cn("space-y-6", className)}>
       {/* Summary Cards - Only show if there are vendors assigned */}
       {vendorSummary.totalWorkItems > 0 && (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -189,7 +188,7 @@ export function VehicleVendorsTab({ vehicleId, className }: VehicleVendorsTabPro
 
       {/* Vendors List - Only show if there are vendors assigned */}
       {vendorSummary.totalWorkItems > 0 && (
-      <div className="space-y-4">
+      <div className="space-y-4 pb-4">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <Briefcase className="h-5 w-5" />
           {t('get_ready.vendors.assigned_vendors')}

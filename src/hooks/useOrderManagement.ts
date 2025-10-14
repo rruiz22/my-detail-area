@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { shouldUseRealtime } from '@/config/realtimeFeatures';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
-import { orderNumberService, OrderType } from '@/services/orderNumberService';
-import { useOrderPolling } from '@/hooks/useSmartPolling';
-import { shouldUseRealtime } from '@/config/realtimeFeatures';
-import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
-import { getSystemTimezone } from '@/utils/dateUtils';
 import { usePermissions } from '@/hooks/usePermissions';
-import { useQueryClient } from '@tanstack/react-query';
+import { useOrderPolling } from '@/hooks/useSmartPolling';
+import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
+import { orderNumberService, OrderType } from '@/services/orderNumberService';
+import { getSystemTimezone } from '@/utils/dateUtils';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // Enhanced database types
 type SupabaseOrderRow = Database['public']['Tables']['orders']['Row'];
@@ -129,12 +129,12 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
     // Core identifiers
     id: supabaseOrder.id,
     orderNumber: getFieldValue(supabaseOrder.order_number) || supabaseOrder.id,
-    
+
     // Customer information
     customerName: getFieldValue(supabaseOrder.customer_name, ''),
     customerEmail: getFieldValue(supabaseOrder.customer_email),
     customerPhone: getFieldValue(supabaseOrder.customer_phone),
-    
+
     // Vehicle information - prioritize consolidated field but keep individual fields for compatibility
     vehicleInfo: getFieldValue(supabaseOrder.vehicle_info),
     vehicleYear: getFieldValue(supabaseOrder.vehicle_year),
@@ -142,19 +142,19 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
     vehicleModel: getFieldValue(supabaseOrder.vehicle_model),
     vehicleVin: getFieldValue(supabaseOrder.vehicle_vin),
     stockNumber: getFieldValue(supabaseOrder.stock_number),
-    
+
     // Order management
     status: (supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled') || 'pending',
     priority: getFieldValue(supabaseOrder.priority, 'normal'),
     orderType: getFieldValue(supabaseOrder.order_type, 'sales'),
-    
+
     // Date handling - due_date is primary
     dueDate: primaryDate,
-    
+
     // System fields
     createdAt: supabaseOrder.created_at,
     updatedAt: supabaseOrder.updated_at,
-    
+
     // Financial and services
     totalAmount: getFieldValue(supabaseOrder.total_amount),
     services: Array.isArray(supabaseOrder.services) ? supabaseOrder.services as OrderService[] : [],
@@ -163,13 +163,13 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
     shortLink: getFieldValue(supabaseOrder.short_link),
     qrCodeUrl: getFieldValue(supabaseOrder.qr_code_url),
     qrGenerationStatus: getFieldValue(supabaseOrder.qr_generation_status),
-    
+
     // Assignment - will be populated by refreshData with proper names
     assignedTo: 'Unassigned', // Will be overwritten in refreshData
-    
+
     // Notes
     notes: getFieldValue(supabaseOrder.notes),
-    
+
     // Enhanced fields from manual JOINs (will be set in refreshData)
     dealershipName: 'Unknown Dealer',
     assignedGroupName: undefined,
@@ -187,10 +187,9 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
   };
 };
 
-export const useOrderManagement = (activeTab: string) => {
+export const useOrderManagement = (activeTab: string, weekOffset: number = 0) => {
   const { createSubscription, removeSubscription } = useSubscriptionManager();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [allOrders, setAllOrders] = useState<Order[]>([]); // Keep full dataset
   const [tabCounts, setTabCounts] = useState({
     today: 0,
     tomorrow: 0,
@@ -221,7 +220,7 @@ export const useOrderManagement = (activeTab: string) => {
   const realtimeUpdateCountRef = useRef(0);
 
   // Helper function to get dates in system timezone (Eastern Time) for consistent filtering
-  const getSystemTimezoneDates = useCallback(() => {
+  const getSystemTimezoneDates = useCallback((offset: number = 0) => {
     const timezone = getSystemTimezone();
     const now = new Date();
 
@@ -233,21 +232,30 @@ export const useOrderManagement = (activeTab: string) => {
     const tomorrowInTimezone = new Date(todayInTimezone);
     tomorrowInTimezone.setDate(tomorrowInTimezone.getDate() + 1);
 
-    // Next week in system timezone (7 days from today)
-    const nextWeekInTimezone = new Date(todayInTimezone);
-    nextWeekInTimezone.setDate(nextWeekInTimezone.getDate() + 7);
-    nextWeekInTimezone.setHours(23, 59, 59, 999);
+    // Calculate week range based on offset
+    // Week start (Monday) with offset applied
+    const weekStart = new Date(todayInTimezone);
+    const dayOfWeek = weekStart.getDay();
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If Sunday (0), go back 6 days, else go to Monday
+    weekStart.setDate(weekStart.getDate() + daysToMonday + (offset * 7));
+    weekStart.setHours(0, 0, 0, 0);
+
+    // Week end (Sunday) with offset applied
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
 
     return {
       today: todayInTimezone,
       tomorrow: tomorrowInTimezone,
-      nextWeek: nextWeekInTimezone,
+      weekStart: weekStart,
+      weekEnd: weekEnd,
       timezone
     };
   }, []);
 
   const calculateTabCounts = useMemo(() => (allOrders: Order[]) => {
-    const { today, tomorrow, nextWeek } = getSystemTimezoneDates();
+    const { today, tomorrow, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
 
     return {
       today: allOrders.filter(order => {
@@ -270,18 +278,18 @@ export const useOrderManagement = (activeTab: string) => {
         // Normalize order date to start of day for comparison
         const orderDateNormalized = new Date(orderDate);
         orderDateNormalized.setHours(0, 0, 0, 0);
-        return orderDateNormalized >= today && orderDateNormalized <= nextWeek;
+        return orderDateNormalized >= weekStart && orderDateNormalized <= weekEnd;
       }).length,
       services: allOrders.filter(order => order.orderType === 'service').length,
     };
-  }, [getSystemTimezoneDates]);
+  }, [getSystemTimezoneDates, weekOffset]);
 
   const filterOrders = useMemo(() => (allOrders: Order[], tab: string, currentFilters: OrderFilters) => {
     let filtered = [...allOrders];
 
     // Apply tab-specific filtering
     if (tab !== 'dashboard' && tab !== 'all') {
-      const { today, tomorrow, nextWeek } = getSystemTimezoneDates();
+      const { today, tomorrow, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
 
       switch (tab) {
         case 'today':
@@ -317,7 +325,7 @@ export const useOrderManagement = (activeTab: string) => {
             // Normalize order date to start of day for comparison
             const orderDateNormalized = new Date(orderDate);
             orderDateNormalized.setHours(0, 0, 0, 0);
-            return orderDateNormalized >= today && orderDateNormalized <= nextWeek;
+            return orderDateNormalized >= weekStart && orderDateNormalized <= weekEnd;
           });
           break;
         case 'services':
@@ -362,7 +370,7 @@ export const useOrderManagement = (activeTab: string) => {
     }
 
     return filtered;
-  }, [getSystemTimezoneDates]);
+  }, [getSystemTimezoneDates, weekOffset]);
 
   const refreshData = useCallback(async (skipFiltering = false) => {
     if (!user || !enhancedUser) return;
@@ -478,7 +486,7 @@ export const useOrderManagement = (activeTab: string) => {
       const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
       const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
       const userMap = new Map(userProfiles?.map(u => [
-        u.id, 
+        u.id,
         `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
       ]) || []);
 
@@ -489,23 +497,25 @@ export const useOrderManagement = (activeTab: string) => {
         transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
         transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
         transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-        
+
         // Fix assignment mapping - assigned_group_id actually contains user IDs, not group IDs
-        transformedOrder.assignedTo = order.assigned_group_id ? 
+        transformedOrder.assignedTo = order.assigned_group_id ?
           userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
-        
+
         return transformedOrder;
       });
 
-      // Store full dataset and calculate tab counts
-      setAllOrders(allOrders);
+      // Calculate tab counts from fetched data
       setTabCounts(calculateTabCounts(allOrders));
-      
+
       // Apply filtering unless skipped
       if (!skipFiltering) {
         const filtered = filterOrders(allOrders, activeTab, filters);
         setOrders(filtered);
       }
+
+      // Update React Query cache for silent updates
+      queryClient.setQueryData(['orders', 'all'], allOrders);
 
       // Force polling query to update
       await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
@@ -615,7 +625,15 @@ export const useOrderManagement = (activeTab: string) => {
       }
 
       console.log('Order created successfully:', data);
-      
+
+      // Enrich the new order with dealer info
+      const enrichedNewOrder = await enrichOrderData(data);
+
+      // Optimistic update: Add new order to cache immediately
+      queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+        oldData ? [enrichedNewOrder, ...oldData] : [enrichedNewOrder]
+      );
+
       // Auto-generate QR code and shortlink in background (non-blocking)
       generateQR(data.id, data.order_number, data.dealer_id)
         .then(() => {
@@ -626,8 +644,8 @@ export const useOrderManagement = (activeTab: string) => {
           // QR generation failure doesn't affect order creation
         });
 
-      // Force immediate refetch to refresh order list
-      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
+      // Invalidate to ensure data consistency in background
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
       console.error('Error in createOrder:', error);
       throw error;
@@ -638,14 +656,100 @@ export const useOrderManagement = (activeTab: string) => {
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<OrderFormData>) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
-      // orderData may come in snake_case format, so use it directly
+      // Build updateData dynamically - only include fields explicitly provided
+      // This prevents accidental data loss when doing partial updates (e.g., status change)
+      const updateData: SupabaseOrderUpdate = {};
+
+      // Customer information
+      if (orderData.customer_name !== undefined) {
+        updateData.customer_name = orderData.customer_name;
+      }
+      if (orderData.customer_email !== undefined) {
+        updateData.customer_email = orderData.customer_email;
+      }
+      if (orderData.customer_phone !== undefined) {
+        updateData.customer_phone = orderData.customer_phone;
+      }
+
+      // Vehicle information
+      if (orderData.vehicle_year !== undefined) {
+        updateData.vehicle_year = orderData.vehicle_year;
+      }
+      if (orderData.vehicle_make !== undefined) {
+        updateData.vehicle_make = orderData.vehicle_make;
+      }
+      if (orderData.vehicle_model !== undefined) {
+        updateData.vehicle_model = orderData.vehicle_model;
+      }
+      if (orderData.vehicle_vin !== undefined) {
+        updateData.vehicle_vin = orderData.vehicle_vin;
+      }
+      if (orderData.vehicle_info !== undefined) {
+        updateData.vehicle_info = orderData.vehicle_info;
+      }
+      if (orderData.stock_number !== undefined) {
+        updateData.stock_number = orderData.stock_number;
+      }
+
+      // Assignment
+      if (orderData.assigned_group_id !== undefined) {
+        updateData.assigned_group_id = orderData.assigned_group_id;
+      }
+      if (orderData.assigned_contact_id !== undefined) {
+        updateData.assigned_contact_id = orderData.assigned_contact_id;
+      }
+      if (orderData.salesperson !== undefined) {
+        updateData.salesperson = orderData.salesperson;
+      }
+
+      // Order status and priority
+      if (orderData.status !== undefined) {
+        updateData.status = orderData.status;
+      }
+      if (orderData.priority !== undefined) {
+        updateData.priority = orderData.priority;
+      }
+
+      // CRITICAL: Only update services if explicitly provided
+      // This prevents clearing services array during status-only updates
+      if (orderData.services !== undefined) {
+        updateData.services = orderData.services;
+      }
+
+      // Pricing
+      if (orderData.total_amount !== undefined) {
+        updateData.total_amount = orderData.total_amount;
+      }
+
+      // Dates
+      if (orderData.due_date !== undefined) {
+        updateData.due_date = orderData.due_date;
+      }
+      if (orderData.sla_deadline !== undefined) {
+        updateData.sla_deadline = orderData.sla_deadline;
+      }
+      if (orderData.scheduled_date !== undefined) {
+        updateData.scheduled_date = orderData.scheduled_date;
+      }
+      if (orderData.scheduled_time !== undefined) {
+        updateData.scheduled_time = orderData.scheduled_time;
+      }
+
+      // Notes
+      if (orderData.notes !== undefined) {
+        updateData.notes = orderData.notes;
+      }
+      if (orderData.internal_notes !== undefined) {
+        updateData.internal_notes = orderData.internal_notes;
+      }
+
       const { data, error } = await supabase
         .from('orders')
-        .update(orderData)
+        .update(updateData)
         .eq('id', orderId)
         .select()
         .single();
@@ -655,34 +759,20 @@ export const useOrderManagement = (activeTab: string) => {
         throw error;
       }
 
-      // Transform data back to camelCase for local state update
-      const transformedData = {
-        customerName: orderData.customer_name || orderData.customerName,
-        customerEmail: orderData.customer_email || orderData.customerEmail,
-        customerPhone: orderData.customer_phone || orderData.customerPhone,
-        vehicleYear: orderData.vehicle_year || orderData.vehicleYear,
-        vehicleMake: orderData.vehicle_make || orderData.vehicleMake,
-        vehicleModel: orderData.vehicle_model || orderData.vehicleModel,
-        vehicleVin: orderData.vehicle_vin || orderData.vehicleVin,
-        vehicleInfo: orderData.vehicle_info || orderData.vehicleInfo,
-        stockNumber: orderData.stock_number || orderData.stockNumber,
-        assignedGroupId: orderData.assigned_group_id || orderData.assignedGroupId,
-        assignedContactId: orderData.assigned_contact_id || orderData.assignedContactId,
-        salesperson: orderData.salesperson,
-        notes: orderData.notes,
-        internalNotes: orderData.internal_notes || orderData.internalNotes,
-        priority: orderData.priority,
-        dueDate: orderData.due_date || orderData.dueDate,
-        slaDeadline: orderData.sla_deadline || orderData.slaDeadline,
-        scheduledDate: orderData.scheduled_date || orderData.scheduledDate,
-        scheduledTime: orderData.scheduled_time || orderData.scheduledTime,
-        updatedAt: new Date().toISOString()
-      };
-
       console.log('Order updated successfully:', data);
 
-      // Force immediate refetch to get fresh data
-      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
+      // Enrich updated order
+      const enrichedUpdatedOrder = await enrichOrderData(data);
+
+      // Optimistic update: Update the order in cache immediately
+      queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+        oldData
+          ? oldData.map(order => order.id === orderId ? enrichedUpdatedOrder : order)
+          : [enrichedUpdatedOrder]
+      );
+
+      // Invalidate to ensure data consistency in background
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
       console.error('Error in updateOrder:', error);
       throw error;
@@ -693,9 +783,9 @@ export const useOrderManagement = (activeTab: string) => {
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
       const { error } = await supabase
         .from('orders')
@@ -709,8 +799,13 @@ export const useOrderManagement = (activeTab: string) => {
 
       console.log('Order deleted successfully');
 
-      // Force immediate refetch to refresh order list
-      await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
+      // Optimistic update: Remove order from cache immediately
+      queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+        oldData ? oldData.filter(order => order.id !== orderId) : []
+      );
+
+      // Invalidate to ensure data consistency in background
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
       console.error('Error in deleteOrder:', error);
       throw error;
@@ -729,26 +824,6 @@ export const useOrderManagement = (activeTab: string) => {
   //     return () => clearTimeout(timer);
   //   }
   // }, [user, enhancedUser, refreshData]); // Wait for both user and enhancedUser
-
-  // Listen for dealer filter changes
-  useEffect(() => {
-    const handleDealerFilterChange = () => {
-      console.log('🎯 Dealer filter changed - refreshing data');
-      refreshData();
-    };
-
-    window.addEventListener('dealerFilterChanged', handleDealerFilterChange);
-    return () => window.removeEventListener('dealerFilterChanged', handleDealerFilterChange);
-  }, [refreshData]);
-
-  // Handle filtering when tab or filters change (without full refresh)
-  useEffect(() => {
-    if (allOrders.length > 0) {
-      // Apply filtering to full dataset
-      const filtered = filterOrders(allOrders, activeTab, filters);
-      setOrders(filtered);
-    }
-  }, [activeTab, filters, allOrders, filterOrders]);
 
   // Smart polling for order data (replaces real-time subscription)
   const ordersPollingQuery = useOrderPolling(
@@ -852,13 +927,31 @@ export const useOrderManagement = (activeTab: string) => {
     !!(user && enhancedUser)
   );
 
-  // Update allOrders when polling data changes
+  // Derive allOrders from polling data using useMemo for silent updates
+  const allOrders = useMemo(() =>
+    ordersPollingQuery.data || [],
+    [ordersPollingQuery.data]
+  );
+
+  // Listen for dealer filter changes
   useEffect(() => {
-    if (ordersPollingQuery.data) {
-      setAllOrders(ordersPollingQuery.data);
-      setLoading(false);
+    const handleDealerFilterChange = () => {
+      console.log('🎯 Dealer filter changed - refreshing data');
+      refreshData();
+    };
+
+    window.addEventListener('dealerFilterChanged', handleDealerFilterChange);
+    return () => window.removeEventListener('dealerFilterChanged', handleDealerFilterChange);
+  }, [refreshData]);
+
+  // Handle filtering when tab or filters change (without full refresh)
+  useEffect(() => {
+    if (allOrders.length > 0) {
+      // Apply filtering to full dataset
+      const filtered = filterOrders(allOrders, activeTab, filters);
+      setOrders(filtered);
     }
-  }, [ordersPollingQuery.data]);
+  }, [activeTab, filters, allOrders, filterOrders]);
 
   // Always update lastRefresh when polling executes (every 60s), regardless of data changes
   useEffect(() => {
@@ -867,11 +960,11 @@ export const useOrderManagement = (activeTab: string) => {
     }
 
     // Update timestamp when fetch completes (success or error)
-    if (!ordersPollingQuery.isFetching && (ordersPollingQuery.data || ordersPollingQuery.error)) {
-      setLastRefresh(new Date());
-      console.log('⏰ LastRefresh updated:', new Date().toLocaleTimeString());
+    if (!ordersPollingQuery.isFetching && ordersPollingQuery.dataUpdatedAt) {
+      setLastRefresh(new Date(ordersPollingQuery.dataUpdatedAt));
+      console.log('⏰ LastRefresh updated:', new Date(ordersPollingQuery.dataUpdatedAt).toLocaleTimeString());
     }
-  }, [ordersPollingQuery.isFetching, ordersPollingQuery.data, ordersPollingQuery.error]);
+  }, [ordersPollingQuery.isFetching, ordersPollingQuery.dataUpdatedAt]);
 
   // Listen for status updates to trigger immediate refresh
   useEffect(() => {
@@ -910,10 +1003,13 @@ export const useOrderManagement = (activeTab: string) => {
                 const order = payload.new as SupabaseOrderRow;
                 const updatedOrder = await enrichOrderData(order);
 
-                setAllOrders(prevAllOrders =>
-                  prevAllOrders.map(existingOrder =>
-                    existingOrder.id === updatedOrder.id ? updatedOrder : existingOrder
-                  )
+                // Update React Query cache for realtime updates
+                queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+                  oldData
+                    ? oldData.map(existingOrder =>
+                        existingOrder.id === updatedOrder.id ? updatedOrder : existingOrder
+                      )
+                    : [updatedOrder]
                 );
               }
             } catch (error) {
@@ -954,9 +1050,9 @@ export const useOrderManagement = (activeTab: string) => {
       transformedOrder.dealershipName = dealershipName;
       transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
       transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-      transformedOrder.assignedTo = order.assigned_group_id ? 
+      transformedOrder.assignedTo = order.assigned_group_id ?
         userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
-      
+
       return transformedOrder;
     } catch (error) {
       console.error('Error enriching order data:', error);

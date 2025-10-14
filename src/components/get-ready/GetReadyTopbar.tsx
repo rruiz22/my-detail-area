@@ -46,10 +46,10 @@ export function GetReadyTopbar() {
   });
 
   return (
-    <div className="h-12 border-b bg-gradient-to-r from-background to-muted/20 border-border/40 shadow-sm">
-      <div className="h-full px-4 flex items-center justify-between gap-4">
+    <div className="h-auto sm:h-12 border-b bg-gradient-to-r from-background to-muted/20 border-border/40 shadow-sm">
+      <div className="h-full px-2 sm:px-4 py-2 sm:py-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
         {/* Left Section - Navigation Tabs */}
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 overflow-x-auto w-full sm:w-auto">
           {visibleTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = location.pathname === tab.path || 
@@ -76,18 +76,18 @@ export function GetReadyTopbar() {
         </div>
 
         {/* Right Section - Search and Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* Search */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-initial">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('get_ready.search_placeholder')}
-              className="pl-8 w-64"
+              className="pl-8 w-full sm:w-64"
             />
           </div>
 
           {/* Action Buttons */}
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="flex-shrink-0">
             <Settings className="h-4 w-4" />
           </Button>
         </div>

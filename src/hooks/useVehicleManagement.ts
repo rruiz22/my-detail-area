@@ -1,7 +1,8 @@
+import { toast } from '@/hooks/use-toast';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface VehicleData {
   stock_number: string;
@@ -34,6 +35,7 @@ interface GetReadyVehicle extends VehicleData {
 }
 
 export function useVehicleManagement() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { currentDealership } = useAccessibleDealerships();
 
@@ -105,7 +107,11 @@ export function useVehicleManagement() {
     },
     onError: (error: any) => {
       console.error('Create vehicle error:', error);
-      toast.error('Failed to create vehicle');
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.vehicle_form.errors.save_failed'),
+        variant: 'destructive',
+      });
     },
   });
 
@@ -141,7 +147,11 @@ export function useVehicleManagement() {
     },
     onError: (error: any) => {
       console.error('Update vehicle error:', error);
-      toast.error('Failed to update vehicle');
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.vehicle_form.errors.save_failed'),
+        variant: 'destructive',
+      });
     },
   });
 
@@ -167,23 +177,39 @@ export function useVehicleManagement() {
     },
     onError: (error: any) => {
       console.error('Delete vehicle error:', error);
-      toast.error('Failed to delete vehicle');
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.vehicle_form.errors.delete_failed'),
+        variant: 'destructive',
+      });
     },
   });
 
   // Move vehicle to different step
   const moveVehicleToStep = useMutation({
-    mutationFn: async ({ id, stepId }: { id: string; stepId: string }) => {
+    mutationFn: async ({ id, stepId, vehicleId }: { id?: string; stepId: string; vehicleId?: string }) => {
+      // Support both 'id' and 'vehicleId' parameters for backwards compatibility
+      const actualId = id || vehicleId;
+      if (!actualId) {
+        throw new Error('Vehicle ID is required');
+      }
+
+      // The step change will be automatically tracked by the database trigger
+      // which will:
+      // 1. Close the current step history entry (set exit_date)
+      // 2. Create a new step history entry for the new step
+      // 3. Handle visit numbering automatically
+
       const { data, error } = await supabase
         .from('get_ready_vehicles')
         .update({
           step_id: stepId,
-          intake_date: new Date().toISOString(), // Reset intake date for new step
-          days_in_step: 0,
+          intake_date: new Date().toISOString(), // Entry date for new step
+          days_in_step: 0, // Days in current visit (will be calculated)
           sla_status: 'on_track',
           updated_at: new Date().toISOString(),
         })
-        .eq('id', id)
+        .eq('id', actualId)
         .select()
         .single();
 
@@ -194,13 +220,31 @@ export function useVehicleManagement() {
 
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (movedVehicle) => {
+      // Optimistic update: Update vehicle step in cache immediately
+      queryClient.setQueryData(
+        ['get-ready-vehicles', 'list', currentDealership?.id],
+        (oldData: any[] | undefined) =>
+          oldData
+            ? oldData.map(vehicle => vehicle.id === movedVehicle.id ? movedVehicle : vehicle)
+            : [movedVehicle]
+      );
+
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+
+      toast({
+        title: t('common.success'),
+        description: t('get_ready.vehicle_form.success.moved'),
+      });
     },
     onError: (error: any) => {
       console.error('Move vehicle error:', error);
-      toast.error('Failed to move vehicle');
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.vehicle_form.errors.move_failed'),
+        variant: 'destructive',
+      });
     },
   });
 
@@ -235,7 +279,11 @@ export function useVehicleManagement() {
     },
     onError: (error: any) => {
       console.error('Bulk update error:', error);
-      toast.error('Failed to update vehicles');
+      toast({
+        title: t('common.error'),
+        description: 'Failed to update vehicles',
+        variant: 'destructive',
+      });
     },
   });
 
@@ -249,6 +297,7 @@ export function useVehicleManagement() {
     updateVehicle: updateVehicle.mutateAsync,
     deleteVehicle: deleteVehicle.mutateAsync,
     moveVehicleToStep: moveVehicleToStep.mutateAsync,
+    moveVehicle: moveVehicleToStep.mutate, // Alias for backwards compatibility
     bulkUpdateVehicles: bulkUpdateVehicles.mutateAsync,
 
     // Loading states

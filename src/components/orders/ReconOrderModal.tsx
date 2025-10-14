@@ -489,12 +489,19 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
       console.log('📤 Modal sending data to hook:', {
         dealerId: dbData.dealerId,
+        stockNumber: dbData.stockNumber,
+        vehicleInfo: dbData.vehicleInfo,
         services: dbData.services,
         servicesLength: dbData.services?.length,
         servicesContent: JSON.stringify(dbData.services),
         selectedServicesState: selectedServices,
         selectedServicesContent: JSON.stringify(selectedServices),
-        selectedServicesLength: selectedServices.length
+        selectedServicesLength: selectedServices.length,
+        completedAt: dbData.completedAt,
+        completedAtType: typeof dbData.completedAt,
+        completedAtISO: dbData.completedAt instanceof Date ? dbData.completedAt.toISOString() : dbData.completedAt,
+        totalAmount: dbData.totalAmount,
+        notes: dbData.notes
       });
 
       // Show immediate success feedback
@@ -518,7 +525,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-7xl max-h-[95vh] w-[95vw] sm:w-[90vw] md:w-[85vw] p-0 mx-2 sm:mx-4"
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] md:w-[85vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="recon-order-modal-description"
       >
         <DialogHeader className="p-4 sm:p-6 pb-0">
@@ -526,7 +533,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
             {order ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
           </DialogTitle>
           <div id="recon-order-modal-description" className="text-sm text-muted-foreground">
-            {order ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
+            {order ? 'Update reconditioning order details and services' : 'Create a new reconditioning order for dealer inventory'}
           </div>
         </DialogHeader>
 
@@ -535,133 +542,117 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="px-4 sm:px-6 pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
 
-                  {/* Column 1: Dealership Information */}
+                  {/* Column 1: Dealership & Vehicle Info */}
                   <div className="space-y-4">
-                    <div className="border-b border-border pb-2 mb-3">
-                      <h3 className="text-sm sm:text-base font-medium text-foreground">
-                        {t('sales_orders.dealership')}
-                      </h3>
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                        {isDealerFieldReadOnly && (
+                          <Badge variant="secondary" className="text-xs">
+                            {t('dealerships.auto_selected')}
+                          </Badge>
+                        )}
+                      </div>
+                      <Select
+                        value={selectedDealership}
+                        onValueChange={handleDealershipChange}
+                        disabled={loading || isDealerFieldReadOnly}
+                      >
+                        <SelectTrigger className="border-input bg-background">
+                          <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
+                        </SelectTrigger>
+                        <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
+                          {dealerships.map((dealer: any) => (
+                            <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                              {dealer.name} - {dealer.city}, {dealer.state}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
-                      {isDealerFieldReadOnly && (
-                        <Badge variant="secondary" className="text-xs">
-                          {t('dealerships.auto_selected')}
-                        </Badge>
+
+                    <div>
+                      <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>
+                      <Input
+                        id="stockNumber"
+                        value={formData.stockNumber}
+                        onChange={(e) => handleInputChange('stockNumber', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder="ST-001"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                        {t('orders.vin')}
+                        {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                        {vinDecoded && (
+                          <Badge variant="secondary" className="bg-success text-success-foreground">
+                            <Zap className="w-3 h-3 mr-1" />
+                            {t('sales_orders.vin_decoded_successfully')}
+                          </Badge>
+                        )}
+                      </Label>
+                      <VinInputWithScanner
+                        id="vehicleVin"
+                        name="vehicleVin"
+                        value={formData.vehicleVin}
+                        onChange={(e) => handleVinChange(e.target.value)}
+                        onVinScanned={handleVinChange}
+                        className="border-input bg-background font-mono"
+                        stickerMode={true}
+                      />
+                      {vinError && (
+                        <div className="flex items-center gap-1 text-sm text-destructive mt-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {vinError}
+                        </div>
+                      )}
+                      {formData.vehicleVin.length > 0 && formData.vehicleVin.length < 17 && (
+                        <div className="text-sm text-muted-foreground mt-1">
+                          {17 - formData.vehicleVin.length} characters remaining
+                        </div>
                       )}
                     </div>
-                    <Select
-                      value={selectedDealership}
-                      onValueChange={handleDealershipChange}
-                      disabled={loading || isDealerFieldReadOnly}
-                    >
-                      <SelectTrigger className="border-input bg-background">
-                        <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
-                      </SelectTrigger>
-                       <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
-                         {dealerships.map((dealer: any) => (
-                           <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                             {dealer.name} - {dealer.city}, {dealer.state}
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
-                    </Select>
-                  </div>
+
+                    <div>
+                      <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
+                      <Input
+                        id="vehicleInfo"
+                        value={formData.vehicleInfo}
+                        onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
+                        className="border-input bg-background"
+                        placeholder="2025 BMW X6 (xDrive40i)"
+                      />
+                      {!formData.vehicleInfo && (
+                        <div className="text-sm text-muted-foreground mt-1">
+                          {t('sales_orders.manual_vehicle_entry')}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Column 2: Vehicle Information */}
+                  {/* Column 2: Completion Date, Services & Notes */}
                   <div className="space-y-4">
-                    <div className="border-b border-border pb-2 mb-3">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                        <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
-                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto">
-                          <Zap className="w-3 h-3 mr-1" />
-                          {t('sales_orders.vin_decoded_successfully')}
-                        </Badge>}
+                    {/* Completion Date */}
+                    <div>
+                      <Label htmlFor="completionDate">{t('recon.completion_date')}</Label>
+                      <CompletionDatePicker
+                        value={formData.completedAt}
+                        onChange={(date) => handleInputChange('completedAt', date)}
+                        placeholder={t('recon.select_completion_date')}
+                        allowPastDates={true}
+                        className="w-full"
+                      />
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {t('recon.completion_date_help')}
                       </div>
                     </div>
-                  <div>
-                    <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>
-                    <Input
-                      id="stockNumber"
-                      value={formData.stockNumber}
-                      onChange={(e) => handleInputChange('stockNumber', e.target.value)}
-                      className="border-input bg-background"
-                      placeholder="ST-001"
-                    />
-                  </div>
 
-                  <div>
-                    <Label htmlFor="vehicleVin" className="flex items-center gap-2">
-                      {t('orders.vin')}
-                      {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                    </Label>
-                    <VinInputWithScanner
-                      id="vehicleVin"
-                      name="vehicleVin"
-                      value={formData.vehicleVin}
-                      onChange={(e) => handleVinChange(e.target.value)}
-                      onVinScanned={handleVinChange}
-                      className="border-input bg-background font-mono"
-                      stickerMode={true}
-                    />
-                    {vinError && (
-                      <div className="flex items-center gap-1 text-sm text-destructive mt-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {vinError}
-                      </div>
-                    )}
-                    {formData.vehicleVin.length > 0 && formData.vehicleVin.length < 17 && (
-                      <div className="text-sm text-muted-foreground mt-1">
-                        {17 - formData.vehicleVin.length} characters remaining
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Consolidated Vehicle Info */}
-                  <div>
-                    <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
-                    <Input
-                      id="vehicleInfo"
-                      value={formData.vehicleInfo}
-                      onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
-                      className="border-input bg-background"
-                      placeholder="2025 BMW X6 (xDrive40i)"
-                    />
-                    {!formData.vehicleInfo && (
-                      <div className="text-sm text-muted-foreground mt-1">
-                        {t('sales_orders.manual_vehicle_entry')}
-                      </div>
-                    )}
-                  </div>
-
-                  <Separator />
-
-                  {/* Completion Date - Recon Specific */}
-                  <div>
-                    <Label htmlFor="completionDate">{t('recon.completion_date')}</Label>
-                    <CompletionDatePicker
-                      value={formData.completedAt}
-                      onChange={(date) => handleInputChange('completedAt', date)}
-                      placeholder={t('recon.select_completion_date')}
-                      allowPastDates={true}
-                    />
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {t('recon.completion_date_help')}
-                    </div>
-                  </div>
-
-                  </div>
-
-                  {/* Column 3: Services & Notes */}
-                  <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-1">
-                    <div className="border-b border-border pb-2 mb-3">
-                      <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
-                    </div>
-                  <div>
+                    {/* Services Section */}
+                    <div>
                     <Label className="text-sm font-medium">
                       {t('orders.services')}
                       {selectedDealership && services.length > 0 && (
@@ -747,6 +738,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
                   <Separator />
 
+                  {/* Notes Section */}
                   <div>
                     <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
                     <Textarea
@@ -801,7 +793,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                 onClick={onClose}
                 className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
               >
-                {t('common.cancel')}
+                {t('common.action_buttons.cancel')}
               </Button>
               <Button
                 type="submit"
@@ -820,7 +812,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                     {order ? t('orders.updating') : t('orders.creating')}
                   </>
                 ) : (
-                  order ? t('common.action_buttons.update') : t('recon.create_order')
+                  order ? t('common.action_buttons.update') : t('common.action_buttons.create')
                 )}
               </Button>
             </div>

@@ -130,29 +130,77 @@ export const getOrderDueDate = (order: OrderData): DateAccessResult => {
 };
 
 /**
+ * Safely access completed_at date (for recon/carwash orders)
+ */
+export const getOrderCompletedDate = (order: OrderData): DateAccessResult => {
+  const possibleFields = [
+    { key: 'completed_at', value: (order as any).completed_at },
+    { key: 'completedAt', value: (order as any).completedAt },
+    { key: 'date_completed', value: (order as any).date_completed },
+    { key: 'dateCompleted', value: (order as any).dateCompleted }
+  ];
+
+  console.log('🔍 [DATE DEBUG] Looking for completed date in:', possibleFields);
+
+  for (const field of possibleFields) {
+    if (field.value) {
+      const parsed = safeParseDate(field.value);
+      if (parsed) {
+        console.log(`✅ [DATE DEBUG] Found valid completed date: ${field.key} = ${field.value}`);
+        return {
+          value: safeFormatDate(field.value),
+          rawValue: field.value,
+          source: field.key,
+          isValid: true
+        };
+      }
+    }
+  }
+
+  console.log('❌ [DATE DEBUG] No valid completed date found');
+  return {
+    value: 'Not set',
+    rawValue: null,
+    source: 'none',
+    isValid: false
+  };
+};
+
+/**
  * Get comprehensive order date summary for debugging
  */
 export const getOrderDateSummary = (order: OrderData) => {
   const created = getOrderCreatedDate(order);
   const updated = getOrderUpdatedDate(order);
   const due = getOrderDueDate(order);
+  const completed = getOrderCompletedDate(order);
 
   console.log('📊 [DATE SUMMARY]', {
     orderId: order.id,
     created: { value: created.value, source: created.source, raw: created.rawValue },
     updated: { value: updated.value, source: updated.source, raw: updated.rawValue },
     due: { value: due.value, source: due.source, raw: due.rawValue },
+    completed: { value: completed.value, source: completed.source, raw: completed.rawValue },
     allFields: Object.keys(order).filter(key => key.includes('date') || key.includes('created') || key.includes('updated'))
   });
 
-  return { created, updated, due };
+  return { created, updated, due, completed };
 };
 
 /**
  * Create robust schedule items with enhanced date handling
+ * For recon/carwash: uses completed_at instead of due_date
  */
-export const createScheduleItems = (order: OrderData, t: any, orderAge: string) => {
-  const { created, updated, due } = getOrderDateSummary(order);
+export const createScheduleItems = (order: OrderData, t: any, orderAge: string, orderType?: string) => {
+  const { created, updated, due, completed } = getOrderDateSummary(order);
+
+  // For recon and carwash orders, use completed_at instead of due_date
+  const usesCompletedDate = orderType === 'recon' || orderType === 'carwash';
+  const targetDate = usesCompletedDate ? completed : due;
+  const targetLabel = usesCompletedDate ? t('recon.completion_date') : t('orders.due_date');
+  const targetSubtitle = targetDate.isValid
+    ? (usesCompletedDate ? 'Completion date set' : 'Due date set')
+    : (usesCompletedDate ? 'Not completed' : t('schedule_view.no_due_date'));
 
   return [
     {
@@ -164,10 +212,10 @@ export const createScheduleItems = (order: OrderData, t: any, orderAge: string) 
     },
     {
       icon: 'Target',
-      label: t('orders.due_date'),
-      value: due.value,
-      subtitle: due.isValid ? 'Due date set' : t('schedule_view.no_due_date'),
-      debug: { source: due.source, raw: due.rawValue }
+      label: targetLabel,
+      value: targetDate.value,
+      subtitle: targetSubtitle,
+      debug: { source: targetDate.source, raw: targetDate.rawValue }
     },
     {
       icon: 'Clock',

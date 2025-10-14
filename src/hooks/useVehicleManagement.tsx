@@ -28,13 +28,6 @@ export function useVehicleManagement() {
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
-  console.log('[useVehicleManagement] Hook called with:', {
-    hasDealership: !!currentDealership,
-    dealershipId: currentDealership?.id,
-    hasQueryClient: !!queryClient,
-    hasTranslation: !!t,
-    timestamp: new Date().toISOString()
-  });
 
   // Create Vehicle
   const createVehicleMutation = useMutation({
@@ -103,7 +96,13 @@ export function useVehicleManagement() {
 
       return vehicle;
     },
-    onSuccess: () => {
+    onSuccess: (newVehicle) => {
+      // Optimistic update: Add new vehicle to cache immediately
+      queryClient.setQueryData(
+        ['get-ready-vehicles', 'list', currentDealership?.id],
+        (oldData: any[] | undefined) => oldData ? [newVehicle, ...oldData] : [newVehicle]
+      );
+
       // Invalidate both vehicles and steps queries to update counts
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
@@ -147,7 +146,16 @@ export function useVehicleManagement() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (updatedVehicle, variables) => {
+      // Optimistic update: Update vehicle in cache immediately
+      queryClient.setQueryData(
+        ['get-ready-vehicles', 'list', currentDealership?.id],
+        (oldData: any[] | undefined) =>
+          oldData
+            ? oldData.map(vehicle => vehicle.id === variables.id ? updatedVehicle : vehicle)
+            : [updatedVehicle]
+      );
+
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       toast.success(t('get_ready.vehicle_form.success.updated'));
@@ -172,8 +180,16 @@ export function useVehicleManagement() {
         .eq('dealer_id', currentDealership.id);
 
       if (error) throw error;
+      return vehicleId;
     },
-    onSuccess: () => {
+    onSuccess: (vehicleId) => {
+      // Optimistic update: Remove vehicle from cache immediately
+      queryClient.setQueryData(
+        ['get-ready-vehicles', 'list', currentDealership?.id],
+        (oldData: any[] | undefined) =>
+          oldData ? oldData.filter(vehicle => vehicle.id !== vehicleId) : []
+      );
+
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       toast.success(t('get_ready.vehicle_form.success.deleted'));
@@ -200,7 +216,16 @@ export function useVehicleManagement() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (movedVehicle) => {
+      // Optimistic update: Update vehicle step in cache immediately
+      queryClient.setQueryData(
+        ['get-ready-vehicles', 'list', currentDealership?.id],
+        (oldData: any[] | undefined) =>
+          oldData
+            ? oldData.map(vehicle => vehicle.id === movedVehicle.id ? movedVehicle : vehicle)
+            : [movedVehicle]
+      );
+
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       toast.success(t('get_ready.vehicle_form.success.moved'));
@@ -211,21 +236,15 @@ export function useVehicleManagement() {
     },
   });
 
-  console.log('[useVehicleManagement] moveVehicleMutation:', {
-    exists: !!moveVehicleMutation,
-    hasMutate: !!moveVehicleMutation?.mutate,
-    mutateType: typeof moveVehicleMutation?.mutate,
-    isPending: moveVehicleMutation?.isPending,
-    keys: moveVehicleMutation ? Object.keys(moveVehicleMutation) : []
-  });
-
   return {
     createVehicle: createVehicleMutation.mutate,
     createVehicleAsync: createVehicleMutation.mutateAsync,
     updateVehicle: updateVehicleMutation.mutate,
     updateVehicleAsync: updateVehicleMutation.mutateAsync,
     deleteVehicle: deleteVehicleMutation.mutate,
+    deleteVehicleAsync: deleteVehicleMutation.mutateAsync,
     moveVehicle: moveVehicleMutation.mutate,
+    moveVehicleAsync: moveVehicleMutation.mutateAsync,
     isCreating: createVehicleMutation.isPending,
     isUpdating: updateVehicleMutation.isPending,
     isDeleting: deleteVehicleMutation.isPending,

@@ -98,6 +98,7 @@ interface UnifiedOrderDetailModalProps {
   onEdit?: (order: OrderData) => void;
   onDelete?: (orderId: string) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
+  onUpdate?: (orderId: string, updates: Partial<OrderData>) => Promise<void>;
   isLoadingData?: boolean;
 }
 
@@ -173,6 +174,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   onEdit,
   onDelete,
   onStatusChange,
+  onUpdate,
   isLoadingData = false
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
@@ -397,6 +399,40 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     [onStatusChange]
   );
 
+  // Handle completed date change (for recon/carwash)
+  const handleCompletedDateChange = useCallback(
+    async (orderId: string, newDate: Date | null) => {
+      try {
+        // Prepare the update data
+        const isoDate = newDate?.toISOString() || null;
+        const updates: Partial<OrderData> = {
+          completed_at: isoDate,
+          completedAt: isoDate
+        };
+
+        // Call parent update function if available
+        if (onUpdate) {
+          await onUpdate(orderId, updates);
+        } else {
+          logger.warn('onUpdate callback not provided, skipping DB update', { orderId });
+        }
+
+        // Optimistic update
+        setOrderData(prev => (
+          prev.id === orderId
+            ? { ...prev, ...updates }
+            : prev
+        ));
+
+        toast.success(t('orders.date_updated'));
+      } catch (error) {
+        logger.error('Failed to update completed date', error, { orderId, newDate });
+        toast.error(t('orders.date_update_failed'));
+      }
+    },
+    [onUpdate, t]
+  );
+
   // Memoize vehicle display name - prioritize vehicle_info from VIN decoder
   const vehicleDisplayName = useMemo(() => {
     // Priority 1: Use vehicle_info if available (contains complete decoded VIN info)
@@ -451,6 +487,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 orderType={orderType}
                 effectiveDealerId={effectiveDealerId}
                 onStatusChange={handleStatusChange}
+                onCompletedDateChange={handleCompletedDateChange}
                 canEditOrder={canEditOrder}
                 onEdit={handleEdit}
               />
@@ -461,7 +498,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   {/* Row 1: Type-specific fields + Schedule View (Two blocks side by side) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <OrderTypeFields orderType={orderType} order={orderData} />
-                    <ScheduleViewBlock order={orderData as SystemOrderData} />
+                    <ScheduleViewBlock order={orderData as SystemOrderData} orderType={orderType} />
                   </div>
 
                   {/* Row 2: Simple Notes Display (Full width) */}

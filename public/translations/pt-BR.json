@@ -29,6 +29,13 @@
       "disconnected": "Desconectado",
       "loading": "Carregando"
     },
+    "priority": {
+      "high": "Prioridade Alta",
+      "medium": "Prioridade Média",
+      "normal": "Prioridade Normal",
+      "low": "Prioridade Baixa",
+      "urgent": "Urgente"
+    },
     "activity": "Atividade",
     "of": "de",
     "showing": "Mostrando",
@@ -67,9 +74,20 @@
       "redo": "Refazer",
       "select_all": "Selecionar Todos"
     },
+    "actions": {
+      "refresh": "Atualizar",
+      "export": "Exportar",
+      "export_csv": "Exportar para CSV",
+      "export_excel": "Exportar para Excel",
+      "export_pdf": "Exportar para PDF",
+      "exporting": "Exportando...",
+      "export_success": "Dados exportados com sucesso",
+      "export_failed": "Falha ao exportar dados"
+    },
     "selected": "selecionados",
     "refresh": "Atualizar",
     "data_refreshed": "Dados atualizados",
+    "refresh_failed": "Falha ao atualizar dados",
     "new_order": "Novo Pedido",
     "calendar": "Calendário",
     "unknown_error": "Erro desconhecido",
@@ -372,6 +390,7 @@
       "all": "Todas",
       "vehicle": "Veículo",
       "customer": "Cliente",
+      "stock": "Estoque",
       "no_recent_activity": "Nenhuma atividade recente",
       "order_created": "Pedido Criado",
       "order_updated": "Pedido Atualizado",
@@ -891,8 +910,10 @@
     "unknown_dealer": "Concessionária Desconhecida",
     "unassigned": "Não Atribuído",
     "no_time_set": "Nenhum horário definido",
+    "no_date_set": "Nenhuma data definida",
     "orders_count": "{{count}} pedidos",
     "page_of": "Página {{current}} de {{total}}",
+    "showing_range": "Mostrando {{start}}-{{end}} de {{total}} pedidos",
     "view": "Ver",
     "edit": "Editar",
     "delete": "Excluir",
@@ -913,8 +934,24 @@
     "display_preview": "Visualizar prévia"
   },
   "car_wash_orders": {
+    "quick_order": "Novo Pedido Rápido",
+    "quick_car_wash_order": "Pedido Rápido de Lavagem",
+    "edit_order": "Editar Pedido de Lavagem",
+    "dealership": "Concessionária",
+    "select_dealership": "Selecionar concessionária",
+    "vehicle_display": "Informações do Veículo",
+    "stock_number": "Número de Estoque",
+    "tag": "TAG",
+    "waiter_priority": "Espera - Cliente Aguardando",
+    "waiter_description": "Este pedido será marcado com prioridade urgente (cliente está aguardando)",
+    "notes_placeholder": "Adicionar instruções especiais ou detalhes sobre este serviço de lavagem...",
     "decoded": "Decodificado",
-    "auto_populated": "Preenchido automaticamente pelo VIN"
+    "auto_populated": "Preenchido automaticamente pelo VIN",
+    "car_wash_information": "Informações de Lavagem",
+    "service_performer": "Responsável pelo Serviço",
+    "service_type": "Tipo de Serviço",
+    "waiter": "Espera",
+    "standard_wash": "Lavagem Padrão"
   },
   "completion_date": {
     "select_date": "Selecionar data"
@@ -922,7 +959,13 @@
   "car_wash": {
     "service_date": "Data do Serviço",
     "select_service_date": "Selecionar data do serviço",
-    "service_date_help": "Data em que o serviço de lavagem foi concluído"
+    "service_date_help": "Data em que o serviço de lavagem foi concluído",
+    "order_created_successfully": "Pedido de lavagem criado com sucesso",
+    "order_updated_successfully": "Pedido de lavagem atualizado com sucesso",
+    "order_deleted_successfully": "Pedido de lavagem excluído com sucesso",
+    "error_creating_order": "Erro ao criar pedido de lavagem",
+    "error_updating_order": "Erro ao atualizar pedido de lavagem",
+    "error_deleting_order": "Erro ao excluir pedido de lavagem"
   },
   "schedule_view": {
     "schedule_timeline": "Cronograma Programado",
@@ -1522,6 +1565,26 @@
       "timeline": "Linha do Tempo",
       "appraisal": "Avaliação"
     },
+    "time_tracking": {
+      "title": "Rastreamento de Tempo",
+      "total_time_completed": "Tempo Total (Completado)",
+      "time_in_process": "Tempo em Processo",
+      "days": "dias",
+      "hours": "horas",
+      "in_progress": "Em Andamento",
+      "current_step": "Etapa Atual",
+      "current_visit": "Visita Atual",
+      "first_visit": "Primeira Visita",
+      "visit": "Visita",
+      "previous_visits": "Visitas Anteriores",
+      "total_accumulated": "Total Acumulado",
+      "time_by_step": "Tempo por Etapa",
+      "current": "Atual",
+      "visited_times": "Visitado {{count}} vezes",
+      "no_data": "Nenhum dado de rastreamento de tempo disponível",
+      "steps_completed": "Etapas Concluídas",
+      "avg_time_per_step": "Tempo Médio/Etapa"
+    },
     "search_placeholder": "Buscar veículos...",
     "steps": {
       "title": "Get Ready - Fluxo Otimizado",
@@ -1571,6 +1634,8 @@
       "add_work_item": "Adicionar Trabalho",
       "add_from_templates": "Adicionar de Modelos",
       "no_items": "Ainda não há trabalhos",
+      "item": "trabalho",
+      "items": "trabalhos",
       "templates_modal_title": "Adicionar Trabalhos de Modelos",
       "templates_modal_description": "Selecione os modelos que deseja adicionar a este veículo",
       "no_templates_available": "Nenhum modelo ativo disponível",
@@ -1631,7 +1696,16 @@
       "error_completing": "Erro ao completar o trabalho",
       "error_deleting": "Erro ao excluir o trabalho",
       "error_loading": "Erro ao carregar os trabalhos",
-      "confirm_delete": "Tem certeza de que deseja excluir este trabalho?"
+      "confirm_delete": "Tem certeza de que deseja excluir este trabalho?",
+      "quick_add_title": "Adicionar Trabalho",
+      "quick_add_description": "Escolha de modelos ou crie um trabalho personalizado",
+      "no_templates_found": "Nenhum modelo corresponde à sua pesquisa",
+      "no_templates": "Nenhum modelo disponível",
+      "create_custom": "Criar Trabalho Personalizado",
+      "assigned_to": "Atribuído A",
+      "assigned_to_placeholder": "Digite o nome do técnico",
+      "edit_title": "Editar Trabalho",
+      "edit_description": "Atualize os detalhes do trabalho"
     },
     "media": {
       "photos": "Fotos",
@@ -1855,6 +1929,7 @@
       "subtitle": "Configurar etapas e definições do fluxo de trabalho",
       "workflow_steps": "Etapas do Fluxo",
       "work_item_templates": "Modelos de Trabalho",
+      "sla_configuration": "Configuração de SLA",
       "access_denied": "Acesso Negado",
       "no_steps_title": "Sem Etapas de Fluxo de Trabalho",
       "no_steps_description": "Esta concessionária ainda não possui etapas de fluxo de trabalho configuradas",
@@ -1933,6 +2008,214 @@
       "step_association_help": "Modelos globais são criados quando um veículo é adicionado. Modelos específicos de etapa são criados quando um veículo entra nessa etapa.",
       "templates_reordered": "Modelos reordenados com sucesso",
       "error_reordering": "Falha ao reordenar modelos"
+    },
+    "sla": {
+      "title": "Configuração de SLA e Metas de Tempo",
+      "description": "Configure metas de tempo e limites de alerta para o processo de recondicionamento",
+      "time_goals": {
+        "title": "Metas de Tempo",
+        "description": "Defina as metas de tempo para concluir o recondicionamento de veículos",
+        "default_label": "Meta de Tempo Padrão (Dias)",
+        "default_help": "Tempo de conclusão alvo",
+        "max_label": "Meta de Tempo Máximo (Dias)",
+        "max_help": "Limite superior"
+      },
+      "thresholds": {
+        "title": "Limites de Alerta",
+        "description": "Defina quando os veículos devem mostrar diferentes níveis de alerta com base nos dias na etapa atual",
+        "green_label": "Verde (No Prazo)",
+        "warning_label": "Amarelo (Aviso)",
+        "danger_label": "Vermelho (Crítico)"
+      },
+      "preview": {
+        "title": "Visualização",
+        "description": "Veja como diferentes contagens de dias serão categorizadas",
+        "on_track": "No Prazo",
+        "warning": "Aviso",
+        "critical": "Crítico"
+      },
+      "options": {
+        "title": "Opções Adicionais",
+        "enable_notifications": "Ativar Notificações",
+        "enable_notifications_help": "Enviar alertas quando os veículos excederem os limites",
+        "count_weekends": "Contar Fins de Semana",
+        "count_weekends_help": "Incluir fins de semana nos cálculos de dias",
+        "business_hours_only": "Apenas Horário Comercial",
+        "business_hours_only_help": "Contar apenas horas durante o horário comercial (8h - 18h)"
+      },
+      "actions": {
+        "save": "Salvar Configuração",
+        "saving": "Salvando...",
+        "saved": "Configuração de SLA atualizada com sucesso",
+        "error": "Falha ao atualizar a configuração de SLA"
+      }
+    }
+  },
+  "stock": {
+    "title": "Inventário de Estoque",
+    "description": "Gestão e análise de veículos",
+    "metrics": {
+      "totalVehicles": "veículos",
+      "avgPrice": "Preço Médio",
+      "avgAgeDays": "Idade Média",
+      "totalValue": "Valor Total do Inventário"
+    },
+    "dashboard": {
+      "avg_price": "Preço Médio",
+      "avg_age_days": "Dias no Lote",
+      "inventory_value": "Valor Total"
+    },
+    "errors": {
+      "no_access": "Sem Acesso ao Estoque",
+      "no_access_description": "Sua conta não tem acesso ao módulo de inventário de estoque. Por favor, entre em contato com seu administrador."
+    },
+    "actions": {
+      "refresh": "Atualizar",
+      "export": "Exportar",
+      "view_details": "Ver Detalhes"
+    },
+    "tabs": {
+      "inventory": "Inventário",
+      "upload": "Upload",
+      "analytics": "Análises",
+      "dms_config": "Config DMS",
+      "sync_history": "Histórico de Sincronização"
+    },
+    "inventory": {
+      "title": "Inventário",
+      "no_vehicles": "Nenhum veículo no inventário",
+      "showing_range": "Mostrando {{start}}-{{end}} de {{total}} veículos"
+    },
+    "filters": {
+      "search_placeholder": "Buscar por estoque #, VIN, marca, modelo...",
+      "make": "Marca",
+      "all_makes": "Todas as Marcas",
+      "status": "Status",
+      "all_statuses": "Todos os Status"
+    },
+    "status": {
+      "available": "Disponível",
+      "sold": "Vendido",
+      "pending": "Pendente",
+      "unknown": "Desconhecido"
+    },
+    "table": {
+      "stock_number": "Estoque #",
+      "vin": "VIN",
+      "vehicle": "Veículo",
+      "year": "Ano",
+      "mileage": "Quilometragem",
+      "price": "Preço",
+      "age_days": "Idade (Dias)",
+      "status": "Status"
+    },
+    "analytics": {
+      "title": "Análises",
+      "last_7_days": "Últimos 7 Dias",
+      "last_30_days": "Últimos 30 Dias",
+      "last_90_days": "Últimos 90 Dias",
+      "last_year": "Último Ano",
+      "export_report": "Exportar Relatório",
+      "avg_inventory_value": "Valor Médio do Inventário",
+      "avg_days_in_stock": "Dias Médios em Estoque",
+      "inventory_turnover": "Rotatividade de Inventário",
+      "total_vehicles": "Total de Veículos",
+      "inventory_by_make": "Inventário por Marca",
+      "price_distribution": "Distribuição de Preços",
+      "age_analysis": "Análise de Antigüidade",
+      "inventory_trends": "Tendências de Inventário",
+      "total_inventory_value": "Valor Total do Inventário"
+    },
+    "vehicleDetails": {
+      "title": "Detalhes do Veículo",
+      "stockNumber": "Número de Estoque",
+      "photos": "Fotos",
+      "certified": "Certificado",
+      "overview": "Visão Geral",
+      "year": "Ano",
+      "make": "Marca",
+      "model": "Modelo",
+      "trim": "Versão",
+      "vin": "VIN",
+      "pricing": "Preços",
+      "price": "Preço",
+      "msrp": "MSRP",
+      "details": "Detalhes",
+      "mileage": "Quilometragem",
+      "color": "Cor",
+      "drivetrain": "Tração",
+      "locationStatus": "Localização e Status",
+      "lotLocation": "Localização no Lote",
+      "dmsStatus": "Status DMS",
+      "objective": "Objetivo",
+      "ageDays": "Idade (Dias)",
+      "riskLight": "Luz de Risco",
+      "leadPerformance": "Desempenho de Leads",
+      "leadsLast7Days": "Leads (Últimos 7 Dias)",
+      "leadsTotal": "Total de Leads",
+      "rawData": "Dados Brutos"
+    },
+    "upload": {
+      "title": "Upload de Inventário",
+      "drag_drop_files": "Arraste e solte seu arquivo CSV aqui",
+      "drop_files": "Solte os arquivos aqui",
+      "or": "ou",
+      "browse_files": "Procurar Arquivos",
+      "no_file_chosen": "Nenhum arquivo selecionado",
+      "files_to_upload": "Arquivos para Enviar",
+      "clear_all": "Limpar Tudo",
+      "upload_all": "Enviar Tudo",
+      "preview": "Pré-visualização",
+      "more_rows": "{{count}} linhas a mais",
+      "supported_formats": "Formatos suportados: CSV (valores separados por vírgula)",
+      "sample_csv": "Modelo CSV de Exemplo",
+      "sample_csv_description": "Baixe um arquivo CSV de exemplo com o formato correto e as colunas obrigatórias",
+      "download_sample": "Baixar Exemplo",
+      "uploading": "Enviando...",
+      "success": "Sucesso",
+      "upload_success": "Arquivo enviado com sucesso",
+      "error": "Erro",
+      "upload_failed": "Falha ao enviar arquivo",
+      "error_message": "Ocorreu um erro durante o upload",
+      "processing": "Processando dados de inventário...",
+      "invalid_format": "Formato de arquivo inválido. Por favor, envie um arquivo CSV.",
+      "required_columns": "Colunas obrigatórias: stock_number, vin, year, make, model, price",
+      "max_file_size": "Tamanho máximo do arquivo: 10 MB",
+      "status": {
+        "pending": "Pendente",
+        "uploading": "Enviando",
+        "success": "Sucesso",
+        "error": "Erro"
+      }
+    },
+    "sync_history": {
+      "title": "Histórico de Sincronização",
+      "export": "Exportar",
+      "search_placeholder": "Buscar por tipo, status ou nome do arquivo...",
+      "all_statuses": "Todos os Status",
+      "all_types": "Todos os Tipos",
+      "date_time": "Data e Hora",
+      "type": "Tipo",
+      "status": "Status",
+      "duration": "Duração",
+      "processed": "Processados",
+      "added": "Adicionados",
+      "updated": "Atualizados",
+      "removed": "Removidos",
+      "file": "Arquivo",
+      "no_history": "Nenhum histórico de sincronização disponível",
+      "types": {
+        "auto_sync": "Sincronização Automática",
+        "csv_upload": "Upload CSV",
+        "manual_sync": "Sincronização Manual",
+        "dms_sync": "Sincronização DMS"
+      },
+      "statuses": {
+        "completed": "Concluído",
+        "failed": "Falhou",
+        "in_progress": "Em Andamento",
+        "cancelled": "Cancelado"
+      }
     }
   }
 }

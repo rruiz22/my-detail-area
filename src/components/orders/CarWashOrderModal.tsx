@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -106,6 +107,73 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
 
+  // Check for global dealer filter
+  const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
+  const isGlobalFilterActive = globalDealerFilter && globalDealerFilter !== 'all';
+  const isDealerFieldReadOnly = Boolean(isGlobalFilterActive);
+
+  // Declare fetchDealerships BEFORE useEffect to avoid hoisting issues
+  const fetchDealerships = useCallback(async () => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return;
+
+      const { data, error } = await supabase.rpc('get_user_accessible_dealers', {
+        user_uuid: user.user.id
+      });
+
+      if (error) throw error;
+      setDealerships(data || []);
+
+      // Auto-select if only one dealership
+      if (data && data.length === 1) {
+        setSelectedDealership(data[0].id.toString());
+        fetchDealerServices(data[0].id.toString());
+      }
+    } catch (error) {
+      console.error('Error fetching dealerships:', error);
+    }
+  }, []);
+
+  const fetchDealerServices = async (dealershipId: string) => {
+    if (!dealershipId) return;
+
+    setLoading(true);
+    try {
+      // Use department-specific function like Recon - DB filters by department
+      const { data: servicesResult, error: servicesError } = await supabase
+        .rpc('get_dealer_services_by_department', {
+          p_dealer_id: parseInt(dealershipId),
+          p_department_name: 'CarWash Dept'
+        });
+
+      if (servicesError) {
+        console.error('Error fetching services:', servicesError);
+        setServices([]);
+        return;
+      }
+
+      // No additional filtering needed - DB function already filters by department
+      setServices(servicesResult || []);
+    } catch (error) {
+      console.error('Error fetching dealer services:', error);
+      setServices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Declare handleDealershipChange BEFORE useEffect to avoid hoisting issues
+  const handleDealershipChange = (dealershipId: string) => {
+    setSelectedDealership(dealershipId);
+    setServices([]);
+    setSelectedServices([]);
+
+    if (dealershipId) {
+      fetchDealerServices(dealershipId);
+    }
+  };
+
   // Auto-generate vehicle display when VIN is decoded or fields change
   useEffect(() => {
     const vehicleDisplay = formatVehicleDisplay(
@@ -121,7 +189,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   useEffect(() => {
     if (open) {
       fetchDealerships();
-      
+
       if (order) {
         setFormData({
           orderNumber: order.orderNumber || order.order_number || '',
@@ -152,7 +220,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           scheduledTime: order.scheduledTime || ''
         });
         setSelectedServices(order.services || []);
-        setSelectedDealership(order.dealerId?.toString() || '');
+        // Dealership will be set by separate useEffect after dealerships load
       } else {
         // Reset form for new order
         setFormData({
@@ -189,59 +257,29 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     }
   }, [order, open, fetchDealerships]);
 
-  const fetchDealerships = useCallback(async () => {
-    try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+  // Auto-select dealership from global filter for new orders (like Recon)
+  useEffect(() => {
+    if (!order && isGlobalFilterActive && globalDealerFilter && dealerships.length > 0 && !selectedDealership) {
+      handleDealershipChange(globalDealerFilter);
+    }
+  }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
 
-      const { data, error } = await supabase.rpc('get_user_accessible_dealers', {
-        user_uuid: user.user.id
-      });
+  // CRITICAL: Set dealership ONLY after dealerships options are loaded (like Recon)
+  useEffect(() => {
+    if (order && dealerships.length > 0 && !selectedDealership) {
+      let dealershipId = null;
 
-      if (error) throw error;
-      setDealerships(data || []);
-      
-      // Auto-select if only one dealership
-      if (data && data.length === 1) {
-        setSelectedDealership(data[0].id.toString());
-        fetchDealerServices(data[0].id.toString());
+      // Try dealer_id first (most reliable)
+      if (order.dealer_id || order.dealerId) {
+        dealershipId = (order.dealer_id || order.dealerId).toString();
       }
-    } catch (error) {
-      console.error('Error fetching dealerships:', error);
-    }
-  }, []);
 
-  const fetchDealerServices = async (dealershipId: string) => {
-    if (!dealershipId) return;
-    
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealershipId) });
-
-      if (error) throw error;
-      
-      // Filter services for car wash module (wash and general categories)
-      const carWashServices = (data || []).filter((service: any) => 
-        service.category === 'wash' || service.category === 'general'
-      );
-      setServices(carWashServices);
-    } catch (error) {
-      console.error('Error fetching dealer services:', error);
-    } finally {
-      setLoading(false);
+      if (dealershipId) {
+        setSelectedDealership(dealershipId);
+        fetchDealerServices(dealershipId);
+      }
     }
-  };
-
-  const handleDealershipChange = (dealershipId: string) => {
-    setSelectedDealership(dealershipId);
-    setServices([]);
-    setSelectedServices([]);
-    
-    if (dealershipId) {
-      fetchDealerServices(dealershipId);
-    }
-  };
+  }, [dealerships.length, order, selectedDealership]);
 
   const handleVinChange = async (vin: string) => {
     handleInputChange('vehicleVin', vin);
@@ -275,52 +313,47 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   };
 
   const transformToDbFormat = (formData: OrderFormData) => ({
-    // Map frontend camelCase to backend snake_case
-    order_number: formData.orderNumber,
-    customer_name: formData.customerName || 'Walk-in Customer',
-    customer_email: formData.customerEmail || null,
-    customer_phone: formData.customerPhone || null,
-    vehicle_vin: formData.vehicleVin || null,
-    vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
-    vehicle_make: formData.vehicleMake || null,
-    vehicle_model: formData.vehicleModel || null,
-    vehicle_info: formData.vehicleInfo || null,
-    stock_number: formData.stockNumber || null,
-    tag: formData.tag || null,
-    service: formData.service || null,
-    is_waiter: formData.isWaiter,
-    order_type: formData.orderType,
-    status: formData.status,
-    assigned_group_id: formData.assignedGroupId || null,
-    assigned_contact_id: formData.assignedContactId || null,
-    salesperson: formData.salesperson || null,
-    notes: formData.notes || null,
-    internal_notes: formData.internalNotes || null,
-    priority: formData.priority || 'normal',
-    completed_at: formData.completedAt || null,
-    sla_deadline: formData.slaDeadline || null,
-    scheduled_date: formData.scheduledDate || null,
-    scheduled_time: formData.scheduledTime || null,
-    dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
-    services: selectedServices
+    // Return camelCase format - hook will transform to snake_case for DB
+    vehicleVin: formData.vehicleVin || undefined,
+    vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
+    vehicleMake: formData.vehicleMake || undefined,
+    vehicleModel: formData.vehicleModel || undefined,
+    vehicleInfo: formData.vehicleInfo || undefined,
+    stockNumber: formData.stockNumber || undefined,
+    tag: formData.tag || undefined,
+    isWaiter: formData.isWaiter,
+    services: selectedServices || [],
+    totalAmount: 0,
+    notes: formData.notes || undefined,
+    completedAt: formData.completedAt || undefined,
+    dealerId: selectedDealership ? parseInt(selectedDealership) : undefined,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const dbData = transformToDbFormat(formData);
+
+    console.log('📤 [CarWash Modal] Sending data to handleSaveOrder:', {
+      dealerId: dbData.dealerId,
+      stockNumber: dbData.stockNumber,
+      tag: dbData.tag,
+      vehicleInfo: dbData.vehicleInfo,
+      isWaiter: dbData.isWaiter,
+      services: dbData.services,
+      servicesLength: dbData.services?.length,
+      completedAt: dbData.completedAt,
+      totalAmount: dbData.totalAmount,
+      fullData: dbData
+    });
+
     onSave(dbData);
   };
 
-  const totalPrice = selectedServices.reduce((total, serviceId) => {
-    const service = services.find((s: any) => s.id === serviceId);
-    return total + (service?.price || 0);
-  }, 0);
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[95vh] w-[95vw] p-0" aria-describedby="carwash-order-modal-description">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] md:w-[85vw] sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
+        <DialogHeader className="p-4 sm:p-6 pb-0">
+          <DialogTitle className="text-lg sm:text-xl font-semibold flex items-center gap-2">
             {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
             {formData.isWaiter && (
               <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
@@ -330,22 +363,32 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
             )}
           </DialogTitle>
           <DialogDescription className="sr-only" id="carwash-order-modal-description">
-            {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
+            {order ? 'Update car wash service details' : 'Create a quick car wash service order'}
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
-          <form onSubmit={handleSubmit} className="space-y-6 pb-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
-              {/* Left Column - Dealership & Vehicle Info */}
-              <div className="space-y-4">
+        <ScrollArea className="max-h-[calc(95vh-100px)] sm:max-h-[calc(95vh-120px)] px-4 sm:px-6">
+          <form onSubmit={handleSubmit} className="space-y-4 pb-4">
+            {/* Single Responsive Container */}
+            <Card className="border-border">
+              <CardContent className="px-4 sm:px-6 pt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+                  {/* Left Column - Dealership & Vehicle Info */}
+                  <div className="space-y-3">
                 <div>
-                  <Label htmlFor="dealership">{t('car_wash_orders.dealership')}</Label>
-                  <Select 
-                    value={selectedDealership} 
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="dealership">{t('car_wash_orders.dealership')}</Label>
+                    {isDealerFieldReadOnly && (
+                      <Badge variant="secondary" className="text-xs">
+                        {t('dealerships.auto_selected')}
+                      </Badge>
+                    )}
+                  </div>
+                  <Select
+                    value={selectedDealership}
                     onValueChange={handleDealershipChange}
-                    disabled={loading}
+                    disabled={loading || isDealerFieldReadOnly}
                   >
                     <SelectTrigger className="border-input bg-background">
                       <SelectValue placeholder={loading ? t('common.loading') : t('car_wash_orders.select_dealership')} />
@@ -432,8 +475,6 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   </div>
                 </div>
 
-                <Separator />
-
                 {/* Service Date - Car Wash Specific */}
                 <div>
                   <Label htmlFor="completionDate">{t('car_wash.service_date')}</Label>
@@ -442,17 +483,23 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     onChange={(date) => handleInputChange('completedAt', date)}
                     placeholder={t('car_wash.select_service_date')}
                     allowPastDates={true}
+                    className="w-full"
                   />
                   <div className="text-xs text-muted-foreground mt-1">
                     {t('car_wash.service_date_help')}
                   </div>
                 </div>
-              </div>
+                  </div>
 
-              {/* Right Column - Service & Options */}
-              <div className="space-y-4">
+              {/* Right Column - Services & Notes */}
+              <div className="space-y-3 col-span-1 lg:col-span-2 xl:col-span-1">
+                <div className="border-b border-border pb-2 mb-3">
+                  <h3 className="text-sm sm:text-base font-medium text-foreground">
+                    {t('orders.servicesAndNotes')}
+                  </h3>
+                </div>
 
-                <div className="flex items-center space-x-2 p-4 border border-border rounded-lg bg-background">
+                <div className="flex items-center space-x-2 p-3 border border-border rounded-lg bg-background">
                   <Checkbox
                     id="waiter"
                     checked={formData.isWaiter}
@@ -466,57 +513,96 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     <span className="font-medium">{t('car_wash_orders.waiter_priority')}</span>
                   </Label>
                 </div>
-                
-                {formData.isWaiter && (
-                  <div className="text-sm text-destructive bg-destructive/10 p-2 rounded border border-destructive/20">
-                    {t('car_wash_orders.waiter_description')}
-                  </div>
-                )}
+
+                {/* Available Services */}
+                <div>
+                  <Label className="text-sm font-medium">
+                    {t('orders.services')}
+                    {selectedDealership && services.length > 0 && (
+                      <span className="text-muted-foreground ml-1">
+                        ({services.length} {t('orders.available')})
+                      </span>
+                    )}
+                  </Label>
+
+                  {!selectedDealership ? (
+                    <div className="p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground">
+                      {t('orders.selectDealershipFirst')}
+                    </div>
+                  ) : loading ? (
+                    <div className="p-4 border border-border rounded-lg text-center">
+                      <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2" />
+                      <div className="text-sm text-muted-foreground">{t('common.loading')}</div>
+                    </div>
+                  ) : (
+                    <ScrollArea
+                      className={`${
+                        services.length <= 2
+                          ? 'h-auto max-h-32'
+                          : services.length <= 4
+                            ? 'h-48'
+                            : 'h-64'
+                      } border border-border rounded-lg p-3 bg-background`}
+                    >
+                      <div className="space-y-3">
+                        {services.length === 0 ? (
+                          <div className="text-center text-muted-foreground py-8">
+                            {t('orders.noServicesAvailable')}
+                          </div>
+                        ) : (
+                          services.map((service: any) => (
+                            <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
+                              <div className="flex items-start space-x-3 flex-1">
+                                <Checkbox
+                                  id={service.id}
+                                  checked={selectedServices.includes(service.id)}
+                                  onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                  className="mt-1"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <Label
+                                    htmlFor={service.id}
+                                    className="font-medium text-sm cursor-pointer"
+                                  >
+                                    {service.name}
+                                  </Label>
+                                  {service.duration && (
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                                      <span>{service.duration} {t('services.minutes')}</span>
+                                    </div>
+                                  )}
+                                  {service.description && (
+                                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                      {service.description}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </div>
+
+                <Separator />
 
                 <div>
-                  <Label htmlFor="notes">{t('orders.notes')}</Label>
+                  <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}
                     onChange={(e) => handleInputChange('notes', e.target.value)}
-                    className="border-input bg-background"
-                    placeholder={t('car_wash_orders.notes_placeholder')}
                     rows={3}
+                    className="border-input bg-background resize-none"
+                    placeholder={t('car_wash_orders.notes_placeholder')}
                   />
                 </div>
-
-                {/* Available Services */}
-                {selectedDealership && services.length > 0 && (
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">
-                      {t('orders.services')} ({services.length} {t('orders.available')})
-                    </Label>
-                    <div className="max-h-32 overflow-y-auto space-y-2 p-3 border border-border rounded-md bg-background">
-                      {services.map((service: any) => (
-                        <div key={service.id} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={service.id}
-                            checked={selectedServices.includes(service.id)}
-                            onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                          />
-                          <Label 
-                            htmlFor={service.id}
-                            className="text-sm cursor-pointer flex-1"
-                          >
-                            {service.name} - ${service.price || 0}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                    {totalPrice > 0 && (
-                      <div className="text-sm font-medium text-right">
-                        {t('orders.total')}: ${totalPrice.toFixed(2)}
-                      </div>
-                    )}
                   </div>
-                )}
-              </div>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Hidden fields with default values for later editing in order details */}
             <div className="hidden">
@@ -573,15 +659,15 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
             {/* Submit Buttons */}
             <div className="flex justify-end gap-3 pt-4 border-t">
               <Button type="button" variant="outline" onClick={onClose}>
-                {t('common.cancel')}
+                {t('common.action_buttons.cancel')}
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={loading || !selectedDealership || !formData.vehicleVin}
                 className="min-w-[120px]"
               >
                 {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                {order ? t('common.update') : t('common.create')}
+                {order ? t('common.action_buttons.update') : t('common.action_buttons.create')}
               </Button>
             </div>
           </form>

@@ -58,65 +58,39 @@ export const CarWashOrderFields = React.memo(function CarWashOrderFields({
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-3">
-          {/* Service Performer */}
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-            <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <div className="min-w-0 flex-1">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                {t('car_wash_orders.service_performer')}
-              </p>
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-medium">
-                  {carWashInfo.servicePerformer}
+        <CardContent className="p-4">
+          {/* TAG and Service Type - Inline */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* TAG Field */}
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+              <Tag className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                  TAG
                 </p>
-                <Badge
-                  variant={carWashInfo.hasServicePerformer ? 'default' : 'outline'}
-                  className="text-xs"
-                >
-                  {carWashInfo.hasServicePerformer ? t('common.assigned') : t('common.not_assigned')}
-                </Badge>
-              </div>
-            </div>
-          </div>
-
-          {/* TAG Field */}
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-            <Tag className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <div className="min-w-0 flex-1">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                TAG
-              </p>
-              <div className="flex items-center gap-2">
                 <p className="text-sm font-medium font-mono">
                   {carWashInfo.tag}
                 </p>
-                <Badge
-                  variant={carWashInfo.hasTag ? 'default' : 'outline'}
-                  className="text-xs"
-                >
-                  {carWashInfo.hasTag ? t('common.assigned') : t('common.not_assigned')}
-                </Badge>
               </div>
             </div>
-          </div>
 
-          {/* Service Type */}
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-            <Droplets className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <div className="min-w-0 flex-1">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                {t('car_wash_orders.service_type')}
-              </p>
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-medium">
-                  {carWashInfo.serviceType}
+            {/* Service Type */}
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+              <Droplets className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                  {t('car_wash_orders.service_type')}
                 </p>
-                {carWashInfo.isWaiter && (
-                  <Badge variant="secondary" className="text-xs">
-                    {t('car_wash_orders.waiter')}
-                  </Badge>
-                )}
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium">
+                    {carWashInfo.serviceType}
+                  </p>
+                  {carWashInfo.isWaiter && (
+                    <Badge variant="secondary" className="text-xs">
+                      {t('car_wash_orders.waiter')}
+                    </Badge>
+                  )}
+                </div>
               </div>
             </div>
           </div>

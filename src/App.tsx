@@ -245,9 +245,9 @@ const App = () => (
         </PermissionProvider>
       </AuthProvider>
     </TooltipProvider>
-    {/* Sistema de toast antiguo reactivado para comparación */}
+    {/* Sistema de toast shadcn/ui - Sistema unificado */}
     <Toaster />
-    {/* Sonner comentado para comparación
+    {/* Sonner comentado - ahora todo usa shadcn/ui toast
     <Sonner
       position="top-right"
       expand={true}

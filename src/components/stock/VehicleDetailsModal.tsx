@@ -1,16 +1,17 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { X, Car, DollarSign, Info, MapPin, TrendingUp, Database, Camera } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogClose,
-} from '@/components/ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { formatTimeDuration } from '@/utils/timeFormatUtils';
+import { Award, BarChart3, Camera, Car, Database, DollarSign, Eye, Info, MapPin, X } from 'lucide-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface VehicleDetailsModalProps {
   vehicle: any;
@@ -71,7 +72,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                           <Camera className="h-12 w-12 text-muted-foreground" />
                         </div>
                       )}
-                      
+
                       {/* Enhanced Status Badges */}
                       <div className="absolute bottom-2 right-2 flex flex-col gap-1">
                         {vehicle.photo_count && (
@@ -81,8 +82,8 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                         )}
                         {(vehicle.objective || vehicle.raw_data?.Objective) && (
                           <div className={`px-2 py-1 rounded text-sm font-medium ${
-                            (vehicle.objective || vehicle.raw_data?.Objective)?.toLowerCase() === 'retail' 
-                              ? 'bg-green-500/90 text-white' 
+                            (vehicle.objective || vehicle.raw_data?.Objective)?.toLowerCase() === 'retail'
+                              ? 'bg-green-500/90 text-white'
                               : 'bg-blue-500/90 text-white'
                           }`}>
                             {vehicle.objective || vehicle.raw_data?.Objective}
@@ -235,8 +236,8 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                           <span className="font-medium">{vehicle.objective || vehicle.raw_data?.Objective || 'N/A'}</span>
                           {(vehicle.objective || vehicle.raw_data?.Objective) && (
                             <Badge variant="outline" className={
-                              (vehicle.objective || vehicle.raw_data?.Objective)?.toLowerCase() === 'retail' 
-                                ? 'border-green-500 text-green-700' 
+                              (vehicle.objective || vehicle.raw_data?.Objective)?.toLowerCase() === 'retail'
+                                ? 'border-green-500 text-green-700'
                                 : 'border-blue-500 text-blue-700'
                             }>
                               {vehicle.objective || vehicle.raw_data?.Objective}
@@ -246,7 +247,13 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                       </div>
                       <div>
                         <Label className="text-muted-foreground">{t('stock.vehicleDetails.ageDays')}</Label>
-                        <p className="font-medium">{vehicle.age_days || vehicle.raw_data?.Age || 0} days</p>
+                        <p className="font-medium font-mono">
+                          {vehicle.age_days
+                            ? formatTimeDuration((vehicle.age_days || 0) * 24 * 60 * 60 * 1000)
+                            : vehicle.raw_data?.Age
+                              ? `${vehicle.raw_data.Age} days`
+                              : '0 days'}
+                        </p>
                       </div>
                       <div>
                         <Label className="text-muted-foreground">{t('stock.vehicleDetails.riskLight')}</Label>
@@ -265,46 +272,260 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                 </Card>
               </div>
 
-              {/* Third Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Lead Performance */}
+              {/* Third Row - Valuation & Market */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Valuation */}
                 <Card className="shadow-sm hover:shadow-md transition-shadow">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5" />
-                      {t('stock.vehicleDetails.leadPerformance')}
+                      <DollarSign className="h-5 w-5" />
+                      Valuation & Costs
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {vehicle.unit_cost && (
+                        <div>
+                          <Label className="text-muted-foreground">Unit Cost</Label>
+                          <p className="font-medium">${vehicle.unit_cost.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.estimated_profit && (
+                        <div>
+                          <Label className="text-muted-foreground">Est. Profit</Label>
+                          <p className={`font-medium ${vehicle.estimated_profit > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            ${vehicle.estimated_profit.toLocaleString()}
+                          </p>
+                        </div>
+                      )}
+                      {vehicle.mmr_value && (
+                        <div>
+                          <Label className="text-muted-foreground">MMR Value</Label>
+                          <p className="font-medium">${vehicle.mmr_value.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.galves_value && (
+                        <div>
+                          <Label className="text-muted-foreground">Galves Value</Label>
+                          <p className="font-medium">${vehicle.galves_value.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.acv_wholesale && (
+                        <div>
+                          <Label className="text-muted-foreground">ACV Wholesale</Label>
+                          <p className="font-medium">${vehicle.acv_wholesale.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.acv_max_retail && (
+                        <div>
+                          <Label className="text-muted-foreground">ACV Max Retail</Label>
+                          <p className="font-medium">${vehicle.acv_max_retail.toLocaleString()}</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Market Performance */}
+                <Card className="shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart3 className="h-5 w-5" />
+                      Market Performance
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {vehicle.market_rank_matching !== null && vehicle.market_rank_matching !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">Market Rank (Matching)</Label>
+                          <p className="font-medium">#{vehicle.market_rank_matching} of {vehicle.market_listings_matching || 'N/A'}</p>
+                        </div>
+                      )}
+                      {vehicle.market_rank_overall !== null && vehicle.market_rank_overall !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">Market Rank (Overall)</Label>
+                          <p className="font-medium">#{vehicle.market_rank_overall} of {vehicle.market_listings_overall || 'N/A'}</p>
+                        </div>
+                      )}
+                      {vehicle.percent_to_market !== null && vehicle.percent_to_market !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">Percent to Market</Label>
+                          <p className={`font-medium ${vehicle.percent_to_market > 100 ? 'text-red-600' : 'text-green-600'}`}>
+                            {vehicle.percent_to_market}%
+                          </p>
+                        </div>
+                      )}
+                      {vehicle.cost_to_market !== null && vehicle.cost_to_market !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">Cost to Market</Label>
+                          <p className="font-medium">${vehicle.cost_to_market.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.mds_overall && (
+                        <div>
+                          <Label className="text-muted-foreground">MDS Overall</Label>
+                          <p className="font-medium">{vehicle.mds_overall}</p>
+                        </div>
+                      )}
+                      {vehicle.mds_matching && (
+                        <div>
+                          <Label className="text-muted-foreground">MDS Matching</Label>
+                          <p className="font-medium">{vehicle.mds_matching}</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Lead & CarGurus Performance */}
+                <Card className="shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Eye className="h-5 w-5" />
+                      Lead & Digital Performance
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <div>
-                        <Label className="text-muted-foreground">{t('stock.vehicleDetails.leadsLast7Days')}</Label>
+                        <Label className="text-muted-foreground">Leads Last 7 Days</Label>
                         <p className="font-medium text-lg">{vehicle.leads_last_7_days || 0}</p>
                       </div>
                       <div>
-                        <Label className="text-muted-foreground">{t('stock.vehicleDetails.leadsTotal')}</Label>
+                        <Label className="text-muted-foreground">Total Leads</Label>
                         <p className="font-medium">{vehicle.leads_total || 0}</p>
                       </div>
+                      {vehicle.leads_daily_avg_last_7_days !== null && vehicle.leads_daily_avg_last_7_days !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">Daily Avg (7D)</Label>
+                          <p className="font-medium">{vehicle.leads_daily_avg_last_7_days.toFixed(1)}</p>
+                        </div>
+                      )}
+                      <hr className="my-2" />
+                      {vehicle.cargurus_srp_views !== null && vehicle.cargurus_srp_views !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">CarGurus SRP Views</Label>
+                          <p className="font-medium">{vehicle.cargurus_srp_views.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.cargurus_vdp_views !== null && vehicle.cargurus_vdp_views !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">CarGurus VDP Views</Label>
+                          <p className="font-medium">{vehicle.cargurus_vdp_views.toLocaleString()}</p>
+                        </div>
+                      )}
+                      {vehicle.cargurus_ctr !== null && vehicle.cargurus_ctr !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">CarGurus CTR</Label>
+                          <p className="font-medium">{(vehicle.cargurus_ctr * 100).toFixed(2)}%</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Fourth Row - Proof Points */}
+              {(vehicle.proof_point_msrp || vehicle.proof_point_jd_power || vehicle.proof_point_kbb || vehicle.proof_point_market) && (
+                <Card className="shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Award className="h-5 w-5" />
+                      Proof Points
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {vehicle.proof_point_msrp && (
+                        <Badge variant="outline" className="text-sm">
+                          MSRP: {vehicle.proof_point_msrp}
+                        </Badge>
+                      )}
+                      {vehicle.proof_point_jd_power && (
+                        <Badge variant="outline" className="text-sm">
+                          JD Power: {vehicle.proof_point_jd_power}
+                        </Badge>
+                      )}
+                      {vehicle.proof_point_kbb && (
+                        <Badge variant="outline" className="text-sm">
+                          KBB: {vehicle.proof_point_kbb}
+                        </Badge>
+                      )}
+                      {vehicle.proof_point_market && (
+                        <Badge variant="outline" className="text-sm">
+                          Market: {vehicle.proof_point_market}
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Fifth Row - Additional Info & Raw Data */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Additional Information */}
+                <Card className="shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Info className="h-5 w-5" />
+                      Additional Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {vehicle.syndication_status && (
+                        <div>
+                          <Label className="text-muted-foreground">Syndication Status</Label>
+                          <p className="font-medium">{vehicle.syndication_status}</p>
+                        </div>
+                      )}
+                      {vehicle.key_information && (
+                        <div>
+                          <Label className="text-muted-foreground">Key Information</Label>
+                          <p className="font-medium text-sm">{vehicle.key_information}</p>
+                        </div>
+                      )}
+                      {vehicle.water_damage && (
+                        <div>
+                          <Label className="text-muted-foreground">Water Damage</Label>
+                          <Badge variant="destructive">Yes</Badge>
+                        </div>
+                      )}
+                      {vehicle.last_reprice_date && (
+                        <div>
+                          <Label className="text-muted-foreground">Last Reprice</Label>
+                          <p className="font-medium">{new Date(vehicle.last_reprice_date).toLocaleDateString()}</p>
+                        </div>
+                      )}
+                      {vehicle.leads_since_last_reprice !== null && vehicle.leads_since_last_reprice !== undefined && (
+                        <div>
+                          <Label className="text-muted-foreground">Leads Since Reprice</Label>
+                          <p className="font-medium">{vehicle.leads_since_last_reprice}</p>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Raw Data */}
-                <Card className="shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Database className="h-5 w-5" />
-                      {t('stock.vehicleDetails.rawData')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="max-h-40 overflow-y-auto">
-                      <pre className="text-xs bg-muted p-2 rounded">
-                        {JSON.stringify(vehicle.raw_data, null, 2)}
-                      </pre>
-                    </div>
-                  </CardContent>
-                </Card>
+                {vehicle.raw_data && Object.keys(vehicle.raw_data).length > 0 && (
+                  <Card className="shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Database className="h-5 w-5" />
+                        {t('stock.vehicleDetails.rawData')}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="max-h-40 overflow-y-auto">
+                        <pre className="text-xs bg-muted p-2 rounded">
+                          {JSON.stringify(vehicle.raw_data, null, 2)}
+                        </pre>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </div>
           </ScrollArea>

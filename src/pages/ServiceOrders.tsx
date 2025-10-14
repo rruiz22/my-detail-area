@@ -1,27 +1,32 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw } from 'lucide-react';
-import { OrderFilters } from '@/components/orders/OrderFilters';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
-import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
-import { useTranslation } from 'react-i18next';
-import { useTabPersistence, useViewModePersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
+import { OrderFilters } from '@/components/orders/OrderFilters';
+import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
+import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Plus, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '@/hooks/use-toast';
 
 // New improved components
-import { SmartDashboard } from '@/components/sales/SmartDashboard';
-import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
-import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { OrderPreviewPanel } from '@/components/sales/OrderPreviewPanel';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import { SmartDashboard } from '@/components/sales/SmartDashboard';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function ServiceOrders() {
   console.log('🔵 ServiceOrders component is RENDERING');
   const { t } = useTranslation();
   const { confirmDelete } = useSweetAlert();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('service_orders');
@@ -34,6 +39,7 @@ export default function ServiceOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
   const [weekOffset, setWeekOffset] = useState(0);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
   const {
     orders,
@@ -116,12 +122,56 @@ export default function ServiceOrders() {
     }
   };
 
+  const handleUpdate = async (orderId: string, updates: any) => {
+    try {
+      await updateOrder(orderId, updates);
+
+      // Invalidate query cache to trigger silent refetch
+      // This is faster than polling and doesn't cause visible reload
+      queryClient.invalidateQueries({ queryKey: ['orders', 'service'] });
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderUpdated', {
+        detail: { orderId, updates, timestamp: Date.now() }
+      }));
+    } catch (error) {
+      console.error('Order update failed:', error);
+      throw error;
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      // Force refetch of polling query
+      const result = await queryClient.refetchQueries({
+        queryKey: ['orders', 'service']
+      });
+      console.log('🔄 Manual refresh completed:', result);
+      toast({
+        description: t('common.data_refreshed') || 'Data refreshed successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      toast({
+        description: t('common.refresh_failed') || 'Failed to refresh data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
+
   const handleCardClick = (filter: string) => {
     setActiveFilter(filter);
     if (filter !== 'dashboard') {
       setViewMode('kanban');
     }
   };
+
+  // Force table view on mobile (disable kanban and calendar)
+  const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   // Filter orders based on search term
   const filteredOrders = orders.filter((order: any) => {
@@ -147,15 +197,15 @@ export default function ServiceOrders() {
           <div className="flex items-center gap-4">
             <LiveTimer
               lastRefresh={lastRefresh}
-              isRefreshing={loading}
+              isRefreshing={isManualRefreshing}
             />
             <Button
               variant="outline"
               size="sm"
-              onClick={refreshData}
-              disabled={loading}
+              onClick={handleManualRefresh}
+              disabled={isManualRefreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>
@@ -199,7 +249,8 @@ export default function ServiceOrders() {
             />
           ) : (
             <>
-              {viewMode === 'kanban' ? (
+              {/* Table/Kanban/Calendar Content - Mobile forces table */}
+              {effectiveViewMode === 'kanban' ? (
                 <OrderKanbanBoard
                   orders={filteredOrders}
                   onEdit={handleEditOrder}
@@ -207,7 +258,7 @@ export default function ServiceOrders() {
                   onDelete={handleDeleteOrder}
                   onStatusChange={handleStatusChange}
                 />
-              ) : viewMode === 'calendar' ? (
+              ) : effectiveViewMode === 'calendar' ? (
                 <OrderCalendarView
                   orders={filteredOrders}
                   loading={loading}
@@ -251,6 +302,7 @@ export default function ServiceOrders() {
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}
+            onUpdate={handleUpdate}
           />
         )}
     </div>

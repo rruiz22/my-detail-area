@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
 All colors MUST be HSL.
 */
 
@@ -164,72 +164,72 @@ All colors MUST be HSL.
     box-shadow: var(--shadow-card);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
-  
+
   .card-enhanced:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
   }
-  
+
   /* Default card shadows - always visible */
   .card {
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease;
   }
-  
+
   .card:hover {
     box-shadow: var(--shadow-md);
   }
-  
+
   /* Enhanced header with depth */
   .header-enhanced {
     box-shadow: var(--shadow-header);
     backdrop-filter: blur(12px);
     background: hsl(var(--background) / 0.95);
   }
-  
+
   /* Enhanced modal presence */
   .modal-enhanced {
     box-shadow: var(--shadow-modal);
   }
-  
+
   /* Subtle button enhancement */
   .button-enhanced {
     box-shadow: var(--shadow-xs);
     transition: box-shadow 0.2s ease, transform 0.1s ease;
   }
-  
+
   .button-enhanced:hover {
     box-shadow: var(--shadow-sm);
     transform: translateY(-0.5px);
   }
-  
+
   .button-enhanced:active {
     transform: translateY(0);
     box-shadow: var(--shadow-xs);
   }
-  
+
   /* Enhanced button default state */
   .button {
     box-shadow: var(--shadow-xs);
     transition: box-shadow 0.2s ease, transform 0.1s ease;
   }
-  
+
   .button:hover {
     box-shadow: var(--shadow-sm);
     transform: translateY(-0.5px);
   }
-  
-  
+
+
   /* Input shadows for depth */
   .input-enhanced {
     box-shadow: inset 0 1px 2px 0 hsl(0 0% 0% / 0.05);
     transition: box-shadow 0.2s ease;
   }
-  
+
   .input-enhanced:focus {
     box-shadow: inset 0 1px 2px 0 hsl(0 0% 0% / 0.05), 0 0 0 2px hsl(var(--ring) / 0.2);
   }
-  
+
   /* Perfect icon centering for collapsed sidebar */
   .sidebar-icon-centered {
     display: flex !important;
@@ -240,7 +240,7 @@ All colors MUST be HSL.
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-  
+
   .sidebar-icon-centered .lucide {
     margin: 0 !important;
   }
@@ -280,12 +280,12 @@ All colors MUST be HSL.
   .due-date-delayed {
     transition: all 0.3s ease;
   }
-  
+
   /* Sidebar responsive behavior and animations */
   [data-sidebar] {
     transition: width 0.2s ease-in-out, transform 0.2s ease-in-out;
   }
-  
+
   /* Mobile-first responsive design */
   @media (max-width: 768px) {
     [data-sidebar="true"] {
@@ -294,43 +294,43 @@ All colors MUST be HSL.
       height: 100vh;
     }
   }
-  
+
   /* Sidebar state transitions */
   [data-state="expanded"] {
     width: auto;
     min-width: 240px;
   }
-  
+
   [data-state="collapsed"] {
     width: 56px;
     min-width: 56px;
   }
-  
+
   /* Additional z-index utilities for dropdowns and modals */
   .z-dropdown {
     z-index: 1000;
   }
-  
+
   .z-modal {
     z-index: 1100;
   }
-  
+
   .z-tooltip {
     z-index: 1200;
   }
-  
+
   /* Ensure all SelectContent components have proper styling */
   [data-radix-select-content] {
     z-index: 1000;
     background: hsl(var(--popover));
     border: 1px solid hsl(var(--border));
   }
-  
+
   /* Ensure dialogs are properly rendered */
   [data-radix-dialog-overlay] {
     z-index: 1050;
   }
-  
+
   [data-radix-dialog-content] {
     z-index: 1051;
   }
@@ -486,5 +486,127 @@ All colors MUST be HSL.
 
   [data-sonner-toast] {
     z-index: 99999 !important;
+  }
+
+  /* SweetAlert2 within Dialog modals */
+  /* Dialog uses z-50, so SweetAlert2 should be z-60 (just above) */
+  .swal2-container.swal2-in-modal {
+    z-index: 60 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Default SweetAlert2 container - for use outside modals */
+  .swal2-container {
+    z-index: 60 !important;
+    padding: 0.75rem;
+    pointer-events: auto !important;
+  }
+
+  /* SweetAlert2 backdrop - must be below popup and allow clicks through */
+  .swal2-container::before {
+    z-index: 60 !important;
+  }
+
+  /* SweetAlert2 popup - ensure it's above everything */
+  .swal2-popup {
+    position: relative !important;
+    z-index: 65 !important;
+    width: auto !important;
+    max-width: 90vw !important;
+    padding: 1.5rem !important;
+  }
+
+  /* SweetAlert2 actions (buttons) - ensure they're clickable */
+  .swal2-actions {
+    position: relative !important;
+    z-index: 66 !important;
+  }
+
+  /* SweetAlert2 buttons - highest priority for clicks */
+  .swal2-confirm,
+  .swal2-cancel,
+  .swal2-styled {
+    position: relative !important;
+    z-index: 67 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+
+  /* Ensure all SweetAlert2 content is clickable */
+  .swal2-title,
+  .swal2-html-container,
+  .swal2-icon {
+    position: relative !important;
+    z-index: 65 !important;
+    pointer-events: none !important;
+  }
+
+  /* Responsive SweetAlert2 */
+  @media (max-width: 640px) {
+    .swal2-popup {
+      font-size: 0.875rem !important;
+      padding: 1.25rem !important;
+      max-width: 95vw !important;
+    }
+
+    .swal2-title {
+      font-size: 1.125rem !important;
+      padding: 0 0 0.5rem 0 !important;
+    }
+
+    .swal2-html-container {
+      font-size: 0.875rem !important;
+      padding: 0.5rem 0 !important;
+    }
+
+    .swal2-actions {
+      flex-direction: column !important;
+      width: 100% !important;
+      gap: 0.5rem !important;
+      margin: 1rem 0 0 0 !important;
+    }
+
+    .swal2-actions button {
+      width: 100% !important;
+      margin: 0 !important;
+    }
+
+    .swal2-styled {
+      padding: 0.625rem 1rem !important;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .swal2-popup {
+      max-width: 28rem !important;
+    }
+  }
+}
+
+/* ============================================
+   Sticky Table Header Fix
+   ============================================ */
+@layer components {
+  /* Ensure sticky header works properly */
+  [data-sticky-header] thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  [data-sticky-header] thead th {
+    position: relative;
+    background-color: hsl(var(--background));
+  }
+
+  /* Add border after pseudo-element for sticky header */
+  [data-sticky-header] thead::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: hsl(var(--border));
   }
 }

@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
-import { orderNumberService } from '@/services/orderNumberService';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useOrderPolling } from '@/hooks/useSmartPolling';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -39,6 +42,7 @@ interface CarWashOrderData {
 // Unified CarWash Order type for components
 export interface CarWashOrder {
   id: string;
+  orderNumber: string;
   vehicleYear?: number;
   vehicleMake?: string;
   vehicleModel?: string;
@@ -69,6 +73,7 @@ export interface CarWashOrder {
 // Transform Supabase order to component order
 const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
   id: supabaseOrder.id,
+  orderNumber: supabaseOrder.order_number,
   vehicleYear: supabaseOrder.vehicle_year || undefined,
   vehicleMake: supabaseOrder.vehicle_make || undefined,
   vehicleModel: supabaseOrder.vehicle_model || undefined,
@@ -101,25 +106,32 @@ const transformCarWashOrder = (supabaseOrder: SupabaseOrder): CarWashOrder => ({
 });
 
 export const useCarWashOrderManagement = () => {
-  const [orders, setOrders] = useState<CarWashOrder[]>([]);
   const [loading, setLoading] = useState(false);
-  const { user, enhancedUser } = useAuth();
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const { enhancedUser } = usePermissions();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();
 
-  const refreshData = useCallback(async () => {
-    if (!user || !enhancedUser) return;
+  // Check if polling should be enabled
+  const isPollingEnabled = !!(user && enhancedUser);
 
-    setLoading(true);
-
-    try {
-      console.log('🔄 CarWash refreshData: Fetching car wash orders...');
+  // Smart polling for car wash order data (replaces real-time subscription and initial refresh)
+  const carWashOrdersPollingQuery = useOrderPolling(
+    ['orders', 'car_wash'],
+    async () => {
+      if (!user || !enhancedUser) {
+        console.log('⚠️ [CarWash] Polling skipped - no user or enhancedUser');
+        return [];
+      }
 
       // Apply same dealer filtering logic as other modules
       let ordersQuery = supabase
         .from('orders')
         .select('*')
-        .eq('order_type', 'car_wash')
+        .eq('order_type', 'carwash')
         .order('created_at', { ascending: false });
 
       // Check global dealer filter
@@ -142,12 +154,12 @@ export const useCarWashOrderManagement = () => {
             ordersQuery = ordersQuery.eq('dealer_id', 5);
           } else {
             const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
-            console.log(`🏢 CarWash refreshData - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            console.log(`🏢 [CarWash Polling] Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown
-          console.log(`🎯 CarWash refreshData - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          console.log(`🎯 [CarWash Polling] Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
           ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
         }
       } else {
@@ -156,11 +168,7 @@ export const useCarWashOrderManagement = () => {
       }
 
       const { data: orders, error } = await ordersQuery;
-
-      if (error) {
-        console.error('Error fetching car wash orders:', error);
-        return;
-      }
+      if (error) throw error;
 
       // Fetch dealerships data separately
       const { data: dealerships, error: dealershipsError } = await supabase
@@ -185,7 +193,7 @@ export const useCarWashOrderManagement = () => {
       const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
 
       // Transform orders with joined data
-      const allOrders = (orders || []).map(order => {
+      const transformedOrders = (orders || []).map(order => {
         const transformedOrder = transformCarWashOrder(order);
         // Add joined data manually
         transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
@@ -195,34 +203,55 @@ export const useCarWashOrderManagement = () => {
         return transformedOrder;
       });
 
-      setOrders(allOrders);
-    } catch (error) {
-      console.error('Error in refreshData:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user, enhancedUser]);
+      return transformedOrders;
+    },
+    isPollingEnabled
+  );
+
+  // Derive orders directly from polling query using useMemo for silent updates
+  const allOrders = useMemo(() =>
+    carWashOrdersPollingQuery.data || [],
+    [carWashOrdersPollingQuery.data]
+  );
+
+  // Simplified refreshData - uses polling query for consistency
+  const refreshData = useCallback(async () => {
+    await carWashOrdersPollingQuery.refetch();
+    toast({
+      description: t('common.data_refreshed') || 'Data refreshed',
+      variant: 'default'
+    });
+  }, [carWashOrdersPollingQuery, t]);
 
   const createOrder = useCallback(async (orderData: CarWashOrderData) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
-      console.log('Creating car wash order with data:', orderData);
-      
-      // Use database function to generate sequential order number
+      console.log('📥 [CarWash Hook] createOrder received:', {
+        dealerId: orderData.dealerId,
+        tag: orderData.tag,
+        stockNumber: orderData.stockNumber,
+        vehicleInfo: orderData.vehicleInfo,
+        isWaiter: orderData.isWaiter,
+        services: orderData.services,
+        completedAt: orderData.completedAt,
+        completedAtType: typeof orderData.completedAt,
+        fullData: orderData
+      });
+
+      // Use database function to generate sequential car wash order number
       const { data: orderNumberData, error: numberError } = await supabase
-        .rpc('generate_custom_order_number');
+        .rpc('generate_car_wash_order_number');
 
       if (numberError || !orderNumberData) {
-        console.error('Error generating order number:', numberError);
-        throw new Error('Failed to generate order number');
+        console.error('Error generating car wash order number:', numberError);
+        throw new Error('Failed to generate car wash order number');
       }
 
       const insertData: SupabaseOrderInsert = {
         order_number: orderNumberData, // Use sequential CW-1001, CW-1002, etc.
-        customer_name: 'Car Wash Service', // Default for car wash orders
         vehicle_year: orderData.vehicleYear ? parseInt(orderData.vehicleYear.toString()) : null,
         vehicle_make: orderData.vehicleMake,
         vehicle_model: orderData.vehicleModel,
@@ -230,7 +259,7 @@ export const useCarWashOrderManagement = () => {
         vehicle_info: orderData.vehicleInfo,
         stock_number: orderData.stockNumber,
         tag: orderData.tag,
-        order_type: 'car_wash',
+        order_type: 'carwash',
         status: 'pending',
         priority: orderData.isWaiter ? 'urgent' : 'normal',
         services: orderData.services || [],
@@ -240,9 +269,20 @@ export const useCarWashOrderManagement = () => {
         dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
       };
 
-      console.log('Inserting car wash order to DB:', insertData);
+      console.log('💾 [CarWash Hook] Sending INSERT to Supabase:', {
+        order_number: insertData.order_number,
+        tag: insertData.tag,
+        stock_number: insertData.stock_number,
+        vehicle_info: insertData.vehicle_info,
+        priority: insertData.priority,
+        isWaiter: insertData.priority === 'urgent',
+        services: insertData.services,
+        completed_at: insertData.completed_at,
+        completed_at_type: typeof insertData.completed_at,
+        fullInsertData: insertData
+      });
 
-      const { data, error } = await supabase
+      const { data, error} = await supabase
         .from('orders')
         .insert(insertData)
         .select()
@@ -253,59 +293,130 @@ export const useCarWashOrderManagement = () => {
         throw error;
       }
 
-      console.log('Car wash order created successfully:', data);
-      
+      const newOrder = transformCarWashOrder(data);
+
+      // Optimistic update: Add order immediately to UI using query cache
+      queryClient.setQueryData(['orders', 'car_wash'], (oldData: CarWashOrder[] | undefined) =>
+        oldData ? [newOrder, ...oldData] : [newOrder]
+      );
+
       // Auto-generate QR code and shortlink
       try {
         await generateQR(data.id, data.order_number, data.dealer_id);
-        console.log('QR code and shortlink generated for order:', data.order_number);
+        console.log('QR code and shortlink generated for car wash order:', data.order_number);
       } catch (qrError) {
         console.error('Failed to generate QR code:', qrError);
         // Don't fail the order creation if QR generation fails
       }
 
+      toast({
+        description: t('car_wash.order_created_successfully') || 'Car wash order created successfully',
+        variant: 'default'
+      });
+
       // Invalidate React Query cache to refresh order list
       await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
 
-      // Real-time subscription will handle the data update automatically
+      return newOrder;
     } catch (error) {
       console.error('Error in createOrder:', error);
+      toast({
+        description: t('car_wash.error_creating_order') || 'Error creating car wash order',
+        variant: 'destructive'
+      });
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user, generateQR, queryClient]);
+  }, [user, generateQR, queryClient, t]);
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<CarWashOrderData> & { status?: string }) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
-      // Map waiter checkbox to priority and prepare update data
-      const updateDataRaw = {
-        ...orderData,
-        priority: orderData.isWaiter ? 'urgent' : 'normal'
-      };
+      console.log('📥 [CarWash Hook] updateOrder received:', {
+        orderId: orderId,
+        orderData: orderData,
+        completedAt: orderData.completedAt,
+        tag: orderData.tag,
+        isWaiter: orderData.isWaiter,
+        services: orderData.services,
+        status: orderData.status
+      });
 
-      // Remove isWaiter from update data as it's not a DB field
-      delete updateDataRaw.isWaiter;
+      // Build updateData dynamically - only include fields explicitly provided
+      // This prevents accidental data loss when doing partial updates (e.g., status change)
+      const updateData: SupabaseOrderUpdate = {};
 
-      const updateData: SupabaseOrderUpdate = {
-        vehicle_year: updateDataRaw.vehicleYear ? parseInt(updateDataRaw.vehicleYear.toString()) : undefined,
-        vehicle_make: updateDataRaw.vehicleMake,
-        vehicle_model: updateDataRaw.vehicleModel,
-        vehicle_vin: updateDataRaw.vehicleVin,
-        vehicle_info: updateDataRaw.vehicleInfo,
-        stock_number: updateDataRaw.stockNumber,
-        tag: updateDataRaw.tag,
-        status: updateDataRaw.status,
-        priority: updateDataRaw.priority,
-        services: updateDataRaw.services,
-        total_amount: updateDataRaw.totalAmount,
-        notes: updateDataRaw.notes,
-        completed_at: updateDataRaw.completedAt ? (updateDataRaw.completedAt instanceof Date ? updateDataRaw.completedAt.toISOString() : updateDataRaw.completedAt) : undefined,
-      };
+      // Vehicle information
+      if (orderData.vehicleYear !== undefined) {
+        updateData.vehicle_year = parseInt(orderData.vehicleYear.toString());
+      }
+      if (orderData.vehicleMake !== undefined) {
+        updateData.vehicle_make = orderData.vehicleMake;
+      }
+      if (orderData.vehicleModel !== undefined) {
+        updateData.vehicle_model = orderData.vehicleModel;
+      }
+      if (orderData.vehicleVin !== undefined) {
+        updateData.vehicle_vin = orderData.vehicleVin;
+      }
+      if (orderData.vehicleInfo !== undefined) {
+        updateData.vehicle_info = orderData.vehicleInfo;
+      }
+
+      // Stock and tag information
+      if (orderData.stockNumber !== undefined) {
+        updateData.stock_number = orderData.stockNumber;
+      }
+      if (orderData.tag !== undefined) {
+        updateData.tag = orderData.tag;
+      }
+
+      // Order status and priority
+      if (orderData.status !== undefined) {
+        updateData.status = orderData.status;
+      }
+      if (orderData.isWaiter !== undefined) {
+        // Map waiter checkbox to priority
+        updateData.priority = orderData.isWaiter ? 'urgent' : 'normal';
+      }
+
+      // CRITICAL: Only update services if explicitly provided
+      // This prevents clearing services array during status-only updates
+      if (orderData.services !== undefined) {
+        updateData.services = orderData.services;
+      }
+
+      // Pricing
+      if (orderData.totalAmount !== undefined) {
+        updateData.total_amount = orderData.totalAmount;
+      }
+
+      // Notes
+      if (orderData.notes !== undefined) {
+        updateData.notes = orderData.notes;
+      }
+
+      // Dates
+      if (orderData.completedAt !== undefined) {
+        updateData.completed_at = orderData.completedAt
+          ? (orderData.completedAt instanceof Date ? orderData.completedAt.toISOString() : orderData.completedAt)
+          : null;
+      }
+
+      console.log('💾 [CarWash Hook] Sending UPDATE to Supabase:', {
+        orderId: orderId,
+        updateData: updateData,
+        completed_at: updateData.completed_at,
+        tag: updateData.tag,
+        priority: updateData.priority,
+        services: updateData.services,
+        status: updateData.status,
+        fieldsToUpdate: Object.keys(updateData)
+      });
 
       const { data, error } = await supabase
         .from('orders')
@@ -315,27 +426,53 @@ export const useCarWashOrderManagement = () => {
         .single();
 
       if (error) {
-        console.error('Error updating car wash order:', error);
+        console.error('❌ [CarWash Hook] Error updating order:', error);
         throw error;
       }
 
-      console.log('Car wash order updated successfully:', data);
+      console.log('✅ [CarWash Hook] Supabase UPDATE successful:', {
+        id: data.id,
+        completed_at: data.completed_at,
+        tag: data.tag,
+        priority: data.priority,
+        services: data.services,
+        status: data.status,
+        fullData: data
+      });
+
+      const updatedOrder = transformCarWashOrder(data);
+
+      // Optimistic update: Update order immediately in UI using query cache
+      queryClient.setQueryData(['orders', 'car_wash'], (oldData: CarWashOrder[] | undefined) =>
+        oldData ? oldData.map(order => order.id === orderId ? updatedOrder : order) : []
+      );
+
+      toast({
+        description: t('car_wash.order_updated_successfully') || 'Car wash order updated successfully',
+        variant: 'default'
+      });
 
       // Invalidate React Query cache to force fresh data from polling
       await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
+
+      return updatedOrder;
     } catch (error) {
       console.error('Error in updateOrder:', error);
+      toast({
+        description: t('car_wash.error_updating_order') || 'Error updating car wash order',
+        variant: 'destructive'
+      });
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user, queryClient]);
+  }, [user, queryClient, t]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
-    
+
     setLoading(true);
-    
+
     try {
       const { error } = await supabase
         .from('orders')
@@ -344,72 +481,103 @@ export const useCarWashOrderManagement = () => {
 
       if (error) {
         console.error('Error deleting car wash order:', error);
+        toast({
+          description: t('car_wash.error_deleting_order') || 'Error deleting car wash order',
+          variant: 'destructive'
+        });
         throw error;
       }
 
-      console.log('Car wash order deleted successfully');
+      // Optimistic update: Remove order immediately from UI using query cache
+      queryClient.setQueryData(['orders', 'car_wash'], (oldData: CarWashOrder[] | undefined) =>
+        oldData ? oldData.filter(order => order.id !== orderId) : []
+      );
+
+      toast({
+        description: t('car_wash.order_deleted_successfully') || 'Car wash order deleted successfully',
+        variant: 'default'
+      });
 
       // Invalidate React Query cache to refresh order list
       await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
 
-      // Real-time subscription will handle the data update automatically
+      return true;
     } catch (error) {
       console.error('Error in deleteOrder:', error);
-      throw error;
+      toast({
+        description: t('car_wash.error_deleting_order') || 'Error deleting car wash order',
+        variant: 'destructive'
+      });
+      return false;
     } finally {
       setLoading(false);
     }
-  }, [user, queryClient]);
+  }, [user, queryClient, t]);
 
-  // Initialize data on mount and when dependencies change
+  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
+  // useEffect(() => {
+  //   refreshData();
+  // }, [refreshData]);
+
+  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
+  // useEffect(() => {
+  //   if (!user) return;
+  //
+  //   const channel = supabase
+  //     .channel('car_wash_orders_realtime')
+  //     .on(
+  //       'postgres_changes',
+  //       {
+  //         event: '*',
+  //         schema: 'public',
+  //         table: 'orders',
+  //         filter: 'order_type=eq.car_wash'
+  //       },
+  //       async (payload) => {
+  //         console.log('Car wash order real-time update:', payload);
+  //
+  //         if (payload.eventType === 'INSERT') {
+  //           const newOrder = transformCarWashOrder(payload.new as SupabaseOrder);
+  //           setAllOrders(prevOrders => [newOrder, ...prevOrders]);
+  //         } else if (payload.eventType === 'UPDATE') {
+  //           const updatedOrder = transformCarWashOrder(payload.new as SupabaseOrder);
+  //           setAllOrders(prevOrders =>
+  //             prevOrders.map(order =>
+  //               order.id === updatedOrder.id ? updatedOrder : order
+  //             )
+  //           );
+  //         } else if (payload.eventType === 'DELETE') {
+  //           setAllOrders(prevOrders =>
+  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
+  //           );
+  //         }
+  //       }
+  //     )
+  //     .subscribe();
+  //
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // }, [user]);
+
+  // Trigger initial fetch when enhancedUser becomes available
   useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+    if (user && enhancedUser && !carWashOrdersPollingQuery.data) {
+      carWashOrdersPollingQuery.refetch();
+    }
+  }, [user, enhancedUser, carWashOrdersPollingQuery]);
 
-  // Real-time subscription for car wash orders
+  // Update lastRefresh when polling completes
   useEffect(() => {
-    if (!user) return;
-
-    const channel = supabase
-      .channel('car_wash_orders_realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'orders',
-          filter: 'order_type=eq.car_wash'
-        },
-        async (payload) => {
-          console.log('Car wash order real-time update:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            const newOrder = transformCarWashOrder(payload.new as SupabaseOrder);
-            setOrders(prevOrders => [newOrder, ...prevOrders]);
-          } else if (payload.eventType === 'UPDATE') {
-            const updatedOrder = transformCarWashOrder(payload.new as SupabaseOrder);
-            setOrders(prevOrders =>
-              prevOrders.map(order =>
-                order.id === updatedOrder.id ? updatedOrder : order
-              )
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setOrders(prevOrders =>
-              prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-            );
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user]);
+    if (!carWashOrdersPollingQuery.isFetching && carWashOrdersPollingQuery.dataUpdatedAt) {
+      setLastRefresh(new Date(carWashOrdersPollingQuery.dataUpdatedAt));
+    }
+  }, [carWashOrdersPollingQuery.isFetching, carWashOrdersPollingQuery.dataUpdatedAt]);
 
   return {
-    orders,
+    orders: allOrders,
     loading,
+    lastRefresh,
     refreshData,
     createOrder,
     updateOrder,

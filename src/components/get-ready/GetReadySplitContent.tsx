@@ -1,11 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
+import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { cn } from '@/lib/utils';
-import { Download, MoreHorizontal, Plus, RefreshCw } from 'lucide-react';
+import { exportToCSV, exportToExcel, formatVehiclesForExport } from '@/utils/exportUtils';
+import { ChevronDown, Download, FileSpreadsheet, FileText, MoreHorizontal, Plus, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -24,6 +28,7 @@ interface GetReadySplitContentProps {
 export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { t } = useTranslation();
   const location = useLocation();
+  const { toast } = useToast();
   const { splitLayout, selectedStepId, selectedVehicleId } = useGetReadyStore();
   const { steps, refetchSteps, refetchKPIs } = useGetReady();
 
@@ -33,6 +38,8 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const [selectedPriority, setSelectedPriority] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('days_in_step');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Vehicle form modal state
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
@@ -41,9 +48,76 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || 'all';
 
-  const handleRefresh = () => {
-    refetchSteps();
-    refetchKPIs();
+  // Fetch vehicles for export (infinite query to get all vehicles)
+  const { data: vehiclesData } = useGetReadyVehiclesInfinite({
+    searchQuery,
+    selectedStep,
+    selectedWorkflow,
+    selectedPriority,
+    sortBy,
+    sortOrder
+  });
+
+  // Flatten all vehicles from infinite query
+  const allVehicles = vehiclesData?.pages.flatMap(page => page.vehicles) ?? [];
+
+  const handleRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      await Promise.all([refetchSteps(), refetchKPIs()]);
+      toast({
+        description: t('common.data_refreshed') || 'Data refreshed successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      toast({
+        description: t('common.refresh_failed') || 'Failed to refresh data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
+
+  const handleExport = async (format: 'csv' | 'excel') => {
+    setIsExporting(true);
+    try {
+      if (allVehicles.length === 0) {
+        toast({
+          description: 'No vehicles to export',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Format vehicles for export
+      const formattedData = formatVehiclesForExport(allVehicles);
+
+      // Generate filename
+      const stepName = selectedStep === 'all' ? 'all-steps' : (steps.find(s => s.id === selectedStep)?.name || 'vehicles');
+      const filename = `get-ready-${stepName.toLowerCase().replace(/\s+/g, '-')}`;
+
+      // Export based on format
+      if (format === 'csv') {
+        exportToCSV(formattedData, filename);
+      } else if (format === 'excel') {
+        exportToExcel(formattedData, filename);
+      }
+
+      toast({
+        description: t('common.actions.export_success') || 'Data exported successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast({
+        description: t('common.actions.export_failed') || 'Failed to export data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const hasActiveFilters = selectedWorkflow !== 'all' || selectedPriority !== 'all' || searchQuery.length > 0;
@@ -66,7 +140,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
         <GetReadyDashboardWidget />
 
         {/* Quick Actions and Alerts */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
           {/* Quick Actions */}
           <Card>
             <CardHeader>
@@ -99,7 +173,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     return (
       <div className={cn("h-full flex flex-col space-y-4", className)}>
         {/* Header with Actions */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold">
               {selectedStep === 'all'
@@ -115,27 +189,47 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleRefresh}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              {t('common.actions.refresh')}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isManualRefreshing}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">{t('common.actions.refresh')}</span>
             </Button>
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              {t('common.actions.export')}
-            </Button>
+
+            {/* Export Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" disabled={isExporting}>
+                  <Download className={`h-4 w-4 mr-2 ${isExporting ? 'animate-pulse' : ''}`} />
+                  <span className="hidden sm:inline">{isExporting ? t('common.actions.exporting') : t('common.actions.export')}</span>
+                  <ChevronDown className="h-3 w-3 ml-1 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{t('common.actions.export')}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleExport('csv')}>
+                  <FileText className="h-4 w-4 mr-2" />
+                  {t('common.actions.export_csv')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport('excel')}>
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  {t('common.actions.export_excel')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button size="sm" onClick={() => {
               setEditingVehicleId(null);
               setVehicleFormOpen(true);
             }}>
               <Plus className="h-4 w-4 mr-2" />
-              {t('get_ready.vehicle_form.add_vehicle')}
+              <span className="hidden sm:inline">{t('get_ready.vehicle_form.add_vehicle')}</span>
             </Button>
           </div>
         </div>
 
         {/* Compact Filters Bar */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-muted/30 rounded-lg border">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 px-4 py-3 bg-muted/30 rounded-lg border">
           {/* Step indicator (read-only from sidebar) */}
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Step:</span>

@@ -1,0 +1,146 @@
+{
+  "en": {
+    "get_ready": {
+      "sla": {
+        "title": "SLA & Time Goals Configuration",
+        "description": "Configure time goals and alert thresholds for vehicle reconditioning process",
+        "time_goals": {
+          "title": "Time Goals",
+          "description": "Set the target and maximum time goals for completing vehicle reconditioning",
+          "default_label": "Default Time Goal (Days)",
+          "default_help": "Target completion time",
+          "max_label": "Maximum Time Goal (Days)",
+          "max_help": "Upper limit"
+        },
+        "thresholds": {
+          "title": "Alert Thresholds",
+          "description": "Define when vehicles should show different alert levels based on days in current step",
+          "green_label": "Green (On Track)",
+          "green_help": "≤ {{count}} {{count, plural, one {day} other {days}}}",
+          "warning_label": "Yellow (Warning)",
+          "warning_help": "{{from}} - {{to}} days",
+          "danger_label": "Red (Critical)",
+          "danger_help": "≥ {{count}} {{count, plural, one {day} other {days}}}"
+        },
+        "preview": {
+          "title": "Preview",
+          "description": "See how different day counts will be categorized",
+          "on_track": "On Track",
+          "warning": "Warning",
+          "critical": "Critical"
+        },
+        "options": {
+          "title": "Additional Options",
+          "enable_notifications": "Enable Notifications",
+          "enable_notifications_help": "Send alerts when vehicles exceed thresholds",
+          "count_weekends": "Count Weekends",
+          "count_weekends_help": "Include weekends in day calculations",
+          "business_hours_only": "Business Hours Only",
+          "business_hours_only_help": "Only count hours during business hours (8 AM - 6 PM)"
+        },
+        "actions": {
+          "save": "Save Configuration",
+          "saving": "Saving...",
+          "saved": "SLA configuration updated successfully",
+          "error": "Failed to update SLA configuration"
+        }
+      }
+    }
+  },
+  "es": {
+    "get_ready": {
+      "sla": {
+        "title": "Configuración de SLA y Objetivos de Tiempo",
+        "description": "Configura los objetivos de tiempo y umbrales de alerta para el proceso de reacondicionamiento de vehículos",
+        "time_goals": {
+          "title": "Objetivos de Tiempo",
+          "description": "Establece los objetivos de tiempo objetivo y máximo para completar el reacondicionamiento de vehículos",
+          "default_label": "Objetivo de Tiempo Predeterminado (Días)",
+          "default_help": "Tiempo de finalización objetivo",
+          "max_label": "Objetivo de Tiempo Máximo (Días)",
+          "max_help": "Límite superior"
+        },
+        "thresholds": {
+          "title": "Umbrales de Alerta",
+          "description": "Define cuándo los vehículos deben mostrar diferentes niveles de alerta según los días en el paso actual",
+          "green_label": "Verde (En Progreso)",
+          "green_help": "≤ {{count}} {{count, plural, one {día} other {días}}}",
+          "warning_label": "Amarillo (Advertencia)",
+          "warning_help": "{{from}} - {{to}} días",
+          "danger_label": "Rojo (Crítico)",
+          "danger_help": "≥ {{count}} {{count, plural, one {día} other {días}}}"
+        },
+        "preview": {
+          "title": "Vista Previa",
+          "description": "Ve cómo se categorizarán diferentes conteos de días",
+          "on_track": "En Progreso",
+          "warning": "Advertencia",
+          "critical": "Crítico"
+        },
+        "options": {
+          "title": "Opciones Adicionales",
+          "enable_notifications": "Habilitar Notificaciones",
+          "enable_notifications_help": "Enviar alertas cuando los vehículos excedan los umbrales",
+          "count_weekends": "Contar Fines de Semana",
+          "count_weekends_help": "Incluir fines de semana en los cálculos de días",
+          "business_hours_only": "Solo Horas de Negocio",
+          "business_hours_only_help": "Solo contar horas durante el horario comercial (8 AM - 6 PM)"
+        },
+        "actions": {
+          "save": "Guardar Configuración",
+          "saving": "Guardando...",
+          "saved": "Configuración de SLA actualizada exitosamente",
+          "error": "Error al actualizar la configuración de SLA"
+        }
+      }
+    }
+  },
+  "pt-BR": {
+    "get_ready": {
+      "sla": {
+        "title": "Configuração de SLA e Metas de Tempo",
+        "description": "Configure metas de tempo e limites de alerta para o processo de recondicionamento de veículos",
+        "time_goals": {
+          "title": "Metas de Tempo",
+          "description": "Defina as metas de tempo alvo e máximo para concluir o recondicionamento de veículos",
+          "default_label": "Meta de Tempo Padrão (Dias)",
+          "default_help": "Tempo de conclusão alvo",
+          "max_label": "Meta de Tempo Máximo (Dias)",
+          "max_help": "Limite superior"
+        },
+        "thresholds": {
+          "title": "Limites de Alerta",
+          "description": "Defina quando os veículos devem mostrar diferentes níveis de alerta com base nos dias na etapa atual",
+          "green_label": "Verde (No Prazo)",
+          "green_help": "≤ {{count}} {{count, plural, one {dia} other {dias}}}",
+          "warning_label": "Amarelo (Aviso)",
+          "warning_help": "{{from}} - {{to}} dias",
+          "danger_label": "Vermelho (Crítico)",
+          "danger_help": "≥ {{count}} {{count, plural, one {dia} other {dias}}}"
+        },
+        "preview": {
+          "title": "Visualização",
+          "description": "Veja como diferentes contagens de dias serão categorizadas",
+          "on_track": "No Prazo",
+          "warning": "Aviso",
+          "critical": "Crítico"
+        },
+        "options": {
+          "title": "Opções Adicionais",
+          "enable_notifications": "Ativar Notificações",
+          "enable_notifications_help": "Enviar alertas quando os veículos excederem os limites",
+          "count_weekends": "Contar Fins de Semana",
+          "count_weekends_help": "Incluir fins de semana nos cálculos de dias",
+          "business_hours_only": "Apenas Horário Comercial",
+          "business_hours_only_help": "Contar apenas horas durante o horário comercial (8h - 18h)"
+        },
+        "actions": {
+          "save": "Salvar Configuração",
+          "saving": "Salvando...",
+          "saved": "Configuração de SLA atualizada com sucesso",
+          "error": "Falha ao atualizar a configuração de SLA"
+        }
+      }
+    }
+  }
+}

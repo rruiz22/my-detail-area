@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "migration:apply": "node scripts/apply_vehicle_step_history_migration.js",
     "translation:audit": "node scripts/translation-scanner.js",
     "translation:fix": "node scripts/translation-batch-fix.js fix",
     "translation:fix-restore": "node scripts/translation-batch-fix.js restore",
@@ -116,6 +117,7 @@
     "tesseract.js": "^6.0.1",
     "vaul": "^0.9.9",
     "vitest": "^3.2.4",
+    "xlsx": "0.18.5",
     "zod": "^3.25.76",
     "zustand": "^5.0.8"
   },

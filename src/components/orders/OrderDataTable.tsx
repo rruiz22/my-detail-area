@@ -1,71 +1,49 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
-import {
-  MoreHorizontal,
-  Eye,
-  Edit,
-  Trash2,
-  QrCode,
-  MessageSquare,
-  CheckCircle,
-  Loader2,
-  User,
-  Car,
-  Calendar,
-  Building2,
-  Hash,
-  Printer,
-  Download
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { orderNumberService } from '@/services/orderNumberService';
-import { toast } from 'sonner';
-import { safeParseDate } from '@/utils/dateUtils';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
-import { useStatusPermissions } from '@/hooks/useStatusPermissions';
-import { usePermissions } from '@/hooks/usePermissions';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { getStatusRowColor } from '@/utils/statusUtils';
-import { 
-  getDuplicateCount, 
-  getDuplicateOrders, 
-  getDuplicateCellBackground 
-} from '@/utils/duplicateUtils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CommentsTooltip } from '@/components/ui/comments-tooltip';
+import { DueDateIndicator } from '@/components/ui/due-date-indicator';
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
-import { DueDateIndicator, useDueDateAttention } from '@/components/ui/due-date-indicator';
-import { CommentsTooltip } from '@/components/ui/comments-tooltip';
 import {
-  isSameDayOrder,
-  isTimeBasedOrder,
-  getAttentionRowClasses,
-  calculateTimeStatus
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from '@/components/ui/table';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { usePermissions } from '@/hooks/usePermissions';
+import { usePrintOrder } from '@/hooks/usePrintOrder';
+import { useStatusPermissions } from '@/hooks/useStatusPermissions';
+import { cn } from '@/lib/utils';
+import '@/styles/order-animations.css';
+import { safeParseDate } from '@/utils/dateUtils';
+import {
+    calculateTimeStatus,
+    getAttentionRowClasses,
+    isSameDayOrder,
+    isTimeBasedOrder
 } from '@/utils/dueDateUtils';
 import { getOrderAnimationClass } from '@/utils/orderAnimationUtils';
 import { formatOrderNumber } from '@/utils/orderUtils';
+import { getStatusRowColor } from '@/utils/statusUtils';
+import {
+    Building2,
+    Calendar,
+    Car,
+    Edit,
+    Eye,
+    MessageSquare,
+    Printer,
+    Trash2
+} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { ServicesDisplay } from './ServicesDisplay';
-import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { SkeletonLoader } from './SkeletonLoader';
-import { cn } from '@/lib/utils';
-import '@/styles/order-animations.css';
 
 interface Order {
   id: string;
@@ -155,16 +133,16 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
     if (import.meta.env.DEV && orders.length > 100) {
       console.log('🔄 Calculating duplicates for', orders.length, 'orders...');
     }
-    
+
     const stockDuplicates = new Map<string, number>();
     const vinDuplicates = new Map<string, number>();
     const stockDuplicateOrders = new Map<string, Order[]>();
     const vinDuplicateOrders = new Map<string, Order[]>();
-    
+
     // More efficient duplicate detection using grouping
     const stockGroups = new Map<string, Order[]>();
     const vinGroups = new Map<string, Order[]>();
-    
+
     // Group orders by normalized values
     orders.forEach(order => {
       // Group by stock number
@@ -176,7 +154,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
         }
         stockGroups.get(key)!.push(order);
       }
-      
+
       // Group by VIN
       if (order.vehicleVin && order.vehicleVin.trim()) {
         const normalizedVin = order.vehicleVin.trim().toLowerCase().replace(/[-\s]/g, '');
@@ -187,7 +165,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
         vinGroups.get(key)!.push(order);
       }
     });
-    
+
     // Process stock duplicates
     stockGroups.forEach((groupOrders, key) => {
       if (groupOrders.length > 1) {
@@ -197,7 +175,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
         });
       }
     });
-    
+
     // Process VIN duplicates
     vinGroups.forEach((groupOrders, key) => {
       if (groupOrders.length > 1) {
@@ -207,7 +185,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
         });
       }
     });
-    
+
     const endTime = performance.now();
     const duplicateStats = {
       stockDuplicateGroups: stockGroups.size,
@@ -216,16 +194,16 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       vinDuplicateOrders: vinDuplicates.size,
       calculationTime: `${(endTime - startTime).toFixed(2)}ms`
     };
-    
+
     // Only log performance stats for larger datasets
     if (import.meta.env.DEV && orders.length > 100) {
       console.log('✅ Duplicate calculation complete:', duplicateStats);
     }
-    
-    return { 
-      stockDuplicates, 
-      vinDuplicates, 
-      stockDuplicateOrders, 
+
+    return {
+      stockDuplicates,
+      vinDuplicates,
+      stockDuplicateOrders,
       vinDuplicateOrders,
       stats: duplicateStats
     };
@@ -239,12 +217,12 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
       if (success) {
         console.log(`Status updated for order ${orderId} to ${newStatus}`);
-        
+
         // Trigger immediate refresh of order data
         if (onStatusChange) {
           onStatusChange(orderId, newStatus);
         }
-        
+
         // Dispatch custom event for real-time updates
         window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
           detail: { orderId, newStatus, timestamp: Date.now() }
@@ -271,7 +249,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
     if (!orderDate) {
       return { text: 'N/A', variant: 'secondary' as const };
     }
-    
+
     const today = new Date();
     const diffTime = orderDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -293,6 +271,10 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
   );
 
   const totalPages = Math.ceil(orders.length / itemsPerPage);
+
+  // Calculate range for pagination display
+  const startRange = orders.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endRange = Math.min(currentPage * itemsPerPage, orders.length);
 
   if (loading) {
     return (
@@ -329,11 +311,11 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       <div className="block lg:hidden space-y-4">
         {paginatedOrders.map((order) => {
           // Calculate attention level for row styling
-          const showDueDateIndicator = isTimeBasedOrder(tabType) && 
+          const showDueDateIndicator = isTimeBasedOrder(tabType) &&
                                       isSameDayOrder(order.createdAt, order.dueDate) &&
-                                      order.status !== 'completed' && 
+                                      order.status !== 'completed' &&
                                       order.status !== 'cancelled';
-          const attentionClasses = showDueDateIndicator && order.dueDate 
+          const attentionClasses = showDueDateIndicator && order.dueDate
             ? getAttentionRowClasses(calculateTimeStatus(order.dueDate, order.status).attentionLevel)
             : '';
 
@@ -376,9 +358,9 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         onStatusChange={handleStatusChange}
                       />
                       {/* Due Date Indicator for time-based orders */}
-                      {isTimeBasedOrder(tabType) && 
+                      {isTimeBasedOrder(tabType) &&
                        isSameDayOrder(order.createdAt, order.dueDate) && (
-                        <DueDateIndicator 
+                        <DueDateIndicator
                           dueDate={order.dueDate}
                           orderType={tabType}
                           compact={false}
@@ -434,27 +416,41 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
                         </span>
                       </DuplicateTooltip>
-                      <div className="flex items-center text-xs text-muted-foreground mt-1">
-                        <User className="w-3 h-3 mr-1 text-green-600" />
-                        {order.assignedTo || t('data_table.unassigned')}
-                      </div>
                     </div>
                   </div>
 
-                  {/* Due Date Row */}
+                  {/* Due Date / Completed Date Row */}
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Due</label>
+                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      {(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}
+                    </label>
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
-                        {order.dueTime || '12:00 PM'} - {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'No date'}
+                        {(tabType === 'recon' || tabType === 'carwash') ? (
+                          order.completedAt || order.completed_at ? (
+                            <>
+                              {new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
+                            </>
+                          ) : (
+                            t('data_table.no_date_set')
+                          )
+                        ) : (
+                          <>
+                            {order.dueTime || '12:00 PM'} - {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'No date'}
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
 
                   {/* Actions Row */}
                   <div className="flex items-center justify-end gap-2 pt-2 border-t">
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => onView(order)}
                       className="flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition-all hover:scale-105"
@@ -462,7 +458,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       <Eye className="h-4 w-4" />
                       {t('data_table.view')}
                     </Button>
-                    
+
                     {/* Edit - Only if user can edit this specific order */}
                     {canEditOrder(order) && (
                       <Button
@@ -497,26 +493,31 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
         {/* Mobile Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center space-x-2 pt-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </Button>
-            <span className="flex items-center px-3 text-sm text-muted-foreground">
-              {t('data_table.page_of', { current: currentPage, total: totalPages })}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage >= totalPages}
-            >
-              Next
-            </Button>
+          <div className="flex flex-col items-center gap-2 pt-4">
+            <div className="text-sm text-muted-foreground font-medium">
+              {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}
+            </div>
+            <div className="flex justify-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="flex items-center px-3 text-sm text-muted-foreground">
+                {t('data_table.page_of', { current: currentPage, total: totalPages })}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage >= totalPages}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -528,7 +529,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 {t('data_table.orders_count', { count: orders.length })}
           </CardTitle>
         </CardHeader>
-        
+
         <CardContent className="p-0">
           <Table>
             <TableHeader>
@@ -538,7 +539,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                 <TableHead className="font-medium text-foreground text-center">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>
                 <TableHead className="max-w-[200px] font-medium text-foreground text-center">Vehicle</TableHead>
                 <TableHead className="font-medium text-foreground text-center">{t('orders.services')}</TableHead>
-                <TableHead className="font-medium text-foreground text-center">Due</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Status</TableHead>
                 <TableHead className="font-medium text-foreground text-center">Actions</TableHead>
               </TableRow>
@@ -546,11 +547,11 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
             <TableBody>
               {paginatedOrders.map((order, index) => {
                 // Calculate attention level for row styling
-                const showDueDateIndicator = isTimeBasedOrder(tabType) && 
+                const showDueDateIndicator = isTimeBasedOrder(tabType) &&
                                             isSameDayOrder(order.createdAt, order.dueDate) &&
-                                            order.status !== 'completed' && 
+                                            order.status !== 'completed' &&
                                             order.status !== 'cancelled';
-                const attentionClasses = showDueDateIndicator && order.dueDate 
+                const attentionClasses = showDueDateIndicator && order.dueDate
                   ? getAttentionRowClasses(calculateTimeStatus(order.dueDate, order.status).attentionLevel)
                   : '';
 
@@ -598,7 +599,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       </div>
                     </TableCell>
 
-                    {/* Column 2: Stock & Assigned User */}
+                    {/* Column 2: Stock */}
                     <TableCell className="py-2 text-center">
                       <div className="space-y-0">
                         <DuplicateTooltip
@@ -613,10 +614,6 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                             <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
                           </span>
                         </DuplicateTooltip>
-                        <div className="flex items-center justify-center text-sm text-muted-foreground">
-                          <User className="w-3 h-3 mr-1 text-green-600" />
-                          <span>{order.assignedTo || 'Unassigned'}</span>
-                        </div>
                       </div>
                     </TableCell>
 
@@ -665,24 +662,49 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       />
                     </TableCell>
 
-                    {/* Column 6: Due Date/Time - Dynamic Countdown */}
+                    {/* Column 6: Due Date/Time or Completed Date - Dynamic based on order type */}
                     <TableCell className="py-2 text-center">
                       <div className="flex flex-col items-center justify-center h-full">
-                        <DueDateIndicator
-                          dueDate={order.dueDate}
-                          orderStatus={order.status}
-                          orderType={tabType}
-                          compact={false}
-                          showDateTime={true}
-                          className="due-date-indicator-table min-w-[140px] whitespace-nowrap"
-                        />
+                        {(tabType === 'recon' || tabType === 'carwash') ? (
+                          // For recon and carwash orders, show completed_at instead of due date
+                          order.completedAt || order.completed_at ? (
+                            <div className="text-sm font-medium text-foreground">
+                              <div className="flex items-center justify-center gap-1">
+                                <Calendar className="w-4 h-4 text-emerald-600" />
+                                <span>
+                                  {new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-sm text-muted-foreground">
+                              {t('data_table.no_date_set')}
+                            </div>
+                          )
+                        ) : (
+                          // For other orders (sales, service), use DueDateIndicator
+                          <>
+                            <DueDateIndicator
+                              dueDate={order.dueDate}
+                              orderStatus={order.status}
+                              orderType={tabType}
+                              compact={false}
+                              showDateTime={true}
+                              className="due-date-indicator-table min-w-[140px] whitespace-nowrap"
+                            />
 
-                        {/* Fallback time display if no due date */}
-                        {!order.dueDate && (
-                          <div className="text-sm text-muted-foreground text-center due-date-details">
-                            <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
-                            {order.dueTime || t('data_table.no_time_set')}
-                          </div>
+                            {/* Fallback time display if no due date */}
+                            {!order.dueDate && (
+                              <div className="text-sm text-muted-foreground text-center due-date-details">
+                                <Calendar className="w-4 h-4 mr-1 text-gray-700 inline" />
+                                {order.dueTime || t('data_table.no_time_set')}
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </TableCell>
@@ -753,7 +775,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                   </TableRow>
                 );
               })}
-              
+
               {paginatedOrders.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
@@ -771,26 +793,31 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
         {/* Desktop Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 py-4 border-t">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </Button>
-            <span className="flex items-center px-3 text-sm text-muted-foreground">
-              {t('data_table.page_of', { current: currentPage, total: totalPages })}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage >= totalPages}
-            >
-              Next
-            </Button>
+          <div className="flex flex-col items-center gap-2 py-4 border-t">
+            <div className="text-sm text-muted-foreground font-medium">
+              {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}
+            </div>
+            <div className="flex justify-center items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="flex items-center px-3 text-sm text-muted-foreground">
+                {t('data_table.page_of', { current: currentPage, total: totalPages })}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage >= totalPages}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         )}
       </Card>

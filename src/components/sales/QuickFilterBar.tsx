@@ -56,9 +56,9 @@ export function QuickFilterBar({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-switch to table if on mobile and kanban is selected
+  // Auto-switch to table if on mobile and kanban/calendar is selected
   useEffect(() => {
-    if (isMobile && viewMode === 'kanban') {
+    if (isMobile && (viewMode === 'kanban' || viewMode === 'calendar')) {
       onViewModeChange('table');
     }
   }, [isMobile, viewMode, onViewModeChange]);
@@ -167,15 +167,19 @@ export function QuickFilterBar({
                   <span className="hidden sm:inline">Kanban</span>
                 </Button>
               )}
-              <Button
-                size="sm"
-                variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                onClick={() => onViewModeChange('calendar')}
-                className="h-8 px-2 sm:px-3"
-              >
-                <Calendar className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">{t('common.calendar')}</span>
-              </Button>
+
+              {/* Calendar - Only on desktop */}
+              {!isMobile && (
+                <Button
+                  size="sm"
+                  variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                  onClick={() => onViewModeChange('calendar')}
+                  className="h-8 px-2 sm:px-3"
+                >
+                  <Calendar className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{t('common.calendar')}</span>
+                </Button>
+              )}
             </div>
 
             {/* Filters Toggle */}

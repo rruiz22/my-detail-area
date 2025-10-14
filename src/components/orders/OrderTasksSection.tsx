@@ -15,7 +15,8 @@ import {
   AlertCircle,
   ExternalLink,
   User2,
-  Calendar
+  Calendar,
+  Hash
 } from 'lucide-react';
 import { useProductivityTodos, ProductivityTodo } from '@/hooks/useProductivityTodos';
 import { Link } from 'react-router-dom';
@@ -260,14 +261,10 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
 
       <CardContent className="space-y-4">
         {/* Order Context */}
-        {customerName && (
-          <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
-            <User2 className="w-4 h-4" />
-            <span>Customer: <strong>{customerName}</strong></span>
-            <span className="text-gray-400">•</span>
-            <span>Order: <strong>#{orderNumber}</strong></span>
-          </div>
-        )}
+        <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
+          <Hash className="w-4 h-4" />
+          <span>Order: <strong>#{orderNumber}</strong></span>
+        </div>
 
         {/* Progress Summary */}
         {orderTodos.length > 0 && (

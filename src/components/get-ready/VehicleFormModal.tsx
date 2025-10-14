@@ -25,7 +25,7 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { Loader2, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface VehicleFormData {
   stock_number: string;
@@ -69,6 +69,7 @@ export function VehicleFormModal({
   onSuccess,
 }: VehicleFormModalProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { steps } = useGetReady();
   const { currentDealership } = useAccessibleDealerships();
   const { createVehicle, updateVehicle, isCreating, isUpdating } = useVehicleManagement();
@@ -128,7 +129,10 @@ export function VehicleFormModal({
     }
 
     if (!currentDealership?.id) {
-      toast.error('No dealership selected');
+      toast({
+        description: 'No dealership selected',
+        variant: 'destructive'
+      });
       return;
     }
 
@@ -191,7 +195,10 @@ export function VehicleFormModal({
           model: undefined,
         }));
 
-        toast.success(t('get_ready.vehicle_form.vin_decoded'));
+        toast({
+          description: t('get_ready.vehicle_form.vin_decoded'),
+          variant: 'default'
+        });
       }
     } else if (vin.length < 17) {
       setVinDecoded(false);
@@ -200,7 +207,7 @@ export function VehicleFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-2xl sm:max-h-[90vh] sm:rounded-lg sm:border overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isEditMode
@@ -215,7 +222,7 @@ export function VehicleFormModal({
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             {/* Stock Number & VIN */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="stock_number">
                   {t('get_ready.vehicle_form.fields.stock_number')}
@@ -268,7 +275,7 @@ export function VehicleFormModal({
             </div>
 
             {/* Year, Make, Model */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="year">
                   {t('get_ready.vehicle_form.fields.year')}
@@ -336,7 +343,7 @@ export function VehicleFormModal({
             </div>
 
             {/* Step & Workflow Type */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="step_id">
                   {t('get_ready.vehicle_form.fields.step')}
@@ -387,7 +394,7 @@ export function VehicleFormModal({
             </div>
 
             {/* Priority & Assigned To */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="priority">
                   {t('get_ready.vehicle_form.fields.priority')}

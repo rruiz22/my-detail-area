@@ -1,42 +1,49 @@
-import React, { useState, useMemo } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { toast } from '@/hooks/use-toast';
+import { useStockManagement, VehicleInventory } from '@/hooks/useStockManagement';
+import { exportToCSV, exportToExcel } from '@/utils/exportUtils';
+import { formatTimeDuration } from '@/utils/timeFormatUtils';
+import {
+    Car,
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    Download,
+    Eye,
+    FileSpreadsheet,
+    FileText,
+    MoreHorizontal,
+    Search
+} from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VehicleDetailsModal } from './VehicleDetailsModal';
-import { VehicleInventory } from '@/hooks/useStockManagement';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useStockManagement } from '@/hooks/useStockManagement';
-import { 
-  Search, 
-  Filter, 
-  Download,
-  Eye,
-  MoreHorizontal,
-  Car,
-  DollarSign,
-  Calendar,
-  MapPin
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 interface StockInventoryTableProps {
   dealerId?: number;
 }
+
+const ITEMS_PER_PAGE = 25;
 
 export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealerId }) => {
   const { t } = useTranslation();
@@ -48,6 +55,8 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleInventory | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isExporting, setIsExporting] = useState(false);
 
   const handleVehicleClick = (vehicle: VehicleInventory) => {
     setSelectedVehicle(vehicle);
@@ -57,6 +66,58 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedVehicle(null);
+  };
+
+  // Export functions
+  const formatInventoryForExport = (vehicles: VehicleInventory[]) => {
+    return vehicles.map((vehicle, index) => ({
+      '#': index + 1,
+      'Stock Number': vehicle.stock_number || '',
+      'VIN': vehicle.vin || '',
+      'Year': vehicle.year || '',
+      'Make': vehicle.make || '',
+      'Model': vehicle.model || '',
+      'Trim': vehicle.trim || '',
+      'Mileage': vehicle.mileage || 0,
+      'Color': vehicle.color || '',
+      'Status': vehicle.dms_status || '',
+      'Age (Days)': vehicle.age_days || 0,
+      'Price': vehicle.price ? `$${vehicle.price}` : '',
+      'MSRP': vehicle.msrp ? `$${vehicle.msrp}` : '',
+      'Location': vehicle.lot_location || '',
+      'Certified': vehicle.is_certified ? 'Yes' : 'No',
+      'Photos': vehicle.photo_count || 0,
+      'Leads (7D)': vehicle.leads_last_7_days || 0,
+      'Total Leads': vehicle.leads_total || 0,
+    }));
+  };
+
+  const handleExport = async (format: 'csv' | 'excel') => {
+    setIsExporting(true);
+    try {
+      const formattedData = formatInventoryForExport(filteredInventory);
+      const filename = `inventory-${new Date().toISOString().split('T')[0]}`;
+
+      if (format === 'csv') {
+        exportToCSV(formattedData, filename);
+      } else {
+        exportToExcel(formattedData, filename);
+      }
+
+      toast({
+        title: t('common.success'),
+        description: t('common.actions.export_success')
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: t('common.error'),
+        description: t('common.actions.export_failed'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   // Get unique makes for filter
@@ -70,7 +131,7 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
     if (!inventory) return [];
 
     const filtered = inventory.filter(item => {
-      const matchesSearch = 
+      const matchesSearch =
         item.stock_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.vin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.make?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -102,6 +163,18 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
     return filtered;
   }, [inventory, searchTerm, makeFilter, statusFilter, sortBy, sortOrder]);
 
+  // Pagination calculations
+  const totalItems = filteredInventory.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+  const paginatedInventory = filteredInventory.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchTerm, makeFilter, statusFilter]);
+
   const getStatusColor = (status?: string) => {
     switch (status?.toLowerCase()) {
       case 'available':
@@ -129,19 +202,49 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
     return num.toLocaleString();
   };
 
+  const formatAgeDays = (days?: number) => {
+    if (!days) return '0 days';
+    const milliseconds = days * 24 * 60 * 60 * 1000;
+    return formatTimeDuration(milliseconds);
+  };
+
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2">
-            <Car className="w-5 h-5" />
-            <span>{t('stock.inventory.title')}</span>
-            <Badge variant="secondary">{filteredInventory.length}</Badge>
-          </CardTitle>
-          <Button variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            {t('stock.actions.export')}
-          </Button>
+          <div className="flex items-center space-x-2">
+            <CardTitle className="flex items-center space-x-2">
+              <Car className="w-5 h-5" />
+              <span>{t('stock.inventory.title')}</span>
+              <Badge variant="secondary">{totalItems}</Badge>
+            </CardTitle>
+            {totalItems > 0 && (
+              <span className="text-sm text-muted-foreground">
+                {t('showing_range', { start: startIndex + 1, end: endIndex, total: totalItems })}
+              </span>
+            )}
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" disabled={isExporting || totalItems === 0}>
+                <Download className="w-4 h-4 mr-2" />
+                {isExporting ? t('common.actions.exporting') : t('common.actions.export')}
+                <ChevronDown className="w-4 h-4 ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>{t('common.actions.export')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleExport('csv')}>
+                <FileText className="w-4 h-4 mr-2" />
+                {t('common.actions.export_csv')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('excel')}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                {t('common.actions.export_excel')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -183,36 +286,37 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
         </div>
 
         {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[120px]">{t('stock.table.stock_number')}</TableHead>
-                <TableHead className="w-[150px]">{t('stock.table.vin')}</TableHead>
-                <TableHead>{t('stock.table.vehicle')}</TableHead>
-                <TableHead className="text-right">{t('stock.table.year')}</TableHead>
-                <TableHead className="text-right">{t('stock.table.mileage')}</TableHead>
-                <TableHead className="text-right">{t('stock.table.price')}</TableHead>
-                <TableHead className="text-right">{t('stock.table.age_days')}</TableHead>
-                <TableHead>{t('stock.table.status')}</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                    {t('common.loading')}...
-                  </TableCell>
+        <div className="rounded-md border overflow-hidden">
+          <div className="max-h-[600px] overflow-auto">
+            <Table data-sticky-header>
+              <TableHeader className="sticky top-0 bg-background z-10 after:absolute after:inset-x-0 after:bottom-0 after:border-b">
+                <TableRow className="border-b-0">
+                  <TableHead className="w-[120px] bg-background">{t('stock.table.stock_number')}</TableHead>
+                  <TableHead className="w-[150px] bg-background">{t('stock.table.vin')}</TableHead>
+                  <TableHead className="bg-background">{t('stock.table.vehicle')}</TableHead>
+                  <TableHead className="text-right bg-background">{t('stock.table.year')}</TableHead>
+                  <TableHead className="text-right bg-background">{t('stock.table.mileage')}</TableHead>
+                  <TableHead className="text-right bg-background">{t('stock.table.price')}</TableHead>
+                  <TableHead className="text-right bg-background">{t('stock.table.age_days')}</TableHead>
+                  <TableHead className="bg-background">{t('stock.table.status')}</TableHead>
+                  <TableHead className="w-[50px] bg-background"></TableHead>
                 </TableRow>
-              ) : filteredInventory.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                    {t('stock.inventory.no_vehicles')}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredInventory.map((vehicle) => (
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                      {t('common.loading')}...
+                    </TableCell>
+                  </TableRow>
+                ) : paginatedInventory.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                      {t('stock.inventory.no_vehicles')}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  paginatedInventory.map((vehicle) => (
                   <TableRow key={vehicle.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => handleVehicleClick(vehicle)}>
                     <TableCell className="font-mono font-medium">
                       {vehicle.stock_number}
@@ -223,13 +327,13 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors" 
+                      <div className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors"
                            onClick={() => handleVehicleClick(vehicle)}>
                         <div className="w-10 h-10 bg-muted rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
                           {vehicle.key_photo_url ? (
-                            <img 
-                              src={vehicle.key_photo_url} 
-                              alt="Vehicle" 
+                            <img
+                              src={vehicle.key_photo_url}
+                              alt="Vehicle"
                               className="w-full h-full object-cover"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -259,8 +363,8 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                       {formatCurrency(vehicle.price)}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Badge variant="outline">
-                        {vehicle.age_days || 0} {t('common.days')}
+                      <Badge variant="outline" className="font-mono whitespace-nowrap">
+                        {formatAgeDays(vehicle.age_days)}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -289,11 +393,41 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                   </TableRow>
                 ))
               )}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-2">
+            <div className="flex-1 text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </CardContent>
-      
+
       <VehicleDetailsModal
         vehicle={selectedVehicle}
         open={isModalOpen}

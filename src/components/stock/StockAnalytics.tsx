@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Calendar,
-  Car,
-  BarChart3,
-  PieChart as PieChartIcon,
-  Download
+import {
+    BarChart3,
+    Calendar,
+    Car,
+    DollarSign,
+    Download,
+    PieChart as PieChartIcon,
+    TrendingUp
 } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface StockAnalyticsProps {
   dealerId?: number;
@@ -23,72 +21,126 @@ interface StockAnalyticsProps {
 
 export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
   const { t } = useTranslation();
-  const { loading } = useStockManagement();
+  const { inventory, loading } = useStockManagement(dealerId);
   const [timeRange, setTimeRange] = useState('30');
   const [chartType, setChartType] = useState('bar');
 
-  // Mock data - replace with real analytics data
-  const inventoryByMake = [
-    { name: 'Toyota', count: 45, value: 1250000 },
-    { name: 'Honda', count: 38, value: 980000 },
-    { name: 'Ford', count: 32, value: 850000 },
-    { name: 'Chevrolet', count: 28, value: 720000 },
-    { name: 'Nissan', count: 25, value: 650000 },
-  ];
+  // Calculate real analytics data from inventory
+  const analytics = useMemo(() => {
+    if (!inventory || inventory.length === 0) {
+      return {
+        inventoryByMake: [],
+        priceDistribution: [],
+        ageAnalysis: [],
+        totalValue: 0,
+        avgAge: 0,
+        totalVehicles: 0
+      };
+    }
 
-  const priceDistribution = [
-    { range: '$0-20K', count: 35, percentage: 25.7 },
-    { range: '$20-40K', count: 48, percentage: 35.3 },
-    { range: '$40-60K', count: 32, percentage: 23.5 },
-    { range: '$60-80K', count: 15, percentage: 11.0 },
-    { range: '$80K+', count: 6, percentage: 4.4 },
-  ];
+    // Inventory by Make
+    const makeGroups = inventory.reduce((acc, vehicle) => {
+      const make = vehicle.make || 'Unknown';
+      if (!acc[make]) {
+        acc[make] = { name: make, count: 0, value: 0 };
+      }
+      acc[make].count++;
+      acc[make].value += vehicle.price || 0;
+      return acc;
+    }, {} as Record<string, { name: string; count: number; value: number }>);
 
-  const ageAnalysis = [
-    { ageRange: '0-30 days', count: 45, avgPrice: 32500 },
-    { ageRange: '31-60 days', count: 38, avgPrice: 29800 },
-    { ageRange: '61-90 days', count: 25, avgPrice: 27200 },
-    { ageRange: '91-120 days', count: 18, avgPrice: 24500 },
-    { ageRange: '120+ days', count: 12, avgPrice: 21800 },
-  ];
+    const inventoryByMake = Object.values(makeGroups)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
 
-  const trendData = [
-    { month: 'Jan', inventory: 145, avgPrice: 28500, turnover: 12 },
-    { month: 'Feb', inventory: 138, avgPrice: 29200, turnover: 15 },
-    { month: 'Mar', inventory: 152, avgPrice: 30100, turnover: 18 },
-    { month: 'Apr', inventory: 148, avgPrice: 31200, turnover: 16 },
-    { month: 'May', inventory: 156, avgPrice: 32100, turnover: 19 },
-    { month: 'Jun', inventory: 163, avgPrice: 33000, turnover: 21 },
-  ];
+    // Price Distribution
+    const priceRanges = [
+      { range: '$0-20K', min: 0, max: 20000, count: 0 },
+      { range: '$20-40K', min: 20000, max: 40000, count: 0 },
+      { range: '$40-60K', min: 40000, max: 60000, count: 0 },
+      { range: '$60-80K', min: 60000, max: 80000, count: 0 },
+      { range: '$80K+', min: 80000, max: Infinity, count: 0 },
+    ];
+
+    inventory.forEach(vehicle => {
+      const price = vehicle.price || 0;
+      const range = priceRanges.find(r => price >= r.min && price < r.max);
+      if (range) range.count++;
+    });
+
+    const priceDistribution = priceRanges.map(r => ({
+      range: r.range,
+      count: r.count,
+      percentage: ((r.count / inventory.length) * 100).toFixed(1)
+    }));
+
+    // Age Analysis
+    const ageRanges = [
+      { ageRange: '0-30 days', min: 0, max: 30, count: 0, totalPrice: 0 },
+      { ageRange: '31-60 days', min: 31, max: 60, count: 0, totalPrice: 0 },
+      { ageRange: '61-90 days', min: 61, max: 90, count: 0, totalPrice: 0 },
+      { ageRange: '91-120 days', min: 91, max: 120, count: 0, totalPrice: 0 },
+      { ageRange: '120+ days', min: 121, max: Infinity, count: 0, totalPrice: 0 },
+    ];
+
+    inventory.forEach(vehicle => {
+      const age = vehicle.age_days || 0;
+      const range = ageRanges.find(r => age >= r.min && age <= r.max);
+      if (range) {
+        range.count++;
+        range.totalPrice += vehicle.price || 0;
+      }
+    });
+
+    const ageAnalysis = ageRanges.map(r => ({
+      ageRange: r.ageRange,
+      count: r.count,
+      avgPrice: r.count > 0 ? Math.round(r.totalPrice / r.count) : 0
+    }));
+
+    // Totals
+    const totalValue = inventory.reduce((sum, v) => sum + (v.price || 0), 0);
+    const avgAge = Math.round(inventory.reduce((sum, v) => sum + (v.age_days || 0), 0) / inventory.length);
+    const totalVehicles = inventory.length;
+
+    return {
+      inventoryByMake,
+      priceDistribution,
+      ageAnalysis,
+      totalValue,
+      avgAge,
+      totalVehicles
+    };
+  }, [inventory]);
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
   const keyMetrics = [
     {
       title: t('stock.analytics.avg_inventory_value'),
-      value: '$4.2M',
-      change: '+8.5%',
+      value: `$${(analytics.totalValue / 1000000).toFixed(1)}M`,
+      change: '',
       positive: true,
       icon: DollarSign
     },
     {
       title: t('stock.analytics.avg_days_in_stock'),
-      value: '42 days',
-      change: '-5 days',
+      value: `${analytics.avgAge} days`,
+      change: '',
       positive: true,
       icon: Calendar
     },
     {
-      title: t('stock.analytics.inventory_turnover'),
-      value: '8.5x',
-      change: '+1.2x',
+      title: t('stock.analytics.total_inventory_value'),
+      value: `$${analytics.totalValue.toLocaleString()}`,
+      change: '',
       positive: true,
       icon: TrendingUp
     },
     {
       title: t('stock.analytics.total_vehicles'),
-      value: '163',
-      change: '+12',
+      value: analytics.totalVehicles.toString(),
+      change: '',
       positive: true,
       icon: Car
     }
@@ -130,17 +182,7 @@ export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
                   <p className="text-sm font-medium text-muted-foreground">
                     {metric.title}
                   </p>
-                  <div className="flex items-center space-x-2">
-                    <p className="text-2xl font-bold">{metric.value}</p>
-                    <Badge variant={metric.positive ? "default" : "destructive"} className="text-xs">
-                      {metric.positive ? (
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                      ) : (
-                        <TrendingDown className="w-3 h-3 mr-1" />
-                      )}
-                      {metric.change}
-                    </Badge>
-                  </div>
+                  <p className="text-2xl font-bold">{metric.value}</p>
                 </div>
               </div>
             </CardContent>
@@ -160,11 +202,11 @@ export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={inventoryByMake}>
+              <BarChart data={analytics.inventoryByMake}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name) => [
                     name === 'count' ? `${value} vehicles` : `$${(value as number).toLocaleString()}`,
                     name === 'count' ? 'Count' : 'Value'
@@ -188,7 +230,7 @@ export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={priceDistribution}
+                  data={analytics.priceDistribution}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -197,7 +239,7 @@ export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
                   fill="#8884d8"
                   dataKey="count"
                 >
-                  {priceDistribution.map((entry, index) => (
+                  {analytics.priceDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -217,11 +259,11 @@ export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={ageAnalysis}>
+              <BarChart data={analytics.ageAnalysis}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="ageRange" />
                 <YAxis />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name) => [
                     name === 'count' ? `${value} vehicles` : `$${(value as number).toLocaleString()}`,
                     name === 'count' ? 'Count' : 'Avg Price'
@@ -247,9 +289,9 @@ export const StockAnalytics: React.FC<StockAnalyticsProps> = ({ dealerId }) => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name) => [
-                    name === 'inventory' ? `${value} vehicles` : 
+                    name === 'inventory' ? `${value} vehicles` :
                     name === 'avgPrice' ? `$${(value as number).toLocaleString()}` :
                     `${value}x`,
                     name === 'inventory' ? 'Inventory' :

@@ -1,18 +1,24 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw, Search, List, Kanban, Calendar as CalendarIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
-import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
-import { useTranslation } from 'react-i18next';
-import { useViewModePersistence } from '@/hooks/useTabPersistence';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
+import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
+import { useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useQueryClient } from '@tanstack/react-query';
+import { Calendar as CalendarIcon, Kanban, List, Plus, RefreshCw, Search } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CarWash() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Persistent state
   const [viewMode, setViewMode] = useViewModePersistence('car_wash');
@@ -22,10 +28,12 @@ export default function CarWash() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
   const {
     orders,
     loading,
+    lastRefresh,
     refreshData,
     createOrder,
     updateOrder,
@@ -63,16 +71,30 @@ export default function CarWash() {
   };
 
   const handleSaveOrder = async (orderData: any) => {
+    console.log('🎯 [CarWash] handleSaveOrder called with:', {
+      hasSelectedOrder: !!selectedOrder,
+      selectedOrderId: selectedOrder?.id,
+      orderData: orderData,
+      completedAt: orderData.completedAt,
+      tag: orderData.tag,
+      isWaiter: orderData.isWaiter,
+      services: orderData.services
+    });
+
     try {
       if (selectedOrder) {
+        console.log('📝 [CarWash] Calling updateOrder...');
         await updateOrder(selectedOrder.id, orderData);
+        console.log('✅ [CarWash] updateOrder completed');
       } else {
+        console.log('➕ [CarWash] Calling createOrder...');
         await createOrder(orderData);
+        console.log('✅ [CarWash] createOrder completed');
       }
       setShowModal(false);
       refreshData();
     } catch (error) {
-      console.error('Error saving car wash order:', error);
+      console.error('❌ [CarWash] Error in handleSaveOrder:', error);
     }
   };
 
@@ -95,6 +117,46 @@ export default function CarWash() {
       throw error;
     }
   };
+
+  const handleUpdate = async (orderId: string, updates: any) => {
+    try {
+      await updateOrder(orderId, updates);
+
+      // Invalidate query cache to trigger silent refetch
+      // This is faster than polling and doesn't cause visible reload
+      queryClient.invalidateQueries({ queryKey: ['orders', 'car_wash'] });
+
+      // Dispatch event to notify other components
+      window.dispatchEvent(new CustomEvent('orderUpdated', {
+        detail: { orderId, updates, timestamp: Date.now() }
+      }));
+    } catch (error) {
+      console.error('Order update failed:', error);
+      throw error;
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsManualRefreshing(true);
+    try {
+      await refreshData();
+      toast({
+        description: t('common.data_refreshed') || 'Data refreshed successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      toast({
+        description: t('common.refresh_failed') || 'Failed to refresh data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
+
+  // Force table view on mobile (disable kanban and calendar)
+  const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   // Filter orders based on search term
   const filteredOrders = orders.filter((order: any) => {
@@ -122,10 +184,10 @@ export default function CarWash() {
             <Button
               variant="outline"
               size="sm"
-              onClick={refreshData}
-              disabled={loading}
+              onClick={handleManualRefresh}
+              disabled={isManualRefreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>
@@ -152,6 +214,7 @@ export default function CarWash() {
 
               {/* View Mode Toggle */}
               <div className="flex items-center bg-muted/50 rounded-lg p-1">
+                {/* Table - Always available */}
                 <Button
                   size="sm"
                   variant={viewMode === 'table' ? 'default' : 'ghost'}
@@ -161,32 +224,40 @@ export default function CarWash() {
                   <List className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Table</span>
                 </Button>
-                <Button
-                  size="sm"
-                  variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('kanban')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <Kanban className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Kanban</span>
-                </Button>
-                <Button
-                  size="sm"
-                  variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('calendar')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <CalendarIcon className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{t('common.calendar')}</span>
-                </Button>
+
+                {/* Kanban - Only on desktop */}
+                {!isMobile && (
+                  <Button
+                    size="sm"
+                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                    onClick={() => setViewMode('kanban')}
+                    className="h-8 px-2 sm:px-3"
+                  >
+                    <Kanban className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Kanban</span>
+                  </Button>
+                )}
+
+                {/* Calendar - Only on desktop */}
+                {!isMobile && (
+                  <Button
+                    size="sm"
+                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                    onClick={() => setViewMode('calendar')}
+                    className="h-8 px-2 sm:px-3"
+                  >
+                    <CalendarIcon className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">{t('common.calendar')}</span>
+                  </Button>
+                )}
               </div>
             </div>
           </div>
         </Card>
 
-        {/* Main Content - Orders Table/Calendar */}
+        {/* Main Content - Orders Table/Calendar - Mobile forces table */}
         <div className="space-y-6">
-          {viewMode === 'calendar' ? (
+          {effectiveViewMode === 'calendar' ? (
             <OrderCalendarView
               orders={filteredOrders}
               loading={loading}
@@ -228,6 +299,7 @@ export default function CarWash() {
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}
+            onUpdate={handleUpdate}
           />
         )}
       </div>
