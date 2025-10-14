@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
+import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { cn } from '@/lib/utils';
 import { exportToCSV, exportToExcel, formatVehiclesForExport } from '@/utils/exportUtils';
 import { ChevronDown, Download, FileSpreadsheet, FileText, MoreHorizontal, Plus, RefreshCw } from 'lucide-react';
@@ -31,6 +32,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { toast } = useToast();
   const { splitLayout, selectedStepId, selectedVehicleId } = useGetReadyStore();
   const { steps, refetchSteps, refetchKPIs } = useGetReady();
+  const { deleteVehicle, isDeleting } = useVehicleManagement();
 
   // State for filters when in details view
   const [searchQuery, setSearchQuery] = useState('');
@@ -117,6 +119,25 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
       });
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleDeleteVehicle = async (vehicleId: string) => {
+    try {
+      await deleteVehicle(vehicleId);
+      toast({
+        description: t('get_ready.vehicle_deleted') || 'Vehicle deleted successfully',
+        variant: 'default'
+      });
+      // Refresh KPIs and steps after deletion
+      refetchSteps();
+      refetchKPIs();
+    } catch (error) {
+      console.error('Failed to delete vehicle:', error);
+      toast({
+        description: t('get_ready.delete_failed') || 'Failed to delete vehicle',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -315,6 +336,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                 setEditingVehicleId(vehicleId);
                 setVehicleFormOpen(true);
               }}
+              onDeleteVehicle={handleDeleteVehicle}
             />
           </div>
 

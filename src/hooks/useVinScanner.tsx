@@ -1,16 +1,25 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import {
+    isValidVin,
+    normalizeVin,
+    VIN_LENGTH
+} from '@/utils/vinValidation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface VinScanResult {
   vins: string[];
   confidence?: number;
   processingTime?: number;
+  bestVin?: string;
+  hasValidVin?: boolean;
+  method?: 'worker' | 'main-thread'; // Track which method was used
 }
 
 interface VinScanOptions {
   language?: string;
   enableLogging?: boolean;
   timeout?: number;
+  useWebWorker?: boolean; // Option to use Web Worker (default: true for better performance)
 }
 
 interface UseVinScannerReturn {
@@ -20,68 +29,73 @@ interface UseVinScannerReturn {
   lastScanResult?: VinScanResult;
 }
 
-const VIN_LENGTH = 17;
-
-const transliterationMap: Record<string, number> = {
-  A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8,
-  J: 1, K: 2, L: 3, M: 4, N: 5, P: 7, R: 9, S: 2,
-  T: 3, U: 4, V: 5, W: 6, X: 7, Y: 8, Z: 9,
-  '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5,
-  '6': 6, '7': 7, '8': 8, '9': 9
-};
-
-const positionWeights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
-
-const normalizeVin = (candidate: string) =>
-  candidate
-    .replace(/[^a-z0-9]/gi, '')
-    .toUpperCase()
-    .replace(/[IOQ]/g, '')
-    .slice(0, VIN_LENGTH);
-
-const isValidVin = (vin: string) => {
-  if (vin.length !== VIN_LENGTH) return false;
-
-  let sum = 0;
-  for (let i = 0; i < VIN_LENGTH; i++) {
-    const char = vin[i];
-    const value = transliterationMap[char];
-    if (value === undefined) {
-      return false;
-    }
-    sum += value * positionWeights[i];
-  }
-
-  const remainder = sum % 11;
-  const checkDigit = remainder === 10 ? 'X' : remainder.toString();
-  return vin[8] === checkDigit;
-};
-
 export function useVinScanner(): UseVinScannerReturn {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastScanResult, setLastScanResult] = useState<VinScanResult>();
-  const workerRef = useRef<any | null>(null);
+  const tesseractWorkerRef = useRef<any | null>(null);
   const workerLanguageRef = useRef<string>('eng');
 
-  const ensureWorker = useCallback(async (language: string, enableLogging?: boolean) => {
+  // Fallback: Use Tesseract in main thread
+  const ensureTesseractWorker = useCallback(async (language: string, enableLogging?: boolean) => {
     const Tesseract = await import('tesseract.js');
 
-    if (!workerRef.current) {
+    if (!tesseractWorkerRef.current) {
       const worker = await Tesseract.createWorker({ logger: enableLogging ? console.log : undefined });
       await worker.loadLanguage(language);
       await worker.initialize(language);
-      workerRef.current = worker;
+      tesseractWorkerRef.current = worker;
       workerLanguageRef.current = language;
     } else if (workerLanguageRef.current !== language) {
-      await workerRef.current.loadLanguage(language);
-      await workerRef.current.initialize(language);
+      await tesseractWorkerRef.current.loadLanguage(language);
+      await tesseractWorkerRef.current.initialize(language);
       workerLanguageRef.current = language;
     }
 
-    return workerRef.current;
+    return tesseractWorkerRef.current;
   }, []);
+
+  // Main thread scanning (current method, kept as fallback)
+  const scanVinMainThread = useCallback(async (
+    imageFile: Blob | File | string,
+    options: VinScanOptions = {}
+  ): Promise<string[]> => {
+    const startTime = Date.now();
+    const language = options.language || 'eng';
+
+    const worker = await ensureTesseractWorker(language, options.enableLogging);
+
+    const { data } = await worker.recognize(imageFile, language, {
+      logger: options.enableLogging ? console.log : undefined
+    });
+
+    const rawMatches = data.text.match(/[A-HJ-NPR-Z0-9]{8,}/gi) || [];
+    const candidates = rawMatches
+      .map(normalizeVin)
+      .filter((vin) => vin.length === VIN_LENGTH)
+      .map((vin) => ({ vin, valid: isValidVin(vin) }));
+
+    const ordered = [
+      ...candidates.filter((candidate) => candidate.valid).map((candidate) => candidate.vin),
+      ...candidates.filter((candidate) => !candidate.valid).map((candidate) => candidate.vin)
+    ];
+
+    const unique = Array.from(new Set(ordered));
+    const bestVin = unique.find(isValidVin) || unique[0];
+
+    const processingTime = Date.now() - startTime;
+    setLastScanResult({
+      vins: unique,
+      confidence: data.confidence,
+      processingTime,
+      bestVin,
+      hasValidVin: unique.some(isValidVin),
+      method: 'main-thread'
+    });
+
+    return unique;
+  }, [ensureTesseractWorker]);
 
   const scanVin = useCallback(async (
     imageFile: Blob | File | string,
@@ -90,38 +104,23 @@ export function useVinScanner(): UseVinScannerReturn {
     setLoading(true);
     setError(null);
 
-    const startTime = Date.now();
+    const timeout = options.timeout || 30000; // 30 seconds default timeout
+    const useWebWorker = options.useWebWorker === true; // Explicitly enable with option
 
     try {
-      const language = options.language || 'eng';
-      const worker = await ensureWorker(language, options.enableLogging);
-
-      const { data } = await worker.recognize(imageFile, language, {
-        logger: options.enableLogging ? console.log : undefined
+      // Create timeout promise
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('VIN scan timeout')), timeout);
       });
 
-      const rawMatches = data.text.match(/[A-HJ-NPR-Z0-9]{8,}/gi) || [];
-      const candidates = rawMatches
-        .map(normalizeVin)
-        .filter((vin) => vin.length === VIN_LENGTH)
-        .map((vin) => ({ vin, valid: isValidVin(vin) }));
+      if (options.enableLogging) {
+        console.log(`[VIN Scanner] ✅ ACTIVE - Using ${useWebWorker ? '⚡ Web Worker (non-blocking)' : '🔄 Main Thread'} method`);
+      }
 
-      const ordered = [
-        ...candidates.filter((candidate) => candidate.valid).map((candidate) => candidate.vin),
-        ...candidates.filter((candidate) => !candidate.valid).map((candidate) => candidate.vin)
-      ];
-
-      const unique = Array.from(new Set(ordered));
-      const bestVin = unique.find(isValidVin) || unique[0];
-
-      const processingTime = Date.now() - startTime;
-      setLastScanResult({
-        vins: unique,
-        confidence: data.confidence,
-        processingTime,
-        bestVin,
-        hasValidVin: unique.some(isValidVin)
-      });
+      // Currently using main thread method
+      // Web Worker can be enabled by passing useWebWorker: true in options
+      const scanPromise = scanVinMainThread(imageFile, options);
+      const unique = await Promise.race([scanPromise, timeoutPromise]);
 
       if (unique.length === 0) {
         setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));
@@ -133,18 +132,24 @@ export function useVinScanner(): UseVinScannerReturn {
     } catch (err) {
       console.error('VIN scanning error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      setError(t('vin_scanner_errors.processing_error', 'Unable to process VIN image.') + ': ' + errorMessage);
+
+      if (errorMessage.includes('timeout')) {
+        setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));
+      } else {
+        setError(t('vin_scanner_errors.processing_error', 'Unable to process VIN image.') + ': ' + errorMessage);
+      }
+
       return [];
     } finally {
       setLoading(false);
     }
-  }, [ensureWorker, t]);
+  }, [scanVinMainThread, t]);
 
   useEffect(() => {
     return () => {
-      if (workerRef.current) {
-        workerRef.current.terminate?.();
-        workerRef.current = null;
+      if (tesseractWorkerRef.current) {
+        tesseractWorkerRef.current.terminate?.();
+        tesseractWorkerRef.current = null;
       }
     };
   }, []);

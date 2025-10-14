@@ -10,6 +10,7 @@ import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
+import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { cn } from '@/lib/utils';
 import {
     AlertTriangle,
@@ -22,6 +23,7 @@ import {
     Eye,
     Loader2,
     MoreHorizontal,
+    Trash2,
     User,
     XCircle
 } from 'lucide-react';
@@ -37,6 +39,7 @@ interface GetReadyVehicleListProps {
   sortOrder: 'asc' | 'desc';
   className?: string;
   onEditVehicle?: (vehicleId: string) => void;
+  onDeleteVehicle?: (vehicleId: string) => Promise<void>;
 }
 
 export function GetReadyVehicleList({
@@ -47,12 +50,14 @@ export function GetReadyVehicleList({
   sortBy,
   sortOrder,
   className,
-  onEditVehicle
+  onEditVehicle,
+  onDeleteVehicle
 }: GetReadyVehicleListProps) {
   const { t } = useTranslation();
   const { steps } = useGetReady();
   const { setSelectedVehicleId, selectedVehicleId } = useGetReadyStore();
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const { confirmDelete } = useSweetAlert();
 
   // Get vehicle management functions
   const { moveVehicle, isMoving } = useVehicleManagement();
@@ -68,6 +73,15 @@ export function GetReadyVehicleList({
       onEditVehicle(vehicleId);
     } else {
       console.log('Edit vehicle:', vehicleId);
+    }
+  };
+
+  const handleDeleteVehicle = async (vehicleId: string) => {
+    // Ask for confirmation before deleting
+    const confirmed = await confirmDelete();
+
+    if (confirmed && onDeleteVehicle) {
+      await onDeleteVehicle(vehicleId);
     }
   };
 
@@ -273,6 +287,14 @@ export function GetReadyVehicleList({
                       <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEditVehicle(vehicle.id); }}>
                         <Edit className="h-4 w-4 mr-2" />
                         {t('get_ready.actions.edit_vehicle')}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={(e) => { e.stopPropagation(); handleDeleteVehicle(vehicle.id); }}
+                        className="text-red-600 focus:text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {t('get_ready.actions.delete_vehicle')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -669,6 +691,18 @@ export function GetReadyVehicleList({
                       title={t('get_ready.actions.edit_vehicle')}
                     >
                       <Edit className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteVehicle(vehicle.id);
+                      }}
+                      title={t('get_ready.actions.delete_vehicle')}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 </TableCell>

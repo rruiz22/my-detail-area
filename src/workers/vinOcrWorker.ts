@@ -25,12 +25,53 @@ export interface VinOcrResponse {
   };
 }
 
+// Import validation utilities - Note: In worker context, we need to inline these
+// since imports may not work correctly in web workers
+const VIN_LENGTH = 17;
+
+const transliterationMap: Record<string, number> = {
+  A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8,
+  J: 1, K: 2, L: 3, M: 4, N: 5, P: 7, R: 9, S: 2,
+  T: 3, U: 4, V: 5, W: 6, X: 7, Y: 8, Z: 9,
+  '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5,
+  '6': 6, '7': 7, '8': 8, '9': 9
+};
+
+const positionWeights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
+
 // VIN pattern regex for better accuracy
 const VIN_PATTERN = /\b[A-HJ-NPR-Z0-9]{17}\b/gi;
 
-// Enhanced VIN validation
+// Inline validation functions for worker context
+function isValidVin(vin: string): boolean {
+  if (vin.length !== VIN_LENGTH) return false;
+
+  let sum = 0;
+  for (let i = 0; i < VIN_LENGTH; i++) {
+    const char = vin[i];
+    const value = transliterationMap[char];
+    if (value === undefined) {
+      return false;
+    }
+    sum += value * positionWeights[i];
+  }
+
+  const remainder = sum % 11;
+  const checkDigit = remainder === 10 ? 'X' : remainder.toString();
+  return vin[8] === checkDigit;
+}
+
+function normalizeVin(raw: string): string {
+  return raw
+    .replace(/[^a-z0-9]/gi, '')
+    .toUpperCase()
+    .replace(/[IOQ]/g, '')
+    .slice(0, VIN_LENGTH);
+}
+
+// Enhanced VIN validation with confidence
 function validateVin(vin: string): { isValid: boolean; confidence: number } {
-  if (!vin || vin.length !== 17) {
+  if (!vin || vin.length !== VIN_LENGTH) {
     return { isValid: false, confidence: 0 };
   }
 
@@ -39,35 +80,12 @@ function validateVin(vin: string): { isValid: boolean; confidence: number } {
     return { isValid: false, confidence: 0.1 };
   }
 
-  // Check digit validation (position 9)
-  const checkDigit = vin.charAt(8);
-  const calculatedCheckDigit = calculateCheckDigit(vin);
-
-  if (checkDigit === calculatedCheckDigit || checkDigit === 'X') {
-    return { isValid: true, confidence: 0.95 };
-  }
-
-  return { isValid: false, confidence: 0.3 };
-}
-
-function calculateCheckDigit(vin: string): string {
-  const weights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
-  const values: { [key: string]: number } = {
-    'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8,
-    'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5, 'P': 7, 'R': 9,
-    'S': 2, 'T': 3, 'U': 4, 'V': 5, 'W': 6, 'X': 7, 'Y': 8, 'Z': 9,
-    '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9
+  // Check digit validation
+  const valid = isValidVin(vin);
+  return {
+    isValid: valid,
+    confidence: valid ? 0.95 : 0.3
   };
-
-  let sum = 0;
-  for (let i = 0; i < 17; i++) {
-    if (i === 8) continue; // Skip check digit position
-    const char = vin.charAt(i);
-    sum += (values[char] || 0) * weights[i];
-  }
-
-  const remainder = sum % 11;
-  return remainder === 10 ? 'X' : remainder.toString();
 }
 
 // Auto-correction suggestions
@@ -87,8 +105,9 @@ function suggestCorrections(detectedText: string): string[] {
   const baseText = detectedText.toUpperCase();
   for (const [wrong, right] of Object.entries(corrections)) {
     const candidate = baseText.replace(new RegExp(wrong, 'g'), right);
-    if (candidate !== baseText && validateVin(candidate).isValid) {
-      suggestions.push(candidate);
+    const normalized = normalizeVin(candidate);
+    if (normalized !== baseText && validateVin(normalized).isValid) {
+      suggestions.push(normalized);
     }
   }
 

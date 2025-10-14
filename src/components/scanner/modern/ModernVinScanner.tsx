@@ -1,13 +1,14 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Camera, Upload, X, Zap, Target, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { ScannerOverlay } from './ScannerOverlay';
-import { VinTargetingGuides } from './VinTargetingGuides';
-import { VinConfidenceIndicator } from './VinConfidenceIndicator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useVinScanner } from '@/hooks/useVinScanner';
 import { cn } from '@/lib/utils';
+import { isValidVin } from '@/utils/vinValidation';
+import { AlertCircle, Camera, CheckCircle2, RefreshCw, Target, Upload, X, Zap } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScannerOverlay } from './ScannerOverlay';
+import { VinConfidenceIndicator } from './VinConfidenceIndicator';
+import { VinTargetingGuides } from './VinTargetingGuides';
 
 interface ModernVinScannerProps {
   open: boolean;
@@ -17,29 +18,6 @@ interface ModernVinScannerProps {
 }
 
 type ScannerStatus = 'idle' | 'processing' | 'success' | 'no-vin' | 'error';
-
-const transliterationMap: Record<string, number> = {
-  A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7, H: 8,
-  J: 1, K: 2, L: 3, M: 4, N: 5, P: 7, R: 9, S: 2,
-  T: 3, U: 4, V: 5, W: 6, X: 7, Y: 8, Z: 9,
-  '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5,
-  '6': 6, '7': 7, '8': 8, '9': 9
-};
-
-const positionWeights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
-
-const isVinValid = (vin: string) => {
-  if (vin.length !== 17) return false;
-  let sum = 0;
-  for (let i = 0; i < vin.length; i++) {
-    const value = transliterationMap[vin[i]];
-    if (value === undefined) return false;
-    sum += value * positionWeights[i];
-  }
-  const remainder = sum % 11;
-  const checkDigit = remainder === 10 ? 'X' : remainder.toString();
-  return vin[8] === checkDigit;
-};
 
 const preprocessImageBlob = async (blob: Blob): Promise<Blob> => {
   try {
@@ -121,6 +99,8 @@ export function ModernVinScanner({
 
   const startCamera = useCallback(async () => {
     try {
+      console.log('📹 Requesting camera access...');
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: 'environment',
@@ -129,23 +109,69 @@ export function ModernVinScanner({
         }
       });
 
+      console.log('✅ Camera stream obtained:', stream.id);
+
+      // Set mode and stream first to ensure video element is rendered
+      setMode('camera');
+      streamRef.current = stream;
+
+      // Wait for next frame to ensure video element is in DOM
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       if (videoRef.current) {
+        console.log('📺 Assigning stream to video element');
         videoRef.current.srcObject = stream;
-        streamRef.current = stream;
+
+        // Wait for video metadata to load
+        await new Promise<void>((resolve) => {
+          if (!videoRef.current) {
+            resolve();
+            return;
+          }
+
+          const onLoadedMetadata = () => {
+            console.log('✅ Video metadata loaded:', {
+              width: videoRef.current?.videoWidth,
+              height: videoRef.current?.videoHeight
+            });
+            resolve();
+          };
+
+          if (videoRef.current.readyState >= 1) {
+            onLoadedMetadata();
+          } else {
+            videoRef.current.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
+          }
+
+          // Timeout fallback
+          setTimeout(resolve, 2000);
+        });
+
+        // Play video
         try {
           await videoRef.current.play();
+          console.log('▶️ Video playing');
         } catch (playError) {
-          console.warn('VIN scanner video play blocked:', playError);
+          console.warn('⚠️ Video play blocked:', playError);
         }
+
         setCameraActive(true);
-        setMode('camera');
         setStatus('idle');
         setStatusMessage(t('modern_vin_scanner.status_ready', 'Ready to scan'));
+      } else {
+        console.error('❌ Video element not found');
+        throw new Error('Video element not available');
       }
     } catch (err) {
-      console.error('Camera access error:', err);
+      console.error('💥 Camera access error:', err);
       setStatus('error');
       setStatusMessage(t('modern_vin_scanner.camera_unavailable', 'Unable to access camera. Check browser permissions.'));
+
+      // Cleanup stream if error occurred
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
     }
   }, [t]);
 
@@ -164,7 +190,7 @@ export function ModernVinScanner({
       return;
     }
 
-    const validVin = vins.find(isVinValid);
+    const validVin = vins.find(isValidVin);
 
     if (validVin) {
       setDetectedVin(validVin);
@@ -276,42 +302,63 @@ export function ModernVinScanner({
   };
 
   const renderModeSelector = () => (
-    <div className="flex flex-col items-center justify-center min-h-[400px] space-y-8">
+    <div className="flex flex-col items-center justify-center py-8 px-4 space-y-8">
+      {/* Header with Icon */}
       <div className="text-center space-y-4">
-        <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-          <Target className="w-10 h-10 text-primary" />
+        <div className="mx-auto w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border-2 border-primary/20">
+          <Target className="w-12 h-12 text-primary" />
         </div>
-        <h3 className="text-2xl font-semibold text-foreground">
-          {t('modern_vin_scanner.dialog_title', 'VIN Scanner')}
-        </h3>
-        <p className="text-muted-foreground max-w-md">
-          {stickerMode
-            ? t('modern_vin_scanner.sticker_hint', 'Aim the camera at the VIN sticker and hold steady.')
-            : t('modern_vin_scanner.plate_hint', 'Aim the camera so the VIN plate fills the guide.')}
-        </p>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold text-foreground">
+            {t('modern_vin_scanner.dialog_title', 'VIN Scanner')}
+          </h3>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+            {stickerMode
+              ? t('modern_vin_scanner.sticker_hint', 'Aim the camera at the VIN sticker and hold steady for best results.')
+              : t('modern_vin_scanner.plate_hint', 'Position the VIN plate within the camera frame and capture a clear image.')}
+          </p>
+        </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+      {/* Action Buttons */}
+      <div className="w-full max-w-md space-y-3">
         <Button
           onClick={startCamera}
           size="lg"
-          className="flex-1 h-14"
+          className="w-full h-16 text-base font-semibold bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"
           disabled={loading}
         >
-          <Camera className="w-5 h-5 mr-3" />
-          {t('modern_vin_scanner.scan_camera', 'Scan with camera')}
+          <div className="flex items-center justify-center gap-3">
+            <Camera className="w-6 h-6" />
+            <span>{t('modern_vin_scanner.scan_camera', 'Scan with Camera')}</span>
+          </div>
         </Button>
 
         <Button
           onClick={() => fileInputRef.current?.click()}
           variant="outline"
           size="lg"
-          className="flex-1 h-14"
+          className="w-full h-16 text-base font-semibold border-2 hover:bg-accent/50 transition-all"
           disabled={loading}
         >
-          <Upload className="w-5 h-5 mr-3" />
-          {t('modern_vin_scanner.upload_image', 'Upload image')}
+          <div className="flex items-center justify-center gap-3">
+            <Upload className="w-6 h-6" />
+            <span>{t('modern_vin_scanner.upload_image', 'Upload Image')}</span>
+          </div>
         </Button>
+      </div>
+
+      {/* Tips Section */}
+      <div className="w-full max-w-md">
+        <div className="rounded-lg border border-border bg-muted/30 p-4">
+          <p className="text-xs font-medium text-foreground mb-2">{t('modern_vin_scanner.tips_title', '💡 Tips for best results:')}</p>
+          <ul className="text-xs text-muted-foreground space-y-1.5">
+            <li>• {t('modern_vin_scanner.tip_lighting', 'Ensure good lighting on the VIN plate')}</li>
+            <li>• {t('modern_vin_scanner.tip_steady', 'Hold camera steady when capturing')}</li>
+            <li>• {t('modern_vin_scanner.tip_focus', 'Keep VIN plate in focus and centered')}</li>
+            <li>• {t('modern_vin_scanner.tip_glare', 'Avoid glare and reflections')}</li>
+          </ul>
+        </div>
       </div>
 
       <input
@@ -327,50 +374,109 @@ export function ModernVinScanner({
   );
 
   const renderCameraView = () => (
-    <div className="relative">
-      <div className="relative bg-black rounded-lg overflow-hidden">
+    <div className="relative space-y-4">
+      {/* Video Container with explicit sizing */}
+      <div className="relative bg-black rounded-xl overflow-hidden border-2 border-border" style={{ minHeight: '400px', maxHeight: '600px' }}>
+        {/* Video Element */}
         <video
           ref={videoRef}
           autoPlay
           playsInline
           muted
-          className="w-full aspect-video object-cover"
+          className="w-full h-full object-cover"
+          style={{
+            display: 'block',
+            minHeight: '400px',
+            maxHeight: '600px',
+            backgroundColor: '#000'
+          }}
+          onLoadedMetadata={() => {
+            console.log('📺 Video onLoadedMetadata event');
+          }}
+          onCanPlay={() => {
+            console.log('✅ Video canPlay event');
+          }}
+          onPlay={() => {
+            console.log('▶️ Video onPlay event');
+          }}
         />
 
-        <ScannerOverlay 
-          isActive={cameraActive && !isCapturing}
-          confidence={confidence ?? 0}
-        />
+        {/* Loading Overlay when camera is initializing */}
+        {!cameraActive && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="text-center text-white space-y-3">
+              <div className="relative mx-auto w-16 h-16">
+                <Camera className="w-16 h-16 animate-pulse" />
+              </div>
+              <p className="text-sm font-medium">{t('modern_vin_scanner.initializing_camera', 'Initializing camera...')}</p>
+              <p className="text-xs text-muted-foreground">{t('modern_vin_scanner.allow_camera_access', 'Please allow camera access')}</p>
+            </div>
+          </div>
+        )}
 
-        <VinTargetingGuides 
-          isActive={cameraActive && !isCapturing}
-          confidence={confidence ?? 0}
-        />
+        {/* Scanner Overlays */}
+        {cameraActive && (
+          <>
+            <ScannerOverlay
+              isActive={!isCapturing}
+              confidence={confidence ?? 0}
+            />
+
+            <VinTargetingGuides
+              isActive={!isCapturing}
+              confidence={confidence ?? 0}
+            />
+          </>
+        )}
+
+        {/* Scanning Overlay */}
+        {isCapturing && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="text-center text-white space-y-3">
+              <RefreshCw className="w-12 h-12 animate-spin mx-auto" />
+              <p className="text-sm font-medium">{t('modern_vin_scanner.scanning_vin', 'Scanning VIN...')}</p>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center justify-between mt-6">
+      {/* Controls */}
+      <div className="flex items-center justify-between gap-4">
         <Button
           onClick={() => {
             stopCamera();
             setMode('select');
             setStatus('idle');
           }}
-          variant="ghost"
+          variant="outline"
+          size="lg"
         >
           <X className="w-4 h-4 mr-2" />
-          {t('common.back')}
+          {t('common.back', 'Back')}
         </Button>
 
-        <div className="flex items-center space-x-4">
-          <VinConfidenceIndicator confidence={confidence ?? 0} />
+        <div className="flex items-center gap-3">
+          {cameraActive && confidence !== null && confidence > 0 && (
+            <VinConfidenceIndicator confidence={confidence} />
+          )}
+
           <Button
             onClick={captureImage}
             size="lg"
             disabled={!cameraActive || isCapturing || loading}
-            className="flex items-center gap-2"
+            className="bg-primary hover:bg-primary/90 min-w-[160px]"
           >
-            <Zap className="w-4 h-4" />
-            {isCapturing ? t('modern_vin_scanner.status_scanning', 'Processing image…') : t('modern_vin_scanner.scan_camera', 'Scan with camera')}
+            {isCapturing || loading ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                {t('modern_vin_scanner.status_scanning', 'Scanning...')}
+              </>
+            ) : (
+              <>
+                <Camera className="w-4 h-4 mr-2" />
+                {t('modern_vin_scanner.capture', 'Capture VIN')}
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -420,15 +526,20 @@ export function ModernVinScanner({
 
   return (
     <Dialog open={open} onOpenChange={(openState) => !openState && onClose()}>
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>{t('modern_vin_scanner.dialog_title', 'VIN Scanner')}</DialogTitle>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-1.5">
+          <DialogTitle className="text-xl font-bold flex items-center gap-2">
+            <Target className="w-5 h-5 text-primary" />
+            {t('modern_vin_scanner.dialog_title', 'VIN Scanner')}
+          </DialogTitle>
           <p className="text-sm text-muted-foreground">
-            {t('modern_vin_scanner.dialog_subtitle', 'Scan vehicle VINs using the camera or upload an image.')}
+            {t('modern_vin_scanner.dialog_subtitle', 'Scan vehicle VINs using the camera or upload an image for instant recognition.')}
           </p>
         </DialogHeader>
 
-        {renderContent()}
+        <div className="mt-2">
+          {renderContent()}
+        </div>
       </DialogContent>
     </Dialog>
   );
