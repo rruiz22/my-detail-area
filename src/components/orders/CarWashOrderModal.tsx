@@ -1,35 +1,35 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { safeParseDate } from '@/utils/dateUtils';
-import { formatVehicleDisplay } from '@/utils/vehicleUtils';
-import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { CompletionDatePicker } from '@/components/ui/completion-date-picker';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, AlertCircle, Zap, Clock } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
-import { CompletionDatePicker } from '@/components/ui/completion-date-picker';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { supabase } from '@/integrations/supabase/client';
+import { safeParseDate } from '@/utils/dateUtils';
+import { formatVehicleDisplay } from '@/utils/vehicleUtils';
+import { AlertCircle, Clock, Loader2, Zap } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface OrderFormData {
   // Order identification
   orderNumber: string;
   orderType: string;
   status: string;
-  
+
   // Customer information (vehicle owner)
   customerName: string;
   customerEmail?: string;
   customerPhone?: string;
-  
+
   // Vehicle information
   vehicleVin: string;
   vehicleYear: string;
@@ -38,16 +38,16 @@ interface OrderFormData {
   vehicleInfo: string;
   stockNumber: string;
   tag: string;
-  
+
   // Car wash specific
   service: string;
   isWaiter: boolean;
-  
+
   // Assignment information (employee responsible)
   assignedGroupId?: string;
   assignedContactId?: string;
   salesperson?: string;
-  
+
   // Order details
   notes: string;
   internalNotes?: string;
@@ -283,7 +283,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   const handleVinChange = async (vin: string) => {
     handleInputChange('vehicleVin', vin);
-    
+
     if (vin.length === 17 && !vinDecoded) {
       const vehicleData = await decodeVin(vin);
       if (vehicleData) {
@@ -351,9 +351,9 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] md:w-[85vw] sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
-        <DialogHeader className="p-4 sm:p-6 pb-0">
-          <DialogTitle className="text-lg sm:text-xl font-semibold flex items-center gap-2">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+          <DialogTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
             {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
             {formData.isWaiter && (
               <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
@@ -367,12 +367,12 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(95vh-100px)] sm:max-h-[calc(95vh-120px)] px-4 sm:px-6">
-          <form onSubmit={handleSubmit} className="space-y-4 pb-4">
+        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Single Responsive Container */}
             <Card className="border-border">
-              <CardContent className="px-4 sm:px-6 pt-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <CardContent className="p-3 sm:p-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
 
                   {/* Left Column - Dealership & Vehicle Info */}
                   <div className="space-y-3">
@@ -505,8 +505,8 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     checked={formData.isWaiter}
                     onCheckedChange={(checked) => handleInputChange('isWaiter', checked)}
                   />
-                  <Label 
-                    htmlFor="waiter" 
+                  <Label
+                    htmlFor="waiter"
                     className="flex items-center gap-2 cursor-pointer"
                   >
                     <Clock className="w-4 h-4 text-destructive" />
@@ -606,65 +606,70 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
             {/* Hidden fields with default values for later editing in order details */}
             <div className="hidden">
-              <input 
-                type="hidden" 
-                name="customer_name" 
-                value={formData.customerName || ''} 
+              <input
+                type="hidden"
+                name="customer_name"
+                value={formData.customerName || ''}
                 onChange={(e) => handleInputChange('customerName', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="customer_email" 
-                value={formData.customerEmail || ''} 
+              <input
+                type="hidden"
+                name="customer_email"
+                value={formData.customerEmail || ''}
                 onChange={(e) => handleInputChange('customerEmail', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="customer_phone" 
-                value={formData.customerPhone || ''} 
+              <input
+                type="hidden"
+                name="customer_phone"
+                value={formData.customerPhone || ''}
                 onChange={(e) => handleInputChange('customerPhone', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="salesperson" 
-                value={formData.salesperson || ''} 
+              <input
+                type="hidden"
+                name="salesperson"
+                value={formData.salesperson || ''}
                 onChange={(e) => handleInputChange('salesperson', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="internal_notes" 
-                value={formData.internalNotes || ''} 
+              <input
+                type="hidden"
+                name="internal_notes"
+                value={formData.internalNotes || ''}
                 onChange={(e) => handleInputChange('internalNotes', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="sla_deadline" 
-                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
+              <input
+                type="hidden"
+                name="sla_deadline"
+                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''}
                 onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
               />
-              <input 
-                type="hidden" 
-                name="scheduled_date" 
-                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
+              <input
+                type="hidden"
+                name="scheduled_date"
+                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''}
                 onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
               />
-              <input 
-                type="hidden" 
-                name="scheduled_time" 
-                value={formData.scheduledTime || ''} 
+              <input
+                type="hidden"
+                name="scheduled_time"
+                value={formData.scheduledTime || ''}
                 onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
               />
             </div>
 
-            {/* Submit Buttons */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button type="button" variant="outline" onClick={onClose}>
+            {/* Submit Buttons - Sticky on mobile for better accessibility */}
+            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
+              >
                 {t('common.action_buttons.cancel')}
               </Button>
               <Button
                 type="submit"
                 disabled={loading || !selectedDealership || !formData.vehicleVin}
-                className="min-w-[120px]"
+                className="order-1 sm:order-2 w-full sm:w-auto min-h-[44px]"
               >
                 {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {order ? t('common.action_buttons.update') : t('common.action_buttons.create')}

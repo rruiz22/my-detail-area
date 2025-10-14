@@ -9,9 +9,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
-import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
+import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { cn } from '@/lib/utils';
+import { formatTimeForTable } from '@/utils/timeFormatUtils';
 import {
     AlertTriangle,
     Car,
@@ -387,11 +388,11 @@ export function GetReadyVehicleList({
                   </div>
                   <div>
                     <span className="text-muted-foreground text-xs">Time in Process:</span>
-                    <div className="font-medium text-xs whitespace-nowrap">{vehicle.t2l}</div>
+                    <div className="font-medium text-xs whitespace-nowrap">{formatTimeForTable(vehicle.t2l).primary}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-xs">Current Step:</span>
-                    <div className="font-medium text-xs whitespace-nowrap">{vehicle.days_in_step}</div>
+                    <div className="font-medium text-xs whitespace-nowrap">{formatTimeForTable(vehicle.days_in_step).primary}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground text-xs">Days to Frontline:</span>
@@ -460,7 +461,7 @@ export function GetReadyVehicleList({
                   <TableHead className="w-[200px] text-center py-2 bg-background">{t('get_ready.table.vehicle')}</TableHead>
                   <TableHead className="w-[140px] text-center py-2 bg-background">{t('get_ready.table.step')}</TableHead>
                   <TableHead className="w-[110px] text-center py-2 bg-background">Workflow</TableHead>
-                  <TableHead className="w-[100px] text-center py-2 bg-background">
+                  <TableHead className="w-[80px] text-center py-2 bg-background">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="cursor-help">In Process</span>
@@ -471,7 +472,7 @@ export function GetReadyVehicleList({
                       </TooltipContent>
                     </Tooltip>
                   </TableHead>
-                  <TableHead className="w-[100px] text-center py-2 bg-background">
+                  <TableHead className="w-[80px] text-center py-2 bg-background">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="cursor-help">Step Time</span>
@@ -482,27 +483,15 @@ export function GetReadyVehicleList({
                       </TooltipContent>
                     </Tooltip>
                   </TableHead>
-                  <TableHead className="w-[100px] text-center py-2 bg-background">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help">To Frontline</span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="font-semibold">Days to Frontline</p>
-                        <p className="text-xs text-muted-foreground">Estimated days remaining until frontline ready</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableHead>
                   <TableHead className="w-[100px] text-center py-2 bg-background">{t('get_ready.table.priority')}</TableHead>
-                  <TableHead className="w-[120px] text-center py-2 bg-background">Progress</TableHead>
-                  <TableHead className="w-[130px] text-center py-2 bg-background">Assigned</TableHead>
+                  <TableHead className="w-[150px] text-center py-2 bg-background">{t('get_ready.table.progress_time')}</TableHead>
                   <TableHead className="w-[100px] text-center py-2 bg-background">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
               {vehicles.length === 0 && !isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={12} className="text-center py-12">
+                  <TableCell colSpan={10} className="text-center py-12">
                     <div className="text-muted-foreground">
                       <Car className="h-12 w-12 mx-auto mb-4 opacity-50" />
                       <h3 className="text-lg font-medium mb-2">
@@ -526,22 +515,24 @@ export function GetReadyVehicleList({
                     )}
                   >
                 {/* Image */}
-                <TableCell className="w-[70px] py-1">
-                  <Avatar className="h-8 w-12 rounded-sm">
-                    <AvatarImage src={vehicle.images[0]} alt={`${vehicle.make} ${vehicle.model}`} />
-                    <AvatarFallback className="rounded-sm">
-                      <Car className="h-3 w-3" />
-                    </AvatarFallback>
-                  </Avatar>
+                <TableCell className="w-[70px] py-1 text-center">
+                  <div className="flex justify-center">
+                    <Avatar className="h-8 w-12 rounded-sm">
+                      <AvatarImage src={vehicle.images[0]} alt={`${vehicle.make} ${vehicle.model}`} />
+                      <AvatarFallback className="rounded-sm">
+                        <Car className="h-3 w-3" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                 </TableCell>
 
                 {/* Stock Number */}
-                <TableCell className="w-[100px] font-medium py-1 text-sm">
+                <TableCell className="w-[100px] font-medium py-1 text-sm text-center">
                   {vehicle.stock_number}
                 </TableCell>
 
                 {/* Vehicle Info */}
-                <TableCell className="w-[200px] py-1">
+                <TableCell className="w-[200px] py-1 text-center">
                   <div className="space-y-0">
                     <div className="font-medium whitespace-nowrap overflow-hidden text-ellipsis text-sm">
                       {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.trim && `(${vehicle.trim})`}
@@ -554,8 +545,8 @@ export function GetReadyVehicleList({
                 </TableCell>
 
                 {/* Step */}
-                <TableCell className="w-[140px] py-1" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center gap-1">
+                <TableCell className="w-[140px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-center gap-1">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -622,52 +613,57 @@ export function GetReadyVehicleList({
                 </TableCell>
 
                 {/* Workflow */}
-                <TableCell className="w-[110px] py-1">
-                  <Badge variant="outline" className={cn("text-xs h-5", getWorkflowColor(vehicle.workflow_type))}>
-                    {t(`get_ready.workflow.${vehicle.workflow_type}`)}
-                  </Badge>
-                </TableCell>
-
-                {/* Time in Process */}
-                <TableCell className="w-[100px] py-1">
-                  <span className="font-medium text-sm whitespace-nowrap">{vehicle.t2l}</span>
-                </TableCell>
-
-                {/* Current Step */}
-                <TableCell className="w-[100px] py-1">
-                  <span className="font-medium text-sm whitespace-nowrap">{vehicle.days_in_step}</span>
-                </TableCell>
-
-                {/* Days to Frontline */}
-                <TableCell className="w-[100px] py-1">
-                  <span className="font-medium text-sm whitespace-nowrap">{vehicle.days_to_frontline}</span>
-                </TableCell>
-
-                {/* Priority */}
-                <TableCell className="w-[100px] py-1">
-                  <Badge className={cn("text-xs h-5 capitalize", getPriorityColor(vehicle.priority))}>
-                    {vehicle.priority}
-                  </Badge>
-                </TableCell>
-
-                {/* Progress */}
-                <TableCell className="w-[120px] py-1">
-                  <div className="flex items-center gap-2">
-                    <Progress value={vehicle.progress} className="h-1.5 flex-1" />
-                    <span className="text-xs text-muted-foreground w-8">
-                      {vehicle.progress}%
-                    </span>
+                <TableCell className="w-[110px] py-1 text-center">
+                  <div className="flex justify-center">
+                    <Badge variant="outline" className={cn("text-xs h-5", getWorkflowColor(vehicle.workflow_type))}>
+                      {t(`get_ready.workflow.${vehicle.workflow_type}`)}
+                    </Badge>
                   </div>
                 </TableCell>
 
-                {/* Assigned */}
-                <TableCell className="w-[130px] py-1">
-                  <div className="text-xs">{vehicle.assigned_to}</div>
+                {/* Time in Process - Compact Format */}
+                <TableCell className="w-[80px] py-1 text-center">
+                  <span className="font-medium text-sm whitespace-nowrap">
+                    {formatTimeForTable(vehicle.t2l).primary}
+                  </span>
+                </TableCell>
+
+                {/* Current Step - Compact Format */}
+                <TableCell className="w-[80px] py-1 text-center">
+                  <span className="font-medium text-sm whitespace-nowrap">
+                    {formatTimeForTable(vehicle.days_in_step).primary}
+                  </span>
+                </TableCell>
+
+                {/* Priority */}
+                <TableCell className="w-[100px] py-1 text-center">
+                  <div className="flex justify-center">
+                    <Badge className={cn("text-xs h-5 capitalize", getPriorityColor(vehicle.priority))}>
+                      {vehicle.priority}
+                    </Badge>
+                  </div>
+                </TableCell>
+
+                {/* Progress & Assigned - Combined */}
+                <TableCell className="w-[150px] py-1 text-center">
+                  <div className="space-y-1">
+                    {/* Progress bar with percentage */}
+                    <div className="flex items-center gap-2">
+                      <Progress value={vehicle.progress} className="h-1.5 flex-1" />
+                      <span className="text-xs text-muted-foreground w-8">
+                        {vehicle.progress}%
+                      </span>
+                    </div>
+                    {/* Assigned user */}
+                    <div className="text-xs text-muted-foreground">
+                      {vehicle.assigned_to}
+                    </div>
+                  </div>
                 </TableCell>
 
                 {/* Actions */}
                 <TableCell className="w-[100px] text-center py-1" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-end gap-1">
+                  <div className="flex items-center justify-center gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -711,7 +707,7 @@ export function GetReadyVehicleList({
                 {/* Loading indicator for next page */}
                 {isFetchingNextPage && (
                   <TableRow>
-                    <TableCell colSpan={12} className="text-center py-4">
+                    <TableCell colSpan={10} className="text-center py-4">
                       <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                     </TableCell>
                   </TableRow>

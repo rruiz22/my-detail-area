@@ -1866,7 +1866,12 @@
       "days_in_step": "Days in Step",
       "notes": "Notes",
       "priority": "Priority",
-      "click_to_view": "Click on a row to view vehicle details"
+      "click_to_view": "Click on a row to view vehicle details",
+      "vehicle_stock": "Vehicle & Stock",
+      "step_workflow": "Step & Workflow",
+      "progress_time": "Progress & Time",
+      "unassigned": "Unassigned",
+      "no_work_items": "No work items"
     },
     "detail_panel": {
       "no_selection": {
@@ -2020,7 +2025,46 @@
       "coming_soon": "Media gallery coming soon"
     },
     "notes": {
-      "coming_soon": "Notes feature coming soon"
+      "add_note": "Add Note",
+      "add_first_note": "Add First Note",
+      "edit_note": "Edit Note",
+      "delete_note": "Delete Note",
+      "create": "Create Note",
+      "no_notes": "No notes yet",
+      "notes_count": "{{count}} note(s)",
+      "empty_state": "No notes have been added for this vehicle yet.",
+      "add_note_description": "Add a note to track important information about this vehicle.",
+      "edit_note_description": "Update the note content or type.",
+      "delete_note_confirmation": "Are you sure you want to delete this note? This action cannot be undone.",
+      "note_type": "Note Type",
+      "content": "Content",
+      "content_placeholder": "Enter your note here...",
+      "content_required": "Note content is required",
+      "created": "Note Created",
+      "created_success": "Note has been created successfully",
+      "updated": "Note Updated",
+      "updated_success": "Note has been updated successfully",
+      "deleted": "Note Deleted",
+      "deleted_success": "Note has been deleted successfully",
+      "pinned": "Note Pinned",
+      "pinned_success": "Note has been pinned to the top",
+      "unpinned": "Note Unpinned",
+      "unpinned_success": "Note has been unpinned",
+      "pin": "Pin Note",
+      "unpin": "Unpin Note",
+      "edited": "edited",
+      "error": "Error",
+      "create_error": "Failed to create note",
+      "update_error": "Failed to update note",
+      "delete_error": "Failed to delete note",
+      "pin_error": "Failed to toggle pin status",
+      "types": {
+        "general": "General",
+        "issue": "Issue",
+        "observation": "Observation",
+        "reminder": "Reminder",
+        "important": "Important"
+      }
     },
     "vendors": {
       "title": "Vendor Management",

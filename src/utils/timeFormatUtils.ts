@@ -77,3 +77,73 @@ export function calculateDTF(
   const estimatedMs = estimatedHours * 60 * 60 * 1000;
   return formatTimeDuration(estimatedMs);
 }
+
+/**
+ * Format time duration in a compact way for tables
+ * @param ms - Milliseconds to format
+ * @returns Formatted string like "13d 20h" or "20h 56m"
+ */
+export function formatCompactTime(ms: number): string {
+  if (ms < 0) return '0m';
+
+  const totalMinutes = Math.floor(ms / (1000 * 60));
+  const totalHours = Math.floor(totalMinutes / 60);
+  const days = Math.floor(totalHours / 24);
+  const hours = totalHours % 24;
+  const minutes = totalMinutes % 60;
+
+  // If we have days, show "Xd Xh" format (omit minutes for space)
+  if (days > 0) {
+    if (hours > 0) {
+      return `${days}d ${hours}h`;
+    }
+    return `${days}d`;
+  }
+
+  // If we have hours but no days, show "Xh Xm" format
+  if (hours > 0) {
+    if (minutes > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${hours}h`;
+  }
+
+  // Only minutes
+  return `${minutes}m`;
+}
+
+/**
+ * Format time duration with two-line layout for table cells
+ * @param timeString - Time string from backend (e.g., "13D 20H 56min")
+ * @returns Object with primary (main time) and secondary (additional detail) lines
+ */
+export function formatTimeForTable(timeString: string): { primary: string; secondary?: string } {
+  // If empty or invalid
+  if (!timeString || timeString === '-') {
+    return { primary: '-' };
+  }
+
+  // Parse the time string (e.g., "13D 20H 56min")
+  const dayMatch = timeString.match(/(\d+)D/);
+  const hourMatch = timeString.match(/(\d+)H/);
+  const minMatch = timeString.match(/(\d+)min/);
+
+  const days = dayMatch ? parseInt(dayMatch[1]) : 0;
+  const hours = hourMatch ? parseInt(hourMatch[1]) : 0;
+  const minutes = minMatch ? parseInt(minMatch[1]) : 0;
+
+  // If we have days, show days and hours on first line
+  if (days > 0) {
+    const primary = hours > 0 ? `${days}d ${hours}h` : `${days}d`;
+    return { primary };
+  }
+
+  // If we have hours but no days
+  if (hours > 0) {
+    const primary = minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+    return { primary };
+  }
+
+  // Only minutes
+  return { primary: `${minutes}m` };
+}

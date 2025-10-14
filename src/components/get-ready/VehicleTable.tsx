@@ -17,6 +17,7 @@ import {
     CheckCircle,
     Circle,
     Clock,
+    Eye,
     Image,
     Pause,
     Printer,
@@ -119,126 +120,139 @@ export function VehicleTable({ className }: VehicleTableProps) {
       <Table data-sticky-header>
         <TableHeader className="sticky top-0 bg-background z-10 after:absolute after:inset-x-0 after:bottom-0 after:border-b">
           <TableRow className="h-9 hover:bg-transparent border-b-0">
-            <TableHead className="w-16 py-2 bg-background">{t('get_ready.table.step')}</TableHead>
-            <TableHead className="w-16 py-2 bg-background">{t('get_ready.table.image')}</TableHead>
-            <TableHead className="py-2 bg-background">{t('get_ready.table.stock')}</TableHead>
-            <TableHead className="py-2 bg-background">{t('get_ready.table.vehicle')}</TableHead>
-            <TableHead className="w-20 text-center py-2 bg-background">{t('get_ready.table.media')}</TableHead>
-            <TableHead className="w-32 py-2 bg-background">{t('get_ready.table.work_items')}</TableHead>
-            <TableHead className="w-24 py-2 bg-background">{t('get_ready.table.days_in_step')}</TableHead>
-            <TableHead className="w-32 py-2 bg-background">{t('get_ready.table.notes')}</TableHead>
-            <TableHead className="w-20 py-2 bg-background">{t('get_ready.table.priority')}</TableHead>
+            <TableHead className="w-12 py-2 bg-background text-center">#</TableHead>
+            <TableHead className="py-2 bg-background">{t('get_ready.table.vehicle_stock')}</TableHead>
+            <TableHead className="w-32 py-2 bg-background">{t('get_ready.table.step_workflow')}</TableHead>
+            <TableHead className="w-40 py-2 bg-background">{t('get_ready.table.progress_time')}</TableHead>
+            <TableHead className="w-24 py-2 bg-background">{t('get_ready.table.priority')}</TableHead>
+            <TableHead className="w-16 py-2 bg-background text-center">{t('common.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {vehicles.map((vehicle) => (
+          {vehicles.map((vehicle, index) => (
             <TableRow
               key={vehicle.id}
               className={cn(
-                "cursor-pointer transition-colors h-12",
+                "cursor-pointer transition-colors",
                 selectedVehicleId === vehicle.id && "bg-muted/50"
               )}
               onClick={() => handleRowClick(vehicle)}
             >
-              {/* Step Badge */}
-              <TableCell className="py-1">
-                <Badge
-                  variant="outline"
-                  className="text-xs h-5"
-                  style={{
-                    borderColor: vehicle.current_step_color,
-                    color: vehicle.current_step_color
-                  }}
-                >
-                  {vehicle.current_step_order}
-                </Badge>
+              {/* Row Number */}
+              <TableCell className="py-2 text-center text-xs font-medium text-muted-foreground">
+                {index + 1}
               </TableCell>
 
-              {/* Vehicle Image */}
-              <TableCell className="py-1">
-                <Avatar className="h-8 w-8 rounded-sm">
-                  <AvatarFallback className="rounded-sm bg-muted">
-                    <Image className="h-4 w-4 text-muted-foreground" />
-                  </AvatarFallback>
-                </Avatar>
-              </TableCell>
-
-              {/* Stock Number */}
-              <TableCell className="py-1">
-                <div className="font-medium text-sm">{vehicle.stock_number}</div>
-              </TableCell>
-
-              {/* Vehicle Info */}
-              <TableCell className="py-1">
-                <div className="font-medium text-sm">
-                  {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model} {vehicle.vehicle_trim && `(${vehicle.vehicle_trim})`}
-                </div>
-                <div className="text-xs">
-                  <span className="text-muted-foreground/60">L8V: </span>
-                  <span className="font-mono text-sm font-semibold text-foreground">
-                    {(vehicle.vin || vehicle.short_vin)?.slice(-8)}
-                  </span>
+              {/* Vehicle & Stock - Grouped */}
+              <TableCell className="py-2">
+                <div className="flex items-start gap-2">
+                  <Avatar className="h-10 w-10 rounded-sm flex-shrink-0">
+                    <AvatarFallback className="rounded-sm bg-muted">
+                      <Image className="h-5 w-5 text-muted-foreground" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm text-foreground">
+                      {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
+                      {vehicle.vehicle_trim && <span className="text-muted-foreground"> ({vehicle.vehicle_trim})</span>}
+                    </div>
+                    <div className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
+                      <span className="font-medium">ST: {vehicle.stock_number}</span>
+                      <span className="text-muted-foreground/50">•</span>
+                      <span className="font-mono">
+                        VIN: {(vehicle.vin || vehicle.short_vin)?.slice(-8)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </TableCell>
 
-              {/* Media Count */}
-              <TableCell className="text-center py-1">
-                <div className="flex items-center justify-center gap-1">
-                  <Image className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-xs">{vehicle.media_count}</span>
+              {/* Step & Workflow - Grouped */}
+              <TableCell className="py-2">
+                <div className="space-y-1">
+                  <Badge
+                    variant="outline"
+                    className="text-xs font-medium"
+                    style={{
+                      borderColor: vehicle.current_step_color,
+                      color: vehicle.current_step_color
+                    }}
+                  >
+                    {vehicle.current_step_name}
+                  </Badge>
+                  <div className="text-xs text-muted-foreground capitalize">
+                    {vehicle.workflow_type || 'Standard'}
+                  </div>
                 </div>
               </TableCell>
 
-              {/* Work Items */}
-              <TableCell className="py-1">
-                <div className="flex flex-wrap gap-1">
-                  {vehicle.work_item_counts?.pending && vehicle.work_item_counts.pending > 0 && (
-                    <Badge variant="outline" className="text-xs h-4 px-1">
-                      <AlertTriangle className="h-2.5 w-2.5 mr-0.5 text-yellow-600" />
-                      {vehicle.work_item_counts.pending}
-                    </Badge>
-                  )}
-                  {vehicle.work_item_counts?.in_progress && vehicle.work_item_counts.in_progress > 0 && (
-                    <Badge variant="outline" className="text-xs h-4 px-1">
-                      <Circle className="h-2.5 w-2.5 mr-0.5 text-blue-600" />
-                      {vehicle.work_item_counts.in_progress}
-                    </Badge>
-                  )}
-                  {vehicle.work_item_counts?.completed && vehicle.work_item_counts.completed > 0 && (
-                    <Badge variant="outline" className="text-xs h-4 px-1">
-                      <CheckCircle className="h-2.5 w-2.5 mr-0.5 text-green-600" />
-                      {vehicle.work_item_counts.completed}
-                    </Badge>
-                  )}
-                  {/* Show placeholder when no work items data */}
-                  {!vehicle.work_item_counts && (
-                    <span className="text-xs text-muted-foreground">
-                      {t('get_ready.table.no_work_items')}
-                    </span>
-                  )}
-                </div>
-              </TableCell>
+              {/* Progress & Time - Grouped */}
+              <TableCell className="py-2">
+                <div className="space-y-1.5">
+                  {/* Time in Step */}
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-xs font-medium">{vehicle.days_in_step}</span>
+                  </div>
 
-              {/* Days in Step */}
-              <TableCell className="py-1">
-                <div className="text-sm font-medium">{vehicle.days_in_step}</div>
-              </TableCell>
+                  {/* Work Items Counts */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {vehicle.work_item_counts?.pending > 0 && (
+                      <span className="inline-flex items-center gap-0.5 text-xs text-yellow-600">
+                        <AlertTriangle className="h-3 w-3" />
+                        {vehicle.work_item_counts.pending}
+                      </span>
+                    )}
+                    {vehicle.work_item_counts?.in_progress > 0 && (
+                      <span className="inline-flex items-center gap-0.5 text-xs text-blue-600">
+                        <Circle className="h-3 w-3" />
+                        {vehicle.work_item_counts.in_progress}
+                      </span>
+                    )}
+                    {vehicle.work_item_counts?.completed > 0 && (
+                      <span className="inline-flex items-center gap-0.5 text-xs text-green-600">
+                        <CheckCircle className="h-3 w-3" />
+                        {vehicle.work_item_counts.completed}
+                      </span>
+                    )}
+                    {vehicle.media_count > 0 && (
+                      <span className="inline-flex items-center gap-0.5 text-xs text-muted-foreground">
+                        <Image className="h-3 w-3" />
+                        {vehicle.media_count}
+                      </span>
+                    )}
+                  </div>
 
-              {/* Notes Preview */}
-              <TableCell className="py-1">
-                <div className="text-xs text-muted-foreground line-clamp-1 max-w-32">
-                  {vehicle.notes_preview || t('get_ready.table.no_notes')}
+                  {/* Assigned To */}
+                  <div className="text-xs text-muted-foreground">
+                    👤 {vehicle.assigned_to || t('get_ready.table.unassigned')}
+                  </div>
                 </div>
               </TableCell>
 
               {/* Priority */}
-              <TableCell className="py-1">
+              <TableCell className="py-2">
                 <Badge
                   variant="outline"
-                  className={cn("text-xs h-5", getPriorityColor(vehicle.priority))}
+                  className={cn("text-xs", getPriorityColor(vehicle.priority))}
                 >
                   {t(`common.priority.${vehicle.priority}`)}
                 </Badge>
+              </TableCell>
+
+              {/* Actions */}
+              <TableCell className="py-2 text-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRowClick(vehicle);
+                  }}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}

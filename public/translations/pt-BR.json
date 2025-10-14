@@ -1617,7 +1617,12 @@
       "days_in_step": "Dias na Etapa",
       "notes": "Anotações",
       "priority": "Prioridade",
-      "click_to_view": "Clique em uma linha para ver detalhes do veículo"
+      "click_to_view": "Clique em uma linha para ver detalhes do veículo",
+      "vehicle_stock": "Veículo e Estoque",
+      "step_workflow": "Etapa e Fluxo",
+      "progress_time": "Progresso e Tempo",
+      "unassigned": "Não atribuído",
+      "no_work_items": "Sem itens de trabalho"
     },
     "detail_panel": {
       "no_selection": {
@@ -1771,7 +1776,46 @@
       "coming_soon": "Galeria de mídia em breve"
     },
     "notes": {
-      "coming_soon": "Função de anotações em breve"
+      "add_note": "Adicionar Nota",
+      "add_first_note": "Adicionar Primeira Nota",
+      "edit_note": "Editar Nota",
+      "delete_note": "Excluir Nota",
+      "create": "Criar Nota",
+      "no_notes": "Ainda sem notas",
+      "notes_count": "{{count}} nota(s)",
+      "empty_state": "Nenhuma nota foi adicionada para este veículo ainda.",
+      "add_note_description": "Adicione uma nota para rastrear informações importantes sobre este veículo.",
+      "edit_note_description": "Atualize o conteúdo ou tipo da nota.",
+      "delete_note_confirmation": "Tem certeza de que deseja excluir esta nota? Esta ação não pode ser desfeita.",
+      "note_type": "Tipo de Nota",
+      "content": "Conteúdo",
+      "content_placeholder": "Digite sua nota aqui...",
+      "content_required": "O conteúdo da nota é obrigatório",
+      "created": "Nota Criada",
+      "created_success": "A nota foi criada com sucesso",
+      "updated": "Nota Atualizada",
+      "updated_success": "A nota foi atualizada com sucesso",
+      "deleted": "Nota Excluída",
+      "deleted_success": "A nota foi excluída com sucesso",
+      "pinned": "Nota Fixada",
+      "pinned_success": "A nota foi fixada no topo",
+      "unpinned": "Nota Desfixada",
+      "unpinned_success": "A nota foi desfixada",
+      "pin": "Fixar Nota",
+      "unpin": "Desafixar Nota",
+      "edited": "editado",
+      "error": "Erro",
+      "create_error": "Falha ao criar nota",
+      "update_error": "Falha ao atualizar nota",
+      "delete_error": "Falha ao excluir nota",
+      "pin_error": "Falha ao alternar status de fixação",
+      "types": {
+        "general": "Geral",
+        "issue": "Problema",
+        "observation": "Observação",
+        "reminder": "Lembrete",
+        "important": "Importante"
+      }
     },
     "vendors": {
       "title": "Gestão de Fornecedores",

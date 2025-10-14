@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { safeParseDate } from '@/utils/dateUtils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Zap, AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { usePermissionContext } from '@/contexts/PermissionContext';
-import { canViewPricing } from '@/utils/permissions';
-import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
+import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { supabase } from '@/integrations/supabase/client';
+import { safeParseDate } from '@/utils/dateUtils';
+import { canViewPricing } from '@/utils/permissions';
+import { AlertCircle, Loader2, Zap } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface OrderFormData {
   // Order identification
@@ -447,9 +447,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] sm:rounded-lg sm:border" aria-describedby="service-order-modal-description">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl font-semibold">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4" aria-describedby="service-order-modal-description">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+          <DialogTitle className="text-base sm:text-lg font-semibold">
             {order ? t('orders.edit_service_order') : t('orders.create_service_order')}
           </DialogTitle>
           <DialogDescription className="sr-only" id="service-order-modal-description">
@@ -457,16 +457,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(95vh-120px)] px-6">
-          <form onSubmit={handleSubmit} className="space-y-6 pb-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-3 space-y-3">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
 
               {/* Dealership & Customer Information */}
               <Card className="border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">{t('sales_orders.dealership')} & {t('orders.clientInfo')}</CardTitle>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">{t('sales_orders.dealership')} & {t('orders.clientInfo')}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <Label htmlFor="dealership">
@@ -624,8 +624,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
               {/* Vehicle Information with VIN Decoding */}
               <Card className="border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
                     {t('orders.vehicleInfo')}
                     {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground">
                       <Zap className="w-3 h-3 mr-1" />
@@ -633,7 +633,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                     </Badge>}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                   <div>
                     <Label htmlFor="vehicleVin" className="flex items-center gap-2">
                       {t('orders.vin')} <span className="text-red-500">*</span>
@@ -691,10 +691,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
               {/* Services & Notes */}
               <Card className="border-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">{t('orders.servicesAndNotes')}</CardTitle>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">{t('orders.servicesAndNotes')}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                   <div>
                     <Label className="text-sm font-medium">
                       {t('orders.services')} <span className="text-red-500">*</span>
@@ -783,9 +783,14 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
               <input type="hidden" name="scheduled_time" value={formData.scheduledTime || ''} />
             </div>
 
-            {/* Footer Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-border">
-              <Button type="button" variant="outline" onClick={onClose}>
+            {/* Footer Actions - Sticky on mobile for better accessibility */}
+            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
+              >
                 {t('common.action_buttons.cancel')}
               </Button>
               <Button
@@ -802,6 +807,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                   !formData.dueDate ||
                   selectedServices.length === 0
                 }
+                className="order-1 sm:order-2 w-full sm:w-auto min-h-[44px]"
               >
                 {loading ? (
                   <>

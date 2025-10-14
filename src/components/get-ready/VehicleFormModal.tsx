@@ -1,23 +1,24 @@
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { useToast } from '@/hooks/use-toast';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useGetReady } from '@/hooks/useGetReady';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
@@ -25,7 +26,6 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { Loader2, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface VehicleFormData {
   stock_number: string;
@@ -207,23 +207,23 @@ export function VehicleFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-2xl sm:max-h-[90vh] sm:rounded-lg sm:border overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-2xl sm:h-auto sm:max-h-[98vh] sm:rounded-lg sm:border sm:mx-4">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+          <DialogTitle className="text-base sm:text-lg font-semibold">
             {isEditMode
               ? t('get_ready.vehicle_form.title.edit')
               : t('get_ready.vehicle_form.title.add')}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
             {t('get_ready.vehicle_form.description')}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
+        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Stock Number & VIN */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1.5">
                 <Label htmlFor="stock_number">
                   {t('get_ready.vehicle_form.fields.stock_number')}
                   <span className="text-red-500 ml-1">*</span>
@@ -240,7 +240,7 @@ export function VehicleFormModal({
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="vin">
                     {t('get_ready.vehicle_form.fields.vin')}
@@ -275,8 +275,8 @@ export function VehicleFormModal({
             </div>
 
             {/* Year, Make, Model */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="space-y-1.5">
                 <Label htmlFor="year">
                   {t('get_ready.vehicle_form.fields.year')}
                   <span className="text-red-500 ml-1">*</span>
@@ -330,7 +330,7 @@ export function VehicleFormModal({
             </div>
 
             {/* Trim */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label htmlFor="trim">
                 {t('get_ready.vehicle_form.fields.trim')}
               </Label>
@@ -343,8 +343,8 @@ export function VehicleFormModal({
             </div>
 
             {/* Step & Workflow Type */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1.5">
                 <Label htmlFor="step_id">
                   {t('get_ready.vehicle_form.fields.step')}
                 </Label>
@@ -394,8 +394,8 @@ export function VehicleFormModal({
             </div>
 
             {/* Priority & Assigned To */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1.5">
                 <Label htmlFor="priority">
                   {t('get_ready.vehicle_form.fields.priority')}
                 </Label>
@@ -430,7 +430,7 @@ export function VehicleFormModal({
             </div>
 
             {/* Notes */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label htmlFor="notes">
                 {t('get_ready.vehicle_form.fields.notes')}
               </Label>
@@ -440,27 +440,34 @@ export function VehicleFormModal({
                 onChange={e => updateFormData('notes', e.target.value)}
                 placeholder={t('get_ready.vehicle_form.placeholders.notes')}
                 rows={3}
+                className="resize-none"
               />
             </div>
-          </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={loading}
-            >
-              {t('common.actions.cancel')}
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isEditMode
-                ? t('common.actions.update')
-                : t('common.actions.create')}
-            </Button>
-          </DialogFooter>
-        </form>
+            {/* Action Buttons - Sticky on mobile for better accessibility */}
+            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={loading}
+                className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
+              >
+                {t('common.actions.cancel')}
+              </Button>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="order-1 sm:order-2 w-full sm:w-auto min-h-[44px]"
+              >
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isEditMode
+                  ? t('common.actions.update')
+                  : t('common.actions.create')}
+              </Button>
+            </div>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

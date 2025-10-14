@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { safeParseDate } from '@/utils/dateUtils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { CompletionDatePicker } from '@/components/ui/completion-date-picker';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Zap, AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { usePermissionContext } from '@/contexts/PermissionContext';
-import { canViewPricing } from '@/utils/permissions';
-import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { CompletionDatePicker } from '@/components/ui/completion-date-picker';
+import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { supabase } from '@/integrations/supabase/client';
+import { safeParseDate } from '@/utils/dateUtils';
+import { canViewPricing } from '@/utils/permissions';
+import { AlertCircle, Loader2, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface OrderFormData {
@@ -525,27 +525,27 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] md:w-[85vw] sm:rounded-lg sm:border sm:mx-4"
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="recon-order-modal-description"
       >
-        <DialogHeader className="p-4 sm:p-6 pb-0">
-          <DialogTitle className="text-lg sm:text-xl font-semibold">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+          <DialogTitle className="text-base sm:text-lg font-semibold">
             {order ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
           </DialogTitle>
-          <div id="recon-order-modal-description" className="text-sm text-muted-foreground">
+          <div id="recon-order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
             {order ? 'Update reconditioning order details and services' : 'Create a new reconditioning order for dealer inventory'}
           </div>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(95vh-100px)] sm:max-h-[calc(95vh-120px)] px-4 sm:px-6">
-          <form onSubmit={handleSubmit} className="space-y-6 pb-6">
+        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Single Responsive Container */}
             <Card className="border-border">
-              <CardContent className="px-4 sm:px-6 pt-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              <CardContent className="p-3 sm:p-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
 
                   {/* Column 1: Dealership & Vehicle Info */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
@@ -785,13 +785,13 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
               />
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-border">
+            {/* Action Buttons - Sticky on mobile for better accessibility */}
+            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
+                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto min-h-[44px]"
               >
                 {t('common.action_buttons.cancel')}
               </Button>
@@ -804,7 +804,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                   !formData.stockNumber ||
                   selectedServices.length === 0
                 }
-                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
+                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
               >
                 {submitting ? (
                   <>

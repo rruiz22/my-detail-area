@@ -4,24 +4,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
+import { useVehicleNotes } from '@/hooks/useVehicleNotes';
 import { useCurrentStepVisit, useVehicleStepHistory, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
 import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
-  AlertTriangle,
-  Circle,
-  Clock,
-  DollarSign,
-  Image,
-  MessageSquare,
-  Users,
-  Wrench,
-  X
+    AlertTriangle,
+    Circle,
+    Clock,
+    DollarSign,
+    Image,
+    MessageSquare,
+    Users,
+    Wrench,
+    X
 } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { VehicleMediaTab } from './tabs/VehicleMediaTab';
+import { VehicleNotesTab } from './tabs/VehicleNotesTab';
 import { VehicleVendorsTab } from './tabs/VehicleVendorsTab';
 import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
 import { VehicleStepTimeHistory } from './VehicleStepTimeHistory';
@@ -38,6 +40,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   // Fetch counts for each tab
   const { data: workItems = [] } = useWorkItems(selectedVehicleId);
   const { data: mediaFiles = [] } = useVehicleMedia(selectedVehicleId || '');
+  const { data: notes = [] } = useVehicleNotes(selectedVehicleId);
   const { data: stepHistory = [] } = useVehicleStepHistory(selectedVehicleId);
 
   // Fetch time tracking data for header
@@ -50,12 +53,12 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     return {
       workItems: workItems.length,
       media: mediaFiles.length,
-      notes: 0, // Notes feature not yet implemented in database (vehicle_notes table)
+      notes: notes.length,
       vendors: workItemsWithVendors.length,
       timeline: stepHistory.length,
       appraisal: 0 // Appraisal feature not yet implemented in database
     };
-  }, [workItems, mediaFiles, stepHistory]);
+  }, [workItems, mediaFiles, notes, stepHistory]);
 
   const handleClose = () => {
     setSelectedVehicleId(null);
@@ -284,11 +287,8 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
             <VehicleMediaTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="notes" className="flex-1 px-4 pt-4 pb-6">
-            <div className="text-center py-8 text-muted-foreground">
-              <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <div className="text-sm">{t('get_ready.notes.coming_soon')}</div>
-            </div>
+          <TabsContent value="notes" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
+            <VehicleNotesTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
           {/* Vendors Tab - NEW: Full vendor integration */}

@@ -1,25 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { safeParseDate } from '@/utils/dateUtils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Zap, AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { usePermissionContext } from '@/contexts/PermissionContext';
-import { canViewPricing } from '@/utils/permissions';
-import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useAppointmentCapacity } from '@/hooks/useAppointmentCapacity';
+import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { supabase } from '@/integrations/supabase/client';
+import { safeParseDate } from '@/utils/dateUtils';
+import { canViewPricing } from '@/utils/permissions';
+import { AlertCircle, Loader2, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface OrderFormData {
@@ -40,12 +40,12 @@ interface OrderFormData {
   vehicleModel: string;
   vehicleInfo: string;
   stockNumber: string;
-  
+
   // Assignment information (employee responsible)
   assignedGroupId?: string;
   assignedContactId?: string;
   salesperson?: string;
-  
+
   // Order details
   notes: string;
   internalNotes?: string;
@@ -207,7 +207,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   useEffect(() => {
     if (open) {
       fetchDealerships();
-      
+
       if (order) {
         // Prevent double initialization in React Strict Mode
         if (currentOrderId.current === order.id && editModeInitialized.current) {
@@ -255,16 +255,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           vehicleModel: getFieldValue(order.vehicleModel, order.vehicle_model),
           vehicleInfo: getFieldValue(order.vehicleInfo, order.vehicle_info),
           stockNumber: getFieldValue(order.stockNumber, order.stock_number),
-          
+
           // Assignment information
           assignedGroupId: getFieldValue(order.assignedGroupId, order.assigned_group_id),
           assignedContactId: getFieldValue(order.assignedContactId, order.assigned_contact_id),
           salesperson: getFieldValue(order.salesperson, order.salesperson),
-          
+
           // Notes
           notes: getFieldValue(order.notes, order.notes),
           internalNotes: getFieldValue(order.internalNotes, order.internal_notes),
-          
+
           // Date fields - handle proper parsing
           dueDate: parseDateField(order.dueDate, order.due_date),
           slaDeadline: parseDateField(order.slaDeadline, order.sla_deadline),
@@ -491,7 +491,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const handleVinChange = async (vin: string) => {
     handleInputChange('vehicleVin', vin);
-    
+
     if (vin.length === 17 && !vinDecoded) {
       const vehicleData = await decodeVin(vin);
       if (vehicleData) {
@@ -523,13 +523,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const handleInputChange = (field: keyof OrderFormData, value: string | Date | undefined) => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
-      
+
       // If individual vehicle fields are manually changed, update consolidated vehicle_info
       if (['vehicleYear', 'vehicleMake', 'vehicleModel'].includes(field)) {
         const year = field === 'vehicleYear' ? value : prev.vehicleYear;
         const make = field === 'vehicleMake' ? value : prev.vehicleMake;
         const model = field === 'vehicleModel' ? value : prev.vehicleModel;
-        
+
         // Build consolidated vehicle_info only if we have year, make, and model
         if (year && make && model) {
           newData.vehicleInfo = `${year} ${make} ${model}`;
@@ -537,7 +537,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           newData.vehicleInfo = '';
         }
       }
-      
+
       return newData;
     });
   };
@@ -553,18 +553,18 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const transformToDbFormat = (formData: OrderFormData) => {
     // Ensure vehicle_info is properly set as the primary field
     let vehicleInfo = formData.vehicleInfo;
-    
+
     // Fallback: if vehicle_info is empty but individual fields exist, construct it
     if (!vehicleInfo && formData.vehicleYear && formData.vehicleMake && formData.vehicleModel) {
       vehicleInfo = `${formData.vehicleYear} ${formData.vehicleMake} ${formData.vehicleModel}`;
     }
-    
+
     // Handle date formatting - ensure proper ISO string format
     const formatDateForDb = (date: Date | undefined) => {
       if (!date) return null;
       return date instanceof Date ? date.toISOString() : null;
     };
-    
+
     return {
       // Map frontend camelCase to backend snake_case
       order_number: formData.orderNumber || null,
@@ -579,27 +579,27 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       vehicle_model: formData.vehicleModel || null,
       vehicle_info: vehicleInfo || null, // Primary consolidated field
       stock_number: formData.stockNumber || null,
-      
+
       // Order management fields
       order_type: formData.orderType || 'sales',
       status: formData.status || 'pending',
       priority: formData.priority || 'normal',
-      
+
       // Assignment fields - map selectedAssignedTo to database
       assigned_group_id: selectedAssignedTo || null,          // Use selectedAssignedTo for user assignment
       assigned_contact_id: formData.assignedContactId || null, // Keep for contact assignments
       salesperson: formData.salesperson || null,
-      
+
       // Date fields - due_date is primary, sla_deadline is secondary
       due_date: formatDateForDb(formData.dueDate),
       sla_deadline: formatDateForDb(formData.slaDeadline),
       scheduled_date: formatDateForDb(formData.scheduledDate),
       scheduled_time: formData.scheduledTime || null,
-      
+
       // Notes and additional info
       notes: formData.notes || null,
       internal_notes: formData.internalNotes || null,
-      
+
       // Related data
       dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
       services: selectedServices || [],
@@ -767,29 +767,29 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:max-h-[95vh] sm:w-[90vw] md:w-[85vw] sm:rounded-lg sm:border sm:mx-4"
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="order-modal-description"
       >
-        <DialogHeader className="p-4 sm:p-6 pb-0">
-          <DialogTitle className="text-lg sm:text-xl font-semibold">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+          <DialogTitle className="text-base sm:text-lg font-semibold">
             {order ? t('orders.edit') : t('orders.create')}
           </DialogTitle>
-          <div id="order-modal-description" className="text-sm text-muted-foreground">
+          <div id="order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
             {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
           </div>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(95vh-100px)] sm:max-h-[calc(95vh-120px)] px-4 sm:px-6">
-          <form onSubmit={handleSubmit} className="space-y-6 pb-6">
+        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Single Responsive Container */}
             <Card className="border-border">
-              <CardContent className="px-4 sm:px-6 pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-              
+              <CardContent className="p-3 sm:p-4">
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4">
+
                   {/* Column 1: Dealership & Assignment Information */}
-                  <div className="space-y-4">
-                    <div className="border-b border-border pb-2 mb-3">
-                      <h3 className="text-sm sm:text-base font-medium text-foreground">
+                  <div className="space-y-3">
+                    <div className="border-b border-border pb-1.5 mb-2">
+                      <h3 className="text-sm font-medium text-foreground">
                         {t('sales_orders.dealership')} & {t('sales_orders.assignment')}
                       </h3>
                     </div>
@@ -822,17 +822,17 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   <div>
                     <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
-                    <Select 
-                      value={selectedAssignedTo || ""} 
-                      onValueChange={handleAssignedToChange} 
+                    <Select
+                      value={selectedAssignedTo || ""}
+                      onValueChange={handleAssignedToChange}
                       disabled={loading || !selectedDealership}
                     >
                       <SelectTrigger className="border-input bg-background">
                         <SelectValue placeholder={
-                          !selectedDealership 
-                            ? t('sales_orders.select_dealership_first') 
-                            : loading 
-                              ? t('common.loading') 
+                          !selectedDealership
+                            ? t('sales_orders.select_dealership_first')
+                            : loading
+                              ? t('common.loading')
                               : t('sales_orders.select_assignee')
                         } />
                       </SelectTrigger>
@@ -846,10 +846,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </Select>
                   </div>
 
-                  <Separator />
+                  <Separator className="my-3" />
 
                   {/* Customer Information Section */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <Label className="text-sm font-medium text-foreground">{t('orders.customer_information')}</Label>
 
                     <div>
@@ -893,8 +893,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                     <div>
                       <Label htmlFor="priority">{t('orders.priority')}</Label>
-                      <Select 
-                        value={formData.priority || 'normal'} 
+                      <Select
+                        value={formData.priority || 'normal'}
                         onValueChange={(value) => handleInputChange('priority', value)}
                       >
                         <SelectTrigger className="border-input bg-background">
@@ -911,10 +911,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   {/* Column 2: Vehicle Information */}
-                  <div className="space-y-4">
-                    <div className="border-b border-border pb-2 mb-3">
+                  <div className="space-y-3">
+                    <div className="border-b border-border pb-1.5 mb-2">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                        <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
+                        <h3 className="text-sm font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
                         {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto">
                           <Zap className="w-3 h-3 mr-1" />
                           {t('sales_orders.vin_decoded_successfully')}
@@ -976,11 +976,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     )}
                   </div>
 
-                  <Separator />
+                  <Separator className="my-3" />
 
                    {/* Due Date & Time Section */}
-                   <div className="space-y-4">
-                     <Label className="text-base font-medium">{t('due_date.title')}</Label>
+                   <div className="space-y-3">
+                     <Label className="text-sm font-medium">{t('due_date.title')}</Label>
                      <div>
                        <DueDateTimePicker
                          value={formData.dueDate}
@@ -994,20 +994,20 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   {/* Column 3: Services & Notes */}
-                  <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-1">
-                    <div className="border-b border-border pb-2 mb-3">
-                      <h3 className="text-sm sm:text-base font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
+                  <div className="space-y-3 col-span-1 lg:col-span-2 xl:col-span-1">
+                    <div className="border-b border-border pb-1.5 mb-2">
+                      <h3 className="text-sm font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
                     </div>
                   <div>
                     <Label className="text-sm font-medium">
-                      {t('orders.services')} 
+                      {t('orders.services')}
                       {selectedDealership && assignedUsers.length > 0 && (
                         <span className="text-muted-foreground ml-1">
                           ({services.length} {t('orders.available')})
                         </span>
                       )}
                     </Label>
-                    
+
                     {!selectedDealership ? (
                       <div className="p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground">
                         {t('orders.selectDealershipFirst')}
@@ -1027,17 +1027,17 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                           ) : (
                             services.map((service: any) => (
                               <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
-                                <div className="flex items-start space-x-3 flex-1">
+                                <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
                                   <Checkbox
                                     id={service.id}
                                     checked={selectedServices.includes(service.id)}
                                     onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                                    className="mt-1"
+                                    className="mt-1 w-5 h-5"
                                   />
                                   <div className="flex-1 min-w-0">
-                                    <Label 
-                                      htmlFor={service.id} 
-                                      className="font-medium text-sm cursor-pointer"
+                                    <Label
+                                      htmlFor={service.id}
+                                      className="font-medium text-sm cursor-pointer block leading-relaxed"
                                     >
                                       {service.name}
                                     </Label>
@@ -1082,7 +1082,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </div>
                   )}
 
-                  <Separator />
+                  <Separator className="my-3" />
 
                   <div>
                     <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
@@ -1090,7 +1090,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       id="notes"
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
-                      rows={4}
+                      rows={3}
                       className="border-input bg-background resize-none"
                       placeholder={t('orders.notesPlaceholder')}
                     />
@@ -1100,49 +1100,47 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               </CardContent>
             </Card>
 
-            <Separator className="my-6" />
-
             {/* Hidden fields with default values for later editing in order details */}
             <div className="hidden">
-              <input 
-                type="hidden" 
-                name="salesperson" 
-                value={formData.salesperson || ''} 
+              <input
+                type="hidden"
+                name="salesperson"
+                value={formData.salesperson || ''}
                 onChange={(e) => handleInputChange('salesperson', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="internal_notes" 
-                value={formData.internalNotes || ''} 
+              <input
+                type="hidden"
+                name="internal_notes"
+                value={formData.internalNotes || ''}
                 onChange={(e) => handleInputChange('internalNotes', e.target.value)}
               />
-              <input 
-                type="hidden" 
-                name="sla_deadline" 
-                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''} 
+              <input
+                type="hidden"
+                name="sla_deadline"
+                value={formData.slaDeadline ? formData.slaDeadline.toISOString() : ''}
                 onChange={(e) => handleInputChange('slaDeadline', e.target.value ? new Date(e.target.value) : undefined)}
               />
-              <input 
-                type="hidden" 
-                name="scheduled_date" 
-                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''} 
+              <input
+                type="hidden"
+                name="scheduled_date"
+                value={formData.scheduledDate ? formData.scheduledDate.toISOString() : ''}
                 onChange={(e) => handleInputChange('scheduledDate', e.target.value ? new Date(e.target.value) : undefined)}
               />
-              <input 
-                type="hidden" 
-                name="scheduled_time" 
-                value={formData.scheduledTime || ''} 
+              <input
+                type="hidden"
+                name="scheduled_time"
+                value={formData.scheduledTime || ''}
                 onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
               />
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-border">
+            {/* Action Buttons - Sticky on mobile for better accessibility */}
+            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
+                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto min-h-[44px]"
               >
                 {t('common.action_buttons.cancel')}
               </Button>
@@ -1158,7 +1156,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   (requiresDueDate && !formData.dueDate) ||
                   selectedServices.length === 0
                 }
-                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
+                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
               >
                 {submitting ? (
                   <>
