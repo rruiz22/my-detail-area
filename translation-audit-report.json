@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 553,
-  "totalStrings": 5410,
-  "hardcodedStrings": 1253,
-  "translatedStrings": 4157,
+  "scannedFiles": 555,
+  "totalStrings": 5464,
+  "hardcodedStrings": 1248,
+  "translatedStrings": 4216,
   "issues": {
     "critical": [
       {
@@ -4102,220 +4102,200 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 42,
-            "context": "41: onEditVehicle?: (vehicleId: string) => void;\n42: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n43: }"
+            "line": 43,
+            "context": "42: onEditVehicle?: (vehicleId: string) => void;\n43: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n44: }"
           },
           {
             "text": "Table",
-            "line": 224,
-            "context": "223: onClick={() => setViewMode('table')}\n224: >\n225: Table"
+            "line": 225,
+            "context": "224: onClick={() => setViewMode('table')}\n225: >\n226: Table"
           },
           {
             "text": "Grid",
-            "line": 231,
-            "context": "230: onClick={() => setViewMode('grid')}\n231: >\n232: Grid"
+            "line": 232,
+            "context": "231: onClick={() => setViewMode('grid')}\n232: >\n233: Grid"
           },
           {
             "text": "Table",
-            "line": 437,
-            "context": "436: onClick={() => setViewMode('table')}\n437: >\n438: Table"
+            "line": 438,
+            "context": "437: onClick={() => setViewMode('table')}\n438: >\n439: Table"
           },
           {
             "text": "Grid",
-            "line": 444,
-            "context": "443: onClick={() => setViewMode('grid')}\n444: >\n445: Grid"
+            "line": 445,
+            "context": "444: onClick={() => setViewMode('grid')}\n445: >\n446: Grid"
           },
           {
             "text": "Workflow",
-            "line": 462,
-            "context": "461: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n462: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n463: <TableHead className=\"w-[100px] text-center py-2 bg-background\">"
+            "line": 463,
+            "context": "462: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n463: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n464: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
           },
           {
             "text": "In Process",
-            "line": 466,
-            "context": "465: <TooltipTrigger asChild>\n466: <span className=\"cursor-help\">In Process</span>\n467: </TooltipTrigger>"
+            "line": 467,
+            "context": "466: <TooltipTrigger asChild>\n467: <span className=\"cursor-help\">In Process</span>\n468: </TooltipTrigger>"
           },
           {
             "text": "Time in Process",
-            "line": 469,
-            "context": "468: <TooltipContent>\n469: <p className=\"font-semibold\">Time in Process</p>\n470: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>"
+            "line": 470,
+            "context": "469: <TooltipContent>\n470: <p className=\"font-semibold\">Time in Process</p>\n471: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>"
           },
           {
             "text": "Total time from intake to current step",
-            "line": 470,
-            "context": "469: <p className=\"font-semibold\">Time in Process</p>\n470: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>\n471: </TooltipContent>"
+            "line": 471,
+            "context": "470: <p className=\"font-semibold\">Time in Process</p>\n471: <p className=\"text-xs text-muted-foreground\">Total time from intake to current step</p>\n472: </TooltipContent>"
           },
           {
             "text": "Step Time",
-            "line": 477,
-            "context": "476: <TooltipTrigger asChild>\n477: <span className=\"cursor-help\">Step Time</span>\n478: </TooltipTrigger>"
+            "line": 478,
+            "context": "477: <TooltipTrigger asChild>\n478: <span className=\"cursor-help\">Step Time</span>\n479: </TooltipTrigger>"
           },
           {
             "text": "Current Step Time",
-            "line": 480,
-            "context": "479: <TooltipContent>\n480: <p className=\"font-semibold\">Current Step Time</p>\n481: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>"
+            "line": 481,
+            "context": "480: <TooltipContent>\n481: <p className=\"font-semibold\">Current Step Time</p>\n482: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>"
           },
           {
             "text": "Time spent in current step",
-            "line": 481,
-            "context": "480: <p className=\"font-semibold\">Current Step Time</p>\n481: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>\n482: </TooltipContent>"
-          },
-          {
-            "text": "To Frontline",
-            "line": 488,
-            "context": "487: <TooltipTrigger asChild>\n488: <span className=\"cursor-help\">To Frontline</span>\n489: </TooltipTrigger>"
-          },
-          {
-            "text": "Days to Frontline",
-            "line": 491,
-            "context": "490: <TooltipContent>\n491: <p className=\"font-semibold\">Days to Frontline</p>\n492: <p className=\"text-xs text-muted-foreground\">Estimated days remaining until frontline ready</p>"
-          },
-          {
-            "text": "Estimated days remaining until frontline ready",
-            "line": 492,
-            "context": "491: <p className=\"font-semibold\">Days to Frontline</p>\n492: <p className=\"text-xs text-muted-foreground\">Estimated days remaining until frontline ready</p>\n493: </TooltipContent>"
-          },
-          {
-            "text": "Progress",
-            "line": 497,
-            "context": "496: <TableHead className=\"w-[100px] text-center py-2 bg-background\">{t('get_ready.table.priority')}</TableHead>\n497: <TableHead className=\"w-[120px] text-center py-2 bg-background\">Progress</TableHead>\n498: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>"
-          },
-          {
-            "text": "Assigned",
-            "line": 498,
-            "context": "497: <TableHead className=\"w-[120px] text-center py-2 bg-background\">Progress</TableHead>\n498: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>\n499: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>"
+            "line": 482,
+            "context": "481: <p className=\"font-semibold\">Current Step Time</p>\n482: <p className=\"text-xs text-muted-foreground\">Time spent in current step</p>\n483: </TooltipContent>"
           },
           {
             "text": "Actions",
-            "line": 499,
-            "context": "498: <TableHead className=\"w-[130px] text-center py-2 bg-background\">Assigned</TableHead>\n499: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n500: </TableRow>"
+            "line": 488,
+            "context": "487: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress_time')}</TableHead>\n488: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n489: </TableRow>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 205,
+            "line": 206,
             "exists": true
           },
           {
             "key": "get_ready.actions.actions",
-            "line": 282,
+            "line": 283,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 285,
+            "line": 286,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 289,
+            "line": 290,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 297,
+            "line": 298,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 307,
+            "line": 308,
             "exists": false
           },
           {
             "key": "get_ready.actions.change_step",
-            "line": 342,
+            "line": 343,
             "exists": true
           },
           {
             "key": "get_ready.actions.advance_step",
-            "line": 382,
+            "line": 383,
             "exists": true
           },
           {
             "key": "get_ready.table.click_to_view",
-            "line": 429,
+            "line": 430,
             "exists": true
           },
           {
             "key": "get_ready.table.image",
-            "line": 458,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.stock",
             "line": 459,
             "exists": true
           },
           {
-            "key": "get_ready.table.vehicle",
+            "key": "get_ready.table.stock",
             "line": 460,
             "exists": true
           },
           {
-            "key": "get_ready.table.step",
+            "key": "get_ready.table.vehicle",
             "line": 461,
             "exists": true
           },
           {
+            "key": "get_ready.table.step",
+            "line": 462,
+            "exists": true
+          },
+          {
             "key": "get_ready.table.priority",
-            "line": 496,
+            "line": 486,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.progress_time",
+            "line": 487,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.title",
-            "line": 509,
+            "line": 498,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 512,
+            "line": 501,
             "exists": true
           },
           {
             "key": "get_ready.actions.change_step",
-            "line": 577,
+            "line": 568,
             "exists": true
           },
           {
             "key": "get_ready.actions.advance_step",
-            "line": 617,
+            "line": 608,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 627,
+            "line": 619,
             "exists": false
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 679,
+            "line": 675,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 691,
+            "line": 687,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 703,
+            "line": 699,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 307,
-            "context": "306: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n307: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n308: </Badge>"
+            "line": 308,
+            "context": "307: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n308: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n309: </Badge>"
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 627,
-            "context": "626: <Badge variant=\"outline\" className={cn(\"text-xs h-5\", getWorkflowColor(vehicle.workflow_type))}>\n627: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n628: </Badge>"
+            "line": 619,
+            "context": "618: <Badge variant=\"outline\" className={cn(\"text-xs h-5\", getWorkflowColor(vehicle.workflow_type))}>\n619: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n620: </Badge>"
           }
         ],
-        "coverage": 55,
+        "coverage": 64,
         "severity": "high"
       },
       {
@@ -27920,27 +27900,27 @@
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 789,
+            "line": 794,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 809,
+            "line": 815,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 809,
+            "line": 815,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 812,
+            "line": 818,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 812,
+            "line": 818,
             "exists": true
           }
         ],
@@ -28973,27 +28953,27 @@
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1147,
+            "line": 1145,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1166,
+            "line": 1164,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1166,
+            "line": 1164,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1169,
+            "line": 1167,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1169,
+            "line": 1167,
             "exists": true
           }
         ],
@@ -29001,12 +28981,12 @@
           {
             "key": "orders.edit_order_description",
             "line": 778,
-            "context": "777: <div id=\"order-modal-description\" className=\"text-sm text-muted-foreground\">\n778: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n779: </div>"
+            "context": "777: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n778: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n779: </div>"
           },
           {
             "key": "orders.create_order_description",
             "line": 778,
-            "context": "777: <div id=\"order-modal-description\" className=\"text-sm text-muted-foreground\">\n778: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n779: </div>"
+            "context": "777: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n778: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n779: </div>"
           },
           {
             "key": "dealerships.auto_selected",
@@ -30448,17 +30428,17 @@
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 662,
+            "line": 667,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 670,
+            "line": 675,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 670,
+            "line": 675,
             "exists": true
           }
         ],
@@ -35726,130 +35706,95 @@
         "translationCalls": [
           {
             "key": "get_ready.no_vehicles.title",
-            "line": 77,
+            "line": 78,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 80,
+            "line": 81,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.title",
-            "line": 94,
+            "line": 95,
             "exists": false
           },
           {
             "key": "get_ready.vehicle_list.vehicles",
-            "line": 97,
+            "line": 98,
             "exists": false
           },
           {
             "key": "get_ready.table.click_to_view",
-            "line": 101,
+            "line": 102,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 108,
+            "line": 109,
             "exists": true
           },
           {
             "key": "common.print",
-            "line": 113,
+            "line": 114,
             "exists": false
           },
           {
-            "key": "get_ready.table.step",
-            "line": 122,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.image",
-            "line": 123,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.stock",
+            "key": "get_ready.table.vehicle_stock",
             "line": 124,
             "exists": true
           },
           {
-            "key": "get_ready.table.vehicle",
+            "key": "get_ready.table.step_workflow",
             "line": 125,
             "exists": true
           },
           {
-            "key": "get_ready.table.media",
+            "key": "get_ready.table.progress_time",
             "line": 126,
             "exists": true
           },
           {
-            "key": "get_ready.table.work_items",
+            "key": "get_ready.table.priority",
             "line": 127,
             "exists": true
           },
           {
-            "key": "get_ready.table.days_in_step",
+            "key": "common.actions",
             "line": 128,
             "exists": true
           },
           {
-            "key": "get_ready.table.notes",
-            "line": 129,
+            "key": "get_ready.table.unassigned",
+            "line": 228,
             "exists": true
-          },
-          {
-            "key": "get_ready.table.priority",
-            "line": 130,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.no_work_items",
-            "line": 216,
-            "exists": false
-          },
-          {
-            "key": "get_ready.table.no_notes",
-            "line": 230,
-            "exists": false
           },
           {
             "key": "common.priority.${vehicle.priority}",
-            "line": 240,
+            "line": 239,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.vehicle_list.title",
-            "line": 94,
-            "context": "93: <h3 className=\"font-semibold text-sm text-foreground\">\n94: {t('get_ready.vehicle_list.title', 'Vehicle List')}\n95: </h3>"
+            "line": 95,
+            "context": "94: <h3 className=\"font-semibold text-sm text-foreground\">\n95: {t('get_ready.vehicle_list.title', 'Vehicle List')}\n96: </h3>"
           },
           {
             "key": "get_ready.vehicle_list.vehicles",
-            "line": 97,
-            "context": "96: <Badge variant=\"outline\" className=\"text-xs\">\n97: {vehicles?.length || 0} {t('get_ready.vehicle_list.vehicles', 'vehicles')}\n98: </Badge>"
+            "line": 98,
+            "context": "97: <Badge variant=\"outline\" className=\"text-xs\">\n98: {vehicles?.length || 0} {t('get_ready.vehicle_list.vehicles', 'vehicles')}\n99: </Badge>"
           },
           {
             "key": "common.print",
-            "line": 113,
-            "context": "112: <Printer className=\"h-4 w-4 mr-2\" />\n113: {t('common.print', 'Print')}\n114: </Button>"
-          },
-          {
-            "key": "get_ready.table.no_work_items",
-            "line": 216,
-            "context": "215: <span className=\"text-xs text-muted-foreground\">\n216: {t('get_ready.table.no_work_items')}\n217: </span>"
-          },
-          {
-            "key": "get_ready.table.no_notes",
-            "line": 230,
-            "context": "229: <div className=\"text-xs text-muted-foreground line-clamp-1 max-w-32\">\n230: {vehicle.notes_preview || t('get_ready.table.no_notes')}\n231: </div>"
+            "line": 114,
+            "context": "113: <Printer className=\"h-4 w-4 mr-2\" />\n114: {t('common.print', 'Print')}\n115: </Button>"
           },
           {
             "key": "common.priority.${vehicle.priority}",
-            "line": 240,
-            "context": "239: >\n240: {t(`common.priority.${vehicle.priority}`)}\n241: </Badge>"
+            "line": 239,
+            "context": "238: >\n239: {t(`common.priority.${vehicle.priority}`)}\n240: </Badge>"
           }
         ],
         "coverage": 100,
@@ -36047,35 +35992,35 @@
           },
           {
             "key": "common.actions.cancel",
-            "line": 454,
+            "line": 456,
             "exists": false
           },
           {
             "key": "common.actions.update",
-            "line": 459,
+            "line": 465,
             "exists": false
           },
           {
             "key": "common.actions.create",
-            "line": 460,
+            "line": 466,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.actions.cancel",
-            "line": 454,
-            "context": "453: >\n454: {t('common.actions.cancel')}\n455: </Button>"
+            "line": 456,
+            "context": "455: >\n456: {t('common.actions.cancel')}\n457: </Button>"
           },
           {
             "key": "common.actions.update",
-            "line": 459,
-            "context": "458: {isEditMode\n459: ? t('common.actions.update')\n460: : t('common.actions.create')}"
+            "line": 465,
+            "context": "464: {isEditMode\n465: ? t('common.actions.update')\n466: : t('common.actions.create')}"
           },
           {
             "key": "common.actions.create",
-            "line": 460,
-            "context": "459: ? t('common.actions.update')\n460: : t('common.actions.create')}\n461: </Button>"
+            "line": 466,
+            "context": "465: ? t('common.actions.update')\n466: : t('common.actions.create')}\n467: </Button>"
           }
         ],
         "coverage": 90,
@@ -36086,84 +36031,79 @@
         "hardcodedStrings": [
           {
             "text": "Current Step",
-            "line": 188,
-            "context": "187: <div>\n188: <span className=\"text-xs text-muted-foreground block\">Current Step</span>\n189: <div className=\"flex items-baseline gap-1\">"
+            "line": 191,
+            "context": "190: <div>\n191: <span className=\"text-xs text-muted-foreground block\">Current Step</span>\n192: <div className=\"flex items-baseline gap-1\">"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.detail_panel.no_selection.title",
-            "line": 72,
-            "exists": true
-          },
-          {
-            "key": "get_ready.detail_panel.no_selection.description",
             "line": 75,
             "exists": true
           },
           {
-            "key": "get_ready.detail_panel.error.title",
-            "line": 106,
+            "key": "get_ready.detail_panel.no_selection.description",
+            "line": 78,
             "exists": true
           },
           {
-            "key": "get_ready.detail_panel.error.description",
+            "key": "get_ready.detail_panel.error.title",
             "line": 109,
             "exists": true
           },
           {
-            "key": "get_ready.detail_panel.close",
+            "key": "get_ready.detail_panel.error.description",
             "line": 112,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.close",
-            "line": 134,
+            "line": 115,
+            "exists": true
+          },
+          {
+            "key": "get_ready.detail_panel.close",
+            "line": 137,
             "exists": true
           },
           {
             "key": "get_ready.time_tracking.time_in_process",
-            "line": 163,
+            "line": 166,
             "exists": true
           },
           {
             "key": "get_ready.tabs.work_items",
-            "line": 174,
+            "line": 177,
             "exists": true
           },
           {
             "key": "get_ready.tabs.work_items",
-            "line": 223,
+            "line": 226,
             "exists": true
           },
           {
             "key": "get_ready.tabs.media",
-            "line": 232,
+            "line": 235,
             "exists": true
           },
           {
             "key": "get_ready.tabs.notes",
-            "line": 241,
+            "line": 244,
             "exists": true
           },
           {
             "key": "get_ready.tabs.vendors",
-            "line": 250,
+            "line": 253,
             "exists": true
           },
           {
             "key": "get_ready.tabs.timeline",
-            "line": 259,
+            "line": 262,
             "exists": true
           },
           {
             "key": "get_ready.tabs.appraisal",
-            "line": 268,
-            "exists": true
-          },
-          {
-            "key": "get_ready.notes.coming_soon",
-            "line": 290,
+            "line": 271,
             "exists": true
           },
           {
@@ -37372,6 +37312,371 @@
             "key": "common.completed",
             "line": 226,
             "context": "225: <div className=\"text-xs text-muted-foreground\">\n226: {completedCount}/{vendorWorkItems.length} {t('common.completed')}\n227: </div>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "get_ready.notes.error",
+            "line": 90,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.content_required",
+            "line": 91,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.created",
+            "line": 106,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.created_success",
+            "line": 107,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 115,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.create_error",
+            "line": 116,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.updated",
+            "line": 137,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.updated_success",
+            "line": 138,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 145,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.update_error",
+            "line": 146,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.deleted",
+            "line": 163,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.deleted_success",
+            "line": 164,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 171,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.delete_error",
+            "line": 172,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.unpinned",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.pinned",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.unpinned_success",
+            "line": 190,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.pinned_success",
+            "line": 191,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 195,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.pin_error",
+            "line": 196,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.issue",
+            "line": 223,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.important",
+            "line": 229,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.observation",
+            "line": 235,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.reminder",
+            "line": 241,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.general",
+            "line": 247,
+            "exists": true
+          },
+          {
+            "key": "get_ready.tabs.notes",
+            "line": 265,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.no_notes",
+            "line": 268,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.notes_count",
+            "line": 269,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.add_note",
+            "line": 274,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.empty_state",
+            "line": 284,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.add_first_note",
+            "line": 288,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.pinned",
+            "line": 321,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.unpin",
+            "line": 341,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.pin",
+            "line": 346,
+            "exists": true
+          },
+          {
+            "key": "common.edit",
+            "line": 352,
+            "exists": false
+          },
+          {
+            "key": "common.delete",
+            "line": 360,
+            "exists": false
+          },
+          {
+            "key": "get_ready.notes.edited",
+            "line": 385,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.add_note",
+            "line": 402,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.add_note_description",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.note_type",
+            "line": 408,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.general",
+            "line": 414,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.issue",
+            "line": 415,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.observation",
+            "line": 416,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.reminder",
+            "line": 417,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.important",
+            "line": 418,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.content",
+            "line": 424,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.content_placeholder",
+            "line": 429,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 438,
+            "exists": false
+          },
+          {
+            "key": "get_ready.notes.create",
+            "line": 442,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.edit_note",
+            "line": 452,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.edit_note_description",
+            "line": 453,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.note_type",
+            "line": 458,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.general",
+            "line": 464,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.issue",
+            "line": 465,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.observation",
+            "line": 466,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.reminder",
+            "line": 467,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.types.important",
+            "line": 468,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.content",
+            "line": 474,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 487,
+            "exists": false
+          },
+          {
+            "key": "common.save",
+            "line": 491,
+            "exists": false
+          },
+          {
+            "key": "get_ready.notes.delete_note",
+            "line": 501,
+            "exists": true
+          },
+          {
+            "key": "get_ready.notes.delete_note_confirmation",
+            "line": 502,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 507,
+            "exists": false
+          },
+          {
+            "key": "common.delete",
+            "line": 511,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.edit",
+            "line": 352,
+            "context": "351: <Edit className=\"h-4 w-4 mr-2\" />\n352: {t('common.edit')}\n353: </DropdownMenuItem>"
+          },
+          {
+            "key": "common.delete",
+            "line": 360,
+            "context": "359: <Trash2 className=\"h-4 w-4 mr-2\" />\n360: {t('common.delete')}\n361: </DropdownMenuItem>"
+          },
+          {
+            "key": "common.cancel",
+            "line": 438,
+            "context": "437: <Button variant=\"outline\" onClick={() => setCreateModalOpen(false)}>\n438: {t('common.cancel')}\n439: </Button>"
+          },
+          {
+            "key": "common.cancel",
+            "line": 487,
+            "context": "486: <Button variant=\"outline\" onClick={() => setEditModalOpen(false)}>\n487: {t('common.cancel')}\n488: </Button>"
+          },
+          {
+            "key": "common.save",
+            "line": 491,
+            "context": "490: {updateNote.isPending && <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />}\n491: {t('common.save')}\n492: </Button>"
+          },
+          {
+            "key": "common.cancel",
+            "line": 507,
+            "context": "506: <Button variant=\"outline\" onClick={() => setDeleteModalOpen(false)}>\n507: {t('common.cancel')}\n508: </Button>"
+          },
+          {
+            "key": "common.delete",
+            "line": 511,
+            "context": "510: {deleteNote.isPending && <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />}\n511: {t('common.delete')}\n512: </Button>"
           }
         ],
         "coverage": 100,
@@ -42417,7 +42722,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "279 Component components need translation",
+      "description": "280 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -42430,7 +42735,6 @@
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
         "src\\components\\invitations\\InvitationManagement.tsx",
-        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
@@ -42441,6 +42745,7 @@
         "src\\components\\performance\\PerformanceMonitor.tsx",
         "src\\components\\orders\\InstructionsBlock.tsx",
         "src\\components\\management\\DealershipManagementSection.tsx",
+        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\pages\\PublicReconData.tsx",
         "src\\hooks\\usePrintOrder.ts",
         "src\\components\\scanner\\enhanced\\VinStatistics.tsx",
@@ -42680,6 +42985,7 @@
         "src\\components\\get-ready\\vendors\\VendorList.tsx",
         "src\\components\\get-ready\\tabs\\VehicleWorkItemsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleVendorsTab.tsx",
+        "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
         "src\\components\\dealer\\DealerOverview.tsx",
@@ -42704,7 +43010,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2424 translation keys are referenced but missing",
+      "description": "2429 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "122 hours"
     }
