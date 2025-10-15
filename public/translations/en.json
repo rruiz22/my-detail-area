@@ -429,6 +429,7 @@
     "sales_orders": "Sales Orders",
     "service_orders": "Service Orders",
     "recon_orders": "Recon Orders",
+    "car_wash": "Car Wash",
     "user_management": {
       "title": "Users & Groups Management",
       "manage_description": "Manage users, roles, and group assignments",
@@ -1057,6 +1058,7 @@
     "add_dealership": "Add Dealership",
     "dealership_list": "Dealerships",
     "dealership": "Dealership",
+    "auto_selected": "Auto-selected",
     "filters": "Filters",
     "search_placeholder": "Search dealerships...",
     "no_location": "No location set",
@@ -2454,6 +2456,20 @@
       "leadsLast7Days": "Leads (Last 7 Days)",
       "leadsTotal": "Total Leads",
       "rawData": "Raw Data"
+    },
+    "autopop": {
+      "searchVehicle": "Search vehicle by stock, VIN, make or model",
+      "localInventory": "Local Inventory",
+      "vinDecoded": "VIN Decoded",
+      "useVehicle": "Use this vehicle",
+      "noResults": "No vehicles found",
+      "cleared": "Vehicle cleared - you can now enter manually",
+      "autoPopulated": "Auto-populated from",
+      "confidence": {
+        "high": "High Match",
+        "medium": "Medium Match",
+        "low": "Low Match"
+      }
     },
     "upload": {
       "title": "Upload Inventory",

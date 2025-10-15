@@ -11,14 +11,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 interface OrderFormData {
   // Order identification
@@ -96,6 +99,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
   const [selectedDealership, setSelectedDealership] = useState('');
   const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleSearchResult | null>(null);
   const [dealerships, setDealerships] = useState([]);
   const [assignedUsers, setAssignedUsers] = useState([]);
   const [services, setServices] = useState([]);
@@ -199,6 +203,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         setSelectedServices([]);
         setSelectedDealership('');
         setSelectedAssignedTo('');
+        setSelectedVehicle(null);
+        setVinDecoded(false);
       }
     }
   }, [order, open]);
@@ -376,6 +382,35 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       ...prev,
       assignedGroupId: userId
     }));
+  };
+
+  const handleVehicleSelect = (result: VehicleSearchResult) => {
+    setSelectedVehicle(result);
+
+    setFormData(prev => ({
+      ...prev,
+      vehicleVin: result.data.vin || '',
+      vehicleYear: String(result.data.year || ''),
+      vehicleMake: result.data.make || '',
+      vehicleModel: result.data.model || '',
+      vehicleInfo: result.data.vehicleInfo || `${result.data.year || ''} ${result.data.make || ''} ${result.data.model || ''}`.trim()
+    }));
+
+    setVinDecoded(true);
+
+    if (result.source === 'inventory') {
+      const details = [];
+      if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);
+      if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);
+      if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);
+
+      toast.success(
+        `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,
+        { duration: 4000 }
+      );
+    } else if (result.source === 'vin_api') {
+      toast.success(t('stock.autopop.vinDecoded'), { duration: 3000 });
+    }
   };
 
   const handleVinChange = async (vin: string) => {
@@ -634,6 +669,21 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* Vehicle Search & Auto-Population */}
+                  {!order && (
+                    <>
+                      <VehicleAutoPopulationField
+                        dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
+                        onVehicleSelect={handleVehicleSelect}
+                        selectedVehicle={selectedVehicle}
+                        label={t('stock.autopop.searchVehicle')}
+                        placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
+                      />
+
+                      {selectedVehicle && <Separator className="my-3" />}
+                    </>
+                  )}
+
                   <div>
                     <Label htmlFor="vehicleVin" className="flex items-center gap-2">
                       {t('orders.vin')} <span className="text-red-500">*</span>
@@ -645,13 +695,19 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                       value={formData.vehicleVin}
                       onChange={(e) => handleVinChange(e.target.value)}
                       onVinScanned={handleVinChange}
-                      className="border-input bg-background font-mono"
+                      className={selectedVehicle ? "border-input bg-muted/30 font-mono" : "border-input bg-background font-mono"}
+                      disabled={!!selectedVehicle}
                     />
                     {vinError && (
                       <div className="flex items-center gap-1 text-sm text-destructive mt-1">
                         <AlertCircle className="w-3 h-3" />
                         {vinError}
                       </div>
+                    )}
+                    {selectedVehicle && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
+                      </p>
                     )}
                   </div>
 
@@ -662,9 +718,15 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
                       id="vehicleInfo"
                       value={formData.vehicleInfo}
                       onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
-                      className="border-input bg-background"
+                      className={selectedVehicle ? "border-input bg-muted/30" : "border-input bg-background"}
                       placeholder="2025 Honda Accord EX-L"
+                      readOnly={!!selectedVehicle}
                     />
+                    {selectedVehicle && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
+                      </p>
+                    )}
                   </div>
 
                   <Separator />

@@ -70,8 +70,8 @@ const SEPARATORS = ['\t', ',', '|', ';', ':'];
 const COLUMN_MAPPINGS: Record<string, string[]> = {
   year: ['year', 'año', 'model year', 'vehicle year', 'yr'],
   make: ['make', 'marca', 'manufacturer', 'mfg', 'brand'],
-  model: ['model', 'modelo', 'vehicle model', 'model name'],
-  trim: ['trim', 'trim level', 'trim_level', 'variant'],
+  model: ['model', 'modelo', 'vehicle model', 'model name', 'series', 'base model'],
+  trim: ['trim', 'trim level', 'trim_level', 'variant', 'style', 'trim style'],
   objective: ['objective', 'objetivo', 'sales status', 'inventory objective', 'status objective'],
   drivetrain: ['drivetrain', 'drive train', 'drive_train', 'transmission', 'trans'],
   segment: ['segment', 'category', 'type', 'class'],
@@ -109,7 +109,7 @@ export function detectSeparator(csvContent: string): string {
 
     lines.forEach((line, index) => {
       const parts = line.split(separator);
-      
+
       if (index === 0) {
         firstLineCount = parts.length;
         // Bonus for having reasonable number of columns (5-50)
@@ -122,13 +122,13 @@ export function detectSeparator(csvContent: string): string {
           consistency += 1;
         }
       }
-      
+
       // Bonus for parts that look like headers or data
       parts.forEach(part => {
         const trimmed = part.trim();
         if (trimmed.length > 0) {
           score += 1;
-          
+
           // Bonus for common header patterns
           if (index === 0 && /^[a-zA-Z][a-zA-Z\s()0-9]*$/.test(trimmed)) {
             score += 2;
@@ -157,17 +157,17 @@ export function detectSeparator(csvContent: string): string {
  */
 export function mapColumnToField(columnName: string): string | null {
   const normalized = columnName.toLowerCase().trim();
-  
+
   for (const [field, variations] of Object.entries(COLUMN_MAPPINGS)) {
-    if (variations.some(variation => 
-      normalized === variation || 
+    if (variations.some(variation =>
+      normalized === variation ||
       normalized.includes(variation) ||
       variation.includes(normalized)
     )) {
       return field;
     }
   }
-  
+
   return null;
 }
 
@@ -177,14 +177,14 @@ export function mapColumnToField(columnName: string): string | null {
 export function parseCSV(csvContent: string): CSVParseResult {
   const separator = detectSeparator(csvContent);
   const lines = csvContent.split('\n').filter(line => line.trim());
-  
+
   if (lines.length === 0) {
     throw new Error('CSV file is empty');
   }
 
   const headers = lines[0].split(separator).map(h => h.trim());
   const rows = lines.slice(1).map(line => line.split(separator).map(cell => cell.trim()));
-  
+
   // Map detected columns to our standard fields
   const detectedColumns: Record<string, string> = {};
   headers.forEach(header => {
@@ -235,14 +235,14 @@ export function extractFileTimestamp(filename: string): Date | null {
         } else if (match.length === 4) {
           // Date components
           const [, part1, part2, part3] = match;
-          
+
           // Try different date interpretations
           const attempts = [
             new Date(parseInt(part1), parseInt(part2) - 1, parseInt(part3)), // YYYY-MM-DD
             new Date(parseInt(part3), parseInt(part1) - 1, parseInt(part2)), // MM-DD-YYYY
             new Date(parseInt(part3), parseInt(part2) - 1, parseInt(part1))  // DD-MM-YYYY
           ];
-          
+
           for (const date of attempts) {
             if (!isNaN(date.getTime()) && date.getFullYear() > 2000 && date.getFullYear() < 2100) {
               return date;
@@ -254,7 +254,7 @@ export function extractFileTimestamp(filename: string): Date | null {
       }
     }
   }
-  
+
   return null;
 }
 
@@ -262,12 +262,12 @@ export function extractFileTimestamp(filename: string): Date | null {
  * Processes vehicle data from parsed CSV with detailed logging
  */
 export function processVehicleData(
-  parseResult: CSVParseResult, 
+  parseResult: CSVParseResult,
   dealerId: number
 ): VehicleProcessingResult {
   const logs: ProcessingLog[] = [];
   const vehicles: VehicleData[] = [];
-  
+
   const stats = {
     processed: 0,
     valid: 0,
@@ -304,8 +304,6 @@ export function processVehicleData(
 
     let hasRequiredFields = 0;
     let hasMissingRequired = false;
-    const modelParts: string[] = [];
-    const trimParts: string[] = [];
 
     // Process each column
     headers.forEach((header, columnIndex) => {
@@ -313,7 +311,7 @@ export function processVehicleData(
       if (!value) return;
 
       const mappedField = mapColumnToField(header);
-      
+
       if (mappedField) {
         // Process known fields
         switch (mappedField) {
@@ -329,11 +327,9 @@ export function processVehicleData(
             break;
           case 'model':
             vehicle.model = value;
-            modelParts.push(value);
             break;
           case 'trim':
             vehicle.trim = value;
-            trimParts.push(value);
             break;
           case 'objective':
             vehicle.objective = value;
@@ -422,14 +418,6 @@ export function processVehicleData(
       }
     });
 
-    // Combine model and trim for full model name
-    if (modelParts.length > 0 || trimParts.length > 0) {
-      const combinedModel = [...modelParts, ...trimParts].filter(Boolean).join(' ');
-      if (combinedModel) {
-        vehicle.model = combinedModel;
-      }
-    }
-
     // Validate required fields
     if (hasRequiredFields >= 2) { // stock_number AND vin
       vehicles.push(vehicle);
@@ -441,7 +429,7 @@ export function processVehicleData(
     } else {
       stats.invalid++;
       hasMissingRequired = true;
-      
+
       if (!vehicle.stock_number && !vehicle.vin) {
         stats.missingRequired++;
         addLog('error', `Row ${i + 1}: Missing both stock_number and VIN`);

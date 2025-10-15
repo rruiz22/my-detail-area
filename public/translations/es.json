@@ -423,6 +423,7 @@
     "sales_orders": "Órdenes de Ventas",
     "service_orders": "Órdenes de Servicio",
     "recon_orders": "Órdenes de Reacondicionamiento",
+    "car_wash": "Lavado de Autos",
     "user_management": {
       "title": "Gestión de Usuarios y Grupos",
       "manage_description": "Gestionar usuarios, roles y asignaciones de grupos",
@@ -793,6 +794,7 @@
   "dealerships": {
     "title": "Concesionarios",
     "manage_description": "Gestionar concesionarios, sus contactos y usuarios",
+    "auto_selected": "Auto-seleccionado",
     "show_stats": "Mostrar Estadísticas",
     "hide_stats": "Ocultar Estadísticas",
     "add_new": "Agregar Concesionario",
@@ -2218,6 +2220,20 @@
       "leadsLast7Days": "Leads (Últimos 7 Días)",
       "leadsTotal": "Total de Leads",
       "rawData": "Datos Sin Procesar"
+    },
+    "autopop": {
+      "searchVehicle": "Buscar vehículo por stock, VIN, marca o modelo",
+      "localInventory": "Inventario Local",
+      "vinDecoded": "VIN Decodificado",
+      "useVehicle": "Usar este vehículo",
+      "noResults": "No se encontraron vehículos",
+      "cleared": "Vehículo eliminado - ahora puedes ingresar manualmente",
+      "autoPopulated": "Auto-completado desde",
+      "confidence": {
+        "high": "Alta Coincidencia",
+        "medium": "Coincidencia Media",
+        "low": "Baja Coincidencia"
+      }
     },
     "upload": {
       "title": "Subir Inventario",

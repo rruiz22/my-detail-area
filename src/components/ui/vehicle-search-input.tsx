@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Loader2, Car, Zap } from 'lucide-react';
+import { Search, Loader2, Car, Zap, Image as ImageIcon, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useVehicleAutoPopulation, VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 
 interface VehicleSearchInputProps {
@@ -27,8 +28,11 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
   const [results, setResults] = useState<VehicleSearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const lastSearchQuery = useRef<string>('');
+  const searchInProgress = useRef<boolean>(false);
 
   const { searchVehicle, loading } = useVehicleAutoPopulation(dealerId);
 
@@ -38,14 +42,23 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
 
   useEffect(() => {
     const timeoutId = setTimeout(async () => {
-      if (query.length >= 2) {
-        const searchResults = await searchVehicle(query);
-        setResults(searchResults);
-        setIsOpen(searchResults.length > 0);
-        setSelectedIndex(-1);
-      } else {
+      // Avoid duplicate searches and searches while one is in progress
+      if (query.length >= 2 && query !== lastSearchQuery.current && !searchInProgress.current) {
+        searchInProgress.current = true;
+        lastSearchQuery.current = query;
+
+        try {
+          const searchResults = await searchVehicle(query);
+          setResults(searchResults);
+          setIsOpen(searchResults.length > 0);
+          setSelectedIndex(-1);
+        } finally {
+          searchInProgress.current = false;
+        }
+      } else if (query.length < 2) {
         setResults([]);
         setIsOpen(false);
+        lastSearchQuery.current = '';
       }
     }, 300);
 
@@ -150,7 +163,40 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                   }`}
                   onClick={() => handleResultSelect(result)}
                 >
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    {/* Vehicle Thumbnail */}
+                    {result.data.imageUrl ? (
+                      <div
+                        className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-border bg-background cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedImage(result.data.imageUrl!);
+                        }}
+                      >
+                        <img
+                          src={result.data.imageUrl}
+                          alt={result.preview?.title || 'Vehicle'}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            if (e.currentTarget.parentElement) {
+                              e.currentTarget.parentElement.innerHTML = `
+                                <div class="w-full h-full flex items-center justify-center bg-muted">
+                                  <svg class="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                </div>
+                              `;
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex-shrink-0 w-16 h-16 rounded-md border border-border bg-muted flex items-center justify-center">
+                        <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                    )}
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         {getSourceIcon(result.source)}
@@ -158,16 +204,10 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                           {result.preview?.title}
                         </span>
                       </div>
-                      
+
                       {result.preview?.subtitle && (
                         <p className="text-sm text-muted-foreground truncate">
                           {result.preview.subtitle}
-                        </p>
-                      )}
-                      
-                      {result.data.price && (
-                        <p className="text-sm font-medium text-foreground mt-1">
-                          ${result.data.price.toLocaleString()}
                         </p>
                       )}
                     </div>
@@ -217,6 +257,32 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
           </CardContent>
         </Card>
       )}
+
+      {/* Image Expansion Modal */}
+      <Dialog open={!!expandedImage} onOpenChange={() => setExpandedImage(null)}>
+        <DialogContent className="max-w-4xl p-0" aria-describedby="vehicle-image-description">
+          <div className="relative">
+            <span id="vehicle-image-description" className="sr-only">
+              {t('stock.vehicle_image', 'Vehicle image preview')}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setExpandedImage(null)}
+              className="absolute top-2 right-2 z-10 h-8 w-8 p-0 bg-background/80 hover:bg-background"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            {expandedImage && (
+              <img
+                src={expandedImage}
+                alt="Vehicle"
+                className="w-full h-auto max-h-[80vh] object-contain"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -37,7 +37,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <DialogTitle className="text-2xl font-bold">
-                  {vehicle.year} {vehicle.make} {vehicle.model || `${vehicle.raw_data?.Model || ''} ${vehicle.raw_data?.Trim || ''}`.trim()}
+                  {vehicle.year} {vehicle.make} {vehicle.model}
                 </DialogTitle>
                 <p className="text-muted-foreground">
                   {t('stock.vehicleDetails.stockNumber')}: {vehicle.stock_number} | VIN: {vehicle.vin}
@@ -60,7 +60,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                       {vehicle.key_photo_url ? (
                         <img
                           src={vehicle.key_photo_url}
-                          alt={`${vehicle.year} ${vehicle.make} ${vehicle.model || `${vehicle.raw_data?.Model || ''} ${vehicle.raw_data?.Trim || ''}`.trim()}`}
+                          alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -80,18 +80,18 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                             {vehicle.photo_count} {t('stock.vehicleDetails.photos')}
                           </div>
                         )}
-                        {(vehicle.objective || vehicle.raw_data?.Objective) && (
+                        {vehicle.objective && (
                           <div className={`px-2 py-1 rounded text-sm font-medium ${
-                            (vehicle.objective || vehicle.raw_data?.Objective)?.toLowerCase() === 'retail'
+                            vehicle.objective.toLowerCase() === 'retail'
                               ? 'bg-green-500/90 text-white'
                               : 'bg-blue-500/90 text-white'
                           }`}>
-                            {vehicle.objective || vehicle.raw_data?.Objective}
+                            {vehicle.objective}
                           </div>
                         )}
-                        {(vehicle.age_days || vehicle.raw_data?.Age) && (
+                        {vehicle.age_days && (
                           <div className="bg-orange-500/90 text-white px-2 py-1 rounded text-sm">
-                            {vehicle.age_days || vehicle.raw_data?.Age}d
+                            {vehicle.age_days}d
                           </div>
                         )}
                         {vehicle.is_certified && (
@@ -124,11 +124,11 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                       </div>
                       <div>
                         <Label className="text-muted-foreground">{t('stock.vehicleDetails.model')}</Label>
-                        <p className="font-medium">{vehicle.model || `${vehicle.raw_data?.Model || ''} ${vehicle.raw_data?.Trim || ''}`.trim() || 'N/A'}</p>
+                        <p className="font-medium">{vehicle.model || 'N/A'}</p>
                       </div>
                       <div>
                         <Label className="text-muted-foreground">{t('stock.vehicleDetails.trim')}</Label>
-                        <p className="font-medium">{vehicle.trim || vehicle.raw_data?.Trim || 'N/A'}</p>
+                        <p className="font-medium">{vehicle.trim || 'N/A'}</p>
                       </div>
                       <div>
                         <Label className="text-muted-foreground">{t('stock.vehicleDetails.vin')}</Label>
@@ -233,14 +233,14 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                       <div>
                         <Label className="text-muted-foreground">{t('stock.vehicleDetails.objective')}</Label>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">{vehicle.objective || vehicle.raw_data?.Objective || 'N/A'}</span>
-                          {(vehicle.objective || vehicle.raw_data?.Objective) && (
+                          <span className="font-medium">{vehicle.objective || 'N/A'}</span>
+                          {vehicle.objective && (
                             <Badge variant="outline" className={
-                              (vehicle.objective || vehicle.raw_data?.Objective)?.toLowerCase() === 'retail'
+                              vehicle.objective.toLowerCase() === 'retail'
                                 ? 'border-green-500 text-green-700'
                                 : 'border-blue-500 text-blue-700'
                             }>
-                              {vehicle.objective || vehicle.raw_data?.Objective}
+                              {vehicle.objective}
                             </Badge>
                           )}
                         </div>
@@ -250,9 +250,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                         <p className="font-medium font-mono">
                           {vehicle.age_days
                             ? formatTimeDuration((vehicle.age_days || 0) * 24 * 60 * 60 * 1000)
-                            : vehicle.raw_data?.Age
-                              ? `${vehicle.raw_data.Age} days`
-                              : '0 days'}
+                            : '0 days'}
                         </p>
                       </div>
                       <div>

@@ -248,16 +248,22 @@ export const useStockManagement = (): UseStockManagementReturn => {
           records_invalid: processingResult.stats.invalid,
           file_name: file.name,
           file_size: file.size,
-          file_timestamp: fileTimestamp?.toISOString(),
+          file_timestamp: fileTimestamp?.toISOString() || null,
           separator_detected: parseResult.separator,
-          columns_mapped: Object.keys(parseResult.detectedColumns),
-          processing_logs: processingResult.logs,
+          columns_mapped: JSON.stringify(Object.keys(parseResult.detectedColumns)),
+          processing_logs: JSON.stringify(processingResult.logs.slice(-20)), // Only last 20 logs
           processed_by: user.id
         };
 
-        await supabase
-          .from('dealer_inventory_sync_log')
-          .insert(syncLogData);
+        // Try to insert sync log, but don't fail if it doesn't work
+        try {
+          await supabase
+            .from('dealer_inventory_sync_log')
+            .insert(syncLogData);
+        } catch (logError) {
+          console.warn('⚠️ Could not save sync log (non-critical):', logError);
+          // Continue anyway - log is not critical for operation
+        }
 
         // Invalidate queries to refresh data
         await queryClient.invalidateQueries({ queryKey: ['stock-inventory', dealerId] });

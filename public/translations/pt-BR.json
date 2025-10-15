@@ -423,6 +423,7 @@
     "sales_orders": "Pedidos de Vendas",
     "service_orders": "Pedidos de Serviço",
     "recon_orders": "Pedidos de Recondicionamento",
+    "car_wash": "Lavagem de Carros",
     "user_management": {
       "title": "Gestão de Usuários e Grupos",
       "manage_description": "Gerenciar usuários, funções e atribuições de grupos",
@@ -793,6 +794,7 @@
   "dealerships": {
     "title": "Concessionárias",
     "manage_description": "Gerenciar concessionárias, seus contatos e usuários",
+    "auto_selected": "Selecionado automaticamente",
     "show_stats": "Mostrar Estatísticas",
     "hide_stats": "Ocultar Estatísticas",
     "add_new": "Adicionar Concessionária",
@@ -2215,6 +2217,20 @@
       "leadsLast7Days": "Leads (Últimos 7 Dias)",
       "leadsTotal": "Total de Leads",
       "rawData": "Dados Brutos"
+    },
+    "autopop": {
+      "searchVehicle": "Buscar veículo por stock, VIN, marca ou modelo",
+      "localInventory": "Inventário Local",
+      "vinDecoded": "VIN Decodificado",
+      "useVehicle": "Usar este veículo",
+      "noResults": "Nenhum veículo encontrado",
+      "cleared": "Veículo removido - agora você pode inserir manualmente",
+      "autoPopulated": "Preenchido automaticamente de",
+      "confidence": {
+        "high": "Alta Correspondência",
+        "medium": "Correspondência Média",
+        "low": "Baixa Correspondência"
+      }
     },
     "upload": {
       "title": "Upload de Inventário",

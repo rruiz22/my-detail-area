@@ -18,6 +18,7 @@ import { formatVehicleDisplay } from '@/utils/vehicleUtils';
 import { AlertCircle, Clock, Loader2, Zap } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 interface OrderFormData {
   // Order identification
@@ -245,7 +246,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           notes: '',
           internalNotes: '',
           priority: 'normal',
-          completedAt: undefined,
+          completedAt: new Date(), // Auto-populate with current date
           dueDate: undefined,
           slaDeadline: undefined,
           scheduledDate: undefined,
@@ -253,6 +254,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
         });
         setSelectedServices([]);
         setSelectedDealership('');
+        setVinDecoded(false);
       }
     }
   }, [order, open, fetchDealerships]);
@@ -435,6 +437,31 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   )}
                 </div>
 
+                {/* Stock Number and Tag - Side by Side */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="stockNumber">{t('car_wash_orders.stock_number')}</Label>
+                    <Input
+                      id="stockNumber"
+                      value={formData.stockNumber}
+                      onChange={(e) => handleInputChange('stockNumber', e.target.value)}
+                      className="border-input bg-background"
+                      placeholder="ST-001"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="tag">{t('car_wash_orders.tag')}</Label>
+                    <Input
+                      id="tag"
+                      value={formData.tag}
+                      onChange={(e) => handleInputChange('tag', e.target.value)}
+                      className="border-input bg-background"
+                      placeholder="LOT-A1"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <Label htmlFor="vehicleInfo">{t('car_wash_orders.vehicle_display')}</Label>
                   <Input
@@ -449,30 +476,6 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                       {t('car_wash_orders.auto_populated')}
                     </div>
                   )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="stockNumber">{t('car_wash_orders.stock_number')}</Label>
-                    <Input
-                      id="stockNumber"
-                      value={formData.stockNumber}
-                      onChange={(e) => handleInputChange('stockNumber', e.target.value)}
-                      className="border-input bg-background"
-                      placeholder="ST-2025-001"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="tag">{t('car_wash_orders.tag')}</Label>
-                    <Input
-                      id="tag"
-                      value={formData.tag}
-                      onChange={(e) => handleInputChange('tag', e.target.value)}
-                      className="border-input bg-background"
-                      placeholder="LOT-A1"
-                    />
-                  </div>
                 </div>
 
                 {/* Service Date - Car Wash Specific */}

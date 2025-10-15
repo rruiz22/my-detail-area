@@ -347,10 +347,10 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                         </div>
                         <div>
                           <div className="font-medium">
-                            {vehicle.year} {vehicle.make} {vehicle.model || `${vehicle.raw_data?.Model || ''} ${vehicle.raw_data?.Trim || ''}`.trim()}
+                            {vehicle.year} {vehicle.make} {vehicle.model}
                           </div>
                           <div className="text-sm text-muted-foreground">
-                            {vehicle.trim || vehicle.raw_data?.Trim}
+                            {vehicle.trim}
                           </div>
                         </div>
                       </div>

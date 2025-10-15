@@ -18,7 +18,8 @@
       "Bash(dir:*)",
       "Bash(find:*)",
       "Bash(npm run build:dev:*)",
-      "Bash(npx supabase:*)"
+      "Bash(npx supabase:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

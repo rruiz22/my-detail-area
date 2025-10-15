@@ -17,6 +17,7 @@ export interface VehicleSearchResult {
     price?: number;
     mileage?: number;
     color?: string;
+    imageUrl?: string;
     // Inventory-specific enrichment
     age_days?: number;
     leads_total?: number;
@@ -53,10 +54,10 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
   const createInventoryResult = (vehicle: any): VehicleSearchResult => {
     const title = `${vehicle.year || ''} ${vehicle.make || ''} ${vehicle.model || ''}`.trim();
     const subtitle = vehicle.trim ? `${vehicle.trim} - Stock: ${vehicle.stock_number}` : `Stock: ${vehicle.stock_number}`;
-    
+
     let badge = 'In Stock';
     let badgeVariant: 'default' | 'secondary' | 'outline' | 'destructive' = 'secondary';
-    
+
     if (vehicle.age_days > 60) {
       badge = `${vehicle.age_days} days old`;
       badgeVariant = 'outline';
@@ -79,6 +80,7 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
         price: vehicle.price,
         mileage: vehicle.mileage,
         color: vehicle.color,
+        imageUrl: vehicle.key_photo_url,
         age_days: vehicle.age_days,
         leads_total: vehicle.leads_total,
         market_rank_overall: vehicle.market_rank_overall,
@@ -138,28 +140,30 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
 
   const searchByVin = useCallback(async (vin: string): Promise<VehicleSearchResult | null> => {
     if (!vin || vin.length !== 17) return null;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       // First check local inventory
       if (currentDealerId) {
         const localVehicle = getVehicleByVin(vin);
         if (localVehicle) {
+          setLoading(false);
           return createInventoryResult(localVehicle);
         }
       }
-      
-      // Fallback to VIN API
+
+      // Fallback to VIN API ONLY if not found in inventory
       const vehicleData = await decodeVin(vin);
       if (vehicleData) {
         return createVinResult({ ...vehicleData, vin });
       }
-      
+
       return null;
     } catch (err) {
-      setError('Error searching by VIN');
+      // Silently fail - don't set error for VIN decode failures
+      console.warn('VIN decode failed for:', vin, err);
       return null;
     } finally {
       setLoading(false);
