@@ -1,17 +1,15 @@
-import React, { useState } from "react";
-import { LayoutDashboard, ShoppingCart, Wrench, RefreshCw, Car, FileText, Settings, Bell, User, Users, ClipboardList, Building2, Shield, Users2, MessageCircle, QrCode, Nfc, Zap, Droplets, Package, Sparkles, Clock, Globe, Calendar } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { LiveClock } from "@/components/ui/live-clock";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
-import { usePermissions } from "@/hooks/usePermissions";
 import { useDealershipModules } from "@/hooks/useDealershipModules";
-import { isSystemAdmin } from "@/utils/permissions";
-import { LiveClock } from "@/components/ui/live-clock";
+import { usePermissions } from "@/hooks/usePermissions";
 import { getSystemTimezone } from "@/utils/dateUtils";
+import { Calendar, Clock, Droplets, FileText, Globe, LayoutDashboard, MessageCircle, Nfc, Package, QrCode, RefreshCw, Settings, Shield, ShoppingCart, Sparkles, User, Users2, Wrench, Zap } from "lucide-react";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { NavLink, useLocation } from "react-router-dom";
 export function AppSidebar() {
-  const { state, open, setOpen } = useSidebar();
+  const { state, open, setOpen, isMobile, openMobile, setOpenMobile } = useSidebar();
   const { enhancedUser, getAllowedOrderTypes, hasPermission } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
@@ -209,21 +207,14 @@ export function AppSidebar() {
   }, [enhancedUser?.role, t]);
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
-  
 
-  const handleNavClick = (url?: string) => {
+
+  const handleNavClick = React.useCallback(() => {
     // Close mobile sidebar on navigation
-    if (window.innerWidth < 768) {
-      setOpen(false);
+    if (isMobile) {
+      setOpenMobile(false);
     }
-    if (url) {
-      console.log('[Sidebar] navigating to ->', url);
-      // Force a small delay to ensure state updates properly
-      setTimeout(() => {
-        console.log('[Sidebar] navigation completed to ->', url);
-      }, 100);
-    }
-  };
+  }, [isMobile, setOpenMobile]);
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return currentPath === "/dashboard";
@@ -235,8 +226,9 @@ export function AppSidebar() {
     return active ? "bg-primary text-primary-foreground font-medium shadow-sm" : "hover:bg-muted/50 transition-colors";
   };
   return (
-    <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
-      <SidebarHeader className="p-4 space-y-3">
+    <TooltipProvider delayDuration={300}>
+      <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
+        <SidebarHeader className="p-4 space-y-3">
         {/* Logo/Title (First Row) */}
         <div className="flex items-center justify-center">
           {collapsed ? (
@@ -275,6 +267,7 @@ export function AppSidebar() {
                         <SidebarMenuButton asChild>
                          <NavLink
                             to={item.url}
+                            onClick={handleNavClick}
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
                           >
                             <item.icon className="w-4 h-4" />
@@ -289,6 +282,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild>
                        <NavLink
                         to={item.url}
+                        onClick={handleNavClick}
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -314,8 +308,9 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                           <NavLink 
-                            to={item.url} 
+                           <NavLink
+                            to={item.url}
+                            onClick={handleNavClick}
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
                           >
                             <item.icon className="w-4 h-4" />
@@ -328,8 +323,9 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                       <NavLink 
-                        to={item.url} 
+                       <NavLink
+                        to={item.url}
+                        onClick={handleNavClick}
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -356,8 +352,9 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                           <NavLink 
-                            to={item.url} 
+                           <NavLink
+                            to={item.url}
+                            onClick={handleNavClick}
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
                           >
                             <item.icon className="w-4 h-4" />
@@ -370,8 +367,9 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                       <NavLink 
-                        to={item.url} 
+                       <NavLink
+                        to={item.url}
+                        onClick={handleNavClick}
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -398,8 +396,9 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                           <NavLink 
-                            to={item.url} 
+                           <NavLink
+                            to={item.url}
+                            onClick={handleNavClick}
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
                           >
                             <item.icon className="w-4 h-4" />
@@ -412,8 +411,9 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                       <NavLink 
-                        to={item.url} 
+                       <NavLink
+                        to={item.url}
+                        onClick={handleNavClick}
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -440,8 +440,9 @@ export function AppSidebar() {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
-                           <NavLink 
-                            to={item.url} 
+                           <NavLink
+                            to={item.url}
+                            onClick={handleNavClick}
                             className={`${getNavClasses(item.url)} sidebar-icon-centered`}
                           >
                             <item.icon className="w-4 h-4" />
@@ -454,8 +455,9 @@ export function AppSidebar() {
                     </Tooltip>
                   ) : (
                     <SidebarMenuButton asChild>
-                       <NavLink 
-                        to={item.url} 
+                       <NavLink
+                        to={item.url}
+                        onClick={handleNavClick}
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -482,8 +484,8 @@ export function AppSidebar() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <SidebarMenuButton asChild>
-                             <NavLink 
-                              to={item.url} 
+                             <NavLink
+                              to={item.url}
                               className={`${getNavClasses(item.url)} sidebar-icon-centered`}
                             >
                               <item.icon className="w-4 h-4" />
@@ -496,8 +498,8 @@ export function AppSidebar() {
                       </Tooltip>
                     ) : (
                       <SidebarMenuButton asChild>
-                         <NavLink 
-                          to={item.url} 
+                         <NavLink
+                          to={item.url}
                           className={getNavClasses(item.url)}
                         >
                           <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -513,5 +515,6 @@ export function AppSidebar() {
         )}
       </SidebarContent>
     </Sidebar>
+    </TooltipProvider>
   );
 }
