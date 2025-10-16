@@ -1,44 +1,119 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect } from 'react';
+import { toast } from 'sonner';
 
 export type ProductivityTodo = Database['public']['Tables']['productivity_todos']['Row'];
+export type ProductivityTodoInsert = Database['public']['Tables']['productivity_todos']['Insert'];
+export type ProductivityTodoUpdate = Database['public']['Tables']['productivity_todos']['Update'];
 
+// Query keys for cache management
+export const productivityTodosKeys = {
+  all: ['productivity', 'todos'] as const,
+  lists: () => [...productivityTodosKeys.all, 'list'] as const,
+  list: (dealerId: number) => [...productivityTodosKeys.lists(), dealerId] as const,
+  details: () => [...productivityTodosKeys.all, 'detail'] as const,
+  detail: (id: string) => [...productivityTodosKeys.details(), id] as const,
+  byOrder: (orderId: string) => [...productivityTodosKeys.all, 'by-order', orderId] as const,
+};
+
+/**
+ * Enhanced ProductivityTodos Hook with TanStack Query
+ *
+ * Features:
+ * - Automatic caching and refetching
+ * - Optimistic updates for instant UI feedback
+ * - Real-time subscriptions
+ * - Better error handling
+ * - Automatic retry on failure
+ */
 export const useProductivityTodos = () => {
-  const [todos, setTodos] = useState<ProductivityTodo[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const { currentDealership } = useAccessibleDealerships();
+  const queryClient = useQueryClient();
 
-  const fetchTodos = useCallback(async () => {
-    if (!user || !currentDealership) return;
+  // Fetch todos with TanStack Query
+  const {
+    data: todos = [],
+    isLoading: loading,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: productivityTodosKeys.list(currentDealership?.id || 0),
+    queryFn: async () => {
+      if (!user || !currentDealership) {
+        return [];
+      }
 
-    try {
-      setLoading(true);
       const { data, error } = await supabase
         .from('productivity_todos')
         .select('*')
         .eq('dealer_id', currentDealership.id)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setTodos(data || []);
-    } catch (err: any) {
-      setError(err.message);
-      toast.error('Failed to fetch todos');
-    } finally {
-      setLoading(false);
-    }
-  }, [user, currentDealership]);
+      return data || [];
+    },
+    enabled: !!user && !!currentDealership,
+    staleTime: 30 * 1000, // Consider data fresh for 30 seconds
+    gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+  });
 
-  const createTodo = async (todoData: Omit<Database['public']['Tables']['productivity_todos']['Insert'], 'dealer_id' | 'created_by'>) => {
+  // Real-time subscription for live updates
+  useEffect(() => {
     if (!user || !currentDealership) return;
 
-    try {
+    console.log('[ProductivityTodos] 🔴 Setting up real-time subscription');
+
+    const channel = supabase
+      .channel(`productivity_todos_${currentDealership.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'productivity_todos',
+          filter: `dealer_id=eq.${currentDealership.id}`
+        },
+        (payload: RealtimePostgresChangesPayload<ProductivityTodo>) => {
+          console.log('[ProductivityTodos] 🔴 Real-time event:', payload.eventType);
+
+          // Invalidate cache to trigger refetch
+          queryClient.invalidateQueries({
+            queryKey: productivityTodosKeys.list(currentDealership.id)
+          });
+
+          // Show notification for changes made by other users
+          if (payload.eventType === 'INSERT' && payload.new.created_by !== user.id) {
+            toast.info('New task created by team member');
+          }
+          if (payload.eventType === 'UPDATE' && payload.new.created_by !== user.id) {
+            toast.info('Task updated by team member');
+          }
+        }
+      )
+      .subscribe((status) => {
+        console.log('[ProductivityTodos] 🔴 Subscription status:', status);
+      });
+
+    return () => {
+      console.log('[ProductivityTodos] 🔴 Cleaning up real-time subscription');
+      supabase.removeChannel(channel);
+    };
+  }, [user, currentDealership, queryClient]);
+
+  // Create todo mutation with optimistic update
+  const createTodoMutation = useMutation({
+    mutationFn: async (todoData: Omit<ProductivityTodoInsert, 'dealer_id' | 'created_by'>) => {
+      if (!user || !currentDealership) {
+        throw new Error('User or dealership not found');
+      }
+
       const { data, error } = await supabase
         .from('productivity_todos')
         .insert({
@@ -50,17 +125,77 @@ export const useProductivityTodos = () => {
         .single();
 
       if (error) throw error;
-      setTodos(prev => [data, ...prev]);
-      toast.success('Todo created successfully');
       return data;
-    } catch (err: any) {
-      toast.error('Failed to create todo');
-      throw err;
-    }
-  };
+    },
+    onMutate: async (newTodo) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: productivityTodosKeys.list(currentDealership?.id || 0)
+      });
 
-  const updateTodo = async (id: string, updates: Database['public']['Tables']['productivity_todos']['Update']) => {
-    try {
+      // Snapshot previous value
+      const previousTodos = queryClient.getQueryData<ProductivityTodo[]>(
+        productivityTodosKeys.list(currentDealership?.id || 0)
+      );
+
+      // Optimistically update to the new value
+      if (currentDealership) {
+        const optimisticTodo: ProductivityTodo = {
+          id: `temp-${Date.now()}`,
+          ...newTodo,
+          dealer_id: currentDealership.id,
+          created_by: user?.id || '',
+          status: newTodo.status || 'pending',
+          priority: newTodo.priority || 'medium',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          completed_at: null,
+          assigned_to: newTodo.assigned_to || null,
+          category: newTodo.category || null,
+          description: newTodo.description || null,
+          due_date: newTodo.due_date || null,
+          metadata: newTodo.metadata || null,
+          order_id: newTodo.order_id || null,
+          recurring_config: newTodo.recurring_config || null,
+          tags: newTodo.tags || null,
+          title: newTodo.title,
+        };
+
+        queryClient.setQueryData<ProductivityTodo[]>(
+          productivityTodosKeys.list(currentDealership.id),
+          (old = []) => [optimisticTodo, ...old]
+        );
+      }
+
+      return { previousTodos };
+    },
+    onError: (err, newTodo, context) => {
+      // Rollback on error
+      if (context?.previousTodos && currentDealership) {
+        queryClient.setQueryData(
+          productivityTodosKeys.list(currentDealership.id),
+          context.previousTodos
+        );
+      }
+      toast.error('Failed to create task');
+      console.error('Create todo error:', err);
+    },
+    onSuccess: () => {
+      toast.success('Task created successfully');
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      if (currentDealership) {
+        queryClient.invalidateQueries({
+          queryKey: productivityTodosKeys.list(currentDealership.id)
+        });
+      }
+    },
+  });
+
+  // Update todo mutation with optimistic update
+  const updateTodoMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: ProductivityTodoUpdate }) => {
       const { data, error } = await supabase
         .from('productivity_todos')
         .update(updates)
@@ -69,56 +204,131 @@ export const useProductivityTodos = () => {
         .single();
 
       if (error) throw error;
-      setTodos(prev => prev.map(todo => todo.id === id ? data : todo));
-      toast.success('Todo updated successfully');
       return data;
-    } catch (err: any) {
-      toast.error('Failed to update todo');
-      throw err;
-    }
-  };
+    },
+    onMutate: async ({ id, updates }) => {
+      await queryClient.cancelQueries({
+        queryKey: productivityTodosKeys.list(currentDealership?.id || 0)
+      });
 
-  const deleteTodo = async (id: string) => {
-    try {
+      const previousTodos = queryClient.getQueryData<ProductivityTodo[]>(
+        productivityTodosKeys.list(currentDealership?.id || 0)
+      );
+
+      // Optimistically update
+      if (currentDealership) {
+        queryClient.setQueryData<ProductivityTodo[]>(
+          productivityTodosKeys.list(currentDealership.id),
+          (old = []) => old.map(todo => todo.id === id ? { ...todo, ...updates } : todo)
+        );
+      }
+
+      return { previousTodos };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousTodos && currentDealership) {
+        queryClient.setQueryData(
+          productivityTodosKeys.list(currentDealership.id),
+          context.previousTodos
+        );
+      }
+      toast.error('Failed to update task');
+      console.error('Update todo error:', err);
+    },
+    onSuccess: () => {
+      toast.success('Task updated successfully');
+    },
+    onSettled: () => {
+      if (currentDealership) {
+        queryClient.invalidateQueries({
+          queryKey: productivityTodosKeys.list(currentDealership.id)
+        });
+      }
+    },
+  });
+
+  // Delete todo mutation
+  const deleteTodoMutation = useMutation({
+    mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('productivity_todos')
         .delete()
         .eq('id', id);
 
       if (error) throw error;
-      setTodos(prev => prev.filter(todo => todo.id !== id));
-      toast.success('Todo deleted successfully');
-    } catch (err: any) {
-      toast.error('Failed to delete todo');
-      throw err;
-    }
-  };
+      return id;
+    },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({
+        queryKey: productivityTodosKeys.list(currentDealership?.id || 0)
+      });
 
-  const toggleTodoStatus = async (id: string) => {
-    const todo = todos.find(t => t.id === id);
-    if (!todo) return;
+      const previousTodos = queryClient.getQueryData<ProductivityTodo[]>(
+        productivityTodosKeys.list(currentDealership?.id || 0)
+      );
 
-    const newStatus = todo.status === 'completed' ? 'pending' : 'completed';
-    const updates: Database['public']['Tables']['productivity_todos']['Update'] = {
-      status: newStatus,
-      completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
-    };
+      // Optimistically remove
+      if (currentDealership) {
+        queryClient.setQueryData<ProductivityTodo[]>(
+          productivityTodosKeys.list(currentDealership.id),
+          (old = []) => old.filter(todo => todo.id !== id)
+        );
+      }
 
-    await updateTodo(id, updates);
-  };
+      return { previousTodos };
+    },
+    onError: (err, id, context) => {
+      if (context?.previousTodos && currentDealership) {
+        queryClient.setQueryData(
+          productivityTodosKeys.list(currentDealership.id),
+          context.previousTodos
+        );
+      }
+      toast.error('Failed to delete task');
+      console.error('Delete todo error:', err);
+    },
+    onSuccess: () => {
+      toast.success('Task deleted successfully');
+    },
+    onSettled: () => {
+      if (currentDealership) {
+        queryClient.invalidateQueries({
+          queryKey: productivityTodosKeys.list(currentDealership.id)
+        });
+      }
+    },
+  });
 
-  useEffect(() => {
-    fetchTodos();
-  }, [fetchTodos]);
+  // Toggle todo status helper
+  const toggleTodoStatus = useCallback(
+    async (id: string) => {
+      const todo = todos.find(t => t.id === id);
+      if (!todo) return;
+
+      const newStatus = todo.status === 'completed' ? 'pending' : 'completed';
+      const updates: ProductivityTodoUpdate = {
+        status: newStatus,
+        completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
+      };
+
+      await updateTodoMutation.mutateAsync({ id, updates });
+    },
+    [todos, updateTodoMutation]
+  );
 
   return {
     todos,
     loading,
-    error,
-    createTodo,
-    updateTodo,
-    deleteTodo,
+    error: error ? (error as Error).message : null,
+    createTodo: createTodoMutation.mutateAsync,
+    updateTodo: (id: string, updates: ProductivityTodoUpdate) =>
+      updateTodoMutation.mutateAsync({ id, updates }),
+    deleteTodo: deleteTodoMutation.mutateAsync,
     toggleTodoStatus,
-    refetch: fetchTodos,
+    refetch,
+    // Additional state
+    isCreating: createTodoMutation.isPending,
+    isUpdating: updateTodoMutation.isPending,
+    isDeleting: deleteTodoMutation.isPending,
   };
 };
