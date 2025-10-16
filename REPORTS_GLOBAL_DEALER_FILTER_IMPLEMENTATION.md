@@ -370,3 +370,4 @@ export const useDealerFilter = () => {
 
 El módulo de Reports ahora usa correctamente el filtro global de dealer del topbar, sin conflictos con filtros locales.
 
+
