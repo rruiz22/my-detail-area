@@ -1,31 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Building2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { Building2 } from 'lucide-react';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const DealershipFilter = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { dealerships, loading } = useAccessibleDealerships();
-  const [selectedDealerId, setSelectedDealerId] = useState<number | 'all'>('all');
+  const { selectedDealerId, setSelectedDealerId } = useDealerFilter();
 
-  // Load from localStorage on mount
+  // Sync with localStorage on mount (for backwards compatibility)
   useEffect(() => {
     const saved = localStorage.getItem('selectedDealerFilter');
-    if (saved) {
-      setSelectedDealerId(saved === 'all' ? 'all' : parseInt(saved));
+    if (saved && !selectedDealerId) {
+      const dealerId = saved === 'all' ? 'all' : parseInt(saved);
+      setSelectedDealerId(dealerId);
     }
-  }, []);
+  }, [selectedDealerId, setSelectedDealerId]);
 
-  // Save to localStorage when changed
+  // Save to localStorage and trigger events when changed
   const handleDealerChange = (value: string) => {
     const newValue = value === 'all' ? 'all' : parseInt(value);
     setSelectedDealerId(newValue);
     localStorage.setItem('selectedDealerFilter', value);
 
-    // Trigger custom event for useOrderManagement to listen
+    // Trigger custom event for legacy components that still listen to it
     window.dispatchEvent(new CustomEvent('dealerFilterChanged', {
       detail: { dealerId: newValue }
     }));

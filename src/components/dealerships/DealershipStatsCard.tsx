@@ -170,16 +170,18 @@ export const DealershipStatsCard: React.FC<DealershipStatsCardProps> = ({
 
       setStats(statsData);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Error fetching dealership stats for dealer', dealerId, ':', err);
 
       // Manejo robusto de diferentes tipos de errores
       let errorMessage = 'Failed to load dealership statistics';
 
-      if (err?.message) {
-        errorMessage = err.message;
-      } else if (err?.code) {
-        errorMessage = `Database error (${err.code}): ${err.details || 'Unknown error'}`;
+      if (err && typeof err === 'object' && 'message' in err) {
+        errorMessage = String(err.message);
+      } else if (err && typeof err === 'object' && 'code' in err) {
+        const code = String(err.code);
+        const details = ('details' in err) ? String(err.details) : 'Unknown error';
+        errorMessage = `Database error (${code}): ${details}`;
       } else if (typeof err === 'string') {
         errorMessage = err;
       }

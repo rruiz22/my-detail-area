@@ -11,6 +11,7 @@ import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
+import { useGetReadyViewMode } from '@/hooks/useGetReadyPersistence';
 import { cn } from '@/lib/utils';
 import { formatTimeForTable } from '@/utils/timeFormatUtils';
 import {
@@ -57,7 +58,7 @@ export function GetReadyVehicleList({
   const { t } = useTranslation();
   const { steps } = useGetReady();
   const { setSelectedVehicleId, selectedVehicleId } = useGetReadyStore();
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [viewMode, setViewMode] = useGetReadyViewMode(); // WITH LOCALSTORAGE PERSISTENCE
   const { confirmDelete } = useSweetAlert();
 
   // Get vehicle management functions
@@ -194,6 +195,32 @@ export function GetReadyVehicleList({
         return 'bg-blue-100 text-blue-800 border-blue-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  // Get color for Time in Process based on step and time
+  const getTimeInProcessColor = (stepId: string, daysInStep: number) => {
+    // Green if in Front Line (ready step)
+    if (stepId === 'ready' || stepId.toLowerCase().includes('front') || stepId.toLowerCase().includes('ready')) {
+      return 'text-emerald-600 dark:text-emerald-400';
+    }
+
+    // Find step SLA hours
+    const step = steps.find(s => s.id === stepId);
+    if (!step || !step.sla_hours) {
+      return 'text-foreground';
+    }
+
+    const slaDays = step.sla_hours / 24;
+    const percentage = daysInStep / slaDays;
+
+    // Color based on SLA percentage
+    if (percentage >= 1.0) {
+      return 'text-red-600 dark:text-red-400 font-bold';
+    } else if (percentage >= 0.7) {
+      return 'text-amber-600 dark:text-amber-400';
+    } else {
+      return 'text-emerald-600 dark:text-emerald-400';
     }
   };
 
@@ -387,13 +414,26 @@ export function GetReadyVehicleList({
                     </div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs">Time in Process:</span>
-                    <div className="font-medium text-xs whitespace-nowrap">{formatTimeForTable(vehicle.t2l).primary}</div>
+                    <span className="text-muted-foreground text-xs">{t('get_ready.vehicle_list.t2l')}:</span>
+                    <div className={cn(
+                      "font-medium text-xs whitespace-nowrap",
+                      getTimeInProcessColor(vehicle.step_id, parseInt(vehicle.days_in_step) || 0)
+                    )}>
+                      {formatTimeForTable(vehicle.t2l).primary}
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground text-xs">Current Step:</span>
-                    <div className="font-medium text-xs whitespace-nowrap">{formatTimeForTable(vehicle.days_in_step).primary}</div>
-                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="cursor-help">
+                        <span className="text-muted-foreground text-xs">{t('get_ready.steps.dis')}:</span>
+                        <div className="font-medium text-xs whitespace-nowrap">{formatTimeForTable(vehicle.days_in_step).primary}</div>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="font-semibold">{t('get_ready.vehicle_list.days_in_step')}</p>
+                      <p className="text-xs text-muted-foreground">{t('get_ready.steps.dis_tooltip')}</p>
+                    </TooltipContent>
+                  </Tooltip>
                   <div>
                     <span className="text-muted-foreground text-xs">Days to Frontline:</span>
                     <div className="font-medium text-xs whitespace-nowrap">{vehicle.days_to_frontline}</div>
@@ -464,22 +504,22 @@ export function GetReadyVehicleList({
                   <TableHead className="w-[80px] text-center py-2 bg-background">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help">In Process</span>
+                        <span className="cursor-help">{t('get_ready.vehicle_list.t2l_short')}</span>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className="font-semibold">Time in Process</p>
-                        <p className="text-xs text-muted-foreground">Total time from intake to current step</p>
+                        <p className="font-semibold">{t('get_ready.vehicle_list.t2l_full')}</p>
+                        <p className="text-xs text-muted-foreground">{t('get_ready.vehicle_list.t2l_description')}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TableHead>
                   <TableHead className="w-[80px] text-center py-2 bg-background">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help">Step Time</span>
+                        <span className="cursor-help">{t('get_ready.steps.dis')}</span>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className="font-semibold">Current Step Time</p>
-                        <p className="text-xs text-muted-foreground">Time spent in current step</p>
+                        <p className="font-semibold">{t('get_ready.vehicle_list.days_in_step')}</p>
+                        <p className="text-xs text-muted-foreground">{t('get_ready.steps.dis_tooltip')}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TableHead>
@@ -623,7 +663,10 @@ export function GetReadyVehicleList({
 
                 {/* Time in Process - Compact Format */}
                 <TableCell className="w-[80px] py-1 text-center">
-                  <span className="font-medium text-sm whitespace-nowrap">
+                  <span className={cn(
+                    "font-medium text-sm whitespace-nowrap",
+                    getTimeInProcessColor(vehicle.step_id, parseInt(vehicle.days_in_step) || 0)
+                  )}>
                     {formatTimeForTable(vehicle.t2l).primary}
                   </span>
                 </TableCell>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -58,7 +58,7 @@ export function AttachmentsList({
   const [previewImage, setPreviewImage] = useState<{ url: string; name: string } | null>(null);
 
   // Fetch attachments
-  const fetchAttachments = async () => {
+  const fetchAttachments = useCallback(async () => {
     if (!orderId) return;
 
     setLoading(true);
@@ -148,7 +148,7 @@ export function AttachmentsList({
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId, commentId, context]);
 
   // Download attachment
   const downloadAttachment = async (attachment: Attachment) => {
@@ -314,7 +314,7 @@ export function AttachmentsList({
       subscription.unsubscribe();
       window.removeEventListener('attachmentUploaded', handleAttachmentUploaded);
     };
-  }, [orderId, commentId, context]);
+  }, [orderId, commentId, context, fetchAttachments]);
 
   if (loading) {
     return (

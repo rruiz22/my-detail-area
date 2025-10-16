@@ -19,16 +19,32 @@ import { Loader2, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+interface ModulePermission {
+  module: string;
+  permission_level: string;
+}
+
+interface GranularPermissions {
+  can_access_internal_notes?: boolean;
+  can_view_pricing?: boolean;
+  can_delete_orders?: boolean;
+  can_export_reports?: boolean;
+  can_change_order_status?: boolean;
+}
+
+interface Role {
+  id: string;
+  role_name: string;
+  display_name: string;
+  description: string | null;
+  permissions: ModulePermission[] | GranularPermissions;
+  granularPermissions?: GranularPermissions;
+}
+
 interface EditRoleModalProps {
   open: boolean;
   onClose: () => void;
-  role: {
-    id: string;
-    role_name: string;
-    display_name: string;
-    description: string | null;
-    permissions: Array<{ module: string; permission_level: string }> | any;
-  } | null;
+  role: Role | null;
   onRoleUpdated: () => void;
 }
 
@@ -91,8 +107,8 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
       }
 
       // Load granular permissions (JSONB format)
-      const roleData = role as any;
-      const granPerms = roleData.granularPermissions || roleData.permissions;
+      const granPerms = role.granularPermissions ||
+                       (!Array.isArray(role.permissions) ? role.permissions : null);
       if (granPerms && typeof granPerms === 'object' && !Array.isArray(granPerms)) {
         setGranularPermissions({
           can_access_internal_notes: granPerms.can_access_internal_notes || false,

@@ -17,8 +17,14 @@ export function AppSidebar() {
   const location = useLocation();
 
   // Get user's dealership_id to check enabled modules
-  const userDealershipId = (enhancedUser as any)?.dealership_id;
-  const isAdmin = (enhancedUser as any)?.is_system_admin || false;
+  const userDealershipId = enhancedUser?.dealership_id;
+
+  // Check if user is system admin (works for both EnhancedUser and EnhancedUserV2)
+  const isAdmin = enhancedUser
+    ? ('is_system_admin' in enhancedUser
+        ? enhancedUser.is_system_admin
+        : enhancedUser.role === 'system_admin')
+    : false;
 
   // Load dealership modules (only if user has a dealership)
   const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(userDealershipId || 0);
@@ -62,7 +68,7 @@ export function AppSidebar() {
     // Filter items based on user's allowed order types
     return baseItems.filter(item =>
       item.orderType === null ||
-      allowedOrderTypes.includes(item.orderType as any) ||
+      (item.orderType !== null && allowedOrderTypes.includes(item.orderType)) ||
       enhancedUser?.role === 'system_admin'
     );
   }, [t, getAllowedOrderTypes, enhancedUser?.role]);

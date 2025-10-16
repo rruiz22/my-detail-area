@@ -17,6 +17,10 @@ export interface GetReadyStep {
   parallel_capable: boolean;
   express_lane_eligible: boolean;
   cost_per_day: number;
+  // Vehicle grouping by days (for sidebar)
+  vehicles_1_day?: number;
+  vehicles_2_3_days?: number;
+  vehicles_4_plus_days?: number;
 }
 
 export interface GetReadyVehicle {
@@ -56,6 +60,18 @@ export interface GetReadyVehicle {
   sla_hours_remaining: number;
   is_bottlenecked: boolean;
   escalation_level: 0 | 1 | 2 | 3;
+  // Approval fields
+  requires_approval: boolean;
+  approval_status: ApprovalStatus;
+  approved_by?: string | null;
+  approved_at?: string | null;
+  approval_notes?: string | null;
+  rejected_by?: string | null;
+  rejected_at?: string | null;
+  rejection_reason?: string | null;
+  // Timer control
+  timer_paused?: boolean;
+  frontline_reached_at?: string | null;
 }
 
 export interface GetReadyKPIs {
@@ -103,6 +119,10 @@ export interface SLAAlert {
 export type WorkflowPath = 'standard' | 'express' | 'priority';
 export type SLAStatus = 'green' | 'yellow' | 'red';
 export type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
+
+// Approval System Types
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'not_required';
+export type ApprovalAction = 'approve' | 'reject' | 'request';
 
 // Utility types for enhanced analytics
 export interface TimeToLineData {
@@ -164,4 +184,57 @@ export interface VendorPerformanceMetrics {
   on_time_percentage: number;
   total_revenue: number;
   avg_job_cost: number;
+}
+
+// Approval History Types
+export interface ApprovalHistory {
+  id: string;
+  vehicle_id: string;
+  dealer_id: number;
+  action: ApprovalStatus;
+  action_by: string;
+  action_at: string;
+  notes?: string | null;
+  reason?: string | null;
+  vehicle_step_id?: string | null;
+  vehicle_workflow_type?: string | null;
+  vehicle_priority?: string | null;
+  created_at: string;
+}
+
+export interface ApprovalHistoryWithUser extends ApprovalHistory {
+  user_name?: string;
+  user_email?: string;
+}
+
+// Approval Request/Response Types
+export interface ApprovalRequest {
+  vehicleId: string;
+  notes?: string;
+}
+
+export interface RejectRequest {
+  vehicleId: string;
+  reason: string;
+  notes?: string;
+}
+
+export interface ApprovalResponse {
+  success: boolean;
+  vehicle_id?: string;
+  approved_by?: string;
+  approved_at?: string;
+  rejected_by?: string;
+  rejected_at?: string;
+  reason?: string;
+  error?: string;
+}
+
+// Approval Summary for Dashboard
+export interface ApprovalSummary {
+  total_pending: number;
+  total_approved_today: number;
+  total_rejected_today: number;
+  pending_critical: number;
+  oldest_pending_days: number;
 }

@@ -1,15 +1,16 @@
 import { cn } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { GetReadySplitContent } from './GetReadySplitContent';
 import { GetReadyStepsSidebar } from './GetReadyStepsSidebar';
 import { GetReadyTopbar } from './GetReadyTopbar';
+import { useGetReadySidebarState } from '@/hooks/useGetReadyPersistence';
 
 interface GetReadyContentProps {
   children?: React.ReactNode;
 }
 
 export function GetReadyContent({ children }: GetReadyContentProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useGetReadySidebarState();
 
   // Auto-collapse sidebar on small screens
   useEffect(() => {
@@ -33,12 +34,12 @@ export function GetReadyContent({ children }: GetReadyContentProps) {
 
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Steps Sidebar */}
+        {/* Steps Sidebar - OPTIMIZED WIDTH */}
         <div className={cn(
           "border-r bg-card transition-all duration-300 flex-shrink-0",
           sidebarCollapsed
-            ? "w-14 min-w-14"
-            : "w-[260px] min-w-[260px] max-w-[260px] lg:w-[260px] md:w-56 sm:w-48"
+            ? "w-12 min-w-12"
+            : "w-[225px] min-w-[225px] max-w-[225px] lg:w-[225px] md:w-48 sm:w-40"
         )}>
           <GetReadyStepsSidebar
             collapsed={sidebarCollapsed}

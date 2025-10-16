@@ -7,6 +7,7 @@ import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { AppSidebar } from "./AppSidebar";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
+import { DealershipFilter } from "./filters/DealershipFilter";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NotificationBell } from "./notifications/NotificationBell";
 import { ThemeToggle } from "./ThemeToggle";
@@ -27,7 +28,7 @@ function DashboardLayoutInner({ children, title }: DashboardLayoutProps) {
       <div className="flex-1 flex flex-col">
         {/* Sticky Header */}
         <header className="sticky top-0 z-40 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-1 min-w-0">
             <SidebarTrigger />
             <div className="relative max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -36,9 +37,11 @@ function DashboardLayoutInner({ children, title }: DashboardLayoutProps) {
                 className="pl-10 w-full"
               />
             </div>
+            {/* Global Dealer Filter */}
+            <DealershipFilter />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 shrink-0">
             <LanguageSwitcher />
             <ThemeToggle />
             {currentDealership?.id ? <NotificationBell dealerId={currentDealership.id} /> : null}

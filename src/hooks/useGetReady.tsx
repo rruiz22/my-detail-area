@@ -274,7 +274,36 @@ export function useGetReadySteps() {
         throw error;
       }
 
-      // Transform RPC data to GetReadyStep format
+      // Use new RPC function with vehicles grouped by days
+      const { data: vehiclesByDays, error: daysError } = await supabase.rpc('get_vehicles_by_days_in_step', {
+        p_dealer_id: currentDealership.id,
+        p_step_id: null, // Get all steps
+      });
+
+      if (daysError) {
+        console.warn('get_vehicles_by_days_in_step not available, falling back to basic counts:', daysError);
+        // Fallback to basic step data
+        const { data: stepsData } = await supabase
+          .from('get_ready_steps')
+          .select('*')
+          .eq('dealer_id', currentDealership.id)
+          .eq('is_active', true)
+          .order('order_index');
+
+        if (!stepsData) return [];
+
+        return stepsData.map(step => {
+          const countData = data?.find((d: any) => d.step_id === step.id);
+          return {
+            ...step,
+            vehicle_count: countData?.vehicle_count || 0,
+            days_in_step_avg: countData?.avg_days_in_step || 0,
+            days_to_frontline_avg: 0,
+          };
+        });
+      }
+
+      // Transform vehiclesByDays data to GetReadyStep format
       const { data: stepsData } = await supabase
         .from('get_ready_steps')
         .select('*')
@@ -284,15 +313,19 @@ export function useGetReadySteps() {
 
       if (!stepsData) return [];
 
-      // Merge step data with vehicle counts
+      // Merge step data with vehicle counts and day groupings
       return stepsData.map(step => {
+        const daysData = vehiclesByDays?.find((d: any) => d.step_id === step.id);
         const countData = data?.find((d: any) => d.step_id === step.id);
+
         return {
           ...step,
-          vehicle_count: countData?.vehicle_count || 0,
-          days_in_step_avg: countData?.avg_days_in_step || 0,
-          days_to_frontline_avg: 0, // Will be calculated separately if needed
-          current_capacity: countData?.vehicle_count || 0,
+          vehicle_count: daysData?.total_vehicles || 0,
+          vehicles_1_day: daysData?.vehicles_1_day || 0,
+          vehicles_2_3_days: daysData?.vehicles_2_3_days || 0,
+          vehicles_4_plus_days: daysData?.vehicles_4_plus_days || 0,
+          days_in_step_avg: daysData?.avg_days_in_step || countData?.avg_days_in_step || 0,
+          days_to_frontline_avg: 0,
         };
       });
     },
@@ -402,72 +435,54 @@ export function useGetReadyKPIs() {
 }
 
 export function useBottleneckAlerts() {
-  const { dealerships } = useAccessibleDealerships();
-  const dealerId = dealerships.length > 0 ? dealerships[0].id : 5;
+  const { currentDealership } = useAccessibleDealerships();
 
   return useOrderPolling(
-    ['bottleneck-alerts', dealerId],
+    ['bottleneck-alerts', currentDealership?.id],
     async (): Promise<BottleneckAlert[]> => {
-      // Mock bottleneck alerts
-      const alerts: BottleneckAlert[] = [
-        {
-          step_id: 'mechanical',
-          step_name: 'Mechanical',
-          severity: 'high',
-          vehicle_count: 2,
-          avg_wait_time: 6.5,
-          recommended_action: 'Consider adding additional mechanic or outsourcing overflow',
-          created_at: new Date().toISOString()
-        },
-        {
-          step_id: 'inspection',
-          step_name: 'Inspection',
-          severity: 'medium',
-          vehicle_count: 3,
-          avg_wait_time: 3.8,
-          recommended_action: 'Schedule additional inspection slots during peak hours',
-          created_at: new Date().toISOString()
-        }
-      ];
+      if (!currentDealership?.id) {
+        return [];
+      }
 
-      return alerts;
+      // Use real RPC function
+      const { data, error } = await supabase.rpc('get_bottleneck_alerts', {
+        p_dealer_id: currentDealership.id,
+      });
+
+      if (error) {
+        console.error('Error fetching bottleneck alerts:', error);
+        return [];
+      }
+
+      return data || [];
     },
-    true
+    !!currentDealership?.id
   );
 }
 
 export function useSLAAlerts() {
-  const { dealerships } = useAccessibleDealerships();
-  const dealerId = dealerships.length > 0 ? dealerships[0].id : 5;
+  const { currentDealership } = useAccessibleDealerships();
 
   return useOrderPolling(
-    ['sla-alerts', dealerId],
+    ['sla-alerts', currentDealership?.id],
     async (): Promise<SLAAlert[]> => {
-      // Mock SLA alerts
-      const alerts: SLAAlert[] = [
-        {
-          vehicle_id: '1',
-          stock_number: 'STK001',
-          vehicle_info: '2023 Honda Civic LX',
-          hours_overdue: 18,
-          severity: 'critical',
-          escalation_level: 2,
-          created_at: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          vehicle_id: '2',
-          stock_number: 'STK002',
-          vehicle_info: '2022 Toyota Camry LE',
-          hours_overdue: 6,
-          severity: 'warning',
-          escalation_level: 1,
-          created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
-        }
-      ];
+      if (!currentDealership?.id) {
+        return [];
+      }
 
-      return alerts;
+      // Use real RPC function
+      const { data, error } = await supabase.rpc('get_sla_alerts', {
+        p_dealer_id: currentDealership.id,
+      });
+
+      if (error) {
+        console.error('Error fetching SLA alerts:', error);
+        return [];
+      }
+
+      return data || [];
     },
-    true
+    !!currentDealership?.id
   );
 }
 

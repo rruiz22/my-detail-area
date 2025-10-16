@@ -134,7 +134,19 @@ export function WorkItemsGroupedTable({
         <div className="flex items-start gap-2">
           {getStatusIcon(item.status)}
           <div className="flex-1 min-w-0">
-            <div className="font-medium text-sm line-clamp-1">{item.title}</div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-sm line-clamp-1">{item.title}</span>
+              {item.approval_required && !item.approval_status && (
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 text-xs">
+                  {t('get_ready.work_items.approval_required')}
+                </Badge>
+              )}
+              {item.approval_status === 'approved' && (
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300 text-xs">
+                  {t('get_ready.approvals.status.approved')}
+                </Badge>
+              )}
+            </div>
             {item.description && (
               <div className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
                 {item.description}
@@ -199,50 +211,28 @@ export function WorkItemsGroupedTable({
       {/* Quick Actions */}
       <TableCell className="text-right">
         <div className="flex items-center justify-end gap-1">
-          {/* Approval Actions */}
+          {/* Approval Actions - IMPROVED VISIBILITY */}
           {item.approval_required && !item.approval_status && (
             <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
-                      onClick={() => onApprove(item.id)}
-                    >
-                      <CheckCheck className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <div className="text-center">
-                      <div className="font-semibold">{t('get_ready.work_items.approve')}</div>
-                      <div className="text-xs text-muted-foreground">Pending → In Progress</div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-green-600 hover:text-green-700 hover:bg-green-50 border-green-300"
+                onClick={() => onApprove(item.id)}
+              >
+                <CheckCheck className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">{t('get_ready.work_items.approve')}</span>
+              </Button>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                      onClick={() => onDecline(item)}
-                    >
-                      <XCircle className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <div className="text-center">
-                      <div className="font-semibold">{t('get_ready.work_items.decline')}</div>
-                      <div className="text-xs text-muted-foreground">Pending → Declined</div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300"
+                onClick={() => onDecline(item)}
+              >
+                <XCircle className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">{t('get_ready.work_items.decline')}</span>
+              </Button>
             </>
           )}
 

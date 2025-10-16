@@ -16,10 +16,24 @@ import { useAuth } from '@/contexts/AuthContext';
 import { FilePreview } from './FilePreview';
 import { toast } from 'sonner';
 
+interface UploadedAttachment {
+  id: string;
+  order_id: string;
+  file_name: string;
+  file_path: string;
+  file_size: number;
+  mime_type: string;
+  uploaded_by: string;
+  upload_context?: string;
+  description?: string;
+  is_public?: boolean;
+  created_at: string;
+}
+
 interface FileUploadProps {
   orderId: string;
   onFilesSelected?: (files: File[]) => void;
-  onUploadComplete?: (attachment: any) => void;
+  onUploadComplete?: (attachment: UploadedAttachment) => void;
   uploadContext?: string;
   disabled?: boolean;
   className?: string;
@@ -34,7 +48,7 @@ interface UploadingFile {
 }
 
 export interface FileUploadRef {
-  uploadFiles: (files: File[]) => Promise<any[]>;
+  uploadFiles: (files: File[]) => Promise<UploadedAttachment[]>;
 }
 
 export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
@@ -98,19 +112,20 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
   };
 
   // Public method to upload files (called from parent)
-  const uploadFiles = async (filesToUpload: File[]): Promise<any[]> => {
+  const uploadFiles = async (filesToUpload: File[]): Promise<UploadedAttachment[]> => {
     const uploadPromises = filesToUpload.map(file => uploadFile(file));
     const results = await Promise.allSettled(uploadPromises);
 
     const successfulUploads = results
-      .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
-      .map(result => result.value);
+      .filter((result): result is PromiseFulfilledResult<UploadedAttachment> => result.status === 'fulfilled')
+      .map(result => result.value)
+      .filter((value): value is UploadedAttachment => value !== undefined);
 
     return successfulUploads;
   };
 
   // Upload individual file
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: File): Promise<UploadedAttachment | undefined> => {
     if (!user) {
       toast.error(t('attachments.auth_required', 'Please log in to upload files'));
       return;
@@ -196,6 +211,8 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
       setTimeout(() => {
         setUploadingFiles(prev => prev.filter(f => f.id !== uploadId));
       }, 1000);
+
+      return data.attachment;
 
     } catch (error) {
       console.error('❌ File upload error:', error);

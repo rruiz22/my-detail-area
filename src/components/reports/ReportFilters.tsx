@@ -1,26 +1,22 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CalendarIcon, Filter, X } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { useTranslation } from 'react-i18next';
 import type { ReportsFilters } from '@/hooks/useReportsData';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { CalendarIcon, Filter, X } from 'lucide-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ReportFiltersProps {
   filters: ReportsFilters;
   onFiltersChange: (filters: ReportsFilters) => void;
-  dealerships: Array<{ id: number; name: string }>;
-  showDealershipFilter?: boolean;
 }
 
 export const ReportFilters: React.FC<ReportFiltersProps> = ({
   filters,
-  onFiltersChange,
-  dealerships,
-  showDealershipFilter = false
+  onFiltersChange
 }) => {
   const { t } = useTranslation();
 
@@ -47,7 +43,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - days);
-    
+
     onFiltersChange({
       ...filters,
       startDate,
@@ -61,11 +57,12 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     startDate.setDate(endDate.getDate() - 30);
 
     onFiltersChange({
+      ...filters,
       startDate,
       endDate,
       orderType: 'all',
-      status: 'all',
-      dealerId: dealerships[0]?.id
+      status: 'all'
+      // dealerId is now controlled by global filter, don't reset it
     });
   };
 
@@ -101,27 +98,6 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           <Filter className="h-4 w-4" />
           {t('reports.filters.filters')}:
         </div>
-
-        {/* Dealership Filter */}
-        {showDealershipFilter && dealerships.length > 1 && (
-          <Select
-            value={filters.dealerId?.toString() || ''}
-            onValueChange={(value) =>
-              onFiltersChange({ ...filters, dealerId: parseInt(value) })
-            }
-          >
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder={t('reports.filters.select_dealership')} />
-            </SelectTrigger>
-            <SelectContent>
-              {dealerships.map((dealership) => (
-                <SelectItem key={dealership.id} value={dealership.id.toString()}>
-                  {dealership.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
 
         {/* Date Range */}
         <div className="flex gap-2">

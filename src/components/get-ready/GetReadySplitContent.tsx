@@ -1,26 +1,62 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { useGetReady } from '@/hooks/useGetReady';
-import { useGetReadyStore } from '@/hooks/useGetReadyStore';
-import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
-import { useVehicleManagement } from '@/hooks/useVehicleManagement';
-import { cn } from '@/lib/utils';
-import { exportToCSV, exportToExcel, formatVehiclesForExport } from '@/utils/exportUtils';
-import { ChevronDown, Download, FileSpreadsheet, FileText, MoreHorizontal, Plus, RefreshCw } from 'lucide-react';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-import { GetReadyAlerts } from './GetReadyAlerts';
-import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
-import { GetReadyVehicleList } from './GetReadyVehicleList';
-import { GetReadyWorkflowActions } from './GetReadyWorkflowActions';
-import { VehicleDetailPanel } from './VehicleDetailPanel';
-import { VehicleFormModal } from './VehicleFormModal';
-import { VehicleTable } from './VehicleTable';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { useGetReady } from "@/hooks/useGetReady";
+import { useGetReadyStore } from "@/hooks/useGetReadyStore";
+import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
+import { useVehicleManagement } from "@/hooks/useVehicleManagement";
+import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import {
+  exportToCSV,
+  exportToExcel,
+  formatVehiclesForExport,
+} from "@/utils/exportUtils";
+import {
+  CheckCircle2,
+  ChevronDown,
+  Download,
+  FileSpreadsheet,
+  FileText,
+  MoreHorizontal,
+  Plus,
+  RefreshCw,
+  XCircle,
+} from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import { GetReadyAlerts } from "./GetReadyAlerts";
+import { GetReadyDashboardWidget } from "./GetReadyDashboardWidget";
+import { GetReadyVehicleList } from "./GetReadyVehicleList";
+import { GetReadyWorkflowActions } from "./GetReadyWorkflowActions";
+import { VehicleDetailPanel } from "./VehicleDetailPanel";
+import { VehicleFormModal } from "./VehicleFormModal";
+import { VehicleTable } from "./VehicleTable";
+import { ApprovalModal } from "./approvals/ApprovalModal";
+import { GetReadyVehicle } from "@/types/getReady";
+import {
+  useGetReadySearchQuery,
+  useGetReadyWorkflowFilter,
+  useGetReadyPriorityFilter,
+  useGetReadySortPreferences,
+} from "@/hooks/useGetReadyPersistence";
 
 interface GetReadySplitContentProps {
   className?: string;
@@ -29,17 +65,23 @@ interface GetReadySplitContentProps {
 export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const { splitLayout, selectedStepId, selectedVehicleId } = useGetReadyStore();
+  const {
+    splitLayout,
+    selectedStepId,
+    selectedVehicleId,
+    setSelectedVehicleId,
+  } = useGetReadyStore();
   const { steps, refetchSteps, refetchKPIs } = useGetReady();
   const { deleteVehicle, isDeleting } = useVehicleManagement();
 
-  // State for filters when in details view
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string>('all');
-  const [selectedPriority, setSelectedPriority] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('days_in_step');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  // State for filters when in details view - WITH LOCALSTORAGE PERSISTENCE
+  const [searchQuery, setSearchQuery] = useGetReadySearchQuery();
+  const [selectedWorkflow, setSelectedWorkflow] = useGetReadyWorkflowFilter();
+  const [selectedPriority, setSelectedPriority] = useGetReadyPriorityFilter();
+  const { sortBy, setSortBy, sortOrder, setSortOrder } =
+    useGetReadySortPreferences();
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -47,8 +89,16 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
 
+  // Approval modal state
+  const [approvalModalOpen, setApprovalModalOpen] = useState(false);
+  const [approvalAction, setApprovalAction] = useState<"approve" | "reject">(
+    "approve",
+  );
+  const [selectedApprovalVehicle, setSelectedApprovalVehicle] =
+    useState<GetReadyVehicle | null>(null);
+
   // Use the selected step from sidebar, or 'all' if none selected
-  const selectedStep = selectedStepId || 'all';
+  const selectedStep = selectedStepId || "all";
 
   // Fetch vehicles for export (infinite query to get all vehicles)
   const { data: vehiclesData } = useGetReadyVehiclesInfinite({
@@ -57,38 +107,47 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     selectedWorkflow,
     selectedPriority,
     sortBy,
-    sortOrder
+    sortOrder,
   });
 
+  // Fetch ALL vehicles without step filter for Approvals tab
+  const { data: allVehiclesData } = useGetReadyVehiclesInfinite({});
+
   // Flatten all vehicles from infinite query
-  const allVehicles = vehiclesData?.pages.flatMap(page => page.vehicles) ?? [];
+  const allVehicles =
+    vehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
+
+  // All vehicles without filters (for Approvals tab)
+  const allVehiclesUnfiltered =
+    allVehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
 
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
       await Promise.all([refetchSteps(), refetchKPIs()]);
       toast({
-        description: t('common.data_refreshed') || 'Data refreshed successfully',
-        variant: 'default'
+        description:
+          t("common.data_refreshed") || "Data refreshed successfully",
+        variant: "default",
       });
     } catch (error) {
-      console.error('Manual refresh failed:', error);
+      console.error("Manual refresh failed:", error);
       toast({
-        description: t('common.refresh_failed') || 'Failed to refresh data',
-        variant: 'destructive'
+        description: t("common.refresh_failed") || "Failed to refresh data",
+        variant: "destructive",
       });
     } finally {
       setIsManualRefreshing(false);
     }
   };
 
-  const handleExport = async (format: 'csv' | 'excel') => {
+  const handleExport = async (format: "csv" | "excel") => {
     setIsExporting(true);
     try {
       if (allVehicles.length === 0) {
         toast({
-          description: 'No vehicles to export',
-          variant: 'destructive'
+          description: "No vehicles to export",
+          variant: "destructive",
         });
         return;
       }
@@ -97,25 +156,30 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
       const formattedData = formatVehiclesForExport(allVehicles);
 
       // Generate filename
-      const stepName = selectedStep === 'all' ? 'all-steps' : (steps.find(s => s.id === selectedStep)?.name || 'vehicles');
-      const filename = `get-ready-${stepName.toLowerCase().replace(/\s+/g, '-')}`;
+      const stepName =
+        selectedStep === "all"
+          ? "all-steps"
+          : steps.find((s) => s.id === selectedStep)?.name || "vehicles";
+      const filename = `get-ready-${stepName.toLowerCase().replace(/\s+/g, "-")}`;
 
       // Export based on format
-      if (format === 'csv') {
+      if (format === "csv") {
         exportToCSV(formattedData, filename);
-      } else if (format === 'excel') {
+      } else if (format === "excel") {
         exportToExcel(formattedData, filename);
       }
 
       toast({
-        description: t('common.actions.export_success') || 'Data exported successfully',
-        variant: 'default'
+        description:
+          t("common.actions.export_success") || "Data exported successfully",
+        variant: "default",
       });
     } catch (error) {
-      console.error('Export failed:', error);
+      console.error("Export failed:", error);
       toast({
-        description: t('common.actions.export_failed') || 'Failed to export data',
-        variant: 'destructive'
+        description:
+          t("common.actions.export_failed") || "Failed to export data",
+        variant: "destructive",
       });
     } finally {
       setIsExporting(false);
@@ -126,32 +190,39 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     try {
       await deleteVehicle(vehicleId);
       toast({
-        description: t('get_ready.vehicle_deleted') || 'Vehicle deleted successfully',
-        variant: 'default'
+        description:
+          t("get_ready.vehicle_deleted") || "Vehicle deleted successfully",
+        variant: "default",
       });
       // Refresh KPIs and steps after deletion
       refetchSteps();
       refetchKPIs();
     } catch (error) {
-      console.error('Failed to delete vehicle:', error);
+      console.error("Failed to delete vehicle:", error);
       toast({
-        description: t('get_ready.delete_failed') || 'Failed to delete vehicle',
-        variant: 'destructive'
+        description: t("get_ready.delete_failed") || "Failed to delete vehicle",
+        variant: "destructive",
       });
     }
   };
 
-  const hasActiveFilters = selectedWorkflow !== 'all' || selectedPriority !== 'all' || searchQuery.length > 0;
+  const hasActiveFilters =
+    selectedWorkflow !== "all" ||
+    selectedPriority !== "all" ||
+    searchQuery.length > 0;
 
   const clearFilters = () => {
-    setSearchQuery('');
-    setSelectedWorkflow('all');
-    setSelectedPriority('all');
+    setSearchQuery("");
+    setSelectedWorkflow("all");
+    setSelectedPriority("all");
   };
 
   // Determine which content to show based on route
-  const isOverview = location.pathname === '/get-ready' || location.pathname === '/get-ready/';
-  const isDetailsView = location.pathname === '/get-ready/details';
+  const isOverview =
+    location.pathname === "/get-ready" || location.pathname === "/get-ready/";
+  const isDetailsView = location.pathname === "/get-ready/details";
+  const isReportsView = location.pathname === "/get-ready/reports";
+  const isApprovalsView = location.pathname === "/get-ready/approvals";
 
   // Overview Tab - Dashboard Content
   if (isOverview) {
@@ -189,6 +260,391 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     );
   }
 
+  // Reports View Tab - Analytics and Reports
+  if (isReportsView) {
+    return (
+      <div className={cn("h-full overflow-auto space-y-6", className)}>
+        {/* Reports Header */}
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t("get_ready.reports.title") || "Reports & Analytics"}
+          </h2>
+          <p className="text-muted-foreground">
+            {t("get_ready.reports.subtitle") ||
+              "Generate and view detailed reports for your reconditioning workflow"}
+          </p>
+        </div>
+
+        {/* Report Options */}
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Performance Report</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                View overall workflow performance metrics and KPIs
+              </p>
+              <Button className="w-full" onClick={() => handleExport("excel")}>
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                Generate Report
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Vehicle History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Export detailed vehicle movement and status history
+              </p>
+              <Button className="w-full" onClick={() => handleExport("csv")}>
+                <FileText className="h-4 w-4 mr-2" />
+                Export Data
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">SLA Compliance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                Review SLA compliance rates and identify bottlenecks
+              </p>
+              <Button className="w-full" onClick={() => handleExport("excel")}>
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                View Report
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* KPIs Summary for Reports */}
+        <GetReadyDashboardWidget />
+
+        {/* Recent Export History (Placeholder) */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Exports</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              No recent exports. Generate a report above to see it listed here.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Helper functions for approval tab
+  const handleApproveClick = (vehicle: GetReadyVehicle) => {
+    setSelectedApprovalVehicle(vehicle);
+    setApprovalAction("approve");
+    setApprovalModalOpen(true);
+  };
+
+  const handleRejectClick = (vehicle: GetReadyVehicle) => {
+    setSelectedApprovalVehicle(vehicle);
+    setApprovalAction("reject");
+    setApprovalModalOpen(true);
+  };
+
+  // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab
+  const pendingApprovalVehicles = allVehiclesUnfiltered.filter(
+    (v) => v.requires_approval === true && v.approval_status === "pending",
+  );
+
+  const approvedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
+    if (!v.approved_at || v.approval_status !== "approved") return false;
+    const approvedDate = new Date(v.approved_at);
+    const today = new Date();
+    return (
+      approvedDate.getDate() === today.getDate() &&
+      approvedDate.getMonth() === today.getMonth() &&
+      approvedDate.getFullYear() === today.getFullYear()
+    );
+  });
+
+  const rejectedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
+    if (!v.rejected_at || v.approval_status !== "rejected") return false;
+    const rejectedDate = new Date(v.rejected_at);
+    const today = new Date();
+    return (
+      rejectedDate.getDate() === today.getDate() &&
+      rejectedDate.getMonth() === today.getMonth() &&
+      rejectedDate.getFullYear() === today.getFullYear()
+    );
+  });
+
+  // Approvals View Tab - Approval Queue
+  if (isApprovalsView) {
+    return (
+      <div className={cn("h-full overflow-auto space-y-6", className)}>
+        {/* Approvals Header */}
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t("get_ready.approvals.title") || "Approvals"}
+          </h2>
+          <p className="text-muted-foreground">
+            {t("get_ready.approvals.subtitle") ||
+              "Review and approve vehicles ready to move to the next step"}
+          </p>
+        </div>
+
+        {/* Summary Cards */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("get_ready.approvals.summary.pending")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {pendingApprovalVehicles.length}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("get_ready.approvals.summary.awaiting_review")}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("get_ready.approvals.summary.approved_today")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {approvedTodayVehicles.length}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("get_ready.approvals.summary.processed_today")}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("get_ready.approvals.summary.rejected_today")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {rejectedTodayVehicles.length}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("get_ready.approvals.summary.needs_attention")}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Approval Queues */}
+        <div className="grid gap-6">
+          {/* Pending Approvals */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>{t("get_ready.approvals.queue.pending_title")}</span>
+                <Badge variant="secondary">
+                  {pendingApprovalVehicles.length}
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {pendingApprovalVehicles.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  {t("get_ready.approvals.queue.no_pending")}
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {pendingApprovalVehicles.map((vehicle) => (
+                    <div
+                      key={vehicle.id}
+                      onClick={() => {
+                        setSelectedVehicleId(vehicle.id);
+                        navigate("/get-ready/details");
+                      }}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                    >
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">
+                            {vehicle.year} {vehicle.make} {vehicle.model}
+                          </p>
+                          <Badge variant="outline" className="text-xs">
+                            {vehicle.workflow_type?.toUpperCase()}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Stock: {vehicle.stock_number || "N/A"} •{" "}
+                          {t("get_ready.steps.dis")}:{" "}
+                          {vehicle.days_in_step || "0d"} • Step:{" "}
+                          {vehicle.step_name}
+                        </p>
+                        {/* Show work items needing approval with details */}
+                        {(vehicle as any).pending_approval_work_items &&
+                          (vehicle as any).pending_approval_work_items.length >
+                            0 && (
+                            <div className="space-y-2">
+                              {(vehicle as any).pending_approval_work_items.map(
+                                (workItem: any) => (
+                                  <div
+                                    key={workItem.id}
+                                    className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800"
+                                  >
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-amber-100 text-amber-700 border-amber-300 text-xs shrink-0 mt-0.5"
+                                    >
+                                      {t(
+                                        "get_ready.work_items.approval_required",
+                                      )}
+                                    </Badge>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-medium text-foreground">
+                                        {workItem.title}
+                                      </p>
+                                      {workItem.description && (
+                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                          {workItem.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                ),
+                              )}
+                            </div>
+                          )}
+                        {vehicle.approval_notes && (
+                          <p className="text-xs text-muted-foreground italic">
+                            "{vehicle.approval_notes}"
+                          </p>
+                        )}
+                      </div>
+                      <div
+                        className="flex gap-2 ml-4"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleRejectClick(vehicle)}
+                        >
+                          <XCircle className="h-4 w-4 mr-1" />
+                          {t("get_ready.approvals.actions.reject")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleApproveClick(vehicle)}
+                        >
+                          <CheckCircle2 className="h-4 w-4 mr-1" />
+                          {t("get_ready.approvals.actions.approve")}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Recently Approved */}
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {t("get_ready.approvals.queue.approved_title")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {approvedTodayVehicles.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  {t("get_ready.approvals.queue.no_approved")}
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {approvedTodayVehicles.slice(0, 5).map((vehicle) => (
+                    <div
+                      key={vehicle.id}
+                      className="flex items-center justify-between p-3 border rounded-lg bg-green-50 dark:bg-green-950/20"
+                    >
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">
+                          {vehicle.vehicle_year} {vehicle.vehicle_make}{" "}
+                          {vehicle.vehicle_model}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("get_ready.vehicle_form.stock_number")}:{" "}
+                          {vehicle.stock_number}
+                        </p>
+                      </div>
+                      <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Recently Rejected */}
+          {rejectedTodayVehicles.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  {t("get_ready.approvals.queue.rejected_title")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {rejectedTodayVehicles.slice(0, 5).map((vehicle) => (
+                    <div
+                      key={vehicle.id}
+                      className="flex items-center justify-between p-3 border rounded-lg bg-red-50 dark:bg-red-950/20"
+                    >
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium">
+                          {vehicle.vehicle_year} {vehicle.vehicle_make}{" "}
+                          {vehicle.vehicle_model}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("get_ready.vehicle_form.stock_number")}:{" "}
+                          {vehicle.stock_number}
+                        </p>
+                        {vehicle.rejection_reason && (
+                          <p className="text-xs text-red-600 dark:text-red-400 italic">
+                            {t("get_ready.approvals.modal.rejection_reason")}:{" "}
+                            {vehicle.rejection_reason}
+                          </p>
+                        )}
+                      </div>
+                      <XCircle className="h-5 w-5 text-red-600" />
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Approval Modal */}
+        <ApprovalModal
+          open={approvalModalOpen}
+          onOpenChange={setApprovalModalOpen}
+          vehicle={selectedApprovalVehicle}
+          action={approvalAction}
+        />
+      </div>
+    );
+  }
+
   // Details View Tab - Enhanced Vehicle List
   if (isDetailsView) {
     return (
@@ -197,54 +653,74 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold">
-              {selectedStep === 'all'
-                ? 'Vehicle Management'
-                : `${steps.find(s => s.id === selectedStep)?.name || 'Step'} - Vehicles`
-              }
+              {selectedStep === "all"
+                ? "Vehicle Management"
+                : `${steps.find((s) => s.id === selectedStep)?.name || "Step"} - Vehicles`}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {selectedStep === 'all'
-                ? 'Enhanced vehicle list with advanced filtering'
-                : `Showing vehicles in ${steps.find(s => s.id === selectedStep)?.name || 'selected'} step`
-              }
+              {selectedStep === "all"
+                ? "Enhanced vehicle list with advanced filtering"
+                : `Showing vehicles in ${steps.find((s) => s.id === selectedStep)?.name || "selected"} step`}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isManualRefreshing}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">{t('common.actions.refresh')}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isManualRefreshing}
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${isManualRefreshing ? "animate-spin" : ""}`}
+              />
+              <span className="hidden sm:inline">
+                {t("common.actions.refresh")}
+              </span>
             </Button>
 
             {/* Export Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" disabled={isExporting}>
-                  <Download className={`h-4 w-4 mr-2 ${isExporting ? 'animate-pulse' : ''}`} />
-                  <span className="hidden sm:inline">{isExporting ? t('common.actions.exporting') : t('common.actions.export')}</span>
+                  <Download
+                    className={`h-4 w-4 mr-2 ${isExporting ? "animate-pulse" : ""}`}
+                  />
+                  <span className="hidden sm:inline">
+                    {isExporting
+                      ? t("common.actions.exporting")
+                      : t("common.actions.export")}
+                  </span>
                   <ChevronDown className="h-3 w-3 ml-1 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{t('common.actions.export')}</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {t("common.actions.export")}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleExport('csv')}>
+                <DropdownMenuItem onClick={() => handleExport("csv")}>
                   <FileText className="h-4 w-4 mr-2" />
-                  {t('common.actions.export_csv')}
+                  {t("common.actions.export_csv")}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport('excel')}>
+                <DropdownMenuItem onClick={() => handleExport("excel")}>
                   <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  {t('common.actions.export_excel')}
+                  {t("common.actions.export_excel")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button size="sm" onClick={() => {
-              setEditingVehicleId(null);
-              setVehicleFormOpen(true);
-            }}>
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditingVehicleId(null);
+                setVehicleFormOpen(true);
+              }}
+            >
               <Plus className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">{t('get_ready.vehicle_form.add_vehicle')}</span>
+              <span className="hidden sm:inline">
+                {t("get_ready.vehicle_form.add_vehicle")}
+              </span>
             </Button>
           </div>
         </div>
@@ -254,8 +730,13 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           {/* Step indicator (read-only from sidebar) */}
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Step:</span>
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-              {selectedStep === 'all' ? 'All Steps' : steps.find(s => s.id === selectedStep)?.name || 'All Steps'}
+            <Badge
+              variant="outline"
+              className="bg-primary/10 text-primary border-primary/20"
+            >
+              {selectedStep === "all"
+                ? "All Steps"
+                : steps.find((s) => s.id === selectedStep)?.name || "All Steps"}
             </Badge>
           </div>
 
@@ -266,9 +747,15 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="standard">{t('get_ready.workflow.standard')}</SelectItem>
-              <SelectItem value="express">{t('get_ready.workflow.express')}</SelectItem>
-              <SelectItem value="priority">{t('get_ready.workflow.priority')}</SelectItem>
+              <SelectItem value="standard">
+                {t("get_ready.workflow.standard")}
+              </SelectItem>
+              <SelectItem value="express">
+                {t("get_ready.workflow.express")}
+              </SelectItem>
+              <SelectItem value="priority">
+                {t("get_ready.workflow.priority")}
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -294,7 +781,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="days_in_step">Days in Step</SelectItem>
-                <SelectItem value="days_to_frontline">Days to Finish</SelectItem>
+                <SelectItem value="days_to_frontline">
+                  Days to Finish
+                </SelectItem>
                 <SelectItem value="priority_score">Priority Score</SelectItem>
                 <SelectItem value="sla_status">SLA Status</SelectItem>
                 <SelectItem value="stock_number">Stock Number</SelectItem>
@@ -305,9 +794,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
               variant="outline"
               size="sm"
               className="h-9 w-9 p-0"
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </Button>
           </div>
 
@@ -315,7 +804,12 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
           {/* Clear filters button (only when active) */}
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9"
+              onClick={clearFilters}
+            >
               Clear Filters
             </Button>
           )}

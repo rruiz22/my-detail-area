@@ -1,19 +1,20 @@
 import { RouteLogger } from "@/components/debug/RouteLogger";
 import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
 import { NotificationProvider } from "@/components/NotificationProvider";
+import { PermissionGuard } from "@/components/permissions/PermissionGuard";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { PermissionGuard } from "@/components/permissions/PermissionGuard";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { DealerFilterProvider } from "@/contexts/DealerFilterContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 import { TooltipTester } from "./components/debug/TooltipTester";
+import AdminDashboard from "./pages/AdminDashboard";
 import Auth from "./pages/Auth";
 import CarWash from "./pages/CarWash";
 import Chat from "./pages/Chat";
@@ -40,7 +41,6 @@ import ServiceOrders from "./pages/ServiceOrders";
 import Settings from "./pages/Settings";
 import Stock from "./pages/Stock";
 import VinScanner from "./pages/VinScanner";
-import AdminDashboard from "./pages/AdminDashboard";
 
     console.log('🚀 App starting up with improved navigation');
     console.log('📱 Current URL:', window.location.href);
@@ -227,22 +227,24 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <PermissionProvider>
-          <ServicesProvider>
-            <GlobalChatWrapper>
-              <NotificationProvider>
-                <BrowserRouter
-                  future={{
-                    v7_startTransition: false,
-                    v7_relativeSplatPath: true
-                  }}
-                >
-                  <AppRoutes />
-                </BrowserRouter>
-              </NotificationProvider>
-            </GlobalChatWrapper>
-          </ServicesProvider>
-        </PermissionProvider>
+        <DealerFilterProvider>
+          <PermissionProvider>
+            <ServicesProvider>
+              <GlobalChatWrapper>
+                <NotificationProvider>
+                  <BrowserRouter
+                    future={{
+                      v7_startTransition: false,
+                      v7_relativeSplatPath: true
+                    }}
+                  >
+                    <AppRoutes />
+                  </BrowserRouter>
+                </NotificationProvider>
+              </GlobalChatWrapper>
+            </ServicesProvider>
+          </PermissionProvider>
+        </DealerFilterProvider>
       </AuthProvider>
     </TooltipProvider>
     {/* Sistema de toast shadcn/ui - Sistema unificado */}

@@ -17,7 +17,7 @@ export default function GetReady() {
       <Route path="approvals" element={<GetReadyContent />} />
 
       {/* Vendors - NEW: Full vendor management */}
-      <Route path="vendors" element={<VendorManagement />} />
+      <Route path="vendors" element={<GetReadyContent><VendorManagement /></GetReadyContent>} />
 
       {/* Reports */}
       <Route path="reports" element={<GetReadyContent />} />

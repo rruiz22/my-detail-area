@@ -70,7 +70,11 @@ export function useOverviewTable() {
           ),
           get_ready_work_items (
             id,
-            status
+            title,
+            description,
+            status,
+            approval_required,
+            approval_status
           )
         `)
         .eq('dealer_id', currentDealership.id)
@@ -269,6 +273,14 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           intake_date,
           created_at,
           updated_at,
+          requires_approval,
+          approval_status,
+          approved_by,
+          approved_at,
+          approval_notes,
+          rejected_by,
+          rejected_at,
+          rejection_reason,
           get_ready_steps!inner (
             name,
             color,
@@ -276,7 +288,11 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           ),
           get_ready_work_items (
             id,
-            status
+            title,
+            description,
+            status,
+            approval_required,
+            approval_status
           )
         `)
         .eq('dealer_id', currentDealership.id);
@@ -360,6 +376,15 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           work_items: workItems.length,
           work_item_counts,
           media_count: 0, // TODO: Count media
+          // Approval fields
+          requires_approval: vehicle.requires_approval || false,
+          approval_status: vehicle.approval_status || 'not_required',
+          approved_by: vehicle.approved_by,
+          approved_at: vehicle.approved_at,
+          approval_notes: vehicle.approval_notes,
+          rejected_by: vehicle.rejected_by,
+          rejected_at: vehicle.rejected_at,
+          rejection_reason: vehicle.rejection_reason,
         };
       });
     },
@@ -419,6 +444,14 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           intake_date,
           created_at,
           updated_at,
+          requires_approval,
+          approval_status,
+          approved_by,
+          approved_at,
+          approval_notes,
+          rejected_by,
+          rejected_at,
+          rejection_reason,
           get_ready_steps!inner (
             name,
             color,
@@ -426,7 +459,11 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           ),
           get_ready_work_items (
             id,
-            status
+            title,
+            description,
+            status,
+            approval_required,
+            approval_status
           )
         `)
         .eq('dealer_id', currentDealership.id);
@@ -487,6 +524,12 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           declined: workItems.filter((item: any) => item.status === 'declined').length,
         };
 
+        // Get pending work items that need approval
+        const pendingApprovalWorkItems = workItems.filter((item: any) =>
+          item.approval_required === true &&
+          (!item.approval_status || item.approval_status !== 'approved')
+        );
+
         return {
           id: vehicle.id,
           stock_number: vehicle.stock_number,
@@ -513,6 +556,17 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           work_items: workItems.length,
           work_item_counts,
           media_count: 0,
+          // Approval fields
+          requires_approval: vehicle.requires_approval || false,
+          approval_status: vehicle.approval_status || 'not_required',
+          approved_by: vehicle.approved_by,
+          approved_at: vehicle.approved_at,
+          approval_notes: vehicle.approval_notes,
+          rejected_by: vehicle.rejected_by,
+          rejected_at: vehicle.rejected_at,
+          rejection_reason: vehicle.rejection_reason,
+          // Work items needing approval
+          pending_approval_work_items: pendingApprovalWorkItems,
         };
       });
 

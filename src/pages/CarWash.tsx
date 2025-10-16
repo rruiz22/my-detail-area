@@ -1,27 +1,24 @@
 import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
-import { useViewModePersistence } from '@/hooks/useTabPersistence';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { useQueryClient } from '@tanstack/react-query';
-import { Calendar as CalendarIcon, Kanban, List, Plus, RefreshCw, Search } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, RefreshCw } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
+import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function CarWash() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const isMobile = useIsMobile();
 
   // Persistent state
-  const [viewMode, setViewMode] = useViewModePersistence('car_wash');
+  const [activeFilter, setActiveFilter] = useTabPersistence('car_wash');
 
   // Non-persistent UI state
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,9 +26,11 @@ export default function CarWash() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [weekOffset, setWeekOffset] = useState(0);
 
   const {
-    orders,
+    orders: allOrders,
     loading,
     lastRefresh,
     refreshData,
@@ -42,15 +41,98 @@ export default function CarWash() {
 
   // Real-time updates are handled by useCarWashOrderManagement hook
 
+  // Reset week offset when changing to a different filter
+  useEffect(() => {
+    if (activeFilter !== 'week') {
+      setWeekOffset(0);
+    }
+  }, [activeFilter]);
+
+  // Helper function to get dates in system timezone for filtering
+  const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {
+    const timezone = getSystemTimezone();
+    const now = new Date();
+
+    // Get current date in system timezone and normalize to start of day
+    const todayInTimezone = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+    todayInTimezone.setHours(0, 0, 0, 0);
+
+    // Tomorrow in system timezone
+    const tomorrowInTimezone = new Date(todayInTimezone);
+    tomorrowInTimezone.setDate(tomorrowInTimezone.getDate() + 1);
+
+    // Calculate week range based on offset
+    const weekStart = new Date(todayInTimezone);
+    const dayOfWeek = weekStart.getDay();
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    weekStart.setDate(weekStart.getDate() + daysToMonday + (offset * 7));
+    weekStart.setHours(0, 0, 0, 0);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+
+    return {
+      today: todayInTimezone,
+      tomorrow: tomorrowInTimezone,
+      weekStart,
+      weekEnd,
+      timezone
+    };
+  }, []);
+
+  // Calculate tab counts from all orders (excluding tomorrow for Car Wash)
+  const tabCounts = useMemo(() => {
+    const { today, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
+
+    return {
+      today: allOrders.filter(order => {
+        const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+        return orderDate.toDateString() === today.toDateString();
+      }).length,
+      pending: allOrders.filter(order => order.status === 'pending').length,
+      in_process: allOrders.filter(order => order.status === 'in_progress').length,
+      week: allOrders.filter(order => {
+        const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+        const orderDateNormalized = new Date(orderDate);
+        orderDateNormalized.setHours(0, 0, 0, 0);
+        return orderDateNormalized >= weekStart && orderDateNormalized <= weekEnd;
+      }).length,
+    };
+  }, [allOrders, weekOffset, getSystemTimezoneDates]);
+
+  // Filter orders based on active filter and week offset (excluding tomorrow for Car Wash)
+  const filteredOrdersByTab = useMemo(() => {
+    if (activeFilter === 'dashboard' || activeFilter === 'all') {
+      return allOrders;
+    }
+
+    const { today, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
+
+    switch (activeFilter) {
+      case 'today':
+        return allOrders.filter(order => {
+          const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+          return orderDate.toDateString() === today.toDateString();
+        });
+      case 'pending':
+        return allOrders.filter(order => order.status === 'pending');
+      case 'in_process':
+        return allOrders.filter(order => order.status === 'in_progress');
+      case 'week':
+        return allOrders.filter(order => {
+          const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+          const orderDateNormalized = new Date(orderDate);
+          orderDateNormalized.setHours(0, 0, 0, 0);
+          return orderDateNormalized >= weekStart && orderDateNormalized <= weekEnd;
+        });
+      default:
+        return allOrders;
+    }
+  }, [allOrders, activeFilter, weekOffset, getSystemTimezoneDates]);
+
   const handleCreateOrder = () => {
     setSelectedOrder(null);
-    setShowModal(true);
-  };
-
-  const handleCreateOrderWithDate = (selectedDate?: Date) => {
-    setSelectedOrder(null);
-    // If date is provided from calendar, we could pre-populate the due_date
-    // For now, just open the modal
     setShowModal(true);
   };
 
@@ -155,11 +237,8 @@ export default function CarWash() {
     }
   };
 
-  // Force table view on mobile (disable kanban and calendar)
-  const effectiveViewMode = isMobile ? 'table' : viewMode;
-
-  // Filter orders based on search term
-  const filteredOrders = orders.filter((order: any) => {
+  // Filter orders based on search term (after tab filtering)
+  const filteredOrders = filteredOrdersByTab.filter((order: any) => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -197,86 +276,29 @@ export default function CarWash() {
           </div>
         </div>
 
-        {/* Search and View Mode Bar */}
-        <Card className="border-border shadow-sm">
-          <div className="p-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-              {/* Search */}
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder={t('layout.search_placeholder')}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-background"
-                />
-              </div>
+        {/* Quick Filter Bar - Table view only for Car Wash */}
+        <QuickFilterBar
+          activeFilter={activeFilter}
+          tabCounts={tabCounts}
+          onFilterChange={setActiveFilter}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          weekOffset={weekOffset}
+          onWeekChange={setWeekOffset}
+        />
 
-              {/* View Mode Toggle */}
-              <div className="flex items-center bg-muted/50 rounded-lg p-1">
-                {/* Table - Always available */}
-                <Button
-                  size="sm"
-                  variant={viewMode === 'table' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('table')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <List className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Table</span>
-                </Button>
-
-                {/* Kanban - Only on desktop */}
-                {!isMobile && (
-                  <Button
-                    size="sm"
-                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                    onClick={() => setViewMode('kanban')}
-                    className="h-8 px-2 sm:px-3"
-                  >
-                    <Kanban className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Kanban</span>
-                  </Button>
-                )}
-
-                {/* Calendar - Only on desktop */}
-                {!isMobile && (
-                  <Button
-                    size="sm"
-                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                    onClick={() => setViewMode('calendar')}
-                    className="h-8 px-2 sm:px-3"
-                  >
-                    <CalendarIcon className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">{t('common.calendar')}</span>
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Main Content - Orders Table/Calendar - Mobile forces table */}
+        {/* Main Content - Table View Only */}
         <div className="space-y-6">
-          {effectiveViewMode === 'calendar' ? (
-            <OrderCalendarView
-              orders={filteredOrders}
-              loading={loading}
-              onEdit={handleEditOrder}
-              onView={handleViewOrder}
-              onDelete={handleDeleteOrder}
-              onStatusChange={handleStatusChange}
-              onCreateOrder={handleCreateOrderWithDate}
-            />
-          ) : (
-            <OrderDataTable
-              orders={filteredOrders}
-              loading={loading}
-              onEdit={handleEditOrder}
-              onDelete={handleDeleteOrder}
-              onView={handleViewOrder}
-              tabType="carwash"
-            />
-          )}
+          <OrderDataTable
+            orders={filteredOrders}
+            loading={loading}
+            onEdit={handleEditOrder}
+            onDelete={handleDeleteOrder}
+            onView={handleViewOrder}
+            tabType="carwash"
+          />
         </div>
 
         {/* Modals */}

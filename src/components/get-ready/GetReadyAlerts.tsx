@@ -5,17 +5,22 @@ import { useGetReady } from '@/hooks/useGetReady';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Clock, TrendingDown, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BottleneckAlert, SLAAlert } from '@/types/getReady';
 
 interface GetReadyAlertsProps {
   className?: string;
   compact?: boolean;
 }
 
+type AlertWithType =
+  | (BottleneckAlert & { type: 'bottleneck' })
+  | (SLAAlert & { type: 'sla' });
+
 export function GetReadyAlerts({ className, compact = false }: GetReadyAlertsProps) {
   const { t } = useTranslation();
   const { bottleneckAlerts, slaAlerts } = useGetReady();
 
-  const allAlerts = [
+  const allAlerts: AlertWithType[] = [
     ...bottleneckAlerts.map(alert => ({ ...alert, type: 'bottleneck' as const })),
     ...slaAlerts.map(alert => ({ ...alert, type: 'sla' as const }))
   ];
@@ -70,18 +75,18 @@ export function GetReadyAlerts({ className, compact = false }: GetReadyAlertsPro
                 <div className="text-sm font-medium">
                   {alert.type === 'bottleneck' ? (
                     <>
-                      {t('get_ready.alerts.bottleneck')}: {(alert as any).step_name}
+                      {t('get_ready.alerts.bottleneck')}: {alert.step_name}
                     </>
                   ) : (
                     <>
-                      {t('get_ready.alerts.sla_warning')}: {(alert as any).stock_number}
+                      {t('get_ready.alerts.sla_warning')}: {alert.stock_number}
                     </>
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground truncate">
                   {alert.type === 'bottleneck'
-                    ? `${(alert as any).vehicle_count} vehicles, ${(alert as any).avg_wait_time}d avg wait`
-                    : `${(alert as any).hours_overdue}h overdue`
+                    ? `${alert.vehicle_count} vehicles, ${alert.avg_wait_time}d avg wait`
+                    : `${alert.hours_overdue}h overdue`
                   }
                 </div>
               </div>
@@ -124,11 +129,11 @@ export function GetReadyAlerts({ className, compact = false }: GetReadyAlertsPro
                   <div className="font-medium text-sm">
                     {alert.type === 'bottleneck' ? (
                       <>
-                        {t('get_ready.alerts.bottleneck')}: {(alert as any).step_name}
+                        {t('get_ready.alerts.bottleneck')}: {alert.step_name}
                       </>
                     ) : (
                       <>
-                        SLA Alert: {(alert as any).vehicle_info}
+                        SLA Alert: {alert.vehicle_info}
                       </>
                     )}
                   </div>
@@ -141,21 +146,21 @@ export function GetReadyAlerts({ className, compact = false }: GetReadyAlertsPro
                   {alert.type === 'bottleneck' ? (
                     <div>
                       <div className="mb-1">
-                        <strong>{(alert as any).vehicle_count} vehicles</strong> with average wait time of{' '}
-                        <strong>{(alert as any).avg_wait_time} days</strong>
+                        <strong>{alert.vehicle_count} vehicles</strong> with average wait time of{' '}
+                        <strong>{alert.avg_wait_time} days</strong>
                       </div>
                       <div className="text-muted-foreground">
-                        Recommended: {(alert as any).recommended_action}
+                        Recommended: {alert.recommended_action}
                       </div>
                     </div>
                   ) : (
                     <div>
                       <div className="mb-1">
-                        Vehicle <strong>{(alert as any).stock_number}</strong> is{' '}
-                        <strong>{(alert as any).hours_overdue} hours overdue</strong>
+                        Vehicle <strong>{alert.stock_number}</strong> is{' '}
+                        <strong>{alert.hours_overdue} hours overdue</strong>
                       </div>
                       <div className="text-muted-foreground">
-                        Escalation level: {(alert as any).escalation_level}
+                        Escalation level: {alert.escalation_level}
                       </div>
                     </div>
                   )}

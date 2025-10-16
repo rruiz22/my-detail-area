@@ -275,3 +275,5 @@ Después de arreglar el problema:
 ---
 
 *Sistema de notas robusto y funcional para Get Ready module* 🎉
+
+

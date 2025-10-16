@@ -3,7 +3,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import {
   Search,
   Settings,
@@ -34,6 +36,13 @@ const TABS: TabConfig[] = [
 export function GetReadyTopbar() {
   const { t } = useTranslation();
   const location = useLocation();
+
+  // Get vehicles to count pending approvals
+  const { data: vehiclesData } = useGetReadyVehiclesInfinite({});
+  const allVehicles = vehiclesData?.pages.flatMap(page => page.vehicles) ?? [];
+  const pendingApprovalsCount = allVehicles.filter(
+    v => v.requires_approval === true && v.approval_status === 'pending'
+  ).length;
   const { user } = useAuth();
 
   // Filter tabs based on user role
@@ -61,8 +70,8 @@ export function GetReadyTopbar() {
                 to={tab.path}
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                  isActive 
-                    ? "bg-primary text-primary-foreground" 
+                  isActive
+                    ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
@@ -70,6 +79,19 @@ export function GetReadyTopbar() {
                 <span className="hidden sm:inline">
                   {t(`get_ready.tabs.${tab.key}`)}
                 </span>
+                {tab.key === 'approvals' && pendingApprovalsCount > 0 && (
+                  <Badge
+                    variant={isActive ? "secondary" : "outline"}
+                    className={cn(
+                      "ml-1 h-5 min-w-[20px] px-1.5 text-xs font-bold",
+                      isActive
+                        ? "bg-white/20 text-primary-foreground border-white/30"
+                        : "bg-amber-100 text-amber-700 border-amber-300"
+                    )}
+                  >
+                    {pendingApprovalsCount}
+                  </Badge>
+                )}
               </NavLink>
             );
           })}

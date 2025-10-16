@@ -1851,12 +1851,34 @@
       "avg_time_per_step": "Avg Time/Step"
     },
     "search_placeholder": "Search vehicles...",
+    "sidebar": {
+      "t2l": "T2L",
+      "sla": "SLA",
+      "daily": "Daily",
+      "alerts": "active alerts",
+      "on_track": "On Track",
+      "at_risk": "At Risk",
+      "critical": "Critical",
+      "by_days": "By Days",
+      "fresh": "≤1d",
+      "normal": "2-3d",
+      "sla_hours": "SLA",
+      "cost_per_day": "Cost/day",
+      "current_step": "Current Step"
+    },
     "steps": {
       "title": "Get Ready - Optimized Flow",
-      "dis": "Days In Step",
-      "dtf": "Days To Finish",
-      "dis_tooltip": "Average days vehicles remain in this step",
-      "dtf_tooltip": "Average days remaining to complete the process"
+      "dis": "DIS",
+      "dtf": "DTF",
+      "dis_tooltip": "Days In Step - Time spent in current step",
+      "dtf_tooltip": "Days To Finish - Estimated days remaining to complete"
+    },
+    "vehicle_list": {
+      "t2l": "T2L",
+      "t2l_short": "T2L",
+      "t2l_full": "Time to Line",
+      "t2l_description": "Total time from intake to current step",
+      "days_in_step": "Days in Step"
     },
     "table": {
       "step": "Step",
@@ -2350,6 +2372,230 @@
         "saving": "Saving...",
         "saved": "SLA configuration updated successfully",
         "error": "Failed to update SLA configuration"
+      }
+    },
+    "approvals": {
+      "title": "Approvals",
+      "subtitle": "Review and approve vehicles ready to move to the next step",
+      "summary": {
+        "pending": "Pending Approvals",
+        "approved_today": "Approved Today",
+        "rejected_today": "Rejected Today",
+        "awaiting_review": "Awaiting review",
+        "processed_today": "Processed today",
+        "needs_attention": "Needs attention"
+      },
+      "queue": {
+        "pending_title": "Pending Approvals",
+        "approved_title": "Recently Approved",
+        "rejected_title": "Recently Rejected",
+        "no_pending": "No vehicles pending approval at this time.",
+        "no_approved": "No recently approved vehicles to display.",
+        "no_rejected": "No recently rejected vehicles to display."
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "review": "Review",
+        "request_approval": "Request Approval"
+      },
+      "modal": {
+        "approve_title": "Approve Vehicle",
+        "reject_title": "Reject Vehicle",
+        "approve_description": "Confirm that this vehicle meets all quality standards and is ready to proceed.",
+        "reject_description": "Provide a reason for rejecting this vehicle. The assigned team will be notified.",
+        "vehicle_info": "Vehicle Information",
+        "rejection_reason": "Rejection Reason",
+        "rejection_reason_placeholder": "Enter the reason for rejection...",
+        "rejection_reason_required": "A rejection reason is required",
+        "notes": "Additional Notes",
+        "optional": "optional",
+        "notes_placeholder": "Add any additional comments or instructions..."
+      },
+      "success": {
+        "approved": "Vehicle approved successfully",
+        "rejected": "Vehicle rejected successfully",
+        "requested": "Approval requested successfully"
+      },
+      "errors": {
+        "approve_failed": "Failed to approve vehicle",
+        "reject_failed": "Failed to reject vehicle",
+        "request_failed": "Failed to request approval",
+        "no_permission": "You don't have permission to approve vehicles",
+        "already_approved": "This vehicle is already approved",
+        "not_pending": "This vehicle is not pending approval"
+      },
+      "status": {
+        "pending": "Pending Approval",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "not_required": "Approval Not Required"
+      }
+    },
+    "reports": {
+      "title": "Reports & Analytics",
+      "subtitle": "Generate and view detailed reports for your reconditioning workflow"
+    }
+  },
+  "reports": {
+    "title": "Reports & Analytics",
+    "overview": "Comprehensive analytics and financial reporting",
+    "period": "Period",
+    "no_data": "No data available for the selected period",
+    "tabs": {
+      "operational": "Operational",
+      "financial": "Financial",
+      "invoices": "Invoices & Billing",
+      "export": "Export & Schedule",
+      "order_volume": "Order Volume",
+      "status_distribution": "Status",
+      "performance": "Performance",
+      "revenue_trends": "Revenue Trends",
+      "top_services": "Top Services",
+      "detailed_analysis": "Detailed Analysis"
+    },
+    "filters": {
+      "last_7_days": "Last 7 Days",
+      "last_30_days": "Last 30 Days",
+      "last_90_days": "Last 90 Days",
+      "this_year": "This Year",
+      "select_dealership": "Select Dealership",
+      "all_dealerships": "All Dealerships",
+      "select_order_type": "Order Type",
+      "all_order_types": "All Types",
+      "select_status": "Status",
+      "all_statuses": "All Statuses",
+      "clear_all": "Clear All",
+      "custom_range": "Custom Range"
+    },
+    "metrics": {
+      "total_orders": "Total Orders",
+      "total_revenue": "Total Revenue",
+      "completion_rate": "Completion Rate",
+      "avg_processing_time": "Avg Processing Time",
+      "avg_order_value": "Avg Order Value",
+      "sla_compliance": "SLA Compliance",
+      "revenue_growth": "Revenue Growth",
+      "avg_revenue_per_period": "Avg Revenue/Period",
+      "growth_rate": "Growth Rate",
+      "top_services_count": "Top Services",
+      "orders": "orders"
+    },
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "charts": {
+      "order_volume_trend": "Order Volume Trend",
+      "daily_order_volume_revenue": "Daily order volume and revenue over time",
+      "status_distribution": "Status Distribution",
+      "order_status_breakdown": "Current order status breakdown",
+      "status_summary": "Status Summary",
+      "detailed_status_metrics": "Detailed metrics by status",
+      "department_performance": "Department Performance",
+      "performance_by_department": "Performance metrics by department/order type",
+      "revenue_trends": "Revenue Trends",
+      "monthly_revenue_performance": "Monthly revenue performance",
+      "top_services_by_revenue": "Top Services by Revenue",
+      "highest_revenue_generating_services": "Highest revenue generating services",
+      "service_performance": "Service Performance",
+      "service_revenue_breakdown": "Service revenue breakdown",
+      "average_order_value_trend": "Average Order Value Trend",
+      "aov_analysis_over_time": "AOV analysis over time",
+      "avg_order_value": "Avg Order Value",
+      "revenue": "Revenue",
+      "orders": "Orders"
+    },
+    "export": {
+      "configuration": "Export Configuration",
+      "configuration_description": "Configure your export settings",
+      "format": "Export Format",
+      "include_sections": "Include Sections",
+      "summary_section": "Executive Summary",
+      "charts_section": "Charts & Visualizations",
+      "tables_section": "Detailed Tables",
+      "trends_section": "Trends Analysis",
+      "available_reports": "Available Reports",
+      "available_reports_description": "Select a report to download",
+      "operational_report": "Operational Report",
+      "operational_description": "Order analytics, completion rates, and processing times",
+      "financial_report": "Financial Report",
+      "financial_description": "Revenue analysis, top services, and financial trends",
+      "performance_report": "Performance Report",
+      "performance_description": "Department performance and efficiency metrics",
+      "custom_report": "Custom Report",
+      "custom_description": "Build a custom report with selected metrics",
+      "download": "Download",
+      "success_message": "{{format}} report generated successfully for {{type}}",
+      "error_message": "Failed to generate report",
+      "scheduled_reports": "Scheduled Reports",
+      "scheduled_reports_description": "Automate report delivery via email",
+      "email_reports": "Email Reports",
+      "email_reports_description": "Schedule automatic report delivery to your team",
+      "schedule": "Schedule Report",
+      "schedule_success": "Report scheduled successfully",
+      "schedule_error": "Failed to schedule report"
+    },
+    "invoices": {
+      "title": "Invoices & Billing",
+      "subtitle": "Manage invoices and track payments",
+      "create_invoice": "Create Invoice",
+      "invoice_number": "Invoice Number",
+      "customer": "Customer",
+      "order": "Order",
+      "issue_date": "Issue Date",
+      "due_date": "Due Date",
+      "amount": "Amount",
+      "paid": "Paid",
+      "due": "Due",
+      "status": "Status",
+      "actions": "Actions",
+      "no_invoices": "No invoices found",
+      "create_first": "Create your first invoice",
+      "search_placeholder": "Search invoices...",
+      "all_status": "All Status",
+      "all_types": "All Types",
+      "total_billed": "Total Billed",
+      "collected": "Collected",
+      "outstanding": "Outstanding",
+      "overdue": "Overdue",
+      "requires_attention": "Requires attention",
+      "invoices_count": "{{count}} invoices",
+      "paid_count": "{{count}} paid",
+      "pending_count": "{{count}} pending",
+      "status_labels": {
+        "draft": "Draft",
+        "pending": "Pending",
+        "paid": "Paid",
+        "partially_paid": "Partial",
+        "overdue": "Overdue",
+        "cancelled": "Cancelled"
+      },
+      "record_payment": "Record Payment",
+      "send_email": "Send Email",
+      "download_pdf": "Download PDF",
+      "view_details": "View Details",
+      "payment_method": {
+        "cash": "Cash",
+        "check": "Check",
+        "credit_card": "Credit Card",
+        "debit_card": "Debit Card",
+        "bank_transfer": "Bank Transfer",
+        "other": "Other"
+      },
+      "form": {
+        "select_order": "Select Order",
+        "tax_rate": "Tax Rate (%)",
+        "discount": "Discount",
+        "notes": "Invoice Notes",
+        "terms": "Terms & Conditions",
+        "payment_amount": "Payment Amount",
+        "payment_date": "Payment Date",
+        "payment_method": "Payment Method",
+        "reference_number": "Reference Number",
+        "payment_notes": "Payment Notes"
       }
     }
   },

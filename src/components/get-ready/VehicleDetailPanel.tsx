@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
@@ -159,16 +160,28 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
             {/* Center: Time Tracking Stats */}
             <div className="flex items-center gap-4 flex-1 justify-center">
-              {/* Time to Front Line */}
-              <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-800">
-                <Clock className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                <div>
-                  <span className="text-xs text-muted-foreground block">{t('get_ready.time_tracking.time_in_process')}</span>
-                  <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-sm">
-                    {timeToLine?.total_hours ? formatTimeDuration(timeToLine.total_hours * 60 * 60 * 1000) : '-'}
-                  </span>
-                </div>
-              </div>
+              {/* T2L - Time to Line with Tooltip */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
+                      <Clock className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground block">{t('get_ready.vehicle_list.t2l_full')}</span>
+                        <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-sm">
+                          {timeToLine?.total_hours ? formatTimeDuration(timeToLine?.total_hours * 60 * 60 * 1000) : '-'}
+                        </span>
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-semibold">{t('get_ready.vehicle_list.t2l_full')}</p>
+                    <p className="text-xs text-muted-foreground max-w-xs">
+                      {t('get_ready.vehicle_list.t2l_description')}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
               {/* Work Items - Hidden on small screens */}
               <div className="hidden md:flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800">

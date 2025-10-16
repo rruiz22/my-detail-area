@@ -1602,12 +1602,34 @@
       "avg_time_per_step": "Tempo Médio/Etapa"
     },
     "search_placeholder": "Buscar veículos...",
+    "sidebar": {
+      "t2l": "T2L",
+      "sla": "SLA",
+      "daily": "Diário",
+      "alerts": "alertas ativos",
+      "on_track": "No Prazo",
+      "at_risk": "Em Risco",
+      "critical": "Crítico",
+      "by_days": "Por Dias",
+      "fresh": "≤1d",
+      "normal": "2-3d",
+      "sla_hours": "SLA",
+      "cost_per_day": "Custo/dia",
+      "current_step": "Etapa Atual"
+    },
     "steps": {
       "title": "Get Ready - Fluxo Otimizado",
-      "dis": "Dias na Etapa",
-      "dtf": "Dias para Finalizar",
-      "dis_tooltip": "Média de dias que os veículos permanecem nesta etapa",
-      "dtf_tooltip": "Média de dias restantes para completar o processo"
+      "dis": "DNE",
+      "dtf": "DPF",
+      "dis_tooltip": "Dias Na Etapa - Tempo gasto na etapa atual",
+      "dtf_tooltip": "Dias Para Finalizar - Dias estimados restantes"
+    },
+    "vehicle_list": {
+      "t2l": "T2L",
+      "t2l_short": "T2L",
+      "t2l_full": "Tempo até a Linha",
+      "t2l_description": "Tempo total desde a entrada até a etapa atual",
+      "days_in_step": "Dias na Etapa"
     },
     "table": {
       "step": "Etapa",
@@ -2112,6 +2134,68 @@
         "saved": "Configuração de SLA atualizada com sucesso",
         "error": "Falha ao atualizar a configuração de SLA"
       }
+    },
+    "approvals": {
+      "title": "Aprovações",
+      "subtitle": "Revise e aprove veículos prontos para avançar para a próxima etapa",
+      "summary": {
+        "pending": "Aprovações Pendentes",
+        "approved_today": "Aprovadas Hoje",
+        "rejected_today": "Rejeitadas Hoje",
+        "awaiting_review": "Aguardando revisão",
+        "processed_today": "Processadas hoje",
+        "needs_attention": "Precisa de atenção"
+      },
+      "queue": {
+        "pending_title": "Aprovações Pendentes",
+        "approved_title": "Recentemente Aprovadas",
+        "rejected_title": "Recentemente Rejeitadas",
+        "no_pending": "Não há veículos pendentes de aprovação no momento.",
+        "no_approved": "Não há veículos aprovados recentemente para exibir.",
+        "no_rejected": "Não há veículos rejeitados recentemente para exibir."
+      },
+      "actions": {
+        "approve": "Aprovar",
+        "reject": "Rejeitar",
+        "review": "Revisar",
+        "request_approval": "Solicitar Aprovação"
+      },
+      "modal": {
+        "approve_title": "Aprovar Veículo",
+        "reject_title": "Rejeitar Veículo",
+        "approve_description": "Confirme que este veículo atende a todos os padrões de qualidade e está pronto para prosseguir.",
+        "reject_description": "Forneça um motivo para rejeitar este veículo. A equipe designada será notificada.",
+        "vehicle_info": "Informações do Veículo",
+        "rejection_reason": "Motivo da Rejeição",
+        "rejection_reason_placeholder": "Digite o motivo da rejeição...",
+        "rejection_reason_required": "Um motivo para a rejeição é obrigatório",
+        "notes": "Notas Adicionais",
+        "optional": "opcional",
+        "notes_placeholder": "Adicione comentários ou instruções adicionais..."
+      },
+      "success": {
+        "approved": "Veículo aprovado com sucesso",
+        "rejected": "Veículo rejeitado com sucesso",
+        "requested": "Aprovação solicitada com sucesso"
+      },
+      "errors": {
+        "approve_failed": "Falha ao aprovar o veículo",
+        "reject_failed": "Falha ao rejeitar o veículo",
+        "request_failed": "Falha ao solicitar a aprovação",
+        "no_permission": "Você não tem permissão para aprovar veículos",
+        "already_approved": "Este veículo já está aprovado",
+        "not_pending": "Este veículo não está pendente de aprovação"
+      },
+      "status": {
+        "pending": "Pendente de Aprovação",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado",
+        "not_required": "Aprovação Não Requerida"
+      }
+    },
+    "reports": {
+      "title": "Relatórios e Análises",
+      "subtitle": "Gere e visualize relatórios detalhados para seu fluxo de recondicionamento"
     }
   },
   "stock": {

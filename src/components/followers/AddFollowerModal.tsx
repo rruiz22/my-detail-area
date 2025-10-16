@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,14 +53,7 @@ export function AddFollowerModal({
   const [notificationLevel, setNotificationLevel] = useState<string>('important');
   const [adding, setAdding] = useState(false);
 
-  // Fetch team members when modal opens
-  useEffect(() => {
-    if (open) {
-      fetchTeamMembers();
-    }
-  }, [open, dealerId]);
-
-  const fetchTeamMembers = async () => {
+  const fetchTeamMembers = useCallback(async () => {
     if (!user) return;
 
     setLoading(true);
@@ -112,7 +105,14 @@ export function AddFollowerModal({
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, dealerId, existingFollowerIds]);
+
+  // Fetch team members when modal opens
+  useEffect(() => {
+    if (open) {
+      fetchTeamMembers();
+    }
+  }, [open, fetchTeamMembers]);
 
   // Filter team members based on search
   const filteredMembers = teamMembers.filter(member =>

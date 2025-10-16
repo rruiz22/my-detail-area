@@ -21,8 +21,8 @@ interface QuickFilterBarProps {
   onFilterChange: (filter: string) => void;
   searchTerm: string;
   onSearchChange: (term: string) => void;
-  viewMode: 'kanban' | 'table' | 'calendar';
-  onViewModeChange: (mode: 'kanban' | 'table' | 'calendar') => void;
+  viewMode?: 'kanban' | 'table' | 'calendar';
+  onViewModeChange?: (mode: 'kanban' | 'table' | 'calendar') => void;
   showFilters?: boolean;
   onToggleFilters?: () => void;
   weekOffset?: number;
@@ -58,7 +58,7 @@ export function QuickFilterBar({
 
   // Auto-switch to table if on mobile and kanban/calendar is selected
   useEffect(() => {
-    if (isMobile && (viewMode === 'kanban' || viewMode === 'calendar')) {
+    if (viewMode && onViewModeChange && isMobile && (viewMode === 'kanban' || viewMode === 'calendar')) {
       onViewModeChange('table');
     }
   }, [isMobile, viewMode, onViewModeChange]);
@@ -142,45 +142,47 @@ export function QuickFilterBar({
 
           {/* View Mode & Filters Toggle */}
           <div className="flex items-center gap-2">
-            {/* View Mode Toggle */}
-            <div className="flex items-center bg-muted/50 rounded-lg p-1">
-              {/* Table - Always first and available */}
-              <Button
-                size="sm"
-                variant={viewMode === 'table' ? 'default' : 'ghost'}
-                onClick={() => onViewModeChange('table')}
-                className="h-8 px-2 sm:px-3"
-              >
-                <List className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Table</span>
-              </Button>
-
-              {/* Kanban - Only on desktop */}
-              {!isMobile && (
+            {/* View Mode Toggle - Only show if viewMode props are provided */}
+            {viewMode && onViewModeChange && (
+              <div className="flex items-center bg-muted/50 rounded-lg p-1">
+                {/* Table - Always first and available */}
                 <Button
                   size="sm"
-                  variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                  onClick={() => onViewModeChange('kanban')}
+                  variant={viewMode === 'table' ? 'default' : 'ghost'}
+                  onClick={() => onViewModeChange('table')}
                   className="h-8 px-2 sm:px-3"
                 >
-                  <Kanban className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Kanban</span>
+                  <List className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Table</span>
                 </Button>
-              )}
 
-              {/* Calendar - Only on desktop */}
-              {!isMobile && (
-                <Button
-                  size="sm"
-                  variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                  onClick={() => onViewModeChange('calendar')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <Calendar className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{t('common.calendar')}</span>
-                </Button>
-              )}
-            </div>
+                {/* Kanban - Only on desktop */}
+                {!isMobile && (
+                  <Button
+                    size="sm"
+                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                    onClick={() => onViewModeChange('kanban')}
+                    className="h-8 px-2 sm:px-3"
+                  >
+                    <Kanban className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Kanban</span>
+                  </Button>
+                )}
+
+                {/* Calendar - Only on desktop */}
+                {!isMobile && (
+                  <Button
+                    size="sm"
+                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
+                    onClick={() => onViewModeChange('calendar')}
+                    className="h-8 px-2 sm:px-3"
+                  >
+                    <Calendar className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">{t('common.calendar')}</span>
+                  </Button>
+                )}
+              </div>
+            )}
 
             {/* Filters Toggle */}
             {onToggleFilters && (

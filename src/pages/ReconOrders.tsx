@@ -3,6 +3,7 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,13 +11,14 @@ import { LiveTimer } from '@/components/ui/LiveTimer';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
-import { useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useQueryClient } from '@tanstack/react-query';
 import { Calendar as CalendarIcon, Kanban, List, Plus, RefreshCw, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
+import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function ReconOrders() {
   const { t } = useTranslation();
@@ -27,6 +29,7 @@ export default function ReconOrders() {
 
   // Persistent state
   const [viewMode, setViewMode] = useViewModePersistence('recon_orders');
+  const [activeFilter, setActiveFilter] = useTabPersistence('recon_orders');
 
   // Non-persistent UI state
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,9 +37,11 @@ export default function ReconOrders() {
   const [selectedOrder, setSelectedOrder] = useState<ReconOrder | null>(null);
   const [previewOrder, setPreviewOrder] = useState<ReconOrder | null>(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [weekOffset, setWeekOffset] = useState(0);
 
   const {
-    orders,
+    orders: allOrders,
     loading,
     lastRefresh,
     refreshData,
@@ -44,6 +49,96 @@ export default function ReconOrders() {
     updateOrder,
     deleteOrder,
   } = useReconOrderManagement();
+
+  // Reset week offset when changing to a different filter
+  useEffect(() => {
+    if (activeFilter !== 'week') {
+      setWeekOffset(0);
+    }
+  }, [activeFilter]);
+
+  // Helper function to get dates in system timezone for filtering
+  const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {
+    const timezone = getSystemTimezone();
+    const now = new Date();
+
+    // Get current date in system timezone and normalize to start of day
+    const todayInTimezone = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+    todayInTimezone.setHours(0, 0, 0, 0);
+
+    // Tomorrow in system timezone
+    const tomorrowInTimezone = new Date(todayInTimezone);
+    tomorrowInTimezone.setDate(tomorrowInTimezone.getDate() + 1);
+
+    // Calculate week range based on offset
+    const weekStart = new Date(todayInTimezone);
+    const dayOfWeek = weekStart.getDay();
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    weekStart.setDate(weekStart.getDate() + daysToMonday + (offset * 7));
+    weekStart.setHours(0, 0, 0, 0);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+
+    return {
+      today: todayInTimezone,
+      tomorrow: tomorrowInTimezone,
+      weekStart,
+      weekEnd,
+      timezone
+    };
+  }, []);
+
+  // Calculate tab counts from all orders (excluding tomorrow for Recon)
+  const tabCounts = useMemo(() => {
+    const { today, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
+
+    return {
+      today: allOrders.filter(order => {
+        const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+        return orderDate.toDateString() === today.toDateString();
+      }).length,
+      pending: allOrders.filter(order => order.status === 'pending').length,
+      in_process: allOrders.filter(order => order.status === 'in_progress').length,
+      week: allOrders.filter(order => {
+        const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+        const orderDateNormalized = new Date(orderDate);
+        orderDateNormalized.setHours(0, 0, 0, 0);
+        return orderDateNormalized >= weekStart && orderDateNormalized <= weekEnd;
+      }).length,
+    };
+  }, [allOrders, weekOffset, getSystemTimezoneDates]);
+
+  // Filter orders based on active filter and week offset (excluding tomorrow for Recon)
+  const filteredOrdersByTab = useMemo(() => {
+    if (activeFilter === 'dashboard' || activeFilter === 'all') {
+      return allOrders;
+    }
+
+    const { today, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
+
+    switch (activeFilter) {
+      case 'today':
+        return allOrders.filter(order => {
+          const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+          return orderDate.toDateString() === today.toDateString();
+        });
+      case 'pending':
+        return allOrders.filter(order => order.status === 'pending');
+      case 'in_process':
+        return allOrders.filter(order => order.status === 'in_progress');
+      case 'week':
+        return allOrders.filter(order => {
+          const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
+          const orderDateNormalized = new Date(orderDate);
+          orderDateNormalized.setHours(0, 0, 0, 0);
+          return orderDateNormalized >= weekStart && orderDateNormalized <= weekEnd;
+        });
+      default:
+        return allOrders;
+    }
+  }, [allOrders, activeFilter, weekOffset, getSystemTimezoneDates]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -173,7 +268,7 @@ export default function ReconOrders() {
   const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   // Transform ReconOrder to Order format for compatibility with OrderKanbanBoard/OrderDataTable
-  const transformedOrders = orders.map(order => {
+  const transformedOrders = filteredOrdersByTab.map(order => {
     return {
       id: order.id,
       order_number: order.orderNumber,
@@ -270,63 +365,20 @@ export default function ReconOrders() {
           </div>
         </div>
 
-        {/* Search and View Mode Bar */}
-        <Card className="border-border shadow-sm">
-          <div className="p-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-              {/* Search */}
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder={t('layout.search_placeholder')}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-background"
-                />
-              </div>
-
-              {/* View Mode Toggle */}
-              <div className="flex items-center bg-muted/50 rounded-lg p-1">
-                {/* Table - Always available */}
-                <Button
-                  size="sm"
-                  variant={viewMode === 'table' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('table')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <List className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Table</span>
-                </Button>
-
-                {/* Kanban - Only on desktop */}
-                {!isMobile && (
-                  <Button
-                    size="sm"
-                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                    onClick={() => setViewMode('kanban')}
-                    className="h-8 px-2 sm:px-3"
-                  >
-                    <Kanban className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Kanban</span>
-                  </Button>
-                )}
-
-                {/* Calendar - Only on desktop */}
-                {!isMobile && (
-                  <Button
-                    size="sm"
-                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                    onClick={() => setViewMode('calendar')}
-                    className="h-8 px-2 sm:px-3"
-                  >
-                    <CalendarIcon className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">{t('common.calendar')}</span>
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-        </Card>
+        {/* Quick Filter Bar */}
+        <QuickFilterBar
+          activeFilter={activeFilter}
+          tabCounts={tabCounts}
+          onFilterChange={setActiveFilter}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          weekOffset={weekOffset}
+          onWeekChange={setWeekOffset}
+        />
 
         {/* Main Content - Mobile forces table */}
         <div className="space-y-6">

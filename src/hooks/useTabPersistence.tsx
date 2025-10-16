@@ -1,7 +1,5 @@
 import { useCallback, useState } from 'react';
 import { usePersistedState } from './usePersistedState';
-import { useInstantTabPersistence, useInstantPersistedState } from './useInstantPersistedState';
-import { useCloudSyncedTabPersistence, useCloudSyncedState } from './useCloudSync';
 
 /**
  * Tab persistence configurations for different pages
@@ -13,24 +11,24 @@ export const TAB_CONFIGS = {
     validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']
   },
   service_orders: {
-    key: 'service', 
+    key: 'service',
     defaultTab: 'dashboard',
     validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']
   },
   recon_orders: {
     key: 'recon',
-    defaultTab: 'dashboard', 
+    defaultTab: 'dashboard',
     validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']
   },
   car_wash: {
     key: 'carwash',
     defaultTab: 'today',
-    validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']  
+    validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']
   },
   reports: {
     key: 'reports',
     defaultTab: 'operational',
-    validTabs: ['operational', 'financial', 'performance', 'custom']
+    validTabs: ['operational', 'financial', 'invoices', 'export']
   },
   management: {
     key: 'management',
@@ -51,6 +49,11 @@ export const TAB_CONFIGS = {
     key: 'dealer',
     defaultTab: 'overview',
     validTabs: ['overview', 'groups', 'users', 'invitations', 'services', 'categories', 'modules']
+  },
+  get_ready: {
+    key: 'get_ready',
+    defaultTab: 'overview',
+    validTabs: ['overview', 'details', 'approvals', 'vendors', 'reports', 'setup']
   }
 } as const;
 
@@ -129,7 +132,7 @@ export function useViewModePersistence(pageKey: PageKey, enableCloudSync = false
  * Hook for filter persistence
  */
 export function useFilterPersistence<T extends Record<string, any>>(
-  pageKey: PageKey, 
+  pageKey: PageKey,
   defaultFilters: T
 ) {
   const [filters, setFilters] = usePersistedState(

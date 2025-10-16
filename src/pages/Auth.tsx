@@ -296,17 +296,15 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 dark:from-background dark:to-muted/40">
+    <div className="min-h-screen bg-background flex items-center justify-center p-8">
       {/* Top right controls */}
       <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
         <LanguageSwitcher />
         <ThemeToggle />
       </div>
 
-      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-        {/* Left Column: Login Form */}
-        <div className="flex items-center justify-center p-8">
-          <div className="w-full max-w-md animate-fade-in">
+      {/* Centered Login Form */}
+      <div className="w-full max-w-md animate-fade-in">
         {/* Logo and Brand Section */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight drop-shadow-lg dark:drop-shadow-xl" style={{
@@ -532,56 +530,6 @@ export default function Auth() {
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-muted-foreground">
           <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')}</p>
-        </div>
-          </div>
-        </div>
-
-        {/* Right Column: Pitch Deck */}
-        <div className="hidden lg:flex items-center justify-center p-8 bg-gradient-to-br from-primary/5 to-accent/10 dark:from-muted/30 dark:to-card/50">
-          <div className="w-full max-w-lg">
-            <div className="text-center space-y-8">
-              {/* Tagline */}
-              <div className="animate-tagline-entrance">
-                <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight relative" style={{
-                  textShadow: 'var(--text-shadow)'
-                }}>
-                  {t('auth.tagline', 'From Detail to sold—')}
-                  {t('auth.tagline_faster', 'faster')}
-                  <span className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-accent to-primary animate-underline-sweep"></span>
-                </h2>
-              </div>
-
-              {/* Value Proposition */}
-              <div className="bg-card/90 dark:bg-card/95 backdrop-blur-sm rounded-2xl p-6 shadow-elegant border border-border/50">
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  {t('auth.value_proposition', 'The operational platform that connects recon, detail, service and sales to move every vehicle from intake to sale with less friction and better visibility.')}
-                </p>
-              </div>
-
-              {/* Features */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-card/70 dark:bg-card/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/90 dark:hover:bg-card/95 transition-all duration-300">
-                  <div className="text-2xl">🔎</div>
-                  <span className="text-base font-medium text-foreground">{t('auth.feature_visibility', 'Real-time visibility')}</span>
-                </div>
-                <div className="flex items-center gap-4 p-4 bg-card/70 dark:bg-card/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/90 dark:hover:bg-card/95 transition-all duration-300">
-                  <div className="text-2xl">⚙️</div>
-                  <span className="text-base font-medium text-foreground">{t('auth.feature_workflow', 'Standardized workflow')}</span>
-                </div>
-                <div className="flex items-center gap-4 p-4 bg-card/70 dark:bg-card/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-card/90 dark:hover:bg-card/95 transition-all duration-300">
-                  <div className="text-2xl">📈</div>
-                  <span className="text-base font-medium text-foreground">{t('auth.feature_performance', 'Reduced T2L, faster turnover')}</span>
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div className="text-center pt-4 border-t border-border/30">
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-medium">info@mydetailarea.com</span>
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

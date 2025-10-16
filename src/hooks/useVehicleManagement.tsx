@@ -236,6 +236,95 @@ export function useVehicleManagement() {
     },
   });
 
+  // Approve Vehicle
+  const approveVehicleMutation = useMutation({
+    mutationFn: async ({ vehicleId, notes }: { vehicleId: string; notes?: string }) => {
+      const { data, error } = await supabase.rpc('approve_vehicle', {
+        p_vehicle_id: vehicleId,
+        p_notes: notes || null,
+      });
+
+      if (error) throw error;
+
+      // Check if approval was successful
+      if (data && !data.success) {
+        throw new Error(data.error || 'Failed to approve vehicle');
+      }
+
+      return data;
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      toast.success(t('get_ready.approvals.success.approved'));
+    },
+    onError: (error: Error) => {
+      console.error('Failed to approve vehicle:', error);
+      toast.error(error.message || t('get_ready.approvals.errors.approve_failed'));
+    },
+  });
+
+  // Reject Vehicle
+  const rejectVehicleMutation = useMutation({
+    mutationFn: async ({ vehicleId, reason, notes }: { vehicleId: string; reason: string; notes?: string }) => {
+      if (!reason || reason.trim() === '') {
+        throw new Error('Rejection reason is required');
+      }
+
+      const { data, error } = await supabase.rpc('reject_vehicle', {
+        p_vehicle_id: vehicleId,
+        p_reason: reason,
+        p_notes: notes || null,
+      });
+
+      if (error) throw error;
+
+      // Check if rejection was successful
+      if (data && !data.success) {
+        throw new Error(data.error || 'Failed to reject vehicle');
+      }
+
+      return data;
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      toast.success(t('get_ready.approvals.success.rejected'));
+    },
+    onError: (error: Error) => {
+      console.error('Failed to reject vehicle:', error);
+      toast.error(error.message || t('get_ready.approvals.errors.reject_failed'));
+    },
+  });
+
+  // Request Approval
+  const requestApprovalMutation = useMutation({
+    mutationFn: async ({ vehicleId, notes }: { vehicleId: string; notes?: string }) => {
+      const { data, error } = await supabase.rpc('request_approval', {
+        p_vehicle_id: vehicleId,
+        p_notes: notes || null,
+      });
+
+      if (error) throw error;
+
+      // Check if request was successful
+      if (data && !data.success) {
+        throw new Error(data.error || 'Failed to request approval');
+      }
+
+      return data;
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      toast.success(t('get_ready.approvals.success.requested'));
+    },
+    onError: (error: Error) => {
+      console.error('Failed to request approval:', error);
+      toast.error(error.message || t('get_ready.approvals.errors.request_failed'));
+    },
+  });
+
   return {
     createVehicle: createVehicleMutation.mutate,
     createVehicleAsync: createVehicleMutation.mutateAsync,
@@ -249,5 +338,17 @@ export function useVehicleManagement() {
     isUpdating: updateVehicleMutation.isPending,
     isDeleting: deleteVehicleMutation.isPending,
     isMoving: moveVehicleMutation.isPending,
+    // Approval functions
+    approveVehicle: approveVehicleMutation.mutate,
+    approveVehicleAsync: approveVehicleMutation.mutateAsync,
+    rejectVehicle: rejectVehicleMutation.mutate,
+    rejectVehicleAsync: rejectVehicleMutation.mutateAsync,
+    requestApproval: requestApprovalMutation.mutate,
+    requestApprovalAsync: requestApprovalMutation.mutateAsync,
+    isApproving: approveVehicleMutation.isPending,
+    isRejecting: rejectVehicleMutation.isPending,
+    isRequestingApproval: requestApprovalMutation.isPending,
   };
 }
+ 
+
