@@ -3,7 +3,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { Building2 } from 'lucide-react';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const DealershipFilter = () => {
@@ -12,20 +11,10 @@ export const DealershipFilter = () => {
   const { dealerships, loading } = useAccessibleDealerships();
   const { selectedDealerId, setSelectedDealerId } = useDealerFilter();
 
-  // Sync with localStorage on mount (for backwards compatibility)
-  useEffect(() => {
-    const saved = localStorage.getItem('selectedDealerFilter');
-    if (saved && !selectedDealerId) {
-      const dealerId = saved === 'all' ? 'all' : parseInt(saved);
-      setSelectedDealerId(dealerId);
-    }
-  }, [selectedDealerId, setSelectedDealerId]);
-
-  // Save to localStorage and trigger events when changed
+  // Handle dealer change (Context handles localStorage persistence)
   const handleDealerChange = (value: string) => {
     const newValue = value === 'all' ? 'all' : parseInt(value);
     setSelectedDealerId(newValue);
-    localStorage.setItem('selectedDealerFilter', value);
 
     // Trigger custom event for legacy components that still listen to it
     window.dispatchEvent(new CustomEvent('dealerFilterChanged', {

@@ -217,6 +217,12 @@ export function useCreateWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
+
+      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
+      // When work item has approval_required=true, trigger marks vehicle for approval
+      // This ensures Approvals tab shows the vehicle immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
       toast.success(t('get_ready.work_items.created_successfully'));
     },
     onError: (error) => {
@@ -264,6 +270,11 @@ export function useUpdateWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
+
+      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
+      // Changing approval_required might affect vehicle approval status via trigger
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
       toast.success(t('get_ready.work_items.updated_successfully'));
     },
     onError: (error) => {
@@ -311,6 +322,11 @@ export function useApproveWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
+
+      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
+      // Approving work item might remove vehicle from Approvals via trigger
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
       toast.success(t('get_ready.work_items.approved_successfully'));
     },
     onError: (error) => {
@@ -359,6 +375,11 @@ export function useDeclineWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
+
+      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
+      // Declining work item affects vehicle approval status via trigger
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
       toast.success(t('get_ready.work_items.declined_successfully'));
     },
     onError: (error) => {

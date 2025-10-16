@@ -297,8 +297,8 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
         `)
         .eq('dealer_id', currentDealership.id);
 
-      // Apply step filter
-      if (selectedStep && selectedStep !== 'all') {
+      // ✅ Apply step filter (ignored when search is active for global search)
+      if (selectedStep && selectedStep !== 'all' && !searchQuery) {
         query = query.eq('step_id', selectedStep);
       }
 
@@ -468,8 +468,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         `)
         .eq('dealer_id', currentDealership.id);
 
-      // Apply step filter
-      if (selectedStep && selectedStep !== 'all') {
+      // ✅ Apply step filter (ignored when search is active for global search)
+      if (selectedStep && selectedStep !== 'all' && !searchQuery) {
         query = query.eq('step_id', selectedStep);
       }
 

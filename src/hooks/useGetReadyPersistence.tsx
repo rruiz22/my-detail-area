@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 /**
  * Get Ready Module - LocalStorage Persistence
@@ -84,7 +84,26 @@ export function useGetReadySearchQuery() {
     } catch (error) {
       console.warn('Failed to save search query to localStorage:', error);
     }
+
+    // ✅ Dispatch custom event for cross-component synchronization
+    window.dispatchEvent(new CustomEvent('getReadySearchChanged', {
+      detail: { searchQuery: query }
+    }));
   }, []);
+
+  // ✅ Listen for search changes from other components
+  useEffect(() => {
+    const handleSearchChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const newQuery = customEvent.detail?.searchQuery;
+      if (newQuery !== undefined && newQuery !== searchQuery) {
+        setSearchQuery(newQuery);
+      }
+    };
+
+    window.addEventListener('getReadySearchChanged', handleSearchChange);
+    return () => window.removeEventListener('getReadySearchChanged', handleSearchChange);
+  }, [searchQuery]);
 
   return [searchQuery, setPersistedSearchQuery] as const;
 }

@@ -97,18 +97,8 @@ export function GetReadyTopbar() {
           })}
         </div>
 
-        {/* Right Section - Search and Actions */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          {/* Search */}
-          <div className="relative flex-1 sm:flex-initial">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder={t('get_ready.search_placeholder')}
-              className="pl-8 w-full sm:w-64"
-            />
-          </div>
-
-          {/* Action Buttons */}
+        {/* Right Section - Settings */}
+        <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="flex-shrink-0">
             <Settings className="h-4 w-4" />
           </Button>

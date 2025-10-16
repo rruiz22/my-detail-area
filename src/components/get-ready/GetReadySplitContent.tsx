@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,15 +32,17 @@ import {
 import {
   CheckCircle2,
   ChevronDown,
+  ChevronRight,
   Download,
   FileSpreadsheet,
   FileText,
   MoreHorizontal,
   Plus,
   RefreshCw,
+  Search,
   XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { GetReadyAlerts } from "./GetReadyAlerts";
@@ -49,7 +52,6 @@ import { GetReadyWorkflowActions } from "./GetReadyWorkflowActions";
 import { VehicleDetailPanel } from "./VehicleDetailPanel";
 import { VehicleFormModal } from "./VehicleFormModal";
 import { VehicleTable } from "./VehicleTable";
-import { ApprovalModal } from "./approvals/ApprovalModal";
 import { GetReadyVehicle } from "@/types/getReady";
 import {
   useGetReadySearchQuery,
@@ -72,6 +74,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     selectedStepId,
     selectedVehicleId,
     setSelectedVehicleId,
+    setSelectedStepId,
   } = useGetReadyStore();
   const { steps, refetchSteps, refetchKPIs } = useGetReady();
   const { deleteVehicle, isDeleting } = useVehicleManagement();
@@ -89,13 +92,24 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
 
-  // Approval modal state
-  const [approvalModalOpen, setApprovalModalOpen] = useState(false);
-  const [approvalAction, setApprovalAction] = useState<"approve" | "reject">(
-    "approve",
-  );
-  const [selectedApprovalVehicle, setSelectedApprovalVehicle] =
-    useState<GetReadyVehicle | null>(null);
+  // ✅ Auto-clear search and navigate to vehicle's step when selecting a vehicle
+  useEffect(() => {
+    if (selectedVehicleId && searchQuery) {
+      // Find the selected vehicle to get its step
+      const selectedVehicle = allVehicles.find(v => v.id === selectedVehicleId);
+      if (selectedVehicle?.step_id) {
+        // Navigate to the vehicle's step
+        setSelectedStepId(selectedVehicle.step_id);
+      }
+
+      // Clear search after short delay so user sees what they searched
+      const timer = setTimeout(() => {
+        setSearchQuery('');
+      }, 200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [selectedVehicleId]);
 
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || "all";
@@ -341,26 +355,16 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     );
   }
 
-  // Helper functions for approval tab
-  const handleApproveClick = (vehicle: GetReadyVehicle) => {
-    setSelectedApprovalVehicle(vehicle);
-    setApprovalAction("approve");
-    setApprovalModalOpen(true);
-  };
-
-  const handleRejectClick = (vehicle: GetReadyVehicle) => {
-    setSelectedApprovalVehicle(vehicle);
-    setApprovalAction("reject");
-    setApprovalModalOpen(true);
-  };
-
   // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab
   const pendingApprovalVehicles = allVehiclesUnfiltered.filter(
     (v) => v.requires_approval === true && v.approval_status === "pending",
   );
 
   const approvedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
-    if (!v.approved_at || v.approval_status !== "approved") return false;
+    // Include vehicles approved via modal OR auto-approved via work items
+    if (!v.approved_at) return false;
+    if (v.approval_status !== "approved" && v.approval_status !== "not_required") return false;
+
     const approvedDate = new Date(v.approved_at);
     const today = new Date();
     return (
@@ -473,7 +477,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                         setSelectedVehicleId(vehicle.id);
                         navigate("/get-ready/details");
                       }}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer group"
                     >
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
@@ -529,27 +533,15 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                             "{vehicle.approval_notes}"
                           </p>
                         )}
+                        {/* Click to approve indicator */}
+                        <div className="mt-3 pt-3 border-t">
+                          <p className="text-xs text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            <ChevronRight className="h-3 w-3" />
+                            {t("get_ready.approvals.actions.click_to_approve") || "Click to view and approve work items"}
+                          </p>
+                        </div>
                       </div>
-                      <div
-                        className="flex gap-2 ml-4"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleRejectClick(vehicle)}
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          {t("get_ready.approvals.actions.reject")}
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => handleApproveClick(vehicle)}
-                        >
-                          <CheckCircle2 className="h-4 w-4 mr-1" />
-                          {t("get_ready.approvals.actions.approve")}
-                        </Button>
-                      </div>
+                      <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                     </div>
                   ))}
                 </div>
@@ -574,16 +566,19 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                   {approvedTodayVehicles.slice(0, 5).map((vehicle) => (
                     <div
                       key={vehicle.id}
-                      className="flex items-center justify-between p-3 border rounded-lg bg-green-50 dark:bg-green-950/20"
+                      onClick={() => {
+                        setSelectedVehicleId(vehicle.id);
+                        navigate("/get-ready/details");
+                      }}
+                      className="flex items-center justify-between p-3 border rounded-lg bg-green-50 dark:bg-green-950/20 hover:bg-green-100 dark:hover:bg-green-950/40 cursor-pointer transition-colors"
                     >
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          {vehicle.vehicle_year} {vehicle.vehicle_make}{" "}
-                          {vehicle.vehicle_model}
+                          {vehicle.year || vehicle.vehicle_year} {vehicle.make || vehicle.vehicle_make}{" "}
+                          {vehicle.model || vehicle.vehicle_model}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {t("get_ready.vehicle_form.stock_number")}:{" "}
-                          {vehicle.stock_number}
+                          Stock: {vehicle.stock_number}
                         </p>
                       </div>
                       <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -607,16 +602,19 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                   {rejectedTodayVehicles.slice(0, 5).map((vehicle) => (
                     <div
                       key={vehicle.id}
-                      className="flex items-center justify-between p-3 border rounded-lg bg-red-50 dark:bg-red-950/20"
+                      onClick={() => {
+                        setSelectedVehicleId(vehicle.id);
+                        navigate("/get-ready/details");
+                      }}
+                      className="flex items-center justify-between p-3 border rounded-lg bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-950/40 cursor-pointer transition-colors"
                     >
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">
-                          {vehicle.vehicle_year} {vehicle.vehicle_make}{" "}
-                          {vehicle.vehicle_model}
+                          {vehicle.year || vehicle.vehicle_year} {vehicle.make || vehicle.vehicle_make}{" "}
+                          {vehicle.model || vehicle.vehicle_model}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {t("get_ready.vehicle_form.stock_number")}:{" "}
-                          {vehicle.stock_number}
+                          Stock: {vehicle.stock_number}
                         </p>
                         {vehicle.rejection_reason && (
                           <p className="text-xs text-red-600 dark:text-red-400 italic">
@@ -633,14 +631,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             </Card>
           )}
         </div>
-
-        {/* Approval Modal */}
-        <ApprovalModal
-          open={approvalModalOpen}
-          onOpenChange={setApprovalModalOpen}
-          vehicle={selectedApprovalVehicle}
-          action={approvalAction}
-        />
       </div>
     );
   }
@@ -665,6 +655,17 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            {/* Search Box - Now in Details View */}
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t('get_ready.search_placeholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-8 h-9 text-sm"
+              />
+            </div>
+
             <Button
               variant="outline"
               size="sm"
@@ -738,6 +739,13 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                 ? "All Steps"
                 : steps.find((s) => s.id === selectedStep)?.name || "All Steps"}
             </Badge>
+            {/* Global search indicator */}
+            {searchQuery && selectedStep !== "all" && (
+              <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400">
+                <Search className="h-3 w-3 mr-1" />
+                Searching all steps
+              </Badge>
+            )}
           </div>
 
           {/* Workflow filter */}

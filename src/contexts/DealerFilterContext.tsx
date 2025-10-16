@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface DealerFilterContextType {
   selectedDealerId: number | 'all';
@@ -11,8 +11,30 @@ interface DealerFilterProviderProps {
   children: ReactNode;
 }
 
+const STORAGE_KEY = 'selectedDealerFilter';
+
 export const DealerFilterProvider = ({ children }: DealerFilterProviderProps) => {
-  const [selectedDealerId, setSelectedDealerId] = useState<number | 'all'>('all');
+  // Initialize from localStorage
+  const [selectedDealerId, setSelectedDealerId] = useState<number | 'all'>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        return saved === 'all' ? 'all' : parseInt(saved, 10);
+      }
+    } catch (error) {
+      console.error('Error reading dealer filter from localStorage:', error);
+    }
+    return 'all';
+  });
+
+  // Save to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, selectedDealerId.toString());
+    } catch (error) {
+      console.error('Error saving dealer filter to localStorage:', error);
+    }
+  }, [selectedDealerId]);
 
   return (
     <DealerFilterContext.Provider value={{ selectedDealerId, setSelectedDealerId }}>
