@@ -208,15 +208,19 @@ export function VehicleFormModal({
       };
 
       if (isEditMode && vehicleId) {
-        updateVehicle({ id: vehicleId, ...vehicleData });
+        // Fix: Pass data correctly and await the mutation
+        await updateVehicle({ id: vehicleId, data: vehicleData });
       } else {
-        createVehicle(vehicleData);
+        // Fix: Await the mutation
+        await createVehicle(vehicleData);
       }
 
+      // Only close modal and trigger success callback after mutation completes
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
       console.error("Error saving vehicle:", error);
+      // Error toast is handled by mutation's onError callback
     }
   };
 

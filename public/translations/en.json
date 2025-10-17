@@ -2000,7 +2000,71 @@
       "visited_times": "Visited {{count}} times",
       "no_data": "No time tracking data available",
       "steps_completed": "Steps Completed",
-      "avg_time_per_step": "Avg Time/Step"
+      "avg_time_per_step": "Avg Time/Step",
+      "previous_time": "Previous",
+      "current_time": "Current",
+      "previous_visits_tooltip": "Time spent in previous visits to this step"
+    },
+    "activity_log": {
+      "title": "Recent Activity",
+      "no_activity": "No recent activity for this vehicle",
+      "loading": "Loading activity...",
+      "error_loading": "Error loading activity",
+      "load_more": "Load more",
+      "date_groups": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "this_week": "This Week",
+        "older": "Older"
+      },
+      "types": {
+        "vehicle_created": "created vehicle",
+        "vehicle_updated": "updated vehicle",
+        "step_changed": "moved vehicle",
+        "work_item_created": "created work item",
+        "work_item_approved": "approved work item",
+        "work_item_declined": "declined work item",
+        "work_item_completed": "completed work item",
+        "work_item_deleted": "deleted work item",
+        "priority_changed": "changed priority",
+        "workflow_changed": "changed workflow",
+        "note_added": "added note",
+        "note_updated": "updated note",
+        "note_deleted": "deleted note",
+        "note_reply_added": "replied to note",
+        "note_reply_deleted": "deleted reply",
+        "media_uploaded": "uploaded media",
+        "media_annotated": "annotated media",
+        "media_updated": "updated media",
+        "media_deleted": "deleted media",
+        "vendor_assigned": "assigned vendor",
+        "stock_updated": "updated stock number",
+        "assignment_changed": "changed assignment"
+      },
+      "badge_types": {
+        "vehicle_created": "Created",
+        "vehicle_updated": "Updated",
+        "step_changed": "Step Change",
+        "work_item_created": "Work Item",
+        "work_item_approved": "Approved",
+        "work_item_declined": "Declined",
+        "work_item_completed": "Completed",
+        "work_item_deleted": "Deleted",
+        "priority_changed": "Priority",
+        "workflow_changed": "Workflow",
+        "note_added": "Note",
+        "note_updated": "Note",
+        "note_deleted": "Note Deleted",
+        "note_reply_added": "Reply",
+        "note_reply_deleted": "Reply Deleted",
+        "media_uploaded": "Media",
+        "media_annotated": "Annotated",
+        "media_updated": "Media Updated",
+        "media_deleted": "Media Deleted",
+        "vendor_assigned": "Vendor",
+        "stock_updated": "Stock",
+        "assignment_changed": "Assignment"
+      }
     },
     "search_placeholder": "Search vehicles...",
     "sidebar": {
@@ -2069,7 +2133,9 @@
       "advance_step": "Advance Step",
       "move_to_step": "Move to Step",
       "change_step": "Change Step",
-      "actions": "Actions"
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete"
     },
     "vehicle_deleted": "Vehicle deleted successfully",
     "delete_failed": "Failed to delete vehicle",
@@ -2144,6 +2210,10 @@
       "error_deleting": "Error deleting work item",
       "error_loading": "Error loading work items",
       "confirm_delete": "Are you sure you want to delete this work item?",
+      "view_media": "View linked media",
+      "view_notes": "View linked notes",
+      "navigating_to_media": "Switching to Media tab...",
+      "navigating_to_notes": "Switching to Notes tab...",
       "quick_add_title": "Add Work Item",
       "quick_add_description": "Choose from templates or create a custom work item",
       "no_templates_found": "No templates match your search",
@@ -2198,7 +2268,42 @@
       "error_setting_primary": "Error setting primary image",
       "error_deleting": "Error deleting media",
       "confirm_delete": "Are you sure you want to delete this media file?",
-      "coming_soon": "Media gallery coming soon"
+      "coming_soon": "Media gallery coming soon",
+      "download": "Download",
+      "document_preview_not_available": "Document preview not available",
+      "search_placeholder": "Search by filename...",
+      "lightbox": {
+        "navigate": "navigate",
+        "close": "close",
+        "fullscreen": "fullscreen",
+        "zoom_in": "Zoom in",
+        "zoom_out": "Zoom out"
+      },
+      "annotations": {
+        "enter_text": "Enter text for annotation",
+        "add_text": "Add Text Annotation",
+        "add_text_description": "Enter the text you want to add to the image",
+        "text": "Text",
+        "text_placeholder": "Enter text...",
+        "add": "Add",
+        "clear_all": "Clear All",
+        "saved": "Annotations Saved",
+        "saved_success": "Your annotations have been saved",
+        "save_error": "Failed to save annotations",
+        "draw_hint": "Click and drag to draw",
+        "select_tool_hint": "Select a tool to start annotating"
+      },
+      "link_to_work_item": "Link to Work Item",
+      "select_work_item": "Select work item (optional)",
+      "no_work_item": "No work item",
+      "bulk": {
+        "select": "Select",
+        "selected": "selected",
+        "select_all": "Select All",
+        "deselect_all": "Deselect All",
+        "delete": "Delete",
+        "confirm_delete": "Delete {{count}} files? This cannot be undone."
+      }
     },
     "notes": {
       "add_note": "Add Note",
@@ -2234,13 +2339,42 @@
       "update_error": "Failed to update note",
       "delete_error": "Failed to delete note",
       "pin_error": "Failed to toggle pin status",
+      "search_placeholder": "Search notes...",
+      "all_types": "All Types",
       "types": {
         "general": "General",
         "issue": "Issue",
         "observation": "Observation",
         "reminder": "Reminder",
         "important": "Important"
-      }
+      },
+      "replies": {
+        "add_reply": "Add Reply",
+        "show_replies": "Show {{count}} replies",
+        "hide_replies": "Hide replies",
+        "reply_placeholder": "Write a reply...",
+        "content_required": "Reply content is required",
+        "created": "Reply Added",
+        "created_success": "Your reply has been added",
+        "deleted": "Reply Deleted",
+        "deleted_success": "Reply has been deleted",
+        "confirm_delete": "Delete this reply?",
+        "create_error": "Failed to create reply",
+        "delete_error": "Failed to delete reply"
+      },
+      "markdown": {
+        "write": "Write",
+        "preview": "Preview",
+        "bold": "Bold",
+        "italic": "Italic",
+        "bullet_list": "Bullet List",
+        "numbered_list": "Numbered List",
+        "link": "Link",
+        "preview_empty": "Nothing to preview"
+      },
+      "link_to_work_item": "Link to Work Item",
+      "select_work_item": "Select work item (optional)",
+      "no_work_item": "No work item"
     },
     "vendors": {
       "title": "Vendor Management",

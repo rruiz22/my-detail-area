@@ -125,6 +125,12 @@ export function useUploadMedia() {
         throw new Error('No dealership selected');
       }
 
+      // Validate file size (50MB limit)
+      const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+      if (input.file.size > MAX_FILE_SIZE) {
+        throw new Error(`File size exceeds 50MB limit. File size: ${(input.file.size / 1024 / 1024).toFixed(2)}MB`);
+      }
+
       // Upload file to Supabase Storage
       const fileExt = input.file.name.split('.').pop();
       const fileName = `${input.vehicle_id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -195,6 +201,7 @@ export function useUploadMedia() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-media', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
       toast.success(t('get_ready.media.uploaded_successfully'));
     },
     onError: (error) => {
@@ -220,11 +227,11 @@ export function useUpdateMedia() {
         throw new Error('No dealership selected');
       }
 
+      // Remove dealer_id filter - RLS will handle access control
       const { data, error } = await supabase
         .from('vehicle_media')
         .update(updates)
         .eq('id', id)
-        .eq('dealer_id', currentDealership.id)
         .select()
         .single();
 
@@ -238,6 +245,7 @@ export function useUpdateMedia() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['vehicle-media', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicleId] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
       toast.success(t('get_ready.media.updated_successfully'));
     },
     onError: (error) => {
@@ -289,6 +297,7 @@ export function useDeleteMedia() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-media', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicleId] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
       toast.success(t('get_ready.media.deleted_successfully'));
     },
     onError: (error) => {

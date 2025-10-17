@@ -28,6 +28,7 @@ import {
     WorkItemType,
 } from '@/hooks/useVehicleWorkItems';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 import {
     AlertTriangle,
     CheckCircle,
@@ -41,11 +42,13 @@ import { useTranslation } from 'react-i18next';
 
 interface VehicleWorkItemsTabProps {
   vehicleId: string;
+  onSwitchTab?: (tab: string) => void;
   className?: string;
 }
 
-export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTabProps) {
+export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: VehicleWorkItemsTabProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { data: workItems = [], isLoading } = useWorkItems(vehicleId);
   const createWorkItem = useCreateWorkItem();
   const updateWorkItem = useUpdateWorkItem();
@@ -147,6 +150,21 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
     }
   };
 
+  // NEW: Navigate to media/notes tabs
+  const handleNavigateToMedia = (workItemId: string) => {
+    onSwitchTab?.('media');
+    toast({
+      description: t('get_ready.work_items.navigating_to_media'),
+    });
+  };
+
+  const handleNavigateToNotes = (workItemId: string) => {
+    onSwitchTab?.('notes');
+    toast({
+      description: t('get_ready.work_items.navigating_to_notes'),
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
@@ -237,6 +255,8 @@ export function VehicleWorkItemsTab({ vehicleId, className }: VehicleWorkItemsTa
             setEditModalOpen(true);
           }}
           onDelete={handleDelete}
+          onNavigateToMedia={handleNavigateToMedia}
+          onNavigateToNotes={handleNavigateToNotes}
           isLoading={isLoading}
         />
       </div>

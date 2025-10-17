@@ -1754,7 +1754,71 @@
       "visited_times": "Visitado {{count}} veces",
       "no_data": "No hay datos de seguimiento de tiempo disponibles",
       "steps_completed": "Pasos Completados",
-      "avg_time_per_step": "Tiempo Promedio/Paso"
+      "avg_time_per_step": "Tiempo Promedio/Paso",
+      "previous_time": "Anterior",
+      "current_time": "Actual",
+      "previous_visits_tooltip": "Tiempo acumulado en visitas anteriores a este paso"
+    },
+    "activity_log": {
+      "title": "Actividad Reciente",
+      "no_activity": "No hay actividad reciente para este vehículo",
+      "loading": "Cargando actividad...",
+      "error_loading": "Error al cargar actividad",
+      "load_more": "Cargar más",
+      "date_groups": {
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "this_week": "Esta Semana",
+        "older": "Anterior"
+      },
+      "types": {
+        "vehicle_created": "creó vehículo",
+        "vehicle_updated": "actualizó vehículo",
+        "step_changed": "movió vehículo",
+        "work_item_created": "creó trabajo",
+        "work_item_approved": "aprobó trabajo",
+        "work_item_declined": "rechazó trabajo",
+        "work_item_completed": "completó trabajo",
+        "work_item_deleted": "eliminó trabajo",
+        "priority_changed": "cambió prioridad",
+        "workflow_changed": "cambió flujo de trabajo",
+        "note_added": "agregó nota",
+        "note_updated": "actualizó nota",
+        "note_deleted": "eliminó nota",
+        "note_reply_added": "respondió a nota",
+        "note_reply_deleted": "eliminó respuesta",
+        "media_uploaded": "subió medio",
+        "media_annotated": "anotó medio",
+        "media_updated": "actualizó medio",
+        "media_deleted": "eliminó medio",
+        "vendor_assigned": "asignó proveedor",
+        "stock_updated": "actualizó número de stock",
+        "assignment_changed": "cambió asignación"
+      },
+      "badge_types": {
+        "vehicle_created": "Creado",
+        "vehicle_updated": "Actualizado",
+        "step_changed": "Cambio de Paso",
+        "work_item_created": "Trabajo",
+        "work_item_approved": "Aprobado",
+        "work_item_declined": "Rechazado",
+        "work_item_completed": "Completado",
+        "work_item_deleted": "Eliminado",
+        "priority_changed": "Prioridad",
+        "workflow_changed": "Flujo",
+        "note_added": "Nota",
+        "note_updated": "Nota",
+        "note_deleted": "Nota Eliminada",
+        "note_reply_added": "Respuesta",
+        "note_reply_deleted": "Respuesta Eliminada",
+        "media_uploaded": "Medio",
+        "media_annotated": "Anotado",
+        "media_updated": "Medio Actualizado",
+        "media_deleted": "Medio Eliminado",
+        "vendor_assigned": "Proveedor",
+        "stock_updated": "Stock",
+        "assignment_changed": "Asignación"
+      }
     },
     "search_placeholder": "Buscar vehículos...",
     "sidebar": {
@@ -1823,7 +1887,9 @@
       "advance_step": "Avanzar Paso",
       "move_to_step": "Mover a Paso",
       "change_step": "Cambiar Paso",
-      "actions": "Acciones"
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar"
     },
     "vehicle_deleted": "Vehículo eliminado exitosamente",
     "delete_failed": "Error al eliminar vehículo",
@@ -1898,6 +1964,10 @@
       "error_deleting": "Error al eliminar el trabajo",
       "error_loading": "Error al cargar los trabajos",
       "confirm_delete": "¿Estás seguro de que deseas eliminar este trabajo?",
+      "view_media": "Ver medios vinculados",
+      "view_notes": "Ver notas vinculadas",
+      "navigating_to_media": "Cambiando a pestaña Medios...",
+      "navigating_to_notes": "Cambiando a pestaña Notas...",
       "quick_add_title": "Agregar Trabajo",
       "quick_add_description": "Elige de plantillas o crea un trabajo personalizado",
       "no_templates_found": "No hay plantillas que coincidan con tu búsqueda",
@@ -1952,7 +2022,42 @@
       "error_setting_primary": "Error al establecer imagen principal",
       "error_deleting": "Error al eliminar archivo",
       "confirm_delete": "¿Estás seguro de que deseas eliminar este archivo?",
-      "coming_soon": "Galería de medios próximamente"
+      "coming_soon": "Galería de medios próximamente",
+      "download": "Descargar",
+      "document_preview_not_available": "Vista previa de documento no disponible",
+      "search_placeholder": "Buscar por nombre de archivo...",
+      "lightbox": {
+        "navigate": "navegar",
+        "close": "cerrar",
+        "fullscreen": "pantalla completa",
+        "zoom_in": "Acercar",
+        "zoom_out": "Alejar"
+      },
+      "annotations": {
+        "enter_text": "Ingrese texto para anotación",
+        "add_text": "Agregar Anotación de Texto",
+        "add_text_description": "Ingrese el texto que desea agregar a la imagen",
+        "text": "Texto",
+        "text_placeholder": "Ingrese texto...",
+        "add": "Agregar",
+        "clear_all": "Limpiar Todo",
+        "saved": "Anotaciones Guardadas",
+        "saved_success": "Tus anotaciones han sido guardadas",
+        "save_error": "Error al guardar anotaciones",
+        "draw_hint": "Haz clic y arrastra para dibujar",
+        "select_tool_hint": "Selecciona una herramienta para comenzar"
+      },
+      "link_to_work_item": "Vincular a Trabajo",
+      "select_work_item": "Seleccionar trabajo (opcional)",
+      "no_work_item": "Sin trabajo",
+      "bulk": {
+        "select": "Seleccionar",
+        "selected": "seleccionados",
+        "select_all": "Seleccionar Todos",
+        "deselect_all": "Deseleccionar Todos",
+        "delete": "Eliminar",
+        "confirm_delete": "¿Eliminar {{count}} archivos? Esto no se puede deshacer."
+      }
     },
     "notes": {
       "add_note": "Agregar Nota",
@@ -1988,13 +2093,42 @@
       "update_error": "Error al actualizar la nota",
       "delete_error": "Error al eliminar la nota",
       "pin_error": "Error al cambiar estado de fijación",
+      "search_placeholder": "Buscar notas...",
+      "all_types": "Todos los Tipos",
       "types": {
         "general": "General",
         "issue": "Problema",
         "observation": "Observación",
         "reminder": "Recordatorio",
         "important": "Importante"
-      }
+      },
+      "replies": {
+        "add_reply": "Agregar Respuesta",
+        "show_replies": "Mostrar {{count}} respuestas",
+        "hide_replies": "Ocultar respuestas",
+        "reply_placeholder": "Escribe una respuesta...",
+        "content_required": "El contenido de la respuesta es requerido",
+        "created": "Respuesta Agregada",
+        "created_success": "Tu respuesta ha sido agregada",
+        "deleted": "Respuesta Eliminada",
+        "deleted_success": "La respuesta ha sido eliminada",
+        "confirm_delete": "¿Eliminar esta respuesta?",
+        "create_error": "Error al crear la respuesta",
+        "delete_error": "Error al eliminar la respuesta"
+      },
+      "markdown": {
+        "write": "Escribir",
+        "preview": "Vista Previa",
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "bullet_list": "Lista con Viñetas",
+        "numbered_list": "Lista Numerada",
+        "link": "Enlace",
+        "preview_empty": "Nada para previsualizar"
+      },
+      "link_to_work_item": "Vincular a Trabajo",
+      "select_work_item": "Seleccionar trabajo (opcional)",
+      "no_work_item": "Sin trabajo"
     },
     "vendors": {
       "title": "Gestión de Proveedores",

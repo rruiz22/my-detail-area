@@ -23,6 +23,8 @@ import {
     Clock,
     Edit,
     Eye,
+    FileText,
+    Image,
     Loader2,
     MoreHorizontal,
     Trash2,
@@ -567,8 +569,27 @@ export function GetReadyVehicleList({
                 </TableCell>
 
                 {/* Stock Number */}
-                <TableCell className="w-[100px] font-medium py-1 text-sm text-center">
-                  {vehicle.stock_number}
+                <TableCell className="w-[100px] py-1 text-center">
+                  <div className="space-y-0.5">
+                    <div className="font-medium text-sm">{vehicle.stock_number}</div>
+                    {/* Compact badges */}
+                    {((vehicle.media_count ?? 0) > 0 || (parseInt(vehicle.notes_preview || '0')) > 0) && (
+                      <div className="flex items-center justify-center gap-1">
+                        {(vehicle.media_count ?? 0) > 0 && (
+                          <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-purple-100 text-purple-700 gap-0.5">
+                            <Image className="h-2 w-2" />
+                            {vehicle.media_count}
+                          </Badge>
+                        )}
+                        {(parseInt(vehicle.notes_preview || '0')) > 0 && (
+                          <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-blue-100 text-blue-700 gap-0.5">
+                            <FileText className="h-2 w-2" />
+                            {vehicle.notes_preview}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </TableCell>
 
                 {/* Vehicle Info */}

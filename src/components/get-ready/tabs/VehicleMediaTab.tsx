@@ -26,8 +26,10 @@ import {
     useVehicleMedia,
     VehicleMedia,
 } from '@/hooks/useVehicleMedia';
+import { useWorkItems } from '@/hooks/useVehicleWorkItems';
 import { cn } from '@/lib/utils';
 import {
+    CheckSquare,
     Edit,
     FileText,
     Filter,
@@ -36,13 +38,18 @@ import {
     List,
     Loader2,
     MoreHorizontal,
+    Search,
+    Square,
     Trash2,
     Upload,
     Video,
     X
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MediaLightbox } from '../MediaLightbox';
+import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
 
 interface VehicleMediaTabProps {
   vehicleId: string;
@@ -54,25 +61,44 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: mediaItems = [], isLoading } = useVehicleMedia(vehicleId);
+  const { data: workItems = [] } = useWorkItems(vehicleId);
   const uploadMedia = useUploadMedia();
   const updateMedia = useUpdateMedia();
   const deleteMedia = useDeleteMedia();
 
+  // Real-time subscription for media
+  useRealtimeSubscription({
+    table: 'vehicle_media',
+    filter: 'vehicle_id',
+    filterValue: vehicleId,
+    queryKeysToInvalidate: [
+      ['vehicle-media', vehicleId],
+      ['vehicle-activity-log'],
+    ],
+    enabled: !!vehicleId,
+  });
+
   // State
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const [selectedMedia, setSelectedMedia] = useState<VehicleMedia | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
   // Upload state
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadCategory, setUploadCategory] = useState<string>('intake');
+  const [uploadWorkItemId, setUploadWorkItemId] = useState<string>('');
 
   // Edit state
   const [editCategory, setEditCategory] = useState('');
+  const [editWorkItemId, setEditWorkItemId] = useState<string>('');
 
   // Filter categories (from database schema)
   const categories = [
@@ -89,10 +115,13 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
     { value: 'odometer', label: t('get_ready.media.categories.odometer') },
   ];
 
-  // Filtered media
-  const filteredMedia = categoryFilter === 'all'
-    ? mediaItems
-    : mediaItems.filter(item => item.category === categoryFilter);
+  // Filtered media by category and search
+  const filteredMedia = mediaItems.filter(item => {
+    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+    const matchesSearch = searchTerm === '' ||
+      item.file_name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   // Calculate counters by type
   const counters = mediaItems.reduce(
@@ -144,12 +173,14 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
           vehicle_id: vehicleId,
           file,
           category: uploadCategory,
+          linked_work_item_id: uploadWorkItemId || undefined,
         });
       }
 
       setUploadModalOpen(false);
       setSelectedFiles([]);
       setUploadCategory('intake');
+      setUploadWorkItemId('');
     } catch (error) {
       console.error('Upload error:', error);
     }
@@ -162,6 +193,7 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
       id: selectedMedia.id,
       vehicleId,
       category: editCategory,
+      linked_work_item_id: editWorkItemId || undefined,
     });
 
     setEditModalOpen(false);
@@ -181,12 +213,61 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
   const openEditModal = (media: VehicleMedia) => {
     setSelectedMedia(media);
     setEditCategory(media.category || 'intake');
+    setEditWorkItemId(media.linked_work_item_id || '');
     setEditModalOpen(true);
   };
 
-  const openPreviewModal = (media: VehicleMedia) => {
-    setSelectedMedia(media);
-    setPreviewModalOpen(true);
+  const openLightbox = (media: VehicleMedia) => {
+    if (selectionMode) return; // Don't open lightbox in selection mode
+    const index = filteredMedia.findIndex(m => m.id === media.id);
+    setLightboxIndex(index >= 0 ? index : 0);
+    setLightboxOpen(true);
+  };
+
+  const toggleSelection = (mediaId: string) => {
+    const newSelected = new Set(selectedItems);
+    if (newSelected.has(mediaId)) {
+      newSelected.delete(mediaId);
+    } else {
+      newSelected.add(mediaId);
+    }
+    setSelectedItems(newSelected);
+  };
+
+  const selectAll = () => {
+    setSelectedItems(new Set(filteredMedia.map(m => m.id)));
+  };
+
+  const deselectAll = () => {
+    setSelectedItems(new Set());
+  };
+
+  const toggleSelectionMode = () => {
+    setSelectionMode(!selectionMode);
+    setSelectedItems(new Set());
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedItems.size === 0) return;
+
+    if (!confirm(t('get_ready.media.bulk.confirm_delete', { count: selectedItems.size }))) {
+      return;
+    }
+
+    try {
+      const mediaToDelete = filteredMedia.filter(m => selectedItems.has(m.id));
+      for (const media of mediaToDelete) {
+        await deleteMedia.mutateAsync({
+          id: media.id,
+          vehicleId,
+          filePath: media.file_path,
+        });
+      }
+      setSelectedItems(new Set());
+      setSelectionMode(false);
+    } catch (error) {
+      console.error('Bulk delete error:', error);
+    }
   };
 
   const getMediaIcon = (mediaType: MediaType) => {
@@ -206,6 +287,12 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
+  const getWorkItemTitle = (workItemId: string | undefined) => {
+    if (!workItemId) return null;
+    const item = workItems.find(wi => wi.id === workItemId);
+    return item?.title || null;
   };
 
   if (isLoading) {
@@ -259,55 +346,116 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="h-4 w-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map(cat => (
-                <SelectItem key={cat.value} value={cat.value}>
-                  {cat.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="space-y-3 mb-4">
+        {/* Search bar (always visible) */}
+        {mediaItems.length > 0 && !selectionMode && (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('get_ready.media.search_placeholder')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {!selectionMode ? (
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+            /* Selection Mode Actions */
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">
+                {selectedItems.size} {t('get_ready.media.bulk.selected')}
+              </span>
+              <Button size="sm" variant="outline" onClick={selectAll}>
+                {t('get_ready.media.bulk.select_all')}
+              </Button>
+              <Button size="sm" variant="outline" onClick={deselectAll}>
+                {t('get_ready.media.bulk.deselect_all')}
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={handleBulkDelete}
+                disabled={selectedItems.size === 0}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {t('get_ready.media.bulk.delete')} ({selectedItems.size})
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex border rounded-md">
-            <Button
-              variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              className="rounded-r-none"
-            >
-              <Grid3x3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className="rounded-l-none"
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
+          {!selectionMode && (
+            <>
+              <div className="flex border rounded-md">
+                <Button
+                  variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className="rounded-r-none"
+                >
+                  <Grid3x3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className="rounded-l-none"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
 
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={(e) => handleFileSelect(e.target.files)}
-            multiple
-            accept="image/*,video/*,.pdf,.doc,.docx"
-            className="hidden"
-          />
-          <Button size="sm" onClick={() => fileInputRef.current?.click()}>
-            <Upload className="h-4 w-4 mr-2" />
-            {t('get_ready.media.upload')}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={(e) => handleFileSelect(e.target.files)}
+                multiple
+                accept="image/*,video/*,.pdf,.doc,.docx"
+                className="hidden"
+              />
+              <Button size="sm" onClick={() => fileInputRef.current?.click()}>
+                <Upload className="h-4 w-4 mr-2" />
+                {t('get_ready.media.upload')}
+              </Button>
+            </>
+          )}
+
+          <Button
+            size="sm"
+            variant={selectionMode ? 'default' : 'outline'}
+            onClick={toggleSelectionMode}
+          >
+            {selectionMode ? (
+              <>
+                <X className="h-4 w-4 mr-2" />
+                {t('common.action_buttons.cancel')}
+              </>
+            ) : (
+              <>
+                <CheckSquare className="h-4 w-4 mr-2" />
+                {t('get_ready.media.bulk.select')}
+              </>
+            )}
           </Button>
+          </div>
         </div>
       </div>
 
@@ -325,11 +473,35 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
           viewMode === 'grid' ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pb-4">
               {filteredMedia.map((media) => (
-                <Card key={media.id} className="group relative overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                <Card key={media.id} className={cn(
+                  "group relative overflow-hidden hover:shadow-lg transition-shadow flex flex-col",
+                  selectionMode && selectedItems.has(media.id) && "ring-2 ring-primary"
+                )}>
+                  {/* Selection Checkbox */}
+                  {selectionMode && (
+                    <div className="absolute top-2 left-2 z-10">
+                      <Button
+                        size="icon"
+                        variant={selectedItems.has(media.id) ? 'default' : 'secondary'}
+                        className="h-6 w-6 rounded"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleSelection(media.id);
+                        }}
+                      >
+                        {selectedItems.has(media.id) ? (
+                          <CheckSquare className="h-4 w-4" />
+                        ) : (
+                          <Square className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
                   {/* Media Preview */}
                   <div
                     className="aspect-square bg-gray-100 cursor-pointer relative flex-shrink-0"
-                    onClick={() => openPreviewModal(media)}
+                    onClick={() => selectionMode ? toggleSelection(media.id) : openLightbox(media)}
                   >
                     {media.media_type === 'photo' ? (
                       <img
@@ -362,12 +534,19 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                           {media.title || media.file_name}
                         </div>
 
-                        {/* Category badge */}
-                        {media.category && (
-                          <Badge variant="outline" className="text-xs">
-                            {t(`get_ready.media.categories.${media.category}`)}
-                          </Badge>
-                        )}
+                        {/* Badges */}
+                        <div className="flex flex-wrap gap-1">
+                          {media.category && (
+                            <Badge variant="outline" className="text-xs">
+                              {t(`get_ready.media.categories.${media.category}`)}
+                            </Badge>
+                          )}
+                          {media.linked_work_item_id && getWorkItemTitle(media.linked_work_item_id) && (
+                            <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
+                              {getWorkItemTitle(media.linked_work_item_id)}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
 
                       {/* Actions Dropdown */}
@@ -413,7 +592,7 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                     {/* Thumbnail */}
                     <div
                       className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 cursor-pointer overflow-hidden"
-                      onClick={() => openPreviewModal(media)}
+                      onClick={() => openLightbox(media)}
                     >
                       {media.media_type === 'photo' ? (
                         <img
@@ -435,10 +614,15 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                           {media.file_name}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-1">
                         {media.category && (
                           <Badge variant="outline" className="text-xs">
                             {t(`get_ready.media.categories.${media.category}`)}
+                          </Badge>
+                        )}
+                        {media.linked_work_item_id && getWorkItemTitle(media.linked_work_item_id) && (
+                          <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
+                            {getWorkItemTitle(media.linked_work_item_id)}
                           </Badge>
                         )}
                         <span>{formatFileSize(media.file_size)}</span>
@@ -536,6 +720,23 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                 </SelectContent>
               </Select>
             </div>
+
+            <div>
+              <Label htmlFor="upload_work_item">{t('get_ready.media.link_to_work_item')} ({t('common.optional')})</Label>
+              <Select value={uploadWorkItemId || 'none'} onValueChange={(val) => setUploadWorkItemId(val === 'none' ? '' : val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('get_ready.media.select_work_item')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t('get_ready.media.no_work_item')}</SelectItem>
+                  {workItems.map(item => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <DialogFooter>
@@ -579,6 +780,23 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
                 </SelectContent>
               </Select>
             </div>
+
+            <div>
+              <Label htmlFor="edit_work_item">{t('get_ready.media.link_to_work_item')}</Label>
+              <Select value={editWorkItemId || 'none'} onValueChange={(val) => setEditWorkItemId(val === 'none' ? '' : val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('get_ready.media.select_work_item')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t('get_ready.media.no_work_item')}</SelectItem>
+                  {workItems.map(item => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <DialogFooter>
@@ -593,76 +811,13 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
         </DialogContent>
       </Dialog>
 
-      {/* Preview Modal */}
-      <Dialog open={previewModalOpen} onOpenChange={setPreviewModalOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>{selectedMedia?.title || selectedMedia?.file_name}</DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-2 right-2"
-              onClick={() => setPreviewModalOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogHeader>
-
-          {selectedMedia && (
-            <div className="space-y-4">
-              {/* Media Preview */}
-              <div className="bg-black rounded-lg overflow-hidden flex items-center justify-center max-h-[60vh]">
-                {selectedMedia.media_type === 'photo' ? (
-                  <img
-                    src={selectedMedia.file_url}
-                    alt={selectedMedia.title || selectedMedia.file_name}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                ) : selectedMedia.media_type === 'video' ? (
-                  <video
-                    src={selectedMedia.file_url}
-                    controls
-                    className="max-w-full max-h-full"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <a
-                    href={selectedMedia.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col items-center gap-4 p-8 text-white hover:text-gray-300"
-                  >
-                    <FileText className="h-16 w-16" />
-                    <span className="text-sm">{t('get_ready.media.view_document')}</span>
-                  </a>
-                )}
-              </div>
-
-              {/* Metadata */}
-              <div className="space-y-2">
-                {selectedMedia.description && (
-                  <div className="text-sm text-muted-foreground">
-                    {selectedMedia.description}
-                  </div>
-                )}
-
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>{formatFileSize(selectedMedia.file_size)}</span>
-                  {selectedMedia.metadata?.width && selectedMedia.metadata?.height && (
-                    <span>{selectedMedia.metadata.width}x{selectedMedia.metadata.height}</span>
-                  )}
-                  {selectedMedia.category && (
-                    <Badge variant="outline">
-                      {t(`get_ready.media.categories.${selectedMedia.category}`)}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Enhanced Lightbox with Navigation */}
+      <MediaLightbox
+        media={filteredMedia}
+        initialIndex={lightboxIndex}
+        open={lightboxOpen}
+        onOpenChange={setLightboxOpen}
+      />
     </div>
   );
 }

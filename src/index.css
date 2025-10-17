@@ -361,6 +361,14 @@ All colors MUST be HSL.
     animation: shake 0.5s ease-in-out;
   }
 
+  /* Wiggle animation for notification bell */
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+    75% { transform: rotate(-10deg); }
+  }
+
   /* Success pulse animation */
   @keyframes success-pulse {
     0% { transform: scale(1); }

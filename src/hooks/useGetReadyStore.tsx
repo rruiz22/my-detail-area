@@ -69,8 +69,8 @@ export const useGetReadyStore = create<GetReadyStore>()(
       // Actions
       setSelectedStepId: (stepId) => set((state) => ({
         selectedStepId: stepId,
-        // Restore vehicle selection for this step (if exists)
-        selectedVehicleId: stepId ? (state.selectedVehiclesByStep[stepId] || null) : null,
+        // Close detail panel when changing steps for cleaner UX
+        selectedVehicleId: null,
       })),
       setSelectedVehicleId: (vehicleId) => set((state) => {
         const newSelectedVehiclesByStep = { ...state.selectedVehiclesByStep };

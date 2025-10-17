@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
+import { NotificationBell } from '@/components/get-ready/notifications/NotificationBell';
 import {
   Search,
   Settings,
@@ -97,8 +98,12 @@ export function GetReadyTopbar() {
           })}
         </div>
 
-        {/* Right Section - Settings */}
+        {/* Right Section - Notifications & Settings */}
         <div className="flex items-center gap-2">
+          {/* Notification Bell with real-time updates */}
+          <NotificationBell size="md" />
+
+          {/* Settings Button */}
           <Button variant="outline" size="sm" className="flex-shrink-0">
             <Settings className="h-4 w-4" />
           </Button>

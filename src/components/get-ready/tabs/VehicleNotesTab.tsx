@@ -48,10 +48,19 @@ import {
     Pin,
     PinOff,
     Plus,
+    Search,
     Trash2,
+    Wrench,
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { NoteReplies } from '../NoteReplies';
+import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
+import { MarkdownEditor } from '../MarkdownEditor';
+import { useWorkItems } from '@/hooks/useVehicleWorkItems';
 
 interface VehicleNotesTabProps {
   vehicleId: string;
@@ -62,8 +71,32 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  // Fetch notes
+  // Fetch notes and work items
   const { data: notes = [], isLoading } = useVehicleNotes(vehicleId);
+  const { data: workItems = [] } = useWorkItems(vehicleId);
+
+  // Real-time subscription for notes
+  useRealtimeSubscription({
+    table: 'vehicle_notes',
+    filter: 'vehicle_id',
+    filterValue: vehicleId,
+    queryKeysToInvalidate: [
+      ['vehicle-notes', vehicleId],
+      ['vehicle-activity-log'],
+    ],
+    enabled: !!vehicleId,
+  });
+
+  // Real-time subscription for note replies
+  useRealtimeSubscription({
+    table: 'vehicle_note_replies',
+    queryKeysToInvalidate: [
+      ['note-replies'],
+      ['vehicle-notes', vehicleId],
+      ['vehicle-activity-log'],
+    ],
+    enabled: !!vehicleId,
+  });
 
   // Mutations
   const createNote = useCreateVehicleNote();
@@ -80,8 +113,14 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
   // Form states
   const [newNoteContent, setNewNoteContent] = useState('');
   const [newNoteType, setNewNoteType] = useState<VehicleNote['note_type']>('general');
+  const [newNoteWorkItem, setNewNoteWorkItem] = useState<string>('');
   const [editNoteContent, setEditNoteContent] = useState('');
   const [editNoteType, setEditNoteType] = useState<VehicleNote['note_type']>('general');
+  const [editNoteWorkItem, setEditNoteWorkItem] = useState<string>('');
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
 
   // Handle create note
   const handleCreateNote = async () => {
@@ -100,6 +139,7 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
         content: newNoteContent.trim(),
         note_type: newNoteType,
         is_pinned: false,
+        linked_work_item_id: newNoteWorkItem || undefined,
       });
 
       toast({
@@ -109,6 +149,7 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
 
       setNewNoteContent('');
       setNewNoteType('general');
+      setNewNoteWorkItem('');
       setCreateModalOpen(false);
     } catch (error) {
       toast({
@@ -130,6 +171,7 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
         updates: {
           content: editNoteContent.trim(),
           note_type: editNoteType,
+          linked_work_item_id: editNoteWorkItem || undefined,
         },
       });
 
@@ -204,6 +246,7 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
     setSelectedNote(note);
     setEditNoteContent(note.content);
     setEditNoteType(note.note_type);
+    setEditNoteWorkItem(note.linked_work_item_id || '');
     setEditModalOpen(true);
   };
 
@@ -249,6 +292,21 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
     }
   };
 
+  // Helper to get work item title
+  const getWorkItemTitle = (workItemId: string | undefined) => {
+    if (!workItemId) return null;
+    const item = workItems.find(wi => wi.id === workItemId);
+    return item?.title || null;
+  };
+
+  // Filter notes by search term and type
+  const filteredNotes = notes.filter(note => {
+    const matchesSearch = searchTerm === '' ||
+      note.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = typeFilter === 'all' || note.note_type === typeFilter;
+    return matchesSearch && matchesType;
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -260,19 +318,49 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
   return (
     <div className={cn('space-y-4', className)}>
       {/* Header with Add Button */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-semibold">{t('get_ready.tabs.notes')}</h3>
-          <p className="text-sm text-muted-foreground">
-            {notes.length === 0
-              ? t('get_ready.notes.no_notes')
-              : t('get_ready.notes.notes_count', { count: notes.length })}
-          </p>
+      <div className="space-y-3 mb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold">{t('get_ready.tabs.notes')}</h3>
+            <p className="text-sm text-muted-foreground">
+              {filteredNotes.length === 0
+                ? t('get_ready.notes.no_notes')
+                : t('get_ready.notes.notes_count', { count: filteredNotes.length })}
+            </p>
+          </div>
+          <Button onClick={() => setCreateModalOpen(true)} size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            {t('get_ready.notes.add_note')}
+          </Button>
         </div>
-        <Button onClick={() => setCreateModalOpen(true)} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          {t('get_ready.notes.add_note')}
-        </Button>
+
+        {/* Search and Filters */}
+        {notes.length > 0 && (
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t('get_ready.notes.search_placeholder')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('get_ready.notes.all_types')}</SelectItem>
+                <SelectItem value="general">{t('get_ready.notes.types.general')}</SelectItem>
+                <SelectItem value="issue">{t('get_ready.notes.types.issue')}</SelectItem>
+                <SelectItem value="observation">{t('get_ready.notes.types.observation')}</SelectItem>
+                <SelectItem value="reminder">{t('get_ready.notes.types.reminder')}</SelectItem>
+                <SelectItem value="important">{t('get_ready.notes.types.important')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       {/* Notes List */}
@@ -291,7 +379,7 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
         </Card>
       ) : (
         <div className="space-y-3">
-          {notes.map((note) => {
+          {filteredNotes.map((note) => {
             const typeConfig = getNoteTypeConfig(note.note_type);
             const NoteIcon = typeConfig.icon;
 
@@ -324,6 +412,12 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
                           <Badge variant="outline" className={cn('text-xs', typeConfig.color)}>
                             {typeConfig.label}
                           </Badge>
+                          {note.linked_work_item_id && getWorkItemTitle(note.linked_work_item_id) && (
+                            <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
+                              <Wrench className="h-3 w-3 mr-1" />
+                              {getWorkItemTitle(note.linked_work_item_id)}
+                            </Badge>
+                          )}
                         </div>
 
                         {/* Actions Menu */}
@@ -363,10 +457,12 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
                         </DropdownMenu>
                       </div>
 
-                      {/* Note Content */}
-                      <p className="text-sm text-foreground whitespace-pre-wrap break-words mb-3">
-                        {note.content}
-                      </p>
+                      {/* Note Content - Rendered as Markdown */}
+                      <div className="text-sm text-foreground prose prose-sm dark:prose-invert max-w-none mb-3">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {note.content}
+                        </ReactMarkdown>
+                      </div>
 
                       {/* Footer */}
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -386,6 +482,9 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
                           </>
                         )}
                       </div>
+
+                      {/* Replies Section */}
+                      <NoteReplies noteId={note.id} className="mt-3" />
                     </div>
                   </div>
                 </CardContent>
@@ -422,14 +521,29 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
 
             <div className="space-y-2">
               <Label htmlFor="note-content">{t('get_ready.notes.content')}</Label>
-              <Textarea
-                id="note-content"
+              <MarkdownEditor
                 value={newNoteContent}
-                onChange={(e) => setNewNoteContent(e.target.value)}
+                onChange={setNewNoteContent}
                 placeholder={t('get_ready.notes.content_placeholder')}
-                rows={5}
-                className="resize-none"
+                rows={8}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="note-work-item">{t('get_ready.notes.link_to_work_item')} ({t('common.optional')})</Label>
+              <Select value={newNoteWorkItem || 'none'} onValueChange={(val) => setNewNoteWorkItem(val === 'none' ? '' : val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('get_ready.notes.select_work_item')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t('get_ready.notes.no_work_item')}</SelectItem>
+                  {workItems.map(item => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -472,13 +586,28 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
 
             <div className="space-y-2">
               <Label htmlFor="edit-note-content">{t('get_ready.notes.content')}</Label>
-              <Textarea
-                id="edit-note-content"
+              <MarkdownEditor
                 value={editNoteContent}
-                onChange={(e) => setEditNoteContent(e.target.value)}
-                rows={5}
-                className="resize-none"
+                onChange={setEditNoteContent}
+                rows={8}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-work-item">{t('get_ready.notes.link_to_work_item')}</Label>
+              <Select value={editNoteWorkItem || 'none'} onValueChange={(val) => setEditNoteWorkItem(val === 'none' ? '' : val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('get_ready.notes.select_work_item')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t('get_ready.notes.no_work_item')}</SelectItem>
+                  {workItems.map(item => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

@@ -144,6 +144,7 @@ export function useVehicleManagement() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Refresh activity log
     },
     onError: (error: any) => {
       console.error('Update vehicle error:', error);
@@ -232,6 +233,7 @@ export function useVehicleManagement() {
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Refresh activity log
 
       toast({
         title: t('common.success'),
@@ -276,6 +278,7 @@ export function useVehicleManagement() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Refresh activity log
     },
     onError: (error: any) => {
       console.error('Bulk update error:', error);

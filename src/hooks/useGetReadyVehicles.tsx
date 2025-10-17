@@ -511,6 +511,41 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
 
       if (!data) return { vehicles: [], hasMore: false };
 
+      // Get vehicle IDs for counting media/notes
+      const vehicleIds = data.map((v: any) => v.id);
+
+      // Fetch media counts
+      let mediaCounts = new Map<string, number>();
+      if (vehicleIds.length > 0) {
+        const { data: mediaData } = await supabase
+          .from('vehicle_media')
+          .select('vehicle_id')
+          .in('vehicle_id', vehicleIds);
+
+        if (mediaData) {
+          mediaData.forEach((item: any) => {
+            const count = mediaCounts.get(item.vehicle_id) || 0;
+            mediaCounts.set(item.vehicle_id, count + 1);
+          });
+        }
+      }
+
+      // Fetch notes counts
+      let notesCounts = new Map<string, number>();
+      if (vehicleIds.length > 0) {
+        const { data: notesData } = await supabase
+          .from('vehicle_notes')
+          .select('vehicle_id')
+          .in('vehicle_id', vehicleIds);
+
+        if (notesData) {
+          notesData.forEach((item: any) => {
+            const count = notesCounts.get(item.vehicle_id) || 0;
+            notesCounts.set(item.vehicle_id, count + 1);
+          });
+        }
+      }
+
       // Transform data
       const vehicles = data.map((vehicle: any) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
@@ -555,7 +590,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           images: [],
           work_items: workItems.length,
           work_item_counts,
-          media_count: 0,
+          media_count: mediaCounts.get(vehicle.id) || 0, // REAL COUNT
+          notes_preview: (notesCounts.get(vehicle.id) || 0).toString(), // Use as count string for now
           // Approval fields
           requires_approval: vehicle.requires_approval || false,
           approval_status: vehicle.approval_status || 'not_required',

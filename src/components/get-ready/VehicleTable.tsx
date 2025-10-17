@@ -18,6 +18,7 @@ import {
     Circle,
     Clock,
     Eye,
+    FileText,
     Image,
     Pause,
     Printer,
@@ -156,12 +157,31 @@ export function VehicleTable({ className }: VehicleTableProps) {
                       {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                       {vehicle.vehicle_trim && <span className="text-muted-foreground"> ({vehicle.vehicle_trim})</span>}
                     </div>
-                    <div className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
-                      <span className="font-medium">ST: {vehicle.stock_number}</span>
-                      <span className="text-muted-foreground/50">•</span>
-                      <span className="font-mono">
-                        VIN: {(vehicle.vin || vehicle.short_vin)?.slice(-8)}
-                      </span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <div className="text-xs text-muted-foreground flex items-center gap-2">
+                        <span className="font-medium">ST: {vehicle.stock_number}</span>
+                        <span className="text-muted-foreground/50">•</span>
+                        <span className="font-mono">
+                          VIN: {(vehicle.vin || vehicle.short_vin)?.slice(-8)}
+                        </span>
+                      </div>
+                      {/* Small media/notes badges */}
+                      {((vehicle.media_count ?? 0) > 0 || (vehicle.notes_preview?.length ?? 0) > 0) && (
+                        <div className="flex items-center gap-1">
+                          {(vehicle.media_count ?? 0) > 0 && (
+                            <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-purple-100 text-purple-700 gap-0.5">
+                              <Image className="h-2.5 w-2.5" />
+                              {vehicle.media_count}
+                            </Badge>
+                          )}
+                          {(vehicle.notes_preview?.length ?? 0) > 0 && (
+                            <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-100 text-blue-700 gap-0.5">
+                              <FileText className="h-2.5 w-2.5" />
+                              {vehicle.notes_preview.length}
+                            </Badge>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

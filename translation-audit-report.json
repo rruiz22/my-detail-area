@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 563,
-  "totalStrings": 5493,
-  "hardcodedStrings": 1280,
-  "translatedStrings": 4213,
+  "scannedFiles": 565,
+  "totalStrings": 5492,
+  "hardcodedStrings": 1300,
+  "translatedStrings": 4192,
   "issues": {
     "critical": [
       {
@@ -510,118 +510,138 @@
         "hardcodedStrings": [
           {
             "text": "Add Task",
-            "line": 164,
-            "context": "163: <Button size=\"sm\" className=\"gap-2\">\n164: <Plus className=\"w-4 h-4\" />\n165: Add Task"
+            "line": 199,
+            "context": "198: <Button size=\"sm\" className=\"gap-2\">\n199: <Plus className=\"w-4 h-4\" />\n200: Add Task"
           },
           {
             "text": "Quick Templates",
-            "line": 174,
-            "context": "173: <div>\n174: <Label htmlFor=\"template\">Quick Templates</Label>\n175: <Select value={selectedTemplate} onValueChange={handleTemplateSelect}>"
+            "line": 209,
+            "context": "208: <div>\n209: <Label htmlFor=\"template\">Quick Templates</Label>\n210: <Select value={selectedTemplate} onValueChange={handleTemplateSelect}>"
           },
           {
             "text": "Custom Task",
-            "line": 180,
-            "context": "179: <SelectContent>\n180: <SelectItem value=\"\">Custom Task</SelectItem>\n181: {ORDER_TASK_TEMPLATES.map((template, index) => ("
+            "line": 215,
+            "context": "214: <SelectContent>\n215: <SelectItem value=\"\">Custom Task</SelectItem>\n216: {ORDER_TASK_TEMPLATES.map((template, index) => ("
           },
           {
             "text": "Task Title",
-            "line": 191,
-            "context": "190: <div>\n191: <Label htmlFor=\"title\">Task Title</Label>\n192: <Input"
+            "line": 226,
+            "context": "225: <div>\n226: <Label htmlFor=\"title\">Task Title</Label>\n227: <Input"
           },
           {
             "text": "Description",
-            "line": 202,
-            "context": "201: <div>\n202: <Label htmlFor=\"description\">Description</Label>\n203: <Input"
+            "line": 237,
+            "context": "236: <div>\n237: <Label htmlFor=\"description\">Description</Label>\n238: <Input"
           },
           {
             "text": "Priority",
-            "line": 213,
-            "context": "212: <div>\n213: <Label htmlFor=\"priority\">Priority</Label>\n214: <Select value={newTask.priority} onValueChange={(value) => setNewTask({ ...newTask, priority: value as any })}>"
+            "line": 248,
+            "context": "247: <div>\n248: <Label htmlFor=\"priority\">Priority</Label>\n249: <Select value={newTask.priority} onValueChange={(value) => setNewTask({ ...newTask, priority: value as any })}>"
           },
           {
             "text": "Medium",
-            "line": 220,
-            "context": "219: <SelectItem value=\"low\">Low</SelectItem>\n220: <SelectItem value=\"medium\">Medium</SelectItem>\n221: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 255,
+            "context": "254: <SelectItem value=\"low\">Low</SelectItem>\n255: <SelectItem value=\"medium\">Medium</SelectItem>\n256: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 221,
-            "context": "220: <SelectItem value=\"medium\">Medium</SelectItem>\n221: <SelectItem value=\"high\">High</SelectItem>\n222: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 256,
+            "context": "255: <SelectItem value=\"medium\">Medium</SelectItem>\n256: <SelectItem value=\"high\">High</SelectItem>\n257: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 222,
-            "context": "221: <SelectItem value=\"high\">High</SelectItem>\n222: <SelectItem value=\"urgent\">Urgent</SelectItem>\n223: </SelectContent>"
+            "line": 257,
+            "context": "256: <SelectItem value=\"high\">High</SelectItem>\n257: <SelectItem value=\"urgent\">Urgent</SelectItem>\n258: </SelectContent>"
           },
           {
             "text": "Due Date",
-            "line": 228,
-            "context": "227: <div>\n228: <Label htmlFor=\"due_date\">Due Date</Label>\n229: <Input"
+            "line": 263,
+            "context": "262: <div>\n263: <Label htmlFor=\"due_date\">Due Date</Label>\n264: <Input"
           },
           {
             "text": "Cancel",
-            "line": 239,
-            "context": "238: <div className=\"flex justify-end space-x-2\">\n239: <Button type=\"button\" variant=\"outline\" onClick={() => setIsCreateOpen(false)}>\n240: Cancel"
+            "line": 274,
+            "context": "273: <div className=\"flex justify-end space-x-2\">\n274: <Button type=\"button\" variant=\"outline\" onClick={() => setIsCreateOpen(false)}>\n275: Cancel"
           },
           {
             "text": "Create Task",
-            "line": 242,
-            "context": "241: </Button>\n242: <Button type=\"submit\">\n243: Create Task"
+            "line": 277,
+            "context": "276: </Button>\n277: <Button type=\"submit\">\n278: Create Task"
           },
           {
             "text": "View All",
-            "line": 253,
-            "context": "252: <Button variant=\"outline\" size=\"sm\" className=\"gap-2\">\n253: <ExternalLink className=\"w-4 h-4\" />\n254: View All"
+            "line": 288,
+            "context": "287: <Button variant=\"outline\" size=\"sm\" className=\"gap-2\">\n288: <ExternalLink className=\"w-4 h-4\" />\n289: View All"
+          },
+          {
+            "text": "My Tasks",
+            "line": 301,
+            "context": "300: <TabsTrigger value=\"all\" className=\"text-xs\">All</TabsTrigger>\n301: <TabsTrigger value=\"my_tasks\" className=\"text-xs\">My Tasks</TabsTrigger>\n302: <TabsTrigger value=\"pending\" className=\"text-xs\">Pending</TabsTrigger>"
+          },
+          {
+            "text": "Pending",
+            "line": 302,
+            "context": "301: <TabsTrigger value=\"my_tasks\" className=\"text-xs\">My Tasks</TabsTrigger>\n302: <TabsTrigger value=\"pending\" className=\"text-xs\">Pending</TabsTrigger>\n303: <TabsTrigger value=\"completed\" className=\"text-xs\">Completed</TabsTrigger>"
+          },
+          {
+            "text": "Completed",
+            "line": 303,
+            "context": "302: <TabsTrigger value=\"pending\" className=\"text-xs\">Pending</TabsTrigger>\n303: <TabsTrigger value=\"completed\" className=\"text-xs\">Completed</TabsTrigger>\n304: </TabsList>"
           },
           {
             "text": "No tasks created for this order yet",
-            "line": 288,
-            "context": "287: <CheckCircle2 className=\"w-12 h-12 mx-auto mb-3 text-gray-300\" />\n288: <p className=\"text-sm\">No tasks created for this order yet</p>\n289: <p className=\"text-xs text-gray-400 mt-1\">Create tasks to track follow-ups and deliverables</p>"
+            "line": 335,
+            "context": "334: <CheckCircle2 className=\"w-12 h-12 mx-auto mb-3 text-gray-300\" />\n335: <p className=\"text-sm\">No tasks created for this order yet</p>\n336: <p className=\"text-xs text-gray-400 mt-1\">Create tasks to track follow-ups and deliverables</p>"
           },
           {
             "text": "Select a template or create custom",
-            "line": 177,
-            "context": "176: <SelectTrigger>\n177: <SelectValue placeholder=\"Select a template or create custom\" />\n178: </SelectTrigger>"
+            "line": 212,
+            "context": "211: <SelectTrigger>\n212: <SelectValue placeholder=\"Select a template or create custom\" />\n213: </SelectTrigger>"
           },
           {
             "text": "Enter task title",
-            "line": 196,
-            "context": "195: onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}\n196: placeholder=\"Enter task title\"\n197: required"
+            "line": 231,
+            "context": "230: onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}\n231: placeholder=\"Enter task title\"\n232: required"
           },
           {
             "text": "Task description",
-            "line": 207,
-            "context": "206: onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}\n207: placeholder=\"Task description\"\n208: />"
+            "line": 242,
+            "context": "241: onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}\n242: placeholder=\"Task description\"\n243: />"
+          },
+          {
+            "text": "Assign task",
+            "line": 416,
+            "context": "415: onClick={() => openAssignDialog(task)}\n416: title=\"Assign task\"\n417: >"
           },
           {
             "text": "Quick Templates",
-            "line": 174,
-            "context": "173: <div>\n174: <Label htmlFor=\"template\">Quick Templates</Label>\n175: <Select value={selectedTemplate} onValueChange={handleTemplateSelect}>"
+            "line": 209,
+            "context": "208: <div>\n209: <Label htmlFor=\"template\">Quick Templates</Label>\n210: <Select value={selectedTemplate} onValueChange={handleTemplateSelect}>"
           },
           {
             "text": "Task Title",
-            "line": 191,
-            "context": "190: <div>\n191: <Label htmlFor=\"title\">Task Title</Label>\n192: <Input"
+            "line": 226,
+            "context": "225: <div>\n226: <Label htmlFor=\"title\">Task Title</Label>\n227: <Input"
           },
           {
             "text": "Description",
-            "line": 202,
-            "context": "201: <div>\n202: <Label htmlFor=\"description\">Description</Label>\n203: <Input"
+            "line": 237,
+            "context": "236: <div>\n237: <Label htmlFor=\"description\">Description</Label>\n238: <Input"
           },
           {
             "text": "Priority",
-            "line": 213,
-            "context": "212: <div>\n213: <Label htmlFor=\"priority\">Priority</Label>\n214: <Select value={newTask.priority} onValueChange={(value) => setNewTask({ ...newTask, priority: value as any })}>"
+            "line": 248,
+            "context": "247: <div>\n248: <Label htmlFor=\"priority\">Priority</Label>\n249: <Select value={newTask.priority} onValueChange={(value) => setNewTask({ ...newTask, priority: value as any })}>"
           },
           {
             "text": "Due Date",
-            "line": 228,
-            "context": "227: <div>\n228: <Label htmlFor=\"due_date\">Due Date</Label>\n229: <Input"
+            "line": 263,
+            "context": "262: <div>\n263: <Label htmlFor=\"due_date\">Due Date</Label>\n264: <Input"
           },
           {
             "text": "Create Task\r\n                    ",
-            "line": 242,
-            "context": "241: </Button>\n242: <Button type=\"submit\">\n243: Create Task"
+            "line": 277,
+            "context": "276: </Button>\n277: <Button type=\"submit\">\n278: Create Task"
           }
         ],
         "translationCalls": [],
@@ -753,345 +773,329 @@
         "hardcodedStrings": [
           {
             "text": "Quick Actions",
-            "line": 240,
-            "context": "239: <CardTitle className=\"flex items-center gap-2\">\n240: <MoreHorizontal className=\"h-5 w-5\" />\n241: Quick Actions"
+            "line": 254,
+            "context": "253: <CardTitle className=\"flex items-center gap-2\">\n254: <MoreHorizontal className=\"h-5 w-5\" />\n255: Quick Actions"
           },
           {
             "text": "Active Alerts",
-            "line": 252,
-            "context": "251: <CardHeader>\n252: <CardTitle>Active Alerts</CardTitle>\n253: </CardHeader>"
+            "line": 266,
+            "context": "265: <CardHeader>\n266: <CardTitle>Active Alerts</CardTitle>\n267: </CardHeader>"
           },
           {
             "text": "Performance Report",
-            "line": 282,
-            "context": "281: <CardHeader>\n282: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n283: </CardHeader>"
+            "line": 296,
+            "context": "295: <CardHeader>\n296: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n297: </CardHeader>"
           },
           {
             "text": "View overall workflow performance metrics and KPIs",
-            "line": 285,
-            "context": "284: <CardContent>\n285: <p className=\"text-sm text-muted-foreground mb-4\">\n286: View overall workflow performance metrics and KPIs"
+            "line": 299,
+            "context": "298: <CardContent>\n299: <p className=\"text-sm text-muted-foreground mb-4\">\n300: View overall workflow performance metrics and KPIs"
           },
           {
             "text": "Generate Report",
-            "line": 289,
-            "context": "288: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n289: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n290: Generate Report"
+            "line": 303,
+            "context": "302: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n303: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n304: Generate Report"
           },
           {
             "text": "Vehicle History",
-            "line": 297,
-            "context": "296: <CardHeader>\n297: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n298: </CardHeader>"
+            "line": 311,
+            "context": "310: <CardHeader>\n311: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n312: </CardHeader>"
           },
           {
             "text": "Export detailed vehicle movement and status history",
-            "line": 300,
-            "context": "299: <CardContent>\n300: <p className=\"text-sm text-muted-foreground mb-4\">\n301: Export detailed vehicle movement and status history"
+            "line": 314,
+            "context": "313: <CardContent>\n314: <p className=\"text-sm text-muted-foreground mb-4\">\n315: Export detailed vehicle movement and status history"
           },
           {
             "text": "Export Data",
-            "line": 304,
-            "context": "303: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n304: <FileText className=\"h-4 w-4 mr-2\" />\n305: Export Data"
+            "line": 318,
+            "context": "317: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n318: <FileText className=\"h-4 w-4 mr-2\" />\n319: Export Data"
           },
           {
             "text": "SLA Compliance",
-            "line": 312,
-            "context": "311: <CardHeader>\n312: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n313: </CardHeader>"
+            "line": 326,
+            "context": "325: <CardHeader>\n326: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n327: </CardHeader>"
           },
           {
             "text": "Review SLA compliance rates and identify bottlenecks",
-            "line": 315,
-            "context": "314: <CardContent>\n315: <p className=\"text-sm text-muted-foreground mb-4\">\n316: Review SLA compliance rates and identify bottlenecks"
+            "line": 329,
+            "context": "328: <CardContent>\n329: <p className=\"text-sm text-muted-foreground mb-4\">\n330: Review SLA compliance rates and identify bottlenecks"
           },
           {
             "text": "View Report",
-            "line": 319,
-            "context": "318: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n319: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n320: View Report"
+            "line": 333,
+            "context": "332: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n333: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n334: View Report"
           },
           {
             "text": "Recent Exports",
-            "line": 332,
-            "context": "331: <CardHeader>\n332: <CardTitle>Recent Exports</CardTitle>\n333: </CardHeader>"
+            "line": 346,
+            "context": "345: <CardHeader>\n346: <CardTitle>Recent Exports</CardTitle>\n347: </CardHeader>"
+          },
+          {
+            "text": "Searching all steps",
+            "line": 745,
+            "context": "744: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n745: <Search className=\"h-3 w-3 mr-1\" />\n746: Searching all steps"
           },
           {
             "text": "All Types",
-            "line": 749,
-            "context": "748: <SelectContent>\n749: <SelectItem value=\"all\">All Types</SelectItem>\n750: <SelectItem value=\"standard\">"
+            "line": 757,
+            "context": "756: <SelectContent>\n757: <SelectItem value=\"all\">All Types</SelectItem>\n758: <SelectItem value=\"standard\">"
           },
           {
             "text": "All Priorities",
-            "line": 768,
-            "context": "767: <SelectContent>\n768: <SelectItem value=\"all\">All Priorities</SelectItem>\n769: <SelectItem value=\"low\">Low</SelectItem>"
+            "line": 776,
+            "context": "775: <SelectContent>\n776: <SelectItem value=\"all\">All Priorities</SelectItem>\n777: <SelectItem value=\"low\">Low</SelectItem>"
           },
           {
             "text": "Normal",
-            "line": 770,
-            "context": "769: <SelectItem value=\"low\">Low</SelectItem>\n770: <SelectItem value=\"normal\">Normal</SelectItem>\n771: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 778,
+            "context": "777: <SelectItem value=\"low\">Low</SelectItem>\n778: <SelectItem value=\"normal\">Normal</SelectItem>\n779: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 771,
-            "context": "770: <SelectItem value=\"normal\">Normal</SelectItem>\n771: <SelectItem value=\"high\">High</SelectItem>\n772: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 779,
+            "context": "778: <SelectItem value=\"normal\">Normal</SelectItem>\n779: <SelectItem value=\"high\">High</SelectItem>\n780: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 772,
-            "context": "771: <SelectItem value=\"high\">High</SelectItem>\n772: <SelectItem value=\"urgent\">Urgent</SelectItem>\n773: </SelectContent>"
+            "line": 780,
+            "context": "779: <SelectItem value=\"high\">High</SelectItem>\n780: <SelectItem value=\"urgent\">Urgent</SelectItem>\n781: </SelectContent>"
           },
           {
             "text": "Days in Step",
-            "line": 783,
-            "context": "782: <SelectContent>\n783: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n784: <SelectItem value=\"days_to_frontline\">"
+            "line": 791,
+            "context": "790: <SelectContent>\n791: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n792: <SelectItem value=\"days_to_frontline\">"
           },
           {
             "text": "Days to Finish",
-            "line": 784,
-            "context": "783: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n784: <SelectItem value=\"days_to_frontline\">\n785: Days to Finish"
+            "line": 792,
+            "context": "791: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n792: <SelectItem value=\"days_to_frontline\">\n793: Days to Finish"
           },
           {
             "text": "Priority Score",
-            "line": 787,
-            "context": "786: </SelectItem>\n787: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n788: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+            "line": 795,
+            "context": "794: </SelectItem>\n795: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n796: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
           },
           {
             "text": "SLA Status",
-            "line": 788,
-            "context": "787: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n788: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n789: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+            "line": 796,
+            "context": "795: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n796: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n797: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
           },
           {
             "text": "Stock Number",
-            "line": 789,
-            "context": "788: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n789: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n790: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+            "line": 797,
+            "context": "796: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n797: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n798: <SelectItem value=\"created_at\">Date Added</SelectItem>"
           },
           {
             "text": "Date Added",
-            "line": 790,
-            "context": "789: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n790: <SelectItem value=\"created_at\">Date Added</SelectItem>\n791: </SelectContent>"
+            "line": 798,
+            "context": "797: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n798: <SelectItem value=\"created_at\">Date Added</SelectItem>\n799: </SelectContent>"
           },
           {
             "text": "Clear Filters",
-            "line": 812,
-            "context": "811: onClick={clearFilters}\n812: >\n813: Clear Filters"
+            "line": 820,
+            "context": "819: onClick={clearFilters}\n820: >\n821: Clear Filters"
           },
           {
             "text": "Workflow",
-            "line": 746,
-            "context": "745: <SelectTrigger className=\"w-32 h-9\">\n746: <SelectValue placeholder=\"Workflow\" />\n747: </SelectTrigger>"
+            "line": 754,
+            "context": "753: <SelectTrigger className=\"w-32 h-9\">\n754: <SelectValue placeholder=\"Workflow\" />\n755: </SelectTrigger>"
           },
           {
             "text": "Priority",
-            "line": 765,
-            "context": "764: <SelectTrigger className=\"w-32 h-9\">\n765: <SelectValue placeholder=\"Priority\" />\n766: </SelectTrigger>"
+            "line": 773,
+            "context": "772: <SelectTrigger className=\"w-32 h-9\">\n773: <SelectValue placeholder=\"Priority\" />\n774: </SelectTrigger>"
           },
           {
             "text": "Clear Filters\n            ",
-            "line": 807,
-            "context": "806: {hasActiveFilters && (\n807: <Button\n808: variant=\"ghost\""
+            "line": 815,
+            "context": "814: {hasActiveFilters && (\n815: <Button\n816: variant=\"ghost\""
           }
         ],
         "translationCalls": [
           {
             "key": "common.data_refreshed",
-            "line": 130,
+            "line": 144,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 136,
+            "line": 150,
             "exists": true
           },
           {
             "key": "common.actions.export_success",
-            "line": 174,
+            "line": 188,
             "exists": true
           },
           {
             "key": "common.actions.export_failed",
-            "line": 181,
+            "line": 195,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_deleted",
-            "line": 194,
+            "line": 208,
             "exists": true
           },
           {
             "key": "get_ready.delete_failed",
-            "line": 203,
+            "line": 217,
             "exists": true
           },
           {
             "key": "get_ready.reports.title",
-            "line": 270,
+            "line": 284,
             "exists": true
           },
           {
             "key": "get_ready.reports.subtitle",
-            "line": 273,
+            "line": 287,
             "exists": true
           },
           {
             "key": "get_ready.approvals.title",
-            "line": 391,
+            "line": 395,
             "exists": true
           },
           {
             "key": "get_ready.approvals.subtitle",
-            "line": 394,
+            "line": 398,
             "exists": true
           },
           {
             "key": "get_ready.approvals.summary.pending",
-            "line": 404,
+            "line": 408,
             "exists": true
           },
           {
             "key": "get_ready.approvals.summary.awaiting_review",
-            "line": 412,
+            "line": 416,
             "exists": true
           },
           {
             "key": "get_ready.approvals.summary.approved_today",
-            "line": 420,
+            "line": 424,
             "exists": true
           },
           {
             "key": "get_ready.approvals.summary.processed_today",
-            "line": 428,
+            "line": 432,
             "exists": true
           },
           {
             "key": "get_ready.approvals.summary.rejected_today",
-            "line": 436,
+            "line": 440,
             "exists": true
           },
           {
             "key": "get_ready.approvals.summary.needs_attention",
-            "line": 444,
+            "line": 448,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.pending_title",
-            "line": 456,
+            "line": 460,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_pending",
-            "line": 465,
+            "line": 469,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 489,
+            "line": 493,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approval_required",
-            "line": 508,
+            "line": 512,
             "exists": true
           },
           {
-            "key": "get_ready.approvals.actions.reject",
-            "line": 543,
-            "exists": true
-          },
-          {
-            "key": "get_ready.approvals.actions.approve",
-            "line": 550,
+            "key": "get_ready.approvals.actions.click_to_approve",
+            "line": 540,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.approved_title",
-            "line": 564,
+            "line": 556,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_approved",
-            "line": 570,
+            "line": 562,
             "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.stock_number",
-            "line": 585,
-            "exists": false
           },
           {
             "key": "get_ready.approvals.queue.rejected_title",
-            "line": 602,
+            "line": 597,
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.stock_number",
-            "line": 618,
-            "exists": false
+            "key": "get_ready.approvals.modal.rejection_reason",
+            "line": 621,
+            "exists": true
           },
           {
-            "key": "get_ready.approvals.modal.rejection_reason",
-            "line": 623,
+            "key": "get_ready.search_placeholder",
+            "line": 662,
             "exists": true
           },
           {
             "key": "common.actions.refresh",
-            "line": 678,
+            "line": 679,
             "exists": true
           },
           {
             "key": "common.actions.exporting",
-            "line": 691,
-            "exists": true
-          },
-          {
-            "key": "common.actions.export",
             "line": 692,
             "exists": true
           },
           {
             "key": "common.actions.export",
-            "line": 699,
+            "line": 693,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export",
+            "line": 700,
             "exists": true
           },
           {
             "key": "common.actions.export_csv",
-            "line": 704,
+            "line": 705,
             "exists": true
           },
           {
             "key": "common.actions.export_excel",
-            "line": 708,
+            "line": 709,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.add_vehicle",
-            "line": 722,
+            "line": 723,
             "exists": true
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 751,
+            "line": 759,
             "exists": true
           },
           {
             "key": "get_ready.workflow.express",
-            "line": 754,
+            "line": 762,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 757,
+            "line": 765,
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "get_ready.vehicle_form.stock_number",
-            "line": 585,
-            "context": "584: <p className=\"text-xs text-muted-foreground\">\n585: {t(\"get_ready.vehicle_form.stock_number\")}:{\" \"}\n586: {vehicle.stock_number}"
-          },
-          {
-            "key": "get_ready.vehicle_form.stock_number",
-            "line": 618,
-            "context": "617: <p className=\"text-xs text-muted-foreground\">\n618: {t(\"get_ready.vehicle_form.stock_number\")}:{\" \"}\n619: {vehicle.stock_number}"
-          }
-        ],
-        "coverage": 58,
+        "missingKeys": [],
+        "coverage": 56,
         "severity": "critical"
       },
       {
@@ -5942,43 +5946,43 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 223,
-            "context": "222: onError: (error) => {\n223: console.error('Create work item mutation error:', error);\n224: toast.error(t('get_ready.work_items.error_creating'));"
+            "line": 229,
+            "context": "228: onError: (error) => {\n229: console.error('Create work item mutation error:', error);\n230: toast.error(t('get_ready.work_items.error_creating'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 270,
-            "context": "269: onError: (error) => {\n270: console.error('Update work item mutation error:', error);\n271: toast.error(t('get_ready.work_items.error_updating'));"
+            "line": 281,
+            "context": "280: onError: (error) => {\n281: console.error('Update work item mutation error:', error);\n282: toast.error(t('get_ready.work_items.error_updating'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 317,
-            "context": "316: onError: (error) => {\n317: console.error('Approve work item mutation error:', error);\n318: toast.error(t('get_ready.work_items.error_approving'));"
+            "line": 333,
+            "context": "332: onError: (error) => {\n333: console.error('Approve work item mutation error:', error);\n334: toast.error(t('get_ready.work_items.error_approving'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 365,
-            "context": "364: onError: (error) => {\n365: console.error('Decline work item mutation error:', error);\n366: toast.error(t('get_ready.work_items.error_declining'));"
+            "line": 386,
+            "context": "385: onError: (error) => {\n386: console.error('Decline work item mutation error:', error);\n387: toast.error(t('get_ready.work_items.error_declining'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 405,
-            "context": "404: onError: (error) => {\n405: console.error('Start work item mutation error:', error);\n406: toast.error(t('get_ready.work_items.error_starting'));"
+            "line": 426,
+            "context": "425: onError: (error) => {\n426: console.error('Start work item mutation error:', error);\n427: toast.error(t('get_ready.work_items.error_starting'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 479,
-            "context": "478: onError: (error) => {\n479: console.error('Complete work item mutation error:', error);\n480: toast.error(t('get_ready.work_items.error_completing'));"
+            "line": 500,
+            "context": "499: onError: (error) => {\n500: console.error('Complete work item mutation error:', error);\n501: toast.error(t('get_ready.work_items.error_completing'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 513,
-            "context": "512: onError: (error) => {\n513: console.error('Delete work item mutation error:', error);\n514: toast.error(t('get_ready.work_items.error_deleting'));"
+            "line": 534,
+            "context": "533: onError: (error) => {\n534: console.error('Delete work item mutation error:', error);\n535: toast.error(t('get_ready.work_items.error_deleting'));"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 565,
-            "context": "564: onError: (error) => {\n565: console.error('Assign vendor mutation error:', error);\n566: toast.error(t('get_ready.vendors.error_assigning_vendor'));"
+            "line": 586,
+            "context": "585: onError: (error) => {\n586: console.error('Assign vendor mutation error:', error);\n587: toast.error(t('get_ready.vendors.error_assigning_vendor'));"
           }
         ],
         "translationCalls": [
@@ -5989,87 +5993,87 @@
           },
           {
             "key": "get_ready.work_items.created_successfully",
-            "line": 220,
+            "line": 226,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_creating",
-            "line": 224,
+            "line": 230,
             "exists": true
           },
           {
             "key": "get_ready.work_items.updated_successfully",
-            "line": 267,
+            "line": 278,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_updating",
-            "line": 271,
+            "line": 282,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approved_successfully",
-            "line": 314,
+            "line": 330,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_approving",
-            "line": 318,
+            "line": 334,
             "exists": true
           },
           {
             "key": "get_ready.work_items.declined_successfully",
-            "line": 362,
+            "line": 383,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_declining",
-            "line": 366,
+            "line": 387,
             "exists": true
           },
           {
             "key": "get_ready.work_items.started_successfully",
-            "line": 402,
+            "line": 423,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_starting",
-            "line": 406,
+            "line": 427,
             "exists": true
           },
           {
             "key": "get_ready.work_items.completed_successfully",
-            "line": 476,
+            "line": 497,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_completing",
-            "line": 480,
+            "line": 501,
             "exists": true
           },
           {
             "key": "get_ready.work_items.deleted_successfully",
-            "line": 510,
+            "line": 531,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_deleting",
-            "line": 514,
+            "line": 535,
             "exists": true
           },
           {
             "key": "get_ready.vendors.vendor_assigned_successfully",
-            "line": 560,
+            "line": 581,
             "exists": true
           },
           {
             "key": "get_ready.vendors.vendor_unassigned_successfully",
-            "line": 561,
+            "line": 582,
             "exists": true
           },
           {
             "key": "get_ready.vendors.error_assigning_vendor",
-            "line": 566,
+            "line": 587,
             "exists": true
           }
         ],
@@ -6993,6 +6997,55 @@
             "text": "Drag orders here",
             "line": 403,
             "context": "402: <div className=\"text-sm\">No orders</div>\n403: <div className=\"text-xs\">Drag orders here</div>\n404: </div>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\components\\productivity\\AssignUserDialog.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 21,
+            "context": "20: currentAssignedUserId?: string | null;\n21: onAssign: (userId: string | null) => Promise<void>;\n22: taskTitle?: string;"
+          },
+          {
+            "text": "Assign Task",
+            "line": 61,
+            "context": "60: <DialogTitle className=\"flex items-center gap-2\">\n61: <UserPlus className=\"w-5 h-5\" />\n62: Assign Task"
+          },
+          {
+            "text": "Remove Assignment",
+            "line": 91,
+            "context": "90: >\n91: <X className=\"w-4 h-4\" />\n92: Remove Assignment"
+          },
+          {
+            "text": "No users found",
+            "line": 113,
+            "context": "112: <UserPlus className=\"w-12 h-12 mx-auto mb-3 opacity-50\" />\n113: <p className=\"text-sm\">No users found</p>\n114: {searchQuery && ("
+          },
+          {
+            "text": "Try adjusting your search",
+            "line": 115,
+            "context": "114: {searchQuery && (\n115: <p className=\"text-xs mt-1\">\n116: Try adjusting your search"
+          },
+          {
+            "text": "Current",
+            "line": 150,
+            "context": "149: {currentAssignedUserId === user.id && (\n150: <Badge variant=\"secondary\" className=\"text-xs\">\n151: Current"
+          },
+          {
+            "text": "Click to assign",
+            "line": 174,
+            "context": "173: <span>{filteredUsers.length} team member{filteredUsers.length !== 1 ? 's' : ''}</span>\n174: <span>Click to assign</span>\n175: </div>"
+          },
+          {
+            "text": "Search by name or email...",
+            "line": 76,
+            "context": "75: <Input\n76: placeholder=\"Search by name or email...\"\n77: value={searchQuery}"
           }
         ],
         "translationCalls": [],
@@ -9472,66 +9525,6 @@
           }
         ],
         "coverage": 80,
-        "severity": "low"
-      },
-      {
-        "file": "src\\pages\\Productivity.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "productivity.title",
-            "line": 24,
-            "exists": false
-          },
-          {
-            "key": "productivity.description",
-            "line": 26,
-            "exists": false
-          },
-          {
-            "key": "productivity.dashboard",
-            "line": 35,
-            "exists": false
-          },
-          {
-            "key": "productivity.todos",
-            "line": 39,
-            "exists": false
-          },
-          {
-            "key": "productivity.calendar",
-            "line": 43,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "productivity.title",
-            "line": 24,
-            "context": "23: <div>\n24: <h1 className=\"text-3xl font-bold tracking-tight\">{t('productivity.title')}</h1>\n25: <p className=\"text-muted-foreground\">"
-          },
-          {
-            "key": "productivity.description",
-            "line": 26,
-            "context": "25: <p className=\"text-muted-foreground\">\n26: {t('productivity.description')}\n27: </p>"
-          },
-          {
-            "key": "productivity.dashboard",
-            "line": 35,
-            "context": "34: <Clock className=\"h-4 w-4\" />\n35: {t('productivity.dashboard')}\n36: </TabsTrigger>"
-          },
-          {
-            "key": "productivity.todos",
-            "line": 39,
-            "context": "38: <CheckSquare className=\"h-4 w-4\" />\n39: {t('productivity.todos')}\n40: </TabsTrigger>"
-          },
-          {
-            "key": "productivity.calendar",
-            "line": 43,
-            "context": "42: <Calendar className=\"h-4 w-4\" />\n43: {t('productivity.calendar')}\n44: </TabsTrigger>"
-          }
-        ],
-        "coverage": 100,
         "severity": "low"
       },
       {
@@ -12750,6 +12743,59 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useProductivityTodos.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", err);\r\n    },\r\n    onSuccess: () => {\r\n      toast.success(",
+            "line": 181,
+            "context": "180: toast.error('Failed to create task');\n181: console.error('Create todo error:', err);\n182: },"
+          },
+          {
+            "text": ", err);\r\n    },\r\n    onSuccess: () => {\r\n      toast.success(",
+            "line": 236,
+            "context": "235: toast.error('Failed to update task');\n236: console.error('Update todo error:', err);\n237: },"
+          },
+          {
+            "text": ", err);\r\n    },\r\n    onSuccess: () => {\r\n      toast.success(",
+            "line": 288,
+            "context": "287: toast.error('Failed to delete task');\n288: console.error('Delete todo error:', err);\n289: },"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useProductivityCalendars.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", err);\r\n    },\r\n  });\r\n\r\n  // Create event mutation with optimistic update\r\n  const createEventMutation = useMutation({\r\n    mutationFn: async (eventData: Omit<ProductivityEventInsert, ",
+            "line": 198,
+            "context": "197: toast.error('Failed to create calendar');\n198: console.error('Create calendar error:', err);\n199: },"
+          },
+          {
+            "text": ", err);\r\n    },\r\n    onSuccess: () => {\r\n      toast.success(",
+            "line": 274,
+            "context": "273: toast.error('Failed to create event');\n274: console.error('Create event error:', err);\n275: },"
+          },
+          {
+            "text": ", err);\r\n    },\r\n    onSuccess: () => {\r\n      toast.success(",
+            "line": 328,
+            "context": "327: toast.error('Failed to update event');\n328: console.error('Update event error:', err);\n329: },"
+          },
+          {
+            "text": ", err);\r\n    },\r\n    onSuccess: () => {\r\n      toast.success(",
+            "line": 380,
+            "context": "379: toast.error('Failed to delete event');\n380: console.error('Delete event error:', err);\n381: },"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\usePerformanceMonitor.ts",
         "hardcodedStrings": [
           {
@@ -13937,129 +13983,129 @@
         "hardcodedStrings": [
           {
             "text": "My Detail Area",
-            "line": 246,
-            "context": "245: <div className=\"text-center\">\n246: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n247: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>"
+            "line": 238,
+            "context": "237: <div className=\"text-center\">\n238: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n239: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>"
           },
           {
             "text": "Enterprise Dealership Management",
-            "line": 247,
-            "context": "246: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n247: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>\n248: </div>"
+            "line": 239,
+            "context": "238: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n239: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>\n240: </div>"
           }
         ],
         "translationCalls": [
           {
             "key": "navigation.dashboard",
-            "line": 37,
+            "line": 35,
             "exists": true
           },
           {
             "key": "navigation.sales_orders",
-            "line": 43,
+            "line": 41,
             "exists": true
           },
           {
             "key": "navigation.service_orders",
-            "line": 49,
+            "line": 47,
             "exists": true
           },
           {
             "key": "navigation.recon_orders",
-            "line": 55,
+            "line": 53,
             "exists": true
           },
           {
             "key": "navigation.car_wash",
-            "line": 61,
+            "line": 59,
             "exists": true
           },
           {
             "key": "navigation.get_ready",
-            "line": 79,
+            "line": 77,
             "exists": true
           },
           {
             "key": "navigation.stock",
-            "line": 84,
+            "line": 82,
             "exists": true
           },
           {
             "key": "navigation.detail_hub",
-            "line": 89,
+            "line": 87,
             "exists": true
           },
           {
             "key": "chat.title",
-            "line": 110,
+            "line": 108,
             "exists": true
           },
           {
             "key": "contacts.title",
-            "line": 115,
+            "line": 113,
             "exists": true
           },
           {
             "key": "vin_scanner_hub.title",
-            "line": 120,
+            "line": 118,
             "exists": true
           },
           {
             "key": "nfc_tracking.title",
-            "line": 125,
+            "line": 123,
             "exists": true
           },
           {
             "key": "navigation.productivity",
-            "line": 141,
+            "line": 139,
             "exists": true
           },
           {
             "key": "profile.title",
-            "line": 146,
+            "line": 144,
             "exists": true
           },
           {
             "key": "admin.administration",
-            "line": 163,
+            "line": 161,
             "exists": true
           },
           {
             "key": "admin.administration_description",
-            "line": 168,
+            "line": 166,
             "exists": true
           },
           {
             "key": "navigation.reports",
-            "line": 171,
+            "line": 169,
             "exists": true
           },
           {
             "key": "navigation.settings",
-            "line": 178,
+            "line": 176,
             "exists": true
           },
           {
             "key": "navigation.landing_page",
-            "line": 199,
+            "line": 197,
             "exists": true
           },
           {
             "key": "navigation.core_operations",
-            "line": 267,
+            "line": 259,
             "exists": true
           },
           {
             "key": "navigation.workflow_management",
-            "line": 308,
+            "line": 302,
             "exists": true
           },
           {
             "key": "navigation.tools_communication",
-            "line": 350,
+            "line": 346,
             "exists": true
           },
           {
             "key": "navigation.productivity_section",
-            "line": 392,
+            "line": 390,
             "exists": true
           },
           {
@@ -14069,7 +14115,7 @@
           },
           {
             "key": "navigation.system_admin",
-            "line": 476,
+            "line": 478,
             "exists": true
           }
         ],
@@ -25322,122 +25368,122 @@
           {
             "key": "productivity.searchTodos",
             "line": 201,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.filters.all",
             "line": 213,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.pending",
             "line": 214,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.inProgress",
             "line": 215,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.completed",
             "line": 216,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.cancelled",
             "line": 217,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.filters.all",
             "line": 226,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.urgent",
             "line": 227,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.high",
             "line": 228,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.medium",
             "line": 229,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.low",
             "line": 230,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.createTodo",
             "line": 239,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.createTodo",
             "line": 247,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.createTodoDescription",
             "line": 253,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.title",
             "line": 259,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.enterTitle",
             "line": 264,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.description",
             "line": 270,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.enterDescription",
             "line": 275,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.label",
             "line": 281,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.low",
             "line": 287,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.medium",
             "line": 288,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.high",
             "line": 289,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.urgent",
             "line": 290,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.dueDate",
             "line": 296,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.cancel",
@@ -25472,92 +25518,92 @@
           {
             "key": "productivity.noTodosFound",
             "line": 410,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.noTodosWithFilters",
             "line": 413,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.createFirstTodo",
             "line": 414,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.createTodo",
             "line": 420,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.editTodo",
             "line": 432,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.title",
             "line": 437,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.description",
             "line": 447,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.label",
             "line": 457,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.low",
             "line": 463,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.medium",
             "line": 464,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.high",
             "line": 465,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.priority.urgent",
             "line": 466,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.label",
             "line": 472,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.pending",
             "line": 478,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.inProgress",
             "line": 479,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.completed",
             "line": 480,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.status.cancelled",
             "line": 481,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.dueDate",
             "line": 488,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.cancel",
@@ -25571,126 +25617,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "productivity.searchTodos",
-            "line": 201,
-            "context": "200: <Input\n201: placeholder={t('productivity.searchTodos')}\n202: value={searchTerm}"
-          },
-          {
-            "key": "productivity.filters.all",
-            "line": 213,
-            "context": "212: <SelectContent>\n213: <SelectItem value=\"all\">{t('productivity.filters.all')}</SelectItem>\n214: <SelectItem value=\"pending\">{t('productivity.status.pending')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.pending",
-            "line": 214,
-            "context": "213: <SelectItem value=\"all\">{t('productivity.filters.all')}</SelectItem>\n214: <SelectItem value=\"pending\">{t('productivity.status.pending')}</SelectItem>\n215: <SelectItem value=\"in_progress\">{t('productivity.status.inProgress')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.inProgress",
-            "line": 215,
-            "context": "214: <SelectItem value=\"pending\">{t('productivity.status.pending')}</SelectItem>\n215: <SelectItem value=\"in_progress\">{t('productivity.status.inProgress')}</SelectItem>\n216: <SelectItem value=\"completed\">{t('productivity.status.completed')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.completed",
-            "line": 216,
-            "context": "215: <SelectItem value=\"in_progress\">{t('productivity.status.inProgress')}</SelectItem>\n216: <SelectItem value=\"completed\">{t('productivity.status.completed')}</SelectItem>\n217: <SelectItem value=\"cancelled\">{t('productivity.status.cancelled')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.cancelled",
-            "line": 217,
-            "context": "216: <SelectItem value=\"completed\">{t('productivity.status.completed')}</SelectItem>\n217: <SelectItem value=\"cancelled\">{t('productivity.status.cancelled')}</SelectItem>\n218: </SelectContent>"
-          },
-          {
-            "key": "productivity.filters.all",
-            "line": 226,
-            "context": "225: <SelectContent>\n226: <SelectItem value=\"all\">{t('productivity.filters.all')}</SelectItem>\n227: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.urgent",
-            "line": 227,
-            "context": "226: <SelectItem value=\"all\">{t('productivity.filters.all')}</SelectItem>\n227: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>\n228: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.high",
-            "line": 228,
-            "context": "227: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>\n228: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>\n229: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.medium",
-            "line": 229,
-            "context": "228: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>\n229: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>\n230: <SelectItem value=\"low\">{t('productivity.priority.low')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.low",
-            "line": 230,
-            "context": "229: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>\n230: <SelectItem value=\"low\">{t('productivity.priority.low')}</SelectItem>\n231: </SelectContent>"
-          },
-          {
-            "key": "productivity.createTodo",
-            "line": 239,
-            "context": "238: <Plus className=\"h-4 w-4 mr-2\" />\n239: {t('productivity.createTodo')}\n240: </Button>"
-          },
-          {
-            "key": "productivity.createTodo",
-            "line": 247,
-            "context": "246: ? `Create Task for Order #${orderFilter}`\n247: : t('productivity.createTodo')\n248: }"
-          },
-          {
-            "key": "productivity.createTodoDescription",
-            "line": 253,
-            "context": "252: ? `This task will be linked to Order #${orderFilter}`\n253: : t('productivity.createTodoDescription')\n254: }"
-          },
-          {
-            "key": "productivity.title",
-            "line": 259,
-            "context": "258: <div>\n259: <Label htmlFor=\"title\">{t('productivity.title')}</Label>\n260: <Input"
-          },
-          {
-            "key": "productivity.enterTitle",
-            "line": 264,
-            "context": "263: onChange={(e) => setNewTodo({ ...newTodo, title: e.target.value })}\n264: placeholder={t('productivity.enterTitle')}\n265: required"
-          },
-          {
-            "key": "productivity.description",
-            "line": 270,
-            "context": "269: <div>\n270: <Label htmlFor=\"description\">{t('productivity.description')}</Label>\n271: <Textarea"
-          },
-          {
-            "key": "productivity.enterDescription",
-            "line": 275,
-            "context": "274: onChange={(e) => setNewTodo({ ...newTodo, description: e.target.value })}\n275: placeholder={t('productivity.enterDescription')}\n276: />"
-          },
-          {
-            "key": "productivity.priority.label",
-            "line": 281,
-            "context": "280: <div>\n281: <Label htmlFor=\"priority\">{t('productivity.priority.label')}</Label>\n282: <Select value={newTodo.priority} onValueChange={(value: 'low' | 'medium' | 'high') => setNewTodo({ ...newTodo, priority: value })}>"
-          },
-          {
-            "key": "productivity.priority.low",
-            "line": 287,
-            "context": "286: <SelectContent>\n287: <SelectItem value=\"low\">{t('productivity.priority.low')}</SelectItem>\n288: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.medium",
-            "line": 288,
-            "context": "287: <SelectItem value=\"low\">{t('productivity.priority.low')}</SelectItem>\n288: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>\n289: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.high",
-            "line": 289,
-            "context": "288: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>\n289: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>\n290: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.urgent",
-            "line": 290,
-            "context": "289: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>\n290: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>\n291: </SelectContent>"
-          },
-          {
-            "key": "productivity.dueDate",
-            "line": 296,
-            "context": "295: <div>\n296: <Label htmlFor=\"due_date\">{t('productivity.dueDate')}</Label>\n297: <Input"
-          },
           {
             "key": "common.cancel",
             "line": 308,
@@ -25720,96 +25646,6 @@
             "key": "common.delete",
             "line": 397,
             "context": "396: <Trash2 className=\"h-4 w-4 mr-2\" />\n397: {t('common.delete')}\n398: </DropdownMenuItem>"
-          },
-          {
-            "key": "productivity.noTodosFound",
-            "line": 410,
-            "context": "409: <CheckCircle2 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n410: <h3 className=\"text-lg font-medium mb-2\">{t('productivity.noTodosFound')}</h3>\n411: <p className=\"text-muted-foreground text-center mb-4\">"
-          },
-          {
-            "key": "productivity.noTodosWithFilters",
-            "line": 413,
-            "context": "412: {searchTerm || statusFilter !== 'all' || priorityFilter !== 'all'\n413: ? t('productivity.noTodosWithFilters')\n414: : t('productivity.createFirstTodo')"
-          },
-          {
-            "key": "productivity.createFirstTodo",
-            "line": 414,
-            "context": "413: ? t('productivity.noTodosWithFilters')\n414: : t('productivity.createFirstTodo')\n415: }"
-          },
-          {
-            "key": "productivity.createTodo",
-            "line": 420,
-            "context": "419: <Plus className=\"h-4 w-4 mr-2\" />\n420: {t('productivity.createTodo')}\n421: </Button>"
-          },
-          {
-            "key": "productivity.editTodo",
-            "line": 432,
-            "context": "431: <DialogHeader>\n432: <DialogTitle>{t('productivity.editTodo')}</DialogTitle>\n433: </DialogHeader>"
-          },
-          {
-            "key": "productivity.title",
-            "line": 437,
-            "context": "436: <div>\n437: <Label htmlFor=\"edit-title\">{t('productivity.title')}</Label>\n438: <Input"
-          },
-          {
-            "key": "productivity.description",
-            "line": 447,
-            "context": "446: <div>\n447: <Label htmlFor=\"edit-description\">{t('productivity.description')}</Label>\n448: <Textarea"
-          },
-          {
-            "key": "productivity.priority.label",
-            "line": 457,
-            "context": "456: <div>\n457: <Label htmlFor=\"edit-priority\">{t('productivity.priority.label')}</Label>\n458: <Select value={editingTodo.priority} onValueChange={(value: 'low' | 'medium' | 'high') => setEditingTodo({ ...editingTodo, priority: value })}>"
-          },
-          {
-            "key": "productivity.priority.low",
-            "line": 463,
-            "context": "462: <SelectContent>\n463: <SelectItem value=\"low\">{t('productivity.priority.low')}</SelectItem>\n464: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.medium",
-            "line": 464,
-            "context": "463: <SelectItem value=\"low\">{t('productivity.priority.low')}</SelectItem>\n464: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>\n465: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.high",
-            "line": 465,
-            "context": "464: <SelectItem value=\"medium\">{t('productivity.priority.medium')}</SelectItem>\n465: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>\n466: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>"
-          },
-          {
-            "key": "productivity.priority.urgent",
-            "line": 466,
-            "context": "465: <SelectItem value=\"high\">{t('productivity.priority.high')}</SelectItem>\n466: <SelectItem value=\"urgent\">{t('productivity.priority.urgent')}</SelectItem>\n467: </SelectContent>"
-          },
-          {
-            "key": "productivity.status.label",
-            "line": 472,
-            "context": "471: <div>\n472: <Label htmlFor=\"edit-status\">{t('productivity.status.label')}</Label>\n473: <Select value={editingTodo.status} onValueChange={(value) => setEditingTodo({ ...editingTodo, status: value as any })}>"
-          },
-          {
-            "key": "productivity.status.pending",
-            "line": 478,
-            "context": "477: <SelectContent>\n478: <SelectItem value=\"pending\">{t('productivity.status.pending')}</SelectItem>\n479: <SelectItem value=\"in_progress\">{t('productivity.status.inProgress')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.inProgress",
-            "line": 479,
-            "context": "478: <SelectItem value=\"pending\">{t('productivity.status.pending')}</SelectItem>\n479: <SelectItem value=\"in_progress\">{t('productivity.status.inProgress')}</SelectItem>\n480: <SelectItem value=\"completed\">{t('productivity.status.completed')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.completed",
-            "line": 480,
-            "context": "479: <SelectItem value=\"in_progress\">{t('productivity.status.inProgress')}</SelectItem>\n480: <SelectItem value=\"completed\">{t('productivity.status.completed')}</SelectItem>\n481: <SelectItem value=\"cancelled\">{t('productivity.status.cancelled')}</SelectItem>"
-          },
-          {
-            "key": "productivity.status.cancelled",
-            "line": 481,
-            "context": "480: <SelectItem value=\"completed\">{t('productivity.status.completed')}</SelectItem>\n481: <SelectItem value=\"cancelled\">{t('productivity.status.cancelled')}</SelectItem>\n482: </SelectContent>"
-          },
-          {
-            "key": "productivity.dueDate",
-            "line": 488,
-            "context": "487: <div>\n488: <Label htmlFor=\"edit-due-date\">{t('productivity.dueDate')}</Label>\n489: <Input"
           },
           {
             "key": "common.cancel",
@@ -25860,146 +25696,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\productivity\\ProductivityDashboard.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "productivity.stats.totalTodos",
-            "line": 81,
-            "exists": false
-          },
-          {
-            "key": "productivity.stats.completed",
-            "line": 88,
-            "exists": false
-          },
-          {
-            "key": "productivity.stats.todayEvents",
-            "line": 96,
-            "exists": false
-          },
-          {
-            "key": "productivity.stats.tomorrow",
-            "line": 103,
-            "exists": false
-          },
-          {
-            "key": "productivity.stats.overdue",
-            "line": 111,
-            "exists": false
-          },
-          {
-            "key": "productivity.stats.urgent",
-            "line": 118,
-            "exists": false
-          },
-          {
-            "key": "productivity.stats.completion",
-            "line": 126,
-            "exists": false
-          },
-          {
-            "key": "productivity.recentTodos",
-            "line": 143,
-            "exists": false
-          },
-          {
-            "key": "productivity.recentTodosDescription",
-            "line": 146,
-            "exists": false
-          },
-          {
-            "key": "productivity.noTodos",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "productivity.todayEvents",
-            "line": 202,
-            "exists": false
-          },
-          {
-            "key": "productivity.todayEventsDescription",
-            "line": 205,
-            "exists": false
-          },
-          {
-            "key": "productivity.noEventsToday",
-            "line": 229,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "productivity.stats.totalTodos",
-            "line": 81,
-            "context": "80: <CardTitle className=\"text-sm font-medium\">\n81: {t('productivity.stats.totalTodos')}\n82: </CardTitle>"
-          },
-          {
-            "key": "productivity.stats.completed",
-            "line": 88,
-            "context": "87: <p className=\"text-xs text-muted-foreground\">\n88: {completedTodos.length} {t('productivity.stats.completed')}\n89: </p>"
-          },
-          {
-            "key": "productivity.stats.todayEvents",
-            "line": 96,
-            "context": "95: <CardTitle className=\"text-sm font-medium\">\n96: {t('productivity.stats.todayEvents')}\n97: </CardTitle>"
-          },
-          {
-            "key": "productivity.stats.tomorrow",
-            "line": 103,
-            "context": "102: <p className=\"text-xs text-muted-foreground\">\n103: {tomorrowEvents.length} {t('productivity.stats.tomorrow')}\n104: </p>"
-          },
-          {
-            "key": "productivity.stats.overdue",
-            "line": 111,
-            "context": "110: <CardTitle className=\"text-sm font-medium\">\n111: {t('productivity.stats.overdue')}\n112: </CardTitle>"
-          },
-          {
-            "key": "productivity.stats.urgent",
-            "line": 118,
-            "context": "117: <p className=\"text-xs text-muted-foreground\">\n118: {urgentTodos.length} {t('productivity.stats.urgent')}\n119: </p>"
-          },
-          {
-            "key": "productivity.stats.completion",
-            "line": 126,
-            "context": "125: <CardTitle className=\"text-sm font-medium\">\n126: {t('productivity.stats.completion')}\n127: </CardTitle>"
-          },
-          {
-            "key": "productivity.recentTodos",
-            "line": 143,
-            "context": "142: <CheckCircle className=\"h-5 w-5\" />\n143: {t('productivity.recentTodos')}\n144: </CardTitle>"
-          },
-          {
-            "key": "productivity.recentTodosDescription",
-            "line": 146,
-            "context": "145: <CardDescription>\n146: {t('productivity.recentTodosDescription')}\n147: </CardDescription>"
-          },
-          {
-            "key": "productivity.noTodos",
-            "line": 192,
-            "context": "191: <ListTodo className=\"h-12 w-12 mx-auto mb-2 opacity-50\" />\n192: <p>{t('productivity.noTodos')}</p>\n193: </div>"
-          },
-          {
-            "key": "productivity.todayEvents",
-            "line": 202,
-            "context": "201: <Calendar className=\"h-5 w-5\" />\n202: {t('productivity.todayEvents')}\n203: </CardTitle>"
-          },
-          {
-            "key": "productivity.todayEventsDescription",
-            "line": 205,
-            "context": "204: <CardDescription>\n205: {t('productivity.todayEventsDescription')}\n206: </CardDescription>"
-          },
-          {
-            "key": "productivity.noEventsToday",
-            "line": 229,
-            "context": "228: <Calendar className=\"h-12 w-12 mx-auto mb-2 opacity-50\" />\n229: <p>{t('productivity.noEventsToday')}</p>\n230: </div>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\productivity\\ProductivityCalendar.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -26031,12 +25727,12 @@
           {
             "key": "productivity.description",
             "line": 205,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.enterDescription",
             "line": 210,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.color",
@@ -26091,7 +25787,7 @@
           {
             "key": "productivity.title",
             "line": 268,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.enterEventTitle",
@@ -26101,17 +25797,17 @@
           {
             "key": "productivity.description",
             "line": 279,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.enterDescription",
             "line": 284,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.calendar",
             "line": 290,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.selectCalendar",
@@ -26191,7 +25887,7 @@
           {
             "key": "productivity.description",
             "line": 426,
-            "exists": false
+            "exists": true
           },
           {
             "key": "productivity.startTime",
@@ -26246,16 +25942,6 @@
             "context": "198: onChange={(e) => setNewCalendar({ ...newCalendar, name: e.target.value })}\n199: placeholder={t('productivity.enterCalendarName')}\n200: required"
           },
           {
-            "key": "productivity.description",
-            "line": 205,
-            "context": "204: <div>\n205: <Label htmlFor=\"cal-description\">{t('productivity.description')}</Label>\n206: <Textarea"
-          },
-          {
-            "key": "productivity.enterDescription",
-            "line": 210,
-            "context": "209: onChange={(e) => setNewCalendar({ ...newCalendar, description: e.target.value })}\n210: placeholder={t('productivity.enterDescription')}\n211: />"
-          },
-          {
             "key": "productivity.color",
             "line": 216,
             "context": "215: <div>\n216: <Label htmlFor=\"cal-color\">{t('productivity.color')}</Label>\n217: <Input"
@@ -26306,29 +25992,9 @@
             "context": "262: <DialogDescription>\n263: {t('productivity.createEventDescription')}\n264: </DialogDescription>"
           },
           {
-            "key": "productivity.title",
-            "line": 268,
-            "context": "267: <div>\n268: <Label htmlFor=\"event-title\">{t('productivity.title')}</Label>\n269: <Input"
-          },
-          {
             "key": "productivity.enterEventTitle",
             "line": 273,
             "context": "272: onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}\n273: placeholder={t('productivity.enterEventTitle')}\n274: required"
-          },
-          {
-            "key": "productivity.description",
-            "line": 279,
-            "context": "278: <div>\n279: <Label htmlFor=\"event-description\">{t('productivity.description')}</Label>\n280: <Textarea"
-          },
-          {
-            "key": "productivity.enterDescription",
-            "line": 284,
-            "context": "283: onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}\n284: placeholder={t('productivity.enterDescription')}\n285: />"
-          },
-          {
-            "key": "productivity.calendar",
-            "line": 290,
-            "context": "289: <div>\n290: <Label htmlFor=\"event-calendar\">{t('productivity.calendar')}</Label>\n291: <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>"
           },
           {
             "key": "productivity.selectCalendar",
@@ -26404,11 +26070,6 @@
             "key": "productivity.eventTypes.${selectedEvent.event_type}",
             "line": 419,
             "context": "418: <DialogDescription>\n419: {selectedEvent?.event_type && t(`productivity.eventTypes.${selectedEvent.event_type}`)}\n420: </DialogDescription>"
-          },
-          {
-            "key": "productivity.description",
-            "line": 426,
-            "context": "425: <div>\n426: <Label>{t('productivity.description')}</Label>\n427: <p className=\"text-sm text-muted-foreground mt-1\">"
           },
           {
             "key": "productivity.startTime",
@@ -35906,11 +35567,6 @@
             "key": "get_ready.tabs.${tab.key}",
             "line": 80,
             "exists": false
-          },
-          {
-            "key": "get_ready.search_placeholder",
-            "line": 106,
-            "exists": true
           }
         ],
         "missingKeys": [
@@ -37725,22 +37381,22 @@
         "hardcodedStrings": [
           {
             "text": "Select dealership...",
-            "line": 56,
-            "context": "55: <SelectTrigger className=\"w-56 h-8 text-sm whitespace-nowrap\">\n56: <SelectValue placeholder=\"Select dealership...\" className=\"truncate\" />\n57: </SelectTrigger>"
+            "line": 45,
+            "context": "44: <SelectTrigger className=\"w-56 h-8 text-sm whitespace-nowrap\">\n45: <SelectValue placeholder=\"Select dealership...\" className=\"truncate\" />\n46: </SelectTrigger>"
           }
         ],
         "translationCalls": [
           {
             "key": "dealerships.all_dealerships",
-            "line": 62,
+            "line": 51,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.all_dealerships",
-            "line": 62,
-            "context": "61: <div className=\"w-2 h-2 bg-blue-500 rounded-full shrink-0\" />\n62: <span className=\"truncate\">{t('dealerships.all_dealerships', 'All Dealerships')}</span>\n63: </div>"
+            "line": 51,
+            "context": "50: <div className=\"w-2 h-2 bg-blue-500 rounded-full shrink-0\" />\n51: <span className=\"truncate\">{t('dealerships.all_dealerships', 'All Dealerships')}</span>\n52: </div>"
           }
         ],
         "coverage": 50,
@@ -42259,7 +41915,7 @@
         "src\\components\\detail-hub\\InvoiceCenter.tsx (50 strings)",
         "src\\components\\detail-hub\\EmployeePortal.tsx (42 strings)",
         "src\\components\\stock\\VehicleDetailsModal.tsx (39 strings)",
-        "src\\components\\chat\\ContextualChatLauncher.tsx (28 strings)"
+        "src\\components\\get-ready\\GetReadySplitContent.tsx (28 strings)"
       ],
       "estimatedEffort": "23 hours"
     },
@@ -42320,15 +41976,15 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "278 Component components need translation",
+      "description": "279 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
+        "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
-        "src\\components\\get-ready\\GetReadySplitContent.tsx",
-        "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
+        "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
         "src\\components\\users\\password\\PasswordActivityLog.tsx",
         "src\\components\\detail-hub\\ReportsCenter.tsx",
@@ -42363,6 +42019,7 @@
         "src\\hooks\\useChatMessages.tsx",
         "src\\components\\sales\\SmartDashboard.tsx",
         "src\\components\\sales\\OrderPreviewPanel.tsx",
+        "src\\components\\productivity\\AssignUserDialog.tsx",
         "src\\pages\\Management.tsx",
         "src\\hooks\\useChatNotifications.tsx",
         "src\\components\\DashboardLayout.tsx",
@@ -42392,6 +42049,7 @@
         "src\\components\\dealer\\DealerServices.tsx",
         "src\\components\\chat\\FloatingChatBubble.tsx",
         "src\\pages\\DealerView.tsx",
+        "src\\hooks\\useProductivityCalendars.tsx",
         "src\\hooks\\useFollowers.ts",
         "src\\hooks\\useEntityFollowers.tsx",
         "src\\hooks\\useChatConversations.tsx",
@@ -42412,6 +42070,7 @@
         "src\\hooks\\useVinDecoding.tsx",
         "src\\hooks\\useVehicleMedia.tsx",
         "src\\hooks\\useVehicleAutoPopulation.tsx",
+        "src\\hooks\\useProductivityTodos.tsx",
         "src\\hooks\\useOrderActions.tsx",
         "src\\contexts\\PermissionContext.tsx",
         "src\\contexts\\AuthContext.tsx",
@@ -42499,7 +42158,6 @@
         "src\\pages\\VinScanner.tsx",
         "src\\pages\\SalesOrders.tsx",
         "src\\pages\\ReconOrders.tsx",
-        "src\\pages\\Productivity.tsx",
         "src\\pages\\Index.tsx",
         "src\\pages\\Dealerships.tsx",
         "src\\pages\\Contacts.tsx",
@@ -42549,7 +42207,6 @@
         "src\\components\\profile\\DataPrivacyTab.tsx",
         "src\\components\\profile\\ActivityAuditTab.tsx",
         "src\\components\\profile\\AccountSecurityTab.tsx",
-        "src\\components\\productivity\\ProductivityDashboard.tsx",
         "src\\components\\productivity\\ProductivityCalendar.tsx",
         "src\\components\\orders\\SimpleNotesDisplay.tsx",
         "src\\components\\orders\\ServicesDisplay.tsx",
@@ -42601,15 +42258,15 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "139 hours"
+      "estimatedEffort": "140 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2324 translation keys are referenced but missing",
+      "description": "2255 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "117 hours"
+      "estimatedEffort": "113 hours"
     }
   ],
-  "coverage": 77
+  "coverage": 76
 }

@@ -238,3 +238,182 @@ export interface ApprovalSummary {
   pending_critical: number;
   oldest_pending_days: number;
 }
+
+// =====================================================
+// NOTIFICATIONS SYSTEM TYPES
+// =====================================================
+
+// Notification Type Enum
+export type NotificationType =
+  | 'sla_warning'
+  | 'sla_critical'
+  | 'approval_pending'
+  | 'approval_approved'
+  | 'approval_rejected'
+  | 'bottleneck_detected'
+  | 'bottleneck_resolved'
+  | 'vehicle_status_change'
+  | 'work_item_completed'
+  | 'work_item_created'
+  | 'step_completed'
+  | 'system_alert';
+
+// Notification Priority Enum
+export type NotificationPriority = 'low' | 'medium' | 'high' | 'critical';
+
+// Core Notification Interface
+export interface GetReadyNotification {
+  id: string;
+  dealer_id: number;
+  user_id: string | null; // null means broadcast to all users
+  notification_type: NotificationType;
+  priority: NotificationPriority;
+
+  // Content
+  title: string;
+  message: string;
+  action_label?: string | null;
+  action_url?: string | null;
+
+  // Related entities
+  related_vehicle_id?: string | null;
+  related_step_id?: string | null;
+  related_work_item_id?: string | null;
+
+  // Metadata
+  metadata?: Record<string, unknown>;
+
+  // Status
+  is_read: boolean;
+  read_at?: string | null;
+  dismissed_at?: string | null;
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+  expires_at?: string | null;
+}
+
+// Notification with Vehicle Info (for display)
+export interface NotificationWithVehicle extends GetReadyNotification {
+  vehicle?: {
+    stock_number: string;
+    year: number | null;
+    make: string | null;
+    model: string | null;
+    step_name: string;
+  };
+  step?: {
+    name: string;
+    color: string;
+  };
+}
+
+// User Notification Preferences
+export interface UserNotificationPreferences {
+  user_id: string;
+  dealer_id: number;
+
+  // Notification type preferences
+  sla_warnings_enabled: boolean;
+  sla_critical_enabled: boolean;
+  approval_notifications_enabled: boolean;
+  bottleneck_alerts_enabled: boolean;
+  vehicle_status_enabled: boolean;
+  work_item_notifications_enabled: boolean;
+  step_completion_enabled: boolean;
+  system_alerts_enabled: boolean;
+
+  // Delivery preferences
+  in_app_enabled: boolean;
+  email_enabled: boolean;
+  sound_enabled: boolean;
+  desktop_enabled: boolean;
+
+  // Quiet hours
+  quiet_hours_enabled: boolean;
+  quiet_hours_start?: string | null;
+  quiet_hours_end?: string | null;
+
+  // Auto-dismiss settings
+  auto_dismiss_read_after_days?: number;
+  auto_dismiss_unread_after_days?: number;
+
+  created_at: string;
+  updated_at: string;
+}
+
+// Notification Filters
+export interface NotificationFilters {
+  type?: NotificationType | 'all';
+  priority?: NotificationPriority | 'all';
+  is_read?: boolean | 'all';
+  date_from?: string;
+  date_to?: string;
+}
+
+// Notification Summary (for badge/counter)
+export interface NotificationSummary {
+  total_unread: number;
+  unread_by_priority: {
+    low: number;
+    medium: number;
+    high: number;
+    critical: number;
+  };
+  unread_by_type: Partial<Record<NotificationType, number>>;
+}
+
+// Notification Actions
+export interface NotificationAction {
+  label: string;
+  icon?: string;
+  onClick: () => void;
+  variant?: 'default' | 'destructive' | 'outline' | 'ghost';
+}
+
+// RPC Function Responses
+export interface MarkAsReadResponse {
+  success: boolean;
+  notification_id?: string;
+}
+
+export interface MarkAllAsReadResponse {
+  success: boolean;
+  count: number;
+}
+
+export interface DismissNotificationResponse {
+  success: boolean;
+  notification_id?: string;
+}
+
+export interface CreateNotificationParams {
+  dealer_id: number;
+  user_id?: string | null;
+  type: NotificationType;
+  priority: NotificationPriority;
+  title: string;
+  message: string;
+  action_label?: string;
+  action_url?: string;
+  vehicle_id?: string;
+  step_id?: string;
+  metadata?: Record<string, unknown>;
+}
+
+// Notification Sound Settings
+export interface NotificationSoundSettings {
+  enabled: boolean;
+  volume: number; // 0-100
+  sound_id: 'default' | 'chime' | 'alert' | 'ping';
+}
+
+// Notification Group (for grouping similar notifications)
+export interface NotificationGroup {
+  type: NotificationType;
+  priority: NotificationPriority;
+  count: number;
+  latest_notification: GetReadyNotification;
+  notifications: GetReadyNotification[];
+}

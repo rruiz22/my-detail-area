@@ -6,8 +6,9 @@ import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
 import { useVehicleNotes } from '@/hooks/useVehicleNotes';
-import { useCurrentStepVisit, useVehicleStepHistory, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
+import { useCurrentStepVisit, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
+import { useVehicleActivityLog } from '@/hooks/useVehicleActivityLog';
 import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
@@ -27,7 +28,7 @@ import { VehicleMediaTab } from './tabs/VehicleMediaTab';
 import { VehicleNotesTab } from './tabs/VehicleNotesTab';
 import { VehicleVendorsTab } from './tabs/VehicleVendorsTab';
 import { VehicleWorkItemsTab } from './tabs/VehicleWorkItemsTab';
-import { VehicleStepTimeHistory } from './VehicleStepTimeHistory';
+import { VehicleActivityLog } from './VehicleActivityLog';
 
 interface VehicleDetailPanelProps {
   className?: string;
@@ -42,7 +43,12 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { data: workItems = [] } = useWorkItems(selectedVehicleId);
   const { data: mediaFiles = [] } = useVehicleMedia(selectedVehicleId || '');
   const { data: notes = [] } = useVehicleNotes(selectedVehicleId);
-  const { data: stepHistory = [] } = useVehicleStepHistory(selectedVehicleId);
+  const activityLogQuery = useVehicleActivityLog(selectedVehicleId);
+
+  // Count total activities from all pages
+  const activityCount = React.useMemo(() => {
+    return activityLogQuery.data?.pages.reduce((total, page) => total + page.activities.length, 0) || 0;
+  }, [activityLogQuery.data]);
 
   // Fetch time tracking data for header
   const { data: timeToLine } = useVehicleTimeToLine(selectedVehicleId);
@@ -56,10 +62,12 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       media: mediaFiles.length,
       notes: notes.length,
       vendors: workItemsWithVendors.length,
-      timeline: stepHistory.length,
+      timeline: activityCount,
       appraisal: 0 // Appraisal feature not yet implemented in database
     };
-  }, [workItems, mediaFiles, notes, stepHistory]);
+  }, [workItems, mediaFiles, notes, activityCount]);
+
+  const [activeTab, setActiveTab] = React.useState('work-items');
 
   const handleClose = () => {
     setSelectedVehicleId(null);
@@ -141,7 +149,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
         </Button>
 
         <div className="p-4">
-          {/* Single Row: Vehicle Info + Time Tracking + Step Badge */}
+          {/* Single Row: Vehicle Info + All Time Cards Aligned Right */}
           <div className="flex items-center justify-between gap-4 pr-10">
             {/* Left: Vehicle Info */}
             <div className="flex-shrink-0">
@@ -158,13 +166,13 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
               </div>
             </div>
 
-            {/* Center: Time Tracking Stats */}
-            <div className="flex items-center gap-4 flex-1 justify-center">
-              {/* T2L - Time to Line with Tooltip */}
+            {/* Right: All Time Cards + Step Badge - Fully Responsive */}
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+              {/* T2L - Time to Line (Hidden on small screens) */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
+                    <div className="hidden md:flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
                       <Clock className="h-4 w-4 text-blue-600 flex-shrink-0" />
                       <div>
                         <span className="text-xs text-muted-foreground block">{t('get_ready.vehicle_list.t2l_full')}</span>
@@ -183,8 +191,8 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                 </Tooltip>
               </TooltipProvider>
 
-              {/* Work Items - Hidden on small screens */}
-              <div className="hidden md:flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800">
+              {/* Work Items (Hidden on small screens) */}
+              <div className="hidden lg:flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800">
                 <Wrench className="h-4 w-4 text-purple-600 flex-shrink-0" />
                 <div>
                   <span className="text-xs text-muted-foreground block">{t('get_ready.tabs.work_items')}</span>
@@ -193,23 +201,52 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                   </span>
                 </div>
               </div>
-            </div>
 
-            {/* Right: Current Step Time + Step Badge */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              {/* Current Step Time */}
+              {/* Current Step Time - Previous + Current */}
               <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800">
                 <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
                 <div>
-                  <span className="text-xs text-muted-foreground block">Current Step</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-sm">
-                      {currentVisit?.current_visit_hours ? formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000) : '-'}
-                    </span>
-                    {currentVisit?.visit_number && currentVisit.visit_number > 1 && (
-                      <span className="text-xs text-muted-foreground">(#{currentVisit.visit_number})</span>
-                    )}
-                  </div>
+                  <span className="text-xs text-muted-foreground block">{t('get_ready.time_tracking.current_step')}</span>
+
+                  {/* Show Previous + Current if revisited, otherwise just Current */}
+                  {currentVisit?.previous_visits_hours && currentVisit.previous_visits_hours > 0 ? (
+                    <div className="flex items-center gap-2">
+                      {/* Previous Time (with tooltip) */}
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex flex-col cursor-help">
+                              <span className="text-[10px] text-muted-foreground uppercase">{t('get_ready.time_tracking.previous_time')}</span>
+                              <span className="font-bold text-amber-700 dark:text-amber-300 text-xs whitespace-nowrap">
+                                {formatTimeDuration(currentVisit.previous_visits_hours * 60 * 60 * 1000)}
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="text-xs">{t('get_ready.time_tracking.previous_visits_tooltip')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      {/* Separator */}
+                      <div className="h-8 w-px bg-amber-300 dark:bg-amber-700" />
+
+                      {/* Current Time */}
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-muted-foreground uppercase">{t('get_ready.time_tracking.current_time')}</span>
+                        <span className="font-bold text-amber-900 dark:text-amber-100 text-sm whitespace-nowrap">
+                          {formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000)}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    /* First visit - show only current time (no Previous/Current labels) */
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-sm">
+                        {currentVisit?.current_visit_hours ? formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000) : '-'}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -232,7 +269,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
       {/* Tabs Content */}
       <div className="flex-1 overflow-hidden">
-        <Tabs defaultValue="work-items" className="h-full flex flex-col">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
           <TabsList className="grid w-full grid-cols-6 mx-4 mt-4">
             <TabsTrigger value="work-items" className="flex items-center gap-1.5">
               <Wrench className="h-4 w-4" />
@@ -292,7 +329,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
           {/* Work Items Tab */}
           <TabsContent value="work-items" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
-            <VehicleWorkItemsTab vehicleId={selectedVehicleId} />
+            <VehicleWorkItemsTab vehicleId={selectedVehicleId} onSwitchTab={setActiveTab} />
           </TabsContent>
 
           {/* Media Tab */}
@@ -311,7 +348,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
           <TabsContent value="timeline" className="flex-1 overflow-auto px-4 pt-4 pb-8">
             {selectedVehicleId && (
-              <VehicleStepTimeHistory vehicleId={selectedVehicleId} />
+              <VehicleActivityLog vehicleId={selectedVehicleId} />
             )}
           </TabsContent>
 

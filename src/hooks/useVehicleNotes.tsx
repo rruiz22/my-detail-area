@@ -11,6 +11,7 @@ export interface VehicleNote {
   created_by: string;
   created_at: string;
   updated_at: string;
+  linked_work_item_id?: string; // NEW: Optional link to work item
   // Populated fields
   created_by_profile?: {
     first_name: string | null;
@@ -24,12 +25,14 @@ export interface CreateVehicleNoteInput {
   content: string;
   note_type?: 'general' | 'issue' | 'observation' | 'reminder' | 'important';
   is_pinned?: boolean;
+  linked_work_item_id?: string; // NEW: Optional link to work item
 }
 
 export interface UpdateVehicleNoteInput {
   content?: string;
   note_type?: 'general' | 'issue' | 'observation' | 'reminder' | 'important';
   is_pinned?: boolean;
+  linked_work_item_id?: string; // NEW: Optional link to work item
 }
 
 // Hook to fetch notes for a vehicle
@@ -78,6 +81,7 @@ export function useCreateVehicleNote() {
           content: input.content,
           note_type: input.note_type || 'general',
           is_pinned: input.is_pinned || false,
+          linked_work_item_id: input.linked_work_item_id || null,
           created_by: user.id,
         })
         .select()
@@ -88,6 +92,7 @@ export function useCreateVehicleNote() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['vehicle-notes', variables.vehicle_id] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
     },
   });
 }
@@ -113,6 +118,7 @@ export function useUpdateVehicleNote() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['vehicle-notes', variables.vehicleId] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
     },
   });
 }
@@ -132,6 +138,7 @@ export function useDeleteVehicleNote() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['vehicle-notes', variables.vehicleId] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
     },
   });
 }
@@ -154,6 +161,7 @@ export function useTogglePinNote() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['vehicle-notes', variables.vehicleId] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
     },
   });
 }

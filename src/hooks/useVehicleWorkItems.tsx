@@ -56,6 +56,9 @@ export interface WorkItem {
     name: string;
     specialties: string[];
   } | null;
+  // Computed counts
+  media_count?: number; // NEW: Count of linked media
+  notes_count?: number; // NEW: Count of linked notes
 }
 
 export interface CreateWorkItemInput {
@@ -159,13 +162,51 @@ export function useWorkItems(vehicleId: string | null) {
         }
       }
 
-      // Map vendor data to work items
+      // Fetch counts of linked media and notes for each work item
+      const workItemIds = workItemsWithVendors.map(wi => wi.id);
+
+      let mediaCounts = new Map<string, number>();
+      let notesCounts = new Map<string, number>();
+
+      if (workItemIds.length > 0) {
+        // Get media counts
+        const { data: mediaData } = await supabase
+          .from('vehicle_media')
+          .select('linked_work_item_id')
+          .in('linked_work_item_id', workItemIds)
+          .not('linked_work_item_id', 'is', null);
+
+        if (mediaData) {
+          mediaData.forEach(item => {
+            const count = mediaCounts.get(item.linked_work_item_id!) || 0;
+            mediaCounts.set(item.linked_work_item_id!, count + 1);
+          });
+        }
+
+        // Get notes counts
+        const { data: notesData } = await supabase
+          .from('vehicle_notes')
+          .select('linked_work_item_id')
+          .in('linked_work_item_id', workItemIds)
+          .not('linked_work_item_id', 'is', null);
+
+        if (notesData) {
+          notesData.forEach(item => {
+            const count = notesCounts.get(item.linked_work_item_id!) || 0;
+            notesCounts.set(item.linked_work_item_id!, count + 1);
+          });
+        }
+      }
+
+      // Map vendor data and counts to work items
       const vendorMap = new Map(vendors.map(v => [v.id, v]));
       const result = workItemsWithVendors.map(workItem => ({
         ...workItem,
         assigned_vendor: workItem.assigned_vendor_id
           ? vendorMap.get(workItem.assigned_vendor_id) || null
-          : null
+          : null,
+        media_count: mediaCounts.get(workItem.id) || 0,
+        notes_count: notesCounts.get(workItem.id) || 0,
       }));
 
       return result as WorkItem[];

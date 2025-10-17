@@ -21,6 +21,8 @@ import {
     Clock,
     DollarSign,
     Edit,
+    FileText,
+    Image,
     Pause,
     Play,
     Trash2,
@@ -48,6 +50,8 @@ interface WorkItem {
     first_name: string;
     last_name: string;
   };
+  media_count?: number; // NEW
+  notes_count?: number; // NEW
 }
 
 interface WorkItemsGroupedTableProps {
@@ -58,6 +62,8 @@ interface WorkItemsGroupedTableProps {
   onComplete: (item: WorkItem) => void;
   onEdit: (item: WorkItem) => void;
   onDelete: (id: string) => void;
+  onNavigateToMedia?: (workItemId: string) => void; // NEW
+  onNavigateToNotes?: (workItemId: string) => void; // NEW
   isLoading?: boolean;
 }
 
@@ -69,6 +75,8 @@ export function WorkItemsGroupedTable({
   onComplete,
   onEdit,
   onDelete,
+  onNavigateToMedia,
+  onNavigateToNotes,
   isLoading,
 }: WorkItemsGroupedTableProps) {
   const { t } = useTranslation();
@@ -150,6 +158,39 @@ export function WorkItemsGroupedTable({
             {item.description && (
               <div className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
                 {item.description}
+              </div>
+            )}
+            {/* Media/Notes Count Badges - Clickeable */}
+            {((item.media_count ?? 0) > 0 || (item.notes_count ?? 0) > 0) && (
+              <div className="flex items-center gap-1.5 mt-1.5">
+                {(item.media_count ?? 0) > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="text-xs bg-purple-100 text-purple-700 gap-1 cursor-pointer hover:bg-purple-200 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigateToMedia?.(item.id);
+                    }}
+                    title={t('get_ready.work_items.view_media')}
+                  >
+                    <Image className="h-3 w-3" />
+                    {item.media_count}
+                  </Badge>
+                )}
+                {(item.notes_count ?? 0) > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="text-xs bg-blue-100 text-blue-700 gap-1 cursor-pointer hover:bg-blue-200 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigateToNotes?.(item.id);
+                    }}
+                    title={t('get_ready.work_items.view_notes')}
+                  >
+                    <FileText className="h-3 w-3" />
+                    {item.notes_count}
+                  </Badge>
+                )}
               </div>
             )}
           </div>
