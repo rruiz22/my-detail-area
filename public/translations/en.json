@@ -2825,6 +2825,18 @@
           "end": "End Time"
         }
       }
+    },
+    "deleted_vehicles": "Deleted Vehicles",
+    "deleted_vehicles": {
+      "title": "Deleted Vehicles",
+      "description": "View and restore vehicles that have been deleted",
+      "count": "{{count}} deleted vehicle(s)",
+      "deleted_at": "Deleted",
+      "restore": "Restore",
+      "restoring": "Restoring...",
+      "restore_success": "Vehicle restored successfully",
+      "restore_failed": "Failed to restore vehicle",
+      "empty": "No deleted vehicles found"
     }
   },
   "reports": {

@@ -2589,6 +2589,17 @@
           "end": "Hora de Fin"
         }
       }
+    },
+    "deleted_vehicles": {
+      "title": "Vehículos Eliminados",
+      "description": "Ver y restaurar vehículos que han sido eliminados",
+      "count": "{{count}} vehículo(s) eliminado(s)",
+      "deleted_at": "Eliminado",
+      "restore": "Restaurar",
+      "restoring": "Restaurando...",
+      "restore_success": "Vehículo restaurado exitosamente",
+      "restore_failed": "Error al restaurar vehículo",
+      "empty": "No se encontraron vehículos eliminados"
     }
   },
   "reports": {

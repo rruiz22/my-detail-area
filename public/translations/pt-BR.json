@@ -2559,6 +2559,17 @@
           "end": "Horário de Término"
         }
       }
+    },
+    "deleted_vehicles": {
+      "title": "Veículos Excluídos",
+      "description": "Visualize e restaure veículos que foram excluídos",
+      "count": "{{count}} veículo(s) excluído(s)",
+      "deleted_at": "Excluído",
+      "restore": "Restaurar",
+      "restoring": "Restaurando...",
+      "restore_success": "Veículo restaurado com sucesso",
+      "restore_failed": "Falha ao restaurar veículo",
+      "empty": "Nenhum veículo excluído encontrado"
     }
   },
   "stock": {
