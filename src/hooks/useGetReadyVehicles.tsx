@@ -79,6 +79,7 @@ export function useOverviewTable() {
           )
         `)
         .eq('dealer_id', currentDealership.id)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
       // Apply filters
@@ -171,6 +172,7 @@ export function useVehicleDetail(vehicleId: string | null) {
         `)
         .eq('id', vehicleId)
         .eq('dealer_id', currentDealership.id)
+        .is('deleted_at', null)
         .single();
 
       if (error) {
@@ -298,7 +300,8 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id);
+        .eq('dealer_id', currentDealership.id)
+        .is('deleted_at', null);
 
       // ✅ Apply step filter (ignored when search is active for global search)
       if (selectedStep && selectedStep !== 'all' && !searchQuery) {
@@ -479,7 +482,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id);
+        .eq('dealer_id', currentDealership.id)
+        .is('deleted_at', null);
 
       // ✅ Apply step filter (ignored when search is active for global search)
       if (selectedStep && selectedStep !== 'all' && !searchQuery) {

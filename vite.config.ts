@@ -79,6 +79,10 @@ export default defineConfig(({ mode }) => ({
         // ✅ OPTIMIZATION: Disable logging in development to reduce console spam
         mode: mode === 'development' ? 'development' : 'production',
 
+        // ✅ FIX: Increase file size limit for large bundles (default 2MB)
+        // Large index bundle (2.45MB) due to ML/Computer Vision libraries
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
+
         // Generate service worker with Workbox for PWA offline support
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
 
@@ -203,7 +207,7 @@ export default defineConfig(({ mode }) => ({
 
           // Heavy specialized libs - lazy load
           'fabric-canvas': ['fabric'], // Canvas manipulation
-          'opencv': ['opencv.js'], // Computer vision
+          'opencv': ['@techstark/opencv-js'], // Computer vision - correct package name
           'huggingface': ['@huggingface/transformers'], // ML models
 
           // Animation & interactions
@@ -246,7 +250,7 @@ export default defineConfig(({ mode }) => ({
     ],
     exclude: [
       'fabric',
-      'opencv.js',
+      '@techstark/opencv-js',
       '@huggingface/transformers'
     ]
   }

@@ -1,5 +1,6 @@
 // Vehicle Management Hook - Updated 2025-10-01
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,7 @@ export function useVehicleManagement() {
   const { t } = useTranslation();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
 
   // Create Vehicle
@@ -166,20 +168,26 @@ export function useVehicleManagement() {
     },
   });
 
-  // Delete Vehicle
+  // Soft Delete Vehicle (instead of hard delete)
   const deleteVehicleMutation = useMutation({
     mutationFn: async (vehicleId: string) => {
       if (!currentDealership?.id) {
         throw new Error('No dealership selected');
       }
 
-      const { error } = await supabase
-        .from('get_ready_vehicles')
-        .delete()
-        .eq('id', vehicleId)
-        .eq('dealer_id', currentDealership.id);
+      // Call soft_delete_vehicle function
+      const { data, error } = await supabase.rpc('soft_delete_vehicle', {
+        p_vehicle_id: vehicleId,
+        p_user_id: user?.id
+      });
 
       if (error) throw error;
+
+      // Check function result
+      if (data && !data.success) {
+        throw new Error(data.error || 'Failed to delete vehicle');
+      }
+
       return vehicleId;
     },
     onSuccess: (vehicleId) => {

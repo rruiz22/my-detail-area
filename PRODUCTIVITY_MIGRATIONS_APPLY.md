@@ -188,3 +188,4 @@ Después de aplicar estas migraciones, continuaré con:
 
 **¿Las migraciones se aplicaron correctamente? Dime cuando estén listas y continúo con el código React.**
 
+
