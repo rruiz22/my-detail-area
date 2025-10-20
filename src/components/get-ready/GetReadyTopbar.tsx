@@ -131,7 +131,7 @@ export function GetReadyTopbar() {
             onClick={() => setShowDeletedDialog(true)}
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">{t('get_ready.deleted_vehicles')}</span>
+            <span className="hidden sm:inline">{t('get_ready.deleted_vehicles.title')}</span>
           </Button>
 
           {/* Settings Button */}
