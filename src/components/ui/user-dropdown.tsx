@@ -13,7 +13,6 @@ import { User, Settings, LogOut, Shield, UserCog } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
-import { isSystemAdmin } from '@/utils/permissions';
 import { useNavigate } from 'react-router-dom';
 import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { useUserProfile } from '@/hooks/useUserProfile';
@@ -21,7 +20,7 @@ import { useUserProfile } from '@/hooks/useUserProfile';
 export function UserDropdown() {
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
-  const { roles } = usePermissions();
+  const { enhancedUser } = usePermissions();
   const navigate = useNavigate();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { profile } = useUserProfile();
@@ -50,9 +49,9 @@ export function UserDropdown() {
   };
 
   const getUserRole = () => {
-    if (isSystemAdmin(roles)) return 'System Admin';
-    if (roles.some(role => role.role_name === 'dealer_admin')) return 'Dealer Admin';
-    if (roles.some(role => role.role_name === 'dealer_manager')) return 'Manager';
+    if (enhancedUser?.is_system_admin) return 'System Admin';
+    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_admin')) return 'Dealer Admin';
+    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_manager')) return 'Manager';
     return 'User';
   };
 
@@ -99,7 +98,7 @@ export function UserDropdown() {
               <Badge variant="secondary" className="text-xs px-2 py-1">
                 {getUserRole()}
               </Badge>
-              {isSystemAdmin(roles) && (
+              {enhancedUser?.is_system_admin && (
                 <Badge variant="outline" className="text-xs px-2 py-1 border-orange-200 text-orange-700">
                   <Shield className="w-3 h-3 mr-1" />
                   Admin
@@ -118,7 +117,7 @@ export function UserDropdown() {
         </DropdownMenuItem>
 
         {/* Management (if admin) */}
-        {isSystemAdmin(roles) && (
+        {enhancedUser?.is_system_admin && (
           <DropdownMenuItem onClick={handleManagementClick} className="cursor-pointer">
             <UserCog className="mr-2 h-4 w-4" />
             <span>{t('navigation.management')}</span>

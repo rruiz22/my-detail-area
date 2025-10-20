@@ -131,3 +131,23 @@ export const hasPermissionLevel = (
 
   return userIndex >= requiredIndex;
 };
+
+/**
+ * Check if user is a system administrator
+ *
+ * This function is deprecated and maintained only for legacy compatibility.
+ * New code should use `enhancedUser.is_system_admin` directly from usePermissions hook.
+ *
+ * @param roles - Array of custom roles (legacy compatibility - always returns false)
+ * @returns Always returns false as system admin status should be checked from enhancedUser
+ * @deprecated Use enhancedUser.is_system_admin from usePermissions hook instead
+ */
+export const isSystemAdmin = (
+  roles: CustomRoleWithPermissions[] | unknown[]
+): boolean => {
+  // This is a legacy compatibility function
+  // System admin status should be checked from enhancedUser.is_system_admin
+  // For now, we return false as the correct way is to use enhancedUser
+  console.warn('⚠️ isSystemAdmin() is deprecated. Use enhancedUser.is_system_admin instead.');
+  return false;
+};
