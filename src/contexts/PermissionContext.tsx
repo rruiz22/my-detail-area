@@ -1,14 +1,9 @@
 import React, { createContext, useContext } from 'react';
-import { usePermissions, AppModule, PermissionLevel, UserPermission, UserRole } from '@/hooks/usePermissions';
+import { usePermissions, AppModule, PermissionLevel } from '@/hooks/usePermissions';
 
 interface PermissionContextType {
-  permissions: UserPermission[];
-  roles: UserRole[];
   loading: boolean;
   hasPermission: (module: AppModule, requiredLevel: PermissionLevel) => boolean;
-  checkPermission: (module: AppModule, requiredLevel: PermissionLevel) => Promise<boolean>;
-  assignRole: (userId: string, roleName: string, expiresAt?: string) => Promise<{ success: boolean; error?: string; data?: any }>;
-  removeRole: (userId: string, roleId: string) => Promise<{ success: boolean; error?: string }>;
   refreshPermissions: () => void;
 }
 
@@ -27,10 +22,10 @@ interface PermissionProviderProps {
 }
 
 export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children }) => {
-  const permissionData = usePermissions();
+  const { hasPermission, loading, refreshPermissions } = usePermissions();
 
   return (
-    <PermissionContext.Provider value={permissionData}>
+    <PermissionContext.Provider value={{ hasPermission, loading, refreshPermissions }}>
       {children}
     </PermissionContext.Provider>
   );

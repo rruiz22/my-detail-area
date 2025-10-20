@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 588,
-  "totalStrings": 5701,
-  "hardcodedStrings": 1357,
-  "translatedStrings": 4344,
+  "scannedFiles": 589,
+  "totalStrings": 5724,
+  "hardcodedStrings": 1354,
+  "translatedStrings": 4370,
   "issues": {
     "critical": [
       {
@@ -897,7 +897,7 @@
             "context": "728: <SelectTrigger className=\"w-32 h-9\">\n729: <SelectValue placeholder=\"Priority\" />\n730: </SelectTrigger>"
           },
           {
-            "text": "Clear Filters\n            ",
+            "text": "Clear Filters\r\n            ",
             "line": 771,
             "context": "770: {hasActiveFilters && (\n771: <Button\n772: variant=\"ghost\""
           }
@@ -14062,30 +14062,6 @@
             "text": "Promise",
             "line": 28,
             "context": "27: getServices: (serviceIds: string[]) => DealerService[];\n28: refreshServices: () => Promise<void>;\n29: }"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
-        "severity": "low"
-      },
-      {
-        "file": "src\\contexts\\PermissionContext.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Promise",
-            "line": 9,
-            "context": "8: hasPermission: (module: AppModule, requiredLevel: PermissionLevel) => boolean;\n9: checkPermission: (module: AppModule, requiredLevel: PermissionLevel) => Promise<boolean>;\n10: assignRole: (userId: string, roleName: string, expiresAt?: string) => Promise<{ success: boolean; error?: string; data?: any }>;"
-          },
-          {
-            "text": "Promise",
-            "line": 10,
-            "context": "9: checkPermission: (module: AppModule, requiredLevel: PermissionLevel) => Promise<boolean>;\n10: assignRole: (userId: string, roleName: string, expiresAt?: string) => Promise<{ success: boolean; error?: string; data?: any }>;\n11: removeRole: (userId: string, roleId: string) => Promise<{ success: boolean; error?: string }>;"
-          },
-          {
-            "text": "Promise",
-            "line": 11,
-            "context": "10: assignRole: (userId: string, roleName: string, expiresAt?: string) => Promise<{ success: boolean; error?: string; data?: any }>;\n11: removeRole: (userId: string, roleId: string) => Promise<{ success: boolean; error?: string }>;\n12: refreshPermissions: () => void;"
           }
         ],
         "translationCalls": [],
@@ -36366,15 +36342,25 @@
         "translationCalls": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 98,
+            "line": 103,
+            "exists": false
+          },
+          {
+            "key": "get_ready.deleted_vehicles",
+            "line": 137,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 98,
-            "context": "97: <span className=\"hidden sm:inline\">\n98: {t(`get_ready.tabs.${tab.key}`)}\n99: </span>"
+            "line": 103,
+            "context": "102: <span className=\"hidden sm:inline\">\n103: {t(`get_ready.tabs.${tab.key}`)}\n104: </span>"
+          },
+          {
+            "key": "get_ready.deleted_vehicles",
+            "line": 137,
+            "context": "136: <Trash2 className=\"h-4 w-4 mr-2\" />\n137: <span className=\"hidden sm:inline\">{t('get_ready.deleted_vehicles')}</span>\n138: </Button> */}"
           }
         ],
         "coverage": 100,
@@ -39159,215 +39145,380 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\dealer\\DealerUsers.tsx",
+        "file": "src\\components\\dealer\\DealerUsers_OLD_BACKUP.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 122,
+            "line": 95,
             "exists": true
           },
           {
             "key": "dealer.users.error_loading_users",
-            "line": 123,
+            "line": 96,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 162,
+            "line": 135,
             "exists": true
           },
           {
             "key": "dealer.users.user_deactivated",
-            "line": 164,
+            "line": 137,
             "exists": true
           },
           {
             "key": "dealer.users.user_activated",
-            "line": 165,
+            "line": 138,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 172,
+            "line": 145,
             "exists": true
           },
           {
             "key": "dealer.users.error_updating_status",
-            "line": 173,
+            "line": 146,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 204,
+            "line": 177,
             "exists": true
           },
           {
             "key": "dealer.users.groups_updated",
-            "line": 205,
+            "line": 178,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 213,
+            "line": 186,
             "exists": true
           },
           {
             "key": "dealer.users.error_updating_groups",
-            "line": 214,
+            "line": 187,
             "exists": true
           },
           {
             "key": "common.unnamed",
-            "line": 230,
+            "line": 203,
             "exists": false
           },
           {
             "key": "common.unnamed",
-            "line": 236,
+            "line": 209,
             "exists": false
           },
           {
             "key": "dealer.users.title",
-            "line": 267,
+            "line": 240,
             "exists": true
           },
           {
             "key": "dealer.users.description",
-            "line": 268,
+            "line": 241,
             "exists": true
           },
           {
             "key": "dealer.users.invite_user",
-            "line": 272,
+            "line": 245,
             "exists": true
           },
           {
             "key": "dealer.users.table.user",
-            "line": 281,
+            "line": 254,
             "exists": true
           },
           {
             "key": "dealer.users.table.email",
-            "line": 282,
+            "line": 255,
             "exists": true
           },
           {
             "key": "dealer.users.table.status",
-            "line": 283,
+            "line": 256,
             "exists": true
           },
           {
             "key": "dealer.users.table.groups",
-            "line": 284,
+            "line": 257,
             "exists": true
           },
           {
             "key": "dealer.users.table.joined",
-            "line": 285,
+            "line": 258,
             "exists": true
           },
           {
             "key": "dealer.users.no_users",
-            "line": 295,
+            "line": 268,
             "exists": true
           },
           {
             "key": "common.no_email",
-            "line": 313,
+            "line": 286,
             "exists": false
           },
           {
             "key": "common.active",
-            "line": 316,
+            "line": 289,
             "exists": false
           },
           {
             "key": "common.inactive",
-            "line": 316,
+            "line": 289,
             "exists": false
           },
           {
             "key": "dealer.users.no_role",
-            "line": 332,
+            "line": 305,
             "exists": true
           },
           {
             "key": "dealer.users.edit_role",
-            "line": 349,
+            "line": 322,
             "exists": true
           },
           {
             "key": "dealer.users.manage_groups",
-            "line": 353,
+            "line": 326,
             "exists": true
           },
           {
             "key": "dealer.users.deactivate",
-            "line": 359,
+            "line": 332,
             "exists": true
           },
           {
             "key": "dealer.users.activate",
-            "line": 364,
+            "line": 337,
             "exists": true
           },
           {
             "key": "dealer.users.manage_groups",
-            "line": 405,
+            "line": 378,
             "exists": true
           },
           {
             "key": "dealer.users.manage_groups_desc",
-            "line": 409,
+            "line": 382,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 435,
+            "line": 408,
             "exists": false
           },
           {
             "key": "common.save",
-            "line": 438,
+            "line": 411,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.unnamed",
-            "line": 230,
-            "context": "229: if (!user.profiles) {\n230: return t('common.unnamed');\n231: }"
+            "line": 203,
+            "context": "202: if (!user.profiles) {\n203: return t('common.unnamed');\n204: }"
           },
           {
             "key": "common.unnamed",
-            "line": 236,
-            "context": "235: }\n236: return first_name || last_name || t('common.unnamed');\n237: };"
+            "line": 209,
+            "context": "208: }\n209: return first_name || last_name || t('common.unnamed');\n210: };"
           },
           {
             "key": "common.no_email",
-            "line": 313,
-            "context": "312: </TableCell>\n313: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n314: <TableCell>"
+            "line": 286,
+            "context": "285: </TableCell>\n286: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n287: <TableCell>"
           },
           {
             "key": "common.active",
-            "line": 316,
-            "context": "315: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n316: {user.is_active ? t('common.active') : t('common.inactive')}\n317: </Badge>"
+            "line": 289,
+            "context": "288: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n289: {user.is_active ? t('common.active') : t('common.inactive')}\n290: </Badge>"
           },
           {
             "key": "common.inactive",
-            "line": 316,
-            "context": "315: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n316: {user.is_active ? t('common.active') : t('common.inactive')}\n317: </Badge>"
+            "line": 289,
+            "context": "288: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n289: {user.is_active ? t('common.active') : t('common.inactive')}\n290: </Badge>"
           },
           {
             "key": "common.cancel",
-            "line": 435,
-            "context": "434: <Button variant=\"outline\" onClick={() => setShowManageGroupsModal(false)}>\n435: {t('common.cancel')}\n436: </Button>"
+            "line": 408,
+            "context": "407: <Button variant=\"outline\" onClick={() => setShowManageGroupsModal(false)}>\n408: {t('common.cancel')}\n409: </Button>"
           },
           {
             "key": "common.save",
-            "line": 438,
-            "context": "437: <Button onClick={handleSaveUserGroups}>\n438: {t('common.save')}\n439: </Button>"
+            "line": 411,
+            "context": "410: <Button onClick={handleSaveUserGroups}>\n411: {t('common.save')}\n412: </Button>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\dealer\\DealerUsers.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.error",
+            "line": 119,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.error_loading_users",
+            "line": 120,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 145,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.user_deactivated",
+            "line": 147,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.user_activated",
+            "line": 148,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 155,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.error_updating_status",
+            "line": 156,
+            "exists": true
+          },
+          {
+            "key": "common.unnamed",
+            "line": 175,
+            "exists": false
+          },
+          {
+            "key": "common.unnamed",
+            "line": 181,
+            "exists": false
+          },
+          {
+            "key": "dealer.users.title",
+            "line": 217,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.description",
+            "line": 218,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.invite_user",
+            "line": 222,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.table.user",
+            "line": 232,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.table.email",
+            "line": 233,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.table.role",
+            "line": 234,
+            "exists": false
+          },
+          {
+            "key": "dealer.users.table.status",
+            "line": 235,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.table.joined",
+            "line": 236,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.no_users",
+            "line": 246,
+            "exists": true
+          },
+          {
+            "key": "common.no_email",
+            "line": 267,
+            "exists": false
+          },
+          {
+            "key": "dealer.users.no_role",
+            "line": 276,
+            "exists": true
+          },
+          {
+            "key": "common.active",
+            "line": 283,
+            "exists": false
+          },
+          {
+            "key": "common.inactive",
+            "line": 283,
+            "exists": false
+          },
+          {
+            "key": "dealer.users.edit_role",
+            "line": 303,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.deactivate",
+            "line": 309,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.activate",
+            "line": 314,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.unnamed",
+            "line": 175,
+            "context": "174: if (!user.profiles) {\n175: return t('common.unnamed');\n176: }"
+          },
+          {
+            "key": "common.unnamed",
+            "line": 181,
+            "context": "180: }\n181: return first_name || last_name || t('common.unnamed');\n182: };"
+          },
+          {
+            "key": "dealer.users.table.role",
+            "line": 234,
+            "context": "233: <TableHead>{t('dealer.users.table.email')}</TableHead>\n234: <TableHead>{t('dealer.users.table.role')}</TableHead>\n235: <TableHead>{t('dealer.users.table.status')}</TableHead>"
+          },
+          {
+            "key": "common.no_email",
+            "line": 267,
+            "context": "266: {/* Email */}\n267: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n268: "
+          },
+          {
+            "key": "common.active",
+            "line": 283,
+            "context": "282: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n283: {user.is_active ? t('common.active') : t('common.inactive')}\n284: </Badge>"
+          },
+          {
+            "key": "common.inactive",
+            "line": 283,
+            "context": "282: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n283: {user.is_active ? t('common.active') : t('common.inactive')}\n284: </Badge>"
           }
         ],
         "coverage": 100,
@@ -43392,7 +43543,6 @@
         "src\\hooks\\useVehicleAutoPopulation.tsx",
         "src\\hooks\\useProductivityTodos.tsx",
         "src\\hooks\\useOrderActions.tsx",
-        "src\\contexts\\PermissionContext.tsx",
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\sidebar.tsx",
         "src\\components\\ui\\comments-tooltip.tsx",
@@ -43568,6 +43718,7 @@
         "src\\components\\get-ready\\tabs\\VehicleVendorsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
+        "src\\components\\dealer\\DealerUsers_OLD_BACKUP.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
         "src\\components\\dealer\\DealerOverview.tsx",
         "src\\components\\dealer\\DealerModules.tsx",
@@ -43591,7 +43742,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2282 translation keys are referenced but missing",
+      "description": "2289 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "115 hours"
     }
