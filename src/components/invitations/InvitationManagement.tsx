@@ -254,8 +254,8 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
         hasInvitationId: !!emailData.invitationId
       });
 
-      // Send invitation email via DEBUG Edge Function (same as creation)
-      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email-debug', {
+      // Send invitation email via Edge Function (same as creation)
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email', {
         body: emailData
       });
 

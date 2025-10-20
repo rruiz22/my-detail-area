@@ -199,8 +199,8 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
         expiresAt: emailData.expiresAt
       });
 
-      // Send invitation email via DEBUG Edge Function
-      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invitation-email-debug', {
+      // Send invitation email via Edge Function
+      const { data: emailResult, error: emailError} = await supabase.functions.invoke('send-invitation-email', {
         body: emailData
       });
 
