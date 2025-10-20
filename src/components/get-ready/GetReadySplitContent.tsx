@@ -24,11 +24,9 @@ import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
 import { useVehicleManagement } from "@/hooks/useVehicleManagement";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import {
-  exportToCSV,
-  exportToExcel,
-  formatVehiclesForExport,
-} from "@/utils/exportUtils";
+import { formatVehiclesForExport } from "@/utils/exportUtils";
+import { useServerExport } from "@/hooks/useServerExport";
+import { GetReadyOverview } from "./GetReadyOverview";
 import {
   CheckCircle2,
   ChevronDown,
@@ -78,6 +76,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   } = useGetReadyStore();
   const { steps, refetchSteps, refetchKPIs } = useGetReady();
   const { deleteVehicle, isDeleting } = useVehicleManagement();
+  const { exportToExcel, exportToCSV, isExporting } = useServerExport({ reportType: 'get_ready' });
 
   // State for filters when in details view - WITH LOCALSTORAGE PERSISTENCE
   const [searchQuery, setSearchQuery] = useGetReadySearchQuery();
@@ -86,7 +85,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { sortBy, setSortBy, sortOrder, setSortOrder } =
     useGetReadySortPreferences();
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
 
   // Vehicle form modal state
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
@@ -156,47 +154,29 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   };
 
   const handleExport = async (format: "csv" | "excel") => {
-    setIsExporting(true);
-    try {
-      if (allVehicles.length === 0) {
-        toast({
-          description: "No vehicles to export",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Format vehicles for export
-      const formattedData = formatVehiclesForExport(allVehicles);
-
-      // Generate filename
-      const stepName =
-        selectedStep === "all"
-          ? "all-steps"
-          : steps.find((s) => s.id === selectedStep)?.name || "vehicles";
-      const filename = `get-ready-${stepName.toLowerCase().replace(/\s+/g, "-")}`;
-
-      // Export based on format
-      if (format === "csv") {
-        exportToCSV(formattedData, filename);
-      } else if (format === "excel") {
-        exportToExcel(formattedData, filename);
-      }
-
+    if (allVehicles.length === 0) {
       toast({
-        description:
-          t("common.actions.export_success") || "Data exported successfully",
-        variant: "default",
-      });
-    } catch (error) {
-      console.error("Export failed:", error);
-      toast({
-        description:
-          t("common.actions.export_failed") || "Failed to export data",
+        description: "No vehicles to export",
         variant: "destructive",
       });
-    } finally {
-      setIsExporting(false);
+      return;
+    }
+
+    // Format vehicles for export
+    const formattedData = formatVehiclesForExport(allVehicles);
+
+    // Generate filename
+    const stepName =
+      selectedStep === "all"
+        ? "all-steps"
+        : steps.find((s) => s.id === selectedStep)?.name || "vehicles";
+    const filename = `get-ready-${stepName.toLowerCase().replace(/\s+/g, "-")}`;
+
+    // Export based on format (now using server-side generation for Excel)
+    if (format === "csv") {
+      exportToCSV(formattedData, filename);
+    } else if (format === "excel") {
+      await exportToExcel(formattedData, filename);
     }
   };
 
@@ -238,40 +218,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const isReportsView = location.pathname === "/get-ready/reports";
   const isApprovalsView = location.pathname === "/get-ready/approvals";
 
-  // Overview Tab - Dashboard Content
+  // Overview Tab - Enhanced Dashboard with Real Data
   if (isOverview) {
-    return (
-      <div className={cn("h-full overflow-auto space-y-6", className)}>
-        {/* KPIs Dashboard */}
-        <GetReadyDashboardWidget />
-
-        {/* Quick Actions and Alerts */}
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MoreHorizontal className="h-5 w-5" />
-                Quick Actions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GetReadyWorkflowActions />
-            </CardContent>
-          </Card>
-
-          {/* Active Alerts */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Active Alerts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GetReadyAlerts compact />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
+    return <GetReadyOverview allVehicles={allVehicles} className={className} />;
   }
 
   // Reports View Tab - Analytics and Reports
@@ -356,9 +305,16 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   }
 
   // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab
-  const pendingApprovalVehicles = allVehiclesUnfiltered.filter(
-    (v) => v.requires_approval === true && v.approval_status === "pending",
-  );
+  
+  const pendingApprovalVehicles = allVehiclesUnfiltered.filter((v) => {
+    // Vehicle-level approval
+    const vehicleNeedsApproval = v.requires_approval === true && v.approval_status === "pending";
+
+    // Work item-level approval
+    const hasWorkItemsNeedingApproval = Array.isArray(v.pending_approval_work_items) && v.pending_approval_work_items.length > 0;
+
+    return vehicleNeedsApproval || hasWorkItemsNeedingApproval;
+  });
 
   const approvedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
     // Include vehicles approved via modal OR auto-approved via work items

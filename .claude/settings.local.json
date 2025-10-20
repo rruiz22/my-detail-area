@@ -19,7 +19,10 @@
       "Bash(find:*)",
       "Bash(npm run build:dev:*)",
       "Bash(npx supabase:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(test:*)",
+      "Bash(npm:*)",
+      "Bash(if not exist \"c:\\Users\\rudyr\\apps\\mydetailarea\\backups\" mkdir \"c:\\Users\\rudyr\\apps\\mydetailarea\\backups\")"
     ],
     "deny": [],
     "ask": []

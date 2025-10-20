@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/table';
 import { toast } from '@/hooks/use-toast';
 import { useStockManagement, VehicleInventory } from '@/hooks/useStockManagement';
-import { exportToCSV, exportToExcel } from '@/utils/exportUtils';
+import { useServerExport } from '@/hooks/useServerExport';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
     Car,
@@ -48,6 +48,7 @@ const ITEMS_PER_PAGE = 25;
 export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { inventory, loading } = useStockManagement(dealerId);
+  const { exportToExcel, exportToCSV, isExporting } = useServerExport({ reportType: 'stock_inventory' });
   const [searchTerm, setSearchTerm] = useState('');
   const [makeFilter, setMakeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -56,7 +57,6 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleInventory | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isExporting, setIsExporting] = useState(false);
 
   const handleVehicleClick = (vehicle: VehicleInventory) => {
     setSelectedVehicle(vehicle);
@@ -93,30 +93,13 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   };
 
   const handleExport = async (format: 'csv' | 'excel') => {
-    setIsExporting(true);
-    try {
-      const formattedData = formatInventoryForExport(filteredInventory);
-      const filename = `inventory-${new Date().toISOString().split('T')[0]}`;
+    const formattedData = formatInventoryForExport(filteredInventory);
+    const filename = `inventory-${new Date().toISOString().split('T')[0]}`;
 
-      if (format === 'csv') {
-        exportToCSV(formattedData, filename);
-      } else {
-        exportToExcel(formattedData, filename);
-      }
-
-      toast({
-        title: t('common.success'),
-        description: t('common.actions.export_success')
-      });
-    } catch (error) {
-      console.error('Export error:', error);
-      toast({
-        title: t('common.error'),
-        description: t('common.actions.export_failed'),
-        variant: 'destructive'
-      });
-    } finally {
-      setIsExporting(false);
+    if (format === 'csv') {
+      exportToCSV(formattedData, filename);
+    } else {
+      await exportToExcel(formattedData, filename);
     }
   };
 

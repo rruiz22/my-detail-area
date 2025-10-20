@@ -41,6 +41,8 @@
     "showing": "Mostrando",
     "actions": {
       "save": "Guardar",
+      "save_changes": "Guardar Cambios",
+      "saving": "Guardando...",
       "edit": "Editar",
       "delete": "Eliminar",
       "cancel": "Cancelar",
@@ -1723,6 +1725,14 @@
     "cancel": "Cancelar"
   },
   "get_ready": {
+    "select_dealership": {
+      "title": "Selecciona un Concesionario",
+      "description": "El módulo Get Ready requiere que se seleccione un concesionario específico",
+      "instruction_1": "Haz clic en el filtro de concesionarios en la barra de navegación superior",
+      "instruction_2": "Elige un concesionario específico del menú desplegable",
+      "instruction_3": "El flujo de Get Ready se cargará para ese concesionario",
+      "note": "Nota: \"Todos los Concesionarios\" no está soportado en el módulo Get Ready"
+    },
     "tabs": {
       "overview": "Resumen",
       "details_view": "Vista de Detalles",
@@ -2426,7 +2436,18 @@
     },
     "approvals": {
       "title": "Aprobaciones",
+      "description": "Revisar y aprobar vehículos listos para pasar a frontline",
       "subtitle": "Revisa tareas que requieren aprobación y rastrea el progreso",
+      "pending": "Pendiente",
+      "approved_today": "Aprobado Hoy",
+      "rejected_today": "Rechazado Hoy",
+      "critical": "Crítico",
+      "oldest_pending": "Más Antiguo Pendiente",
+      "search_placeholder": "Buscar por stock #, VIN, descripción...",
+      "no_pending": "¡Todo al Día!",
+      "all_caught_up": "No hay aprobaciones pendientes en este momento.",
+      "select_all": "Seleccionar Todo",
+      "approve_selected": "Aprobar Seleccionados",
       "summary": {
         "pending": "Aprobaciones Pendientes",
         "approved_today": "Aprobadas Hoy",
@@ -2443,12 +2464,39 @@
         "no_approved": "No hay tareas aprobadas recientemente para mostrar.",
         "no_rejected": "No hay tareas rechazadas recientemente para mostrar."
       },
+      "filter": {
+        "all": "Todos los Tipos",
+        "vehicles": "Solo Vehículos",
+        "work_items": "Solo Items de Trabajo",
+        "critical": "Solo Críticos"
+      },
+      "sort": {
+        "oldest": "Más Antiguo Primero",
+        "newest": "Más Reciente Primero",
+        "priority": "Alta Prioridad Primero",
+        "cost": "Mayor Costo Primero"
+      },
+      "type": {
+        "vehicle": "Aprobación de Vehículo",
+        "work_item": "Item de Trabajo"
+      },
       "actions": {
         "approve": "Aprobar",
         "reject": "Rechazar",
         "review": "Revisar",
         "request_approval": "Solicitar Aprobación",
+        "view_details": "Ver Detalles",
         "click_to_approve": "Haz clic para ver y aprobar tareas"
+      },
+      "reject_dialog": {
+        "title": "Rechazar Aprobación",
+        "vehicle_description": "Por favor proporcione una razón para rechazar la aprobación de este vehículo.",
+        "work_item_description": "Por favor proporcione una razón para declinar este item de trabajo.",
+        "reason": "Razón del Rechazo",
+        "reason_placeholder": "Ingrese la razón del rechazo...",
+        "additional_notes": "Notas Adicionales",
+        "notes_placeholder": "Cualquier comentario o instrucción adicional...",
+        "confirm": "Confirmar Rechazo"
       },
       "modal": {
         "approve_title": "Aprobar Vehículo",
@@ -2486,6 +2534,61 @@
     "reports": {
       "title": "Reportes y Analíticas",
       "subtitle": "Genera y visualiza reportes detallados para tu flujo de reacondicionamiento"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "unread": "sin leer",
+      "new": "Nueva",
+      "critical": "Crítica",
+      "empty": {
+        "title": "¡Todo al día!",
+        "description": "No tiene notificaciones en este momento"
+      },
+      "filter": {
+        "all_types": "Todos los Tipos",
+        "all_priorities": "Todas las Prioridades"
+      },
+      "actions": {
+        "mark_all_read": "Marcar Todo como Leído",
+        "settings": "Configuración"
+      },
+      "settings": {
+        "title": "Configuración de Notificaciones",
+        "description": "Personalice qué notificaciones recibe y cómo se le alerta",
+        "sections": {
+          "types": "Tipos de Notificaciones",
+          "delivery": "Métodos de Entrega",
+          "quiet_hours": "Horas de Silencio"
+        },
+        "types": {
+          "sla_warnings": "Advertencias de SLA",
+          "sla_warnings_desc": "Reciba notificaciones cuando los vehículos se acerquen a su umbral de SLA",
+          "sla_critical": "Violaciones Críticas de SLA",
+          "sla_critical_desc": "Alertas inmediatas cuando se exceden los objetivos de SLA",
+          "approvals": "Solicitudes de Aprobación",
+          "approvals_desc": "Notificaciones cuando se requieren aprobaciones",
+          "bottlenecks": "Alertas de Cuellos de Botella",
+          "bottlenecks_desc": "Alertas cuando se detectan cuellos de botella en el flujo de trabajo",
+          "vehicle_status": "Cambios de Estado del Vehículo",
+          "vehicle_status_desc": "Actualizaciones cuando los vehículos se mueven entre pasos"
+        },
+        "delivery": {
+          "in_app": "Notificaciones en la Aplicación",
+          "in_app_desc": "Mostrar notificaciones en la campana de notificaciones",
+          "email": "Notificaciones por Correo Electrónico",
+          "email_desc": "Enviar notificaciones a su dirección de correo electrónico",
+          "sound": "Alertas de Sonido",
+          "sound_desc": "Reproducir sonido al recibir notificaciones de alta prioridad",
+          "desktop": "Notificaciones de Escritorio",
+          "desktop_desc": "Mostrar notificaciones de escritorio del navegador"
+        },
+        "quiet_hours": {
+          "enabled": "Habilitar Horas de Silencio",
+          "description": "Silenciar notificaciones no críticas durante las horas especificadas",
+          "start": "Hora de Inicio",
+          "end": "Hora de Fin"
+        }
+      }
     }
   },
   "reports": {

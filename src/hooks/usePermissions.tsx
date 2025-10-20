@@ -73,15 +73,19 @@ export interface EnhancedUser {
   groups: UserGroup[];
 }
 
-// Feature flag cache (5 minutes)
-let featureFlagCache: boolean | null = null;
-let featureFlagTimestamp = 0;
-const FEATURE_FLAG_CACHE_DURATION = 300000; // 5 minutes
+import { useCustomRolesSystem } from './useSystemSettings';
+import { useUserProfileForPermissions } from './useUserProfile';
+import { useDealerMemberships } from './useDealerMembership';
 
 export const usePermissions = () => {
   const { user } = useAuth();
   const [enhancedUser, setEnhancedUser] = useState<EnhancedUser | EnhancedUserV2 | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // ✅ OPTIMIZATION: Use shared cache instead of manual cache
+  const { useCustomRoles: useCustomRolesFlag, isLoading: isLoadingFlag } = useCustomRolesSystem();
+  const { data: profileData, isLoading: isLoadingProfile } = useUserProfileForPermissions();
+  const { data: memberships, isLoading: isLoadingMemberships } = useDealerMemberships();
   const [useCustomRoles, setUseCustomRoles] = useState(false);
 
   const getOrderTypeFromModule = useCallback((module: AppModule): OrderType | null => {
@@ -94,49 +98,15 @@ export const usePermissions = () => {
     return moduleMap[module] || null;
   }, []);
 
-  const fetchFeatureFlag = useCallback(async (): Promise<boolean> => {
-    // Return cached value if still valid
-    if (featureFlagCache !== null && Date.now() - featureFlagTimestamp < FEATURE_FLAG_CACHE_DURATION) {
-      return featureFlagCache;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('system_settings')
-        .select('setting_value')
-        .eq('setting_key', 'use_custom_roles_system')
-        .single();
-
-      if (error || !data) {
-        console.log('Feature flag not accessible, using legacy system');
-        featureFlagCache = false;
-        featureFlagTimestamp = Date.now();
-        return false;
-      }
-
-      const flagValue = data.setting_value === true || data.setting_value === 'true';
-      featureFlagCache = flagValue;
-      featureFlagTimestamp = Date.now();
-      return flagValue;
-    } catch (error) {
-      console.error('Error fetching feature flag:', error);
-      featureFlagCache = false;
-      featureFlagTimestamp = Date.now();
-      return false;
-    }
-  }, []);
+  // ✅ REMOVED: fetchFeatureFlag now handled by useCustomRolesSystem hook with shared TanStack Query cache
 
   const fetchCustomRolePermissions = useCallback(async (): Promise<EnhancedUserV2 | null> => {
     if (!user) return null;
 
-    try {
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, email, role, dealership_id')
-        .eq('id', user.id)
-        .single();
+    // ✅ OPTIMIZATION: Use profileData from shared TanStack Query cache
+    if (!profileData) return null;
 
-      if (profileError) throw profileError;
+    try {
 
       if (profileData.role === 'system_admin') {
         return {
@@ -257,19 +227,15 @@ export const usePermissions = () => {
       console.error('Error in fetchCustomRolePermissions:', error);
       return null;
     }
-  }, [user]);
+  }, [user, profileData]); // ✅ Added profileData dependency
 
   const fetchLegacyPermissions = useCallback(async (): Promise<EnhancedUser | null> => {
     if (!user) return null;
 
-    try {
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, email, role, user_type, dealership_id')
-        .eq('id', user.id)
-        .single();
+    // ✅ OPTIMIZATION: Use profileData from shared TanStack Query cache
+    if (!profileData) return null;
 
-      if (profileError) throw profileError;
+    try {
 
       let userGroups: UserGroup[] = [];
       if (profileData.role === 'dealer_user' && profileData.user_type === 'dealer') {
@@ -313,7 +279,7 @@ export const usePermissions = () => {
       console.error('Error in fetchLegacyPermissions:', error);
       return null;
     }
-  }, [user]);
+  }, [user, profileData]); // ✅ Added profileData dependency
 
   const fetchUserPermissions = useCallback(async () => {
     if (!user) {
@@ -322,13 +288,18 @@ export const usePermissions = () => {
       return;
     }
 
+    // Wait for data to load from TanStack Query hooks
+    if (isLoadingFlag || isLoadingProfile || isLoadingMemberships) {
+      return;
+    }
+
     try {
       setLoading(true);
 
-      const customRolesEnabled = await fetchFeatureFlag();
-      setUseCustomRoles(customRolesEnabled);
+      // ✅ OPTIMIZATION: Use value from shared TanStack Query cache
+      setUseCustomRoles(useCustomRolesFlag);
 
-      if (customRolesEnabled) {
+      if (useCustomRolesFlag) {
         console.log('🟢 Using CUSTOM ROLES system');
         const userData = await fetchCustomRolePermissions();
         setEnhancedUser(userData);
@@ -343,7 +314,7 @@ export const usePermissions = () => {
     } finally {
       setLoading(false);
     }
-  }, [user, fetchFeatureFlag, fetchCustomRolePermissions, fetchLegacyPermissions]);
+  }, [user, useCustomRolesFlag, isLoadingFlag, isLoadingProfile, isLoadingMemberships, profileData, fetchCustomRolePermissions, fetchLegacyPermissions]);
 
   useEffect(() => {
     fetchUserPermissions();

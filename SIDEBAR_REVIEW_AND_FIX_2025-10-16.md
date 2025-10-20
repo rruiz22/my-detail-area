@@ -377,3 +377,4 @@ El código ahora sigue las mejores prácticas de React, es más mantenible, y of
 - [React Router NavLink](https://reactrouter.com/en/main/components/nav-link)
 - [React Hooks Best Practices](https://react.dev/reference/react/hooks)
 
+

@@ -41,6 +41,9 @@ export function useGetReadyNotifications(
   const limit = options?.limit || 50;
   const enabled = options?.enabled !== false;
 
+  // ✅ VALIDATION: Only allow numeric dealer IDs, not "all"
+  const isValidDealerId = selectedDealerId && typeof selectedDealerId === 'number' && selectedDealerId > 0;
+
   // =====================================================
   // FETCH NOTIFICATIONS
   // =====================================================
@@ -60,7 +63,7 @@ export function useGetReadyNotifications(
       options?.is_read,
     ],
     queryFn: async () => {
-      if (!selectedDealerId || !user?.id) {
+      if (!isValidDealerId || !user?.id) {
         return [];
       }
 
@@ -71,9 +74,9 @@ export function useGetReadyNotifications(
           *,
           vehicle:related_vehicle_id (
             stock_number,
-            year,
-            make,
-            model,
+            vehicle_year,
+            vehicle_make,
+            vehicle_model,
             step_id
           )
         `
@@ -111,7 +114,7 @@ export function useGetReadyNotifications(
 
       return (data || []) as NotificationWithVehicle[];
     },
-    enabled: enabled && !!selectedDealerId && !!user?.id,
+    enabled: enabled && isValidDealerId && !!user?.id,
     staleTime: 30000, // 30 seconds
     refetchInterval: 60000, // 1 minute auto-refresh
   });
@@ -123,7 +126,7 @@ export function useGetReadyNotifications(
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ['notificationUnreadCount', selectedDealerId, user?.id],
     queryFn: async () => {
-      if (!selectedDealerId || !user?.id) return 0;
+      if (!isValidDealerId || !user?.id) return 0;
 
       const { data, error } = await supabase.rpc(
         'get_unread_notification_count',
@@ -140,7 +143,7 @@ export function useGetReadyNotifications(
 
       return data || 0;
     },
-    enabled: enabled && !!selectedDealerId && !!user?.id,
+    enabled: enabled && isValidDealerId && !!user?.id,
     staleTime: 15000, // 15 seconds
     refetchInterval: 30000, // 30 seconds auto-refresh
   });
@@ -184,7 +187,7 @@ export function useGetReadyNotifications(
 
       return summary;
     },
-    enabled: enabled && !!selectedDealerId && !!user?.id,
+    enabled: enabled && isValidDealerId && !!user?.id,
     staleTime: 30000,
   });
 
@@ -193,20 +196,20 @@ export function useGetReadyNotifications(
   // =====================================================
 
   const { data: preferences } = useQuery({
-    queryKey: ['notificationPreferences', user?.id],
+    queryKey: ['notificationPreferences', user?.id, selectedDealerId],
     queryFn: async () => {
-      if (!user?.id || !selectedDealerId) return null;
+      if (!user?.id || !isValidDealerId) return null;
 
       const { data, error } = await supabase
         .from('user_notification_preferences')
         .select('*')
         .eq('user_id', user.id)
         .eq('dealer_id', selectedDealerId)
-        .single();
+        .maybeSingle(); // Changed from .single() to .maybeSingle()
 
-      if (error && error.code !== 'PGRST116') {
-        // PGRST116 = no rows returned
+      if (error) {
         console.error('Error fetching preferences:', error);
+        return null;
       }
 
       return data as UserNotificationPreferences | null;
@@ -251,7 +254,7 @@ export function useGetReadyNotifications(
 
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
-      if (!user?.id || !selectedDealerId) {
+      if (!user?.id || !isValidDealerId) {
         throw new Error('User not authenticated or dealer not selected');
       }
 
@@ -330,7 +333,7 @@ export function useGetReadyNotifications(
     mutationFn: async (
       updates: Partial<Omit<UserNotificationPreferences, 'user_id' | 'dealer_id'>>
     ) => {
-      if (!user?.id || !selectedDealerId) {
+      if (!user?.id || !isValidDealerId) {
         throw new Error('User not authenticated or dealer not selected');
       }
 
@@ -344,7 +347,7 @@ export function useGetReadyNotifications(
             updated_at: new Date().toISOString(),
           },
           {
-            onConflict: 'user_id',
+            onConflict: 'user_id,dealer_id',
           }
         )
         .select()
@@ -376,7 +379,7 @@ export function useGetReadyNotifications(
   // =====================================================
 
   useEffect(() => {
-    if (!enabled || !selectedDealerId || !user?.id) return;
+    if (!enabled || !isValidDealerId || !user?.id) return;
 
     console.log('[useGetReadyNotifications] Setting up real-time subscription');
 

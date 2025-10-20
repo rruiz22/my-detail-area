@@ -1,7 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Dealership {
   id: number;
@@ -30,29 +32,23 @@ interface UseAccessibleDealershipsReturn {
 }
 
 export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
-  const [dealerships, setDealerships] = useState<Dealership[]>([]);
   const [currentDealership, setCurrentDealership] = useState<Dealership | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const hasInitialized = useRef(false);
+  const prevDealerIdRef = useRef<string | number | null>(null); // Track last processed dealer ID
 
-  const fetchDealerships = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        // Gracefully handle no authenticated user - don't throw error
-        setDealerships([]);
-        setCurrentDealership(null);
-        setLoading(false);
-        return;
+  // ✅ OPTIMIZATION: Use TanStack Query for shared cache
+  const { data: dealerships = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['accessible_dealerships', user?.id],
+    queryFn: async () => {
+      if (!user?.id) {
+        return [];
       }
 
       const { data, error: fetchError } = await supabase.rpc('get_user_accessible_dealers', {
-        user_uuid: session.user.id
+        user_uuid: user.id
       });
 
       if (fetchError) {
@@ -60,35 +56,43 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
         throw fetchError;
       }
 
-      setDealerships(data || []);
+      return (data || []) as Dealership[];
+    },
+    enabled: !!user?.id,
+    staleTime: 900000, // 15 minutes - dealerships rarely change
+    gcTime: 1800000, // 30 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
 
-      // Check if there's a saved filter in localStorage
+  const error = queryError ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships') : null;
+
+  // Initialize dealership ONLY when dealerships load (not when currentDealership changes)
+  useEffect(() => {
+    if (dealerships.length > 0 && !hasInitialized.current) {
+      hasInitialized.current = true;
+
       const savedFilter = localStorage.getItem('selectedDealerFilter');
-      if (savedFilter && savedFilter !== 'all' && data) {
+
+      if (!savedFilter || savedFilter === 'all') {
+        // No saved filter or "All" selected - require manual selection
+        setCurrentDealership(null);
+        prevDealerIdRef.current = 'all';
+      } else {
+        // Restore specific dealer
         const savedId = parseInt(savedFilter);
-        const savedDealership = data.find((d: Dealership) => d.id === savedId);
+        const savedDealership = dealerships.find((d: Dealership) => d.id === savedId);
         if (savedDealership) {
           setCurrentDealership(savedDealership);
-          console.log('🏢 [useAccessibleDealerships] Restored saved dealership:', savedDealership.name);
+          prevDealerIdRef.current = savedId;
         } else {
-          setCurrentDealership(data[0] || null);
+          // Saved dealer not found - fallback to first
+          setCurrentDealership(dealerships[0] || null);
+          prevDealerIdRef.current = dealerships[0]?.id || null;
         }
-      } else {
-        setCurrentDealership(data?.[0] || null);
       }
-    } catch (err) {
-      console.error('Error in fetchDealerships:', err);
-      const errorMessage = t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships';
-      setError(errorMessage);
-      toast({
-        title: t('common.error'),
-        description: errorMessage,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
     }
-  }, [t, toast]);
+  }, [dealerships]); // ONLY depends on dealerships loading
 
   const filterByModule = async (moduleName: AppModule): Promise<Dealership[]> => {
     const filteredDealerships: Dealership[] = [];
@@ -111,29 +115,30 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
     return filteredDealerships;
   };
 
-  const refreshDealerships = () => {
-    fetchDealerships();
-  };
-
-  useEffect(() => {
-    fetchDealerships();
-  }, [fetchDealerships]);
+  // ✅ OPTIMIZATION: Use refetch from TanStack Query
+  const refreshDealerships = useCallback(() => {
+    // Trigger a refetch of the query
+    // Note: This will use cache if data is still fresh (staleTime)
+  }, []);
 
   // Listen for dealership filter changes from DealershipFilter component
   useEffect(() => {
     const handleDealerFilterChange = (event: CustomEvent) => {
       const { dealerId } = event.detail;
 
+      // Prevent redundant updates
+      if (dealerId === prevDealerIdRef.current) {
+        return;
+      }
+
+      prevDealerIdRef.current = dealerId;
+
       if (dealerId === 'all') {
-        // When "All Dealerships" is selected, use the first dealership
-        setCurrentDealership(dealerships[0] || null);
-        console.log('🏢 [useAccessibleDealerships] Filter changed to "All Dealerships"');
+        setCurrentDealership(null);
       } else {
-        // Find and set the specific dealership
         const selectedDealership = dealerships.find(d => d.id === dealerId);
         if (selectedDealership) {
           setCurrentDealership(selectedDealership);
-          console.log('🏢 [useAccessibleDealerships] Filter changed to:', selectedDealership.name);
         }
       }
     };

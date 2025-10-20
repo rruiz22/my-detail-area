@@ -18,9 +18,9 @@ export const importFabric = async () => {
   return fabric;
 };
 
-// OpenCV.js dynamic import (computer vision)
+// OpenCV.js dynamic import (computer vision) - using safe alternative
 export const importOpenCV = async () => {
-  const opencv = await import('opencv.js');
+  const opencv = await import('@techstark/opencv-js');
   return opencv;
 };
 

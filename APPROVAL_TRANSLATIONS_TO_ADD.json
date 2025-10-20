@@ -1,0 +1,156 @@
+{
+  "INSTRUCTIONS": "Add these translations to public/translations/{en,es,pt-BR}.json under get_ready.approvals",
+
+  "EN": {
+    "description": "Centralized approval queue for vehicles and work items requiring manager approval",
+    "pending": "Pending",
+    "approved_today": "Approved Today",
+    "rejected_today": "Rejected Today",
+    "critical": "Critical",
+    "oldest_pending": "Oldest Pending",
+    "search_placeholder": "Search by stock #, VIN, description...",
+    "no_pending": "All Caught Up!",
+    "all_caught_up": "There are no pending approvals at this time.",
+    "select_all": "Select All",
+    "approve_selected": "Approve Selected",
+
+    "filter": {
+      "all": "All Types",
+      "vehicles": "Vehicles Only",
+      "work_items": "Work Items Only",
+      "critical": "Critical Only"
+    },
+
+    "sort": {
+      "oldest": "Oldest First",
+      "newest": "Newest First",
+      "priority": "High Priority First",
+      "cost": "Highest Cost First"
+    },
+
+    "type": {
+      "vehicle": "Vehicle Approval",
+      "work_item": "Work Item"
+    },
+
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "view_details": "View Details",
+      "click_to_approve": "Click to view and approve work items"
+    },
+
+    "reject_dialog": {
+      "title": "Reject Approval",
+      "vehicle_description": "Please provide a reason for rejecting this vehicle approval.",
+      "work_item_description": "Please provide a reason for declining this work item.",
+      "reason": "Rejection Reason",
+      "reason_placeholder": "Enter the reason for rejection...",
+      "additional_notes": "Additional Notes",
+      "notes_placeholder": "Any additional comments or instructions...",
+      "confirm": "Confirm Rejection"
+    }
+  },
+
+  "ES": {
+    "description": "Cola centralizada de aprobaciones para vehículos e items de trabajo que requieren aprobación del gerente",
+    "pending": "Pendiente",
+    "approved_today": "Aprobado Hoy",
+    "rejected_today": "Rechazado Hoy",
+    "critical": "Crítico",
+    "oldest_pending": "Más Antiguo Pendiente",
+    "search_placeholder": "Buscar por stock #, VIN, descripción...",
+    "no_pending": "¡Todo al Día!",
+    "all_caught_up": "No hay aprobaciones pendientes en este momento.",
+    "select_all": "Seleccionar Todo",
+    "approve_selected": "Aprobar Seleccionados",
+
+    "filter": {
+      "all": "Todos los Tipos",
+      "vehicles": "Solo Vehículos",
+      "work_items": "Solo Items de Trabajo",
+      "critical": "Solo Críticos"
+    },
+
+    "sort": {
+      "oldest": "Más Antiguo Primero",
+      "newest": "Más Reciente Primero",
+      "priority": "Alta Prioridad Primero",
+      "cost": "Mayor Costo Primero"
+    },
+
+    "type": {
+      "vehicle": "Aprobación de Vehículo",
+      "work_item": "Item de Trabajo"
+    },
+
+    "actions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "view_details": "Ver Detalles",
+      "click_to_approve": "Click para ver y aprobar items de trabajo"
+    },
+
+    "reject_dialog": {
+      "title": "Rechazar Aprobación",
+      "vehicle_description": "Por favor proporcione una razón para rechazar la aprobación de este vehículo.",
+      "work_item_description": "Por favor proporcione una razón para declinar este item de trabajo.",
+      "reason": "Razón del Rechazo",
+      "reason_placeholder": "Ingrese la razón del rechazo...",
+      "additional_notes": "Notas Adicionales",
+      "notes_placeholder": "Cualquier comentario o instrucción adicional...",
+      "confirm": "Confirmar Rechazo"
+    }
+  },
+
+  "PT-BR": {
+    "description": "Fila centralizada de aprovações para veículos e itens de trabalho que requerem aprovação do gerente",
+    "pending": "Pendente",
+    "approved_today": "Aprovado Hoje",
+    "rejected_today": "Rejeitado Hoje",
+    "critical": "Crítico",
+    "oldest_pending": "Mais Antigo Pendente",
+    "search_placeholder": "Pesquisar por stock #, VIN, descrição...",
+    "no_pending": "Tudo em Dia!",
+    "all_caught_up": "Não há aprovações pendentes no momento.",
+    "select_all": "Selecionar Tudo",
+    "approve_selected": "Aprovar Selecionados",
+
+    "filter": {
+      "all": "Todos os Tipos",
+      "vehicles": "Somente Veículos",
+      "work_items": "Somente Itens de Trabalho",
+      "critical": "Somente Críticos"
+    },
+
+    "sort": {
+      "oldest": "Mais Antigo Primeiro",
+      "newest": "Mais Recente Primeiro",
+      "priority": "Alta Prioridade Primeiro",
+      "cost": "Maior Custo Primeiro"
+    },
+
+    "type": {
+      "vehicle": "Aprovação de Veículo",
+      "work_item": "Item de Trabalho"
+    },
+
+    "actions": {
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "view_details": "Ver Detalhes",
+      "click_to_approve": "Clique para ver e aprovar itens de trabalho"
+    },
+
+    "reject_dialog": {
+      "title": "Rejeitar Aprovação",
+      "vehicle_description": "Por favor forneça uma razão para rejeitar a aprovação deste veículo.",
+      "work_item_description": "Por favor forneça uma razão para recusar este item de trabalho.",
+      "reason": "Motivo da Rejeição",
+      "reason_placeholder": "Digite o motivo da rejeição...",
+      "additional_notes": "Notas Adicionais",
+      "notes_placeholder": "Quaisquer comentários ou instruções adicionais...",
+      "confirm": "Confirmar Rejeição"
+    }
+  }
+}

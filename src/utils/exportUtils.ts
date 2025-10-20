@@ -1,8 +1,9 @@
 /**
  * Utility functions for exporting data to various formats
+ *
+ * NOTE: Excel exports now handled by Edge Function (supabase/functions/generate-excel-report)
+ * This keeps the client bundle lightweight and moves heavy processing to the server
  */
-
-import * as XLSX from 'xlsx';
 
 // Export to CSV
 export function exportToCSV(data: any[], filename: string = 'export') {
@@ -55,60 +56,15 @@ export function exportToCSV(data: any[], filename: string = 'export') {
   URL.revokeObjectURL(url);
 }
 
-// Export to Excel (XLSX format using xlsx library)
-export function exportToExcel(data: any[], filename: string = 'export') {
-  if (!data || data.length === 0) {
-    console.warn('No data to export');
-    return;
-  }
-
-  // Add row numbers
-  const dataWithRowNumbers = data.map((row, index) => ({
-    '#': index + 1,
-    ...row
-  }));
-
-  // Create a new workbook
-  const workbook = XLSX.utils.book_new();
-
-  // Convert data to worksheet
-  const worksheet = XLSX.utils.json_to_sheet(dataWithRowNumbers);
-
-  // Set column widths for better readability
-  const columnWidths = [
-    { wch: 5 },  // # column
-    { wch: 12 }, // Stock Number
-    { wch: 18 }, // VIN
-    { wch: 25 }, // Vehicle
-    { wch: 6 },  // Year
-    { wch: 12 }, // Make
-    { wch: 12 }, // Model
-    { wch: 15 }, // Trim
-    { wch: 15 }, // Step
-    { wch: 12 }, // Workflow
-    { wch: 10 }, // Priority
-    { wch: 10 }, // Status
-    { wch: 12 }, // In Process
-    { wch: 12 }, // Step Time
-    { wch: 12 }, // To Frontline
-    { wch: 10 }, // Progress
-    { wch: 15 }, // Assigned To
-    { wch: 12 }, // Total Work Items
-    { wch: 12 }, // Pending Items
-    { wch: 15 }, // In Progress Items
-    { wch: 14 }, // Completed Items
-    { wch: 13 }, // Declined Items
-    { wch: 18 }, // Work Items Completion
-    { wch: 30 }, // Notes
-  ];
-  worksheet['!cols'] = columnWidths;
-
-  // Add the worksheet to the workbook
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Vehicles');
-
-  // Generate Excel file and trigger download
-  XLSX.writeFile(workbook, `${filename}_${new Date().toISOString().split('T')[0]}.xlsx`);
-}
+/**
+ * Excel export has been moved to Edge Function for better performance
+ * Use the useServerExport hook instead:
+ *
+ * import { useServerExport } from '@/hooks/useServerExport';
+ * const { exportToExcel } = useServerExport({ reportType: 'get_ready' });
+ *
+ * This eliminates 2.5MB from the client bundle and improves performance
+ */
 
 // Format vehicle data for export
 export function formatVehiclesForExport(vehicles: any[]) {

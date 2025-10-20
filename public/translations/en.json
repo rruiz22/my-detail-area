@@ -42,6 +42,8 @@
     "showing": "Showing",
     "action_buttons": {
       "save": "Save",
+      "save_changes": "Save Changes",
+      "saving": "Saving...",
       "edit": "Edit",
       "delete": "Delete",
       "cancel": "Cancel",
@@ -1969,6 +1971,14 @@
     "cancel": "Cancel"
   },
   "get_ready": {
+    "select_dealership": {
+      "title": "Select a Dealership",
+      "description": "Get Ready module requires a specific dealership to be selected",
+      "instruction_1": "Click the dealership filter in the top navigation bar",
+      "instruction_2": "Choose a specific dealership from the dropdown",
+      "instruction_3": "The Get Ready workflow will load for that dealership",
+      "note": "Note: \"All Dealerships\" is not supported in Get Ready module"
+    },
     "tabs": {
       "overview": "Overview",
       "details_view": "Details View",
@@ -2662,7 +2672,18 @@
     },
     "approvals": {
       "title": "Approvals",
+      "description": "Review and approve vehicles ready to move to frontline",
       "subtitle": "Review work items requiring approval and track approval progress",
+      "pending": "Pending",
+      "approved_today": "Approved Today",
+      "rejected_today": "Rejected Today",
+      "critical": "Critical",
+      "oldest_pending": "Oldest Pending",
+      "search_placeholder": "Search by stock #, VIN, description...",
+      "no_pending": "All Caught Up!",
+      "all_caught_up": "There are no pending approvals at this time.",
+      "select_all": "Select All",
+      "approve_selected": "Approve Selected",
       "summary": {
         "pending": "Pending Approvals",
         "approved_today": "Approved Today",
@@ -2679,12 +2700,39 @@
         "no_approved": "No recently approved work items to display.",
         "no_rejected": "No recently rejected work items to display."
       },
+      "filter": {
+        "all": "All Types",
+        "vehicles": "Vehicles Only",
+        "work_items": "Work Items Only",
+        "critical": "Critical Only"
+      },
+      "sort": {
+        "oldest": "Oldest First",
+        "newest": "Newest First",
+        "priority": "High Priority First",
+        "cost": "Highest Cost First"
+      },
+      "type": {
+        "vehicle": "Vehicle Approval",
+        "work_item": "Work Item"
+      },
       "actions": {
         "approve": "Approve",
         "reject": "Reject",
         "review": "Review",
         "request_approval": "Request Approval",
+        "view_details": "View Details",
         "click_to_approve": "Click to view and approve work items"
+      },
+      "reject_dialog": {
+        "title": "Reject Approval",
+        "vehicle_description": "Please provide a reason for rejecting this vehicle approval.",
+        "work_item_description": "Please provide a reason for declining this work item.",
+        "reason": "Rejection Reason",
+        "reason_placeholder": "Enter the reason for rejection...",
+        "additional_notes": "Additional Notes",
+        "notes_placeholder": "Any additional comments or instructions...",
+        "confirm": "Confirm Rejection"
       },
       "modal": {
         "approve_title": "Approve Vehicle",
@@ -2722,6 +2770,61 @@
     "reports": {
       "title": "Reports & Analytics",
       "subtitle": "Generate and view detailed reports for your reconditioning workflow"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "unread": "unread",
+      "new": "New",
+      "critical": "Critical",
+      "empty": {
+        "title": "All caught up!",
+        "description": "You have no notifications at this time"
+      },
+      "filter": {
+        "all_types": "All Types",
+        "all_priorities": "All Priorities"
+      },
+      "actions": {
+        "mark_all_read": "Mark All as Read",
+        "settings": "Settings"
+      },
+      "settings": {
+        "title": "Notification Settings",
+        "description": "Customize which notifications you receive and how you're alerted",
+        "sections": {
+          "types": "Notification Types",
+          "delivery": "Delivery Methods",
+          "quiet_hours": "Quiet Hours"
+        },
+        "types": {
+          "sla_warnings": "SLA Warnings",
+          "sla_warnings_desc": "Get notified when vehicles approach their SLA threshold",
+          "sla_critical": "Critical SLA Violations",
+          "sla_critical_desc": "Immediate alerts when SLA targets are exceeded",
+          "approvals": "Approval Requests",
+          "approvals_desc": "Notifications when approvals are required",
+          "bottlenecks": "Bottleneck Alerts",
+          "bottlenecks_desc": "Alerts when workflow bottlenecks are detected",
+          "vehicle_status": "Vehicle Status Changes",
+          "vehicle_status_desc": "Updates when vehicles move between steps"
+        },
+        "delivery": {
+          "in_app": "In-App Notifications",
+          "in_app_desc": "Show notifications in the notification bell",
+          "email": "Email Notifications",
+          "email_desc": "Send notifications to your email address",
+          "sound": "Sound Alerts",
+          "sound_desc": "Play sound when receiving high-priority notifications",
+          "desktop": "Desktop Notifications",
+          "desktop_desc": "Show browser desktop notifications"
+        },
+        "quiet_hours": {
+          "enabled": "Enable Quiet Hours",
+          "description": "Mute non-critical notifications during specified hours",
+          "start": "Start Time",
+          "end": "End Time"
+        }
+      }
     }
   },
   "reports": {

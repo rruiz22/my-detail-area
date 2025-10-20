@@ -1,249 +1,163 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
-export interface UserPreferences {
-  id?: string;
-  user_id: string;
-  timezone: string;
-  phone?: string;
-  bio?: string;
-  avatar_url?: string;
-  job_title?: string;
-  department?: string;
-  notification_email: boolean;
-  notification_sms: boolean;
-  notification_push: boolean;
-  notification_in_app: boolean;
-  notification_frequency: string;
-  quiet_hours_start?: string;
-  quiet_hours_end?: string;
-  language_preference: string;
-  date_format: string;
-  time_format: string;
-}
+/**
+ * Centralized hook for user profiles with shared cache
+ * Eliminates redundant profile queries across components
+ *
+ * staleTime: 15 minutes - Profile data rarely changes
+ * gcTime: 30 minutes - Keep in cache longer
+ */
 
 export interface UserProfile {
   id: string;
-  email: string;
+  email?: string;
+  role?: string;
+  user_type?: string;
+  dealership_id?: number;
   first_name?: string;
   last_name?: string;
-  role?: string;
-  dealership_id?: number;
-  preferences?: UserPreferences;
+  avatar_seed?: string;
+  avatar_variant?: string;
 }
 
-export const useUserProfile = () => {
-  const { t } = useTranslation();
-  const { toast } = useToast();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [preferences, setPreferences] = useState<UserPreferences | null>(null);
-  const [loading, setLoading] = useState(false);
+/**
+ * Get user profile with shared cache across all components
+ * Single query result shared by all consumers
+ */
+export function useUserProfile() {
+  const { user } = useAuth();
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) throw new Error('No authenticated user');
+  return useQuery({
+    queryKey: ['user_profile', user?.id],
+    queryFn: async () => {
+      if (!user?.id) {
+        return null;
+      }
 
-      // Get profile data
-      const { data: profileData, error: profileError } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
-      if (profileError) throw profileError;
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return null;
+      }
 
-      // Get preferences
-      const { data: preferencesData, error: preferencesError } = await supabase
-        .from('user_preferences')
-        .select('*')
-        .eq('user_id', user.id)
+      return data as UserProfile;
+    },
+    enabled: !!user?.id,
+    staleTime: 900000, // 15 minutes
+    gcTime: 1800000, // 30 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Get minimal profile data (commonly used fields)
+ * Uses same cache key to share with full profile query
+ */
+export function useUserProfileMinimal() {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ['user_profile_minimal', user?.id],
+    queryFn: async () => {
+      if (!user?.id) {
+        return null;
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, email, role, dealership_id')
+        .eq('id', user.id)
         .single();
 
-      if (preferencesError && preferencesError.code !== 'PGRST116') {
-        throw preferencesError;
+      if (error) {
+        console.error('Error fetching minimal profile:', error);
+        return null;
       }
 
-      setProfile({
-        id: user.id,
-        email: user.email || '',
-        ...profileData
-      });
+      return data;
+    },
+    enabled: !!user?.id,
+    staleTime: 900000, // 15 minutes
+    gcTime: 1800000, // 30 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}
 
-      setPreferences(preferencesData || {
-        user_id: user.id,
-        timezone: 'America/New_York',
-        notification_email: true,
-        notification_sms: false,
-        notification_push: true,
-        notification_in_app: true,
-        notification_frequency: 'immediate',
-        language_preference: 'en',
-        date_format: 'MM/dd/yyyy',
-        time_format: '12h'
-      });
+/**
+ * Get user avatar preferences
+ * Separate query key for avatar-specific data
+ */
+export function useUserAvatar() {
+  const { user } = useAuth();
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error loading profile';
-      console.error('Error fetching profile:', error);
-      toast({
-        title: t('common.error'),
-        description: errorMessage,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [t, toast]);
+  return useQuery({
+    queryKey: ['user_avatar', user?.id],
+    queryFn: async () => {
+      if (!user?.id) {
+        return null;
+      }
 
-  const updateProfile = async (updates: Partial<UserProfile>) => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) throw new Error('No authenticated user');
-
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
-        .update(updates)
-        .eq('id', user.id);
+        .select('avatar_seed, avatar_variant')
+        .eq('id', user.id)
+        .single();
 
-      if (error) throw error;
-
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
-
-      // Log activity
-      await supabase
-        .from('user_activity_log')
-        .insert({
-          user_id: user.id,
-          action_type: 'profile_updated',
-          action_description: 'Profile information updated',
-          details: { updated_fields: Object.keys(updates) }
-        });
-
-      toast({
-        title: t('common.success'),
-        description: t('profile.profile_updated'),
-      });
-
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error updating profile';
-      console.error('Error updating profile:', error);
-      toast({
-        title: t('common.error'),
-        description: errorMessage,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updatePreferences = async (updates: Partial<UserPreferences>) => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) throw new Error('No authenticated user');
-
-      const { error } = await supabase
-        .from('user_preferences')
-        .upsert({
-          user_id: user.id,
-          ...preferences,
-          ...updates
-        });
-
-      if (error) throw error;
-
-      setPreferences(prev => prev ? { ...prev, ...updates } : null);
-
-      // Log activity
-      await supabase
-        .from('user_activity_log')
-        .insert({
-          user_id: user.id,
-          action_type: 'preferences_updated',
-          action_description: 'User preferences updated',
-          details: { updated_preferences: Object.keys(updates) }
-        });
-
-      toast({
-        title: t('common.success'),
-        description: t('profile.preferences_updated'),
-      });
-
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error updating preferences';
-      console.error('Error updating preferences:', error);
-      toast({
-        title: t('common.error'),
-        description: errorMessage,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const changePassword = async (currentPassword: string, newPassword: string) => {
-    try {
-      setLoading(true);
-      
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
-      if (error) throw error;
-
-      // Log activity
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase
-          .from('user_activity_log')
-          .insert({
-            user_id: user.id,
-            action_type: 'password_changed',
-            action_description: 'Password changed successfully'
-          });
+      if (error) {
+        return null;
       }
 
-      toast({
-        title: t('common.success'),
-        description: t('profile.password_changed'),
-      });
+      return data;
+    },
+    enabled: !!user?.id,
+    staleTime: 1800000, // 30 minutes (avatars change less frequently)
+    gcTime: 3600000, // 60 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}
 
-      return true;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error changing password';
-      console.error('Error changing password:', error);
-      toast({
-        title: t('common.error'),
-        description: errorMessage,
-        variant: 'destructive',
-      });
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
+/**
+ * ✅ OPTIMIZED: Get user profile for permissions with shared TanStack Query cache
+ * Use this in usePermissions and other permission-related components
+ * Eliminates redundant profile queries
+ */
+export function useUserProfileForPermissions() {
+  const { user } = useAuth();
 
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+  return useQuery({
+    queryKey: ['user_profile_permissions', user?.id],
+    queryFn: async () => {
+      if (!user?.id) {
+        return null;
+      }
 
-  return {
-    profile,
-    preferences,
-    loading,
-    updateProfile,
-    updatePreferences,
-    changePassword,
-    refetch: fetchProfile
-  };
-};
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, email, role, user_type, dealership_id, first_name, last_name')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile for permissions:', error);
+        return null;
+      }
+
+      return data;
+    },
+    enabled: !!user?.id,
+    staleTime: 900000, // 15 minutes
+    gcTime: 1800000, // 30 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}

@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useGetReadyNotifications } from '@/hooks/useGetReadyNotifications';
+import { NotificationSettings } from './NotificationSettings';
 import type { NotificationType, NotificationPriority } from '@/types/getReady';
 import {
   AlertCircle,
@@ -60,6 +61,7 @@ export function NotificationPanel({
   const [filterPriority, setFilterPriority] = useState<
     NotificationPriority | 'all'
   >('all');
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const {
     notifications,
@@ -271,8 +273,8 @@ export function NotificationPanel({
                     {/* Vehicle Info (if available) */}
                     {notification.vehicle && (
                       <p className="text-xs text-muted-foreground mt-1">
-                        {notification.vehicle.year} {notification.vehicle.make}{' '}
-                        {notification.vehicle.model} • Stock:{' '}
+                        {notification.vehicle.vehicle_year} {notification.vehicle.vehicle_make}{' '}
+                        {notification.vehicle.vehicle_model} • Stock:{' '}
                         {notification.vehicle.stock_number}
                       </p>
                     )}
@@ -329,7 +331,7 @@ export function NotificationPanel({
               variant="ghost"
               size="sm"
               className="flex-shrink-0"
-              onClick={onClose}
+              onClick={() => setSettingsOpen(true)}
             >
               <Settings2 className="h-3 w-3 mr-1" />
               {t('get_ready.notifications.actions.settings')}
@@ -337,6 +339,12 @@ export function NotificationPanel({
           </div>
         </>
       )}
+
+      {/* Settings Modal */}
+      <NotificationSettings
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+      />
     </div>
   );
 }

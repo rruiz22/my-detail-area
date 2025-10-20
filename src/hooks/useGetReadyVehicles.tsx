@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
 import { calculateDIS, calculateDTF, calculateT2L } from '@/utils/timeFormatUtils';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
 
 // Type definition for vehicle detail
@@ -273,6 +274,8 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           intake_date,
           created_at,
           updated_at,
+          media_count,
+          notes_count,
           requires_approval,
           approval_status,
           approved_by,
@@ -397,6 +400,7 @@ const PAGE_SIZE = 10;
 
 export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
+  const queryClient = useQueryClient();
   const {
     searchQuery = '',
     selectedStep = 'all',
@@ -405,6 +409,13 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
     sortBy = 'created_at',
     sortOrder = 'desc'
   } = filters;
+
+  // Invalidate cache when dealer changes to ensure fresh data
+  useEffect(() => {
+    if (currentDealership?.id) {
+      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+    }
+  }, [currentDealership?.id, queryClient]);
 
   return useInfiniteQuery({
     queryKey: [
@@ -444,6 +455,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           intake_date,
           created_at,
           updated_at,
+          media_count,
+          notes_count,
           requires_approval,
           approval_status,
           approved_by,
@@ -511,40 +524,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
 
       if (!data) return { vehicles: [], hasMore: false };
 
-      // Get vehicle IDs for counting media/notes
-      const vehicleIds = data.map((v: any) => v.id);
-
-      // Fetch media counts
-      let mediaCounts = new Map<string, number>();
-      if (vehicleIds.length > 0) {
-        const { data: mediaData } = await supabase
-          .from('vehicle_media')
-          .select('vehicle_id')
-          .in('vehicle_id', vehicleIds);
-
-        if (mediaData) {
-          mediaData.forEach((item: any) => {
-            const count = mediaCounts.get(item.vehicle_id) || 0;
-            mediaCounts.set(item.vehicle_id, count + 1);
-          });
-        }
-      }
-
-      // Fetch notes counts
-      let notesCounts = new Map<string, number>();
-      if (vehicleIds.length > 0) {
-        const { data: notesData } = await supabase
-          .from('vehicle_notes')
-          .select('vehicle_id')
-          .in('vehicle_id', vehicleIds);
-
-        if (notesData) {
-          notesData.forEach((item: any) => {
-            const count = notesCounts.get(item.vehicle_id) || 0;
-            notesCounts.set(item.vehicle_id, count + 1);
-          });
-        }
-      }
+      // ✅ OPTIMIZATION: No longer need separate queries for media/notes counts
+      // media_count and notes_count are now maintained by database triggers
 
       // Transform data
       const vehicles = data.map((vehicle: any) => {
@@ -588,10 +569,12 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
           images: [],
-          work_items: workItems.length,
+          work_items: workItems, // ARRAY COMPLETO
+          work_items_count: workItems.length, // Count separado
           work_item_counts,
-          media_count: mediaCounts.get(vehicle.id) || 0, // REAL COUNT
-          notes_preview: (notesCounts.get(vehicle.id) || 0).toString(), // Use as count string for now
+          pending_approval_work_items: pendingApprovalWorkItems, // Work items pendientes
+          media_count: vehicle.media_count || 0, // ✅ From database (trigger-maintained)
+          notes_preview: (vehicle.notes_count || 0).toString(), // ✅ From database (trigger-maintained)
           // Approval fields
           requires_approval: vehicle.requires_approval || false,
           approval_status: vehicle.approval_status || 'not_required',
@@ -600,9 +583,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           approval_notes: vehicle.approval_notes,
           rejected_by: vehicle.rejected_by,
           rejected_at: vehicle.rejected_at,
-          rejection_reason: vehicle.rejection_reason,
-          // Work items needing approval
-          pending_approval_work_items: pendingApprovalWorkItems,
+          rejection_reason: vehicle.rejection_reason
         };
       });
 
@@ -617,5 +598,6 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
     },
     enabled: !!currentDealership?.id,
     staleTime: 1000 * 30,
+    refetchOnMount: 'always', // ✅ FIX: Always refetch when dealer changes from null to valid
   });
 }

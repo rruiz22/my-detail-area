@@ -38,12 +38,29 @@ export function GetReadyTopbar() {
   const { t } = useTranslation();
   const location = useLocation();
 
-  // Get vehicles to count pending approvals
+  // Get vehicles to count pending approvals (vehicles + work items)
   const { data: vehiclesData } = useGetReadyVehiclesInfinite({});
   const allVehicles = vehiclesData?.pages.flatMap(page => page.vehicles) ?? [];
-  const pendingApprovalsCount = allVehicles.filter(
-    v => v.requires_approval === true && v.approval_status === 'pending'
+  
+  // Count vehicles needing approval
+  const vehicleApprovalsCount = allVehicles.filter(
+    v => v.requires_approval === true && v.approval_status === 'pending' && !v.approved_by
   ).length;
+  
+  // Count work items needing approval
+  const workItemApprovalsCount = allVehicles.reduce((count, vehicle) => {
+    // Check if work_items exists and is an array
+    if (!vehicle.work_items || !Array.isArray(vehicle.work_items)) {
+      return count;
+    }
+    
+    const workItemsNeedingApproval = vehicle.work_items.filter(
+      item => item.approval_required === true && !item.approval_status
+    ).length;
+    return count + workItemsNeedingApproval;
+  }, 0);
+  
+  const pendingApprovalsCount = vehicleApprovalsCount + workItemApprovalsCount;
   const { user } = useAuth();
 
   // Filter tabs based on user role

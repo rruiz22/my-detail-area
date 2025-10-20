@@ -187,3 +187,4 @@ Después de aplicar estas migraciones, continuaré con:
 - ✅ **Fase 1.2:** Agregar real-time subscriptions
 
 **¿Las migraciones se aplicaron correctamente? Dime cuando estén listas y continúo con el código React.**
+

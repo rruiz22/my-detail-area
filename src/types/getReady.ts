@@ -298,10 +298,10 @@ export interface GetReadyNotification {
 export interface NotificationWithVehicle extends GetReadyNotification {
   vehicle?: {
     stock_number: string;
-    year: number | null;
-    make: string | null;
-    model: string | null;
-    step_name: string;
+    vehicle_year: number | null;
+    vehicle_make: string | null;
+    vehicle_model: string | null;
+    step_id: string;
   };
   step?: {
     name: string;

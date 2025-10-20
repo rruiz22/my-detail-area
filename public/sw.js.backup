@@ -1,4 +1,11 @@
 // Service Worker for Push Notifications
+// Note: Workbox caching is configured in vite.config.ts
+
+const CACHE_NAME = 'mda-cache-v1';
+const PRECACHE_URLS = ['/'];
+
+console.log('Service Worker loading...');
+
 self.addEventListener('install', (event) => {
   console.log('Service Worker installing');
   self.skipWaiting();
@@ -11,8 +18,9 @@ self.addEventListener('activate', (event) => {
 
 // Handle push notifications
 self.addEventListener('push', (event) => {
-  console.log('Push notification received:', event);
-  
+  console.log('🔔 [SW] Push event received!', event);
+  console.log('🔔 [SW] Has data:', !!event.data);
+
   let notificationData = {
     title: 'My Detail Area',
     body: 'You have a new notification',
@@ -24,15 +32,22 @@ self.addEventListener('push', (event) => {
 
   if (event.data) {
     try {
+      console.log('🔔 [SW] Parsing push data...');
       const payload = event.data.json();
+      console.log('🔔 [SW] Parsed payload:', payload);
       notificationData = {
         ...notificationData,
         ...payload
       };
     } catch (error) {
-      console.error('Error parsing push data:', error);
+      console.error('❌ [SW] Error parsing push data:', error);
+      console.log('🔔 [SW] Raw data:', event.data.text());
     }
+  } else {
+    console.warn('⚠️ [SW] No data in push event - using defaults');
   }
+
+  console.log('🔔 [SW] Showing notification:', notificationData.title);
 
   const promiseChain = self.registration.showNotification(
     notificationData.title,
@@ -57,7 +72,11 @@ self.addEventListener('push', (event) => {
       silent: false,
       vibrate: [200, 100, 200]
     }
-  );
+  ).then(() => {
+    console.log('✅ [SW] Notification shown successfully');
+  }).catch(err => {
+    console.error('❌ [SW] Error showing notification:', err);
+  });
 
   event.waitUntil(promiseChain);
 });

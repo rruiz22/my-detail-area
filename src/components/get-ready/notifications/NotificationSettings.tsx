@@ -12,7 +12,9 @@ import {
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { useGetReadyNotifications } from '@/hooks/useGetReadyNotifications';
+import { useFCMNotifications } from '@/hooks/useFCMNotifications';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Bell,
@@ -24,8 +26,11 @@ import {
   CheckCircle2,
   TrendingUp,
   Wrench,
+  Smartphone,
+  Send,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 interface NotificationSettingsProps {
   open: boolean;
@@ -51,6 +56,20 @@ export function NotificationSettings({
   const { t } = useTranslation();
   const { preferences, updatePreferences, isUpdatingPreferences } =
     useGetReadyNotifications({ enabled: open });
+
+  // FCM notifications hook
+  const {
+    isSupported: isPushSupported,
+    isConfigured: isFirebaseConfigured,
+    isSubscribed: isPushSubscribed,
+    permission: pushPermission,
+    subscribe: subscribeToPush,
+    unsubscribe: unsubscribeFromPush,
+    testNotification,
+    isSubscribing,
+    isUnsubscribing,
+    isTesting,
+  } = useFCMNotifications();
 
   // Local state for form values
   const [formValues, setFormValues] = useState({
@@ -282,6 +301,90 @@ export function NotificationSettings({
 
             <Separator />
 
+            {/* FCM Push Notifications Section */}
+            {isPushSupported && (
+              <>
+                <div>
+                  <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <Smartphone className="h-4 w-4" />
+                    Firebase Cloud Messaging (FCM)
+                  </h4>
+
+                  {/* Firebase Configuration Warning */}
+                  {!isFirebaseConfigured && (
+                    <div className="mb-3 p-3 rounded-lg border bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800">
+                      <p className="text-xs text-yellow-800 dark:text-yellow-200 flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                        Firebase no está configurado correctamente. Verifica las variables de entorno VITE_FIREBASE_*.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="space-y-3">
+                    {/* Push Status Card */}
+                    <div className="p-4 rounded-lg border bg-muted/30">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Label className="text-sm font-medium">
+                              FCM Push Notifications
+                            </Label>
+                            <Badge
+                              variant={isPushSubscribed ? 'default' : 'secondary'}
+                              className="text-xs"
+                            >
+                              {isPushSubscribed ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {isPushSubscribed
+                              ? 'Recibe alertas incluso cuando la app esté cerrada (Firebase)'
+                              : 'Activa para recibir alertas en tiempo real en tu dispositivo'}
+                          </p>
+                          {pushPermission === 'denied' && (
+                            <p className="text-xs text-red-600 mt-2">
+                              ⚠️ Permiso denegado. Actívalo en la configuración del navegador.
+                            </p>
+                          )}
+                        </div>
+                        <Switch
+                          checked={isPushSubscribed}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              subscribeToPush();
+                            } else {
+                              unsubscribeFromPush();
+                            }
+                          }}
+                          disabled={
+                            isSubscribing ||
+                            isUnsubscribing ||
+                            pushPermission === 'denied'
+                          }
+                        />
+                      </div>
+
+                      {/* Test Button */}
+                      {isPushSubscribed && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => testNotification()}
+                          disabled={isTesting}
+                        >
+                          <Send className="h-3 w-3 mr-2" />
+                          {isTesting ? 'Sending...' : 'Send Test Notification'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+              </>
+            )}
+
             {/* Quiet Hours Section */}
             <div>
               <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
@@ -358,12 +461,12 @@ export function NotificationSettings({
             onClick={() => onOpenChange(false)}
             disabled={isUpdatingPreferences}
           >
-            {t('common.cancel')}
+            {t('common.action_buttons.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={isUpdatingPreferences}>
             {isUpdatingPreferences
-              ? t('common.saving')
-              : t('common.save_changes')}
+              ? t('common.action_buttons.saving')
+              : t('common.action_buttons.save_changes')}
           </Button>
         </DialogFooter>
       </DialogContent>

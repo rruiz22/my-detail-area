@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -20,6 +21,7 @@ import {
     Check,
     CheckCircle,
     ChevronRight,
+    ClipboardList,
     Clock,
     Edit,
     Eye,
@@ -572,20 +574,112 @@ export function GetReadyVehicleList({
                 <TableCell className="w-[100px] py-1 text-center">
                   <div className="space-y-0.5">
                     <div className="font-medium text-sm">{vehicle.stock_number}</div>
-                    {/* Compact badges */}
-                    {((vehicle.media_count ?? 0) > 0 || (parseInt(vehicle.notes_preview || '0')) > 0) && (
-                      <div className="flex items-center justify-center gap-1">
+                    {/* Compact badges with popovers */}
+                    {((vehicle.media_count ?? 0) > 0 || (parseInt(vehicle.notes_preview || '0')) > 0 || (vehicle.work_item_counts && (vehicle.work_item_counts.pending + vehicle.work_item_counts.in_progress + vehicle.work_item_counts.completed) > 0)) && (
+                      <div className="flex items-center justify-center gap-1 flex-wrap">
+                        {/* Media Badge */}
                         {(vehicle.media_count ?? 0) > 0 && (
-                          <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-purple-100 text-purple-700 gap-0.5">
-                            <Image className="h-2 w-2" />
-                            {vehicle.media_count}
-                          </Badge>
+                          <HoverCard openDelay={200} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <span className="inline-flex">
+                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-purple-100 text-purple-700 gap-0.5 cursor-pointer">
+                                  <Image className="h-2 w-2" />
+                                  {vehicle.media_count}
+                                </Badge>
+                              </span>
+                            </HoverCardTrigger>
+                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
+                              <div className="flex items-center gap-1.5">
+                                <Image className="h-3 w-3 text-purple-600" />
+                                <span className="font-medium">Media:</span>
+                                <span>{vehicle.media_count} {vehicle.media_count === 1 ? 'file' : 'files'}</span>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
                         )}
+
+                        {/* Notes Badge */}
                         {(parseInt(vehicle.notes_preview || '0')) > 0 && (
-                          <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-blue-100 text-blue-700 gap-0.5">
-                            <FileText className="h-2 w-2" />
-                            {vehicle.notes_preview}
-                          </Badge>
+                          <HoverCard openDelay={200} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <span className="inline-flex">
+                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-blue-100 text-blue-700 gap-0.5 cursor-pointer">
+                                  <FileText className="h-2 w-2" />
+                                  {vehicle.notes_preview}
+                                </Badge>
+                              </span>
+                            </HoverCardTrigger>
+                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
+                              <div className="flex items-center gap-1.5">
+                                <FileText className="h-3 w-3 text-blue-600" />
+                                <span className="font-medium">Notes:</span>
+                                <span>{vehicle.notes_preview} {parseInt(vehicle.notes_preview) === 1 ? 'note' : 'notes'}</span>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        )}
+
+                        {/* Work Items - Pending */}
+                        {vehicle.work_item_counts && vehicle.work_item_counts.pending > 0 && (
+                          <HoverCard openDelay={200} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <span className="inline-flex">
+                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-amber-100 text-amber-700 gap-0.5 cursor-pointer">
+                                  <AlertTriangle className="h-2 w-2" />
+                                  {vehicle.work_item_counts.pending}
+                                </Badge>
+                              </span>
+                            </HoverCardTrigger>
+                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
+                              <div className="flex items-center gap-1.5">
+                                <AlertTriangle className="h-3 w-3 text-amber-600" />
+                                <span className="font-medium">Pending:</span>
+                                <span>{vehicle.work_item_counts.pending} {vehicle.work_item_counts.pending === 1 ? 'item' : 'items'}</span>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        )}
+
+                        {/* Work Items - In Progress */}
+                        {vehicle.work_item_counts && vehicle.work_item_counts.in_progress > 0 && (
+                          <HoverCard openDelay={200} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <span className="inline-flex">
+                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-sky-100 text-sky-700 gap-0.5 cursor-pointer">
+                                  <Clock className="h-2 w-2" />
+                                  {vehicle.work_item_counts.in_progress}
+                                </Badge>
+                              </span>
+                            </HoverCardTrigger>
+                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
+                              <div className="flex items-center gap-1.5">
+                                <Clock className="h-3 w-3 text-sky-600" />
+                                <span className="font-medium">In Progress:</span>
+                                <span>{vehicle.work_item_counts.in_progress} {vehicle.work_item_counts.in_progress === 1 ? 'item' : 'items'}</span>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        )}
+
+                        {/* Work Items - Completed */}
+                        {vehicle.work_item_counts && vehicle.work_item_counts.completed > 0 && (
+                          <HoverCard openDelay={200} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <span className="inline-flex">
+                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-emerald-100 text-emerald-700 gap-0.5 cursor-pointer">
+                                  <CheckCircle className="h-2 w-2" />
+                                  {vehicle.work_item_counts.completed}
+                                </Badge>
+                              </span>
+                            </HoverCardTrigger>
+                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
+                              <div className="flex items-center gap-1.5">
+                                <CheckCircle className="h-3 w-3 text-emerald-600" />
+                                <span className="font-medium">Completed:</span>
+                                <span>{vehicle.work_item_counts.completed} {vehicle.work_item_counts.completed === 1 ? 'item' : 'items'}</span>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
                         )}
                       </div>
                     )}
