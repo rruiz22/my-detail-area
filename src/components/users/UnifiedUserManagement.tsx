@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -12,7 +13,14 @@ import { DealerInvitationModal } from '@/components/dealerships/DealerInvitation
 import { RoleAssignmentModal } from '@/components/permissions/RoleAssignmentModal';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, UserPlus, Settings, Activity, Building2 } from 'lucide-react';
+import { Search, UserPlus, Settings, Activity, Building2, Eye, ExternalLink, AlertCircle, Info } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface User {
   id: string;
@@ -36,9 +44,14 @@ interface DealershipInfo {
   name: string;
 }
 
-export const UnifiedUserManagement: React.FC = () => {
+interface UnifiedUserManagementProps {
+  readOnly?: boolean;
+}
+
+export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ readOnly = false }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   // State management
   const [users, setUsers] = useState<User[]>([]);
@@ -210,6 +223,10 @@ export const UnifiedUserManagement: React.FC = () => {
   const handleInvitationSent = () => {
     fetchUsersWithRoles();
     setIsInvitationModalOpen(false);
+  };
+
+  const handleViewDealerUsers = (dealershipId: number) => {
+    navigate(`/dealers/${dealershipId}?tab=users`);
   };
 
   // Loading state
