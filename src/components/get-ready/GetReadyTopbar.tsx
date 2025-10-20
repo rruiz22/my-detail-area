@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { NotificationBell } from '@/components/get-ready/notifications/NotificationBell';
-import { DeletedVehiclesDialog } from '@/components/get-ready/DeletedVehiclesDialog';
+// TODO: Create DeletedVehiclesDialog component
+// import { DeletedVehiclesDialog } from '@/components/get-ready/DeletedVehiclesDialog';
 import {
   Search,
   Settings,
@@ -39,7 +40,8 @@ const TABS: TabConfig[] = [
 export function GetReadyTopbar() {
   const { t } = useTranslation();
   const location = useLocation();
-  const [showDeletedDialog, setShowDeletedDialog] = useState(false);
+  // TODO: Uncomment when DeletedVehiclesDialog is created
+  // const [showDeletedDialog, setShowDeletedDialog] = useState(false);
 
   // Get vehicles to count pending approvals (vehicles + work items)
   const { data: vehiclesData } = useGetReadyVehiclesInfinite({});
@@ -123,8 +125,9 @@ export function GetReadyTopbar() {
           {/* Notification Bell with real-time updates */}
           <NotificationBell size="md" />
 
+          {/* TODO: Uncomment when DeletedVehiclesDialog is created */}
           {/* Deleted Vehicles Button */}
-          <Button
+          {/* <Button
             variant="outline"
             size="sm"
             className="flex-shrink-0"
@@ -132,7 +135,7 @@ export function GetReadyTopbar() {
           >
             <Trash2 className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">{t('get_ready.deleted_vehicles')}</span>
-          </Button>
+          </Button> */}
 
           {/* Settings Button */}
           <Button variant="outline" size="sm" className="flex-shrink-0">
@@ -140,11 +143,12 @@ export function GetReadyTopbar() {
           </Button>
         </div>
 
+        {/* TODO: Uncomment when DeletedVehiclesDialog is created */}
         {/* Deleted Vehicles Dialog */}
-        <DeletedVehiclesDialog
+        {/* <DeletedVehiclesDialog
           open={showDeletedDialog}
           onOpenChange={setShowDeletedDialog}
-        />
+        /> */}
       </div>
     </div>
   );
