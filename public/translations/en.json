@@ -1040,7 +1040,62 @@
     "cache_cleared": "Cache cleared successfully"
   },
   "layout": {
-    "search_placeholder": "Search orders..."
+    "search_placeholder": "Search orders...",
+    "mobile_menu": "Menu",
+    "tools": "Tools",
+    "preferences": "Preferences"
+  },
+  "search": {
+    "global_placeholder": "Search orders, contacts, users... (Ctrl+K)",
+    "no_results": "No results found",
+    "searching": "Searching...",
+    "results_found": "{{count}} results found",
+    "view_all": "View all results",
+    "categories": {
+      "sales_orders": "Sales Orders",
+      "service_orders": "Service Orders",
+      "recon_orders": "Recon Orders",
+      "car_wash": "Car Wash",
+      "contacts": "Contacts",
+      "users": "Users"
+    },
+    "shortcuts": {
+      "open": "Open search",
+      "close": "Close",
+      "navigate": "Navigate",
+      "select": "Select"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "dealerships": "Dealerships",
+    "sales_orders": "Sales Orders",
+    "service_orders": "Service Orders",
+    "recon_orders": "Recon Orders",
+    "car_wash": "Car Wash",
+    "contacts": "Contacts",
+    "users": "Users",
+    "settings": "Settings",
+    "reports": "Reports",
+    "order": "Order",
+    "contact": "Contact",
+    "user": "User"
+  },
+  "quick_actions": {
+    "title": "Quick Actions",
+    "new_sales_order": "New Sales Order",
+    "new_service_order": "New Service Order",
+    "new_recon_order": "New Recon Order",
+    "new_car_wash": "New Car Wash",
+    "new_contact": "New Contact",
+    "new_user": "Add User",
+    "invite_user": "Invite User",
+    "export": "Export",
+    "import": "Import",
+    "filter": "Filter",
+    "settings": "Settings",
+    "scan_vin": "Scan VIN",
+    "scheduler": "Open Scheduler"
   },
   "chat": {
     "title": "Team Chat"

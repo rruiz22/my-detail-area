@@ -67,6 +67,8 @@ export const mapLegacyToGranular = (
 export const isDangerousPermission = (
   permission: SystemPermissionKey | ModulePermissionKey
 ): boolean => {
+  if (!permission) return false;
+
   const dangerousPerms: (SystemPermissionKey | ModulePermissionKey)[] = [
     'delete_users',
     'manage_api_keys',
@@ -74,6 +76,9 @@ export const isDangerousPermission = (
     'edit_security_settings',
     'delete_orders',
     'delete_vehicles',
+    'delete_contacts',
+    'delete_tasks',
+    'delete_messages',
     'manage_integrations'
   ];
 
@@ -206,7 +211,9 @@ export const getPrerequisitePermissions = (
     'delete_users': ['view_users', 'edit_users'],
     'assign_roles': ['view_users'],
     'edit_tasks': ['view_tasks'],
-    'delete_tasks': ['view_tasks', 'edit_tasks']
+    'delete_tasks': ['view_tasks', 'edit_tasks'],
+    'send_messages': ['view_conversations'],
+    'delete_messages': ['view_conversations']
   };
 
   return prerequisites[permission] || [];
@@ -252,3 +259,7 @@ export const sortPermissions = (
     return a.localeCompare(b);
   });
 };
+
+// Export aliases for shorter names
+export const getPrerequisites = getPrerequisitePermissions;
+export const sortPermissionsByCategory = sortPermissions;
