@@ -1561,7 +1561,10 @@
     "migrate_from_dealerships_page": "For now, use the legacy dealerships page",
     "all_dealerships": "All Dealerships",
     "auto_selected": "Auto-selected from filter",
-    "change_filter_to_edit": "Change global filter to edit dealer"
+    "change_filter_to_edit": "Change global filter to edit dealer",
+    "current": "Current Dealership",
+    "all_selected": "All Dealerships",
+    "none_selected": "No Dealership Selected"
   },
   "groups": {
     "title": "Group Management",
