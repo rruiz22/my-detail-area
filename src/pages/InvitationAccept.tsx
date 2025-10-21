@@ -13,16 +13,17 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Building2, 
-  UserPlus, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
+import {
+  Building2,
+  UserPlus,
+  CheckCircle,
+  XCircle,
+  Clock,
   Loader2,
   Mail,
   Shield
 } from 'lucide-react';
+import { formatRoleName } from '@/utils/roleUtils';
 
 interface InvitationDetails {
   id: string;
@@ -232,7 +233,8 @@ export function InvitationAccept() {
       detail_super_manager: t('roles.detail_super_manager'),
       detail_admin: t('roles.detail_admin'),
     };
-    return roleMap[roleName] || roleName;
+    // Use translation if available, otherwise format the role name automatically
+    return roleMap[roleName] || t(`roles.${roleName}`, formatRoleName(roleName));
   };
 
   const getTimeUntilExpiration = () => {

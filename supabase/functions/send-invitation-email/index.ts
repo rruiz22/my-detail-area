@@ -1,4 +1,4 @@
-// @ts-ignore-file: This file is for Supabase Edge Functions (Deno environment)
+// @ts-nocheck - This file is for Supabase Edge Functions (Deno environment)
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
@@ -14,7 +14,7 @@ const corsHeaders = {
 // Constants
 const EMAIL_CONFIG = {
   DEFAULT_DEALER_ID: 'default',
-  EMAIL_DOMAIN: 'invitations@mydetailarea.com',
+  EMAIL_DOMAIN: 'invitations@mydetailarea.com', // Updated to verified domain
   TAG_TYPES: {
     INVITATION: 'invitation'
   },
@@ -85,6 +85,27 @@ function sanitizeTemplateVariable(value: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;');
+}
+
+function sanitizeEmailTag(value: string): string {
+  // Resend API only allows ASCII letters, numbers, underscores, and dashes in tags
+  // Replace spaces and special characters with underscores
+  return value
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
+    .replace(/_+/g, '_') // Replace multiple underscores with single
+    .replace(/^_|_$/g, '') // Remove leading/trailing underscores
+    .substring(0, 256); // Resend tag max length
+}
+
+function formatRoleName(role: string): string {
+  // Convert snake_case or dash-case role names to readable format
+  // Examples: "used_car_manager" -> "Used Car Manager"
+  //           "system-admin" -> "System Admin"
+  return role
+    .replace(/[_-]/g, ' ')         // Replace underscores and dashes with spaces
+    .split(' ')                     // Split into words
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+    .join(' ');                     // Join back together
 }
 
 async function logError(error: Error, context: string, supabase?: any) {
@@ -180,14 +201,28 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Check if there's a custom template for this dealer
-    const { data: templateData, error: templateError } = await supabase
-      .from('invitation_templates')
-      .select('subject, html_content, text_content')
-      .eq('dealer_id', EMAIL_CONFIG.DEFAULT_DEALER_ID)
-      .single();
+    let templateData = null;
+    try {
+      const { data, error: templateError } = await supabase
+        .from('invitation_templates')
+        .select('subject, html_content, text_content')
+        .eq('dealer_id', EMAIL_CONFIG.DEFAULT_DEALER_ID)
+        .single();
 
-    if (templateError && templateError.code !== 'PGRST116') { // PGRST116 = no rows returned
-      console.warn('Failed to fetch custom template, using default:', templateError.message);
+      if (templateError) {
+        // PGRST116 = no rows returned (expected), anything else is logged
+        if (templateError.code !== 'PGRST116') {
+          console.warn('Failed to fetch custom template, using default:', {
+            code: templateError.code,
+            message: templateError.message
+          });
+        }
+      } else {
+        templateData = data;
+      }
+    } catch (error) {
+      // Catch any unexpected errors (like table not existing)
+      console.warn('Error fetching custom template, using default:', error);
     }
 
     const template = createEmailTemplate({
@@ -210,8 +245,8 @@ const handler = async (req: Request): Promise<Response> => {
       text: template.text,
       tags: [
         { name: 'type', value: EMAIL_CONFIG.TAG_TYPES.INVITATION },
-        { name: 'dealership', value: sanitizeTemplateVariable(dealershipName) },
-        { name: 'role', value: sanitizeTemplateVariable(roleName) }
+        { name: 'dealership', value: sanitizeEmailTag(dealershipName) },
+        { name: 'role', value: sanitizeEmailTag(roleName) }
       ]
     });
 
@@ -331,7 +366,7 @@ function createEmailTemplate({
   // Template variables mapping (without placeholder syntax for cleaner code)
   const variables = {
     dealership_name: dealershipName,
-    role_name: roleName,
+    role_name: formatRoleName(roleName), // Format role for display: "used_car_manager" -> "Used Car Manager"
     inviter_name: inviterName,
     inviter_email: inviterEmail,
     invitation_link: invitationLink,
@@ -360,7 +395,7 @@ function createEmailTemplate({
   };
 }
 
-// Cached template constants for better performance
+// Cached template constants for better performance - Pure Notion-style (Gray-based, no blue)
 const DEFAULT_HTML_TEMPLATE = `
 <!DOCTYPE html>
 <html lang="en">
@@ -369,16 +404,174 @@ const DEFAULT_HTML_TEMPLATE = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>You're Invited!</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background-color: #f9fafb; }
-        .container { max-width: 600px; margin: 0 auto; background-color: white; }
-        .header { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); padding: 40px 20px; text-align: center; }
-        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 600; }
-        .content { padding: 40px 20px; }
-        .invitation-box { background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 30px; margin: 20px 0; text-align: center; }
-        .cta-button { display: inline-block; background-color: #6366f1; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
-        .cta-button:hover { background-color: #4f46e5; }
-        .details { background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .footer { background-color: #f8fafc; padding: 20px; text-align: center; color: #64748b; font-size: 14px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9fafb;
+            padding: 20px;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #111827;
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .header h1 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        .content {
+            padding: 32px 24px;
+        }
+        .content h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+        .invitation-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }
+        .invitation-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+        .invitation-box p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 32px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+        .cta-button:hover {
+            background-color: #059669;
+        }
+        .details-box {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .details-box h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+        .details-box ol {
+            margin-left: 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .details-box li {
+            margin-bottom: 8px;
+        }
+        .alert-box {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        .alert-box p {
+            margin: 0;
+            color: #92400e;
+            font-size: 14px;
+        }
+        .features-section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            margin: 24px 0 12px 0;
+        }
+        .features-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features-section li {
+            padding: 8px 0;
+            color: #6b7280;
+            font-size: 14px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .features-section li:last-child {
+            border-bottom: none;
+        }
+        .features-section strong {
+            color: #111827;
+            font-weight: 600;
+        }
+        .signature {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .footer {
+            background-color: #f9fafb;
+            padding: 24px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 13px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer p {
+            margin: 8px 0;
+            color: #9ca3af;
+        }
+        .footer a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        a {
+            color: #10b981;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -399,11 +592,11 @@ const DEFAULT_HTML_TEMPLATE = `
                 <p>You've been assigned the <strong>{{role_name}}</strong> role, which will give you access to the tools and features you need to excel in your position.</p>
             </div>
 
-            <div style="text-align: center; margin: 30px 0;">
+            <div class="cta-container">
                 <a href="{{invitation_link}}" class="cta-button">Accept Invitation & Get Started</a>
             </div>
 
-            <div class="details">
+            <div class="details-box">
                 <h4>What's Next?</h4>
                 <ol>
                     <li><strong>Click the button above</strong> to accept your invitation</li>
@@ -413,38 +606,42 @@ const DEFAULT_HTML_TEMPLATE = `
                 </ol>
             </div>
 
-            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 15px; margin: 20px 0;">
-                <p style="margin: 0; color: #92400e;"><strong>⏰ Important:</strong> This invitation expires on <strong>{{expiration_date}}</strong>. Please accept it before then!</p>
+            <div class="alert-box">
+                <p><strong>⏰ Important:</strong> This invitation expires on <strong>{{expiration_date}}</strong>. Please accept it before then!</p>
             </div>
 
-            <h4>About My Detail Area</h4>
-            <p>My Detail Area is your all-in-one dealership management solution featuring:</p>
-            <ul>
-                <li>🛍️ <strong>Sales Orders</strong> - Manage vehicle sales with VIN decoding & QR codes</li>
-                <li>🔧 <strong>Service Orders</strong> - Streamlined service department workflows</li>
-                <li>✨ <strong>Recon Orders</strong> - Vehicle reconditioning process tracking</li>
-                <li>🚿 <strong>Car Wash</strong> - Quick service order management</li>
-                <li>📞 <strong>Contacts</strong> - Customer relationship management with vCard QR</li>
-                <li>💬 <strong>Real-time Chat</strong> - Team communication and collaboration</li>
-                <li>📊 <strong>Reports</strong> - Business intelligence and export tools</li>
-            </ul>
+            <div class="features-section">
+                <h4>About My Detail Area</h4>
+                <p style="margin-bottom: 12px;">My Detail Area is your all-in-one dealership management solution featuring:</p>
+                <ul>
+                    <li>🛍️ <strong>Sales Orders</strong> - Manage vehicle sales with VIN decoding & QR codes</li>
+                    <li>🔧 <strong>Service Orders</strong> - Streamlined service department workflows</li>
+                    <li>✨ <strong>Recon Orders</strong> - Vehicle reconditioning process tracking</li>
+                    <li>🚿 <strong>Car Wash</strong> - Quick service order management</li>
+                    <li>📞 <strong>Contacts</strong> - Customer relationship management with vCard QR</li>
+                    <li>💬 <strong>Real-time Chat</strong> - Team communication and collaboration</li>
+                    <li>📊 <strong>Reports</strong> - Business intelligence and export tools</li>
+                </ul>
+            </div>
 
             <p>If you have any questions about your invitation or need assistance getting started, please don't hesitate to reach out to {{inviter_name}} at <a href="mailto:{{inviter_email}}">{{inviter_email}}</a>.</p>
 
             <p>We're excited to have you join our team!</p>
 
-            <p>Best regards,<br>
-            The {{dealership_name}} Team<br>
-            <em>Powered by My Detail Area</em></p>
+            <div class="signature">
+                <p>Best regards,<br>
+                The {{dealership_name}} Team<br>
+                <em>Powered by My Detail Area</em></p>
+            </div>
         </div>
 
         <div class="footer">
             <p>This invitation was sent to {{invitee_email}}</p>
             <p>If you weren't expecting this invitation, you can safely ignore this email.</p>
-            <p style="margin-top: 20px;">
+            <p style="margin-top: 16px;">
                 <strong>My Detail Area</strong><br>
                 Professional Dealership Management Platform<br>
-                <a href="https://mydetailarea.com" style="color: #6366f1;">mydetailarea.com</a>
+                <a href="https://mydetailarea.com">mydetailarea.com</a>
             </p>
         </div>
     </div>

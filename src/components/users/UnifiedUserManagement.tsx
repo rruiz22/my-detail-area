@@ -246,22 +246,42 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
     <PermissionGuard module="users" permission="read">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            {t('user_management.title')}
-          </CardTitle>
-          <PermissionGuard module="users" permission="write">
-            <Button
-              onClick={() => setIsInvitationModalOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <UserPlus className="h-4 w-4" />
-              {t('users.invite_user')}
-            </Button>
-          </PermissionGuard>
+          <div className="flex-1">
+            <CardTitle className="flex items-center gap-2">
+              {readOnly ? <Eye className="h-5 w-5" /> : <Settings className="h-5 w-5" />}
+              {readOnly ? t('user_management.overview_title') : t('user_management.title')}
+            </CardTitle>
+            {readOnly && (
+              <CardDescription className="mt-2">
+                {t('user_management.readonly_description')}
+              </CardDescription>
+            )}
+          </div>
+          {!readOnly && (
+            <PermissionGuard module="users" permission="write">
+              <Button
+                onClick={() => setIsInvitationModalOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <UserPlus className="h-4 w-4" />
+                {t('users.invite_user')}
+              </Button>
+            </PermissionGuard>
+          )}
         </CardHeader>
 
         <CardContent className="space-y-4">
+          {/* Read-Only Alert */}
+          {readOnly && (
+            <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <AlertDescription className="text-sm">
+                {t('user_management.readonly_alert')}{' '}
+                <span className="font-semibold">{t('user_management.readonly_alert_cta')}</span>
+              </AlertDescription>
+            </Alert>
+          )}
+
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
@@ -361,17 +381,35 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <PermissionGuard module="users" permission="write">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleManageRoles(user)}
-                            className="flex items-center gap-2"
-                          >
-                            <Settings className="h-4 w-4" />
-                            {t('user_management.manage')}
-                          </Button>
-                        </PermissionGuard>
+                        {readOnly ? (
+                          user.dealership_id ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleViewDealerUsers(user.dealership_id!)}
+                              className="flex items-center gap-2"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              {t('user_management.view_dealer')}
+                            </Button>
+                          ) : (
+                            <span className="text-sm text-muted-foreground">
+                              {t('user_management.no_dealer')}
+                            </span>
+                          )
+                        ) : (
+                          <PermissionGuard module="users" permission="write">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleManageRoles(user)}
+                              className="flex items-center gap-2"
+                            >
+                              <Settings className="h-4 w-4" />
+                              {t('user_management.manage')}
+                            </Button>
+                          </PermissionGuard>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))

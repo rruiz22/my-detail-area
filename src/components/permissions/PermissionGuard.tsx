@@ -1,11 +1,12 @@
-import React from 'react';
-import { usePermissions, AppModule, PermissionLevel } from '@/hooks/usePermissions';
-import { useDealershipModules } from '@/hooks/useDealershipModules';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldAlert, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
+import { useDealershipModules } from '@/hooks/useDealershipModules';
+import { AppModule, PermissionLevel, usePermissions } from '@/hooks/usePermissions';
+import type { ModulePermissionKey, SystemPermissionKey } from '@/types/permissions';
+import { ArrowLeft, ShieldAlert } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface Order {
   id: string;
@@ -15,8 +16,8 @@ interface Order {
 }
 
 interface PermissionGuardProps {
-  module: AppModule;
-  permission: PermissionLevel;
+  module?: AppModule; // Optional for system-level permissions
+  permission: PermissionLevel | ModulePermissionKey | SystemPermissionKey;
   children: React.ReactNode;
   fallback?: React.ReactNode;
   // Optional order-specific checks
@@ -24,6 +25,8 @@ interface PermissionGuardProps {
   requireOrderAccess?: boolean;
   // Optional dealer module check
   checkDealerModule?: boolean;
+  // Flag to indicate this is a system-level permission
+  requireSystemPermission?: boolean;
 }
 
 export const PermissionGuard: React.FC<PermissionGuardProps> = ({
@@ -33,9 +36,10 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   fallback,
   order,
   requireOrderAccess = false,
-  checkDealerModule = false
+  checkDealerModule = false,
+  requireSystemPermission = false
 }) => {
-  const { hasPermission, canEditOrder, canDeleteOrder, loading, enhancedUser } = usePermissions();
+  const { hasPermission, hasModulePermission, hasSystemPermission, canEditOrder, canDeleteOrder, loading, enhancedUser } = usePermissions();
   const { t } = useTranslation();
 
   // Get dealership modules only if needed
@@ -56,28 +60,42 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   let hasAccess = false;
 
   try {
-    const moduleAccess = hasPermission(module, permission);
+    // Check system-level permission
+    if (requireSystemPermission) {
+      hasAccess = hasSystemPermission(permission as SystemPermissionKey);
+    }
+    // Check module-level permission (granular or legacy)
+    else if (module) {
+      // Check if it's a granular permission key or legacy level
+      const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
 
-    if (!moduleAccess) {
-      hasAccess = false;
-    } else if (requireOrderAccess && order) {
-      if (permission === 'edit') {
-        hasAccess = canEditOrder(order);
-      } else if (permission === 'delete') {
-        hasAccess = canDeleteOrder(order);
+      if (isLegacyLevel) {
+        // Use legacy hasPermission for backward compatibility
+        hasAccess = hasPermission(module, permission as PermissionLevel);
       } else {
-        hasAccess = moduleAccess;
+        // Use new granular permission system
+        hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
+      }
+
+      // Check order-specific permissions
+      if (hasAccess && requireOrderAccess && order) {
+        if (permission === 'edit' || permission === 'edit_orders') {
+          hasAccess = canEditOrder(order);
+        } else if (permission === 'delete' || permission === 'delete_orders') {
+          hasAccess = canDeleteOrder(order);
+        }
+      }
+
+      // Additional check: Verify dealer has module enabled (if checkDealerModule is true)
+      if (hasAccess && checkDealerModule && !isSystemAdmin) {
+        const dealerHasModule = hasModuleAccess(module);
+        if (!dealerHasModule) {
+          hasAccess = false;
+        }
       }
     } else {
-      hasAccess = moduleAccess;
-    }
-
-    // Additional check: Verify dealer has module enabled (if checkDealerModule is true)
-    if (hasAccess && checkDealerModule && !isSystemAdmin) {
-      const dealerHasModule = hasModuleAccess(module);
-      if (!dealerHasModule) {
-        hasAccess = false;
-      }
+      console.warn('PermissionGuard: No module specified and not a system permission');
+      hasAccess = false;
     }
   } catch (error) {
     console.error('Error checking permission:', error);

@@ -373,7 +373,7 @@ export const UserDashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="users">
-            <UnifiedUserManagement />
+            <UnifiedUserManagement readOnly={true} />
           </TabsContent>
 
           <TabsContent value="activity">

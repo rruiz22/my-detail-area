@@ -9,13 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Mail, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
-  Send, 
-  Trash2, 
+import {
+  Mail,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Send,
+  Trash2,
   RotateCcw,
   Calendar,
   User,
@@ -26,6 +26,7 @@ import { formatDistanceToNow, format, isAfter } from 'date-fns';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { InvitationTemplateModal } from './InvitationTemplateModal';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatRoleName } from '@/utils/roleUtils';
 
 interface Invitation {
   id: string;
@@ -164,7 +165,6 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
     const isExpired = isAfter(now, new Date(invitation.expires_at));
 
     if (invitation.accepted_at) return 'accepted';
-    if ((invitation as any).cancelled_at) return 'cancelled';
     if (isExpired) return 'expired';
     return 'pending';
   };
@@ -283,18 +283,14 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
     }
   }, [t, toast, fetchInvitations]);
 
-  // Cancel invitation (soft cancel with tracking)
+  // Cancel invitation (removes the invitation)
   const handleCancelInvitation = useCallback(async (invitation: Invitation) => {
     if (!confirm(t('invitations.confirm_cancel'))) return;
 
     try {
       const { error } = await supabase
         .from('dealer_invitations')
-        .update({
-          cancelled_at: new Date().toISOString(),
-          cancelled_by: user?.id,
-          updated_at: new Date().toISOString()
-        })
+        .delete()
         .eq('id', invitation.id);
 
       if (error) throw error;
@@ -312,7 +308,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
         variant: 'destructive',
       });
     }
-  }, [t, toast, fetchInvitations, user]);
+  }, [t, toast, fetchInvitations]);
 
   // Delete invitation permanently (hard delete)
   const handleDeleteInvitation = useCallback(async (invitation: Invitation) => {
@@ -321,11 +317,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
     try {
       const { error } = await supabase
         .from('dealer_invitations')
-        .update({
-          deleted_at: new Date().toISOString(),
-          deleted_by: user?.id,
-          updated_at: new Date().toISOString()
-        })
+        .delete()
         .eq('id', invitation.id);
 
       if (error) throw error;
@@ -343,7 +335,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
         variant: 'destructive',
       });
     }
-  }, [t, toast, fetchInvitations, user]);
+  }, [t, toast, fetchInvitations]);
 
   // Get invitation stats with enhanced states
   const getInvitationStats = () => {
@@ -532,7 +524,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant="outline">{t(`roles.${invitation.role_name}`, invitation.role_name)}</Badge>
+                              <Badge variant="outline">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">

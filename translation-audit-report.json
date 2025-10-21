@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 589,
-  "totalStrings": 5724,
+  "scannedFiles": 590,
+  "totalStrings": 5758,
   "hardcodedStrings": 1354,
-  "translatedStrings": 4370,
+  "translatedStrings": 4404,
   "issues": {
     "critical": [
       {
@@ -1026,32 +1026,32 @@
           {
             "key": "common.actions.refresh",
             "line": 635,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.exporting",
             "line": 648,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export",
             "line": 649,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export",
             "line": 656,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export_csv",
             "line": 661,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export_excel",
             "line": 665,
-            "exists": true
+            "exists": false
           },
           {
             "key": "get_ready.vehicle_form.add_vehicle",
@@ -1074,7 +1074,38 @@
             "exists": true
           }
         ],
-        "missingKeys": [],
+        "missingKeys": [
+          {
+            "key": "common.actions.refresh",
+            "line": 635,
+            "context": "634: <span className=\"hidden sm:inline\">\n635: {t(\"common.actions.refresh\")}\n636: </span>"
+          },
+          {
+            "key": "common.actions.exporting",
+            "line": 648,
+            "context": "647: {isExporting\n648: ? t(\"common.actions.exporting\")\n649: : t(\"common.actions.export\")}"
+          },
+          {
+            "key": "common.actions.export",
+            "line": 649,
+            "context": "648: ? t(\"common.actions.exporting\")\n649: : t(\"common.actions.export\")}\n650: </span>"
+          },
+          {
+            "key": "common.actions.export",
+            "line": 656,
+            "context": "655: <DropdownMenuLabel>\n656: {t(\"common.actions.export\")}\n657: </DropdownMenuLabel>"
+          },
+          {
+            "key": "common.actions.export_csv",
+            "line": 661,
+            "context": "660: <FileText className=\"h-4 w-4 mr-2\" />\n661: {t(\"common.actions.export_csv\")}\n662: </DropdownMenuItem>"
+          },
+          {
+            "key": "common.actions.export_excel",
+            "line": 665,
+            "context": "664: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n665: {t(\"common.actions.export_excel\")}\n666: </DropdownMenuItem>"
+          }
+        ],
         "coverage": 57,
         "severity": "critical"
       },
@@ -15850,185 +15881,185 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 122,
+            "line": 135,
             "exists": true
           },
           {
             "key": "user_management.no_dealership_assigned",
-            "line": 189,
+            "line": 202,
             "exists": false
           },
           {
             "key": "user_management.title",
-            "line": 234,
+            "line": 251,
             "exists": false
           },
           {
             "key": "users.invite_user",
-            "line": 242,
+            "line": 259,
             "exists": false
           },
           {
             "key": "user_management.search_users",
-            "line": 253,
+            "line": 270,
             "exists": false
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 264,
+            "line": 281,
             "exists": false
           },
           {
             "key": "common.all",
-            "line": 267,
-            "exists": false
-          },
-          {
-            "key": "user_management.user",
-            "line": 282,
-            "exists": false
-          },
-          {
-            "key": "dealerships.dealership",
-            "line": 283,
-            "exists": true
-          },
-          {
-            "key": "user_management.roles",
             "line": 284,
             "exists": false
           },
           {
+            "key": "user_management.user",
+            "line": 299,
+            "exists": false
+          },
+          {
+            "key": "dealerships.dealership",
+            "line": 300,
+            "exists": true
+          },
+          {
+            "key": "user_management.roles",
+            "line": 301,
+            "exists": false
+          },
+          {
             "key": "common.status",
-            "line": 285,
+            "line": 302,
             "exists": true
           },
           {
             "key": "common.actions",
-            "line": 286,
+            "line": 303,
             "exists": true
           },
           {
             "key": "user_management.no_users_matching_filters",
-            "line": 295,
+            "line": 312,
             "exists": false
           },
           {
             "key": "user_management.no_users_found",
-            "line": 296,
+            "line": 313,
             "exists": false
           },
           {
             "key": "user_management.no_roles",
-            "line": 334,
+            "line": 351,
             "exists": false
           },
           {
             "key": "common.active",
-            "line": 342,
+            "line": 359,
             "exists": false
           },
           {
             "key": "user_management.incomplete_setup",
-            "line": 342,
+            "line": 359,
             "exists": false
           },
           {
             "key": "user_management.manage",
-            "line": 355,
+            "line": 372,
             "exists": false
           },
           {
             "key": "common.showing",
-            "line": 368,
+            "line": 385,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 368,
+            "line": 385,
             "exists": true
           },
           {
             "key": "user_management.users",
-            "line": 368,
+            "line": 385,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "user_management.no_dealership_assigned",
-            "line": 189,
-            "context": "188: const getDealershipName = (dealershipId?: number) => {\n189: if (!dealershipId) return t('user_management.no_dealership_assigned');\n190: const dealership = dealerships.find(d => d.id === dealershipId);"
+            "line": 202,
+            "context": "201: const getDealershipName = (dealershipId?: number) => {\n202: if (!dealershipId) return t('user_management.no_dealership_assigned');\n203: const dealership = dealerships.find(d => d.id === dealershipId);"
           },
           {
             "key": "user_management.title",
-            "line": 234,
-            "context": "233: <Settings className=\"h-5 w-5\" />\n234: {t('user_management.title')}\n235: </CardTitle>"
+            "line": 251,
+            "context": "250: <Settings className=\"h-5 w-5\" />\n251: {t('user_management.title')}\n252: </CardTitle>"
           },
           {
             "key": "users.invite_user",
-            "line": 242,
-            "context": "241: <UserPlus className=\"h-4 w-4\" />\n242: {t('users.invite_user')}\n243: </Button>"
+            "line": 259,
+            "context": "258: <UserPlus className=\"h-4 w-4\" />\n259: {t('users.invite_user')}\n260: </Button>"
           },
           {
             "key": "user_management.search_users",
-            "line": 253,
-            "context": "252: <Input\n253: placeholder={t('user_management.search_users')}\n254: value={searchQuery}"
+            "line": 270,
+            "context": "269: <Input\n270: placeholder={t('user_management.search_users')}\n271: value={searchQuery}"
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 264,
-            "context": "263: <SelectTrigger className=\"w-[200px]\">\n264: <SelectValue placeholder={t('dealerships.select_dealership')} />\n265: </SelectTrigger>"
+            "line": 281,
+            "context": "280: <SelectTrigger className=\"w-[200px]\">\n281: <SelectValue placeholder={t('dealerships.select_dealership')} />\n282: </SelectTrigger>"
           },
           {
             "key": "common.all",
-            "line": 267,
-            "context": "266: <SelectContent>\n267: <SelectItem value=\"all\">{t('common.all')}</SelectItem>\n268: {dealerships.map((dealership) => ("
+            "line": 284,
+            "context": "283: <SelectContent>\n284: <SelectItem value=\"all\">{t('common.all')}</SelectItem>\n285: {dealerships.map((dealership) => ("
           },
           {
             "key": "user_management.user",
-            "line": 282,
-            "context": "281: <TableRow>\n282: <TableHead>{t('user_management.user')}</TableHead>\n283: <TableHead>{t('dealerships.dealership')}</TableHead>"
+            "line": 299,
+            "context": "298: <TableRow>\n299: <TableHead>{t('user_management.user')}</TableHead>\n300: <TableHead>{t('dealerships.dealership')}</TableHead>"
           },
           {
             "key": "user_management.roles",
-            "line": 284,
-            "context": "283: <TableHead>{t('dealerships.dealership')}</TableHead>\n284: <TableHead>{t('user_management.roles')}</TableHead>\n285: <TableHead>{t('common.status')}</TableHead>"
+            "line": 301,
+            "context": "300: <TableHead>{t('dealerships.dealership')}</TableHead>\n301: <TableHead>{t('user_management.roles')}</TableHead>\n302: <TableHead>{t('common.status')}</TableHead>"
           },
           {
             "key": "user_management.no_users_matching_filters",
-            "line": 295,
-            "context": "294: {searchQuery || selectedDealership\n295: ? t('user_management.no_users_matching_filters')\n296: : t('user_management.no_users_found')"
+            "line": 312,
+            "context": "311: {searchQuery || selectedDealership\n312: ? t('user_management.no_users_matching_filters')\n313: : t('user_management.no_users_found')"
           },
           {
             "key": "user_management.no_users_found",
-            "line": 296,
-            "context": "295: ? t('user_management.no_users_matching_filters')\n296: : t('user_management.no_users_found')\n297: }"
+            "line": 313,
+            "context": "312: ? t('user_management.no_users_matching_filters')\n313: : t('user_management.no_users_found')\n314: }"
           },
           {
             "key": "user_management.no_roles",
-            "line": 334,
-            "context": "333: ) : (\n334: <span className=\"text-sm text-muted-foreground\">{t('user_management.no_roles')}</span>\n335: )}"
+            "line": 351,
+            "context": "350: ) : (\n351: <span className=\"text-sm text-muted-foreground\">{t('user_management.no_roles')}</span>\n352: )}"
           },
           {
             "key": "common.active",
-            "line": 342,
-            "context": "341: <Badge variant={user.dealership_id ? \"default\" : \"secondary\"} className=\"text-xs\">\n342: {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}\n343: </Badge>"
+            "line": 359,
+            "context": "358: <Badge variant={user.dealership_id ? \"default\" : \"secondary\"} className=\"text-xs\">\n359: {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}\n360: </Badge>"
           },
           {
             "key": "user_management.incomplete_setup",
-            "line": 342,
-            "context": "341: <Badge variant={user.dealership_id ? \"default\" : \"secondary\"} className=\"text-xs\">\n342: {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}\n343: </Badge>"
+            "line": 359,
+            "context": "358: <Badge variant={user.dealership_id ? \"default\" : \"secondary\"} className=\"text-xs\">\n359: {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}\n360: </Badge>"
           },
           {
             "key": "user_management.manage",
-            "line": 355,
-            "context": "354: <Settings className=\"h-4 w-4\" />\n355: {t('user_management.manage')}\n356: </Button>"
+            "line": 372,
+            "context": "371: <Settings className=\"h-4 w-4\" />\n372: {t('user_management.manage')}\n373: </Button>"
           },
           {
             "key": "user_management.users",
-            "line": 368,
-            "context": "367: <div className=\"text-sm text-muted-foreground\">\n368: {t('common.showing')} {filteredUsers.length} {t('common.of')} {users.length} {t('user_management.users').toLowerCase()}\n369: </div>"
+            "line": 385,
+            "context": "384: <div className=\"text-sm text-muted-foreground\">\n385: {t('common.showing')} {filteredUsers.length} {t('common.of')} {users.length} {t('user_management.users').toLowerCase()}\n386: </div>"
           }
         ],
         "coverage": 100,
@@ -17505,52 +17536,52 @@
         "hardcodedStrings": [
           {
             "text": "Admin",
-            "line": 104,
-            "context": "103: <Badge variant=\"outline\" className=\"text-xs px-2 py-1 border-orange-200 text-orange-700\">\n104: <Shield className=\"w-3 h-3 mr-1\" />\n105: Admin"
+            "line": 103,
+            "context": "102: <Badge variant=\"outline\" className=\"text-xs px-2 py-1 border-orange-200 text-orange-700\">\n103: <Shield className=\"w-3 h-3 mr-1\" />\n104: Admin"
           },
           {
             "text": ", error);\r\n      setIsSigningOut(false);\r\n    }\r\n  };\r\n\r\n  const handleProfileClick = () => {\r\n    navigate(",
-            "line": 35,
-            "context": "34: } catch (error) {\n35: console.error('Sign out error:', error);\n36: setIsSigningOut(false);"
+            "line": 34,
+            "context": "33: } catch (error) {\n34: console.error('Sign out error:', error);\n35: setIsSigningOut(false);"
           }
         ],
         "translationCalls": [
           {
             "key": "navigation.profile",
-            "line": 117,
+            "line": 116,
             "exists": true
           },
           {
             "key": "navigation.management",
-            "line": 124,
+            "line": 123,
             "exists": true
           },
           {
             "key": "common.settings",
-            "line": 130,
+            "line": 129,
             "exists": false
           },
           {
             "key": "navigation.signing_out",
-            "line": 142,
+            "line": 141,
             "exists": false
           },
           {
             "key": "navigation.sign_out",
-            "line": 142,
+            "line": 141,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.settings",
-            "line": 130,
-            "context": "129: <Settings className=\"mr-2 h-4 w-4\" />\n130: <span>{t('common.settings')}</span>\n131: </DropdownMenuItem>"
+            "line": 129,
+            "context": "128: <Settings className=\"mr-2 h-4 w-4\" />\n129: <span>{t('common.settings')}</span>\n130: </DropdownMenuItem>"
           },
           {
             "key": "navigation.signing_out",
-            "line": 142,
-            "context": "141: <LogOut className=\"mr-2 h-4 w-4\" />\n142: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n143: </DropdownMenuItem>"
+            "line": 141,
+            "context": "140: <LogOut className=\"mr-2 h-4 w-4\" />\n141: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n142: </DropdownMenuItem>"
           }
         ],
         "coverage": 71,
@@ -18051,27 +18082,27 @@
           {
             "key": "common.actions.exporting",
             "line": 214,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export",
             "line": 214,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export",
             "line": 219,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export_csv",
             "line": 223,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.actions.export_excel",
             "line": 227,
-            "exists": true
+            "exists": false
           },
           {
             "key": "stock.filters.search_placeholder",
@@ -18179,6 +18210,31 @@
             "key": "showing_range",
             "line": 206,
             "context": "205: <span className=\"text-sm text-muted-foreground\">\n206: {t('showing_range', { start: startIndex + 1, end: endIndex, total: totalItems })}\n207: </span>"
+          },
+          {
+            "key": "common.actions.exporting",
+            "line": 214,
+            "context": "213: <Download className=\"w-4 h-4 mr-2\" />\n214: {isExporting ? t('common.actions.exporting') : t('common.actions.export')}\n215: <ChevronDown className=\"w-4 h-4 ml-2\" />"
+          },
+          {
+            "key": "common.actions.export",
+            "line": 214,
+            "context": "213: <Download className=\"w-4 h-4 mr-2\" />\n214: {isExporting ? t('common.actions.exporting') : t('common.actions.export')}\n215: <ChevronDown className=\"w-4 h-4 ml-2\" />"
+          },
+          {
+            "key": "common.actions.export",
+            "line": 219,
+            "context": "218: <DropdownMenuContent align=\"end\">\n219: <DropdownMenuLabel>{t('common.actions.export')}</DropdownMenuLabel>\n220: <DropdownMenuSeparator />"
+          },
+          {
+            "key": "common.actions.export_csv",
+            "line": 223,
+            "context": "222: <FileText className=\"w-4 h-4 mr-2\" />\n223: {t('common.actions.export_csv')}\n224: </DropdownMenuItem>"
+          },
+          {
+            "key": "common.actions.export_excel",
+            "line": 227,
+            "context": "226: <FileSpreadsheet className=\"w-4 h-4 mr-2\" />\n227: {t('common.actions.export_excel')}\n228: </DropdownMenuItem>"
           }
         ],
         "coverage": 90,
@@ -18488,6 +18544,121 @@
           }
         ],
         "coverage": 97,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\stock\\StockDashboard.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.success",
+            "line": 53,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export_success",
+            "line": 54,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 58,
+            "exists": true
+          },
+          {
+            "key": "common.actions.export_failed",
+            "line": 59,
+            "exists": false
+          },
+          {
+            "key": "stock.metrics.totalVehicles",
+            "line": 101,
+            "exists": true
+          },
+          {
+            "key": "stock.dashboard.avg_price",
+            "line": 107,
+            "exists": true
+          },
+          {
+            "key": "stock.dashboard.avg_age_days",
+            "line": 113,
+            "exists": true
+          },
+          {
+            "key": "stock.dashboard.inventory_value",
+            "line": 119,
+            "exists": true
+          },
+          {
+            "key": "stock.errors.no_access",
+            "line": 150,
+            "exists": true
+          },
+          {
+            "key": "stock.errors.no_access_description",
+            "line": 153,
+            "exists": true
+          },
+          {
+            "key": "stock.title",
+            "line": 167,
+            "exists": true
+          },
+          {
+            "key": "stock.metrics.totalVehicles",
+            "line": 170,
+            "exists": true
+          },
+          {
+            "key": "stock.description",
+            "line": 174,
+            "exists": true
+          },
+          {
+            "key": "stock.actions.refresh",
+            "line": 185,
+            "exists": true
+          },
+          {
+            "key": "stock.tabs.inventory",
+            "line": 223,
+            "exists": true
+          },
+          {
+            "key": "stock.tabs.upload",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "stock.tabs.analytics",
+            "line": 231,
+            "exists": true
+          },
+          {
+            "key": "stock.tabs.dms_config",
+            "line": 235,
+            "exists": true
+          },
+          {
+            "key": "stock.tabs.sync_history",
+            "line": 239,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.actions.export_success",
+            "line": 54,
+            "context": "53: title: t('common.success'),\n54: description: t('common.actions.export_success')\n55: });"
+          },
+          {
+            "key": "common.actions.export_failed",
+            "line": 59,
+            "context": "58: title: t('common.error'),\n59: description: t('common.actions.export_failed'),\n60: variant: 'destructive'"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -36122,7 +36293,7 @@
           {
             "key": "common.actions.search",
             "line": 103,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.loading",
@@ -36156,11 +36327,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "common.actions.search",
-            "line": 103,
-            "context": "102: <Input\n103: placeholder={t('common.actions.search')}\n104: value={searchQuery}"
-          },
           {
             "key": "get_ready.work_items.type.${template.work_type}",
             "line": 137,
@@ -36342,25 +36508,20 @@
         "translationCalls": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 103,
+            "line": 101,
             "exists": false
           },
           {
-            "key": "get_ready.deleted_vehicles",
-            "line": 137,
-            "exists": false
+            "key": "get_ready.deleted_vehicles.title",
+            "line": 134,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 103,
-            "context": "102: <span className=\"hidden sm:inline\">\n103: {t(`get_ready.tabs.${tab.key}`)}\n104: </span>"
-          },
-          {
-            "key": "get_ready.deleted_vehicles",
-            "line": 137,
-            "context": "136: <Trash2 className=\"h-4 w-4 mr-2\" />\n137: <span className=\"hidden sm:inline\">{t('get_ready.deleted_vehicles')}</span>\n138: </Button> */}"
+            "line": 101,
+            "context": "100: <span className=\"hidden sm:inline\">\n101: {t(`get_ready.tabs.${tab.key}`)}\n102: </span>"
           }
         ],
         "coverage": 100,
@@ -36680,6 +36841,106 @@
         ],
         "missingKeys": [],
         "coverage": 50,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\DeletedVehiclesDialog.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "get_ready.deleted_vehicles.restore_success",
+            "line": 111,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.restore_failed",
+            "line": 116,
+            "exists": true
+          },
+          {
+            "key": "common.data_refreshed",
+            "line": 127,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.title",
+            "line": 136,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.description",
+            "line": 139,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.count",
+            "line": 146,
+            "exists": true
+          },
+          {
+            "key": "common.actions.refresh",
+            "line": 155,
+            "exists": false
+          },
+          {
+            "key": "get_ready.table.vehicle_stock",
+            "line": 168,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.vin",
+            "line": 169,
+            "exists": false
+          },
+          {
+            "key": "get_ready.table.workflow",
+            "line": 170,
+            "exists": false
+          },
+          {
+            "key": "get_ready.deleted_vehicles.deleted_at",
+            "line": 171,
+            "exists": true
+          },
+          {
+            "key": "common.actions",
+            "line": 172,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.restoring",
+            "line": 215,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.restore",
+            "line": 216,
+            "exists": true
+          },
+          {
+            "key": "get_ready.deleted_vehicles.empty",
+            "line": 226,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.actions.refresh",
+            "line": 155,
+            "context": "154: <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />\n155: {t('common.actions.refresh')}\n156: </Button>"
+          },
+          {
+            "key": "get_ready.table.vin",
+            "line": 169,
+            "context": "168: <TableHead>{t('get_ready.table.vehicle_stock')}</TableHead>\n169: <TableHead>{t('get_ready.table.vin')}</TableHead>\n170: <TableHead>{t('get_ready.table.workflow')}</TableHead>"
+          },
+          {
+            "key": "get_ready.table.workflow",
+            "line": 170,
+            "context": "169: <TableHead>{t('get_ready.table.vin')}</TableHead>\n170: <TableHead>{t('get_ready.table.workflow')}</TableHead>\n171: <TableHead>{t('get_ready.deleted_vehicles.deleted_at')}</TableHead>"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -43443,7 +43704,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "291 Component components need translation",
+      "description": "293 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -43655,6 +43916,7 @@
         "src\\components\\users\\password\\BulkPasswordOperations.tsx",
         "src\\components\\ui\\avatar-selection-modal.tsx",
         "src\\components\\stock\\StockSyncHistory.tsx",
+        "src\\components\\stock\\StockDashboard.tsx",
         "src\\components\\stock\\StockCSVUploader.tsx",
         "src\\components\\scanner\\VinScannerHub.tsx",
         "src\\components\\scanner\\modern\\VinTargetingGuides.tsx",
@@ -43713,6 +43975,7 @@
         "src\\components\\get-ready\\VehicleActivityLog.tsx",
         "src\\components\\get-ready\\NoteReplies.tsx",
         "src\\components\\get-ready\\GetReadyTopbar.tsx",
+        "src\\components\\get-ready\\DeletedVehiclesDialog.tsx",
         "src\\components\\get-ready\\vendors\\VendorList.tsx",
         "src\\components\\get-ready\\tabs\\VehicleWorkItemsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleVendorsTab.tsx",
@@ -43737,14 +44000,14 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "146 hours"
+      "estimatedEffort": "147 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2289 translation keys are referenced but missing",
+      "description": "2303 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "115 hours"
+      "estimatedEffort": "116 hours"
     }
   ],
   "coverage": 76

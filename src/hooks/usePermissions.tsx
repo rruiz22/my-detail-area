@@ -1,6 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import type {
+    EnhancedUserGranular,
+    GranularCustomRole,
+    ModulePermissionKey,
+    SystemPermissionKey
+} from '@/types/permissions';
+import { useCallback, useEffect, useState } from 'react';
 import { useUserProfileForPermissions } from './useUserProfile';
 
 /**
@@ -24,7 +30,7 @@ export type AppModule =
   | 'contacts';
 
 /**
- * Permission Levels
+ * @deprecated Legacy permission levels - Use ModulePermissionKey instead
  * Hierarchical permission levels: none < view < edit < delete < admin
  */
 export type PermissionLevel = 'none' | 'view' | 'edit' | 'delete' | 'admin';
@@ -36,7 +42,7 @@ export type PermissionLevel = 'none' | 'view' | 'edit' | 'delete' | 'admin';
 export type OrderType = 'sales' | 'service' | 'recon' | 'carwash';
 
 /**
- * Granular Permissions (JSONB)
+ * @deprecated Legacy Granular Permissions (JSONB)
  * Fine-grained permissions stored in dealer_custom_roles.permissions
  */
 export interface GranularPermissions {
@@ -48,7 +54,7 @@ export interface GranularPermissions {
 }
 
 /**
- * Custom Role with Permissions
+ * @deprecated Legacy Custom Role with Permissions
  * Represents a dealer-specific custom role with module permissions
  */
 export interface CustomRoleWithPermissions {
@@ -61,7 +67,7 @@ export interface CustomRoleWithPermissions {
 }
 
 /**
- * Enhanced User (Modern System)
+ * @deprecated Legacy Enhanced User (Modern System)
  * User with custom roles and aggregated permissions
  */
 export interface EnhancedUser {
@@ -74,7 +80,7 @@ export interface EnhancedUser {
 }
 
 /**
- * Permission Hierarchy
+ * @deprecated Legacy Permission Hierarchy
  * Used to compare and aggregate permission levels
  */
 const PERMISSION_HIERARCHY: Record<PermissionLevel, number> = {
@@ -86,16 +92,17 @@ const PERMISSION_HIERARCHY: Record<PermissionLevel, number> = {
 };
 
 /**
- * usePermissions Hook
+ * usePermissions Hook (Granular System)
  *
- * Manages user permissions using the Custom Roles system.
+ * Manages user permissions using the Granular Custom Roles system.
  * Loads user's custom roles and aggregates permissions from all assigned roles.
+ * Supports both system-level and module-specific permissions.
  *
  * @returns {Object} Permission utilities and user data
  */
 export const usePermissions = () => {
   const { user } = useAuth();
-  const [enhancedUser, setEnhancedUser] = useState<EnhancedUser | null>(null);
+  const [enhancedUser, setEnhancedUser] = useState<EnhancedUserGranular | null>(null);
   const [loading, setLoading] = useState(true);
 
   const { data: profileData, isLoading: isLoadingProfile } = useUserProfileForPermissions();
@@ -115,12 +122,12 @@ export const usePermissions = () => {
   }, []);
 
   /**
-   * Fetch Custom Role Permissions
+   * Fetch Granular Custom Role Permissions
    *
-   * Loads user's custom roles and permissions from database.
-   * Aggregates permissions from multiple roles (takes highest level).
+   * Loads user's custom roles and granular permissions from database.
+   * Aggregates permissions from multiple roles (OR logic - union of all permissions).
    */
-  const fetchCustomRolePermissions = useCallback(async (): Promise<EnhancedUser | null> => {
+  const fetchGranularRolePermissions = useCallback(async (): Promise<EnhancedUserGranular | null> => {
     if (!user || !profileData) return null;
 
     try {
@@ -133,7 +140,8 @@ export const usePermissions = () => {
           dealership_id: profileData.dealership_id,
           is_system_admin: true,
           custom_roles: [],
-          all_permissions: new Map()
+          system_permissions: new Set(),
+          module_permissions: new Map()
         };
       }
 
@@ -147,8 +155,7 @@ export const usePermissions = () => {
             id,
             role_name,
             display_name,
-            dealer_id,
-            permissions
+            dealer_id
           )
         `)
         .eq('user_id', user.id)
@@ -162,7 +169,8 @@ export const usePermissions = () => {
           dealership_id: profileData.dealership_id,
           is_system_admin: false,
           custom_roles: [],
-          all_permissions: new Map()
+          system_permissions: new Set(),
+          module_permissions: new Map()
         };
       }
 
@@ -178,31 +186,64 @@ export const usePermissions = () => {
           dealership_id: profileData.dealership_id,
           is_system_admin: false,
           custom_roles: [],
-          all_permissions: new Map()
+          system_permissions: new Set(),
+          module_permissions: new Map()
         };
       }
 
-      // Fetch module permissions for all assigned roles
-      const { data: permissionsData, error: permissionsError } = await supabase
-        .from('dealer_role_permissions')
-        .select('role_id, module, permission_level')
+      // Fetch system-level permissions for all assigned roles
+      const { data: systemPermsData, error: systemPermsError } = await supabase
+        .from('role_system_permissions')
+        .select(`
+          role_id,
+          system_permissions (
+            permission_key
+          )
+        `)
         .in('role_id', roleIds);
 
-      if (permissionsError) throw permissionsError;
+      if (systemPermsError) throw systemPermsError;
 
-      // Build roles map with permissions
-      const rolesMap = new Map<string, CustomRoleWithPermissions>();
+      // Fetch module-specific permissions for all assigned roles
+      const { data: modulePermsData, error: modulePermsError } = await supabase
+        .from('role_module_permissions_new')
+        .select(`
+          role_id,
+          module_permissions (
+            module,
+            permission_key
+          )
+        `)
+        .in('role_id', roleIds);
+
+      if (modulePermsError) throw modulePermsError;
+
+      // Build roles map with granular permissions
+      const rolesMap = new Map<string, GranularCustomRole>();
 
       (assignmentsData || []).forEach(assignment => {
         const role = assignment.dealer_custom_roles;
         if (!role) return;
 
-        const rolePerms = (permissionsData || [])
-          .filter(p => p.role_id === role.id);
+        // Get system permissions for this role
+        const roleSystemPerms = (systemPermsData || [])
+          .filter((p: any) => p.role_id === role.id && p.system_permissions)
+          .map((p: any) => p.system_permissions.permission_key as SystemPermissionKey);
 
-        const permissionsMap = new Map<AppModule, PermissionLevel>();
-        rolePerms.forEach(p => {
-          permissionsMap.set(p.module as AppModule, p.permission_level as PermissionLevel);
+        // Get module permissions for this role
+        const roleModulePerms = (modulePermsData || [])
+          .filter((p: any) => p.role_id === role.id && p.module_permissions);
+
+        // Organize module permissions by module
+        const modulePermissionsMap = new Map<AppModule, Set<ModulePermissionKey>>();
+        roleModulePerms.forEach((p: any) => {
+          const module = p.module_permissions.module as AppModule;
+          const permKey = p.module_permissions.permission_key as ModulePermissionKey;
+
+          if (!modulePermissionsMap.has(module)) {
+            modulePermissionsMap.set(module, new Set());
+          }
+          modulePermissionsMap.get(module)!.add(permKey);
         });
 
         rolesMap.set(role.id, {
@@ -210,24 +251,35 @@ export const usePermissions = () => {
           role_name: role.role_name,
           display_name: role.display_name,
           dealer_id: role.dealer_id,
-          permissions: permissionsMap,
-          granularPermissions: (role.permissions as GranularPermissions) || {}
+          system_permissions: new Set(roleSystemPerms),
+          module_permissions: modulePermissionsMap
         });
       });
 
-      // Aggregate permissions from all roles (take highest level)
-      const allPermissions = new Map<AppModule, PermissionLevel>();
+      // Aggregate all permissions from all roles (OR logic - union)
+      const aggregatedSystemPerms = new Set<SystemPermissionKey>();
+      const aggregatedModulePerms = new Map<AppModule, Set<ModulePermissionKey>>();
 
       rolesMap.forEach(role => {
-        role.permissions.forEach((level, module) => {
-          const existingLevel = allPermissions.get(module);
-          if (!existingLevel || PERMISSION_HIERARCHY[level] > PERMISSION_HIERARCHY[existingLevel]) {
-            allPermissions.set(module, level);
+        // Aggregate system permissions
+        role.system_permissions.forEach(perm => {
+          aggregatedSystemPerms.add(perm);
+        });
+
+        // Aggregate module permissions
+        role.module_permissions.forEach((perms, module) => {
+          if (!aggregatedModulePerms.has(module)) {
+            aggregatedModulePerms.set(module, new Set());
           }
+          perms.forEach(perm => {
+            aggregatedModulePerms.get(module)!.add(perm);
+          });
         });
       });
 
-      console.log(`✅ Loaded ${rolesMap.size} custom roles with ${allPermissions.size} module permissions`);
+      console.log(`✅ Loaded ${rolesMap.size} custom roles`);
+      console.log(`   - ${aggregatedSystemPerms.size} system-level permissions`);
+      console.log(`   - ${aggregatedModulePerms.size} modules with granular permissions`);
 
       return {
         id: profileData.id,
@@ -235,17 +287,18 @@ export const usePermissions = () => {
         dealership_id: profileData.dealership_id,
         is_system_admin: false,
         custom_roles: Array.from(rolesMap.values()),
-        all_permissions: allPermissions
+        system_permissions: aggregatedSystemPerms,
+        module_permissions: aggregatedModulePerms
       };
     } catch (error) {
-      console.error('💥 Error in fetchCustomRolePermissions:', error);
+      console.error('💥 Error in fetchGranularRolePermissions:', error);
       return null;
     }
   }, [user, profileData]);
 
   /**
    * Fetch User Permissions
-   * Main function to load user permissions
+   * Main function to load user permissions (Granular System)
    */
   const fetchUserPermissions = useCallback(async () => {
     if (!user) {
@@ -260,13 +313,13 @@ export const usePermissions = () => {
 
     try {
       setLoading(true);
-      console.log('🔄 Fetching user permissions...');
+      console.log('🔄 Fetching granular user permissions...');
 
-      const userData = await fetchCustomRolePermissions();
+      const userData = await fetchGranularRolePermissions();
       setEnhancedUser(userData);
 
       if (userData) {
-        console.log('✅ User permissions loaded successfully');
+        console.log('✅ Granular user permissions loaded successfully');
       }
     } catch (error) {
       console.error('💥 Error fetching user permissions:', error);
@@ -274,14 +327,56 @@ export const usePermissions = () => {
     } finally {
       setLoading(false);
     }
-  }, [user, isLoadingProfile, fetchCustomRolePermissions]);
+  }, [user, isLoadingProfile, fetchGranularRolePermissions]);
 
   useEffect(() => {
     fetchUserPermissions();
   }, [fetchUserPermissions]);
 
   /**
-   * Check if user has permission for a module
+   * Check if user has a specific system-level permission
+   *
+   * @param permission - The system permission to check
+   * @returns true if user has the system permission
+   */
+  const hasSystemPermission = useCallback((permission: SystemPermissionKey): boolean => {
+    if (!enhancedUser) return false;
+
+    // System admins have all permissions
+    if (enhancedUser.is_system_admin) return true;
+
+    // Check if user has this system permission
+    return enhancedUser.system_permissions.has(permission);
+  }, [enhancedUser]);
+
+  /**
+   * Check if user has a specific module permission
+   *
+   * @param module - The module to check
+   * @param permission - The specific permission to check
+   * @returns true if user has the module permission
+   */
+  const hasModulePermission = useCallback((module: AppModule, permission: ModulePermissionKey): boolean => {
+    if (!enhancedUser) return false;
+
+    // System admins have all permissions
+    if (enhancedUser.is_system_admin) return true;
+
+    // Users without custom roles have no access
+    if (enhancedUser.custom_roles.length === 0) {
+      return false;
+    }
+
+    // Check if user has this specific permission for the module
+    const modulePerms = enhancedUser.module_permissions.get(module);
+    if (!modulePerms) return false;
+
+    return modulePerms.has(permission);
+  }, [enhancedUser]);
+
+  /**
+   * @deprecated Legacy permission check - Use hasModulePermission instead
+   * Check if user has permission for a module (hierarchical system)
    *
    * @param module - The module to check
    * @param requiredLevel - The minimum permission level required
@@ -293,18 +388,26 @@ export const usePermissions = () => {
     // System admins have full access
     if (enhancedUser.is_system_admin) return true;
 
-    // Users without custom roles can only access dashboard and productivity
-    if (enhancedUser.custom_roles.length === 0) {
-      const allowedModules: AppModule[] = ['dashboard', 'productivity'];
-      return allowedModules.includes(module) && requiredLevel === 'view';
-    }
+    // Map legacy levels to granular permissions
+    const permissionsByLevel: Record<PermissionLevel, ModulePermissionKey[]> = {
+      'none': [],
+      'view': ['view_orders', 'view_inventory', 'view_contacts', 'view_dashboard', 'view_reports',
+               'view_users', 'view_settings', 'view_dealerships', 'view_tasks', 'view_conversations'],
+      'edit': ['view_orders', 'create_orders', 'edit_orders', 'change_status', 'edit_vehicles',
+               'edit_contacts', 'edit_users', 'edit_tasks', 'send_messages'],
+      'delete': ['delete_orders', 'delete_vehicles', 'delete_contacts', 'delete_tasks', 'delete_messages'],
+      'admin': ['view_orders', 'create_orders', 'edit_orders', 'delete_orders', 'change_status',
+                'view_pricing', 'edit_pricing', 'access_internal_notes', 'export_data', 'assign_orders']
+    };
 
-    // Check module permission
-    const userLevel = enhancedUser.all_permissions.get(module);
-    if (!userLevel || userLevel === 'none') return false;
+    const requiredPerms = permissionsByLevel[requiredLevel];
+    if (!requiredPerms || requiredPerms.length === 0) return false;
 
-    // Compare hierarchy
-    return PERMISSION_HIERARCHY[userLevel] >= PERMISSION_HIERARCHY[requiredLevel];
+    // Check if user has ANY of the required permissions for this level
+    const modulePerms = enhancedUser.module_permissions.get(module);
+    if (!modulePerms) return false;
+
+    return requiredPerms.some(perm => modulePerms.has(perm));
   }, [enhancedUser]);
 
   /**
@@ -335,21 +438,41 @@ export const usePermissions = () => {
     };
     const module = moduleMap[orderType];
 
-    return hasPermission(module, 'edit');
-  }, [enhancedUser, hasPermission]);
+    return hasModulePermission(module, 'edit_orders');
+  }, [enhancedUser, hasModulePermission]);
 
   /**
    * Check if user can delete an order
    *
-   * @param order - Order to check (requires dealer_id)
+   * @param order - Order to check (requires dealer_id, order_type)
    * @returns true if user can delete the order
    */
-  const canDeleteOrder = useCallback((order: { dealer_id: number }): boolean => {
+  const canDeleteOrder = useCallback((order: { dealer_id: number; order_type?: string }): boolean => {
     if (!enhancedUser) return false;
 
-    // Only system admins can delete orders
-    return enhancedUser.is_system_admin;
-  }, [enhancedUser]);
+    // System admins can delete everything
+    if (enhancedUser.is_system_admin) return true;
+
+    // Can only delete orders from own dealership
+    if (order.dealer_id !== enhancedUser.dealership_id) return false;
+
+    // If order type is provided, check specific module permission
+    if (order.order_type) {
+      const orderType = order.order_type as OrderType;
+      const moduleMap: Record<OrderType, AppModule> = {
+        'sales': 'sales_orders',
+        'service': 'service_orders',
+        'recon': 'recon_orders',
+        'carwash': 'car_wash'
+      };
+      const module = moduleMap[orderType];
+      return hasModulePermission(module, 'delete_orders');
+    }
+
+    // Fallback: check if user has delete_orders permission on any order module
+    const orderModules: AppModule[] = ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'];
+    return orderModules.some(module => hasModulePermission(module, 'delete_orders'));
+  }, [enhancedUser, hasModulePermission]);
 
   /**
    * Get allowed order types for user
@@ -370,7 +493,7 @@ export const usePermissions = () => {
       return [];
     }
 
-    // Check which order modules user has access to
+    // Check which order modules user has view_orders permission
     const allowed: OrderType[] = [];
     const orderModules: Array<[OrderType, AppModule]> = [
       ['sales', 'sales_orders'],
@@ -380,13 +503,13 @@ export const usePermissions = () => {
     ];
 
     orderModules.forEach(([orderType, module]) => {
-      if (hasPermission(module, 'view')) {
+      if (hasModulePermission(module, 'view_orders')) {
         allowed.push(orderType);
       }
     });
 
     return allowed;
-  }, [enhancedUser, hasPermission]);
+  }, [enhancedUser, hasModulePermission]);
 
   /**
    * Refresh user permissions
@@ -399,6 +522,10 @@ export const usePermissions = () => {
   return {
     enhancedUser,
     loading,
+    // New granular permission system
+    hasSystemPermission,
+    hasModulePermission,
+    // Legacy compatibility
     hasPermission,
     canEditOrder,
     canDeleteOrder,

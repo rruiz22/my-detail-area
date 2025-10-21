@@ -12,6 +12,7 @@ import { XCircle } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { supabase } from '@/integrations/supabase/client';
+import { formatRoleName } from '@/utils/roleUtils';
 
 // Security utility functions
 const sanitizeInput = (input: string) => {
@@ -330,7 +331,7 @@ export default function Auth() {
             {isSignupMode && invitationData && (
               <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  {t('auth.signup.invitation_info', 'You\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{invitationData.role_name}</strong>
+                  {t('auth.signup.invitation_info', 'You\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{formatRoleName(invitationData.role_name)}</strong>
                 </p>
               </div>
             )}

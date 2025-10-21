@@ -22,7 +22,11 @@
       "Bash(cat:*)",
       "Bash(test:*)",
       "Bash(npm:*)",
-      "Bash(if not exist \"c:\\Users\\rudyr\\apps\\mydetailarea\\backups\" mkdir \"c:\\Users\\rudyr\\apps\\mydetailarea\\backups\")"
+      "Bash(if not exist \"c:\\Users\\rudyr\\apps\\mydetailarea\\backups\" mkdir \"c:\\Users\\rudyr\\apps\\mydetailarea\\backups\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Remove legacy permission system and migrate to Custom Roles only\n\n## Summary\n- Eliminated legacy group-based permission system completely\n- Preserved rruiz@lima.llc as system_admin with full access\n- Removed ~400 lines of legacy code across multiple files\n- Improved type safety by eliminating all ''any'' types\n- Simplified user management UI (removed group management)\n- Added comprehensive documentation and migration strategy\n\n## Database Changes\n- Created migration to delete all legacy user group data (20251020200000)\n- Created future migration to drop legacy tables after 30 days (FUTURE_20251120000000)\n- Verified system admin user preservation before cleanup\n\n## Code Changes\n- usePermissions.tsx: 522 → 411 lines (-111 lines, -21%)\n- DealerUsers.tsx: 445 → 383 lines (-62 lines, -14%)\n- permissions.ts: Enhanced with strict TypeScript types (+89 lines)\n- PermissionContext.tsx: Simplified to essentials only\n- Created backup: DealerUsers_OLD_BACKUP.tsx\n\n## Type Safety Improvements\n- Removed legacy types: UserRole, UserType, UserGroup\n- Renamed EnhancedUserV2 → EnhancedUser (now the only user type)\n- Eliminated all ''any'' types in permission utilities\n- Created strict interfaces: ModulePermission, GranularPermissions\n\n## UI Improvements\n- Removed \"Manage User Groups\" functionality\n- Converted to TanStack Query for better caching\n- Shows only Custom Roles in user management\n- Simplified user interface significantly\n\n## Breaking Changes\nBREAKING CHANGE: Legacy group-based permissions system removed.\nAll users must use Custom Roles. Groups table will be dropped in 30 days.\n\n## Next Steps\n1. Apply SQL migration: 20251020200000_clean_legacy_user_system.sql\n2. Deploy to staging environment\n3. Test login as rruiz@lima.llc\n4. Monitor for 30 days before dropping tables\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
