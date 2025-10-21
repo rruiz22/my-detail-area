@@ -392,6 +392,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
           email: selectedUser.profiles?.email || '',
           first_name: selectedUser.profiles?.first_name || null,
           last_name: selectedUser.profiles?.last_name || null,
+          dealership_id: parseInt(dealerId)
         } : null}
         onRolesUpdated={async () => {
           console.log('🔄 [DealerUsers] onRolesUpdated callback triggered');

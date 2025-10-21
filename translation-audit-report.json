@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 596,
-  "totalStrings": 5763,
-  "hardcodedStrings": 1359,
-  "translatedStrings": 4404,
+  "scannedFiles": 603,
+  "totalStrings": 5777,
+  "hardcodedStrings": 1361,
+  "translatedStrings": 4416,
   "issues": {
     "critical": [
       {
@@ -5612,7 +5612,7 @@
           {
             "key": "common.cancel",
             "line": 412,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.loading",
@@ -5640,11 +5640,6 @@
             "key": "messages.saved",
             "line": 129,
             "context": "128: if (error) throw error;\n129: toast.success(t('messages.saved'));\n130: }"
-          },
-          {
-            "key": "common.cancel",
-            "line": 412,
-            "context": "411: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n412: {t('common.cancel')}\n413: </Button>"
           },
           {
             "key": "common.save",
@@ -5931,132 +5926,117 @@
         "hardcodedStrings": [
           {
             "text": "Order Migration",
-            "line": 75,
-            "context": "74: <TabsTrigger value=\"migration\" className=\"flex items-center gap-2\">\n75: <Database className=\"h-4 w-4\" />\n76: Order Migration"
+            "line": 72,
+            "context": "71: <TabsTrigger value=\"migration\" className=\"flex items-center gap-2\">\n72: <Database className=\"h-4 w-4\" />\n73: Order Migration"
           },
           {
             "text": "Configura roles del sistema y sus permisos asociados",
-            "line": 115,
-            "context": "114: <h3 className=\"font-semibold mb-2\">{t('management.role_configuration')}</h3>\n115: <p className=\"text-sm text-muted-foreground mb-4\">\n116: Configura roles del sistema y sus permisos asociados"
+            "line": 112,
+            "context": "111: <h3 className=\"font-semibold mb-2\">{t('management.role_configuration')}</h3>\n112: <p className=\"text-sm text-muted-foreground mb-4\">\n113: Configura roles del sistema y sus permisos asociados"
           },
           {
             "text": "Configurar Roles",
-            "line": 118,
-            "context": "117: </p>\n118: <Button variant=\"outline\" size=\"sm\">\n119: Configurar Roles"
+            "line": 115,
+            "context": "114: </p>\n115: <Button variant=\"outline\" size=\"sm\">\n116: Configurar Roles"
           },
           {
             "text": "Realizar operaciones masivas de usuarios y permisos",
-            "line": 128,
-            "context": "127: <h3 className=\"font-semibold mb-2\">{t('management.bulk_operations')}</h3>\n128: <p className=\"text-sm text-muted-foreground mb-4\">\n129: Realizar operaciones masivas de usuarios y permisos"
+            "line": 125,
+            "context": "124: <h3 className=\"font-semibold mb-2\">{t('management.bulk_operations')}</h3>\n125: <p className=\"text-sm text-muted-foreground mb-4\">\n126: Realizar operaciones masivas de usuarios y permisos"
           },
           {
             "text": "Acciones Masivas",
-            "line": 131,
-            "context": "130: </p>\n131: <Button variant=\"outline\" size=\"sm\">\n132: Acciones Masivas"
+            "line": 128,
+            "context": "127: </p>\n128: <Button variant=\"outline\" size=\"sm\">\n129: Acciones Masivas"
           },
           {
             "text": "Configurar Roles\r\n                        ",
-            "line": 118,
-            "context": "117: </p>\n118: <Button variant=\"outline\" size=\"sm\">\n119: Configurar Roles"
+            "line": 115,
+            "context": "114: </p>\n115: <Button variant=\"outline\" size=\"sm\">\n116: Configurar Roles"
           },
           {
             "text": "Acciones Masivas\r\n                        ",
-            "line": 131,
-            "context": "130: </p>\n131: <Button variant=\"outline\" size=\"sm\">\n132: Acciones Masivas"
+            "line": 128,
+            "context": "127: </p>\n128: <Button variant=\"outline\" size=\"sm\">\n129: Acciones Masivas"
           }
         ],
         "translationCalls": [
           {
             "key": "management.title",
-            "line": 39,
+            "line": 36,
             "exists": false
           },
           {
             "key": "management.description",
-            "line": 42,
+            "line": 39,
             "exists": false
           },
           {
             "key": "management.admin_access",
-            "line": 48,
+            "line": 45,
             "exists": false
           },
           {
             "key": "management.overview",
-            "line": 59,
+            "line": 56,
             "exists": true
           },
           {
-            "key": "management.users",
-            "line": 63,
+            "key": "management.users_and_roles",
+            "line": 60,
             "exists": true
           },
           {
             "key": "management.dealerships",
-            "line": 67,
+            "line": 64,
             "exists": false
           },
           {
             "key": "management.permissions",
-            "line": 71,
+            "line": 68,
             "exists": false
           },
           {
             "key": "management.permission_management",
-            "line": 103,
-            "exists": false
+            "line": 100,
+            "exists": true
           },
           {
             "key": "management.role_configuration",
-            "line": 114,
-            "exists": false
+            "line": 111,
+            "exists": true
           },
           {
             "key": "management.bulk_operations",
-            "line": 127,
-            "exists": false
+            "line": 124,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "management.title",
-            "line": 39,
-            "context": "38: <h1 className=\"text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent\">\n39: {t('management.title')}\n40: </h1>"
+            "line": 36,
+            "context": "35: <h1 className=\"text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent\">\n36: {t('management.title')}\n37: </h1>"
           },
           {
             "key": "management.description",
-            "line": 42,
-            "context": "41: <p className=\"text-muted-foreground mt-2\">\n42: {t('management.description')}\n43: </p>"
+            "line": 39,
+            "context": "38: <p className=\"text-muted-foreground mt-2\">\n39: {t('management.description')}\n40: </p>"
           },
           {
             "key": "management.admin_access",
-            "line": 48,
-            "context": "47: <Shield className=\"h-3 w-3 mr-1\" />\n48: {t('management.admin_access')}\n49: </Badge>"
+            "line": 45,
+            "context": "44: <Shield className=\"h-3 w-3 mr-1\" />\n45: {t('management.admin_access')}\n46: </Badge>"
           },
           {
             "key": "management.dealerships",
-            "line": 67,
-            "context": "66: <Building2 className=\"h-4 w-4\" />\n67: {t('management.dealerships')}\n68: </TabsTrigger>"
+            "line": 64,
+            "context": "63: <Building2 className=\"h-4 w-4\" />\n64: {t('management.dealerships')}\n65: </TabsTrigger>"
           },
           {
             "key": "management.permissions",
-            "line": 71,
-            "context": "70: <Shield className=\"h-4 w-4\" />\n71: {t('management.permissions')}\n72: </TabsTrigger>"
-          },
-          {
-            "key": "management.permission_management",
-            "line": 103,
-            "context": "102: <Shield className=\"h-5 w-5\" />\n103: {t('management.permission_management')}\n104: </CardTitle>"
-          },
-          {
-            "key": "management.role_configuration",
-            "line": 114,
-            "context": "113: <Settings className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n114: <h3 className=\"font-semibold mb-2\">{t('management.role_configuration')}</h3>\n115: <p className=\"text-sm text-muted-foreground mb-4\">"
-          },
-          {
-            "key": "management.bulk_operations",
-            "line": 127,
-            "context": "126: <UserPlus className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n127: <h3 className=\"font-semibold mb-2\">{t('management.bulk_operations')}</h3>\n128: <p className=\"text-sm text-muted-foreground mb-4\">"
+            "line": 68,
+            "context": "67: <Shield className=\"h-4 w-4\" />\n68: {t('management.permissions')}\n69: </TabsTrigger>"
           }
         ],
         "coverage": 59,
@@ -6903,12 +6883,12 @@
           {
             "key": "user_management.title",
             "line": 283,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.manage_description",
             "line": 285,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.refresh",
@@ -6918,7 +6898,7 @@
           {
             "key": "user_management.export_report",
             "line": 305,
-            "exists": false
+            "exists": true
           },
           {
             "key": "management.overview",
@@ -6936,23 +6916,7 @@
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "user_management.title",
-            "line": 283,
-            "context": "282: <div>\n283: <h1 className=\"text-3xl font-bold tracking-tight\">{t('user_management.title')}</h1>\n284: <p className=\"text-muted-foreground\">"
-          },
-          {
-            "key": "user_management.manage_description",
-            "line": 285,
-            "context": "284: <p className=\"text-muted-foreground\">\n285: {t('user_management.manage_description')}\n286: </p>"
-          },
-          {
-            "key": "user_management.export_report",
-            "line": 305,
-            "context": "304: <Download className=\"h-4 w-4\" />\n305: {t('user_management.export_report')}\n306: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 52,
         "severity": "medium"
       },
@@ -8862,38 +8826,38 @@
         "hardcodedStrings": [
           {
             "text": "Modify role details and permissions for this dealership role",
-            "line": 114,
-            "context": "113: <DialogTitle>Edit Role: {role.display_name}</DialogTitle>\n114: <DialogDescription>\n115: Modify role details and permissions for this dealership role"
+            "line": 111,
+            "context": "110: <DialogTitle>Edit Role: {role.display_name}</DialogTitle>\n111: <DialogDescription>\n112: Modify role details and permissions for this dealership role"
           },
           {
             "text": "Basic Info",
-            "line": 121,
-            "context": "120: <TabsList className=\"grid w-full grid-cols-2\">\n121: <TabsTrigger value=\"basic\">Basic Info</TabsTrigger>\n122: <TabsTrigger value=\"permissions\">Permissions</TabsTrigger>"
+            "line": 118,
+            "context": "117: <TabsList className=\"grid w-full grid-cols-2\">\n118: <TabsTrigger value=\"basic\">Basic Info</TabsTrigger>\n119: <TabsTrigger value=\"permissions\">Permissions</TabsTrigger>"
           },
           {
             "text": "Permissions",
-            "line": 122,
-            "context": "121: <TabsTrigger value=\"basic\">Basic Info</TabsTrigger>\n122: <TabsTrigger value=\"permissions\">Permissions</TabsTrigger>\n123: </TabsList>"
+            "line": 119,
+            "context": "118: <TabsTrigger value=\"basic\">Basic Info</TabsTrigger>\n119: <TabsTrigger value=\"permissions\">Permissions</TabsTrigger>\n120: </TabsList>"
           },
           {
             "text": "Cannot be changed after creation",
-            "line": 140,
-            "context": "139: <Input value={role.role_name} disabled className=\"bg-muted\" />\n140: <p className=\"text-xs text-muted-foreground mt-1\">Cannot be changed after creation</p>\n141: </div>"
+            "line": 137,
+            "context": "136: <Input value={role.role_name} disabled className=\"bg-muted\" />\n137: <p className=\"text-xs text-muted-foreground mt-1\">Cannot be changed after creation</p>\n138: </div>"
           },
           {
             "text": "Description",
-            "line": 145,
-            "context": "144: <div>\n145: <Label htmlFor=\"description\">Description</Label>\n146: <Textarea"
+            "line": 142,
+            "context": "141: <div>\n142: <Label htmlFor=\"description\">Description</Label>\n143: <Textarea"
           },
           {
             "text": "Brief description of this role",
-            "line": 150,
-            "context": "149: onChange={(e) => setDescription(e.target.value)}\n150: placeholder=\"Brief description of this role's responsibilities\"\n151: rows={3}"
+            "line": 147,
+            "context": "146: onChange={(e) => setDescription(e.target.value)}\n147: placeholder=\"Brief description of this role's responsibilities\"\n148: rows={3}"
           },
           {
             "text": "Description",
-            "line": 145,
-            "context": "144: <div>\n145: <Label htmlFor=\"description\">Description</Label>\n146: <Textarea"
+            "line": 142,
+            "context": "141: <div>\n142: <Label htmlFor=\"description\">Description</Label>\n143: <Textarea"
           }
         ],
         "translationCalls": [
@@ -8913,24 +8877,13 @@
             "exists": true
           },
           {
-            "key": "common.success",
-            "line": 101,
+            "key": "common.cancel",
+            "line": 154,
             "exists": true
-          },
-          {
-            "key": "common.cancel",
-            "line": 157,
-            "exists": false
           }
         ],
-        "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 157,
-            "context": "156: <Button type=\"button\" variant=\"outline\" onClick={onClose} disabled={loading}>\n157: {t('common.cancel')}\n158: </Button>"
-          }
-        ],
-        "coverage": 42,
+        "missingKeys": [],
+        "coverage": 36,
         "severity": "medium"
       },
       {
@@ -9126,16 +9079,10 @@
           {
             "key": "common.cancel",
             "line": 225,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 225,
-            "context": "224: <Button type=\"button\" variant=\"outline\" onClick={onClose} disabled={loading}>\n225: {t('common.cancel')}\n226: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 29,
         "severity": "medium"
       }
@@ -11158,157 +11105,157 @@
         "hardcodedStrings": [
           {
             "text": "Active",
-            "line": 93,
-            "context": "92: <Badge variant=\"outline\">ID: {id}</Badge>\n93: <Badge variant=\"secondary\">Active</Badge>\n94: </div>"
+            "line": 91,
+            "context": "90: <Badge variant=\"outline\">ID: {id}</Badge>\n91: <Badge variant=\"secondary\">Active</Badge>\n92: </div>"
           },
           {
             "text": "Roles",
-            "line": 120,
-            "context": "119: <Shield className=\"h-4 w-4\" />\n120: <span className=\"hidden sm:inline\">Roles</span>\n121: <span className=\"sm:hidden\">Roles</span>"
+            "line": 118,
+            "context": "117: <Shield className=\"h-4 w-4\" />\n118: <span className=\"hidden sm:inline\">Roles</span>\n119: <span className=\"sm:hidden\">Roles</span>"
           },
           {
             "text": "Roles",
-            "line": 121,
-            "context": "120: <span className=\"hidden sm:inline\">Roles</span>\n121: <span className=\"sm:hidden\">Roles</span>\n122: </TabsTrigger>"
+            "line": 119,
+            "context": "118: <span className=\"hidden sm:inline\">Roles</span>\n119: <span className=\"sm:hidden\">Roles</span>\n120: </TabsTrigger>"
           },
           {
             "text": ", error);\r\n      }\r\n    };\r\n\r\n    fetchDealerInfo();\r\n  }, [id]);\r\n\r\n  if (!id) {\r\n    return (\r\n      <div>\r\n        <div className=",
-            "line": 54,
-            "context": "53: } catch (error) {\n54: console.error('Error fetching dealer info:', error);\n55: }"
+            "line": 52,
+            "context": "51: } catch (error) {\n52: console.error('Error fetching dealer info:', error);\n53: }"
           }
         ],
         "translationCalls": [
           {
             "key": "dealer.view.not_found",
-            "line": 66,
+            "line": 64,
             "exists": true
           },
           {
             "key": "dealer.view.not_found_desc",
-            "line": 67,
+            "line": 65,
             "exists": true
           },
           {
             "key": "dealer.view.back_to_list",
-            "line": 71,
+            "line": 69,
             "exists": true
           },
           {
             "key": "dealer.view.back",
-            "line": 88,
+            "line": 86,
             "exists": true
           },
           {
             "key": "dealer.view.loading",
-            "line": 101,
+            "line": 99,
             "exists": true
           },
           {
             "key": "dealer.view.subtitle",
-            "line": 104,
+            "line": 102,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.overview",
-            "line": 115,
+            "line": 113,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.overview_short",
-            "line": 116,
+            "line": 114,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.users",
-            "line": 125,
+            "line": 123,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.users_short",
-            "line": 126,
+            "line": 124,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.invitations",
-            "line": 130,
+            "line": 128,
             "exists": true
           },
           {
             "key": "dealer.view.tabs.invitations_short",
-            "line": 131,
+            "line": 129,
             "exists": true
           },
           {
             "key": "dealer.tabs.services",
-            "line": 135,
+            "line": 133,
             "exists": true
           },
           {
             "key": "dealer.tabs.services",
-            "line": 136,
+            "line": 134,
             "exists": true
           },
           {
             "key": "dealer.modules.title",
-            "line": 141,
+            "line": 139,
             "exists": true
           },
           {
             "key": "dealer.modules.title",
-            "line": 142,
+            "line": 140,
             "exists": true
           },
           {
             "key": "dealer.view.overview.title",
-            "line": 152,
+            "line": 150,
             "exists": false
           },
           {
             "key": "dealer.view.overview.description",
-            "line": 155,
+            "line": 153,
             "exists": false
           },
           {
             "key": "dealer.view.users.title",
-            "line": 173,
+            "line": 171,
             "exists": true
           },
           {
             "key": "dealer.view.users.description",
-            "line": 176,
+            "line": 174,
             "exists": true
           },
           {
             "key": "services.title",
-            "line": 194,
+            "line": 192,
             "exists": false
           },
           {
             "key": "services.subtitle",
-            "line": 197,
+            "line": 195,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "dealer.view.overview.title",
-            "line": 152,
-            "context": "151: <BarChart3 className=\"h-5 w-5\" />\n152: <span>{t('dealer.view.overview.title')}</span>\n153: </CardTitle>"
+            "line": 150,
+            "context": "149: <BarChart3 className=\"h-5 w-5\" />\n150: <span>{t('dealer.view.overview.title')}</span>\n151: </CardTitle>"
           },
           {
             "key": "dealer.view.overview.description",
-            "line": 155,
-            "context": "154: <CardDescription>\n155: {t('dealer.view.overview.description')}\n156: </CardDescription>"
+            "line": 153,
+            "context": "152: <CardDescription>\n153: {t('dealer.view.overview.description')}\n154: </CardDescription>"
           },
           {
             "key": "services.title",
-            "line": 194,
-            "context": "193: <Wrench className=\"h-5 w-5\" />\n194: <span>{t('services.title')}</span>\n195: </CardTitle>"
+            "line": 192,
+            "context": "191: <Wrench className=\"h-5 w-5\" />\n192: <span>{t('services.title')}</span>\n193: </CardTitle>"
           },
           {
             "key": "services.subtitle",
-            "line": 197,
-            "context": "196: <CardDescription>\n197: {t('services.subtitle')}\n198: </CardDescription>"
+            "line": 195,
+            "context": "194: <CardDescription>\n195: {t('services.subtitle')}\n196: </CardDescription>"
           }
         ],
         "coverage": 85,
@@ -12054,141 +12001,6 @@
             "key": "chat.feature_multimedia_desc",
             "line": 119,
             "context": "118: <h3 className=\"font-medium text-foreground\">{t('chat.feature_multimedia')}</h3>\n119: <p className=\"text-sm text-muted-foreground\">{t('chat.feature_multimedia_desc')}</p>\n120: </div>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\pages\\AdminDashboard.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "admin.dashboard_title",
-            "line": 45,
-            "exists": true
-          },
-          {
-            "key": "admin.dashboard_description",
-            "line": 48,
-            "exists": true
-          },
-          {
-            "key": "admin.system_administrator",
-            "line": 54,
-            "exists": true
-          },
-          {
-            "key": "admin.dealerships",
-            "line": 65,
-            "exists": true
-          },
-          {
-            "key": "admin.users_groups",
-            "line": 69,
-            "exists": true
-          },
-          {
-            "key": "admin.reports",
-            "line": 73,
-            "exists": true
-          },
-          {
-            "key": "admin.system",
-            "line": 77,
-            "exists": true
-          },
-          {
-            "key": "admin.users_and_groups",
-            "line": 95,
-            "exists": true
-          },
-          {
-            "key": "admin.users_groups_description",
-            "line": 96,
-            "exists": true
-          },
-          {
-            "key": "admin.system_reports",
-            "line": 106,
-            "exists": true
-          },
-          {
-            "key": "admin.system_reports_description",
-            "line": 107,
-            "exists": true
-          },
-          {
-            "key": "reports.user_activity",
-            "line": 114,
-            "exists": false
-          },
-          {
-            "key": "reports.coming_soon",
-            "line": 119,
-            "exists": false
-          },
-          {
-            "key": "reports.dealership_performance",
-            "line": 126,
-            "exists": false
-          },
-          {
-            "key": "reports.coming_soon",
-            "line": 131,
-            "exists": false
-          },
-          {
-            "key": "reports.system_health",
-            "line": 138,
-            "exists": false
-          },
-          {
-            "key": "reports.coming_soon",
-            "line": 143,
-            "exists": false
-          },
-          {
-            "key": "admin.system_settings",
-            "line": 153,
-            "exists": true
-          },
-          {
-            "key": "admin.system_settings_description",
-            "line": 154,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "reports.user_activity",
-            "line": 114,
-            "context": "113: <CardHeader>\n114: <CardTitle className=\"text-lg\">{t('reports.user_activity')}</CardTitle>\n115: </CardHeader>"
-          },
-          {
-            "key": "reports.coming_soon",
-            "line": 119,
-            "context": "118: <BarChart3 className=\"h-12 w-12 mx-auto mb-4\" />\n119: <p>{t('reports.coming_soon')}</p>\n120: </div>"
-          },
-          {
-            "key": "reports.dealership_performance",
-            "line": 126,
-            "context": "125: <CardHeader>\n126: <CardTitle className=\"text-lg\">{t('reports.dealership_performance')}</CardTitle>\n127: </CardHeader>"
-          },
-          {
-            "key": "reports.coming_soon",
-            "line": 131,
-            "context": "130: <Building2 className=\"h-12 w-12 mx-auto mb-4\" />\n131: <p>{t('reports.coming_soon')}</p>\n132: </div>"
-          },
-          {
-            "key": "reports.system_health",
-            "line": 138,
-            "context": "137: <CardHeader>\n138: <CardTitle className=\"text-lg\">{t('reports.system_health')}</CardTitle>\n139: </CardHeader>"
-          },
-          {
-            "key": "reports.coming_soon",
-            "line": 143,
-            "context": "142: <Shield className=\"h-12 w-12 mx-auto mb-4\" />\n143: <p>{t('reports.coming_soon')}</p>\n144: </div>"
           }
         ],
         "coverage": 100,
@@ -13693,6 +13505,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useGlobalSearch.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      } finally {\r\n        setIsSearching(false);\r\n      }\r\n    }, 300); // 300ms debounce\r\n\r\n    return () => clearTimeout(debounceTimer);\r\n  }, [searchQuery, selectedDealerId, hasModulePermission]);\r\n\r\n  const performSearch = async (query: string) => {\r\n    const searchResults: SearchResult[] = [];\r\n    const lowerQuery = query.toLowerCase();\r\n\r\n    // Don",
+            "line": 53,
+            "context": "52: } catch (error) {\n53: console.error('Search error:', error);\n54: } finally {"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useFollowers.ts",
         "hardcodedStrings": [
           {
@@ -14138,24 +13964,50 @@
         "hardcodedStrings": [
           {
             "text": "Privacy Policy",
-            "line": 118,
-            "context": "117: <span>•</span>\n118: <span>Privacy Policy</span>\n119: <span>•</span>"
+            "line": 169,
+            "context": "168: <span>•</span>\n169: <span>Privacy Policy</span>\n170: <span>•</span>"
           },
           {
             "text": "Terms of Service",
-            "line": 120,
-            "context": "119: <span>•</span>\n120: <span>Terms of Service</span>\n121: </div>"
+            "line": 171,
+            "context": "170: <span>•</span>\n171: <span>Terms of Service</span>\n172: </div>"
           }
         ],
         "translationCalls": [
           {
-            "key": "layout.search_placeholder",
-            "line": 85,
+            "key": "layout.mobile_menu",
+            "line": 106,
             "exists": true
+          },
+          {
+            "key": "layout.tools",
+            "line": 111,
+            "exists": true
+          },
+          {
+            "key": "dealerships.dealership",
+            "line": 117,
+            "exists": true
+          },
+          {
+            "key": "layout.preferences",
+            "line": 125,
+            "exists": true
+          },
+          {
+            "key": "common.notifications",
+            "line": 137,
+            "exists": false
           }
         ],
-        "missingKeys": [],
-        "coverage": 33,
+        "missingKeys": [
+          {
+            "key": "common.notifications",
+            "line": 137,
+            "context": "136: <label className=\"text-sm font-medium text-muted-foreground\">\n137: {t('common.notifications')}\n138: </label>"
+          }
+        ],
+        "coverage": 71,
         "severity": "low"
       },
       {
@@ -14779,7 +14631,7 @@
           {
             "key": "common.cancel",
             "line": 523,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save",
@@ -15077,11 +14929,6 @@
             "key": "workflows.enter_description",
             "line": 515,
             "context": "514: onChange={(e) => setDescription(e.target.value)}\n515: placeholder={t('workflows.enter_description', 'Enter description')}\n516: />"
-          },
-          {
-            "key": "common.cancel",
-            "line": 523,
-            "context": "522: <Button variant=\"outline\" onClick={onCancel}>\n523: {t('common.cancel', 'Cancel')}\n524: </Button>"
           },
           {
             "key": "common.save",
@@ -15837,245 +15684,145 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 135,
+            "line": 131,
             "exists": true
           },
           {
             "key": "user_management.no_dealership_assigned",
-            "line": 202,
-            "exists": false
+            "line": 198,
+            "exists": true
           },
           {
             "key": "user_management.overview_title",
-            "line": 252,
-            "exists": false
+            "line": 262,
+            "exists": true
           },
           {
             "key": "user_management.title",
-            "line": 252,
-            "exists": false
+            "line": 262,
+            "exists": true
           },
           {
             "key": "user_management.readonly_description",
-            "line": 256,
-            "exists": false
+            "line": 266,
+            "exists": true
           },
           {
             "key": "users.invite_user",
-            "line": 267,
-            "exists": false
+            "line": 277,
+            "exists": true
           },
           {
             "key": "user_management.readonly_alert",
-            "line": 279,
-            "exists": false
+            "line": 289,
+            "exists": true
           },
           {
             "key": "user_management.readonly_alert_cta",
-            "line": 280,
-            "exists": false
+            "line": 290,
+            "exists": true
           },
           {
             "key": "user_management.search_users",
-            "line": 290,
-            "exists": false
+            "line": 300,
+            "exists": true
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 301,
-            "exists": false
+            "line": 311,
+            "exists": true
           },
           {
             "key": "common.all",
-            "line": 304,
-            "exists": false
+            "line": 314,
+            "exists": true
           },
           {
             "key": "user_management.user",
-            "line": 319,
-            "exists": false
+            "line": 329,
+            "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 320,
+            "line": 330,
             "exists": true
           },
           {
             "key": "user_management.roles",
-            "line": 321,
-            "exists": false
-          },
-          {
-            "key": "common.status",
-            "line": 322,
+            "line": 331,
             "exists": true
           },
           {
-            "key": "common.actions",
-            "line": 323,
-            "exists": true
-          },
-          {
-            "key": "user_management.no_users_matching_filters",
+            "key": "common.fields.status",
             "line": 332,
             "exists": false
           },
           {
-            "key": "user_management.no_users_found",
+            "key": "common.actions",
             "line": 333,
-            "exists": false
+            "exists": true
+          },
+          {
+            "key": "user_management.no_users_matching_filters",
+            "line": 342,
+            "exists": true
+          },
+          {
+            "key": "user_management.no_users_found",
+            "line": 343,
+            "exists": true
           },
           {
             "key": "user_management.no_roles",
-            "line": 371,
-            "exists": false
+            "line": 381,
+            "exists": true
           },
           {
             "key": "common.active",
-            "line": 379,
-            "exists": false
+            "line": 389,
+            "exists": true
           },
           {
             "key": "user_management.incomplete_setup",
-            "line": 379,
-            "exists": false
+            "line": 389,
+            "exists": true
           },
           {
             "key": "user_management.view_dealer",
-            "line": 393,
-            "exists": false
+            "line": 403,
+            "exists": true
           },
           {
             "key": "user_management.no_dealer",
-            "line": 397,
-            "exists": false
+            "line": 407,
+            "exists": true
           },
           {
             "key": "user_management.manage",
-            "line": 409,
-            "exists": false
+            "line": 419,
+            "exists": true
           },
           {
             "key": "common.showing",
-            "line": 423,
+            "line": 433,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 423,
+            "line": 433,
             "exists": true
           },
           {
             "key": "user_management.users",
-            "line": 423,
-            "exists": false
+            "line": 433,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "user_management.no_dealership_assigned",
-            "line": 202,
-            "context": "201: const getDealershipName = (dealershipId?: number) => {\n202: if (!dealershipId) return t('user_management.no_dealership_assigned');\n203: const dealership = dealerships.find(d => d.id === dealershipId);"
-          },
-          {
-            "key": "user_management.overview_title",
-            "line": 252,
-            "context": "251: {readOnly ? <Eye className=\"h-5 w-5\" /> : <Settings className=\"h-5 w-5\" />}\n252: {readOnly ? t('user_management.overview_title') : t('user_management.title')}\n253: </CardTitle>"
-          },
-          {
-            "key": "user_management.title",
-            "line": 252,
-            "context": "251: {readOnly ? <Eye className=\"h-5 w-5\" /> : <Settings className=\"h-5 w-5\" />}\n252: {readOnly ? t('user_management.overview_title') : t('user_management.title')}\n253: </CardTitle>"
-          },
-          {
-            "key": "user_management.readonly_description",
-            "line": 256,
-            "context": "255: <CardDescription className=\"mt-2\">\n256: {t('user_management.readonly_description')}\n257: </CardDescription>"
-          },
-          {
-            "key": "users.invite_user",
-            "line": 267,
-            "context": "266: <UserPlus className=\"h-4 w-4\" />\n267: {t('users.invite_user')}\n268: </Button>"
-          },
-          {
-            "key": "user_management.readonly_alert",
-            "line": 279,
-            "context": "278: <AlertDescription className=\"text-sm\">\n279: {t('user_management.readonly_alert')}{' '}\n280: <span className=\"font-semibold\">{t('user_management.readonly_alert_cta')}</span>"
-          },
-          {
-            "key": "user_management.readonly_alert_cta",
-            "line": 280,
-            "context": "279: {t('user_management.readonly_alert')}{' '}\n280: <span className=\"font-semibold\">{t('user_management.readonly_alert_cta')}</span>\n281: </AlertDescription>"
-          },
-          {
-            "key": "user_management.search_users",
-            "line": 290,
-            "context": "289: <Input\n290: placeholder={t('user_management.search_users')}\n291: value={searchQuery}"
-          },
-          {
-            "key": "dealerships.select_dealership",
-            "line": 301,
-            "context": "300: <SelectTrigger className=\"w-[200px]\">\n301: <SelectValue placeholder={t('dealerships.select_dealership')} />\n302: </SelectTrigger>"
-          },
-          {
-            "key": "common.all",
-            "line": 304,
-            "context": "303: <SelectContent>\n304: <SelectItem value=\"all\">{t('common.all')}</SelectItem>\n305: {dealerships.map((dealership) => ("
-          },
-          {
-            "key": "user_management.user",
-            "line": 319,
-            "context": "318: <TableRow>\n319: <TableHead>{t('user_management.user')}</TableHead>\n320: <TableHead>{t('dealerships.dealership')}</TableHead>"
-          },
-          {
-            "key": "user_management.roles",
-            "line": 321,
-            "context": "320: <TableHead>{t('dealerships.dealership')}</TableHead>\n321: <TableHead>{t('user_management.roles')}</TableHead>\n322: <TableHead>{t('common.status')}</TableHead>"
-          },
-          {
-            "key": "user_management.no_users_matching_filters",
+            "key": "common.fields.status",
             "line": 332,
-            "context": "331: {searchQuery || selectedDealership\n332: ? t('user_management.no_users_matching_filters')\n333: : t('user_management.no_users_found')"
-          },
-          {
-            "key": "user_management.no_users_found",
-            "line": 333,
-            "context": "332: ? t('user_management.no_users_matching_filters')\n333: : t('user_management.no_users_found')\n334: }"
-          },
-          {
-            "key": "user_management.no_roles",
-            "line": 371,
-            "context": "370: ) : (\n371: <span className=\"text-sm text-muted-foreground\">{t('user_management.no_roles')}</span>\n372: )}"
-          },
-          {
-            "key": "common.active",
-            "line": 379,
-            "context": "378: <Badge variant={user.dealership_id ? \"default\" : \"secondary\"} className=\"text-xs\">\n379: {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}\n380: </Badge>"
-          },
-          {
-            "key": "user_management.incomplete_setup",
-            "line": 379,
-            "context": "378: <Badge variant={user.dealership_id ? \"default\" : \"secondary\"} className=\"text-xs\">\n379: {user.dealership_id ? t('common.active') : t('user_management.incomplete_setup')}\n380: </Badge>"
-          },
-          {
-            "key": "user_management.view_dealer",
-            "line": 393,
-            "context": "392: <ExternalLink className=\"h-4 w-4\" />\n393: {t('user_management.view_dealer')}\n394: </Button>"
-          },
-          {
-            "key": "user_management.no_dealer",
-            "line": 397,
-            "context": "396: <span className=\"text-sm text-muted-foreground\">\n397: {t('user_management.no_dealer')}\n398: </span>"
-          },
-          {
-            "key": "user_management.manage",
-            "line": 409,
-            "context": "408: <Settings className=\"h-4 w-4\" />\n409: {t('user_management.manage')}\n410: </Button>"
-          },
-          {
-            "key": "user_management.users",
-            "line": 423,
-            "context": "422: <div className=\"text-sm text-muted-foreground\">\n423: {t('common.showing')} {filteredUsers.length} {t('common.of')} {users.length} {t('user_management.users').toLowerCase()}\n424: </div>"
+            "context": "331: <TableHead>{t('user_management.roles')}</TableHead>\n332: <TableHead>{t('common.fields.status')}</TableHead>\n333: <TableHead className=\"text-right\">{t('common.actions')}</TableHead>"
           }
         ],
         "coverage": 100,
@@ -16289,7 +16036,7 @@
           {
             "key": "common.cancel",
             "line": 375,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.back",
@@ -16467,11 +16214,6 @@
             "key": "user_creation.select_role",
             "line": 344,
             "context": "343: <SelectTrigger>\n344: <SelectValue placeholder={t('user_creation.select_role')} />\n345: </SelectTrigger>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 375,
-            "context": "374: >\n375: {step === 1 ? t('common.cancel') : t('common.back')}\n376: </Button>"
           },
           {
             "key": "common.back",
@@ -17541,75 +17283,100 @@
         "file": "src\\components\\ui\\user-dropdown.tsx",
         "hardcodedStrings": [
           {
-            "text": "Admin",
-            "line": 103,
-            "context": "102: <Badge variant=\"outline\" className=\"text-xs px-2 py-1 border-orange-200 text-orange-700\">\n103: <Shield className=\"w-3 h-3 mr-1\" />\n104: Admin"
-          },
-          {
             "text": ", error);\r\n      setIsSigningOut(false);\r\n    }\r\n  };\r\n\r\n  const handleProfileClick = () => {\r\n    navigate(",
-            "line": 34,
-            "context": "33: } catch (error) {\n34: console.error('Sign out error:', error);\n35: setIsSigningOut(false);"
+            "line": 36,
+            "context": "35: } catch (error) {\n36: console.error('Sign out error:', error);\n37: setIsSigningOut(false);"
           }
         ],
         "translationCalls": [
           {
+            "key": "roles.system_admin",
+            "line": 75,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_admin",
+            "line": 76,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_manager",
+            "line": 77,
+            "exists": true
+          },
+          {
+            "key": "roles.user",
+            "line": 78,
+            "exists": true
+          },
+          {
+            "key": "roles.admin",
+            "line": 138,
+            "exists": true
+          },
+          {
             "key": "navigation.profile",
-            "line": 116,
+            "line": 150,
             "exists": true
           },
           {
             "key": "navigation.management",
-            "line": 123,
+            "line": 157,
             "exists": true
           },
           {
-            "key": "common.settings",
-            "line": 129,
-            "exists": false
+            "key": "navigation.settings",
+            "line": 163,
+            "exists": true
           },
           {
             "key": "navigation.signing_out",
-            "line": 141,
+            "line": 175,
             "exists": false
           },
           {
             "key": "navigation.sign_out",
-            "line": 141,
+            "line": 175,
             "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "common.settings",
-            "line": 129,
-            "context": "128: <Settings className=\"mr-2 h-4 w-4\" />\n129: <span>{t('common.settings')}</span>\n130: </DropdownMenuItem>"
-          },
-          {
             "key": "navigation.signing_out",
-            "line": 141,
-            "context": "140: <LogOut className=\"mr-2 h-4 w-4\" />\n141: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n142: </DropdownMenuItem>"
+            "line": 175,
+            "context": "174: <LogOut className=\"mr-2 h-4 w-4\" />\n175: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n176: </DropdownMenuItem>"
           }
         ],
-        "coverage": 71,
+        "coverage": 91,
         "severity": "low"
       },
       {
         "file": "src\\components\\ui\\sidebar.tsx",
         "hardcodedStrings": [
           {
-            "text": "Toggle Sidebar",
-            "line": 258,
-            "context": "257: <PanelLeft />\n258: <span className=\"sr-only\">Toggle Sidebar</span>\n259: </Button>"
+            "text": "Navigation Menu",
+            "line": 189,
+            "context": "188: <VisuallyHidden>\n189: <SheetTitle>Navigation Menu</SheetTitle>\n190: <SheetDescription>"
+          },
+          {
+            "text": "Access navigation links and menu items",
+            "line": 190,
+            "context": "189: <SheetTitle>Navigation Menu</SheetTitle>\n190: <SheetDescription>\n191: Access navigation links and menu items"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 273,
-            "context": "272: data-sidebar=\"rail\"\n273: aria-label=\"Toggle Sidebar\"\n274: tabIndex={-1}"
+            "line": 265,
+            "context": "264: <PanelLeft />\n265: <span className=\"sr-only\">Toggle Sidebar</span>\n266: </Button>"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 276,
-            "context": "275: onClick={toggleSidebar}\n276: title=\"Toggle Sidebar\"\n277: className={cn("
+            "line": 280,
+            "context": "279: data-sidebar=\"rail\"\n280: aria-label=\"Toggle Sidebar\"\n281: tabIndex={-1}"
+          },
+          {
+            "text": "Toggle Sidebar",
+            "line": 283,
+            "context": "282: onClick={toggleSidebar}\n283: title=\"Toggle Sidebar\"\n284: className={cn("
           }
         ],
         "translationCalls": [],
@@ -17882,7 +17649,7 @@
           {
             "key": "common.cancel",
             "line": 127,
-            "exists": false
+            "exists": true
           },
           {
             "key": "profile.save_avatar",
@@ -17895,11 +17662,6 @@
             "key": "profile.beam_style",
             "line": 71,
             "context": "70: <p className=\"text-sm text-muted-foreground\">\n71: {t('profile.beam_style', 'Beam Style')} {selectedSeed.split('-')[1]}\n72: </p>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 127,
-            "context": "126: <Button variant=\"outline\" onClick={handleCancel}>\n127: {t('common.cancel', 'Cancel')}\n128: </Button>"
           }
         ],
         "coverage": 100,
@@ -18762,6 +18524,86 @@
             "key": "stock.upload.status.${uploadFile.status}",
             "line": 304,
             "context": "303: }>\n304: {t(`stock.upload.status.${uploadFile.status}`)}\n305: </Badge>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\search\\GlobalSearch.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "search.global_placeholder",
+            "line": 157,
+            "exists": true
+          },
+          {
+            "key": "search.searching",
+            "line": 179,
+            "exists": true
+          },
+          {
+            "key": "search.no_results",
+            "line": 185,
+            "exists": true
+          },
+          {
+            "key": "search.try_different_keywords",
+            "line": 192,
+            "exists": true
+          },
+          {
+            "key": "search.categories.${type}",
+            "line": 201,
+            "exists": false
+          },
+          {
+            "key": "search.status.${result.status.toLowerCase().replace(/\\s+/g, ",
+            "line": 229,
+            "exists": false
+          },
+          {
+            "key": "search.stock",
+            "line": 247,
+            "exists": true
+          },
+          {
+            "key": "search.vin",
+            "line": 255,
+            "exists": true
+          },
+          {
+            "key": "search.due_date",
+            "line": 263,
+            "exists": true
+          },
+          {
+            "key": "search.completed",
+            "line": 271,
+            "exists": true
+          },
+          {
+            "key": "search.result_found",
+            "line": 317,
+            "exists": true
+          },
+          {
+            "key": "search.results_found",
+            "line": 318,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "search.categories.${type}",
+            "line": 201,
+            "context": "200: key={type}\n201: heading={t(`search.categories.${type}`)}\n202: className=\"p-2\""
+          },
+          {
+            "key": "search.status.${result.status.toLowerCase().replace(/\\s+/g, ",
+            "line": 229,
+            "context": "228: >\n229: {t(`search.status.${result.status.toLowerCase().replace(/\\s+/g, '_')}`)}\n230: </Badge>"
           }
         ],
         "coverage": 100,
@@ -19947,7 +19789,7 @@
           {
             "key": "common.cancel",
             "line": 615,
-            "exists": false
+            "exists": true
           },
           {
             "key": "vin_scanner.scanning",
@@ -19965,11 +19807,6 @@
             "key": "vin_scanner.camera_access_denied",
             "line": 94,
             "context": "93: console.error('Camera access error:', error);\n94: setError(t('vin_scanner.camera_access_denied'));\n95: }"
-          },
-          {
-            "key": "common.cancel",
-            "line": 615,
-            "context": "614: >\n615: {t('common.cancel')}\n616: </Button>"
           }
         ],
         "coverage": 85,
@@ -24317,7 +24154,7 @@
           {
             "key": "common.cancel",
             "line": 305,
-            "exists": false
+            "exists": true
           },
           {
             "key": "recon_costing.estimated_total",
@@ -24487,11 +24324,6 @@
             "context": "301: <Save className=\"w-4 h-4 mr-2\" />\n302: {isEditing ? t('common.update') : t('common.add')}\n303: </Button>"
           },
           {
-            "key": "common.cancel",
-            "line": 305,
-            "context": "304: <Button variant=\"outline\" onClick={onCancel}>\n305: {t('common.cancel')}\n306: </Button>"
-          },
-          {
             "key": "recon_costing.estimated_total",
             "line": 320,
             "context": "319: <p className=\"text-sm font-medium text-muted-foreground\">\n320: {t('recon_costing.estimated_total')}\n321: </p>"
@@ -24657,7 +24489,7 @@
           {
             "key": "common.cancel",
             "line": 443,
-            "exists": false
+            "exists": true
           },
           {
             "key": "recon_approval.types.${approval.request_type}",
@@ -24795,11 +24627,6 @@
             "key": "recon_approval.submit_request",
             "line": 437,
             "context": "436: >\n437: {t('recon_approval.submit_request')}\n438: </Button>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 443,
-            "context": "442: >\n443: {t('common.cancel')}\n444: </Button>"
           },
           {
             "key": "recon_approval.types.${approval.request_type}",
@@ -25400,7 +25227,7 @@
           {
             "key": "common.cancel",
             "line": 293,
-            "exists": false
+            "exists": true
           },
           {
             "key": "profile.deleting",
@@ -25553,11 +25380,6 @@
             "key": "profile.deletion_warning",
             "line": 289,
             "context": "288: <AlertDialogDescription>\n289: {t('profile.deletion_warning')}\n290: </AlertDialogDescription>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 293,
-            "context": "292: <AlertDialogFooter>\n293: <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>\n294: <AlertDialogAction"
           },
           {
             "key": "profile.deleting",
@@ -26006,7 +25828,7 @@
           {
             "key": "common.cancel",
             "line": 308,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.create",
@@ -26126,7 +25948,7 @@
           {
             "key": "common.cancel",
             "line": 499,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save",
@@ -26135,11 +25957,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 308,
-            "context": "307: <Button type=\"button\" variant=\"outline\" onClick={() => setIsCreateOpen(false)}>\n308: {t('common.cancel')}\n309: </Button>"
-          },
           {
             "key": "common.create",
             "line": 311,
@@ -26164,11 +25981,6 @@
             "key": "common.delete",
             "line": 397,
             "context": "396: <Trash2 className=\"h-4 w-4 mr-2\" />\n397: {t('common.delete')}\n398: </DropdownMenuItem>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 499,
-            "context": "498: <Button type=\"button\" variant=\"outline\" onClick={() => setEditingTodo(null)}>\n499: {t('common.cancel')}\n500: </Button>"
           },
           {
             "key": "common.save",
@@ -26280,7 +26092,7 @@
           {
             "key": "common.cancel",
             "line": 242,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.create",
@@ -26390,7 +26202,7 @@
           {
             "key": "common.cancel",
             "line": 377,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.create",
@@ -26430,7 +26242,7 @@
           {
             "key": "common.close",
             "line": 474,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -26483,11 +26295,6 @@
             "key": "productivity.calendarTypes.outlook",
             "line": 234,
             "context": "233: <SelectItem value=\"google\">{t('productivity.calendarTypes.google')}</SelectItem>\n234: <SelectItem value=\"outlook\">{t('productivity.calendarTypes.outlook')}</SelectItem>\n235: </SelectContent>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 242,
-            "context": "241: <Button type=\"button\" variant=\"outline\" onClick={() => setIsCreateCalendarOpen(false)}>\n242: {t('common.cancel')}\n243: </Button>"
           },
           {
             "key": "common.create",
@@ -26575,11 +26382,6 @@
             "context": "370: onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}\n371: placeholder={t('productivity.enterLocation')}\n372: />"
           },
           {
-            "key": "common.cancel",
-            "line": 377,
-            "context": "376: <Button type=\"button\" variant=\"outline\" onClick={() => setIsCreateEventOpen(false)}>\n377: {t('common.cancel')}\n378: </Button>"
-          },
-          {
             "key": "common.create",
             "line": 380,
             "context": "379: <Button type=\"submit\">\n380: {t('common.create')}\n381: </Button>"
@@ -26608,11 +26410,6 @@
             "key": "common.delete",
             "line": 471,
             "context": "470: >\n471: {t('common.delete')}\n472: </Button>"
-          },
-          {
-            "key": "common.close",
-            "line": 474,
-            "context": "473: <Button onClick={() => setSelectedEvent(null)}>\n474: {t('common.close')}\n475: </Button>"
           }
         ],
         "coverage": 100,
@@ -26625,17 +26422,17 @@
           {
             "key": "user_management.title",
             "line": 175,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.manage_description",
             "line": 178,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.search_users",
             "line": 187,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.all_users",
@@ -26650,7 +26447,7 @@
           {
             "key": "user_management.user",
             "line": 209,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.type",
@@ -26660,7 +26457,7 @@
           {
             "key": "user_management.roles",
             "line": 211,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.actions",
@@ -26670,40 +26467,25 @@
           {
             "key": "user_management.no_roles",
             "line": 239,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.manage",
             "line": 257,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.no_users_matching_filters",
             "line": 268,
-            "exists": false
+            "exists": true
           },
           {
             "key": "user_management.no_users_found",
             "line": 269,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
-          {
-            "key": "user_management.title",
-            "line": 175,
-            "context": "174: <Users className=\"h-5 w-5\" />\n175: {t('user_management.title')}\n176: </CardTitle>"
-          },
-          {
-            "key": "user_management.manage_description",
-            "line": 178,
-            "context": "177: <CardDescription>\n178: {t('user_management.manage_description')}\n179: </CardDescription>"
-          },
-          {
-            "key": "user_management.search_users",
-            "line": 187,
-            "context": "186: <Input\n187: placeholder={t('user_management.search_users')}\n188: value={searchQuery}"
-          },
           {
             "key": "user_management.all_users",
             "line": 198,
@@ -26715,39 +26497,9 @@
             "context": "198: <SelectItem value=\"all\">{t('user_management.all_users')}</SelectItem>\n199: <SelectItem value=\"dealer\">{t('user_management.dealer_users')}</SelectItem>\n200: </SelectContent>"
           },
           {
-            "key": "user_management.user",
-            "line": 209,
-            "context": "208: <TableRow>\n209: <TableHead>{t('user_management.user')}</TableHead>\n210: <TableHead>{t('user_management.type')}</TableHead>"
-          },
-          {
             "key": "user_management.type",
             "line": 210,
             "context": "209: <TableHead>{t('user_management.user')}</TableHead>\n210: <TableHead>{t('user_management.type')}</TableHead>\n211: <TableHead>{t('user_management.roles')}</TableHead>"
-          },
-          {
-            "key": "user_management.roles",
-            "line": 211,
-            "context": "210: <TableHead>{t('user_management.type')}</TableHead>\n211: <TableHead>{t('user_management.roles')}</TableHead>\n212: <TableHead>{t('common.actions')}</TableHead>"
-          },
-          {
-            "key": "user_management.no_roles",
-            "line": 239,
-            "context": "238: {user.roles.length === 0 ? (\n239: <span className=\"text-sm text-muted-foreground\">{t('user_management.no_roles')}</span>\n240: ) : ("
-          },
-          {
-            "key": "user_management.manage",
-            "line": 257,
-            "context": "256: <Settings className=\"h-4 w-4 mr-1\" />\n257: {t('user_management.manage')}\n258: </Button>"
-          },
-          {
-            "key": "user_management.no_users_matching_filters",
-            "line": 268,
-            "context": "267: {searchQuery || userTypeFilter !== 'all'\n268: ? t('user_management.no_users_matching_filters')\n269: : t('user_management.no_users_found')"
-          },
-          {
-            "key": "user_management.no_users_found",
-            "line": 269,
-            "context": "268: ? t('user_management.no_users_matching_filters')\n269: : t('user_management.no_users_found')\n270: }"
           }
         ],
         "coverage": 100,
@@ -26866,7 +26618,7 @@
           {
             "key": "common.cancel",
             "line": 393,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save_changes",
@@ -26875,11 +26627,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 393,
-            "context": "392: >\n393: {t('common.cancel')}\n394: </Button>"
-          },
           {
             "key": "common.save_changes",
             "line": 396,
@@ -26894,28 +26641,28 @@
         "hardcodedStrings": [
           {
             "text": "Configure granular permissions for this role",
-            "line": 351,
-            "context": "350: </h3>\n351: <p className=\"text-sm text-muted-foreground\">\n352: Configure granular permissions for this role"
+            "line": 360,
+            "context": "359: </h3>\n360: <p className=\"text-sm text-muted-foreground\">\n361: Configure granular permissions for this role"
           },
           {
             "text": "Reset",
-            "line": 358,
-            "context": "357: <Button variant=\"outline\" onClick={resetChanges}>\n358: <RotateCcw className=\"h-4 w-4 mr-2\" />\n359: Reset"
+            "line": 367,
+            "context": "366: <Button variant=\"outline\" onClick={resetChanges}>\n367: <RotateCcw className=\"h-4 w-4 mr-2\" />\n368: Reset"
           },
           {
             "text": "Administration Permissions",
-            "line": 387,
-            "context": "386: <CardTitle className=\"flex items-center gap-2\">\n387: <Shield className=\"h-5 w-5\" />\n388: Administration Permissions"
+            "line": 396,
+            "context": "395: <CardTitle className=\"flex items-center gap-2\">\n396: <Shield className=\"h-5 w-5\" />\n397: Administration Permissions"
           },
           {
             "text": "Dangerous",
-            "line": 422,
-            "context": "421: <Badge variant=\"destructive\" className=\"text-xs\">\n422: <Lock className=\"h-3 w-3 mr-1\" />\n423: Dangerous"
+            "line": 431,
+            "context": "430: <Badge variant=\"destructive\" className=\"text-xs\">\n431: <Lock className=\"h-3 w-3 mr-1\" />\n432: Dangerous"
           },
           {
             "text": "Module Permissions",
-            "line": 441,
-            "context": "440: <h4 className=\"text-md font-semibold flex items-center gap-2\">\n441: <Info className=\"h-4 w-4\" />\n442: Module Permissions"
+            "line": 450,
+            "context": "449: <h4 className=\"text-md font-semibold flex items-center gap-2\">\n450: <Info className=\"h-4 w-4\" />\n451: Module Permissions"
           }
         ],
         "translationCalls": [
@@ -26926,17 +26673,17 @@
           },
           {
             "key": "common.error",
-            "line": 156,
+            "line": 165,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 302,
+            "line": 311,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 311,
+            "line": 320,
             "exists": true
           }
         ],
@@ -27367,315 +27114,315 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 331,
+            "line": 333,
             "exists": true
           },
           {
             "key": "orders.services_fetch_error",
-            "line": 332,
+            "line": 334,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 357,
+            "line": 359,
             "exists": true
           },
           {
             "key": "common.unexpected_error",
-            "line": 358,
+            "line": 360,
             "exists": false
           },
           {
             "key": "stock.days",
-            "line": 404,
+            "line": 406,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 408,
+            "line": 410,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 412,
+            "line": 414,
             "exists": true
           },
           {
             "key": "orders.edit_service_order",
-            "line": 488,
+            "line": 490,
             "exists": true
           },
           {
             "key": "orders.create_service_order",
-            "line": 488,
+            "line": 490,
             "exists": true
           },
           {
             "key": "orders.edit_service_order",
-            "line": 491,
+            "line": 493,
             "exists": true
           },
           {
             "key": "orders.create_service_order",
-            "line": 491,
+            "line": 493,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 502,
+            "line": 504,
             "exists": true
           },
           {
             "key": "orders.clientInfo",
-            "line": 502,
+            "line": 504,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 508,
+            "line": 510,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 512,
+            "line": 514,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 522,
+            "line": 524,
             "exists": true
           },
           {
             "key": "orders.selectClient",
-            "line": 522,
+            "line": 524,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 536,
+            "line": 538,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 546,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
             "line": 548,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 550,
+            "exists": true
+          },
+          {
             "key": "sales_orders.select_assignee",
-            "line": 549,
+            "line": 551,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 566,
+            "line": 568,
             "exists": true
           },
           {
             "key": "forms.labels.phone",
-            "line": 579,
+            "line": 581,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 579,
+            "line": 581,
             "exists": true
           },
           {
             "key": "forms.labels.email",
-            "line": 593,
+            "line": 595,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 593,
+            "line": 595,
             "exists": true
           },
           {
             "key": "service_orders.po_number",
-            "line": 611,
+            "line": 613,
             "exists": true
           },
           {
             "key": "service_orders.ro_number",
-            "line": 627,
+            "line": 629,
             "exists": true
           },
           {
             "key": "service_orders.tag_number",
-            "line": 643,
+            "line": 645,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 664,
+            "line": 666,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 667,
+            "line": 669,
             "exists": true
           },
           {
             "key": "stock.autopop.searchVehicle",
-            "line": 679,
+            "line": 681,
             "exists": true
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 680,
+            "line": 682,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 689,
+            "line": 691,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 709,
+            "line": 711,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 709,
+            "line": 711,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 709,
+            "line": 711,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 716,
+            "line": 718,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 727,
+            "line": 729,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 727,
+            "line": 729,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 727,
+            "line": 729,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 737,
+            "line": 739,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 743,
+            "line": 745,
             "exists": true
           },
           {
             "key": "due_date.validation.business_hours_only",
-            "line": 748,
+            "line": 750,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 757,
+            "line": 759,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 762,
+            "line": 764,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 765,
+            "line": 767,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 772,
+            "line": 774,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 776,
+            "line": 778,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 776,
+            "line": 778,
             "exists": true
           },
           {
             "key": "orders.totalPrice",
-            "line": 818,
+            "line": 820,
             "exists": false
           },
           {
             "key": "orders.notes",
-            "line": 825,
+            "line": 827,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 832,
+            "line": 834,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 856,
+            "line": 858,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 877,
+            "line": 879,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 877,
+            "line": 879,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 880,
+            "line": 882,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 880,
+            "line": 882,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.services_fetch_error",
-            "line": 332,
-            "context": "331: title: t('common.error'),\n332: description: t('orders.services_fetch_error') || 'Error loading services',\n333: variant: 'destructive'"
+            "line": 334,
+            "context": "333: title: t('common.error'),\n334: description: t('orders.services_fetch_error') || 'Error loading services',\n335: variant: 'destructive'"
           },
           {
             "key": "common.unexpected_error",
-            "line": 358,
-            "context": "357: title: t('common.error'),\n358: description: t('common.unexpected_error') || 'An unexpected error occurred',\n359: variant: 'destructive'"
+            "line": 360,
+            "context": "359: title: t('common.error'),\n360: description: t('common.unexpected_error') || 'An unexpected error occurred',\n361: variant: 'destructive'"
           },
           {
             "key": "stock.days",
-            "line": 404,
-            "context": "403: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n404: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n405: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 406,
+            "context": "405: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n406: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n407: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           },
           {
             "key": "orders.totalPrice",
-            "line": 818,
-            "context": "817: <div className=\"flex justify-between items-center\">\n818: <span className=\"text-sm font-medium\">{t('orders.totalPrice')}</span>\n819: <span className=\"text-lg font-bold text-primary\">${totalPrice.toFixed(2)}</span>"
+            "line": 820,
+            "context": "819: <div className=\"flex justify-between items-center\">\n820: <span className=\"text-sm font-medium\">{t('orders.totalPrice')}</span>\n821: <span className=\"text-lg font-bold text-primary\">${totalPrice.toFixed(2)}</span>"
           }
         ],
         "coverage": 100,
@@ -27751,257 +27498,257 @@
         "hardcodedStrings": [
           {
             "text": "ST-001",
-            "line": 652,
-            "context": "651: className={selectedVehicle ? \"border-input bg-muted/30\" : \"border-input bg-background\"}\n652: placeholder=\"ST-001\"\n653: readOnly={!!selectedVehicle}"
+            "line": 654,
+            "context": "653: className={selectedVehicle ? \"border-input bg-muted/30\" : \"border-input bg-background\"}\n654: placeholder=\"ST-001\"\n655: readOnly={!!selectedVehicle}"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 566,
-            "context": "565: } catch (error) {\n566: console.error('Submit error:', error);\n567: toast.error(t('orders.creation_failed'));"
+            "line": 568,
+            "context": "567: } catch (error) {\n568: console.error('Submit error:', error);\n569: toast.error(t('orders.creation_failed'));"
           }
         ],
         "translationCalls": [
           {
             "key": "stock.days",
-            "line": 380,
+            "line": 382,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 384,
+            "line": 386,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 388,
+            "line": 390,
             "exists": true
           },
           {
             "key": "stock.autopop.cleared",
-            "line": 407,
+            "line": 409,
             "exists": true
           },
           {
             "key": "validation.vinRequired",
-            "line": 504,
+            "line": 506,
             "exists": true
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 508,
+            "line": 510,
             "exists": true
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 514,
+            "line": 516,
             "exists": true
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 520,
+            "line": 522,
             "exists": true
           },
           {
             "key": "orders.creating_order",
-            "line": 561,
+            "line": 563,
             "exists": true
           },
           {
             "key": "orders.creation_failed",
-            "line": 567,
+            "line": 569,
             "exists": true
           },
           {
             "key": "recon.edit_recon_order",
-            "line": 586,
+            "line": 588,
             "exists": true
           },
           {
             "key": "recon.create_recon_order",
-            "line": 586,
+            "line": 588,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 604,
+            "line": 606,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 607,
+            "line": 609,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 617,
+            "line": 619,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 617,
+            "line": 619,
             "exists": true
           },
           {
             "key": "stock.autopop.searchVehicle",
-            "line": 637,
+            "line": 639,
             "exists": true
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 638,
+            "line": 640,
             "exists": true
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 646,
+            "line": 648,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 657,
+            "line": 659,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 657,
+            "line": 659,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 657,
+            "line": 659,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 664,
+            "line": 666,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 669,
+            "line": 671,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 696,
+            "line": 698,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 696,
+            "line": 698,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 696,
+            "line": 698,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 702,
+            "line": 704,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 713,
+            "line": 715,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 723,
+            "line": 725,
             "exists": true
           },
           {
             "key": "recon.select_completion_date",
-            "line": 727,
+            "line": 729,
             "exists": true
           },
           {
             "key": "recon.completion_date_help",
-            "line": 732,
+            "line": 734,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 739,
+            "line": 741,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 742,
+            "line": 744,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 749,
+            "line": 751,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 754,
+            "line": 756,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 761,
+            "line": 763,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 782,
+            "line": 784,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 810,
+            "line": 812,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 816,
+            "line": 818,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 825,
+            "line": 827,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 832,
+            "line": 834,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 878,
+            "line": 880,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 894,
+            "line": 896,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 894,
+            "line": 896,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 897,
+            "line": 899,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 897,
+            "line": 899,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "stock.days",
-            "line": 380,
-            "context": "379: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n380: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n381: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 382,
+            "context": "381: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n382: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n383: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           }
         ],
         "coverage": 96,
@@ -28438,412 +28185,412 @@
         "hardcodedStrings": [
           {
             "text": "ST-001",
-            "line": 1004,
-            "context": "1003: className={selectedVehicle ? \"border-input bg-muted/30\" : \"border-input bg-background\"}\n1004: placeholder=\"ST-001\"\n1005: readOnly={!!selectedVehicle}"
+            "line": 1006,
+            "context": "1005: className={selectedVehicle ? \"border-input bg-muted/30\" : \"border-input bg-background\"}\n1006: placeholder=\"ST-001\"\n1007: readOnly={!!selectedVehicle}"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 811,
-            "context": "810: } catch (error) {\n811: console.error('Submit error:', error);\n812: toast.error(t('orders.creation_failed'));"
+            "line": 813,
+            "context": "812: } catch (error) {\n813: console.error('Submit error:', error);\n814: toast.error(t('orders.creation_failed'));"
           }
         ],
         "translationCalls": [
           {
             "key": "stock.days",
-            "line": 518,
+            "line": 520,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 522,
+            "line": 524,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 526,
+            "line": 528,
             "exists": true
           },
           {
             "key": "stock.autopop.cleared",
-            "line": 545,
+            "line": 547,
             "exists": true
           },
           {
             "key": "validation.customerNameRequired",
-            "line": 681,
+            "line": 683,
             "exists": true
           },
           {
             "key": "validation.vinRequired",
-            "line": 687,
+            "line": 689,
             "exists": true
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 691,
+            "line": 693,
             "exists": true
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 697,
+            "line": 699,
             "exists": true
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 703,
+            "line": 705,
             "exists": true
           },
           {
             "key": "validation.assignedToRequired",
-            "line": 709,
+            "line": 711,
             "exists": true
           },
           {
             "key": "validation.dueDateRequired",
-            "line": 720,
+            "line": 722,
             "exists": true
           },
           {
             "key": "validation.dueDateTooFar",
-            "line": 729,
+            "line": 731,
             "exists": true
           },
           {
             "key": "validation.dueDateTooSoon",
-            "line": 738,
+            "line": 740,
             "exists": true
           },
           {
             "key": "validation.slotNotAvailable",
-            "line": 753,
+            "line": 755,
             "exists": true
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 760,
+            "line": 762,
             "exists": true
           },
           {
             "key": "validation.failedToReserveSlot",
-            "line": 792,
+            "line": 794,
             "exists": true
           },
           {
             "key": "validation.slotReservationWarning",
-            "line": 797,
+            "line": 799,
             "exists": true
           },
           {
             "key": "orders.creating_order",
-            "line": 806,
+            "line": 808,
             "exists": true
           },
           {
             "key": "orders.creation_failed",
-            "line": 812,
+            "line": 814,
             "exists": true
           },
           {
             "key": "orders.edit",
-            "line": 831,
+            "line": 833,
             "exists": true
           },
           {
             "key": "orders.create",
-            "line": 831,
+            "line": 833,
             "exists": true
           },
           {
             "key": "orders.edit_order_description",
-            "line": 834,
+            "line": 836,
             "exists": false
           },
           {
             "key": "orders.create_order_description",
-            "line": 834,
+            "line": 836,
             "exists": false
           },
           {
             "key": "sales_orders.dealership",
-            "line": 849,
+            "line": 851,
             "exists": true
           },
           {
             "key": "sales_orders.assignment",
-            "line": 849,
+            "line": 851,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 854,
+            "line": 856,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 857,
+            "line": 859,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 867,
+            "line": 869,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 867,
+            "line": 869,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 880,
+            "line": 882,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 889,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
             "line": 891,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 893,
+            "exists": true
+          },
+          {
             "key": "sales_orders.select_assignee",
-            "line": 892,
+            "line": 894,
             "exists": true
           },
           {
             "key": "orders.customer_information",
-            "line": 909,
+            "line": 911,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 912,
+            "line": 914,
             "exists": true
           },
           {
             "key": "orders.customerNamePlaceholder",
-            "line": 918,
+            "line": 920,
             "exists": true
           },
           {
             "key": "forms.labels.phone",
-            "line": 924,
+            "line": 926,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 924,
+            "line": 926,
             "exists": true
           },
           {
             "key": "forms.labels.email",
-            "line": 938,
+            "line": 940,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 938,
+            "line": 940,
             "exists": true
           },
           {
             "key": "orders.priority",
-            "line": 951,
+            "line": 953,
             "exists": true
           },
           {
             "key": "orders.priority_normal",
-            "line": 960,
-            "exists": true
-          },
-          {
-            "key": "orders.priority_high",
-            "line": 961,
-            "exists": true
-          },
-          {
-            "key": "orders.priority_urgent",
             "line": 962,
             "exists": true
           },
           {
+            "key": "orders.priority_high",
+            "line": 963,
+            "exists": true
+          },
+          {
+            "key": "orders.priority_urgent",
+            "line": 964,
+            "exists": true
+          },
+          {
             "key": "orders.vehicleInfo",
-            "line": 973,
+            "line": 975,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 976,
+            "line": 978,
             "exists": true
           },
           {
             "key": "stock.autopop.searchVehicle",
-            "line": 989,
+            "line": 991,
             "exists": true
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 990,
+            "line": 992,
             "exists": true
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 998,
+            "line": 1000,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1009,
+            "line": 1011,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1009,
+            "line": 1011,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1009,
+            "line": 1011,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 1016,
+            "line": 1018,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1042,
+            "line": 1044,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1042,
+            "line": 1044,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1042,
+            "line": 1044,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1049,
+            "line": 1051,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 1060,
+            "line": 1062,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 1069,
+            "line": 1071,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 1074,
+            "line": 1076,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 1085,
+            "line": 1087,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 1089,
+            "line": 1091,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 1092,
+            "line": 1094,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 1099,
+            "line": 1101,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1104,
+            "line": 1106,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1111,
+            "line": 1113,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 1132,
+            "line": 1134,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 1160,
+            "line": 1162,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1166,
+            "line": 1168,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 1174,
+            "line": 1176,
             "exists": true
           },
           {
             "key": "orders.notesPlaceholder",
-            "line": 1181,
+            "line": 1183,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1231,
+            "line": 1233,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1250,
+            "line": 1252,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1250,
+            "line": 1252,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1253,
+            "line": 1255,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1253,
+            "line": 1255,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "stock.days",
-            "line": 518,
-            "context": "517: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n518: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n519: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 520,
+            "context": "519: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n520: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n521: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           },
           {
             "key": "orders.edit_order_description",
-            "line": 834,
-            "context": "833: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n834: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n835: </div>"
+            "line": 836,
+            "context": "835: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n836: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n837: </div>"
           },
           {
             "key": "orders.create_order_description",
-            "line": 834,
-            "context": "833: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n834: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n835: </div>"
+            "line": 836,
+            "context": "835: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n836: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n837: </div>"
           }
         ],
         "coverage": 97,
@@ -29503,7 +29250,7 @@
           {
             "key": "common.close",
             "line": 527,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -29626,11 +29373,6 @@
             "key": "performance.updates",
             "line": 513,
             "context": "512: <div className=\"flex justify-between\">\n513: <span>{t('performance.updates')}:</span>\n514: <span>{performanceMetrics.realtimeMetrics?.updateCount || 0}</span>"
-          },
-          {
-            "key": "common.close",
-            "line": 527,
-            "context": "526: <Button onClick={onClose}>\n527: {t('common.close')}\n528: </Button>"
           }
         ],
         "coverage": 96,
@@ -29945,7 +29687,7 @@
           {
             "key": "common.cancel",
             "line": 155,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.sending",
@@ -29995,7 +29737,7 @@
           {
             "key": "common.cancel",
             "line": 198,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.sending",
@@ -30070,11 +29812,6 @@
             "context": "149: <p className=\"text-sm text-muted-foreground mt-1\">\n150: {smsMessage.length}/160 {t('orders.characters')}\n151: </p>"
           },
           {
-            "key": "common.cancel",
-            "line": 155,
-            "context": "154: <Button variant=\"outline\" onClick={() => setSmsDialog(false)}>\n155: {t('common.cancel')}\n156: </Button>"
-          },
-          {
             "key": "common.sending",
             "line": 161,
             "context": "160: >\n161: {loading ? t('common.sending') : t('common.send')}\n162: </Button>"
@@ -30113,11 +29850,6 @@
             "key": "orders.email_message_placeholder",
             "line": 192,
             "context": "191: onChange={(e) => setEmailMessage(e.target.value)}\n192: placeholder={t('orders.email_message_placeholder')}\n193: className=\"min-h-[120px]\""
-          },
-          {
-            "key": "common.cancel",
-            "line": 198,
-            "context": "197: <Button variant=\"outline\" onClick={() => setEmailDialog(false)}>\n198: {t('common.cancel')}\n199: </Button>"
           },
           {
             "key": "common.sending",
@@ -30425,7 +30157,7 @@
           {
             "key": "common.cancel",
             "line": 252,
-            "exists": false
+            "exists": true
           },
           {
             "key": "communication.hide_replies",
@@ -30488,11 +30220,6 @@
             "key": "communication.send",
             "line": 245,
             "context": "244: <Button size=\"sm\" onClick={() => handleReply(message.id)}>\n245: {t('communication.send')}\n246: </Button>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 252,
-            "context": "251: >\n252: {t('common.cancel')}\n253: </Button>"
           },
           {
             "key": "communication.hide_replies",
@@ -31226,7 +30953,7 @@
           {
             "key": "common.cancel",
             "line": 551,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.saving",
@@ -31449,11 +31176,6 @@
             "key": "notifications.entities.${entityType}Description",
             "line": 532,
             "context": "531: <p className=\"text-sm text-muted-foreground\">\n532: {t(`notifications.entities.${entityType}Description`)}\n533: </p>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 551,
-            "context": "550: <Button variant=\"outline\" onClick={() => onOpenChange(false)}>\n551: {t('common.cancel')}\n552: </Button>"
           },
           {
             "key": "common.saving",
@@ -32625,7 +32347,7 @@
           {
             "key": "common.cancel",
             "line": 300,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.templates.create_tag",
@@ -32748,11 +32470,6 @@
             "key": "common.back",
             "line": 296,
             "context": "295: >\n296: {t('common.back')}\n297: </Button>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 300,
-            "context": "299: <Button variant=\"outline\" onClick={onClose}>\n300: {t('common.cancel')}\n301: </Button>"
           },
           {
             "key": "nfc.templates.create_tag",
@@ -33025,7 +32742,7 @@
           {
             "key": "common.cancel",
             "line": 520,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save",
@@ -33040,7 +32757,7 @@
           {
             "key": "common.cancel",
             "line": 539,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.create",
@@ -33305,11 +33022,6 @@
             "context": "513: <DialogTitle>\n514: {t('nfc_tracking.tag_manager.edit_tag')}: {editingTag.name}\n515: </DialogTitle>"
           },
           {
-            "key": "common.cancel",
-            "line": 520,
-            "context": "519: <Button variant=\"outline\" onClick={() => setEditingTag(null)}>\n520: {t('common.cancel')}\n521: </Button>"
-          },
-          {
             "key": "common.save",
             "line": 523,
             "context": "522: <Button onClick={handleUpdateTag} disabled={loading}>\n523: {t('common.save')}\n524: </Button>"
@@ -33318,11 +33030,6 @@
             "key": "nfc_tracking.tag_manager.create_tag",
             "line": 534,
             "context": "533: <DialogHeader>\n534: <DialogTitle>{t('nfc_tracking.tag_manager.create_tag')}</DialogTitle>\n535: </DialogHeader>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 539,
-            "context": "538: <Button variant=\"outline\" onClick={() => setShowCreateDialog(false)}>\n539: {t('common.cancel')}\n540: </Button>"
           },
           {
             "key": "common.create",
@@ -33421,7 +33128,7 @@
           {
             "key": "common.close",
             "line": 148,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.writer.title",
@@ -33451,12 +33158,12 @@
           {
             "key": "common.close",
             "line": 239,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.cancel",
             "line": 239,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.writer.write_tag",
@@ -33546,11 +33253,6 @@
             "context": "141: <AlertDescription>\n142: {t('nfc.errors.not_supported')}\n143: </AlertDescription>"
           },
           {
-            "key": "common.close",
-            "line": 148,
-            "context": "147: <Button variant=\"outline\" onClick={handleClose}>\n148: {t('common.close')}\n149: </Button>"
-          },
-          {
             "key": "nfc.writer.title",
             "line": 162,
             "context": "161: <Smartphone className=\"h-5 w-5\" />\n162: {t('nfc.writer.title')}\n163: </DialogTitle>"
@@ -33574,16 +33276,6 @@
             "key": "nfc.tag_info.location",
             "line": 186,
             "context": "185: <div className=\"flex items-center justify-between\">\n186: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.location')}</span>\n187: <span className=\"text-sm\">{tag.location_name}</span>"
-          },
-          {
-            "key": "common.close",
-            "line": 239,
-            "context": "238: >\n239: {writeStatus === 'success' ? t('common.close') : t('common.cancel')}\n240: </Button>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 239,
-            "context": "238: >\n239: {writeStatus === 'success' ? t('common.close') : t('common.cancel')}\n240: </Button>"
           },
           {
             "key": "nfc.writer.write_tag",
@@ -33656,7 +33348,7 @@
           {
             "key": "common.close",
             "line": 148,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.reader.title",
@@ -33701,7 +33393,7 @@
           {
             "key": "common.close",
             "line": 260,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.reader.start_scanning",
@@ -33776,11 +33468,6 @@
             "context": "141: <AlertDescription>\n142: {t('nfc.errors.not_supported')}\n143: </AlertDescription>"
           },
           {
-            "key": "common.close",
-            "line": 148,
-            "context": "147: <Button variant=\"outline\" onClick={handleClose}>\n148: {t('common.close')}\n149: </Button>"
-          },
-          {
             "key": "nfc.reader.title",
             "line": 162,
             "context": "161: <Eye className=\"h-5 w-5\" />\n162: {t('nfc.reader.title')}\n163: </DialogTitle>"
@@ -33819,11 +33506,6 @@
             "key": "nfc.tag_info.url",
             "line": 239,
             "context": "238: <div className=\"flex items-center justify-between\">\n239: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.url')}</span>\n240: <span className=\"text-xs text-primary truncate max-w-40\">{scannedData.url}</span>"
-          },
-          {
-            "key": "common.close",
-            "line": 260,
-            "context": "259: <Button variant=\"outline\" onClick={handleClose}>\n260: {t('common.close')}\n261: </Button>"
           },
           {
             "key": "nfc.reader.start_scanning",
@@ -34880,63 +34562,93 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\management\\UserManagementSection.tsx",
-        "hardcodedStrings": [],
+        "file": "src\\components\\navigation\\Breadcrumbs.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Breadcrumb",
+            "line": 178,
+            "context": "177: return (\n178: <nav aria-label=\"Breadcrumb\" className=\"flex items-center gap-2 px-6 py-3 text-sm bg-background border-b\">\n179: <ol className=\"flex items-center gap-2\">"
+          }
+        ],
         "translationCalls": [
           {
-            "key": "management.user_management",
-            "line": 19,
-            "exists": false
+            "key": "breadcrumbs.home",
+            "line": 24,
+            "exists": true
           },
           {
-            "key": "user_management.description",
-            "line": 22,
-            "exists": false
+            "key": "breadcrumbs.administration",
+            "line": 43,
+            "exists": true
           },
           {
-            "key": "users.add_new",
-            "line": 29,
-            "exists": false
+            "key": "breadcrumbs.sales_orders",
+            "line": 63,
+            "exists": true
           },
           {
-            "key": "user_management.import_users",
-            "line": 33,
-            "exists": false
+            "key": "breadcrumbs.order",
+            "line": 71,
+            "exists": true
           },
           {
-            "key": "user_management.export_report",
-            "line": 37,
-            "exists": false
+            "key": "breadcrumbs.service_orders",
+            "line": 80,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.order",
+            "line": 87,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.recon_orders",
+            "line": 96,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.order",
+            "line": 103,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.car_wash",
+            "line": 112,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.contacts",
+            "line": 120,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.contact",
+            "line": 127,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.users",
+            "line": 136,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.user",
+            "line": 143,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.settings",
+            "line": 152,
+            "exists": true
+          },
+          {
+            "key": "breadcrumbs.reports",
+            "line": 160,
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "management.user_management",
-            "line": 19,
-            "context": "18: <Users className=\"h-5 w-5\" />\n19: {t('management.user_management')}\n20: </CardTitle>"
-          },
-          {
-            "key": "user_management.description",
-            "line": 22,
-            "context": "21: <CardDescription>\n22: {t('user_management.description')}\n23: </CardDescription>"
-          },
-          {
-            "key": "users.add_new",
-            "line": 29,
-            "context": "28: <UserPlus className=\"h-4 w-4\" />\n29: {t('users.add_new')}\n30: </Button>"
-          },
-          {
-            "key": "user_management.import_users",
-            "line": 33,
-            "context": "32: <Upload className=\"h-4 w-4\" />\n33: {t('user_management.import_users')}\n34: </Button>"
-          },
-          {
-            "key": "user_management.export_report",
-            "line": 37,
-            "context": "36: <Download className=\"h-4 w-4\" />\n37: {t('user_management.export_report')}\n38: </Button>"
-          }
-        ],
-        "coverage": 100,
+        "missingKeys": [],
+        "coverage": 94,
         "severity": "low"
       },
       {
@@ -34956,7 +34668,7 @@
           {
             "key": "common.active",
             "line": 151,
-            "exists": false
+            "exists": true
           },
           {
             "key": "management.dealerships",
@@ -35039,11 +34751,6 @@
             "key": "management.system_status",
             "line": 121,
             "context": "120: <Activity className=\"h-5 w-5\" />\n121: {t('management.system_status')}\n122: </CardTitle>"
-          },
-          {
-            "key": "common.active",
-            "line": 151,
-            "context": "150: \n151: const healthStatus = stats.system_health_score >= 80 ? t('common.active') :\n152: stats.system_health_score >= 60 ? 'Atención' : 'Crítico';"
           },
           {
             "key": "management.dealerships",
@@ -35250,12 +34957,12 @@
           {
             "key": "management.permission_management",
             "line": 43,
-            "exists": false
+            "exists": true
           },
           {
             "key": "management.role_configuration",
             "line": 44,
-            "exists": false
+            "exists": true
           },
           {
             "key": "management.system_configuration",
@@ -35308,16 +35015,6 @@
             "key": "management.dealership_management",
             "line": 36,
             "context": "35: icon: Building2,\n36: label: t('management.dealership_management'),\n37: description: t('dealerships.manage_description'),"
-          },
-          {
-            "key": "management.permission_management",
-            "line": 43,
-            "context": "42: icon: Shield,\n43: label: t('management.permission_management'),\n44: description: t('management.role_configuration'),"
-          },
-          {
-            "key": "management.role_configuration",
-            "line": 44,
-            "context": "43: label: t('management.permission_management'),\n44: description: t('management.role_configuration'),\n45: action: () => navigate('/management'),"
           },
           {
             "key": "management.system_configuration",
@@ -36796,7 +36493,7 @@
           {
             "key": "common.cancel",
             "line": 558,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.approvals.reject_dialog.confirm",
@@ -36834,13 +36531,7 @@
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 558,
-            "context": "557: <Button variant=\"outline\" onClick={() => setRejectDialogOpen(false)}>\n558: {t('common.cancel')}\n559: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 89,
         "severity": "low"
       },
@@ -37216,7 +36907,7 @@
           {
             "key": "common.cancel",
             "line": 327,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.delete",
@@ -37234,11 +36925,6 @@
             "key": "common.delete",
             "line": 295,
             "context": "294: <Trash2 className=\"h-4 w-4 mr-2\" />\n295: {t('common.delete')}\n296: </DropdownMenuItem>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 327,
-            "context": "326: <AlertDialogFooter>\n327: <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>\n328: <AlertDialogAction"
           },
           {
             "key": "common.delete",
@@ -37346,7 +37032,7 @@
           {
             "key": "common.cancel",
             "line": 250,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.saving",
@@ -37365,11 +37051,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 250,
-            "context": "249: <Button type=\"button\" variant=\"outline\" onClick={() => onOpenChange(false)}>\n250: {t('common.cancel')}\n251: </Button>"
-          },
           {
             "key": "common.saving",
             "line": 254,
@@ -38176,7 +37857,7 @@
           {
             "key": "common.cancel",
             "line": 552,
-            "exists": false
+            "exists": true
           },
           {
             "key": "get_ready.notes.create",
@@ -38246,7 +37927,7 @@
           {
             "key": "common.cancel",
             "line": 616,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save",
@@ -38266,7 +37947,7 @@
           {
             "key": "common.cancel",
             "line": 636,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.delete",
@@ -38286,24 +37967,9 @@
             "context": "453: <Trash2 className=\"h-4 w-4 mr-2\" />\n454: {t('common.delete')}\n455: </DropdownMenuItem>"
           },
           {
-            "key": "common.cancel",
-            "line": 552,
-            "context": "551: <Button variant=\"outline\" onClick={() => setCreateModalOpen(false)}>\n552: {t('common.cancel')}\n553: </Button>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 616,
-            "context": "615: <Button variant=\"outline\" onClick={() => setEditModalOpen(false)}>\n616: {t('common.cancel')}\n617: </Button>"
-          },
-          {
             "key": "common.save",
             "line": 620,
             "context": "619: {updateNote.isPending && <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />}\n620: {t('common.save')}\n621: </Button>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 636,
-            "context": "635: <Button variant=\"outline\" onClick={() => setDeleteModalOpen(false)}>\n636: {t('common.cancel')}\n637: </Button>"
           },
           {
             "key": "common.delete",
@@ -38967,7 +38633,7 @@
           {
             "key": "common.cancel",
             "line": 273,
-            "exists": false
+            "exists": true
           },
           {
             "key": "followers.adding",
@@ -38980,40 +38646,53 @@
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "common.cancel",
-            "line": 273,
-            "context": "272: <Button variant=\"outline\" onClick={onClose} className=\"flex-1\">\n273: {t('common.cancel', 'Cancel')}\n274: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 93,
         "severity": "low"
       },
       {
         "file": "src\\components\\filters\\DealershipFilter.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Select dealership...",
-            "line": 45,
-            "context": "44: <SelectTrigger className=\"w-56 h-8 text-sm whitespace-nowrap\">\n45: <SelectValue placeholder=\"Select dealership...\" className=\"truncate\" />\n46: </SelectTrigger>"
-          }
-        ],
+        "hardcodedStrings": [],
         "translationCalls": [
           {
+            "key": "dealerships.all_selected",
+            "line": 40,
+            "exists": false
+          },
+          {
+            "key": "dealerships.none_selected",
+            "line": 43,
+            "exists": false
+          },
+          {
+            "key": "dealerships.dealership",
+            "line": 60,
+            "exists": true
+          },
+          {
             "key": "dealerships.all_dealerships",
-            "line": 51,
+            "line": 67,
             "exists": false
           }
         ],
         "missingKeys": [
           {
+            "key": "dealerships.all_selected",
+            "line": 40,
+            "context": "39: if (selectedDealerId === 'all') {\n40: return t('dealerships.all_selected');\n41: }"
+          },
+          {
+            "key": "dealerships.none_selected",
+            "line": 43,
+            "context": "42: const currentDealer = dealerships.find(d => d.id === selectedDealerId);\n43: return currentDealer?.name || t('dealerships.none_selected');\n44: };"
+          },
+          {
             "key": "dealerships.all_dealerships",
-            "line": 51,
-            "context": "50: <div className=\"w-2 h-2 bg-blue-500 rounded-full shrink-0\" />\n51: <span className=\"truncate\">{t('dealerships.all_dealerships', 'All Dealerships')}</span>\n52: </div>"
+            "line": 67,
+            "context": "66: <div className=\"w-2 h-2 bg-gray-500 rounded-full shrink-0\" />\n67: <span className=\"truncate\">{t('dealerships.all_dealerships')}</span>\n68: </div>"
           }
         ],
-        "coverage": 50,
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -39242,12 +38921,12 @@
           {
             "key": "dealerships.select_dealership",
             "line": 286,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.select_dealership",
             "line": 293,
-            "exists": false
+            "exists": true
           },
           {
             "key": "invitations.email",
@@ -39282,7 +38961,7 @@
           {
             "key": "common.cancel",
             "line": 385,
-            "exists": false
+            "exists": true
           },
           {
             "key": "invitations.sending",
@@ -39300,21 +38979,6 @@
             "key": "messages.required_field",
             "line": 130,
             "context": "129: title: t('common.error'),\n130: description: t('messages.required_field'),\n131: variant: 'destructive',"
-          },
-          {
-            "key": "dealerships.select_dealership",
-            "line": 286,
-            "context": "285: <div className=\"space-y-2\">\n286: <Label htmlFor=\"dealership\">{t('dealerships.select_dealership')} *</Label>\n287: <Select"
-          },
-          {
-            "key": "dealerships.select_dealership",
-            "line": 293,
-            "context": "292: <SelectTrigger>\n293: <SelectValue placeholder={t('dealerships.select_dealership')} />\n294: </SelectTrigger>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 385,
-            "context": "384: >\n385: {t('common.cancel')}\n386: </Button>"
           }
         ],
         "coverage": 100,
@@ -39388,7 +39052,7 @@
           {
             "key": "common.user",
             "line": 200,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealer.users.current_role",
@@ -39438,7 +39102,7 @@
           {
             "key": "common.cancel",
             "line": 285,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.loading",
@@ -39451,18 +39115,7 @@
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "common.user",
-            "line": 200,
-            "context": "199: <div className=\"flex items-center justify-between\">\n200: <span className=\"text-sm text-muted-foreground\">{t('common.user')}:</span>\n201: <span className=\"font-medium\">{getUserFullName()}</span>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 285,
-            "context": "284: <Button type=\"button\" variant=\"outline\" onClick={onClose} disabled={loading}>\n285: {t('common.cancel')}\n286: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 88,
         "severity": "low"
       },
@@ -39588,7 +39241,7 @@
           {
             "key": "common.active",
             "line": 289,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.inactive",
@@ -39633,7 +39286,7 @@
           {
             "key": "common.cancel",
             "line": 408,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save",
@@ -39658,19 +39311,9 @@
             "context": "285: </TableCell>\n286: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n287: <TableCell>"
           },
           {
-            "key": "common.active",
-            "line": 289,
-            "context": "288: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n289: {user.is_active ? t('common.active') : t('common.inactive')}\n290: </Badge>"
-          },
-          {
             "key": "common.inactive",
             "line": 289,
             "context": "288: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n289: {user.is_active ? t('common.active') : t('common.inactive')}\n290: </Badge>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 408,
-            "context": "407: <Button variant=\"outline\" onClick={() => setShowManageGroupsModal(false)}>\n408: {t('common.cancel')}\n409: </Button>"
           },
           {
             "key": "common.save",
@@ -39687,160 +39330,155 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 119,
+            "line": 161,
             "exists": true
           },
           {
             "key": "dealer.users.error_loading_users",
-            "line": 120,
+            "line": 162,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 145,
+            "line": 187,
             "exists": true
           },
           {
             "key": "dealer.users.user_deactivated",
-            "line": 147,
+            "line": 189,
             "exists": true
           },
           {
             "key": "dealer.users.user_activated",
-            "line": 148,
+            "line": 190,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 155,
+            "line": 197,
             "exists": true
           },
           {
             "key": "dealer.users.error_updating_status",
-            "line": 156,
+            "line": 198,
             "exists": true
           },
           {
             "key": "common.unnamed",
-            "line": 175,
+            "line": 217,
             "exists": false
           },
           {
             "key": "common.unnamed",
-            "line": 181,
+            "line": 223,
             "exists": false
           },
           {
             "key": "dealer.users.title",
-            "line": 217,
+            "line": 259,
             "exists": true
           },
           {
             "key": "dealer.users.description",
-            "line": 218,
+            "line": 260,
             "exists": true
           },
           {
             "key": "dealer.users.invite_user",
-            "line": 222,
+            "line": 264,
             "exists": true
           },
           {
             "key": "dealer.users.table.user",
-            "line": 232,
+            "line": 274,
             "exists": true
           },
           {
             "key": "dealer.users.table.email",
-            "line": 233,
+            "line": 275,
             "exists": true
           },
           {
             "key": "dealer.users.table.role",
-            "line": 234,
+            "line": 276,
             "exists": false
           },
           {
             "key": "dealer.users.table.status",
-            "line": 235,
+            "line": 277,
             "exists": true
           },
           {
             "key": "dealer.users.table.joined",
-            "line": 236,
+            "line": 278,
             "exists": true
           },
           {
             "key": "dealer.users.no_users",
-            "line": 246,
+            "line": 288,
             "exists": true
           },
           {
             "key": "common.no_email",
-            "line": 267,
+            "line": 309,
             "exists": false
           },
           {
             "key": "dealer.users.no_role",
-            "line": 276,
+            "line": 322,
             "exists": true
           },
           {
             "key": "common.active",
-            "line": 283,
-            "exists": false
+            "line": 329,
+            "exists": true
           },
           {
             "key": "common.inactive",
-            "line": 283,
+            "line": 329,
             "exists": false
           },
           {
             "key": "dealer.users.edit_role",
-            "line": 303,
+            "line": 349,
             "exists": true
           },
           {
             "key": "dealer.users.deactivate",
-            "line": 309,
+            "line": 355,
             "exists": true
           },
           {
             "key": "dealer.users.activate",
-            "line": 314,
+            "line": 360,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.unnamed",
-            "line": 175,
-            "context": "174: if (!user.profiles) {\n175: return t('common.unnamed');\n176: }"
+            "line": 217,
+            "context": "216: if (!user.profiles) {\n217: return t('common.unnamed');\n218: }"
           },
           {
             "key": "common.unnamed",
-            "line": 181,
-            "context": "180: }\n181: return first_name || last_name || t('common.unnamed');\n182: };"
+            "line": 223,
+            "context": "222: }\n223: return first_name || last_name || t('common.unnamed');\n224: };"
           },
           {
             "key": "dealer.users.table.role",
-            "line": 234,
-            "context": "233: <TableHead>{t('dealer.users.table.email')}</TableHead>\n234: <TableHead>{t('dealer.users.table.role')}</TableHead>\n235: <TableHead>{t('dealer.users.table.status')}</TableHead>"
+            "line": 276,
+            "context": "275: <TableHead>{t('dealer.users.table.email')}</TableHead>\n276: <TableHead>{t('dealer.users.table.role')}</TableHead>\n277: <TableHead>{t('dealer.users.table.status')}</TableHead>"
           },
           {
             "key": "common.no_email",
-            "line": 267,
-            "context": "266: {/* Email */}\n267: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n268: "
-          },
-          {
-            "key": "common.active",
-            "line": 283,
-            "context": "282: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n283: {user.is_active ? t('common.active') : t('common.inactive')}\n284: </Badge>"
+            "line": 309,
+            "context": "308: {/* Email */}\n309: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n310: "
           },
           {
             "key": "common.inactive",
-            "line": 283,
-            "context": "282: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n283: {user.is_active ? t('common.active') : t('common.inactive')}\n284: </Badge>"
+            "line": 329,
+            "context": "328: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n329: {user.is_active ? t('common.active') : t('common.inactive')}\n330: </Badge>"
           }
         ],
         "coverage": 100,
@@ -39851,402 +39489,397 @@
         "hardcodedStrings": [
           {
             "text": "Sales Dept",
-            "line": 361,
-            "context": "360: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#3B82F6' }} />\n361: <span>Sales Dept</span>\n362: </div>"
+            "line": 363,
+            "context": "362: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#3B82F6' }} />\n363: <span>Sales Dept</span>\n364: </div>"
           },
           {
             "text": "Service Dept",
-            "line": 367,
-            "context": "366: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#10B981' }} />\n367: <span>Service Dept</span>\n368: </div>"
+            "line": 369,
+            "context": "368: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#10B981' }} />\n369: <span>Service Dept</span>\n370: </div>"
           },
           {
             "text": "Recon Dept",
-            "line": 373,
-            "context": "372: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#F59E0B' }} />\n373: <span>Recon Dept</span>\n374: </div>"
+            "line": 375,
+            "context": "374: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#F59E0B' }} />\n375: <span>Recon Dept</span>\n376: </div>"
           },
           {
             "text": "CarWash Dept",
-            "line": 379,
-            "context": "378: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#06B6D4' }} />\n379: <span>CarWash Dept</span>\n380: </div>"
+            "line": 381,
+            "context": "380: <div className=\"w-3 h-3 rounded-full\" style={{ backgroundColor: '#06B6D4' }} />\n381: <span>CarWash Dept</span>\n382: </div>"
           },
           {
             "text": "Select category...",
-            "line": 355,
-            "context": "354: <SelectTrigger>\n355: <SelectValue placeholder=\"Select category...\" />\n356: </SelectTrigger>"
+            "line": 357,
+            "context": "356: <SelectTrigger>\n357: <SelectValue placeholder=\"Select category...\" />\n358: </SelectTrigger>"
           }
         ],
         "translationCalls": [
           {
             "key": "services.error",
-            "line": 91,
+            "line": 93,
             "exists": false
           },
           {
             "key": "services.fetchError",
-            "line": 92,
+            "line": 94,
             "exists": false
           },
           {
             "key": "services.error",
-            "line": 159,
+            "line": 161,
             "exists": false
           },
           {
             "key": "services.success",
-            "line": 218,
+            "line": 220,
             "exists": false
           },
           {
             "key": "services.updated",
-            "line": 219,
+            "line": 221,
             "exists": false
           },
           {
             "key": "services.created",
-            "line": 219,
+            "line": 221,
             "exists": false
           },
           {
             "key": "services.error",
-            "line": 228,
+            "line": 230,
             "exists": false
           },
           {
             "key": "services.saveError",
-            "line": 229,
+            "line": 231,
             "exists": false
           },
           {
             "key": "services.confirmDelete",
-            "line": 236,
+            "line": 238,
             "exists": false
           },
           {
             "key": "services.success",
-            "line": 247,
+            "line": 249,
             "exists": false
           },
           {
             "key": "services.deleted",
-            "line": 248,
+            "line": 250,
             "exists": false
           },
           {
             "key": "services.error",
-            "line": 255,
+            "line": 257,
             "exists": false
           },
           {
             "key": "services.deleteError",
-            "line": 256,
+            "line": 258,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 307,
+            "line": 309,
             "exists": true
           },
           {
             "key": "services.title",
-            "line": 315,
+            "line": 317,
             "exists": false
           },
           {
             "key": "services.subtitle",
-            "line": 316,
+            "line": 318,
             "exists": false
           },
           {
             "key": "services.add",
-            "line": 324,
+            "line": 326,
             "exists": false
           },
           {
             "key": "services.edit",
-            "line": 330,
+            "line": 332,
             "exists": false
           },
           {
             "key": "services.add",
-            "line": 330,
+            "line": 332,
             "exists": false
           },
           {
             "key": "services.name",
-            "line": 340,
+            "line": 342,
             "exists": false
           },
           {
             "key": "services.category",
-            "line": 350,
+            "line": 352,
             "exists": false
           },
           {
             "key": "services.description",
-            "line": 388,
+            "line": 390,
             "exists": false
           },
           {
             "key": "services.price",
-            "line": 399,
+            "line": 401,
             "exists": false
           },
           {
             "key": "services.duration",
-            "line": 410,
+            "line": 412,
             "exists": false
           },
           {
             "key": "services.durationPlaceholder",
-            "line": 414,
+            "line": 416,
             "exists": false
           },
           {
             "key": "services.assignGroups",
-            "line": 422,
+            "line": 424,
             "exists": false
           },
           {
             "key": "services.active",
-            "line": 457,
+            "line": 459,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 464,
-            "exists": false
+            "line": 466,
+            "exists": true
           },
           {
             "key": "common.update",
-            "line": 467,
+            "line": 469,
             "exists": false
           },
           {
             "key": "common.create",
-            "line": 467,
+            "line": 469,
             "exists": false
           },
           {
             "key": "services.search",
-            "line": 480,
+            "line": 482,
             "exists": false
           },
           {
             "key": "services.allCategories",
-            "line": 491,
+            "line": 493,
             "exists": false
           },
           {
             "key": "services.minutes",
-            "line": 552,
+            "line": 554,
             "exists": true
           },
           {
             "key": "services.assignedTo",
-            "line": 561,
+            "line": 563,
             "exists": false
           },
           {
             "key": "services.inactive",
-            "line": 577,
+            "line": 579,
             "exists": false
           },
           {
             "key": "services.noServices",
-            "line": 587,
+            "line": 589,
             "exists": false
           },
           {
             "key": "services.noServicesDescription",
-            "line": 588,
+            "line": 590,
             "exists": false
           },
           {
             "key": "services.addFirst",
-            "line": 592,
+            "line": 594,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "services.error",
-            "line": 91,
-            "context": "90: toast({\n91: title: t('services.error'),\n92: description: t('services.fetchError'),"
+            "line": 93,
+            "context": "92: toast({\n93: title: t('services.error'),\n94: description: t('services.fetchError'),"
           },
           {
             "key": "services.fetchError",
-            "line": 92,
-            "context": "91: title: t('services.error'),\n92: description: t('services.fetchError'),\n93: variant: 'destructive'"
+            "line": 94,
+            "context": "93: title: t('services.error'),\n94: description: t('services.fetchError'),\n95: variant: 'destructive'"
           },
           {
             "key": "services.error",
-            "line": 159,
-            "context": "158: toast({\n159: title: t('services.error'),\n160: description: 'Category selection is required',"
+            "line": 161,
+            "context": "160: toast({\n161: title: t('services.error'),\n162: description: 'Category selection is required',"
           },
           {
             "key": "services.success",
-            "line": 218,
-            "context": "217: toast({\n218: title: t('services.success'),\n219: description: editingService ? t('services.updated') : t('services.created')"
+            "line": 220,
+            "context": "219: toast({\n220: title: t('services.success'),\n221: description: editingService ? t('services.updated') : t('services.created')"
           },
           {
             "key": "services.updated",
-            "line": 219,
-            "context": "218: title: t('services.success'),\n219: description: editingService ? t('services.updated') : t('services.created')\n220: });"
+            "line": 221,
+            "context": "220: title: t('services.success'),\n221: description: editingService ? t('services.updated') : t('services.created')\n222: });"
           },
           {
             "key": "services.created",
-            "line": 219,
-            "context": "218: title: t('services.success'),\n219: description: editingService ? t('services.updated') : t('services.created')\n220: });"
+            "line": 221,
+            "context": "220: title: t('services.success'),\n221: description: editingService ? t('services.updated') : t('services.created')\n222: });"
           },
           {
             "key": "services.error",
-            "line": 228,
-            "context": "227: toast({\n228: title: t('services.error'),\n229: description: t('services.saveError'),"
+            "line": 230,
+            "context": "229: toast({\n230: title: t('services.error'),\n231: description: t('services.saveError'),"
           },
           {
             "key": "services.saveError",
-            "line": 229,
-            "context": "228: title: t('services.error'),\n229: description: t('services.saveError'),\n230: variant: 'destructive'"
+            "line": 231,
+            "context": "230: title: t('services.error'),\n231: description: t('services.saveError'),\n232: variant: 'destructive'"
           },
           {
             "key": "services.confirmDelete",
-            "line": 236,
-            "context": "235: const handleDelete = async (serviceId: string) => {\n236: if (!confirm(t('services.confirmDelete'))) return;\n237: "
+            "line": 238,
+            "context": "237: const handleDelete = async (serviceId: string) => {\n238: if (!confirm(t('services.confirmDelete'))) return;\n239: "
           },
           {
             "key": "services.success",
-            "line": 247,
-            "context": "246: toast({\n247: title: t('services.success'),\n248: description: t('services.deleted')"
+            "line": 249,
+            "context": "248: toast({\n249: title: t('services.success'),\n250: description: t('services.deleted')"
           },
           {
             "key": "services.deleted",
-            "line": 248,
-            "context": "247: title: t('services.success'),\n248: description: t('services.deleted')\n249: });"
+            "line": 250,
+            "context": "249: title: t('services.success'),\n250: description: t('services.deleted')\n251: });"
           },
           {
             "key": "services.error",
-            "line": 255,
-            "context": "254: toast({\n255: title: t('services.error'),\n256: description: t('services.deleteError'),"
+            "line": 257,
+            "context": "256: toast({\n257: title: t('services.error'),\n258: description: t('services.deleteError'),"
           },
           {
             "key": "services.deleteError",
-            "line": 256,
-            "context": "255: title: t('services.error'),\n256: description: t('services.deleteError'),\n257: variant: 'destructive'"
+            "line": 258,
+            "context": "257: title: t('services.error'),\n258: description: t('services.deleteError'),\n259: variant: 'destructive'"
           },
           {
             "key": "services.title",
-            "line": 315,
-            "context": "314: <div>\n315: <h2 className=\"text-2xl font-bold\">{t('services.title')}</h2>\n316: <p className=\"text-muted-foreground\">{t('services.subtitle')}</p>"
+            "line": 317,
+            "context": "316: <div>\n317: <h2 className=\"text-2xl font-bold\">{t('services.title')}</h2>\n318: <p className=\"text-muted-foreground\">{t('services.subtitle')}</p>"
           },
           {
             "key": "services.subtitle",
-            "line": 316,
-            "context": "315: <h2 className=\"text-2xl font-bold\">{t('services.title')}</h2>\n316: <p className=\"text-muted-foreground\">{t('services.subtitle')}</p>\n317: </div>"
+            "line": 318,
+            "context": "317: <h2 className=\"text-2xl font-bold\">{t('services.title')}</h2>\n318: <p className=\"text-muted-foreground\">{t('services.subtitle')}</p>\n319: </div>"
           },
           {
             "key": "services.add",
-            "line": 324,
-            "context": "323: <Plus className=\"h-4 w-4 mr-2\" />\n324: {t('services.add')}\n325: </Button>"
+            "line": 326,
+            "context": "325: <Plus className=\"h-4 w-4 mr-2\" />\n326: {t('services.add')}\n327: </Button>"
           },
           {
             "key": "services.edit",
-            "line": 330,
-            "context": "329: <DialogTitle>\n330: {editingService ? t('services.edit') : t('services.add')}\n331: </DialogTitle>"
+            "line": 332,
+            "context": "331: <DialogTitle>\n332: {editingService ? t('services.edit') : t('services.add')}\n333: </DialogTitle>"
           },
           {
             "key": "services.add",
-            "line": 330,
-            "context": "329: <DialogTitle>\n330: {editingService ? t('services.edit') : t('services.add')}\n331: </DialogTitle>"
+            "line": 332,
+            "context": "331: <DialogTitle>\n332: {editingService ? t('services.edit') : t('services.add')}\n333: </DialogTitle>"
           },
           {
             "key": "services.name",
-            "line": 340,
-            "context": "339: <div>\n340: <Label htmlFor=\"name\">{t('services.name')} *</Label>\n341: <Input"
+            "line": 342,
+            "context": "341: <div>\n342: <Label htmlFor=\"name\">{t('services.name')} *</Label>\n343: <Input"
           },
           {
             "key": "services.category",
-            "line": 350,
-            "context": "349: <div>\n350: <Label htmlFor=\"category\">{t('services.category')} *</Label>\n351: <Select value={formData.category_id} onValueChange={(value) =>"
+            "line": 352,
+            "context": "351: <div>\n352: <Label htmlFor=\"category\">{t('services.category')} *</Label>\n353: <Select value={formData.category_id} onValueChange={(value) =>"
           },
           {
             "key": "services.description",
-            "line": 388,
-            "context": "387: <div>\n388: <Label htmlFor=\"description\">{t('services.description')}</Label>\n389: <Textarea"
+            "line": 390,
+            "context": "389: <div>\n390: <Label htmlFor=\"description\">{t('services.description')}</Label>\n391: <Textarea"
           },
           {
             "key": "services.price",
-            "line": 399,
-            "context": "398: <div>\n399: <Label htmlFor=\"price\">{t('services.price')}</Label>\n400: <Input"
+            "line": 401,
+            "context": "400: <div>\n401: <Label htmlFor=\"price\">{t('services.price')}</Label>\n402: <Input"
           },
           {
             "key": "services.duration",
-            "line": 410,
-            "context": "409: <div>\n410: <Label htmlFor=\"duration\">{t('services.duration')}</Label>\n411: <Input"
+            "line": 412,
+            "context": "411: <div>\n412: <Label htmlFor=\"duration\">{t('services.duration')}</Label>\n413: <Input"
           },
           {
             "key": "services.durationPlaceholder",
-            "line": 414,
-            "context": "413: type=\"number\"\n414: placeholder={t('services.durationPlaceholder')}\n415: value={formData.duration}"
+            "line": 416,
+            "context": "415: type=\"number\"\n416: placeholder={t('services.durationPlaceholder')}\n417: value={formData.duration}"
           },
           {
             "key": "services.assignGroups",
-            "line": 422,
-            "context": "421: <div>\n422: <Label>{t('services.assignGroups')}</Label>\n423: <div className=\"space-y-2 mt-2\">"
+            "line": 424,
+            "context": "423: <div>\n424: <Label>{t('services.assignGroups')}</Label>\n425: <div className=\"space-y-2 mt-2\">"
           },
           {
             "key": "services.active",
-            "line": 457,
-            "context": "456: />\n457: <Label htmlFor=\"is_active\">{t('services.active')}</Label>\n458: </div>"
-          },
-          {
-            "key": "common.cancel",
-            "line": 464,
-            "context": "463: <Button type=\"button\" variant=\"outline\" onClick={() => setIsModalOpen(false)}>\n464: {t('common.cancel')}\n465: </Button>"
+            "line": 459,
+            "context": "458: />\n459: <Label htmlFor=\"is_active\">{t('services.active')}</Label>\n460: </div>"
           },
           {
             "key": "common.update",
-            "line": 467,
-            "context": "466: <Button type=\"submit\">\n467: {editingService ? t('common.update') : t('common.create')}\n468: </Button>"
+            "line": 469,
+            "context": "468: <Button type=\"submit\">\n469: {editingService ? t('common.update') : t('common.create')}\n470: </Button>"
           },
           {
             "key": "common.create",
-            "line": 467,
-            "context": "466: <Button type=\"submit\">\n467: {editingService ? t('common.update') : t('common.create')}\n468: </Button>"
+            "line": 469,
+            "context": "468: <Button type=\"submit\">\n469: {editingService ? t('common.update') : t('common.create')}\n470: </Button>"
           },
           {
             "key": "services.search",
-            "line": 480,
-            "context": "479: <Input\n480: placeholder={t('services.search')}\n481: value={searchTerm}"
+            "line": 482,
+            "context": "481: <Input\n482: placeholder={t('services.search')}\n483: value={searchTerm}"
           },
           {
             "key": "services.allCategories",
-            "line": 491,
-            "context": "490: <SelectContent>\n491: <SelectItem value=\"all\">{t('services.allCategories')}</SelectItem>\n492: {categories.map(category => ("
+            "line": 493,
+            "context": "492: <SelectContent>\n493: <SelectItem value=\"all\">{t('services.allCategories')}</SelectItem>\n494: {categories.map(category => ("
           },
           {
             "key": "services.assignedTo",
-            "line": 561,
-            "context": "560: <Settings className=\"h-3 w-3\" />\n561: <span>{t('services.assignedTo')}:</span>\n562: </div>"
+            "line": 563,
+            "context": "562: <Settings className=\"h-3 w-3\" />\n563: <span>{t('services.assignedTo')}:</span>\n564: </div>"
           },
           {
             "key": "services.inactive",
-            "line": 577,
-            "context": "576: {!service.is_active && (\n577: <Badge variant=\"secondary\">{t('services.inactive')}</Badge>\n578: )}"
+            "line": 579,
+            "context": "578: {!service.is_active && (\n579: <Badge variant=\"secondary\">{t('services.inactive')}</Badge>\n580: )}"
           },
           {
             "key": "services.noServices",
-            "line": 587,
-            "context": "586: <Tag className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n587: <h3 className=\"text-lg font-medium mb-2\">{t('services.noServices')}</h3>\n588: <p className=\"text-muted-foreground mb-4\">{t('services.noServicesDescription')}</p>"
+            "line": 589,
+            "context": "588: <Tag className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n589: <h3 className=\"text-lg font-medium mb-2\">{t('services.noServices')}</h3>\n590: <p className=\"text-muted-foreground mb-4\">{t('services.noServicesDescription')}</p>"
           },
           {
             "key": "services.noServicesDescription",
-            "line": 588,
-            "context": "587: <h3 className=\"text-lg font-medium mb-2\">{t('services.noServices')}</h3>\n588: <p className=\"text-muted-foreground mb-4\">{t('services.noServicesDescription')}</p>\n589: {canManageServices && ("
+            "line": 590,
+            "context": "589: <h3 className=\"text-lg font-medium mb-2\">{t('services.noServices')}</h3>\n590: <p className=\"text-muted-foreground mb-4\">{t('services.noServicesDescription')}</p>\n591: {canManageServices && ("
           },
           {
             "key": "services.addFirst",
-            "line": 592,
-            "context": "591: <Plus className=\"h-4 w-4 mr-2\" />\n592: {t('services.addFirst')}\n593: </Button>"
+            "line": 594,
+            "context": "593: <Plus className=\"h-4 w-4 mr-2\" />\n594: {t('services.addFirst')}\n595: </Button>"
           }
         ],
         "coverage": 88,
@@ -40699,7 +40332,7 @@
           {
             "key": "common.cancel",
             "line": 453,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.save",
@@ -40857,11 +40490,6 @@
             "key": "dealer.groups.form.permissions",
             "line": 418,
             "context": "417: <div>\n418: <Label>{t('dealer.groups.form.permissions')}</Label>\n419: <div className=\"mt-2 space-y-3\">"
-          },
-          {
-            "key": "common.cancel",
-            "line": 453,
-            "context": "452: <Button variant=\"outline\" onClick={() => setShowModal(false)} className=\"w-full sm:w-auto\">\n453: {t('common.cancel')}\n454: </Button>"
           },
           {
             "key": "common.save",
@@ -41064,7 +40692,7 @@
           {
             "key": "common.cancel",
             "line": 440,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.update",
@@ -41134,11 +40762,6 @@
         ],
         "missingKeys": [
           {
-            "key": "common.cancel",
-            "line": 440,
-            "context": "439: >\n440: {t('common.cancel')}\n441: </Button>"
-          },
-          {
             "key": "common.update",
             "line": 443,
             "context": "442: <Button onClick={handleSaveGroup}>\n443: {editingGroup ? t('common.update') : t('common.create')}\n444: </Button>"
@@ -41158,390 +40781,385 @@
         "translationCalls": [
           {
             "key": "categories.error_fetching",
-            "line": 94,
+            "line": 93,
             "exists": false
           },
           {
             "key": "categories.insufficient_permissions",
-            "line": 152,
+            "line": 151,
             "exists": false
           },
           {
             "key": "categories.name_required",
-            "line": 157,
+            "line": 156,
             "exists": false
           },
           {
             "key": "categories.cannot_edit_system",
-            "line": 165,
+            "line": 164,
             "exists": false
           },
           {
             "key": "categories.updated_successfully",
-            "line": 184,
+            "line": 183,
             "exists": false
           },
           {
             "key": "categories.created_successfully",
-            "line": 205,
+            "line": 204,
             "exists": false
           },
           {
             "key": "categories.error_saving",
-            "line": 213,
+            "line": 212,
             "exists": false
           },
           {
             "key": "categories.cannot_delete_system",
-            "line": 246,
+            "line": 245,
             "exists": false
           },
           {
             "key": "categories.insufficient_permissions",
-            "line": 251,
+            "line": 250,
             "exists": false
           },
           {
             "key": "categories.deleted_successfully",
-            "line": 264,
+            "line": 263,
             "exists": false
           },
           {
             "key": "categories.error_deleting",
-            "line": 268,
+            "line": 267,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 284,
+            "line": 283,
             "exists": true
           },
           {
             "key": "categories.title",
+            "line": 291,
+            "exists": false
+          },
+          {
+            "key": "categories.description",
             "line": 292,
             "exists": false
           },
           {
-            "key": "categories.description",
-            "line": 293,
-            "exists": false
-          },
-          {
             "key": "categories.add_category",
-            "line": 300,
+            "line": 299,
             "exists": false
           },
           {
             "key": "categories.edit_category",
-            "line": 306,
+            "line": 305,
             "exists": false
           },
           {
             "key": "categories.add_category",
-            "line": 306,
+            "line": 305,
             "exists": false
           },
           {
             "key": "categories.name",
-            "line": 313,
+            "line": 312,
             "exists": false
           },
           {
             "key": "categories.name_placeholder",
-            "line": 318,
+            "line": 317,
             "exists": false
           },
           {
             "key": "categories.color",
-            "line": 324,
+            "line": 323,
             "exists": false
           },
           {
             "key": "categories.description",
-            "line": 349,
+            "line": 348,
             "exists": false
           },
           {
             "key": "categories.description_placeholder",
-            "line": 354,
+            "line": 353,
             "exists": false
           },
           {
             "key": "categories.icon",
-            "line": 360,
+            "line": 359,
             "exists": false
           },
           {
             "key": "categories.icon_placeholder",
-            "line": 365,
+            "line": 364,
             "exists": false
           },
           {
             "key": "categories.available_modules",
-            "line": 370,
+            "line": 369,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 399,
-            "exists": false
+            "line": 398,
+            "exists": true
           },
           {
             "key": "common.update",
-            "line": 402,
+            "line": 401,
             "exists": false
           },
           {
             "key": "common.create",
-            "line": 402,
+            "line": 401,
             "exists": false
           },
           {
             "key": "categories.search_placeholder",
-            "line": 414,
+            "line": 413,
             "exists": false
           },
           {
             "key": "categories.no_categories_found",
+            "line": 424,
+            "exists": false
+          },
+          {
+            "key": "categories.no_categories_description",
             "line": 425,
             "exists": false
           },
           {
-            "key": "categories.no_categories_description",
-            "line": 426,
-            "exists": false
-          },
-          {
             "key": "categories.add_category",
-            "line": 430,
+            "line": 429,
             "exists": false
           },
           {
             "key": "categories.system",
-            "line": 454,
+            "line": 453,
             "exists": false
           },
           {
             "key": "categories.available_in_modules",
-            "line": 491,
+            "line": 490,
             "exists": false
           },
           {
             "key": "categories.no_modules_assigned",
-            "line": 502,
+            "line": 501,
             "exists": false
           },
           {
             "key": "categories.created_at",
-            "line": 509,
+            "line": 508,
             "exists": false
           },
           {
             "key": "categories.no_categories_found",
-            "line": 524,
+            "line": 523,
             "exists": false
           },
           {
             "key": "categories.no_categories_description",
-            "line": 525,
+            "line": 524,
             "exists": false
           },
           {
             "key": "categories.add_first_category",
-            "line": 529,
+            "line": 528,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "categories.error_fetching",
-            "line": 94,
-            "context": "93: console.error('Error fetching categories:', error);\n94: toast.error(t('categories.error_fetching'));\n95: }"
+            "line": 93,
+            "context": "92: console.error('Error fetching categories:', error);\n93: toast.error(t('categories.error_fetching'));\n94: }"
           },
           {
             "key": "categories.insufficient_permissions",
-            "line": 152,
-            "context": "151: if (!canManageCategories) {\n152: toast.error(t('categories.insufficient_permissions'));\n153: return;"
+            "line": 151,
+            "context": "150: if (!canManageCategories) {\n151: toast.error(t('categories.insufficient_permissions'));\n152: return;"
           },
           {
             "key": "categories.name_required",
-            "line": 157,
-            "context": "156: if (!formData.name.trim()) {\n157: toast.error(t('categories.name_required'));\n158: return;"
+            "line": 156,
+            "context": "155: if (!formData.name.trim()) {\n156: toast.error(t('categories.name_required'));\n157: return;"
           },
           {
             "key": "categories.cannot_edit_system",
-            "line": 165,
-            "context": "164: if (editingCategory.is_system_category) {\n165: toast.error(t('categories.cannot_edit_system'));\n166: return;"
+            "line": 164,
+            "context": "163: if (editingCategory.is_system_category) {\n164: toast.error(t('categories.cannot_edit_system'));\n165: return;"
           },
           {
             "key": "categories.updated_successfully",
-            "line": 184,
-            "context": "183: \n184: toast.success(t('categories.updated_successfully'));\n185: } else {"
+            "line": 183,
+            "context": "182: \n183: toast.success(t('categories.updated_successfully'));\n184: } else {"
           },
           {
             "key": "categories.created_successfully",
-            "line": 205,
-            "context": "204: \n205: toast.success(t('categories.created_successfully'));\n206: }"
+            "line": 204,
+            "context": "203: \n204: toast.success(t('categories.created_successfully'));\n205: }"
           },
           {
             "key": "categories.error_saving",
-            "line": 213,
-            "context": "212: console.error('Error saving category:', error);\n213: toast.error(t('categories.error_saving'));\n214: }"
+            "line": 212,
+            "context": "211: console.error('Error saving category:', error);\n212: toast.error(t('categories.error_saving'));\n213: }"
           },
           {
             "key": "categories.cannot_delete_system",
-            "line": 246,
-            "context": "245: if (category.is_system_category) {\n246: toast.error(t('categories.cannot_delete_system'));\n247: return;"
+            "line": 245,
+            "context": "244: if (category.is_system_category) {\n245: toast.error(t('categories.cannot_delete_system'));\n246: return;"
           },
           {
             "key": "categories.insufficient_permissions",
-            "line": 251,
-            "context": "250: if (!canManageCategories) {\n251: toast.error(t('categories.insufficient_permissions'));\n252: return;"
+            "line": 250,
+            "context": "249: if (!canManageCategories) {\n250: toast.error(t('categories.insufficient_permissions'));\n251: return;"
           },
           {
             "key": "categories.deleted_successfully",
-            "line": 264,
-            "context": "263: \n264: toast.success(t('categories.deleted_successfully'));\n265: await loadData();"
+            "line": 263,
+            "context": "262: \n263: toast.success(t('categories.deleted_successfully'));\n264: await loadData();"
           },
           {
             "key": "categories.error_deleting",
-            "line": 268,
-            "context": "267: console.error('Error deleting category:', error);\n268: toast.error(t('categories.error_deleting'));\n269: }"
+            "line": 267,
+            "context": "266: console.error('Error deleting category:', error);\n267: toast.error(t('categories.error_deleting'));\n268: }"
           },
           {
             "key": "categories.title",
-            "line": 292,
-            "context": "291: <div>\n292: <h2 className=\"text-2xl font-bold\">{t('categories.title')}</h2>\n293: <p className=\"text-muted-foreground\">{t('categories.description')}</p>"
+            "line": 291,
+            "context": "290: <div>\n291: <h2 className=\"text-2xl font-bold\">{t('categories.title')}</h2>\n292: <p className=\"text-muted-foreground\">{t('categories.description')}</p>"
           },
           {
             "key": "categories.description",
-            "line": 293,
-            "context": "292: <h2 className=\"text-2xl font-bold\">{t('categories.title')}</h2>\n293: <p className=\"text-muted-foreground\">{t('categories.description')}</p>\n294: </div>"
+            "line": 292,
+            "context": "291: <h2 className=\"text-2xl font-bold\">{t('categories.title')}</h2>\n292: <p className=\"text-muted-foreground\">{t('categories.description')}</p>\n293: </div>"
           },
           {
             "key": "categories.add_category",
-            "line": 300,
-            "context": "299: <Plus className=\"h-5 w-5 mr-2\" />\n300: {t('categories.add_category')}\n301: </Button>"
+            "line": 299,
+            "context": "298: <Plus className=\"h-5 w-5 mr-2\" />\n299: {t('categories.add_category')}\n300: </Button>"
           },
           {
             "key": "categories.edit_category",
-            "line": 306,
-            "context": "305: <DialogTitle>\n306: {editingCategory ? t('categories.edit_category') : t('categories.add_category')}\n307: </DialogTitle>"
+            "line": 305,
+            "context": "304: <DialogTitle>\n305: {editingCategory ? t('categories.edit_category') : t('categories.add_category')}\n306: </DialogTitle>"
           },
           {
             "key": "categories.add_category",
-            "line": 306,
-            "context": "305: <DialogTitle>\n306: {editingCategory ? t('categories.edit_category') : t('categories.add_category')}\n307: </DialogTitle>"
+            "line": 305,
+            "context": "304: <DialogTitle>\n305: {editingCategory ? t('categories.edit_category') : t('categories.add_category')}\n306: </DialogTitle>"
           },
           {
             "key": "categories.name",
-            "line": 313,
-            "context": "312: <div className=\"space-y-2\">\n313: <Label htmlFor=\"name\">{t('categories.name')} *</Label>\n314: <Input"
+            "line": 312,
+            "context": "311: <div className=\"space-y-2\">\n312: <Label htmlFor=\"name\">{t('categories.name')} *</Label>\n313: <Input"
           },
           {
             "key": "categories.name_placeholder",
-            "line": 318,
-            "context": "317: onChange={(e) => setFormData({ ...formData, name: e.target.value })}\n318: placeholder={t('categories.name_placeholder')}\n319: required"
+            "line": 317,
+            "context": "316: onChange={(e) => setFormData({ ...formData, name: e.target.value })}\n317: placeholder={t('categories.name_placeholder')}\n318: required"
           },
           {
             "key": "categories.color",
-            "line": 324,
-            "context": "323: <div className=\"space-y-2\">\n324: <Label htmlFor=\"color\">{t('categories.color')}</Label>\n325: <div className=\"flex space-x-2\">"
+            "line": 323,
+            "context": "322: <div className=\"space-y-2\">\n323: <Label htmlFor=\"color\">{t('categories.color')}</Label>\n324: <div className=\"flex space-x-2\">"
           },
           {
             "key": "categories.description",
-            "line": 349,
-            "context": "348: <div className=\"space-y-2\">\n349: <Label htmlFor=\"description\">{t('categories.description')}</Label>\n350: <Textarea"
+            "line": 348,
+            "context": "347: <div className=\"space-y-2\">\n348: <Label htmlFor=\"description\">{t('categories.description')}</Label>\n349: <Textarea"
           },
           {
             "key": "categories.description_placeholder",
-            "line": 354,
-            "context": "353: onChange={(e) => setFormData({ ...formData, description: e.target.value })}\n354: placeholder={t('categories.description_placeholder')}\n355: rows={3}"
+            "line": 353,
+            "context": "352: onChange={(e) => setFormData({ ...formData, description: e.target.value })}\n353: placeholder={t('categories.description_placeholder')}\n354: rows={3}"
           },
           {
             "key": "categories.icon",
-            "line": 360,
-            "context": "359: <div className=\"space-y-2\">\n360: <Label htmlFor=\"icon\">{t('categories.icon')}</Label>\n361: <Input"
+            "line": 359,
+            "context": "358: <div className=\"space-y-2\">\n359: <Label htmlFor=\"icon\">{t('categories.icon')}</Label>\n360: <Input"
           },
           {
             "key": "categories.icon_placeholder",
-            "line": 365,
-            "context": "364: onChange={(e) => setFormData({ ...formData, icon: e.target.value })}\n365: placeholder={t('categories.icon_placeholder')}\n366: />"
+            "line": 364,
+            "context": "363: onChange={(e) => setFormData({ ...formData, icon: e.target.value })}\n364: placeholder={t('categories.icon_placeholder')}\n365: />"
           },
           {
             "key": "categories.available_modules",
-            "line": 370,
-            "context": "369: <div className=\"space-y-4\">\n370: <Label>{t('categories.available_modules')}</Label>\n371: <div className=\"grid grid-cols-2 gap-3\">"
-          },
-          {
-            "key": "common.cancel",
-            "line": 399,
-            "context": "398: <Button type=\"button\" variant=\"outline\" onClick={() => setIsModalOpen(false)}>\n399: {t('common.cancel')}\n400: </Button>"
+            "line": 369,
+            "context": "368: <div className=\"space-y-4\">\n369: <Label>{t('categories.available_modules')}</Label>\n370: <div className=\"grid grid-cols-2 gap-3\">"
           },
           {
             "key": "common.update",
-            "line": 402,
-            "context": "401: <Button type=\"submit\">\n402: {editingCategory ? t('common.update') : t('common.create')}\n403: </Button>"
+            "line": 401,
+            "context": "400: <Button type=\"submit\">\n401: {editingCategory ? t('common.update') : t('common.create')}\n402: </Button>"
           },
           {
             "key": "common.create",
-            "line": 402,
-            "context": "401: <Button type=\"submit\">\n402: {editingCategory ? t('common.update') : t('common.create')}\n403: </Button>"
+            "line": 401,
+            "context": "400: <Button type=\"submit\">\n401: {editingCategory ? t('common.update') : t('common.create')}\n402: </Button>"
           },
           {
             "key": "categories.search_placeholder",
-            "line": 414,
-            "context": "413: <Input\n414: placeholder={t('categories.search_placeholder')}\n415: value={searchTerm}"
+            "line": 413,
+            "context": "412: <Input\n413: placeholder={t('categories.search_placeholder')}\n414: value={searchTerm}"
           },
           {
             "key": "categories.no_categories_found",
-            "line": 425,
-            "context": "424: <Tag className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n425: <h3 className=\"text-lg font-semibold mb-2\">{t('categories.no_categories_found')}</h3>\n426: <p className=\"text-muted-foreground mb-6\">{t('categories.no_categories_description')}</p>"
+            "line": 424,
+            "context": "423: <Tag className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n424: <h3 className=\"text-lg font-semibold mb-2\">{t('categories.no_categories_found')}</h3>\n425: <p className=\"text-muted-foreground mb-6\">{t('categories.no_categories_description')}</p>"
           },
           {
             "key": "categories.no_categories_description",
-            "line": 426,
-            "context": "425: <h3 className=\"text-lg font-semibold mb-2\">{t('categories.no_categories_found')}</h3>\n426: <p className=\"text-muted-foreground mb-6\">{t('categories.no_categories_description')}</p>\n427: {canManageCategories && ("
+            "line": 425,
+            "context": "424: <h3 className=\"text-lg font-semibold mb-2\">{t('categories.no_categories_found')}</h3>\n425: <p className=\"text-muted-foreground mb-6\">{t('categories.no_categories_description')}</p>\n426: {canManageCategories && ("
           },
           {
             "key": "categories.add_category",
-            "line": 430,
-            "context": "429: <Plus className=\"h-4 w-4 mr-2\" />\n430: {t('categories.add_category')}\n431: </Button>"
+            "line": 429,
+            "context": "428: <Plus className=\"h-4 w-4 mr-2\" />\n429: {t('categories.add_category')}\n430: </Button>"
           },
           {
             "key": "categories.system",
-            "line": 454,
-            "context": "453: <Settings className=\"h-3 w-3 mr-1\" />\n454: {t('categories.system')}\n455: </Badge>"
+            "line": 453,
+            "context": "452: <Settings className=\"h-3 w-3 mr-1\" />\n453: {t('categories.system')}\n454: </Badge>"
           },
           {
             "key": "categories.available_in_modules",
-            "line": 491,
-            "context": "490: <Label className=\"text-xs font-medium text-muted-foreground\">\n491: {t('categories.available_in_modules')}\n492: </Label>"
+            "line": 490,
+            "context": "489: <Label className=\"text-xs font-medium text-muted-foreground\">\n490: {t('categories.available_in_modules')}\n491: </Label>"
           },
           {
             "key": "categories.no_modules_assigned",
-            "line": 502,
-            "context": "501: <span className=\"text-xs text-muted-foreground\">\n502: {t('categories.no_modules_assigned')}\n503: </span>"
+            "line": 501,
+            "context": "500: <span className=\"text-xs text-muted-foreground\">\n501: {t('categories.no_modules_assigned')}\n502: </span>"
           },
           {
             "key": "categories.created_at",
-            "line": 509,
-            "context": "508: <div className=\"text-xs text-muted-foreground\">\n509: {t('categories.created_at', {\n510: date: new Date(category.created_at).toLocaleDateString()"
+            "line": 508,
+            "context": "507: <div className=\"text-xs text-muted-foreground\">\n508: {t('categories.created_at', {\n509: date: new Date(category.created_at).toLocaleDateString()"
           },
           {
             "key": "categories.no_categories_found",
-            "line": 524,
-            "context": "523: <div>\n524: <h3 className=\"text-lg font-semibold\">{t('categories.no_categories_found')}</h3>\n525: <p className=\"text-muted-foreground\">{t('categories.no_categories_description')}</p>"
+            "line": 523,
+            "context": "522: <div>\n523: <h3 className=\"text-lg font-semibold\">{t('categories.no_categories_found')}</h3>\n524: <p className=\"text-muted-foreground\">{t('categories.no_categories_description')}</p>"
           },
           {
             "key": "categories.no_categories_description",
-            "line": 525,
-            "context": "524: <h3 className=\"text-lg font-semibold\">{t('categories.no_categories_found')}</h3>\n525: <p className=\"text-muted-foreground\">{t('categories.no_categories_description')}</p>\n526: {canManageCategories && ("
+            "line": 524,
+            "context": "523: <h3 className=\"text-lg font-semibold\">{t('categories.no_categories_found')}</h3>\n524: <p className=\"text-muted-foreground\">{t('categories.no_categories_description')}</p>\n525: {canManageCategories && ("
           },
           {
             "key": "categories.add_first_category",
-            "line": 529,
-            "context": "528: <Plus className=\"h-4 w-4 mr-2\" />\n529: {t('categories.add_first_category')}\n530: </Button>"
+            "line": 528,
+            "context": "527: <Plus className=\"h-4 w-4 mr-2\" />\n528: {t('categories.add_first_category')}\n529: </Button>"
           }
         ],
         "coverage": 100,
@@ -41790,7 +41408,7 @@
           {
             "key": "common.cancel",
             "line": 459,
-            "exists": false
+            "exists": true
           },
           {
             "key": "common.loading",
@@ -41948,11 +41566,6 @@
             "key": "contacts.notes_placeholder",
             "line": 449,
             "context": "448: onChange={(e) => handleInputChange('notes', e.target.value)}\n449: placeholder={t('contacts.notes_placeholder', 'Additional notes about this contact')}\n450: className=\"min-h-[80px]\""
-          },
-          {
-            "key": "common.cancel",
-            "line": 459,
-            "context": "458: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n459: {t('common.cancel')}\n460: </Button>"
           },
           {
             "key": "common.save",
@@ -43455,210 +43068,200 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 111,
+            "line": 110,
             "exists": true
           },
           {
             "key": "dealerships.fetch_error",
-            "line": 112,
+            "line": 111,
             "exists": true
           },
           {
             "key": "dealerships.confirm_delete",
-            "line": 130,
+            "line": 129,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 143,
+            "line": 142,
             "exists": true
           },
           {
             "key": "dealerships.deleted_successfully",
-            "line": 144,
+            "line": 143,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 151,
+            "line": 150,
             "exists": true
           },
           {
             "key": "dealerships.delete_error",
-            "line": 152,
+            "line": 151,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 179,
+            "line": 178,
             "exists": true
           },
           {
             "key": "dealerships.invitation_sent",
-            "line": 180,
-            "exists": true
-          },
-          {
-            "key": "dealerships.manage_dealerships",
-            "line": 219,
-            "exists": true
-          },
-          {
-            "key": "dealerships.manage_description",
-            "line": 220,
+            "line": 179,
             "exists": true
           },
           {
             "key": "dealerships.add_dealership",
-            "line": 229,
+            "line": 222,
             "exists": true
           },
           {
             "key": "dealerships.filters",
-            "line": 239,
+            "line": 231,
             "exists": true
           },
           {
             "key": "dealerships.search_placeholder",
-            "line": 248,
+            "line": 240,
             "exists": true
           },
           {
             "key": "dealerships.status_filter",
-            "line": 258,
+            "line": 250,
             "exists": false
           },
           {
             "key": "dealerships.all_statuses",
-            "line": 261,
+            "line": 253,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 262,
+            "line": 254,
             "exists": true
           },
           {
             "key": "dealerships.inactive",
-            "line": 263,
+            "line": 255,
             "exists": true
           },
           {
             "key": "dealerships.suspended",
-            "line": 264,
+            "line": 256,
             "exists": true
           },
           {
             "key": "dealerships.dealership_list",
-            "line": 276,
+            "line": 268,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 283,
+            "line": 275,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 289,
+            "line": 281,
             "exists": true
           },
           {
             "key": "dealerships.location",
-            "line": 290,
+            "line": 282,
             "exists": true
           },
           {
             "key": "dealerships.status",
-            "line": 291,
+            "line": 283,
             "exists": true
           },
           {
             "key": "dealerships.plan",
-            "line": 292,
+            "line": 284,
             "exists": true
           },
           {
             "key": "dealerships.stats",
-            "line": 293,
+            "line": 285,
             "exists": true
           },
           {
             "key": "common.actions",
-            "line": 294,
+            "line": 286,
             "exists": true
           },
           {
             "key": "dealerships.no_location",
-            "line": 324,
+            "line": 316,
             "exists": true
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 330,
+            "line": 322,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 335,
+            "line": 327,
             "exists": false
           },
           {
             "key": "dealerships.view_details",
-            "line": 360,
+            "line": 352,
             "exists": true
           },
           {
             "key": "common.edit",
-            "line": 364,
+            "line": 356,
             "exists": false
           },
           {
             "key": "dealerships.invite_user",
-            "line": 368,
+            "line": 360,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 375,
+            "line": 367,
             "exists": false
           },
           {
             "key": "dealerships.no_results",
-            "line": 390,
+            "line": 382,
             "exists": true
           },
           {
             "key": "dealerships.no_dealerships",
-            "line": 390,
+            "line": 382,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.status_filter",
-            "line": 258,
-            "context": "257: <SelectTrigger className=\"w-40\">\n258: <SelectValue placeholder={t('dealerships.status_filter')} />\n259: </SelectTrigger>"
+            "line": 250,
+            "context": "249: <SelectTrigger className=\"w-40\">\n250: <SelectValue placeholder={t('dealerships.status_filter')} />\n251: </SelectTrigger>"
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 330,
-            "context": "329: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n330: {t(`dealerships.${dealership.status}`)}\n331: </Badge>"
+            "line": 322,
+            "context": "321: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n322: {t(`dealerships.${dealership.status}`)}\n323: </Badge>"
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 335,
-            "context": "334: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n335: {t(`dealerships.${dealership.subscription_plan}`)}\n336: </Badge>"
+            "line": 327,
+            "context": "326: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n327: {t(`dealerships.${dealership.subscription_plan}`)}\n328: </Badge>"
           },
           {
             "key": "common.edit",
-            "line": 364,
-            "context": "363: <Edit className=\"mr-2 h-4 w-4\" />\n364: {t('common.edit')}\n365: </DropdownMenuItem>"
+            "line": 356,
+            "context": "355: <Edit className=\"mr-2 h-4 w-4\" />\n356: {t('common.edit')}\n357: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 375,
-            "context": "374: <Trash2 className=\"mr-2 h-4 w-4\" />\n375: {t('common.delete')}\n376: </DropdownMenuItem>"
+            "line": 367,
+            "context": "366: <Trash2 className=\"mr-2 h-4 w-4\" />\n367: {t('common.delete')}\n368: </DropdownMenuItem>"
           }
         ],
         "coverage": 100,
@@ -43766,7 +43369,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "293 Component components need translation",
+      "description": "294 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -43835,6 +43438,7 @@
         "src\\hooks\\useSmartNotifications.tsx",
         "src\\components\\CompletedDateInline.tsx",
         "src\\components\\users\\UserActivityFeed.tsx",
+        "src\\components\\ui\\sidebar.tsx",
         "src\\components\\ui\\pagination.tsx",
         "src\\components\\productivity\\ProductivityMetrics.tsx",
         "src\\components\\orders\\ScheduleViewBlock.tsx",
@@ -43867,7 +43471,6 @@
         "src\\hooks\\useProductivityTodos.tsx",
         "src\\hooks\\useOrderActions.tsx",
         "src\\contexts\\AuthContext.tsx",
-        "src\\components\\ui\\sidebar.tsx",
         "src\\components\\ui\\comments-tooltip.tsx",
         "src\\components\\stock\\StockInventoryTable.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
@@ -43895,7 +43498,6 @@
         "src\\config\\firebase.ts",
         "src\\components\\ProtectedLayout.tsx",
         "src\\components\\AppSidebar.tsx",
-        "src\\components\\ui\\user-dropdown.tsx",
         "src\\components\\ui\\carousel.tsx",
         "src\\components\\scanner\\QuickScanMode.tsx",
         "src\\components\\reports\\invoices\\RecordPaymentDialog.tsx",
@@ -43920,12 +43522,14 @@
         "src\\lib\\sessionRecovery.ts",
         "src\\hooks\\useServerExport.tsx",
         "src\\hooks\\usePerformanceMonitor.ts",
+        "src\\hooks\\useGlobalSearch.ts",
         "src\\hooks\\useAccessibleDealerships.tsx",
         "src\\contexts\\ServicesContext.tsx",
         "src\\contexts\\GlobalChatProvider.tsx",
         "src\\components\\StatusBadgeInteractive.tsx",
         "src\\components\\workflows\\VisualWorkflowBuilder.tsx",
         "src\\components\\ui\\vehicle-search-input.tsx",
+        "src\\components\\ui\\user-dropdown.tsx",
         "src\\components\\ui\\sheet.tsx",
         "src\\components\\ui\\duplicate-popover.tsx",
         "src\\components\\ui\\dialog.tsx",
@@ -43946,9 +43550,9 @@
         "src\\components\\orders\\QRCodeDisplay.tsx",
         "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\nfc\\NFCPhysicalWriter.tsx",
+        "src\\components\\navigation\\Breadcrumbs.tsx",
         "src\\components\\management\\DealershipPerformanceTable.tsx",
         "src\\components\\get-ready\\MediaLightbox.tsx",
-        "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\debug\\SimpleSalesOrders.tsx",
         "src\\components\\common\\LazyComponentWrapper.tsx",
         "src\\components\\chat\\EnhancedChatInterface.tsx",
@@ -43961,7 +43565,6 @@
         "src\\pages\\Dealerships.tsx",
         "src\\pages\\Contacts.tsx",
         "src\\pages\\Chat.tsx",
-        "src\\pages\\AdminDashboard.tsx",
         "src\\hooks\\useWorkItemTemplates.tsx",
         "src\\hooks\\useUserSessions.tsx",
         "src\\hooks\\usePasswordPolicies.ts",
@@ -43980,6 +43583,7 @@
         "src\\components\\stock\\StockSyncHistory.tsx",
         "src\\components\\stock\\StockDashboard.tsx",
         "src\\components\\stock\\StockCSVUploader.tsx",
+        "src\\components\\search\\GlobalSearch.tsx",
         "src\\components\\scanner\\VinScannerHub.tsx",
         "src\\components\\scanner\\modern\\VinTargetingGuides.tsx",
         "src\\components\\scanner\\modern\\VinConfidenceIndicator.tsx",
@@ -44029,7 +43633,6 @@
         "src\\components\\nfc\\NFCLocationHeatmap.tsx",
         "src\\components\\nfc\\NFCGeolocationMap.tsx",
         "src\\components\\nfc\\NFCDashboard.tsx",
-        "src\\components\\management\\UserManagementSection.tsx",
         "src\\components\\management\\SystemStatsCard.tsx",
         "src\\components\\management\\RecentActivityFeed.tsx",
         "src\\components\\management\\ManagementOverview.tsx",
@@ -44042,6 +43645,7 @@
         "src\\components\\get-ready\\tabs\\VehicleWorkItemsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleVendorsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
+        "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "src\\components\\dealer\\DealerUsers_OLD_BACKUP.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
@@ -44067,9 +43671,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2308 translation keys are referenced but missing",
+      "description": "2214 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "116 hours"
+      "estimatedEffort": "111 hours"
     }
   ],
   "coverage": 76

@@ -80,6 +80,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         dealershipId: profile.dealership_id
       };
 
+      // Debug logging (temporal)
+      console.log('🔄 Fresh profile loaded from DB:', {
+        user_type: extendedUser.user_type,
+        role: extendedUser.role,
+        first_name: extendedUser.first_name,
+        last_name: extendedUser.last_name,
+        email: extendedUser.email
+      });
+
       auth('Extended user profile loaded:', {
         user_type: extendedUser.user_type,
         role: extendedUser.role
