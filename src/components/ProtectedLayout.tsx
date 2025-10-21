@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
-import { Search } from "lucide-react";
+import { Menu } from "lucide-react";
 import { ReactNode, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -11,7 +11,9 @@ import { AppSidebar } from "./AppSidebar";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { DealershipFilter } from "./filters/DealershipFilter";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { Breadcrumbs } from "./navigation/Breadcrumbs";
 import { NotificationBell } from "./notifications/NotificationBell";
+import { GlobalSearch } from "./search/GlobalSearch";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserDropdown } from "./ui/user-dropdown";
 
@@ -76,26 +78,75 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
 
         <div className="flex-1 flex flex-col">
           {/* Sticky Header */}
-          <header className="sticky top-0 z-40 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
-            <div className="flex items-center gap-4">
-              <SidebarTrigger />
-              <div className="relative max-w-sm">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder={t('layout.search_placeholder')}
-                  className="pl-10 w-full"
-                />
+          <header className="sticky top-0 z-40 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-4 md:px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
+            {/* Left Section */}
+            <div className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none min-w-0">
+              <SidebarTrigger className="flex-shrink-0" />
+              <div className="flex-1 md:flex-none min-w-0">
+                <GlobalSearch />
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            {/* Right Section - Desktop */}
+            <div className="hidden md:flex items-center gap-3">
               <DealershipFilter />
               <LanguageSwitcher />
               <ThemeToggle />
               {currentDealership?.id && <NotificationBell dealerId={currentDealership.id} />}
               <UserDropdown />
             </div>
+
+            {/* Right Section - Mobile */}
+            <div className="flex md:hidden items-center gap-2">
+              <UserDropdown />
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">{t('layout.mobile_menu')}</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-80">
+                  <SheetHeader>
+                    <SheetTitle>{t('layout.tools')}</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-6 mt-6">
+                    {/* Dealership Filter */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">
+                        {t('dealerships.dealership')}
+                      </label>
+                      <DealershipFilter />
+                    </div>
+
+                    {/* Language Switcher */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">
+                        {t('layout.preferences')}
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <LanguageSwitcher />
+                        <ThemeToggle />
+                      </div>
+                    </div>
+
+                    {/* Notifications */}
+                    {currentDealership?.id && (
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">
+                          {t('common.notifications')}
+                        </label>
+                        <NotificationBell dealerId={currentDealership.id} />
+                      </div>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </header>
+
+          {/* Breadcrumbs */}
+          <Breadcrumbs />
 
           {/* Main Content */}
           <main className="flex-1 p-6 mb-24">

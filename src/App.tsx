@@ -11,7 +11,7 @@ import { DealerFilterProvider } from "@/contexts/DealerFilterContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 import { TooltipTester } from "./components/debug/TooltipTester";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -20,13 +20,11 @@ import CarWash from "./pages/CarWash";
 import Chat from "./pages/Chat";
 import Contacts from "./pages/Contacts";
 import Dashboard from "./pages/Dashboard";
-import { Dealerships } from "./pages/Dealerships";
 import DealerView from "./pages/DealerView";
 import DetailHub from "./pages/DetailHub";
 import GetReady from "./pages/GetReady";
 import Index from "./pages/Index";
 import { InvitationAccept } from "./pages/InvitationAccept";
-import Management from "./pages/Management";
 import NFCTracking from "./pages/NFCTracking";
 import NotFound from "./pages/NotFound";
 import Phase3Dashboard from "./pages/Phase3Dashboard";
@@ -47,6 +45,12 @@ import VinScanner from "./pages/VinScanner";
     console.log('🔄 Router should handle navigation correctly');
 
 const queryClient = new QueryClient();
+
+// Helper component to redirect /dealers/:id to /admin/:id
+const DealerRedirect = () => {
+  const { id } = useParams();
+  return <Navigate to={`/admin/${id}`} replace />;
+};
 
 const AppRoutes = () => {
   return (
@@ -163,22 +167,6 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="dealerships"
-            element={
-              <PermissionGuard module="dealerships" permission="view" checkDealerModule={true}>
-                <Dealerships />
-              </PermissionGuard>
-            }
-          />
-          <Route
-            path="dealers/:id"
-            element={
-              <PermissionGuard module="dealerships" permission="admin" checkDealerModule={true}>
-                <DealerView />
-              </PermissionGuard>
-            }
-          />
-          <Route
             path="contacts"
             element={
               <PermissionGuard module="contacts" permission="view" checkDealerModule={true}>
@@ -187,14 +175,8 @@ const AppRoutes = () => {
             }
           />
           <Route path="profile" element={<Profile />} />
-          <Route
-            path="management"
-            element={
-              <PermissionGuard module="management" permission="admin" checkDealerModule={true}>
-                <Management />
-              </PermissionGuard>
-            }
-          />
+
+          {/* System Administration */}
           <Route
             path="admin"
             element={
@@ -203,6 +185,27 @@ const AppRoutes = () => {
               </PermissionGuard>
             }
           />
+          <Route
+            path="admin/:id"
+            element={
+              <PermissionGuard module="dealerships" permission="admin" checkDealerModule={true}>
+                <DealerView />
+              </PermissionGuard>
+            }
+          />
+
+          {/* Legacy routes - redirect to /admin */}
+          <Route path="dealers" element={<Navigate to="/admin" replace />} />
+          <Route path="dealers/:id" element={<DealerRedirect />} />
+          <Route path="dealerships" element={<Navigate to="/admin" replace />} />
+          {/* <Route
+            path="management"
+            element={
+              <PermissionGuard module="management" permission="admin" checkDealerModule={true}>
+                <Management />
+              </PermissionGuard>
+            }
+          /> */}
           <Route path="phase3" element={<Phase3Dashboard />} />
           <Route
             path="get-ready/*"

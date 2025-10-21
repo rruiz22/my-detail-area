@@ -1,32 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
+import { DealershipModal } from '@/components/dealerships/DealershipModal';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { DealershipModal } from '@/components/dealerships/DealershipModal';
-import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import {
-  Plus,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Building2,
-  Users,
-  UserPlus,
-  Edit,
-  Trash2,
-  Eye,
-  Mail,
-  BarChart3
+    Building2,
+    Edit,
+    Eye,
+    Filter,
+    Mail,
+    MoreHorizontal,
+    Plus,
+    Search,
+    Trash2,
+    UserPlus,
+    Users
 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface Dealership {
   id: number;
@@ -156,7 +155,7 @@ export const DealershipManagement: React.FC = () => {
   };
 
   const handleViewDealer = (dealership: Dealership) => {
-    navigate(`/dealers/${dealership.id}`);
+    navigate(`/admin/${dealership.id}`);
   };
 
   const handleInviteUser = (dealership: Dealership) => {
@@ -214,21 +213,14 @@ export const DealershipManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header and Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">{t('dealerships.manage_dealerships')}</h2>
-          <p className="text-muted-foreground">{t('dealerships.manage_description')}</p>
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            {t('dealerships.add_dealership')}
-          </Button>
-        </div>
+      <div className="flex justify-end items-center">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          {t('dealerships.add_dealership')}
+        </Button>
       </div>
 
       {/* Filters */}

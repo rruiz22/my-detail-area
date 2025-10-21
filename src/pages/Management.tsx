@@ -1,28 +1,25 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Users, 
-  Building2, 
-  Shield, 
-  TrendingUp, 
-  UserPlus, 
-  Settings,
-  ArrowRight,
-  BarChart3,
-  Palette,
-  Database
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
+import {
+    BarChart3,
+    Building2,
+    Database,
+    Settings,
+    Shield,
+    UserPlus,
+    Users
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { OrderNumberMigrationTool } from '@/components/dev/OrderNumberMigrationTool';
-import { PermissionGuard } from '@/components/permissions/PermissionGuard';
-import { UserManagementSection } from '@/components/management/UserManagementSection';
 import { DealershipManagementSection } from '@/components/management/DealershipManagementSection';
 import { ManagementOverview } from '@/components/management/ManagementOverview';
+import { UserManagementSection } from '@/components/management/UserManagementSection';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 
 const Management = () => {
   const navigate = useNavigate();
@@ -60,7 +57,7 @@ const Management = () => {
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              {t('management.users')}
+              {t('management.users_and_roles')}
             </TabsTrigger>
             <TabsTrigger value="dealerships" className="flex items-center gap-2">
               <Building2 className="h-4 w-4" />
@@ -120,7 +117,7 @@ const Management = () => {
                         </Button>
                       </CardContent>
                     </Card>
-                    
+
                     <Card className="border-dashed">
                       <CardContent className="p-6 text-center">
                         <UserPlus className="h-12 w-12 mx-auto text-muted-foreground mb-4" />

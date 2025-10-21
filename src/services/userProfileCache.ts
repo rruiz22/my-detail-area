@@ -27,7 +27,7 @@ export interface CachedUserProfile {
 
 export class UserProfileCacheService {
   private readonly CACHE_KEY = 'user_profile_cache';
-  private readonly CACHE_VERSION = 1;
+  private readonly CACHE_VERSION = 2; // Incremented to invalidate caches without first_name/last_name
   private readonly CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
   private readonly SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutes
 

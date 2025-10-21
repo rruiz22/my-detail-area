@@ -115,7 +115,13 @@
       "refresh_in_minutes": "{{minutes}}:{{seconds}}"
     },
     "assigned": "Assigned",
-    "not_assigned": "Not Assigned"
+    "not_assigned": "Not Assigned",
+    "user": "User",
+    "email": "Email",
+    "all": "All",
+    "active": "Active",
+    "close": "Close",
+    "cancel": "Cancel"
   },
   "cloud_sync": {
     "title": "Cloud Sync Dashboard",
@@ -447,15 +453,71 @@
       "readonly_alert": "This view is read-only for system analytics.",
       "readonly_alert_cta": "To manage users, click 'View Dealer' on any user with an assigned dealership.",
       "view_dealer": "View Dealer",
-      "no_dealer": "No Dealer"
+      "no_dealer": "No Dealer",
+      "manage_custom_roles": "Manage Custom Roles",
+      "manage_custom_roles_desc": "Manage custom role assignments for this user. Users can have multiple roles.",
+      "assign_custom_role": "Assign Custom Role",
+      "remove_custom_role": "Remove Custom Role",
+      "current_custom_roles": "Current Custom Roles",
+      "no_custom_roles": "No custom roles assigned",
+      "no_role_selected": "Please select a role",
+      "role_assigned": "Role assigned successfully",
+      "role_removed": "Role removed successfully",
+      "error_assigning_role": "Error assigning role",
+      "error_removing_role": "Error removing role",
+      "select_role": "Select a role...",
+      "all_roles_assigned": "All roles already assigned"
     }
+  },
+  "user_management": {
+    "title": "Users & Groups Management",
+    "manage_description": "Manage users, roles, and group assignments",
+    "export_report": "Export Report",
+    "search_users": "Search users...",
+    "user": "User",
+    "roles": "Roles",
+    "users": "Users",
+    "manage": "Manage",
+    "no_dealership_assigned": "No dealership assigned",
+    "no_users_matching_filters": "No users match the current filters",
+    "no_users_found": "No users found",
+    "no_roles": "No roles assigned",
+    "incomplete_setup": "Incomplete Setup",
+    "overview_title": "User Overview",
+    "readonly_description": "This is a read-only view for analytics and oversight. To manage users, navigate to the specific dealership.",
+    "readonly_alert": "This view is read-only for system analytics.",
+    "readonly_alert_cta": "To manage users, click 'View Dealer' on any user with an assigned dealership.",
+    "view_dealer": "View Dealer",
+    "no_dealer": "No Dealer",
+    "manage_custom_roles": "Manage Custom Roles",
+    "manage_custom_roles_desc": "Manage custom role assignments for this user. Users can have multiple roles.",
+    "assign_custom_role": "Assign Custom Role",
+    "remove_custom_role": "Remove Custom Role",
+    "current_custom_roles": "Current Custom Roles",
+    "no_custom_roles": "No custom roles assigned",
+    "no_role_selected": "Please select a role",
+    "role_assigned": "Role assigned successfully",
+    "role_removed": "Role removed successfully",
+    "error_assigning_role": "Error assigning role",
+    "error_removing_role": "Error removing role",
+    "select_role": "Select a role...",
+    "all_roles_assigned": "All roles already assigned"
   },
   "management": {
     "overview": "Overview",
     "users": "Users",
+    "users_and_roles": "Users & Roles",
     "total_users": "Total Users",
     "active_users": "Active Users",
-    "activity": "Activity"
+    "activity": "Activity",
+    "permission_management": "Permission Management",
+    "permission_management_desc": "Advanced configuration of system roles and permissions",
+    "role_configuration": "Role Configuration",
+    "role_configuration_desc": "Configure system roles and their associated permissions",
+    "bulk_operations": "Bulk Operations",
+    "bulk_operations_desc": "Perform bulk operations on users and permissions",
+    "configure_roles": "Configure Roles",
+    "bulk_actions": "Bulk Actions"
   },
   "sales": {
     "views": {
@@ -1046,18 +1108,36 @@
     "preferences": "Preferences"
   },
   "search": {
-    "global_placeholder": "Search orders, contacts, users... (Ctrl+K)",
+    "global_placeholder": "Search orders, contacts, users... (Ctrl+S)",
     "no_results": "No results found",
+    "try_different_keywords": "Try different search terms or check your filters",
     "searching": "Searching...",
     "results_found": "{{count}} results found",
+    "result_found": "{{count}} result found",
     "view_all": "View all results",
+    "stock": "Stock",
+    "vin": "VIN",
+    "due_date": "Due",
+    "completed": "Completed",
+    "services": "Services",
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "active": "Active",
+      "new": "New"
+    },
     "categories": {
-      "sales_orders": "Sales Orders",
-      "service_orders": "Service Orders",
-      "recon_orders": "Recon Orders",
+      "sales_order": "Sales Orders",
+      "service_order": "Service Orders",
+      "recon_order": "Recon Orders",
       "car_wash": "Car Wash",
-      "contacts": "Contacts",
-      "users": "Users"
+      "contact": "Contacts",
+      "user": "Users",
+      "get_ready": "Get Ready Vehicles",
+      "stock": "Stock Inventory"
     },
     "shortcuts": {
       "open": "Open search",
@@ -1068,6 +1148,7 @@
   },
   "breadcrumbs": {
     "home": "Home",
+    "administration": "Administration",
     "dealerships": "Dealerships",
     "sales_orders": "Sales Orders",
     "service_orders": "Service Orders",
@@ -1090,12 +1171,17 @@
     "new_contact": "New Contact",
     "new_user": "Add User",
     "invite_user": "Invite User",
+    "new_dealership": "New Dealership",
+    "view_reports": "View Reports",
+    "export_sales": "Export Sales",
     "export": "Export",
     "import": "Import",
     "filter": "Filter",
     "settings": "Settings",
     "scan_vin": "Scan VIN",
-    "scheduler": "Open Scheduler"
+    "scheduler": "Open Scheduler",
+    "more": "More Actions",
+    "more_actions": "More Actions"
   },
   "chat": {
     "title": "Team Chat"
@@ -1107,7 +1193,8 @@
     "title": "NFC Tracking"
   },
   "users": {
-    "admin": "Administrator"
+    "admin": "Administrator",
+    "invite_user": "Invite User"
   },
   "dealerships": {
     "title": "Dealerships",
@@ -1117,6 +1204,7 @@
     "add_dealership": "Add Dealership",
     "dealership_list": "Dealerships",
     "dealership": "Dealership",
+    "select_dealership": "Select a dealership",
     "auto_selected": "Auto-selected",
     "filters": "Filters",
     "search_placeholder": "Search dealerships...",
@@ -1542,6 +1630,12 @@
     "administration": "Administration",
     "administration_description": "Unified dealership, user, and system management",
     "dealerships": "Dealerships",
+    "dealerships_description": "Manage dealerships, users, and permissions",
+    "page_title": "System Administration",
+    "page_description": "Manage dealerships, users, roles, and system-wide permissions",
+    "users": "Users",
+    "overview": "Overview",
+    "permissions": "Permissions",
     "users_groups": "Users & Groups",
     "reports": "Reports",
     "system": "System",
@@ -1898,6 +1992,8 @@
   },
   "roles": {
     "viewer": "Viewer",
+    "user": "User",
+    "admin": "Admin",
     "dealer_user": "Dealer User",
     "dealer_manager": "Dealer Manager",
     "dealer_admin": "Dealer Admin",

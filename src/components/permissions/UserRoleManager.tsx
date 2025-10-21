@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Search, Settings, Users } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { RoleAssignmentModal } from './RoleAssignmentModal';
-import { PermissionGuard } from './PermissionGuard';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Search, Settings, Users } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PermissionGuard } from './PermissionGuard';
+import { RoleAssignmentModal } from './RoleAssignmentModal';
 
 interface User {
   id: string;
@@ -43,14 +43,6 @@ export const UserRoleManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    fetchUsersWithRoles();
-  }, [fetchUsersWithRoles]);
-
-  useEffect(() => {
-    filterUsers();
-  }, [filterUsers, users, searchQuery, userTypeFilter]);
 
   const fetchUsersWithRoles = useCallback(async () => {
     try {
@@ -112,7 +104,7 @@ export const UserRoleManager: React.FC = () => {
 
     // Filter by search query
     if (searchQuery) {
-      filtered = filtered.filter(user => 
+      filtered = filtered.filter(user =>
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -125,6 +117,14 @@ export const UserRoleManager: React.FC = () => {
 
     setFilteredUsers(filtered);
   }, [users, searchQuery, userTypeFilter]);
+
+  useEffect(() => {
+    fetchUsersWithRoles();
+  }, [fetchUsersWithRoles]);
+
+  useEffect(() => {
+    filterUsers();
+  }, [filterUsers]);
 
   const handleManageRoles = (user: User) => {
     setSelectedUser(user);
@@ -264,7 +264,7 @@ export const UserRoleManager: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={4} className="text-center py-8">
                       <div className="text-muted-foreground">
-                        {searchQuery || userTypeFilter !== 'all' 
+                        {searchQuery || userTypeFilter !== 'all'
                           ? t('user_management.no_users_matching_filters')
                           : t('user_management.no_users_found')
                         }

@@ -36,10 +36,11 @@
       "low": "Prioridad Baja",
       "urgent": "Urgente"
     },
+    "actions": "Acciones",
     "activity": "Actividad",
     "of": "de",
     "showing": "Mostrando",
-    "actions": {
+    "action_buttons": {
       "save": "Guardar",
       "save_changes": "Guardar Cambios",
       "saving": "Guardando...",
@@ -76,16 +77,6 @@
       "redo": "Rehacer",
       "select_all": "Seleccionar Todo"
     },
-    "actions": {
-      "refresh": "Actualizar",
-      "export": "Exportar",
-      "export_csv": "Exportar a CSV",
-      "export_excel": "Exportar a Excel",
-      "export_pdf": "Exportar a PDF",
-      "exporting": "Exportando...",
-      "export_success": "Datos exportados exitosamente",
-      "export_failed": "Error al exportar datos"
-    },
     "selected": "seleccionados",
     "refresh": "Actualizar",
     "data_refreshed": "Datos actualizados",
@@ -113,7 +104,13 @@
       "refresh_in_minutes": "{{minutes}}:{{seconds}}"
     },
     "assigned": "Asignado",
-    "not_assigned": "Sin Asignar"
+    "not_assigned": "Sin Asignar",
+    "user": "Usuario",
+    "email": "Correo Electrónico",
+    "all": "Todos",
+    "active": "Activo",
+    "close": "Cerrar",
+    "cancel": "Cancelar"
   },
   "cloud_sync": {
     "title": "Panel de Sincronización en la Nube",
@@ -445,15 +442,71 @@
       "readonly_alert": "Esta vista es de solo lectura para análisis del sistema.",
       "readonly_alert_cta": "Para gestionar usuarios, haz clic en 'Ver Concesionario' en cualquier usuario con un concesionario asignado.",
       "view_dealer": "Ver Concesionario",
-      "no_dealer": "Sin Concesionario"
+      "no_dealer": "Sin Concesionario",
+      "manage_custom_roles": "Gestionar Roles Personalizados",
+      "manage_custom_roles_desc": "Gestionar asignaciones de roles personalizados para este usuario. Los usuarios pueden tener múltiples roles.",
+      "assign_custom_role": "Asignar Rol Personalizado",
+      "remove_custom_role": "Remover Rol Personalizado",
+      "current_custom_roles": "Roles Personalizados Actuales",
+      "no_custom_roles": "Sin roles personalizados asignados",
+      "no_role_selected": "Por favor selecciona un rol",
+      "role_assigned": "Rol asignado exitosamente",
+      "role_removed": "Rol removido exitosamente",
+      "error_assigning_role": "Error al asignar rol",
+      "error_removing_role": "Error al remover rol",
+      "select_role": "Selecciona un rol...",
+      "all_roles_assigned": "Todos los roles ya están asignados"
     }
+  },
+  "user_management": {
+    "title": "Gestión de Usuarios y Grupos",
+    "manage_description": "Gestionar usuarios, roles y asignaciones de grupos",
+    "export_report": "Exportar Reporte",
+    "search_users": "Buscar usuarios...",
+    "user": "Usuario",
+    "roles": "Roles",
+    "users": "Usuarios",
+    "manage": "Gestionar",
+    "no_dealership_assigned": "Sin concesionario asignado",
+    "no_users_matching_filters": "No hay usuarios que coincidan con los filtros",
+    "no_users_found": "No se encontraron usuarios",
+    "no_roles": "Sin roles asignados",
+    "incomplete_setup": "Configuración Incompleta",
+    "overview_title": "Vista General de Usuarios",
+    "readonly_description": "Esta es una vista de solo lectura para análisis y supervisión. Para gestionar usuarios, navega al concesionario específico.",
+    "readonly_alert": "Esta vista es de solo lectura para análisis del sistema.",
+    "readonly_alert_cta": "Para gestionar usuarios, haz clic en 'Ver Concesionario' en cualquier usuario con un concesionario asignado.",
+    "view_dealer": "Ver Concesionario",
+    "no_dealer": "Sin Concesionario",
+    "manage_custom_roles": "Gestionar Roles Personalizados",
+    "manage_custom_roles_desc": "Gestionar asignaciones de roles personalizados para este usuario. Los usuarios pueden tener múltiples roles.",
+    "assign_custom_role": "Asignar Rol Personalizado",
+    "remove_custom_role": "Remover Rol Personalizado",
+    "current_custom_roles": "Roles Personalizados Actuales",
+    "no_custom_roles": "Sin roles personalizados asignados",
+    "no_role_selected": "Por favor selecciona un rol",
+    "role_assigned": "Rol asignado exitosamente",
+    "role_removed": "Rol removido exitosamente",
+    "error_assigning_role": "Error al asignar rol",
+    "error_removing_role": "Error al remover rol",
+    "select_role": "Selecciona un rol...",
+    "all_roles_assigned": "Todos los roles ya están asignados"
   },
   "management": {
     "overview": "Resumen",
     "users": "Usuarios",
+    "users_and_roles": "Usuarios y Roles",
     "total_users": "Total de Usuarios",
     "active_users": "Usuarios Activos",
-    "activity": "Actividad"
+    "activity": "Actividad",
+    "permission_management": "Gestión de Permisos",
+    "permission_management_desc": "Configuración avanzada de roles y permisos del sistema",
+    "role_configuration": "Configuración de Roles",
+    "role_configuration_desc": "Configurar roles del sistema y sus permisos asociados",
+    "bulk_operations": "Operaciones Masivas",
+    "bulk_operations_desc": "Realizar operaciones masivas en usuarios y permisos",
+    "configure_roles": "Configurar Roles",
+    "bulk_actions": "Acciones Masivas"
   },
   "admin": {
     "dashboard_title": "Panel de Administración",
@@ -462,6 +515,12 @@
     "administration": "Administración",
     "administration_description": "Gestión unificada de concesionarios, usuarios y sistema",
     "dealerships": "Concesionarios",
+    "dealerships_description": "Gestionar concesionarios, usuarios y permisos",
+    "page_title": "Administración del Sistema",
+    "page_description": "Gestionar concesionarios, usuarios, roles y permisos del sistema",
+    "users": "Usuarios",
+    "overview": "Resumen",
+    "permissions": "Permisos",
     "users_groups": "Usuarios y Grupos",
     "reports": "Reportes",
     "system": "Sistema",
@@ -785,7 +844,86 @@
     }
   },
   "layout": {
-    "search_placeholder": "Buscar órdenes..."
+    "search_placeholder": "Buscar órdenes...",
+    "mobile_menu": "Menú",
+    "tools": "Herramientas",
+    "preferences": "Preferencias"
+  },
+  "search": {
+    "global_placeholder": "Buscar órdenes, contactos, usuarios... (Ctrl+S)",
+    "no_results": "No se encontraron resultados",
+    "try_different_keywords": "Intenta con otros términos de búsqueda o revisa tus filtros",
+    "searching": "Buscando...",
+    "results_found": "{{count}} resultados encontrados",
+    "result_found": "{{count}} resultado encontrado",
+    "view_all": "Ver todos los resultados",
+    "stock": "Stock",
+    "vin": "VIN",
+    "due_date": "Vencimiento",
+    "completed": "Completado",
+    "services": "Servicios",
+    "status": {
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completado",
+      "delivered": "Entregado",
+      "cancelled": "Cancelado",
+      "active": "Activo",
+      "new": "Nuevo"
+    },
+    "categories": {
+      "sales_order": "Órdenes de Venta",
+      "service_order": "Órdenes de Servicio",
+      "recon_order": "Órdenes de Reacondicionamiento",
+      "car_wash": "Lavado de Autos",
+      "contact": "Contactos",
+      "user": "Usuarios",
+      "get_ready": "Vehículos en Preparación",
+      "stock": "Inventario en Stock"
+    },
+    "shortcuts": {
+      "open": "Abrir búsqueda",
+      "close": "Cerrar",
+      "navigate": "Navegar",
+      "select": "Seleccionar"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Inicio",
+    "administration": "Administración",
+    "dealerships": "Concesionarios",
+    "sales_orders": "Órdenes de Venta",
+    "service_orders": "Órdenes de Servicio",
+    "recon_orders": "Órdenes de Reacondicionamiento",
+    "car_wash": "Lavado de Autos",
+    "contacts": "Contactos",
+    "users": "Usuarios",
+    "settings": "Configuración",
+    "reports": "Reportes",
+    "order": "Orden",
+    "contact": "Contacto",
+    "user": "Usuario"
+  },
+  "quick_actions": {
+    "title": "Acciones Rápidas",
+    "new_sales_order": "Nueva Orden de Venta",
+    "new_service_order": "Nueva Orden de Servicio",
+    "new_recon_order": "Nueva Orden de Reacondicionamiento",
+    "new_car_wash": "Nuevo Lavado",
+    "new_contact": "Nuevo Contacto",
+    "new_user": "Agregar Usuario",
+    "invite_user": "Invitar Usuario",
+    "new_dealership": "Nuevo Concesionario",
+    "view_reports": "Ver Reportes",
+    "export_sales": "Exportar Ventas",
+    "export": "Exportar",
+    "import": "Importar",
+    "filter": "Filtrar",
+    "settings": "Configuración",
+    "scan_vin": "Escanear VIN",
+    "scheduler": "Abrir Calendario",
+    "more": "Más Acciones",
+    "more_actions": "Más Acciones"
   },
   "chat": {
     "title": "Chat del Equipo"
@@ -797,11 +935,14 @@
     "title": "Seguimiento NFC"
   },
   "users": {
-    "admin": "Administrador"
+    "admin": "Administrador",
+    "invite_user": "Invitar Usuario"
   },
   "dealerships": {
     "title": "Concesionarios",
     "manage_description": "Gestionar concesionarios, sus contactos y usuarios",
+    "dealership": "Concesionario",
+    "select_dealership": "Seleccionar concesionario",
     "auto_selected": "Auto-seleccionado",
     "show_stats": "Mostrar Estadísticas",
     "hide_stats": "Ocultar Estadísticas",
@@ -862,7 +1003,10 @@
     "stats": "Estadísticas",
     "basic": "Básico",
     "premium": "Premium",
-    "enterprise": "Empresarial"
+    "enterprise": "Empresarial",
+    "current": "Concesionario Actual",
+    "all_selected": "Todos los Concesionarios",
+    "none_selected": "Ningún Concesionario Seleccionado"
   },
   "profile": {
     "title": "Perfil"
@@ -1581,6 +1725,8 @@
   },
   "roles": {
     "viewer": "Visualizador",
+    "user": "Usuario",
+    "admin": "Admin",
     "dealer_user": "Usuario del Concesionario",
     "dealer_manager": "Gerente del Concesionario",
     "dealer_admin": "Administrador del Concesionario",

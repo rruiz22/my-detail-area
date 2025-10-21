@@ -1,26 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
+import { ManageCustomRolesModal } from '@/components/permissions/ManageCustomRolesModal';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { RoleAssignmentModal } from '@/components/permissions/RoleAssignmentModal';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, UserPlus, Settings, Activity, Building2, Eye, ExternalLink, AlertCircle, Info } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Activity, Building2, ExternalLink, Eye, Info, Search, Settings, UserPlus } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
@@ -52,7 +47,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
-  
+
   // State management
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -63,6 +58,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isInvitationModalOpen, setIsInvitationModalOpen] = useState(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+  const [isCustomRoleModalOpen, setIsCustomRoleModalOpen] = useState(false);
 
   // Data fetching functions
   const fetchUsersWithRoles = useCallback(async () => {
@@ -72,7 +68,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
       // First, let's check the current user context
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       console.log('🔍 DEBUG: Current authenticated user:', currentUser);
-      
+
       // Let's also test a simple count query to see if RLS is limiting our access
       const { data: profileCount, error: countError } = await supabase
         .from('profiles')
@@ -103,7 +99,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
           // Get the dealership_id from profile first, then from active membership
           const activeMembership = profile.dealer_memberships?.find((m: { is_active: boolean; dealer_id: number }) => m.is_active);
           const dealershipId = profile.dealership_id || activeMembership?.dealer_id;
-          
+
           return {
             id: profile.id,
             email: profile.email,
@@ -210,6 +206,11 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
     setIsRoleModalOpen(true);
   };
 
+  const handleManageCustomRoles = (user: User) => {
+    setSelectedUser(user);
+    setIsCustomRoleModalOpen(true);
+  };
+
   const handleRoleModalClose = () => {
     setIsRoleModalOpen(false);
     setSelectedUser(null);
@@ -218,6 +219,15 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
   const handleRoleModalSuccess = () => {
     fetchUsersWithRoles();
     handleRoleModalClose();
+  };
+
+  const handleCustomRoleModalClose = () => {
+    setIsCustomRoleModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleCustomRoleModalSuccess = () => {
+    fetchUsersWithRoles();
   };
 
   const handleInvitationSent = () => {
@@ -293,8 +303,8 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                 className="pl-9"
               />
             </div>
-            <Select 
-              value={selectedDealership?.toString() || 'all'} 
+            <Select
+              value={selectedDealership?.toString() || 'all'}
               onValueChange={(value) => setSelectedDealership(value === 'all' ? null : parseInt(value))}
             >
               <SelectTrigger className="w-[200px]">
@@ -319,7 +329,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                   <TableHead>{t('user_management.user')}</TableHead>
                   <TableHead>{t('dealerships.dealership')}</TableHead>
                   <TableHead>{t('user_management.roles')}</TableHead>
-                  <TableHead>{t('common.status')}</TableHead>
+                  <TableHead>{t('common.fields.status')}</TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -328,7 +338,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8">
                       <div className="text-muted-foreground">
-                        {searchQuery || selectedDealership 
+                        {searchQuery || selectedDealership
                           ? t('user_management.no_users_matching_filters')
                           : t('user_management.no_users_found')
                         }
@@ -402,7 +412,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleManageRoles(user)}
+                              onClick={() => handleManageCustomRoles(user)}
                               className="flex items-center gap-2"
                             >
                               <Settings className="h-4 w-4" />
@@ -439,6 +449,15 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
           onClose={handleRoleModalClose}
           user={selectedUser}
           onSuccess={handleRoleModalSuccess}
+        />
+      )}
+
+      {selectedUser && (
+        <ManageCustomRolesModal
+          open={isCustomRoleModalOpen}
+          onClose={handleCustomRoleModalClose}
+          user={selectedUser}
+          onRolesUpdated={handleCustomRoleModalSuccess}
         />
       )}
     </PermissionGuard>

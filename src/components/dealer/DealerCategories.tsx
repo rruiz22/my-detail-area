@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Edit2, Trash2, Tag, Palette, Settings } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { usePermissions } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
+import { canViewPricing } from '@/utils/permissions';
+import { Edit2, Plus, Settings, Tag, Trash2 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { usePermissions } from '@/hooks/usePermissions';
-import { canViewPricing } from '@/utils/permissions';
 
 interface ServiceCategory {
   id: string;
@@ -42,7 +41,7 @@ interface DealerCategoriesProps {
 }
 
 const DEFAULT_COLORS = [
-  '#3B82F6', '#EF4444', '#10B981', '#F59E0B', 
+  '#3B82F6', '#EF4444', '#10B981', '#F59E0B',
   '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16',
   '#F97316', '#6366F1', '#14B8A6', '#F43F5E'
 ];
@@ -58,9 +57,9 @@ const MODULE_OPTIONS = [
 
 export function DealerCategories({ dealerId }: DealerCategoriesProps) {
   const { t } = useTranslation();
-  const { roles } = usePermissions();
-  const canManageCategories = canViewPricing(roles);
-  
+  const { roles, enhancedUser } = usePermissions();
+  const canManageCategories = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
+
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [mappings, setMappings] = useState<CategoryModuleMapping[]>([]);
   const [loading, setLoading] = useState(true);
@@ -147,7 +146,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!canManageCategories) {
       toast.error(t('categories.insufficient_permissions'));
       return;
@@ -306,7 +305,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
                   {editingCategory ? t('categories.edit_category') : t('categories.add_category')}
                 </DialogTitle>
               </DialogHeader>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -435,14 +434,14 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredCategories.map((category) => {
           const categoryModules = getCategoryModules(category.id);
-          
+
           return (
             <Card key={category.id} className="relative hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <div 
-                      className="w-5 h-5 rounded-full border-2 border-white shadow-sm" 
+                    <div
+                      className="w-5 h-5 rounded-full border-2 border-white shadow-sm"
                       style={{ backgroundColor: category.color || undefined }}
                     />
                     <div>
@@ -506,8 +505,8 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
                 </div>
 
                 <div className="text-xs text-muted-foreground">
-                  {t('categories.created_at', { 
-                    date: new Date(category.created_at).toLocaleDateString() 
+                  {t('categories.created_at', {
+                    date: new Date(category.created_at).toLocaleDateString()
                   })}
                 </div>
               </CardContent>

@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Plus, Edit, Trash2, Settings, DollarSign, Clock, Tag } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { Textarea } from '@/components/ui/textarea';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useToast } from '@/hooks/use-toast';
+import { usePermissions } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
 import { canViewPricing } from '@/utils/permissions';
+import { Clock, DollarSign, Edit, Plus, Settings, Tag, Trash2 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DealerService {
   id: string;
@@ -53,6 +54,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { permissions, roles } = usePermissionContext();
+  const { enhancedUser } = usePermissions();
   const [services, setServices] = useState<DealerService[]>([]);
   const [groups, setGroups] = useState<DealerGroup[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
@@ -73,10 +75,10 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     assigned_groups: [] as string[]
   });
 
-  const canViewPrices = canViewPricing(roles);
-  const canManageServices = permissions.some(p => 
+  const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
+  const canManageServices = permissions?.some(p =>
     p.module === 'dealerships' && ['write', 'delete', 'admin'].includes(p.permission_level)
-  ) || true; // Allow all dealer members for now
+  ) ?? true; // Allow all dealer members for now
 
   const fetchServices = useCallback(async () => {
     try {
@@ -315,7 +317,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
           <h2 className="text-2xl font-bold">{t('services.title')}</h2>
           <p className="text-muted-foreground">{t('services.subtitle')}</p>
         </div>
-        
+
         {canManageServices && (
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
@@ -333,7 +335,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   {editingService ? 'Update service details and group assignments' : 'Create a new service for this dealer'}
                 </DialogDescription>
               </DialogHeader>
-              
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -345,7 +347,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                       required
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="category">{t('services.category')} *</Label>
                     <Select value={formData.category_id} onValueChange={(value) =>
@@ -405,7 +407,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                       onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                     />
                   </div>
-                  
+
                   <div>
                     <Label htmlFor="duration">{t('services.duration')}</Label>
                     <Input
@@ -450,7 +452,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   <Checkbox
                     id="is_active"
                     checked={formData.is_active}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setFormData(prev => ({ ...prev, is_active: !!checked }))
                     }
                   />
@@ -482,7 +484,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        
+
         <Select value={filterCategory} onValueChange={setFilterCategory}>
           <SelectTrigger className="w-48">
             <SelectValue />
@@ -492,8 +494,8 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
             {categories.map(category => (
               <SelectItem key={category.name} value={category.name}>
                 <div className="flex items-center space-x-2">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
+                  <div
+                    className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: category.color }}
                   />
                   <span>{category.name}</span>
@@ -516,9 +518,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                     <Button size="sm" variant="ghost" onClick={() => openEditModal(service)}>
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       onClick={() => handleDelete(service.id)}
                       className="text-destructive hover:text-destructive"
                     >
@@ -527,17 +529,17 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   </div>
                 )}
               </div>
-              
+
               <Badge style={getCategoryBadgeStyle(service.category_color)}>
                 {service.category_name}
               </Badge>
             </CardHeader>
-            
+
             <CardContent className="space-y-3">
               {service.description && (
                 <p className="text-sm text-muted-foreground">{service.description}</p>
               )}
-              
+
               <div className="flex justify-between text-sm">
                 {service.price && (
                   <div className="flex items-center space-x-1">
@@ -545,7 +547,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                     <span>${service.price.toFixed(2)}</span>
                   </div>
                 )}
-                
+
                 {service.duration && (
                   <div className="flex items-center space-x-1">
                     <Clock className="h-4 w-4" />
@@ -553,7 +555,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   </div>
                 )}
               </div>
-              
+
               {service.assigned_groups.length > 0 && (
                 <div className="space-y-1">
                   <div className="flex items-center space-x-1 text-xs text-muted-foreground">
@@ -572,7 +574,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   </div>
                 </div>
               )}
-              
+
               {!service.is_active && (
                 <Badge variant="secondary">{t('services.inactive')}</Badge>
               )}

@@ -9,13 +9,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { User, Settings, LogOut, Shield, UserCog } from 'lucide-react';
+import { User, Settings, LogOut, Shield, UserCog, Building2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useNavigate } from 'react-router-dom';
 import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 
 export function UserDropdown() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export function UserDropdown() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { profile } = useUserProfile();
   const { seed } = useAvatarPreferences();
+  const { currentDealership } = useAccessibleDealerships();
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -44,15 +46,36 @@ export function UserDropdown() {
     navigate('/management');
   };
 
+  const handleSettingsClick = () => {
+    navigate('/management?tab=settings');
+  };
+
   const getUserDisplayName = () => {
+    // Debug logging (temporal)
+    console.log('👤 Profile data:', {
+      first_name: profile?.first_name,
+      last_name: profile?.last_name,
+      email: user?.email
+    });
+
+    // Priority: first_name + last_name > email username
+    if (profile?.first_name && profile?.last_name) {
+      return `${profile.first_name} ${profile.last_name}`;
+    }
+    if (profile?.first_name) {
+      return profile.first_name;
+    }
+    if (profile?.last_name) {
+      return profile.last_name;
+    }
     return user?.email?.split('@')[0] || 'User';
   };
 
   const getUserRole = () => {
-    if (enhancedUser?.is_system_admin) return 'System Admin';
-    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_admin')) return 'Dealer Admin';
-    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_manager')) return 'Manager';
-    return 'User';
+    if (enhancedUser?.is_system_admin) return t('roles.system_admin');
+    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_admin')) return t('roles.dealer_admin');
+    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_manager')) return t('roles.dealer_manager');
+    return t('roles.user');
   };
 
   return (
@@ -94,14 +117,25 @@ export function UserDropdown() {
                 </p>
               </div>
             </div>
-            <div className="flex justify-between items-center">
-              <Badge variant="secondary" className="text-xs px-2 py-1">
+
+            {/* Dealership Info */}
+            {currentDealership && (
+              <div className="flex items-center gap-2 px-2 py-1.5 bg-muted/50 rounded-md">
+                <Building2 className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs text-muted-foreground truncate">
+                  {currentDealership.name}
+                </span>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center gap-2">
+              <Badge variant="secondary" className="text-xs px-2 py-1 flex-shrink-0">
                 {getUserRole()}
               </Badge>
               {enhancedUser?.is_system_admin && (
-                <Badge variant="outline" className="text-xs px-2 py-1 border-orange-200 text-orange-700">
+                <Badge variant="outline" className="text-xs px-2 py-1 border-orange-200 text-orange-700 flex-shrink-0">
                   <Shield className="w-3 h-3 mr-1" />
-                  Admin
+                  {t('roles.admin')}
                 </Badge>
               )}
             </div>
@@ -124,9 +158,9 @@ export function UserDropdown() {
           </DropdownMenuItem>
         )}
 
-        <DropdownMenuItem className="cursor-pointer">
+        <DropdownMenuItem onClick={handleSettingsClick} className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />
-          <span>{t('common.settings')}</span>
+          <span>{t('navigation.settings')}</span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

@@ -1,4 +1,4 @@
-import { CustomRoleWithPermissions, AppModule, PermissionLevel } from '@/hooks/usePermissions';
+import { AppModule, CustomRoleWithPermissions, PermissionLevel } from '@/hooks/usePermissions';
 
 /**
  * Module Permission
@@ -20,10 +20,11 @@ export interface ModulePermission {
  * @returns true if user can view pricing
  */
 export const canViewPricing = (
-  roles: CustomRoleWithPermissions[],
+  roles: CustomRoleWithPermissions[] | undefined,
   isSystemAdmin: boolean
 ): boolean => {
   if (isSystemAdmin) return true;
+  if (!roles || !Array.isArray(roles)) return false;
 
   return roles.some(role =>
     role.granularPermissions?.can_view_pricing === true
@@ -38,10 +39,11 @@ export const canViewPricing = (
  * @returns true if user can access internal notes
  */
 export const canAccessInternalNotes = (
-  roles: CustomRoleWithPermissions[],
+  roles: CustomRoleWithPermissions[] | undefined,
   isSystemAdmin: boolean
 ): boolean => {
   if (isSystemAdmin) return true;
+  if (!roles || !Array.isArray(roles)) return false;
 
   return roles.some(role =>
     role.granularPermissions?.can_access_internal_notes === true
@@ -56,10 +58,11 @@ export const canAccessInternalNotes = (
  * @returns true if user can delete orders
  */
 export const canDeleteOrders = (
-  roles: CustomRoleWithPermissions[],
+  roles: CustomRoleWithPermissions[] | undefined,
   isSystemAdmin: boolean
 ): boolean => {
   if (isSystemAdmin) return true;
+  if (!roles || !Array.isArray(roles)) return false;
 
   return roles.some(role =>
     role.granularPermissions?.can_delete_orders === true
@@ -74,10 +77,11 @@ export const canDeleteOrders = (
  * @returns true if user can export reports
  */
 export const canExportReports = (
-  roles: CustomRoleWithPermissions[],
+  roles: CustomRoleWithPermissions[] | undefined,
   isSystemAdmin: boolean
 ): boolean => {
   if (isSystemAdmin) return true;
+  if (!roles || !Array.isArray(roles)) return false;
 
   return roles.some(role =>
     role.granularPermissions?.can_export_reports === true
@@ -92,10 +96,11 @@ export const canExportReports = (
  * @returns true if user can change order status
  */
 export const canChangeOrderStatus = (
-  roles: CustomRoleWithPermissions[],
+  roles: CustomRoleWithPermissions[] | undefined,
   isSystemAdmin: boolean
 ): boolean => {
   if (isSystemAdmin) return true;
+  if (!roles || !Array.isArray(roles)) return false;
 
   return roles.some(role =>
     role.granularPermissions?.can_change_order_status === true
@@ -111,10 +116,12 @@ export const canChangeOrderStatus = (
  * @returns true if user has required permission level or higher
  */
 export const hasPermissionLevel = (
-  permissions: ModulePermission[],
+  permissions: ModulePermission[] | undefined,
   module: AppModule,
   requiredLevel: PermissionLevel
 ): boolean => {
+  if (!permissions || !Array.isArray(permissions)) return false;
+
   const permission = permissions.find(p => p.module === module);
   if (!permission) return false;
 

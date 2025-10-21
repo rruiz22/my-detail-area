@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Plus,
-  Edit,
-  UserX,
-  UserCheck,
-  MoreHorizontal,
-  Users
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { safeFormatDateOnly } from '@/utils/dateUtils';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
-import { EditUserRoleModal } from './EditUserRoleModal';
+import { ManageCustomRolesModal } from '@/components/permissions/ManageCustomRolesModal';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { safeFormatDateOnly } from '@/utils/dateUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    Edit,
+    MoreHorizontal,
+    Plus,
+    UserCheck,
+    Users,
+    UserX
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DealerUsersProps {
   dealerId: string;
@@ -42,17 +42,17 @@ interface DealerMembership {
   user_id: string;
   is_active: boolean;
   joined_at: string;
-  custom_role_id: string | null;
   profiles: {
     first_name: string | null;
     last_name: string | null;
     email: string;
   };
-  dealer_custom_roles: {
+  // Custom roles from user_custom_role_assignments (new system)
+  custom_roles: Array<{
     id: string;
     role_name: string;
     display_name: string;
-  } | null;
+  }>;
 }
 
 /**
@@ -81,34 +81,76 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
     isLoading: loading,
     error: usersError
   } = useQuery({
-    queryKey: ['dealer_memberships', dealerId],
+    queryKey: ['dealer_users_with_roles', dealerId],
     queryFn: async () => {
       console.log('🔍 [DealerUsers] Fetching users for dealerId:', dealerId);
 
-      const { data, error } = await supabase
+      // 1. Fetch basic membership info from dealer_memberships
+      const { data: memberships, error: memberError } = await supabase
         .from('dealer_memberships')
         .select(`
           id,
           user_id,
           is_active,
           joined_at,
-          custom_role_id,
-          profiles(first_name, last_name, email),
-          dealer_custom_roles(id, role_name, display_name)
+          profiles!inner(first_name, last_name, email)
         `)
         .eq('dealer_id', parseInt(dealerId))
         .order('joined_at', { ascending: false });
 
-      if (error) {
-        console.error('❌ [DealerUsers] Query failed:', error);
-        throw error;
+      if (memberError) {
+        console.error('❌ [DealerUsers] Query failed:', memberError);
+        throw memberError;
       }
 
-      console.log('✅ [DealerUsers] Query successful, fetched', data?.length || 0, 'users');
-      return (data || []) as DealerMembership[];
+      if (!memberships || memberships.length === 0) {
+        console.log('✅ [DealerUsers] No users found');
+        return [];
+      }
+
+      console.log('✅ [DealerUsers] Fetched', memberships.length, 'memberships');
+
+      // 2. For each user, fetch their custom roles from user_custom_role_assignments
+      const usersWithRoles = await Promise.all(
+        memberships.map(async (member) => {
+          const { data: roleAssignments, error: roleError } = await supabase
+            .from('user_custom_role_assignments')
+            .select(`
+              custom_role_id,
+              dealer_custom_roles!inner(
+                id,
+                role_name,
+                display_name
+              )
+            `)
+            .eq('user_id', member.user_id)
+            .eq('dealer_id', parseInt(dealerId))
+            .eq('is_active', true);
+
+          if (roleError) {
+            console.warn('⚠️ [DealerUsers] Error fetching roles for user:', member.user_id, roleError);
+          }
+
+          // Extract custom roles
+          const customRoles = (roleAssignments || [])
+            .map(ra => ra.dealer_custom_roles)
+            .filter(Boolean) as Array<{ id: string; role_name: string; display_name: string }>;
+
+          console.log(`   📋 User ${member.profiles?.email}: ${customRoles.length} role(s)`);
+
+          return {
+            ...member,
+            custom_roles: customRoles
+          };
+        })
+      );
+
+      console.log('✅ [DealerUsers] Query complete, enriched', usersWithRoles.length, 'users with roles');
+      return usersWithRoles as DealerMembership[];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes - users don't change frequently
     gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    enabled: !!dealerId
   });
 
   // Show error toast if query fails
@@ -139,7 +181,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       if (error) throw error;
 
       // Invalidate cache to trigger refetch
-      await queryClient.invalidateQueries({ queryKey: ['dealer_memberships', dealerId] });
+      await queryClient.invalidateQueries({ queryKey: ['dealer_users_with_roles', dealerId] });
 
       toast({
         title: t('common.success'),
@@ -268,10 +310,14 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
 
                     {/* Role */}
                     <TableCell>
-                      {user.dealer_custom_roles ? (
-                        <Badge variant="default" className="text-xs">
-                          {user.dealer_custom_roles.display_name}
-                        </Badge>
+                      {user.custom_roles && user.custom_roles.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {user.custom_roles.map(role => (
+                            <Badge key={role.id} variant="default" className="text-xs">
+                              {role.display_name}
+                            </Badge>
+                          ))}
+                        </div>
                       ) : (
                         <span className="text-xs text-muted-foreground">{t('dealer.users.no_role')}</span>
                       )}
@@ -333,25 +379,24 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
         dealerId={parseInt(dealerId)}
         onInvitationSent={async () => {
           // Invalidate cache to trigger refetch
-          await queryClient.invalidateQueries({ queryKey: ['dealer_memberships', dealerId] });
+          await queryClient.invalidateQueries({ queryKey: ['dealer_users_with_roles', dealerId] });
         }}
       />
 
-      {/* Edit User Role Modal */}
-      <EditUserRoleModal
+      {/* Manage Custom Roles Modal */}
+      <ManageCustomRolesModal
         open={showEditRoleModal}
         onClose={() => setShowEditRoleModal(false)}
         user={selectedUser ? {
-          id: selectedUser.id,
-          user_id: selectedUser.user_id,
-          profiles: selectedUser.profiles,
-          dealer_custom_roles: selectedUser.dealer_custom_roles
+          id: selectedUser.user_id,
+          email: selectedUser.profiles?.email || '',
+          first_name: selectedUser.profiles?.first_name || null,
+          last_name: selectedUser.profiles?.last_name || null,
         } : null}
-        dealerId={parseInt(dealerId)}
-        onRoleUpdated={async () => {
-          console.log('🔄 [DealerUsers] onRoleUpdated callback triggered');
+        onRolesUpdated={async () => {
+          console.log('🔄 [DealerUsers] onRolesUpdated callback triggered');
           // Invalidate cache to trigger refetch
-          await queryClient.invalidateQueries({ queryKey: ['dealer_memberships', dealerId] });
+          await queryClient.invalidateQueries({ queryKey: ['dealer_users_with_roles', dealerId] });
           console.log('✅ [DealerUsers] Cache invalidation complete');
         }}
       />

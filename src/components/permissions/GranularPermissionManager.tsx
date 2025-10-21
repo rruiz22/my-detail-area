@@ -106,6 +106,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
   const loadRolePermissions = useCallback(async () => {
     try {
       setLoading(true);
+      console.log('🔍 [GranularPermissionManager] Loading permissions for roleId:', roleId);
 
       // Load system permissions for this role
       const { data: sysPerms, error: sysError } = await supabase
@@ -116,6 +117,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
         .eq('role_id', roleId);
 
       if (sysError) throw sysError;
+      console.log('🔍 [GranularPermissionManager] System perms loaded:', sysPerms?.length || 0);
 
       const sysPermSet = new Set<SystemPermissionKey>();
       (sysPerms || []).forEach((item: any) => {
@@ -134,6 +136,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
         .eq('role_id', roleId);
 
       if (modError) throw modError;
+      console.log('🔍 [GranularPermissionManager] Module perms loaded:', modPerms?.length || 0);
 
       const modPermState: ModulePermissionsState = {};
       (modPerms || []).forEach((item: any) => {
@@ -148,6 +151,12 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
         }
       });
       setModulePermissions(modPermState);
+
+      console.log('✅ [GranularPermissionManager] Loaded permissions for', Object.keys(modPermState).length, 'modules');
+      console.log('   - System permissions:', sysPermSet.size);
+      Object.entries(modPermState).forEach(([mod, perms]) => {
+        console.log(`   - ${mod}: ${perms.size} permissions`);
+      });
 
       setHasChanges(false);
     } catch (error) {

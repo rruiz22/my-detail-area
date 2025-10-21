@@ -1,3 +1,4 @@
+import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,10 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
-import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
 import { usePermissionContext } from '@/contexts/PermissionContext';
-import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { usePermissions } from '@/hooks/usePermissions';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
+import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
@@ -118,6 +119,7 @@ interface ReconOrderModalProps {
 export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, onClose, onSave, mode = 'create' }) => {
   const { t } = useTranslation();
   const { roles } = usePermissionContext();
+  const { enhancedUser } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Form state
@@ -161,7 +163,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const canViewPrices = canViewPricing(roles);
+  const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
 
   const isEditing = Boolean(order);
 

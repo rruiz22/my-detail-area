@@ -97,10 +97,7 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
   };
 
   const handlePermissionsSaved = () => {
-    toast({
-      title: t('common.success'),
-      description: 'Permissions updated successfully'
-    });
+    // Toast already shown by GranularPermissionManager
     onRoleUpdated();
   };
 

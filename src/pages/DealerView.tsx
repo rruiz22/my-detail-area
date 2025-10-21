@@ -1,51 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import {
-  Building2,
-  BarChart3,
-  Shield,
-  Users,
-  ArrowLeft,
-  Wrench,
-  Settings,
-  Mail
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useTranslation } from 'react-i18next';
-import { useTabPersistence } from '@/hooks/useTabPersistence';
-import { DealerOverview } from '@/components/dealer/DealerOverview';
-import { DealerGroups } from '@/components/dealer/DealerGroups';
-import { DealerRoles } from '@/components/dealer/DealerRoles';
-import { DealerUsers } from '@/components/dealer/DealerUsers';
-import { DealerServices } from '@/components/dealer/DealerServices';
 import { DealerModules } from '@/components/dealer/DealerModules';
+import { DealerOverview } from '@/components/dealer/DealerOverview';
+import { DealerRoles } from '@/components/dealer/DealerRoles';
+import { DealerServices } from '@/components/dealer/DealerServices';
+import { DealerUsers } from '@/components/dealer/DealerUsers';
 import { InvitationManagement } from '@/components/invitations/InvitationManagement';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
-import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { supabase } from '@/integrations/supabase/client';
+import {
+    ArrowLeft,
+    BarChart3,
+    Building2,
+    Mail,
+    Settings,
+    Shield,
+    Users,
+    Wrench
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
 
 const DealerView = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const [dealerName, setDealerName] = useState<string>('');
-  
+
   // Dealer-specific tab persistence
   const [activeTab, setActiveTab] = useTabPersistence('dealer_view', id);
 
   useEffect(() => {
     const fetchDealerInfo = async () => {
       if (!id) return;
-      
+
       try {
         const { data, error } = await supabase
           .from('dealerships')
           .select('name')
           .eq('id', parseInt(id))
           .single();
-        
+
         if (error) throw error;
         if (data) {
           setDealerName(data.name);

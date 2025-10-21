@@ -49,6 +49,16 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
     checkDealerModule ? userDealershipId : 0
   );
 
+  // Debug logging
+  console.log(`🔍 [PermissionGuard] Checking access:`, {
+    module,
+    permission,
+    checkDealerModule,
+    isSystemAdmin,
+    requireSystemPermission,
+    hasEnhancedUser: !!enhancedUser
+  });
+
   if (loading || (checkDealerModule && modulesLoading)) {
     return (
       <div className="animate-pulse">
@@ -66,31 +76,74 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
     }
     // Check module-level permission (granular or legacy)
     else if (module) {
-      // Check if it's a granular permission key or legacy level
-      const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
+      // IMPORTANT: When checkDealerModule is true, we enforce stricter checks
+      // User must have at least ONE permission in the specific module
+      if (checkDealerModule && !isSystemAdmin) {
+        console.log(`🔍 [PermissionGuard] Enforcing strict module check for ${module}`);
 
-      if (isLegacyLevel) {
-        // Use legacy hasPermission for backward compatibility
-        hasAccess = hasPermission(module, permission as PermissionLevel);
-      } else {
-        // Use new granular permission system
-        hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
-      }
+        // Debug: Show what modules the user has permissions for
+        const allUserModules = Array.from(enhancedUser?.module_permissions?.keys() || []);
+        console.log(`   📋 User has permissions in ${allUserModules.length} modules: [${allUserModules.join(', ')}]`);
 
-      // Check order-specific permissions
-      if (hasAccess && requireOrderAccess && order) {
-        if (permission === 'edit' || permission === 'edit_orders') {
-          hasAccess = canEditOrder(order);
-        } else if (permission === 'delete' || permission === 'delete_orders') {
-          hasAccess = canDeleteOrder(order);
-        }
-      }
-
-      // Additional check: Verify dealer has module enabled (if checkDealerModule is true)
-      if (hasAccess && checkDealerModule && !isSystemAdmin) {
+        // First, check if dealership has the module enabled
         const dealerHasModule = hasModuleAccess(module);
         if (!dealerHasModule) {
+          console.warn(`🚫 [PermissionGuard] Dealership doesn't have ${module} module enabled`);
           hasAccess = false;
+        } else {
+          // Second, verify user has AT LEAST ONE permission in this module
+          // This is the PRIMARY check - user must have module-specific permissions
+          const userModulePerms = enhancedUser?.module_permissions?.get(module);
+          const hasAnyModulePermission = userModulePerms && userModulePerms.size > 0;
+
+          console.log(`   🔑 Permissions in "${module}": ${userModulePerms ? `[${Array.from(userModulePerms).join(', ')}]` : 'NONE (size: 0)'}`);
+
+          if (!hasAnyModulePermission) {
+            console.warn(`🚫 [PermissionGuard] User has NO permissions for ${module} module`);
+            console.warn(`   User has permissions for: ${allUserModules.join(', ')}`);
+            hasAccess = false;
+          } else {
+            console.log(`✅ [PermissionGuard] User has ${userModulePerms?.size} permission(s) in ${module}`);
+            // User has permissions in this module, now check the specific permission
+            const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
+
+            if (isLegacyLevel) {
+              // Use legacy hasPermission for backward compatibility
+              hasAccess = hasPermission(module, permission as PermissionLevel);
+            } else {
+              // Use new granular permission system
+              hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
+            }
+
+            // Check order-specific permissions
+            if (hasAccess && requireOrderAccess && order) {
+              if (permission === 'edit' || permission === 'edit_orders') {
+                hasAccess = canEditOrder(order);
+              } else if (permission === 'delete' || permission === 'delete_orders') {
+                hasAccess = canDeleteOrder(order);
+              }
+            }
+          }
+        }
+      } else {
+        // Standard permission check (no module access verification)
+        const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
+
+        if (isLegacyLevel) {
+          // Use legacy hasPermission for backward compatibility
+          hasAccess = hasPermission(module, permission as PermissionLevel);
+        } else {
+          // Use new granular permission system
+          hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
+        }
+
+        // Check order-specific permissions
+        if (hasAccess && requireOrderAccess && order) {
+          if (permission === 'edit' || permission === 'edit_orders') {
+            hasAccess = canEditOrder(order);
+          } else if (permission === 'delete' || permission === 'delete_orders') {
+            hasAccess = canDeleteOrder(order);
+          }
         }
       }
     } else {

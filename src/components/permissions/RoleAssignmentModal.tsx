@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, X } from 'lucide-react';
-import { format } from 'date-fns';
-import { safeParseDate } from '@/utils/dateUtils';
-import { supabase } from '@/integrations/supabase/client';
-import { usePermissions, UserRole } from '@/hooks/usePermissions';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { usePermissions, UserRole } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
+import { safeParseDate } from '@/utils/dateUtils';
+import { format } from 'date-fns';
+import { CalendarIcon, X } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface User {
   id: string;
@@ -49,12 +49,6 @@ export const RoleAssignmentModal: React.FC<RoleAssignmentModalProps> = ({
   const { assignRole, removeRole, refreshPermissions } = usePermissions();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (isOpen && user) {
-      fetchRolesAndUserRoles();
-    }
-  }, [isOpen, user, fetchRolesAndUserRoles]);
-
   const fetchRolesAndUserRoles = useCallback(async () => {
     if (!user) return;
 
@@ -87,6 +81,12 @@ export const RoleAssignmentModal: React.FC<RoleAssignmentModalProps> = ({
       console.error('Error in fetchRolesAndUserRoles:', error);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (isOpen && user) {
+      fetchRolesAndUserRoles();
+    }
+  }, [isOpen, user, fetchRolesAndUserRoles]);
 
   const handleAssignRole = async () => {
     if (!user || !selectedRole) return;
@@ -219,7 +219,7 @@ export const RoleAssignmentModal: React.FC<RoleAssignmentModalProps> = ({
           {/* Assign New Role */}
           <div className="space-y-4">
             <Label className="text-base font-medium">Assign New Role</Label>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="role-select">Role</Label>
