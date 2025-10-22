@@ -6,34 +6,34 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Bell, 
-  Mail, 
-  MessageSquare, 
+import {
+  Bell,
+  Mail,
+  MessageSquare,
   Smartphone,
   Clock,
   Globe,
   Calendar,
   Save
 } from 'lucide-react';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useProfileMutations } from '@/hooks/useProfileMutations';
 
 export function NotificationsPreferencesTab() {
   const { t } = useTranslation();
-  const { preferences, loading, updatePreferences } = useUserProfile();
+  const { loading, updatePreferences } = useProfileMutations();
   
   const [formData, setFormData] = useState({
-    notification_email: preferences?.notification_email ?? true,
-    notification_sms: preferences?.notification_sms ?? false,
-    notification_push: preferences?.notification_push ?? true,
-    notification_in_app: preferences?.notification_in_app ?? true,
-    notification_frequency: preferences?.notification_frequency ?? 'immediate',
-    quiet_hours_start: preferences?.quiet_hours_start ?? '',
-    quiet_hours_end: preferences?.quiet_hours_end ?? '',
-    timezone: preferences?.timezone ?? 'America/New_York',
-    language_preference: preferences?.language_preference ?? 'en',
-    date_format: preferences?.date_format ?? 'MM/dd/yyyy',
-    time_format: preferences?.time_format ?? '12h',
+    notification_email: true,
+    notification_sms: false,
+    notification_push: true,
+    notification_in_app: true,
+    notification_frequency: 'immediate',
+    quiet_hours_start: '',
+    quiet_hours_end: '',
+    timezone: 'America/New_York',
+    language_preference: 'en',
+    date_format: 'MM/dd/yyyy',
+    time_format: '12h',
   });
 
   const handleSwitchChange = (field: string, value: boolean) => {

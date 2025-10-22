@@ -75,24 +75,53 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
       const savedFilter = localStorage.getItem('selectedDealerFilter');
 
       if (!savedFilter || savedFilter === 'all') {
-        // No saved filter or "All" selected - require manual selection
-        setCurrentDealership(null);
-        prevDealerIdRef.current = 'all';
+        // IMPROVED: Auto-select for single-dealer users (except system_admin)
+        if (dealerships.length === 1 && user?.role !== 'system_admin') {
+          const singleDealer = dealerships[0];
+          setCurrentDealership(singleDealer);
+          prevDealerIdRef.current = singleDealer.id;
+
+          // Update localStorage to persist selection
+          localStorage.setItem('selectedDealerFilter', singleDealer.id.toString());
+
+          // Sync with DealerFilterContext
+          window.dispatchEvent(new CustomEvent('dealerFilterChanged', {
+            detail: { dealerId: singleDealer.id }
+          }));
+
+          console.log('🎯 [Auto-Select] Single dealership auto-selected:', singleDealer.name);
+        } else {
+          // Multi-dealer or system_admin: Keep 'all' (no auto-selection)
+          setCurrentDealership(null);
+          prevDealerIdRef.current = 'all';
+          console.log('📋 [Auto-Select] Multi-dealer user or system_admin: defaulting to "all"');
+        }
       } else {
-        // Restore specific dealer
+        // Restore specific dealer with improved validation
         const savedId = parseInt(savedFilter);
         const savedDealership = dealerships.find((d: Dealership) => d.id === savedId);
+
         if (savedDealership) {
           setCurrentDealership(savedDealership);
           prevDealerIdRef.current = savedId;
+          console.log('✅ [Auto-Select] Restored saved dealership:', savedDealership.name);
         } else {
-          // Saved dealer not found - fallback to first
-          setCurrentDealership(dealerships[0] || null);
-          prevDealerIdRef.current = dealerships[0]?.id || null;
+          // Saved dealer not found - clean up and use first dealer
+          console.warn('⚠️ [Auto-Select] Saved dealer not found in accessible list, selecting first available');
+          const firstDealer = dealerships[0];
+          setCurrentDealership(firstDealer || null);
+          prevDealerIdRef.current = firstDealer?.id || null;
+
+          if (firstDealer) {
+            localStorage.setItem('selectedDealerFilter', firstDealer.id.toString());
+            window.dispatchEvent(new CustomEvent('dealerFilterChanged', {
+              detail: { dealerId: firstDealer.id }
+            }));
+          }
         }
       }
     }
-  }, [dealerships]); // ONLY depends on dealerships loading
+  }, [dealerships, user]); // Added 'user' dependency for role checking
 
   const filterByModule = async (moduleName: AppModule): Promise<Dealership[]> => {
     const filteredDealerships: Dealership[] = [];

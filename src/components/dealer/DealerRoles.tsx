@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Shield, Plus, Edit, Trash2, Users } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { confirmDelete, showError, showSuccess } from '@/utils/sweetalert';
+import { Edit, Plus, Shield, Trash2, Users } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CreateRoleModal } from './CreateRoleModal';
 import { EditRoleModal } from './EditRoleModal';
-import { confirmDelete, showError, showSuccess } from '@/utils/sweetalert';
 
 interface DealerRolesProps {
   dealerId: string;
@@ -20,13 +20,14 @@ interface CustomRole {
   display_name: string;
   description: string | null;
   is_active: boolean;
-  permissions: RolePermission[];
+  permissions: GranularRolePermission[];
   users_count?: number;
 }
 
-interface RolePermission {
+interface GranularRolePermission {
   module: string;
-  permission_level: string;
+  permission_key: string;
+  display_name: string;
 }
 
 export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
@@ -55,10 +56,16 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
       // Fetch permissions and user counts for each role
       const rolesWithPermissions = await Promise.all(
         (rolesData || []).map(async (role) => {
-          // Get module permissions
+          // Get module permissions (NEW GRANULAR SYSTEM)
           const { data: permissionsData } = await supabase
-            .from('dealer_role_permissions')
-            .select('module, permission_level')
+            .from('role_module_permissions_new')
+            .select(`
+              module_permissions (
+                module,
+                permission_key,
+                display_name
+              )
+            `)
             .eq('role_id', role.id);
 
           // Get count of users with this role
@@ -68,10 +75,16 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
             .eq('custom_role_id', role.id)
             .eq('is_active', true);
 
+          // Transform granular permissions to display format
+          const transformedPerms = (permissionsData || []).map((item: any) => ({
+            module: item.module_permissions?.module || '',
+            permission_key: item.module_permissions?.permission_key || '',
+            display_name: item.module_permissions?.display_name || ''
+          }));
+
           return {
             ...role,
-            granularPermissions: role.permissions || {}, // Keep JSONB permissions
-            permissions: permissionsData || [], // Module permissions array
+            permissions: transformedPerms,
             users_count: usersCount || 0
           };
         })
@@ -138,16 +151,6 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
         t('common.error'),
         t('roles.error_deleting_role')
       );
-    }
-  };
-
-  const getPermissionBadgeColor = (level: string) => {
-    switch (level) {
-      case 'admin': return 'bg-red-500 text-white';
-      case 'delete': return 'bg-orange-500 text-white';
-      case 'edit': return 'bg-blue-500 text-white';
-      case 'view': return 'bg-green-500 text-white';
-      default: return 'bg-gray-500 text-white';
     }
   };
 
@@ -226,14 +229,22 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                   <span>{role.users_count || 0} {role.users_count === 1 ? 'user' : 'users'}</span>
                 </div>
                 <div>
-                  <div className="text-sm font-medium mb-2">Permissions:</div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="text-sm font-medium mb-2">
+                    Permissions: {role.permissions.length} granular permission(s)
+                  </div>
+                  <div className="flex flex-wrap gap-1">
                     {role.permissions.length === 0 ? (
                       <span className="text-sm text-muted-foreground">No permissions assigned</span>
                     ) : (
-                      role.permissions.map((perm, idx) => (
-                        <Badge key={idx} className={getPermissionBadgeColor(perm.permission_level)}>
-                          {perm.module}: {perm.permission_level}
+                      // Group by module and show count
+                      Object.entries(
+                        role.permissions.reduce((acc, perm) => {
+                          acc[perm.module] = (acc[perm.module] || 0) + 1;
+                          return acc;
+                        }, {} as Record<string, number>)
+                      ).map(([module, count]) => (
+                        <Badge key={module} variant="secondary" className="text-xs">
+                          {module}: {count} perm{count > 1 ? 's' : ''}
                         </Badge>
                       ))
                     )}
@@ -281,6 +292,7 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
           setSelectedRole(null);
         }}
         role={selectedRole}
+        dealerId={dealerId}
         onRoleUpdated={fetchRoles}
       />
     </div>

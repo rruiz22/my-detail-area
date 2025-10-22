@@ -343,6 +343,28 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 
       if (!data) return [];
 
+      // BATCH QUERY: Get vehicle images from Stock inventory by VIN
+      const vins = data.map(v => v.vin).filter(Boolean);
+      let stockImagesMap = new Map<string, string>();
+
+      if (vins.length > 0) {
+        const { data: stockImages, error: stockError } = await supabase
+          .from('dealer_vehicle_inventory')
+          .select('vin, key_photo_url')
+          .eq('dealer_id', currentDealership.id)
+          .in('vin', vins)
+          .not('key_photo_url', 'is', null);
+
+        if (!stockError && stockImages) {
+          stockImages.forEach(img => {
+            if (img.vin && img.key_photo_url) {
+              stockImagesMap.set(img.vin, img.key_photo_url);
+            }
+          });
+          console.log(`📸 [Get Ready] Loaded ${stockImagesMap.size} vehicle images from Stock inventory`);
+        }
+      }
+
       // Transform to match MockVehicle interface
       return data.map((vehicle: any) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
@@ -378,7 +400,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           progress: Math.min(100, Math.round((stepOrder / 8) * 100)), // Calculate progress based on step
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
-          images: [], // TODO: Add when media is implemented
+          images: stockImagesMap.has(vehicle.vin) ? [stockImagesMap.get(vehicle.vin)!] : [],
           work_items: workItems.length,
           work_item_counts,
           media_count: 0, // TODO: Count media
@@ -399,7 +421,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 }
 
 // Hook for infinite scroll vehicle list
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5; // Show 5 vehicles initially, load more with infinite scroll
 
 export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
@@ -531,6 +553,28 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       // ✅ OPTIMIZATION: No longer need separate queries for media/notes counts
       // media_count and notes_count are now maintained by database triggers
 
+      // BATCH QUERY: Get vehicle images from Stock inventory by VIN
+      const vins = data.map(v => v.vin).filter(Boolean);
+      let stockImagesMap = new Map<string, string>();
+
+      if (vins.length > 0) {
+        const { data: stockImages, error: stockError } = await supabase
+          .from('dealer_vehicle_inventory')
+          .select('vin, key_photo_url')
+          .eq('dealer_id', currentDealership.id)
+          .in('vin', vins)
+          .not('key_photo_url', 'is', null);
+
+        if (!stockError && stockImages) {
+          stockImages.forEach(img => {
+            if (img.vin && img.key_photo_url) {
+              stockImagesMap.set(img.vin, img.key_photo_url);
+            }
+          });
+          console.log(`📸 [Get Ready Infinite] Loaded ${stockImagesMap.size} vehicle images from Stock inventory`);
+        }
+      }
+
       // Transform data
       const vehicles = data.map((vehicle: any) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
@@ -572,7 +616,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           progress: Math.min(100, Math.round((stepOrder / 8) * 100)), // Calculate progress based on step
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
-          images: [],
+          images: stockImagesMap.has(vehicle.vin) ? [stockImagesMap.get(vehicle.vin)!] : [],
           work_items: workItems, // ARRAY COMPLETO
           work_items_count: workItems.length, // Count separado
           work_item_counts,

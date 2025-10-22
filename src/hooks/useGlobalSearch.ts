@@ -75,8 +75,15 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
       ? {}
       : { dealer_id: selectedDealerId };
 
-    // Build search pattern once
-    const searchPattern = '*' + query + '*';
+    // Escape special characters for PostgreSQL ILIKE pattern matching
+    // Characters that need escaping: % (wildcard), _ (single char wildcard), \ (escape char)
+    const escapePattern = (str: string): string => {
+      return str.replace(/[%_\\]/g, '\\$&');
+    };
+
+    // Build search pattern once with escaped characters
+    const escapedQuery = escapePattern(query);
+    const searchPattern = '*' + escapedQuery + '*';
 
     // 🔍 SALES ORDERS - Permission-based search
     if (enhancedUser?.is_system_admin || hasModulePermission('sales_orders', 'view_orders')) {
@@ -100,7 +107,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
               type: 'sales_order',
               title: `Sales Order #${order.order_number}`,
               subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
-              url: `/sales-orders/${order.id}`,
+              url: `/sales?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
               status: order.status || undefined,
@@ -137,7 +144,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
               type: 'service_order',
               title: `Service Order #${order.order_number}`,
               subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
-              url: `/service-orders/${order.id}`,
+              url: `/service?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
               status: order.status || undefined,
@@ -174,7 +181,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
               type: 'recon_order',
               title: `Recon Order #${order.order_number}`,
               subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
-              url: `/recon-orders/${order.id}`,
+              url: `/recon?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
               status: order.status || undefined,
@@ -211,7 +218,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
               type: 'car_wash',
               title: `Car Wash #${order.order_number}`,
               subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
-              url: `/car-wash/${order.id}`,
+              url: `/carwash?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
               status: order.status || undefined,

@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { useGlobalSearch, SearchResult } from '@/hooks/useGlobalSearch';
+import { useGlobalSearch, SearchResult } from '@/hooks/useGlobalSearch'; // With special char escaping
 import {
   Search,
   ShoppingCart,

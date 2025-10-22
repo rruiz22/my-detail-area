@@ -36,6 +36,8 @@
       "low": "Prioridade Baixa",
       "urgent": "Urgente"
     },
+    "enabled": "Habilitado",
+    "disabled": "Desabilitado",
     "actions": "Ações",
     "activity": "Atividade",
     "of": "de",
@@ -1009,7 +1011,34 @@
     "none_selected": "Nenhuma Concessionária Selecionada"
   },
   "profile": {
-    "title": "Perfil"
+    "title": "Perfil",
+    "password_strength": "Força da Senha",
+    "password_weak": "Fraca",
+    "password_fair": "Razoável",
+    "password_good": "Boa",
+    "password_strong": "Forte",
+    "password_min_8_chars": "Pelo menos 8 caracteres",
+    "password_uppercase": "Uma letra maiúscula",
+    "password_lowercase": "Uma letra minúscula",
+    "password_number": "Um número",
+    "password_special": "Um caractere especial (!@#$%^&*)",
+    "password_excellent": "✓ Excelente! Sua senha é forte e segura.",
+    "password_improve": "Dica: Adicione mais variedade para tornar sua senha mais forte.",
+    "password_strength_requirement": "A senha deve ter pelo menos força \"Boa\" para continuar",
+    "last_24_hours": "Últimas 24 horas",
+    "last_7_days": "Últimos 7 dias",
+    "last_30_days": "Últimos 30 dias",
+    "last_90_days": "Últimos 90 dias",
+    "total_activities": "Total de Atividades",
+    "filtered_results": "Filtrados",
+    "date_range_label": "Dias",
+    "showing": "Mostrando",
+    "unsaved_changes_title": "Alterações Não Salvas",
+    "unsaved_changes_description": "Você tem alterações não salvas que serão perdidas se sair desta página. O que você gostaria de fazer?",
+    "discard_changes": "Descartar Alterações",
+    "save_and_continue": "Salvar e Continuar",
+    "phone_format_hint": "Formato: (555) 123-4567 ou +1 555 123 4567",
+    "fix_errors": "Por favor, corrija os erros de validação antes de salvar"
   },
   "calendar": {
     "month": "Mês",
@@ -1634,7 +1663,55 @@
       "categories": "Categorias"
     },
     "modules": {
-      "title": "Módulos"
+      "title": "Módulos",
+      "description": "Gerenciar quais módulos esta concessionária pode acessar",
+      "fetch_error": "Erro ao carregar módulos",
+      "update_error": "Erro ao atualizar acesso ao módulo",
+      "module_enabled": "O módulo {{module}} foi habilitado",
+      "module_disabled": "O módulo {{module}} foi desabilitado",
+      "enabled_on": "Habilitado em {{date}}",
+      "categories": {
+        "core": "Recursos Principais",
+        "orders": "Gestão de Pedidos",
+        "operations": "Operações",
+        "communication": "Comunicação",
+        "analytics": "Análises e Relatórios",
+        "administration": "Administração"
+      },
+      "names": {
+        "dashboard": "Painel",
+        "sales_orders": "Pedidos de Venda",
+        "service_orders": "Pedidos de Serviço",
+        "recon_orders": "Pedidos de Recon",
+        "car_wash": "Lavagem",
+        "stock": "Estoque",
+        "get_ready": "Get Ready",
+        "chat": "Chat da Equipe",
+        "contacts": "Contatos",
+        "reports": "Relatórios",
+        "settings": "Configurações",
+        "dealerships": "Concessionárias",
+        "users": "Usuários",
+        "management": "Gerenciamento",
+        "productivity": "Produtividade"
+      },
+      "descriptions": {
+        "main_dashboard": "Painel principal e visão geral",
+        "manage_sales_orders": "Gerenciar pedidos de venda e entrega",
+        "manage_service_orders": "Processar pedidos do departamento de serviço",
+        "manage_recon_orders": "Gerenciar fluxo de trabalho de recondicionamento",
+        "manage_car_wash_orders": "Gerenciar serviços de lavagem expressa",
+        "manage_vehicle_inventory": "Gestão de estoque e inventário",
+        "vehicle_preparation_workflow": "Preparação de veículos e gerenciamento do fluxo de trabalho Get Ready",
+        "team_communication": "Chat e comunicação da equipe",
+        "customer_contact_management": "Gerenciamento de relacionamento com clientes e contatos",
+        "access_reports_analytics": "Visualizar relatórios e análises",
+        "system_configuration": "Configurações do sistema",
+        "manage_multiple_dealerships": "Gerenciamento de múltiplas concessionárias",
+        "user_management": "Funções de usuário e permissões",
+        "advanced_management_tools": "Ferramentas avançadas de gerenciamento",
+        "task_calendar_productivity_tools": "Gerenciamento de tarefas, calendário e ferramentas de produtividade"
+      }
     },
     "overview": {
       "title": "Visão Geral",
@@ -1939,6 +2016,7 @@
     "cancel": "Cancelar"
   },
   "get_ready": {
+    "vehicle_not_found": "Veículo não encontrado ou não acessível",
     "select_dealership": {
       "title": "Selecione uma Concessionária",
       "description": "O módulo Get Ready requer que uma concessionária específica seja selecionada",
@@ -2754,6 +2832,8 @@
       "unread": "não lida",
       "new": "Nova",
       "critical": "Crítica",
+      "scroll_for_more": "Role para ver mais",
+      "all_loaded": "Todas as notificações carregadas",
       "empty": {
         "title": "Tudo em dia!",
         "description": "Você não tem notificações no momento"
@@ -2834,6 +2914,7 @@
       "no_access": "Sem Acesso ao Estoque",
       "no_access_description": "Sua conta não tem acesso ao módulo de inventário de estoque. Por favor, entre em contato com seu administrador."
     },
+    "image_from_inventory": "Imagem do Inventário de Estoque",
     "actions": {
       "refresh": "Atualizar",
       "export": "Exportar",

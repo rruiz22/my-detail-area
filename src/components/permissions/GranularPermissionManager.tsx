@@ -3,7 +3,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { useDealershipModules } from '@/hooks/useDealershipModules';
+import { useRoleModuleAccess } from '@/hooks/useRoleModuleAccess';
 import type { AppModule } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import type {
@@ -32,6 +36,7 @@ import { useTranslation } from 'react-i18next';
 interface GranularPermissionManagerProps {
   roleId: string;
   roleName?: string;
+  dealerId?: number;
   onSave?: () => void;
 }
 
@@ -42,10 +47,13 @@ interface ModulePermissionsState {
 export const GranularPermissionManager: React.FC<GranularPermissionManagerProps> = ({
   roleId,
   roleName,
+  dealerId,
   onSave
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(dealerId || 0);
+  const { moduleAccess, toggleModuleAccess, bulkSetModuleAccess, hasRoleModuleAccess, loading: moduleAccessLoading } = useRoleModuleAccess(roleId);
 
   // State
   const [loading, setLoading] = useState(true);
@@ -327,6 +335,22 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
   }, [roleId, systemPermissions, modulePermissions, t, toast, onSave]);
 
   /**
+   * Toggle module access for role
+   */
+  const handleToggleModuleAccess = useCallback(async (module: AppModule, isEnabled: boolean) => {
+    const success = await toggleModuleAccess(module, isEnabled);
+    if (success) {
+      setHasChanges(true);
+      toast({
+        title: t('common.success'),
+        description: isEnabled
+          ? `Module ${module} enabled for this role`
+          : `Module ${module} disabled for this role`
+      });
+    }
+  }, [toggleModuleAccess, t, toast]);
+
+  /**
    * Reset to loaded state
    */
   const resetChanges = useCallback(() => {
@@ -334,7 +358,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
     setWarnings([]);
   }, [loadRolePermissions]);
 
-  if (loading) {
+  if (loading || moduleAccessLoading) {
     return (
       <Card>
         <CardContent className="p-6">
@@ -451,23 +475,80 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
           Module Permissions
         </h4>
 
-        {Object.entries(availableModulePerms).map(([module, perms]) => {
+        {Object.entries(availableModulePerms)
+          .filter(([module]) => {
+            // Don't filter if no dealerId provided (backwards compatibility)
+            if (!dealerId) return true;
+
+            // Always show if loading
+            if (modulesLoading) return true;
+
+            // Filter by enabled modules
+            return hasModuleAccess(module as AppModule);
+          })
+          .map(([module, perms]) => {
           const modulePerms = modulePermissions[module] || new Set();
           const checkedCount = modulePerms.size;
           const totalCount = perms.length;
+          const isModuleEnabled = hasModuleAccess(module as AppModule);
+          const roleHasModuleAccess = hasRoleModuleAccess(module as AppModule);
 
           return (
             <Card key={module}>
               <CardHeader>
-                <CardTitle className="text-base flex items-center justify-between">
-                  <span className="capitalize">{module.replace(/_/g, ' ')}</span>
-                  <Badge variant="outline">
-                    {checkedCount} / {totalCount} enabled
-                  </Badge>
-                </CardTitle>
+                <div className="space-y-3">
+                  <CardTitle className="text-base flex items-center justify-between">
+                    <span className="capitalize">{module.replace(/_/g, ' ')}</span>
+                    <div className="flex items-center gap-2">
+                      {!isModuleEnabled && dealerId && (
+                        <Badge variant="secondary" className="text-xs">
+                          Module Disabled
+                        </Badge>
+                      )}
+                      <Badge variant="outline">
+                        {checkedCount} / {totalCount} enabled
+                      </Badge>
+                    </div>
+                  </CardTitle>
+
+                  {/* NEW: Toggle to enable/disable module for this role */}
+                  <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-primary" />
+                      <div>
+                        <Label className="text-sm font-medium">
+                          Enable {module.replace(/_/g, ' ')} for this role
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          {roleHasModuleAccess
+                            ? 'This role can access this module'
+                            : 'Access disabled - permissions saved but not active'}
+                        </p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={roleHasModuleAccess}
+                      onCheckedChange={(checked) => handleToggleModuleAccess(module as AppModule, checked)}
+                    />
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {/* Info alert when module is disabled but has permissions */}
+                {!roleHasModuleAccess && checkedCount > 0 && (
+                  <Alert className="mb-4">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>
+                      This module has {checkedCount} saved permission(s) but access is currently disabled.
+                      Enable the toggle above to activate these permissions.
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Disable permissions when module toggle is OFF */}
+                <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 transition-opacity ${
+                  roleHasModuleAccess ? '' : 'opacity-40 pointer-events-none'
+                }`}>
                   {sortPermissions(perms.map(p => p.permission_key as ModulePermissionKey))
                     .map(permKey => {
                       const perm = perms.find(p => p.permission_key === permKey);

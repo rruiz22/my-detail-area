@@ -29,6 +29,7 @@ interface EditRoleModalProps {
   open: boolean;
   onClose: () => void;
   role: Role | null;
+  dealerId?: string;
   onRoleUpdated: () => void;
 }
 
@@ -36,6 +37,7 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
   open,
   onClose,
   role,
+  dealerId,
   onRoleUpdated,
 }) => {
   const { t } = useTranslation();
@@ -171,6 +173,7 @@ export const EditRoleModal: React.FC<EditRoleModalProps> = ({
             <GranularPermissionManager
               roleId={role.id}
               roleName={role.display_name}
+              dealerId={dealerId ? parseInt(dealerId) : undefined}
               onSave={handlePermissionsSaved}
             />
           </TabsContent>

@@ -1,6 +1,10 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+// Translation cache version - increment this when translations are updated
+// This forces browsers to reload translation files
+const TRANSLATION_VERSION = '1.2.0'; // Updated: 2025-10-22 - Added stock.image_from_inventory translation
+
 // Language resources will be loaded dynamically
 const resources = {};
 
@@ -18,7 +22,11 @@ i18n
 // Dynamically load translation files
 const loadLanguage = async (language: string) => {
   try {
-    const response = await fetch(`/translations/${language}.json?v=${Date.now()}` as string, { cache: 'no-store' });
+    // Use version parameter to bust cache when translations are updated
+    const response = await fetch(`/translations/${language}.json?v=${TRANSLATION_VERSION}` as string, {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+    });
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);

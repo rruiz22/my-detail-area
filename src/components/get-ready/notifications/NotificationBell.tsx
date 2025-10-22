@@ -158,7 +158,7 @@ export function NotificationBell({
       <PopoverContent
         align="end"
         side="bottom"
-        className="w-96 p-0"
+        className="w-96 p-0 max-h-[calc(100vh-80px)] overflow-hidden"
         sideOffset={8}
       >
         <NotificationPanel onClose={() => setIsOpen(false)} />

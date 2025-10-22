@@ -15,7 +15,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useNavigate } from 'react-router-dom';
 import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
-import { useUserProfile } from '@/hooks/useUserProfile';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 
 export function UserDropdown() {
@@ -24,7 +23,6 @@ export function UserDropdown() {
   const { enhancedUser } = usePermissions();
   const navigate = useNavigate();
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const { profile } = useUserProfile();
   const { seed } = useAvatarPreferences();
   const { currentDealership } = useAccessibleDealerships();
 
@@ -51,22 +49,16 @@ export function UserDropdown() {
   };
 
   const getUserDisplayName = () => {
-    // Debug logging (temporal)
-    console.log('👤 Profile data:', {
-      first_name: profile?.first_name,
-      last_name: profile?.last_name,
-      email: user?.email
-    });
-
     // Priority: first_name + last_name > email username
-    if (profile?.first_name && profile?.last_name) {
-      return `${profile.first_name} ${profile.last_name}`;
+    // Use AuthContext.user which has the fresh data from DB
+    if (user?.first_name && user?.last_name) {
+      return `${user.first_name} ${user.last_name}`;
     }
-    if (profile?.first_name) {
-      return profile.first_name;
+    if (user?.first_name) {
+      return user.first_name;
     }
-    if (profile?.last_name) {
-      return profile.last_name;
+    if (user?.last_name) {
+      return user.last_name;
     }
     return user?.email?.split('@')[0] || 'User';
   };
@@ -84,8 +76,8 @@ export function UserDropdown() {
         <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 overflow-hidden">
           <AvatarSystem
             name={user?.email || 'User'}
-            firstName={profile?.first_name}
-            lastName={profile?.last_name}
+            firstName={user?.first_name}
+            lastName={user?.last_name}
             email={user?.email}
             seed={seed}
             size={30}
@@ -101,8 +93,8 @@ export function UserDropdown() {
             <div className="flex items-center gap-3">
               <AvatarSystem
                 name={user?.email || 'User'}
-                firstName={profile?.first_name}
-                lastName={profile?.last_name}
+                firstName={user?.first_name}
+                lastName={user?.last_name}
                 email={user?.email}
                 seed={seed}
                 size={36}

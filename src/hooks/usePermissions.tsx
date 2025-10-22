@@ -20,6 +20,7 @@ export type AppModule =
   | 'recon_orders'
   | 'car_wash'
   | 'stock'
+  | 'get_ready'
   | 'chat'
   | 'reports'
   | 'settings'
@@ -248,6 +249,28 @@ export const usePermissions = () => {
 
       if (modulePermsError) throw modulePermsError;
 
+      // Fetch role module access for all assigned roles (NEW LAYER)
+      const { data: roleModuleAccessData, error: roleModuleAccessError } = await supabase
+        .from('role_module_access')
+        .select('role_id, module, is_enabled')
+        .in('role_id', roleIdsArray)
+        .eq('is_enabled', true); // Only load enabled modules
+
+      if (roleModuleAccessError) {
+        console.warn('⚠️ Error fetching role module access (non-critical):', roleModuleAccessError);
+      }
+
+      // Build a map of which modules each role has access to
+      const roleModuleAccessMap = new Map<string, Set<string>>();
+      (roleModuleAccessData || []).forEach((item: any) => {
+        if (!roleModuleAccessMap.has(item.role_id)) {
+          roleModuleAccessMap.set(item.role_id, new Set());
+        }
+        roleModuleAccessMap.get(item.role_id)!.add(item.module);
+      });
+
+      console.log(`📋 Loaded role module access for ${roleModuleAccessMap.size} roles`);
+
       // Build roles map with granular permissions
       const rolesMap = new Map<string, GranularCustomRole>();
 
@@ -264,11 +287,30 @@ export const usePermissions = () => {
         const roleModulePerms = (modulePermsData || [])
           .filter((p: any) => p.role_id === role.id && p.module_permissions);
 
+        // Get which modules this role has access to (toggle layer)
+        const roleModulesEnabled = roleModuleAccessMap.get(role.id);
+
         // Organize module permissions by module
+        // IMPORTANT: Only include permissions for modules that the role has access to
         const modulePermissionsMap = new Map<AppModule, Set<ModulePermissionKey>>();
         roleModulePerms.forEach((p: any) => {
           const module = p.module_permissions.module as AppModule;
           const permKey = p.module_permissions.permission_key as ModulePermissionKey;
+
+          // TRIPLE VERIFICATION LAYER:
+          // 1. Dealership has module enabled (checked in PermissionGuard)
+          // 2. Role has module access enabled (checked HERE - NEW)
+          // 3. Role has specific permission (added below)
+
+          // If role_module_access is empty, assume all modules enabled (backwards compatible)
+          // If role_module_access exists, only include if module is in the enabled set
+          const roleHasModuleAccess = !roleModulesEnabled || roleModulesEnabled.has(module);
+
+          if (!roleHasModuleAccess) {
+            // Role has module disabled - skip these permissions
+            console.log(`⚠️ Skipping ${module} permissions for role ${role.role_name} - module disabled for role`);
+            return;
+          }
 
           if (!modulePermissionsMap.has(module)) {
             modulePermissionsMap.set(module, new Set());

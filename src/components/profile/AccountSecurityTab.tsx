@@ -6,30 +6,33 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Shield, 
-  Key, 
-  Smartphone, 
-  Monitor, 
-  MapPin, 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Shield,
+  Key,
+  Smartphone,
+  Monitor,
+  MapPin,
   Clock,
   AlertTriangle,
   Trash2
 } from 'lucide-react';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useProfileMutations } from '@/hooks/useProfileMutations';
 import { useUserSessions } from '@/hooks/useUserSessions';
+import { PasswordStrengthMeter } from '@/components/profile/PasswordStrengthMeter';
 import { formatDistanceToNow } from 'date-fns';
 
 export function AccountSecurityTab() {
   const { t } = useTranslation();
-  const { loading: profileLoading, changePassword } = useUserProfile();
+  const { loading: profileLoading, changePassword } = useProfileMutations();
   const { sessions, loading: sessionsLoading, terminateSession, terminateAllOtherSessions } = useUserSessions();
-  
+
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const handlePasswordChange = async () => {
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
@@ -96,6 +99,11 @@ export function AccountSecurityTab() {
               onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
               placeholder={t('profile.enter_new_password')}
             />
+            {/* Password Strength Meter */}
+            <PasswordStrengthMeter
+              password={passwordForm.newPassword}
+              onStrengthChange={setPasswordStrength}
+            />
           </div>
 
           <div className="space-y-2">
@@ -107,14 +115,34 @@ export function AccountSecurityTab() {
               onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
               placeholder={t('profile.confirm_new_password')}
             />
+            {passwordForm.confirmPassword && passwordForm.newPassword !== passwordForm.confirmPassword && (
+              <Alert variant="destructive" className="mt-2">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>
+                  {t('validation.passwords_no_match', 'Passwords do not match')}
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
 
-          <Button 
-            onClick={handlePasswordChange} 
-            disabled={profileLoading || !passwordForm.currentPassword || !passwordForm.newPassword || passwordForm.newPassword !== passwordForm.confirmPassword}
+          <Button
+            onClick={handlePasswordChange}
+            disabled={
+              profileLoading ||
+              !passwordForm.currentPassword ||
+              !passwordForm.newPassword ||
+              passwordForm.newPassword !== passwordForm.confirmPassword ||
+              passwordStrength < 3
+            }
           >
             {profileLoading ? t('common.updating') : t('profile.change_password')}
           </Button>
+
+          {passwordStrength < 3 && passwordForm.newPassword.length > 0 && (
+            <p className="text-sm text-muted-foreground">
+              {t('profile.password_strength_requirement', 'Password must have at least "Good" strength to continue')}
+            </p>
+          )}
         </CardContent>
       </Card>
 

@@ -1,27 +1,29 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
-import { 
-  Settings, 
-  ShoppingCart, 
-  Wrench, 
-  RotateCcw, 
-  Car, 
-  BarChart3, 
-  Users,
-  Building2,
-  Shield,
-  MessageCircle,
-  Package,
-  Calendar
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 import type { AppModule } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
+import {
+    BarChart3,
+    Building2,
+    Calendar,
+    Car,
+    MessageCircle,
+    Package,
+    RotateCcw,
+    Settings,
+    Shield,
+    ShoppingCart,
+    Users,
+    Users2,
+    Wrench,
+    Zap
+} from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DealerModulesProps {
   dealerId: string;
@@ -41,7 +43,9 @@ const moduleConfig: Record<AppModule, { name: string; description: string; icon:
   recon_orders: { name: 'Recon Orders', description: 'manage_recon_orders', icon: RotateCcw, category: 'Orders' },
   car_wash: { name: 'Car Wash', description: 'manage_car_wash_orders', icon: Car, category: 'Orders' },
   stock: { name: 'Stock/Inventory', description: 'manage_vehicle_inventory', icon: Package, category: 'Orders' },
+  get_ready: { name: 'Get Ready', description: 'vehicle_preparation_workflow', icon: Zap, category: 'Operations' },
   chat: { name: 'Team Chat', description: 'team_communication', icon: MessageCircle, category: 'Communication' },
+  contacts: { name: 'Contacts', description: 'customer_contact_management', icon: Users2, category: 'Communication' },
   reports: { name: 'Reports', description: 'access_reports_analytics', icon: BarChart3, category: 'Analytics' },
   settings: { name: 'Settings', description: 'system_configuration', icon: Shield, category: 'Administration' },
   dealerships: { name: 'Dealerships', description: 'manage_multiple_dealerships', icon: Building2, category: 'Administration' },
@@ -102,15 +106,15 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
       if (error) throw error;
 
       // Update local state
-      setModules(prev => prev.map(m => 
-        m.module === module 
+      setModules(prev => prev.map(m =>
+        m.module === module
           ? { ...m, is_enabled: !currentEnabled, enabled_at: new Date().toISOString() }
           : m
       ));
 
       toast({
         title: t('common.success'),
-        description: !currentEnabled 
+        description: !currentEnabled
           ? t('dealer.modules.module_enabled', { module: moduleConfig[module].name })
           : t('dealer.modules.module_disabled', { module: moduleConfig[module].name })
       });
@@ -195,7 +199,7 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
                 {categoryModules.map((module) => {
                   const config = moduleConfig[module.module];
                   const IconComponent = config?.icon || Settings;
-                  
+
                   return (
                     <div key={module.module} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                       <div className="flex items-center space-x-4">
@@ -205,7 +209,7 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <Label className="text-sm font-medium">
-                              {config?.name || module.module}
+                              {t(`dealer.modules.names.${module.module}`)}
                             </Label>
                             <Badge variant={module.is_enabled ? "default" : "secondary"} className="text-xs">
                               {module.is_enabled ? t('common.enabled') : t('common.disabled')}
@@ -216,14 +220,14 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
                           </p>
                           {module.is_enabled && module.enabled_at && (
                             <p className="text-xs text-muted-foreground mt-1">
-                              {t('dealer.modules.enabled_on', { 
-                                date: new Date(module.enabled_at).toLocaleDateString() 
+                              {t('dealer.modules.enabled_on', {
+                                date: new Date(module.enabled_at).toLocaleDateString()
                               })}
                             </p>
                           )}
                         </div>
                       </div>
-                      
+
                       <Switch
                         checked={module.is_enabled}
                         disabled={updating === module.module}

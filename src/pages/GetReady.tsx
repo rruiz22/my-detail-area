@@ -24,6 +24,9 @@ export default function GetReady() {
 
       {/* Setup - system_admin only */}
       <Route path="setup" element={<GetReadySetup />} />
+
+      {/* Direct vehicle link from search - /get-ready/:vehicleId */}
+      <Route path=":vehicleId" element={<GetReadyContent />} />
     </Routes>
   );
 }

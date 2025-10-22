@@ -77,7 +77,7 @@ export function AppSidebar() {
       title: t('navigation.get_ready'),
       url: "/get-ready",
       icon: Zap,
-      module: 'productivity' as const
+      module: 'get_ready' as const
     }, {
       title: t('navigation.stock'),
       url: "/stock",

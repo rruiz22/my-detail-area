@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import type {
   GetReadyNotification,
   NotificationWithVehicle,
@@ -30,6 +30,7 @@ export function useGetReadyNotifications(
   options?: NotificationFilters & {
     limit?: number;
     enabled?: boolean;
+    enableInfiniteScroll?: boolean;
   }
 ) {
   const { user } = useAuth();
@@ -38,8 +39,16 @@ export function useGetReadyNotifications(
   const { toast } = useToast();
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
 
-  const limit = options?.limit || 50;
+  // Infinite Scroll State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allNotifications, setAllNotifications] = useState<NotificationWithVehicle[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  const pageSize = options?.limit || 10; // Default 10 per page for infinite scroll
+  const limit = options?.enableInfiniteScroll ? pageSize * currentPage : (options?.limit || 50);
   const enabled = options?.enabled !== false;
+  const enableInfiniteScroll = options?.enableInfiniteScroll || false;
 
   // ✅ VALIDATION: Only allow numeric dealer IDs, not "all"
   const isValidDealerId = selectedDealerId && typeof selectedDealerId === 'number' && selectedDealerId > 0;
@@ -61,6 +70,7 @@ export function useGetReadyNotifications(
       options?.type,
       options?.priority,
       options?.is_read,
+      currentPage, // Add page to query key
     ],
     queryFn: async () => {
       if (!isValidDealerId || !user?.id) {
@@ -79,7 +89,8 @@ export function useGetReadyNotifications(
             vehicle_model,
             step_id
           )
-        `
+        `,
+          { count: 'exact' } // Get total count for pagination
         )
         .eq('dealer_id', selectedDealerId)
         .or(`user_id.eq.${user.id},user_id.is.null`)
@@ -108,9 +119,14 @@ export function useGetReadyNotifications(
         query = query.lte('created_at', options.date_to);
       }
 
-      const { data, error } = await query;
+      const { data, error, count } = await query;
 
       if (error) throw error;
+
+      // Update hasMore state based on total count
+      if (enableInfiniteScroll && count !== null) {
+        setHasMore((data?.length || 0) < count);
+      }
 
       return (data || []) as NotificationWithVehicle[];
     },
@@ -118,6 +134,28 @@ export function useGetReadyNotifications(
     staleTime: 30000, // 30 seconds
     refetchInterval: 60000, // 1 minute auto-refresh
   });
+
+  // Update accumulated notifications when data changes (for infinite scroll)
+  useEffect(() => {
+    if (enableInfiniteScroll && notifications.length > 0) {
+      setAllNotifications(notifications);
+    }
+  }, [notifications, enableInfiniteScroll]);
+
+  // =====================================================
+  // INFINITE SCROLL - LOAD MORE
+  // =====================================================
+
+  const loadMore = useCallback(() => {
+    if (!isLoadingMore && hasMore && enableInfiniteScroll) {
+      console.log('📄 [Notifications] Loading more notifications, page:', currentPage + 1);
+      setIsLoadingMore(true);
+      setCurrentPage(prev => prev + 1);
+
+      // isLoadingMore will be reset when query completes
+      setTimeout(() => setIsLoadingMore(false), 500);
+    }
+  }, [isLoadingMore, hasMore, enableInfiniteScroll, currentPage]);
 
   // =====================================================
   // GET UNREAD COUNT
@@ -467,7 +505,7 @@ export function useGetReadyNotifications(
 
   return {
     // Data
-    notifications,
+    notifications: enableInfiniteScroll ? allNotifications : notifications,
     unreadCount,
     summary,
     preferences,
@@ -490,5 +528,10 @@ export function useGetReadyNotifications(
     isMarkingAllAsRead: markAllAsReadMutation.isPending,
     isDismissing: dismissNotificationMutation.isPending,
     isUpdatingPreferences: updatePreferencesMutation.isPending,
+
+    // Infinite scroll
+    hasMore: enableInfiniteScroll ? hasMore : false,
+    isLoadingMore: enableInfiniteScroll ? isLoadingMore : false,
+    loadMore: enableInfiniteScroll ? loadMore : () => {},
   };
 }

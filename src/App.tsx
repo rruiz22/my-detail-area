@@ -210,7 +210,7 @@ const AppRoutes = () => {
           <Route
             path="get-ready/*"
             element={
-              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+              <PermissionGuard module="get_ready" permission="view" checkDealerModule={true}>
                 <GetReady />
               </PermissionGuard>
             }

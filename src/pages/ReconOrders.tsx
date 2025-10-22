@@ -17,15 +17,19 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Calendar as CalendarIcon, Kanban, List, Plus, RefreshCw, Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function ReconOrders() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { confirmDelete } = useSweetAlert();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const orderIdFromUrl = searchParams.get('order');
 
   // Persistent state
   const [viewMode, setViewMode] = useViewModePersistence('recon_orders');
@@ -39,6 +43,7 @@ export default function ReconOrders() {
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
+  const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
 
   const {
     orders: allOrders,
@@ -56,6 +61,29 @@ export default function ReconOrders() {
       setWeekOffset(0);
     }
   }, [activeFilter]);
+
+  // Auto-open order modal when URL contains ?order=ID parameter
+  useEffect(() => {
+    if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
+      console.log('🎯 [Recon] Processing order from URL (one-time):', orderIdFromUrl);
+
+      // Find the order in the loaded orders
+      const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
+
+      if (targetOrder) {
+        console.log('✅ [Recon] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        setPreviewOrder(targetOrder);
+        setHasProcessedUrlOrder(true); // Prevent loop
+      } else {
+        console.warn('⚠️ [Recon] Order not found in current orders list:', orderIdFromUrl);
+        toast({
+          description: t('orders.order_not_found'),
+          variant: 'destructive'
+        });
+        setHasProcessedUrlOrder(true); // Prevent retrying
+      }
+    }
+  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t]);
 
   // Helper function to get dates in system timezone for filtering
   const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {
@@ -430,7 +458,13 @@ export default function ReconOrders() {
             orderType="recon"
             order={previewOrder}
             open={true}
-            onClose={() => setPreviewOrder(null)}
+            onClose={() => {
+              setPreviewOrder(null);
+              // If we came from URL parameter, redirect to clean /recon to avoid loop
+              if (orderIdFromUrl) {
+                navigate('/recon', { replace: true });
+              }
+            }}
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}

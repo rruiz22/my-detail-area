@@ -9,13 +9,17 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function CarWash() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const orderIdFromUrl = searchParams.get('order');
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('car_wash');
@@ -28,6 +32,7 @@ export default function CarWash() {
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
+  const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
 
   const {
     orders: allOrders,
@@ -47,6 +52,29 @@ export default function CarWash() {
       setWeekOffset(0);
     }
   }, [activeFilter]);
+
+  // Auto-open order modal when URL contains ?order=ID parameter
+  useEffect(() => {
+    if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
+      console.log('🎯 [CarWash] Processing order from URL (one-time):', orderIdFromUrl);
+
+      // Find the order in the loaded orders
+      const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
+
+      if (targetOrder) {
+        console.log('✅ [CarWash] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        setPreviewOrder(targetOrder);
+        setHasProcessedUrlOrder(true); // Prevent loop
+      } else {
+        console.warn('⚠️ [CarWash] Order not found in current orders list:', orderIdFromUrl);
+        toast({
+          description: t('orders.order_not_found'),
+          variant: 'destructive'
+        });
+        setHasProcessedUrlOrder(true); // Prevent retrying
+      }
+    }
+  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t]);
 
   // Helper function to get dates in system timezone for filtering
   const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {
@@ -317,7 +345,13 @@ export default function CarWash() {
             orderType="carwash"
             order={previewOrder}
             open={true}
-            onClose={() => setPreviewOrder(null)}
+            onClose={() => {
+              setPreviewOrder(null);
+              // If we came from URL parameter, redirect to clean /carwash to avoid loop
+              if (orderIdFromUrl) {
+                navigate('/carwash', { replace: true });
+              }
+            }}
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { NotificationBell } from '@/components/get-ready/notifications/NotificationBell';
 import { DeletedVehiclesDialog } from '@/components/get-ready/DeletedVehiclesDialog';
@@ -64,13 +65,13 @@ export function GetReadyTopbar() {
   }, 0);
   
   const pendingApprovalsCount = vehicleApprovalsCount + workItemApprovalsCount;
-  const { user } = useAuth();
+  const { hasModulePermission } = usePermissions();
 
-  // Filter tabs based on user role
+  // Filter tabs based on granular permissions
   const visibleTabs = TABS.filter(tab => {
-    // Hide Setup tab for non-system_admin users
-    if (tab.key === 'setup' && user?.role !== 'system_admin') {
-      return false;
+    // Hide Setup tab if user doesn't have access_setup permission
+    if (tab.key === 'setup') {
+      return hasModulePermission('get_ready', 'access_setup');
     }
     return true;
   });

@@ -22,7 +22,7 @@ import { useGetReady } from "@/hooks/useGetReady";
 import { useGetReadyStore } from "@/hooks/useGetReadyStore";
 import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
 import { useVehicleManagement } from "@/hooks/useVehicleManagement";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { formatVehiclesForExport } from "@/utils/exportUtils";
 import { useServerExport } from "@/hooks/useServerExport";
@@ -40,7 +40,7 @@ import {
   Search,
   XCircle,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { GetReadyAlerts } from "./GetReadyAlerts";
@@ -66,6 +66,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const { vehicleId } = useParams<{ vehicleId?: string }>();
   const { toast } = useToast();
   const {
     splitLayout,
@@ -90,18 +91,26 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
 
+  // Ref to track processed vehicle IDs from URL to prevent infinite loops
+  const processedVehicleIdRef = useRef<string | null>(null);
+
   // ✅ Auto-clear search and navigate to vehicle's step when selecting a vehicle
   useEffect(() => {
     if (selectedVehicleId && searchQuery) {
-      // Find the selected vehicle to get its step
-      const selectedVehicle = allVehicles.find(v => v.id === selectedVehicleId);
+      console.log('🔍 [Get Ready] Vehicle selected from search:', selectedVehicleId);
+
+      // Find the selected vehicle to get its step (use unfiltered list to ensure we find it)
+      const selectedVehicle = allVehiclesUnfiltered.find(v => v.id === selectedVehicleId) || allVehicles.find(v => v.id === selectedVehicleId);
+
       if (selectedVehicle?.step_id) {
+        console.log('✅ [Get Ready] Navigating to step:', selectedVehicle.step_name);
         // Navigate to the vehicle's step
         setSelectedStepId(selectedVehicle.step_id);
       }
 
       // Clear search after short delay so user sees what they searched
       const timer = setTimeout(() => {
+        console.log('🧹 [Get Ready] Clearing search query');
         setSearchQuery('');
       }, 200);
 
@@ -132,6 +141,58 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // All vehicles without filters (for Approvals tab)
   const allVehiclesUnfiltered =
     allVehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
+
+  // ✅ Handle vehicle ID from URL (from Global Search)
+  useEffect(() => {
+    // Only process if:
+    // 1. We have a vehicleId from URL
+    // 2. We haven't already processed this exact vehicleId
+    // 3. We have vehicles loaded
+    if (vehicleId && vehicleId !== processedVehicleIdRef.current && allVehiclesUnfiltered.length > 0) {
+      console.log('🔍 [Get Ready] Vehicle ID from URL:', vehicleId, 'Type:', typeof vehicleId);
+      console.log('🔍 [Get Ready] Total vehicles loaded:', allVehiclesUnfiltered.length);
+      console.log('🔍 [Get Ready] Sample vehicle ID:', allVehiclesUnfiltered[0]?.id, 'Type:', typeof allVehiclesUnfiltered[0]?.id);
+
+      // Mark this vehicleId as processed
+      processedVehicleIdRef.current = vehicleId;
+
+      // Find the vehicle in the unfiltered list (compare as strings)
+      const targetVehicle = allVehiclesUnfiltered.find(v => String(v.id) === String(vehicleId));
+
+      if (targetVehicle) {
+        console.log('✅ [Get Ready] Found vehicle:', targetVehicle.stock_number, 'in step:', targetVehicle.step_name);
+
+        // Navigate to details view
+        navigate('/get-ready/details', { replace: true });
+
+        // Set the vehicle's step as selected
+        if (targetVehicle.step_id) {
+          setSelectedStepId(targetVehicle.step_id);
+        }
+
+        // Select the vehicle to open detail panel
+        setSelectedVehicleId(String(vehicleId));
+
+        toast({
+          description: `Viewing ${targetVehicle.vehicle_year} ${targetVehicle.vehicle_make} ${targetVehicle.vehicle_model}`,
+          variant: 'default',
+        });
+      } else {
+        console.warn('⚠️ [Get Ready] Vehicle not found:', vehicleId);
+        console.warn('⚠️ [Get Ready] Available vehicle IDs:', allVehiclesUnfiltered.slice(0, 5).map(v => v.id));
+        toast({
+          description: t('get_ready.vehicle_not_found') || 'Vehicle not found',
+          variant: 'destructive',
+        });
+        navigate('/get-ready/details', { replace: true });
+      }
+    }
+
+    // Reset the ref when vehicleId becomes null/undefined (navigated away)
+    if (!vehicleId) {
+      processedVehicleIdRef.current = null;
+    }
+  }, [vehicleId, allVehiclesUnfiltered.length]);
 
   const handleRefresh = async () => {
     setIsManualRefreshing(true);

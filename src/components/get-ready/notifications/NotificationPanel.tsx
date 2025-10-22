@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useInView } from 'react-intersection-observer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -23,6 +24,7 @@ import {
   X,
   CheckCheck,
   Settings2,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -71,12 +73,27 @@ export function NotificationPanel({
     markAllAsRead,
     dismissNotification,
     isMarkingAllAsRead,
+    hasMore,
+    isLoadingMore,
+    loadMore,
   } = useGetReadyNotifications({
     enabled: true,
     type: filterType,
     priority: filterPriority,
-    limit: 50,
+    limit: 10, // 10 per page for infinite scroll
+    enableInfiniteScroll: true,
   });
+
+  // Intersection observer for infinite scroll trigger
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0,
+    triggerOnce: false,
+  });
+
+  // Trigger load more when intersection observer is in view
+  if (inView && hasMore && !isLoadingMore && !isLoading) {
+    loadMore();
+  }
 
   // Get icon for notification type
   const getNotificationIcon = (
@@ -153,9 +170,9 @@ export function NotificationPanel({
   };
 
   return (
-    <div className={cn('flex flex-col h-full', className)}>
-      {/* Header */}
-      <div className="px-4 py-3 border-b">
+    <div className={cn('flex flex-col', className)}>
+      {/* Header - Fixed */}
+      <div className="px-4 py-3 border-b flex-shrink-0">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-semibold text-base">
             {t('get_ready.notifications.title')}
@@ -211,9 +228,9 @@ export function NotificationPanel({
         </div>
       </div>
 
-      {/* Notifications List */}
-      <ScrollArea className="flex-1 h-96">
-        {isLoading ? (
+      {/* Notifications List - Infinite Scroll with FIXED height */}
+      <ScrollArea className="h-[400px]">
+        {isLoading && notifications.length === 0 ? (
           <div className="p-4 text-center text-sm text-muted-foreground">
             {t('common.loading')}
           </div>
@@ -307,15 +324,39 @@ export function NotificationPanel({
                 </div>
               </div>
             ))}
+
+            {/* Infinite Scroll Trigger - positioned at the end of list */}
+            {hasMore && (
+              <div
+                ref={loadMoreRef}
+                className="p-4 text-center text-sm text-muted-foreground"
+              >
+                {isLoadingMore ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>{t('common.loading')}</span>
+                  </div>
+                ) : (
+                  <span>{t('get_ready.notifications.scroll_for_more')}</span>
+                )}
+              </div>
+            )}
+
+            {/* End of list indicator */}
+            {!hasMore && notifications.length > 10 && (
+              <div className="p-4 text-center text-xs text-muted-foreground">
+                {t('get_ready.notifications.all_loaded')}
+              </div>
+            )}
           </div>
         )}
       </ScrollArea>
 
-      {/* Footer Actions */}
+      {/* Footer Actions - Fixed */}
       {notifications.length > 0 && (
         <>
-          <Separator />
-          <div className="px-4 py-3 flex items-center gap-2">
+          <Separator className="flex-shrink-0" />
+          <div className="px-4 py-3 flex items-center gap-2 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"

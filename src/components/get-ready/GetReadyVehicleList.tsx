@@ -7,6 +7,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
@@ -20,6 +21,7 @@ import {
     Car,
     Check,
     CheckCircle,
+    ChevronLeft,
     ChevronRight,
     ClipboardList,
     Clock,
@@ -65,8 +67,28 @@ export function GetReadyVehicleList({
   const [viewMode, setViewMode] = useGetReadyViewMode(); // WITH LOCALSTORAGE PERSISTENCE
   const { confirmDelete } = useSweetAlert();
 
+  // Lightbox state for Stock images
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; info: string } | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   // Get vehicle management functions
   const { moveVehicle, isMoving } = useVehicleManagement();
+
+  // Handle image click
+  const handleImageClick = (e: React.MouseEvent, vehicle: any) => {
+    e.stopPropagation(); // Prevent row click
+    if (vehicle.images && vehicle.images[0]) {
+      setLightboxImage({
+        url: vehicle.images[0],
+        info: `${vehicle.year} ${vehicle.make} ${vehicle.model} - ${vehicle.stock_number}`
+      });
+      setLightboxOpen(true);
+    }
+  };
 
   // Action handlers
   const handleViewDetails = (vehicleId: string) => {
@@ -139,27 +161,26 @@ export function GetReadyVehicleList({
   });
 
   // Flatten pages into single array
-  const vehicles = data?.pages.flatMap(page => page.vehicles) ?? [];
+  const allVehicles = data?.pages.flatMap(page => page.vehicles) ?? [];
 
-  // Intersection observer ref for infinite scroll
-  const loadMoreRef = useRef<HTMLDivElement>(null);
+  // Pagination calculations
+  const totalVehicles = allVehicles.length;
+  const totalPages = Math.ceil(totalVehicles / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalVehicles);
+  const vehicles = allVehicles.slice(startIndex, endIndex);
 
+  // Reset to page 1 when filters change
   useEffect(() => {
-    if (!loadMoreRef.current) return;
+    setCurrentPage(1);
+  }, [searchQuery, selectedStep, selectedWorkflow, selectedPriority, sortBy, sortOrder]);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(loadMoreRef.current);
-
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  // Auto-load more pages in background for smooth navigation
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage && allVehicles.length < totalVehicles + itemsPerPage) {
+      fetchNextPage();
+    }
+  }, [currentPage, hasNextPage, isFetchingNextPage, allVehicles.length]);
 
   const getSLAStatusIcon = (status: string) => {
     switch (status) {
@@ -266,8 +287,8 @@ export function GetReadyVehicleList({
           </div>
         </div>
 
-        {/* Grid View with max 3 rows visible, then infinite scroll */}
-        <div className="flex-1 overflow-auto p-1" style={{ maxHeight: 'calc(3 * 300px)' }}>
+        {/* Grid View with responsive height */}
+        <div className="flex-1 overflow-auto p-1 max-h-[calc(100vh-300px)]">
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             {vehicles.map((vehicle) => (
             <Card
@@ -279,9 +300,12 @@ export function GetReadyVehicleList({
               onClick={() => handleViewDetails(vehicle.id)}
             >
               <CardHeader className="pb-2">
-                {/* Vehicle Image */}
-                <div className="mb-2">
-                  <Avatar className="h-32 w-full rounded-md">
+                {/* Vehicle Image - Click to open lightbox */}
+                <div
+                  className="mb-2 cursor-pointer group relative"
+                  onClick={(e) => handleImageClick(e, vehicle)}
+                >
+                  <Avatar className="h-32 w-full rounded-md transition-opacity group-hover:opacity-90">
                     <AvatarImage
                       src={vehicle.images[0]}
                       alt={`${vehicle.make} ${vehicle.model}`}
@@ -291,6 +315,11 @@ export function GetReadyVehicleList({
                       <Car className="h-8 w-8 text-muted-foreground" />
                     </AvatarFallback>
                   </Avatar>
+                  {vehicle.images[0] && (
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-md flex items-center justify-center">
+                      <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-start justify-between">
@@ -468,7 +497,7 @@ export function GetReadyVehicleList({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h3 className="text-lg font-medium">
-            Vehicles ({vehicles.length})
+            Vehicles ({totalVehicles})
           </h3>
           <p className="text-xs text-muted-foreground">
             {t('get_ready.table.click_to_view')}
@@ -493,9 +522,9 @@ export function GetReadyVehicleList({
       </div>
 
       {/* Table */}
-      <Card className="h-[320px] overflow-hidden">
-        {/* Scrollable container */}
-        <div className="h-full overflow-auto">
+      <Card className="flex flex-col">
+        {/* Table container - No scroll needed, shows exactly 5 rows */}
+        <div>
           <TooltipProvider>
             <Table data-sticky-header>
               <TableHeader className="sticky top-0 bg-background z-10 after:absolute after:inset-x-0 after:bottom-0 after:border-b">
@@ -558,15 +587,23 @@ export function GetReadyVehicleList({
                       selectedVehicleId === vehicle.id && "bg-primary/10 border-l-4 border-l-primary"
                     )}
                   >
-                {/* Image */}
+                {/* Image - Click to open lightbox */}
                 <TableCell className="w-[70px] py-1 text-center">
-                  <div className="flex justify-center">
-                    <Avatar className="h-8 w-12 rounded-sm">
+                  <div
+                    className="flex justify-center cursor-pointer group relative"
+                    onClick={(e) => handleImageClick(e, vehicle)}
+                  >
+                    <Avatar className="h-8 w-12 rounded-sm transition-opacity group-hover:opacity-90">
                       <AvatarImage src={vehicle.images[0]} alt={`${vehicle.make} ${vehicle.model}`} />
                       <AvatarFallback className="rounded-sm">
                         <Car className="h-3 w-3" />
                       </AvatarFallback>
                     </Avatar>
+                    {vehicle.images[0] && (
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-sm flex items-center justify-center">
+                        <Eye className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    )}
                   </div>
                 </TableCell>
 
@@ -874,11 +911,74 @@ export function GetReadyVehicleList({
               )}
               </TableBody>
             </Table>
-            {/* Infinite scroll trigger */}
-            <div ref={loadMoreRef} className="h-4" />
           </TooltipProvider>
         </div>
+
+        {/* Pagination Controls */}
+        <div className="flex items-center justify-between border-t px-4 py-3 bg-muted/30">
+          <div className="text-sm text-muted-foreground">
+            {t('common.showing')} {startIndex + 1}-{endIndex} {t('common.of')} {totalVehicles}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            {/* Page numbers */}
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => setCurrentPage(pageNum)}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </Card>
+
+      {/* Stock Image Lightbox */}
+      {lightboxImage && (
+        <StockImageLightbox
+          imageUrl={lightboxImage.url}
+          vehicleInfo={lightboxImage.info}
+          open={lightboxOpen}
+          onOpenChange={setLightboxOpen}
+        />
+      )}
     </div>
   );
 }

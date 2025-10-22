@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { AvatarSelectionModal } from '@/components/ui/avatar-selection-modal';
 import {
@@ -12,48 +13,96 @@ import {
   Activity,
   Database,
   Mail,
-  Edit
+  Edit,
+  Building2
 } from 'lucide-react';
-import { useUserProfile } from '@/hooks/useUserProfile';
-import { PersonalInformationTab } from '@/components/profile/PersonalInformationTab';
-import { AccountSecurityTab } from '@/components/profile/AccountSecurityTab';
-import { NotificationsPreferencesTab } from '@/components/profile/NotificationsPreferencesTab';
-import { ActivityAuditTab } from '@/components/profile/ActivityAuditTab';
-import { DataPrivacyTab } from '@/components/profile/DataPrivacyTab';
+import { useAuth } from '@/contexts/AuthContext';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
+
+// Lazy load tab components for better performance
+const PersonalInformationTab = lazy(() => import('@/components/profile/PersonalInformationTab').then(module => ({ default: module.PersonalInformationTab })));
+const AccountSecurityTab = lazy(() => import('@/components/profile/AccountSecurityTab').then(module => ({ default: module.AccountSecurityTab })));
+const NotificationsPreferencesTab = lazy(() => import('@/components/profile/NotificationsPreferencesTab').then(module => ({ default: module.NotificationsPreferencesTab })));
+const ActivityAuditTab = lazy(() => import('@/components/profile/ActivityAuditTab').then(module => ({ default: module.ActivityAuditTab })));
+const DataPrivacyTab = lazy(() => import('@/components/profile/DataPrivacyTab').then(module => ({ default: module.DataPrivacyTab })));
+
+// Tab loading fallback component
+function TabLoadingFallback() {
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardContent className="pt-6">
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-full max-w-md" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 export default function Profile() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('personal');
-  const { profile, preferences, loading } = useUserProfile();
+
+  // Tab persistence with localStorage - persists across page refreshes
+  const [activeTab, setActiveTab] = useTabPersistence('profile');
+
+  const { user, loading } = useAuth();
+  const { enhancedUser } = usePermissions();
+  const { currentDealership } = useAccessibleDealerships();
   const { seed, setSeed } = useAvatarPreferences();
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 
-  const getFullName = () => {
-    const first = profile?.first_name || '';
-    const last = profile?.last_name || '';
-    return `${first} ${last}`.trim() || profile?.email || 'User';
-  };
+  // Memoized full name computation
+  const fullName = useMemo(() => {
+    const first = user?.first_name || '';
+    const last = user?.last_name || '';
+    return `${first} ${last}`.trim() || user?.email || 'User';
+  }, [user?.first_name, user?.last_name, user?.email]);
 
-  const getRoleDisplay = () => {
-    if (!profile?.role) return t('profile.no_role', 'No Role');
+  // Memoized role display
+  const roleDisplay = useMemo(() => {
+    if (enhancedUser?.is_system_admin) return t('roles.system_admin');
+    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_admin')) return t('roles.dealer_admin');
+    if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_manager')) return t('roles.dealer_manager');
+    return t('roles.user');
+  }, [enhancedUser?.is_system_admin, enhancedUser?.custom_roles, t]);
 
-    const roleMap: Record<string, string> = {
-      admin: t('profile.admin', 'Admin'),
-      manager: t('profile.manager', 'Manager'),
-      viewer: t('profile.viewer', 'Viewer'),
-      user: t('profile.user', 'User')
-    };
-
-    return roleMap[profile.role] || profile.role;
-  };
-
-  const handleAvatarClick = () => {
+  // Memoized callbacks for better performance
+  const handleAvatarClick = useCallback(() => {
     setShowAvatarModal(true);
-  };
+  }, []);
 
-  const handleAvatarChange = (newSeed: typeof seed) => {
+  const handleAvatarChange = useCallback((newSeed: typeof seed) => {
     setSeed(newSeed);
-  };
+  }, [setSeed]);
+
+  // Loading skeleton
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-col sm:flex-row gap-6">
+              <Skeleton className="h-24 w-24 rounded-full mx-auto sm:mx-0" />
+              <div className="flex-1 space-y-4">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-4 w-full max-w-md" />
+                <Skeleton className="h-4 w-full max-w-xs" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Skeleton className="h-96" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -62,34 +111,36 @@ export default function Profile() {
           <CardContent className="pt-6">
             <div className="flex flex-col sm:flex-row gap-6">
               <AvatarSystem
-                name={profile?.email || 'User'}
-                firstName={profile?.first_name}
-                lastName={profile?.last_name}
-                email={profile?.email}
+                name={user?.email || 'User'}
+                firstName={user?.first_name}
+                lastName={user?.last_name}
+                email={user?.email}
                 seed={seed}
                 size={96}
                 className="mx-auto sm:mx-0"
               />
-              
+
               <div className="flex-1 space-y-4 text-center sm:text-left">
                 <div>
-                  <h1 className="text-2xl font-bold">{getFullName()}</h1>
+                  <h1 className="text-2xl font-bold">{fullName}</h1>
                   <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-2">
-                    <Badge variant="secondary">
-                      {getRoleDisplay()}
+                    <Badge variant="secondary" className="flex items-center gap-1.5">
+                      <Shield className="h-3 w-3" />
+                      {roleDisplay}
                     </Badge>
-                    {preferences?.job_title && (
-                      <Badge variant="outline">
-                        {preferences.job_title}
+                    {currentDealership && (
+                      <Badge variant="outline" className="flex items-center gap-1.5">
+                        <Building2 className="h-3 w-3" />
+                        {currentDealership.name}
                       </Badge>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 justify-center sm:justify-start text-sm text-muted-foreground">
                     <Mail className="h-4 w-4" />
-                    <span>{profile?.email}</span>
+                    <span>{user?.email}</span>
                   </div>
 
                   {/* Change Avatar Button */}
@@ -102,20 +153,7 @@ export default function Profile() {
                       <span>{t('profile.change_avatar', 'Change Avatar')}</span>
                     </button>
                   </div>
-
-                  {preferences?.phone && (
-                    <div className="flex items-center gap-2 justify-center sm:justify-start text-sm text-muted-foreground">
-                      <User className="h-4 w-4" />
-                      <span>{preferences.phone}</span>
-                    </div>
-                  )}
                 </div>
-                
-                {preferences?.bio && (
-                  <p className="text-sm text-muted-foreground">
-                    {preferences.bio}
-                  </p>
-                )}
               </div>
             </div>
           </CardContent>
@@ -148,23 +186,33 @@ export default function Profile() {
 
 
           <TabsContent value="personal">
-            <PersonalInformationTab />
+            <Suspense fallback={<TabLoadingFallback />}>
+              <PersonalInformationTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="security">
-            <AccountSecurityTab />
+            <Suspense fallback={<TabLoadingFallback />}>
+              <AccountSecurityTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="notifications">
-            <NotificationsPreferencesTab />
+            <Suspense fallback={<TabLoadingFallback />}>
+              <NotificationsPreferencesTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="activity">
-            <ActivityAuditTab />
+            <Suspense fallback={<TabLoadingFallback />}>
+              <ActivityAuditTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="privacy">
-            <DataPrivacyTab />
+            <Suspense fallback={<TabLoadingFallback />}>
+              <DataPrivacyTab />
+            </Suspense>
           </TabsContent>
         </Tabs>
 
@@ -172,10 +220,10 @@ export default function Profile() {
         <AvatarSelectionModal
           open={showAvatarModal}
           onClose={() => setShowAvatarModal(false)}
-          userName={profile?.email || 'User'}
-          firstName={profile?.first_name}
-          lastName={profile?.last_name}
-          email={profile?.email}
+          userName={user?.email || 'User'}
+          firstName={user?.first_name}
+          lastName={user?.last_name}
+          email={user?.email}
           currentSeed={seed}
           onSeedChange={handleAvatarChange}
         />

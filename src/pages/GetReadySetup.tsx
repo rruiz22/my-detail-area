@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GetReadyContent } from '@/components/get-ready/GetReadyContent';
 import { StepsList } from '@/components/get-ready/StepsList';
 import { WorkItemTemplatesManager } from '@/components/get-ready/WorkItemTemplatesManager';
-import { useAuth } from '@/contexts/AuthContext';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ListOrdered, FileCheck, TrendingUp } from 'lucide-react';
@@ -10,33 +10,15 @@ import { SLAConfigurationPanel } from '@/components/get-ready/SLAConfigurationPa
 
 export function GetReadySetup() {
   const { t } = useTranslation();
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('steps');
 
-  // Only system_admin, dealer_admin, and dealer_manager can access
-  const canAccess = user?.role === 'system_admin' ||
-                    user?.role === 'dealer_admin' ||
-                    user?.role === 'dealer_manager';
-
-  if (!canAccess) {
-    return (
-      <GetReadyContent>
-        <div className="p-6 flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              {t('get_ready.setup.access_denied')}
-            </h2>
-            <p className="text-sm text-gray-500">
-              Administrators and managers only
-            </p>
-          </div>
-        </div>
-      </GetReadyContent>
-    );
-  }
-
   return (
-    <GetReadyContent>
+    <PermissionGuard
+      module="get_ready"
+      permission="access_setup"
+      checkDealerModule={true}
+    >
+      <GetReadyContent>
       <div className="p-6 max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -78,6 +60,7 @@ export function GetReadySetup() {
           </TabsContent>
         </Tabs>
       </div>
-    </GetReadyContent>
+      </GetReadyContent>
+    </PermissionGuard>
   );
 }

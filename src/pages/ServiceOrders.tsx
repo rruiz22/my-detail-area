@@ -7,8 +7,9 @@ import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 // New improved components
@@ -23,10 +24,13 @@ import { useQueryClient } from '@tanstack/react-query';
 export default function ServiceOrders() {
   console.log('🔵 ServiceOrders component is RENDERING');
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { confirmDelete } = useSweetAlert();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const orderIdFromUrl = searchParams.get('order');
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('service_orders');
@@ -40,6 +44,7 @@ export default function ServiceOrders() {
   const [previewOrder, setPreviewOrder] = useState(null);
   const [weekOffset, setWeekOffset] = useState(0);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
 
   const {
     orders,
@@ -54,11 +59,28 @@ export default function ServiceOrders() {
     deleteOrder,
   } = useServiceOrderManagement(activeFilter, weekOffset);
 
-  // Real-time updates are handled by useServiceOrderManagement hook
-  // Keep lastRefresh for UI purposes
- // useEffect(() => {
-   // setLastRefresh(new Date());
-  //}, [orders]);
+  // Auto-open order modal when URL contains ?order=ID parameter
+  useEffect(() => {
+    if (orderIdFromUrl && orders.length > 0 && !hasProcessedUrlOrder) {
+      console.log('🎯 [Service] Processing order from URL (one-time):', orderIdFromUrl);
+
+      // Find the order in the loaded orders
+      const targetOrder = orders.find(order => order.id === orderIdFromUrl);
+
+      if (targetOrder) {
+        console.log('✅ [Service] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        setPreviewOrder(targetOrder);
+        setHasProcessedUrlOrder(true); // Prevent loop
+      } else {
+        console.warn('⚠️ [Service] Order not found in current orders list:', orderIdFromUrl);
+        toast({
+          description: t('orders.order_not_found'),
+          variant: 'destructive'
+        });
+        setHasProcessedUrlOrder(true); // Prevent retrying
+      }
+    }
+  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t]);
 
   const handleCreateOrder = () => {
     setSelectedOrder(null);
@@ -298,7 +320,13 @@ export default function ServiceOrders() {
             orderType="service"
             order={previewOrder}
             open={true}
-            onClose={() => setPreviewOrder(null)}
+            onClose={() => {
+              setPreviewOrder(null);
+              // If we came from URL parameter, redirect to clean /service to avoid loop
+              if (orderIdFromUrl) {
+                navigate('/service', { replace: true });
+              }
+            }}
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onStatusChange={handleStatusChange}
