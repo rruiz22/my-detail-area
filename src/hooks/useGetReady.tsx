@@ -1,17 +1,19 @@
 import { mockVehicles } from '@/data/mockVehicles';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
-import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert } from '@/types/getReady';
+import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert, StepVehicleCountData, VehiclesByDaysData } from '@/types/getReady';
+import { validateDealershipObject } from '@/utils/dealerValidation';
 
 import { useOrderPolling } from '@/hooks/useSmartPolling';
 
 export function useGetReadySteps() {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
 
   return useOrderPolling(
     ['get-ready-steps', currentDealership?.id],
     async (): Promise<GetReadyStep[]> => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected, using mock data');
         // Fallback to mock data
         const vehicleCounts = mockVehicles.reduce((acc, vehicle) => {
@@ -142,7 +144,7 @@ export function useGetReadySteps() {
 
       // Use RPC function to get steps with vehicle counts
       const { data, error } = await supabase.rpc('get_step_vehicle_counts', {
-        p_dealer_id: currentDealership.id,
+        p_dealer_id: dealerId,
       });
 
       // If RPC function doesn't exist yet (migration not applied), use mock data
@@ -276,7 +278,7 @@ export function useGetReadySteps() {
 
       // Use new RPC function with vehicles grouped by days
       const { data: vehiclesByDays, error: daysError } = await supabase.rpc('get_vehicles_by_days_in_step', {
-        p_dealer_id: currentDealership.id,
+        p_dealer_id: dealerId,
         p_step_id: null, // Get all steps
       });
 
@@ -286,14 +288,14 @@ export function useGetReadySteps() {
         const { data: stepsData } = await supabase
           .from('get_ready_steps')
           .select('*')
-          .eq('dealer_id', currentDealership.id)
+          .eq('dealer_id', dealerId)
           .eq('is_active', true)
           .order('order_index');
 
         if (!stepsData) return [];
 
         return stepsData.map(step => {
-          const countData = data?.find((d: any) => d.step_id === step.id);
+          const countData = data?.find((d: StepVehicleCountData) => d.step_id === step.id);
           return {
             ...step,
             vehicle_count: countData?.vehicle_count || 0,
@@ -307,7 +309,7 @@ export function useGetReadySteps() {
       const { data: stepsData } = await supabase
         .from('get_ready_steps')
         .select('*')
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .eq('is_active', true)
         .order('order_index');
 
@@ -315,8 +317,8 @@ export function useGetReadySteps() {
 
       // Merge step data with vehicle counts and day groupings
       return stepsData.map(step => {
-        const daysData = vehiclesByDays?.find((d: any) => d.step_id === step.id);
-        const countData = data?.find((d: any) => d.step_id === step.id);
+        const daysData = vehiclesByDays?.find((d: StepVehicleCountData) => d.step_id === step.id);
+        const countData = data?.find((d: StepVehicleCountData) => d.step_id === step.id);
 
         return {
           ...step,
@@ -329,17 +331,18 @@ export function useGetReadySteps() {
         };
       });
     },
-    !!currentDealership?.id
+    !!dealerId
   );
 }
 
 export function useGetReadyKPIs() {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
 
   return useOrderPolling(
     ['get-ready-kpis', currentDealership?.id],
     async (): Promise<GetReadyKPIs> => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected, using mock KPIs');
         // Fallback to mock data
         const totalVehicles = mockVehicles.length;
@@ -364,7 +367,7 @@ export function useGetReadyKPIs() {
 
       // Use RPC function to get real KPIs
       const { data, error } = await supabase.rpc('get_ready_kpis', {
-        p_dealer_id: currentDealership.id,
+        p_dealer_id: dealerId,
       });
 
       // If RPC function doesn't exist yet (migration not applied), use mock data
@@ -430,23 +433,24 @@ export function useGetReadyKPIs() {
         roiImprovement: 0 // Calculate if needed
       };
     },
-    !!currentDealership?.id
+    !!dealerId
   );
 }
 
 export function useBottleneckAlerts() {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
 
   return useOrderPolling(
     ['bottleneck-alerts', currentDealership?.id],
     async (): Promise<BottleneckAlert[]> => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         return [];
       }
 
       // Use real RPC function
       const { data, error } = await supabase.rpc('get_bottleneck_alerts', {
-        p_dealer_id: currentDealership.id,
+        p_dealer_id: dealerId,
       });
 
       if (error) {
@@ -456,23 +460,24 @@ export function useBottleneckAlerts() {
 
       return data || [];
     },
-    !!currentDealership?.id
+    !!dealerId
   );
 }
 
 export function useSLAAlerts() {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
 
   return useOrderPolling(
     ['sla-alerts', currentDealership?.id],
     async (): Promise<SLAAlert[]> => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         return [];
       }
 
       // Use real RPC function
       const { data, error } = await supabase.rpc('get_sla_alerts', {
-        p_dealer_id: currentDealership.id,
+        p_dealer_id: dealerId,
       });
 
       if (error) {
@@ -482,7 +487,7 @@ export function useSLAAlerts() {
 
       return data || [];
     },
-    !!currentDealership?.id
+    !!dealerId
   );
 }
 

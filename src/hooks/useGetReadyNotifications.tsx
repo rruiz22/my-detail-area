@@ -11,6 +11,7 @@ import type {
   NotificationFilters,
   UserNotificationPreferences,
 } from '@/types/getReady';
+import { validateDealerId } from '@/utils/dealerValidation';
 
 /**
  * Hook for managing Get Ready notifications with real-time updates
@@ -51,7 +52,7 @@ export function useGetReadyNotifications(
   const enableInfiniteScroll = options?.enableInfiniteScroll || false;
 
   // ✅ VALIDATION: Only allow numeric dealer IDs, not "all"
-  const isValidDealerId = selectedDealerId && typeof selectedDealerId === 'number' && selectedDealerId > 0;
+  const dealerId = validateDealerId(selectedDealerId);
 
   // =====================================================
   // FETCH NOTIFICATIONS
@@ -73,7 +74,7 @@ export function useGetReadyNotifications(
       currentPage, // Add page to query key
     ],
     queryFn: async () => {
-      if (!isValidDealerId || !user?.id) {
+      if (!dealerId || !user?.id) {
         return [];
       }
 
@@ -92,7 +93,7 @@ export function useGetReadyNotifications(
         `,
           { count: 'exact' } // Get total count for pagination
         )
-        .eq('dealer_id', selectedDealerId)
+        .eq('dealer_id', dealerId)
         .or(`user_id.eq.${user.id},user_id.is.null`)
         .is('dismissed_at', null)
         .order('created_at', { ascending: false })
@@ -130,7 +131,7 @@ export function useGetReadyNotifications(
 
       return (data || []) as NotificationWithVehicle[];
     },
-    enabled: enabled && isValidDealerId && !!user?.id,
+    enabled: enabled && !!dealerId && !!user?.id,
     staleTime: 30000, // 30 seconds
     refetchInterval: 60000, // 1 minute auto-refresh
   });
@@ -164,7 +165,7 @@ export function useGetReadyNotifications(
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ['notificationUnreadCount', selectedDealerId, user?.id],
     queryFn: async () => {
-      if (!isValidDealerId || !user?.id) return 0;
+      if (!dealerId || !user?.id) return 0;
 
       const { data, error } = await supabase.rpc(
         'get_unread_notification_count',
@@ -181,7 +182,7 @@ export function useGetReadyNotifications(
 
       return data || 0;
     },
-    enabled: enabled && isValidDealerId && !!user?.id,
+    enabled: enabled && !!dealerId && !!user?.id,
     staleTime: 15000, // 15 seconds
     refetchInterval: 30000, // 30 seconds auto-refresh
   });
@@ -204,7 +205,7 @@ export function useGetReadyNotifications(
       const { data, error } = await supabase
         .from('get_ready_notifications')
         .select('priority, notification_type')
-        .eq('dealer_id', selectedDealerId)
+        .eq('dealer_id', dealerId)
         .or(`user_id.eq.${user.id},user_id.is.null`)
         .eq('is_read', false)
         .is('dismissed_at', null);
@@ -225,7 +226,7 @@ export function useGetReadyNotifications(
 
       return summary;
     },
-    enabled: enabled && isValidDealerId && !!user?.id,
+    enabled: enabled && !!dealerId && !!user?.id,
     staleTime: 30000,
   });
 
@@ -236,13 +237,13 @@ export function useGetReadyNotifications(
   const { data: preferences } = useQuery({
     queryKey: ['notificationPreferences', user?.id, selectedDealerId],
     queryFn: async () => {
-      if (!user?.id || !isValidDealerId) return null;
+      if (!user?.id || !dealerId) return null;
 
       const { data, error } = await supabase
         .from('user_notification_preferences')
         .select('*')
         .eq('user_id', user.id)
-        .eq('dealer_id', selectedDealerId)
+        .eq('dealer_id', dealerId)
         .maybeSingle(); // Changed from .single() to .maybeSingle()
 
       if (error) {
@@ -292,7 +293,7 @@ export function useGetReadyNotifications(
 
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
-      if (!user?.id || !isValidDealerId) {
+      if (!user?.id || !dealerId) {
         throw new Error('User not authenticated or dealer not selected');
       }
 
@@ -371,7 +372,7 @@ export function useGetReadyNotifications(
     mutationFn: async (
       updates: Partial<Omit<UserNotificationPreferences, 'user_id' | 'dealer_id'>>
     ) => {
-      if (!user?.id || !isValidDealerId) {
+      if (!user?.id || !dealerId) {
         throw new Error('User not authenticated or dealer not selected');
       }
 
@@ -417,22 +418,25 @@ export function useGetReadyNotifications(
   // =====================================================
 
   useEffect(() => {
-    if (!enabled || !isValidDealerId || !user?.id) return;
+    if (!enabled || !dealerId || !user?.id) return;
+
+    let isMounted = true;
 
     console.log('[useGetReadyNotifications] Setting up real-time subscription');
 
     // Subscribe to notifications table changes
     const channel = supabase
-      .channel('get_ready_notifications_changes')
+      .channel(`get_ready_notifications_${dealerId}_${user.id}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'get_ready_notifications',
-          filter: `dealer_id=eq.${selectedDealerId}`,
+          filter: `dealer_id=eq.${dealerId}`,
         },
         (payload) => {
+          if (!isMounted) return;
           console.log('[Real-time] New notification received:', payload);
 
           // Check if notification is for this user (broadcast or specific user)
@@ -477,10 +481,11 @@ export function useGetReadyNotifications(
           event: 'UPDATE',
           schema: 'public',
           table: 'get_ready_notifications',
-          filter: `dealer_id=eq.${selectedDealerId}`,
+          filter: `dealer_id=eq.${dealerId}`,
         },
         () => {
           console.log('[Real-time] Notification updated');
+          if (!isMounted) return;
           queryClient.invalidateQueries({
             queryKey: ['getReadyNotifications'],
           });
@@ -492,12 +497,11 @@ export function useGetReadyNotifications(
       .subscribe();
 
     return () => {
-      console.log(
-        '[useGetReadyNotifications] Cleaning up real-time subscription'
-      );
-      channel.unsubscribe();
+      console.log('[useGetReadyNotifications] Cleaning up subscription');
+      isMounted = false;
+      supabase.removeChannel(channel);
     };
-  }, [enabled, selectedDealerId, user?.id, queryClient, toast]);
+  }, [enabled, dealerId, user?.id]);
 
   // =====================================================
   // RETURN HOOK INTERFACE

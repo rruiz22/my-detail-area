@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import type { OrderAnalytics } from '@/hooks/useReportsData';
+import type { ChartTooltipProps, PieChartLabelProps, StatusDistributionDataPoint, TooltipPayloadWithTotal } from '@/types/charts';
 
 interface StatusDistributionChartProps {
   data: OrderAnalytics;
@@ -30,15 +31,15 @@ export const StatusDistributionChart: React.FC<StatusDistributionChartProps> = (
     color: STATUS_COLORS[item.name as keyof typeof STATUS_COLORS] || 'hsl(var(--muted))'
   }));
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: ChartTooltipProps) => {
     if (active && payload && payload.length) {
-      const data = payload[0];
+      const data = payload[0] as TooltipPayloadWithTotal;
       return (
         <div className="bg-background border border-border rounded-lg shadow-lg p-3">
           <p className="font-medium text-foreground">{data.name}</p>
           <p className="text-sm text-muted-foreground">{`${t('reports.charts.orders')}: ${data.value}`}</p>
           <p className="text-sm text-muted-foreground">
-            {`${t('reports.charts.percentage')}: ${((data.value / data.payload.total) * 100).toFixed(1)}%`}
+            {`${t('reports.charts.percentage')}: ${((data.value / data.total) * 100).toFixed(1)}%`}
           </p>
         </div>
       );
@@ -46,7 +47,7 @@ export const StatusDistributionChart: React.FC<StatusDistributionChartProps> = (
     return null;
   };
 
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: PieChartLabelProps) => {
     if (percent < 0.05) return null; // Don't show labels for slices < 5%
     
     const RADIAN = Math.PI / 180;

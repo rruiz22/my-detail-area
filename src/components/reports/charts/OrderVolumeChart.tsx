@@ -14,6 +14,7 @@ import {
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import type { OrderAnalytics } from '@/hooks/useReportsData';
+import type { ChartTooltipProps, FormattedChartDataPoint } from '@/types/charts';
 
 interface OrderVolumeChartProps {
   data: OrderAnalytics;
@@ -32,12 +33,12 @@ export const OrderVolumeChart: React.FC<OrderVolumeChartProps> = ({
     revenue: item.revenue
   }));
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: ChartTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border border-border rounded-lg shadow-lg p-3">
           <p className="font-medium text-foreground">{`${t('common.date')}: ${label}`}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {`${entry.name}: ${entry.name === 'orders' ? entry.value : `$${entry.value.toLocaleString()}`}`}
             </p>

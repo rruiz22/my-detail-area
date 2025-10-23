@@ -1,10 +1,10 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LiveClock } from "@/components/ui/live-clock";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useDealershipModules } from "@/hooks/useDealershipModules";
 import { usePermissions } from "@/hooks/usePermissions";
-import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { getSystemTimezone } from "@/utils/dateUtils";
 import { Building2, Calendar, Clock, Droplets, FileText, Globe, LayoutDashboard, MessageCircle, Nfc, Package, QrCode, RefreshCw, Settings, Shield, ShoppingCart, Sparkles, User, Users2, Wrench, Zap } from "lucide-react";
 import React from "react";
@@ -234,19 +234,7 @@ export function AppSidebar() {
     <TooltipProvider delayDuration={300}>
       <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
         <SidebarHeader className="p-4 space-y-3">
-        {/* 1️⃣ Logo MDA (First Row) */}
-        <div className="flex items-center justify-center">
-          {collapsed ? (
-            <div className="font-bold text-lg text-primary">MDA</div>
-          ) : (
-            <div className="text-center">
-              <h1 className="font-bold text-lg">My Detail Area</h1>
-              <p className="text-[9px] text-muted-foreground">Enterprise Dealership Management</p>
-            </div>
-          )}
-        </div>
-
-        {/* 2️⃣ Dealership Logo (Second Row) - NEW SECTION */}
+        {/* 1️⃣ Dealership Logo (First Row) */}
         {currentDealership && (
           <div className="flex flex-col items-center gap-2 py-2 border-y border-border/40">
             {/* Dealership Avatar */}
@@ -272,7 +260,7 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* 3️⃣ Live Clock - Eastern Time (Third Row) */}
+        {/* 2️⃣ Live Clock - Eastern Time (Second Row) */}
         <div className="flex justify-center">
           <LiveClock
             className={collapsed ? "scale-75" : "text-base"}

@@ -5,6 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { calculateDIS, calculateDTF, calculateT2L } from '@/utils/timeFormatUtils';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
+import type { GetReadyWorkItemSummary, VehicleDatabaseResponse, VehicleSortField } from '@/types/getReady';
+import { sanitizeAndLowercase } from '@/utils/searchSanitization';
+import { validateDealershipObject } from '@/utils/dealerValidation';
 
 // Type definition for vehicle detail
 export interface VehicleDetail {
@@ -27,7 +30,7 @@ export interface VehicleDetail {
   notes: string;
   location: string;
   technician: string;
-  work_orders: any[];
+  work_orders: unknown[]; // TODO: Define WorkOrder type if needed
   current_step?: {
     name: string;
     color: string;
@@ -37,12 +40,13 @@ export interface VehicleDetail {
 
 export function useOverviewTable() {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
   const { searchTerm, priorityFilter, statusFilter } = useGetReadyStore();
 
   return useOrderPolling(
     ['get-ready-vehicles', 'overview', currentDealership?.id, searchTerm, priorityFilter, statusFilter],
     async (): Promise<ReconVehicle[]> => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected for vehicle query');
         return [];
       }
@@ -78,14 +82,16 @@ export function useOverviewTable() {
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
       // Apply filters
       if (searchTerm) {
-        const term = searchTerm.toLowerCase();
-        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%`);
+        const sanitized = sanitizeAndLowercase(searchTerm);
+        if (sanitized) {
+          query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%`);
+        }
       }
 
       if (priorityFilter && priorityFilter !== 'all') {
@@ -106,14 +112,14 @@ export function useOverviewTable() {
       if (!data) return [];
 
       // Transform data to ReconVehicle format
-      return data.map((vehicle: any) => {
+      return data.map((vehicle: VehicleDatabaseResponse) => {
         // Calculate work items counts by status
         const workItems = vehicle.get_ready_work_items || [];
         const work_item_counts = {
-          pending: workItems.filter((item: any) => item.status === 'pending').length,
-          in_progress: workItems.filter((item: any) => item.status === 'in_progress').length,
-          completed: workItems.filter((item: any) => item.status === 'completed').length,
-          declined: workItems.filter((item: any) => item.status === 'declined').length,
+          pending: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'pending').length,
+          in_progress: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'in_progress').length,
+          completed: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'completed').length,
+          declined: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'declined').length,
         };
 
         return {
@@ -154,11 +160,12 @@ function calculateDaysInStep(intakeDate: string): string {
 
 export function useVehicleDetail(vehicleId: string | null) {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
 
   return useQuery<VehicleDetail | null>({
     queryKey: ['get-ready-vehicle-detail', vehicleId, currentDealership?.id],
     queryFn: async () => {
-      if (!vehicleId || !currentDealership?.id) return null;
+      if (!vehicleId || !dealerId) return null;
 
       const { data, error } = await supabase
         .from('get_ready_vehicles')
@@ -171,7 +178,7 @@ export function useVehicleDetail(vehicleId: string | null) {
           )
         `)
         .eq('id', vehicleId)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null)
         .single();
 
@@ -182,7 +189,7 @@ export function useVehicleDetail(vehicleId: string | null) {
 
       if (!data) return null;
 
-      const currentStep = data.get_ready_steps as any;
+      const currentStep = data.get_ready_steps;
 
       return {
         id: data.id,
@@ -212,7 +219,7 @@ export function useVehicleDetail(vehicleId: string | null) {
         } : undefined
       };
     },
-    enabled: !!vehicleId && !!currentDealership?.id,
+    enabled: !!vehicleId && !!dealerId,
     staleTime: 1000 * 30, // 30 seconds
   });
 }
@@ -229,6 +236,7 @@ export interface GetReadyVehicleListFilters {
 
 export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
   const {
     searchQuery = '',
     selectedStep = 'all',
@@ -251,7 +259,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       sortOrder
     ],
     async () => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected for vehicle list query');
         return [];
       }
@@ -300,7 +308,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null);
 
       // ✅ Apply step filter (ignored when search is active for global search)
@@ -320,8 +328,9 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 
       // Apply search filter
       if (searchQuery) {
-        const term = searchQuery.toLowerCase();
-        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
+        const sanitized = sanitizeAndLowercase(searchQuery);
+        if (sanitized) {
+          query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
       }
 
       // Apply sorting
@@ -331,7 +340,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       } else if (sortBy === 'stock_number') {
         query = query.order('stock_number', { ascending });
       } else {
-        query = query.order(sortBy as any, { ascending });
+        query = query.order(sortBy as VehicleSortField, { ascending });
       }
 
       const { data, error } = await query;
@@ -351,7 +360,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
         const { data: stockImages, error: stockError } = await supabase
           .from('dealer_vehicle_inventory')
           .select('vin, key_photo_url')
-          .eq('dealer_id', currentDealership.id)
+          .eq('dealer_id', dealerId)
           .in('vin', vins)
           .not('key_photo_url', 'is', null);
 
@@ -366,16 +375,16 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       }
 
       // Transform to match MockVehicle interface
-      return data.map((vehicle: any) => {
+      return data.map((vehicle: VehicleDatabaseResponse) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
 
         // Calculate work items counts by status
         const workItems = vehicle.get_ready_work_items || [];
         const work_item_counts = {
-          pending: workItems.filter((item: any) => item.status === 'pending').length,
-          in_progress: workItems.filter((item: any) => item.status === 'in_progress').length,
-          completed: workItems.filter((item: any) => item.status === 'completed').length,
-          declined: workItems.filter((item: any) => item.status === 'declined').length,
+          pending: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'pending').length,
+          in_progress: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'in_progress').length,
+          completed: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'completed').length,
+          declined: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'declined').length,
         };
 
         return {
@@ -425,6 +434,7 @@ const PAGE_SIZE = 5; // Show 5 vehicles initially, load more with infinite scrol
 
 export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
   const queryClient = useQueryClient();
   const {
     searchQuery = '',
@@ -455,7 +465,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       sortOrder
     ],
     queryFn: async ({ pageParam = 0 }) => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected for vehicle list query');
         return { vehicles: [], hasMore: false };
       }
@@ -504,7 +514,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null);
 
       // ✅ Apply step filter (ignored when search is active for global search)
@@ -524,8 +534,9 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
 
       // Apply search filter
       if (searchQuery) {
-        const term = searchQuery.toLowerCase();
-        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
+        const sanitized = sanitizeAndLowercase(searchQuery);
+        if (sanitized) {
+          query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
       }
 
       // Apply sorting
@@ -535,7 +546,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       } else if (sortBy === 'stock_number') {
         query = query.order('stock_number', { ascending });
       } else {
-        query = query.order(sortBy as any, { ascending });
+        query = query.order(sortBy as VehicleSortField, { ascending });
       }
 
       // Add pagination
@@ -561,7 +572,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         const { data: stockImages, error: stockError } = await supabase
           .from('dealer_vehicle_inventory')
           .select('vin, key_photo_url')
-          .eq('dealer_id', currentDealership.id)
+          .eq('dealer_id', dealerId)
           .in('vin', vins)
           .not('key_photo_url', 'is', null);
 
@@ -576,20 +587,20 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       }
 
       // Transform data
-      const vehicles = data.map((vehicle: any) => {
+      const vehicles = data.map((vehicle: VehicleDatabaseResponse) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
 
         // Calculate work items counts by status
         const workItems = vehicle.get_ready_work_items || [];
         const work_item_counts = {
-          pending: workItems.filter((item: any) => item.status === 'pending').length,
-          in_progress: workItems.filter((item: any) => item.status === 'in_progress').length,
-          completed: workItems.filter((item: any) => item.status === 'completed').length,
-          declined: workItems.filter((item: any) => item.status === 'declined').length,
+          pending: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'pending').length,
+          in_progress: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'in_progress').length,
+          completed: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'completed').length,
+          declined: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'declined').length,
         };
 
         // Get pending work items that need approval
-        const pendingApprovalWorkItems = workItems.filter((item: any) =>
+        const pendingApprovalWorkItems = workItems.filter((item: GetReadyWorkItemSummary) =>
           item.approval_required === true &&
           (!item.approval_status || item.approval_status !== 'approved')
         );
@@ -644,7 +655,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.hasMore ? allPages.length : undefined;
     },
-    enabled: !!currentDealership?.id,
+    enabled: !!dealerId,
     staleTime: 1000 * 30,
     refetchOnMount: 'always', // ✅ FIX: Always refetch when dealer changes from null to valid
   });

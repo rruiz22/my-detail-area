@@ -26,6 +26,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MetricCard } from '../ReportsLayout';
 import { useRevenueAnalytics, type ReportsFilters } from '@/hooks/useReportsData';
+import type { ChartTooltipProps } from '@/types/charts';
 
 interface FinancialReportsProps {
   filters: ReportsFilters;
@@ -44,12 +45,12 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
     }).format(amount);
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: ChartTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border border-border rounded-lg shadow-lg p-3">
           <p className="font-medium text-foreground">{`${t('reports.period')}: ${label}`}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {`${entry.name}: ${entry.name.includes('Revenue') ? formatCurrency(entry.value) : entry.value}`}
             </p>
