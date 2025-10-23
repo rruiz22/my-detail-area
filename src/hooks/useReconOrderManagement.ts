@@ -244,13 +244,10 @@ export const useReconOrderManagement = () => {
   );
 
   // Simplified refreshData - uses polling query for consistency
+  // Toast is shown in the component's handleManualRefresh to avoid duplication
   const refreshData = useCallback(async () => {
     await reconOrdersPollingQuery.refetch();
-    toast({
-      description: t('common.data_refreshed') || 'Data refreshed',
-      variant: 'default'
-    });
-  }, [reconOrdersPollingQuery, t]);
+  }, [reconOrdersPollingQuery]);
 
 
   // Create new recon order
@@ -340,9 +337,6 @@ export const useReconOrderManagement = () => {
       }
 
       const newOrder = transformReconOrder(data);
-
-      // Optimistic update: Add order immediately to UI
-      setAllOrders(prev => [newOrder, ...prev]);
 
       // Auto-generate QR code and shortlink
       try {
@@ -486,11 +480,6 @@ export const useReconOrderManagement = () => {
 
       const updatedOrder = transformReconOrder(data);
 
-      // Optimistic update: Update order immediately in UI
-      setAllOrders(prev =>
-        prev.map(order => order.id === orderId ? updatedOrder : order)
-      );
-
       toast({
         description: t('recon.order_updated_successfully'),
         variant: 'default'
@@ -526,9 +515,6 @@ export const useReconOrderManagement = () => {
         });
         return false;
       }
-
-      // Optimistic update: Remove order immediately from UI
-      setAllOrders(prev => prev.filter(order => order.id !== orderId));
 
       toast({
         description: t('recon.order_deleted_successfully'),
@@ -627,6 +613,17 @@ export const useReconOrderManagement = () => {
       setLastRefresh(new Date(reconOrdersPollingQuery.dataUpdatedAt));
     }
   }, [reconOrdersPollingQuery.isFetching, reconOrdersPollingQuery.dataUpdatedAt]);
+
+  // Listen for status updates to trigger immediate refresh
+  useEffect(() => {
+    const handleStatusUpdate = () => {
+      console.log('🔄 [Recon] Status update detected, triggering immediate polling refresh');
+      reconOrdersPollingQuery.refetch();
+    };
+
+    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
+    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+  }, [reconOrdersPollingQuery]);
 
   return {
     orders: allOrders,

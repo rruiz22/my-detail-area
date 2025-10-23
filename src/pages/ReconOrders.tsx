@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 import type { ReconOrder } from "@/hooks/useReconOrderManagement";
+import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
@@ -40,7 +41,6 @@ export default function ReconOrders() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<ReconOrder | null>(null);
   const [previewOrder, setPreviewOrder] = useState<ReconOrder | null>(null);
-  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
@@ -54,6 +54,9 @@ export default function ReconOrders() {
     updateOrder,
     deleteOrder,
   } = useReconOrderManagement();
+
+  // Use custom hook for manual refresh with consistent behavior
+  const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Reset week offset when changing to a different filter
   useEffect(() => {
@@ -245,12 +248,10 @@ export default function ReconOrders() {
         detail: { orderId, newStatus, timestamp: Date.now() }
       }));
 
-      // Refresh table data immediately after successful status change
-      setTimeout(() => refreshData(), 100);
+      // Event listener in hook will handle immediate refresh
     } catch (error) {
       console.error('Status change failed:', error);
-      // Trigger refresh to revert any optimistic UI updates
-      setTimeout(() => refreshData(), 100);
+      // Event listener will handle refresh
       throw error;
     }
   };
@@ -273,24 +274,6 @@ export default function ReconOrders() {
     }
   };
 
-  const handleManualRefresh = async () => {
-    setIsManualRefreshing(true);
-    try {
-      await refreshData();
-      toast({
-        description: t('common.data_refreshed') || 'Data refreshed successfully',
-        variant: 'default'
-      });
-    } catch (error) {
-      console.error('Manual refresh failed:', error);
-      toast({
-        description: t('common.refresh_failed') || 'Failed to refresh data',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsManualRefreshing(false);
-    }
-  };
 
   // Force table view on mobile (disable kanban and calendar)
   const effectiveViewMode = isMobile ? 'table' : viewMode;
@@ -375,15 +358,15 @@ export default function ReconOrders() {
           <div className="flex items-center gap-4">
             <LiveTimer
               lastRefresh={lastRefresh}
-              isRefreshing={isManualRefreshing}
+              isRefreshing={isRefreshing}
             />
             <Button
               variant="outline"
               size="sm"
-              onClick={handleManualRefresh}
-              disabled={isManualRefreshing}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>

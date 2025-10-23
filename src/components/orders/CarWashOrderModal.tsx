@@ -75,7 +75,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   const [formData, setFormData] = useState<OrderFormData>({
     orderNumber: '',
     orderType: 'car_wash',
-    status: 'pending',
+    status: 'completed',
     customerName: '',
     customerEmail: '',
     customerPhone: '',
@@ -227,7 +227,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
         setFormData({
           orderNumber: '',
           orderType: 'car_wash',
-          status: 'pending',
+          status: 'completed',
           customerName: '',
           customerEmail: '',
           customerPhone: '',
@@ -316,6 +316,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   const transformToDbFormat = (formData: OrderFormData) => ({
     // Return camelCase format - hook will transform to snake_case for DB
+    status: formData.status,
     vehicleVin: formData.vehicleVin || undefined,
     vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
     vehicleMake: formData.vehicleMake || undefined,
@@ -420,9 +421,9 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     id="vehicleVin"
                     name="vehicleVin"
                     value={formData.vehicleVin}
-                    onChange={(e) => handleVinChange(e.target.value)}
-                    onVinScanned={handleVinChange}
-                    className="border-input bg-background font-mono"
+                    onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
+                    onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
+                    className="border-input bg-background font-mono uppercase"
                   />
                   {vinError && (
                     <div className="flex items-center gap-1 text-sm text-destructive mt-1">
@@ -444,8 +445,8 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     <Input
                       id="stockNumber"
                       value={formData.stockNumber}
-                      onChange={(e) => handleInputChange('stockNumber', e.target.value)}
-                      className="border-input bg-background"
+                      onChange={(e) => handleInputChange('stockNumber', e.target.value.toUpperCase())}
+                      className="border-input bg-background uppercase"
                       placeholder="ST-001"
                     />
                   </div>
@@ -455,8 +456,8 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     <Input
                       id="tag"
                       value={formData.tag}
-                      onChange={(e) => handleInputChange('tag', e.target.value)}
-                      className="border-input bg-background"
+                      onChange={(e) => handleInputChange('tag', e.target.value.toUpperCase())}
+                      className="border-input bg-background uppercase"
                       placeholder="LOT-A1"
                     />
                   </div>
@@ -500,6 +501,25 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   <h3 className="text-sm sm:text-base font-medium text-foreground">
                     {t('orders.servicesAndNotes')}
                   </h3>
+                </div>
+
+                {/* Status Field */}
+                <div>
+                  <Label htmlFor="status">{t('orders.status')}</Label>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(value) => handleInputChange('status', value)}
+                  >
+                    <SelectTrigger id="status">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">{t('common.status.pending')}</SelectItem>
+                      <SelectItem value="in_progress">{t('common.status.in_progress')}</SelectItem>
+                      <SelectItem value="completed">{t('common.status.completed')}</SelectItem>
+                      <SelectItem value="cancelled">{t('common.status.cancelled')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="flex items-center space-x-2 p-3 border border-border rounded-lg bg-background">

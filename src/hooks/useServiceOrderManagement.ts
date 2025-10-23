@@ -637,6 +637,17 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     }
   }, [serviceOrdersPollingQuery.isFetching, serviceOrdersPollingQuery.dataUpdatedAt]);
 
+  // Listen for status updates to trigger immediate refresh
+  useEffect(() => {
+    const handleStatusUpdate = () => {
+      console.log('🔄 [Service] Status update detected, triggering immediate polling refresh');
+      serviceOrdersPollingQuery.refetch();
+    };
+
+    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
+    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+  }, [serviceOrdersPollingQuery]);
+
   return {
     orders: filteredOrders,
     tabCounts,

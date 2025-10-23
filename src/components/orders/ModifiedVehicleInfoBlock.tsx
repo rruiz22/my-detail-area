@@ -1,9 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Car, Hash, Palette, Calendar, Shield, Eye, Image } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
 
 interface ModifiedVehicleInfoBlockProps {
   order: {
@@ -16,6 +19,7 @@ interface ModifiedVehicleInfoBlockProps {
     vehicle_image?: string;
     vehicleImage?: string;
     vin_decoded?: boolean;
+    dealer_id?: number;
     [key: string]: unknown;
   };
 }
@@ -29,6 +33,55 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
   order
 }: ModifiedVehicleInfoBlockProps) {
   const { t } = useTranslation();
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  // Load vehicle image from Stock inventory
+  const { data: stockImage, isLoading: isLoadingImage } = useQuery({
+    queryKey: ['stock-vehicle-image', order.vehicle_vin, order.stock_number, order.dealer_id],
+    queryFn: async () => {
+      if (!order.dealer_id) return null;
+
+      const vin = order.vehicleVin || order.vehicle_vin;
+      const stockNumber = order.stockNumber || order.stock_number;
+
+      // Match by VIN first (more accurate)
+      if (vin) {
+        const { data } = await supabase
+          .from('dealer_vehicle_inventory')
+          .select('key_photo_url')
+          .eq('dealer_id', order.dealer_id)
+          .eq('vin', vin)
+          .not('key_photo_url', 'is', null)
+          .maybeSingle();
+
+        if (data?.key_photo_url) {
+          console.log('📸 [VehicleInfo] Found image by VIN:', vin);
+          return data.key_photo_url;
+        }
+      }
+
+      // Fallback: Match by stock_number
+      if (stockNumber) {
+        const { data } = await supabase
+          .from('dealer_vehicle_inventory')
+          .select('key_photo_url')
+          .eq('dealer_id', order.dealer_id)
+          .eq('stock_number', stockNumber.toString())
+          .not('key_photo_url', 'is', null)
+          .maybeSingle();
+
+        if (data?.key_photo_url) {
+          console.log('📸 [VehicleInfo] Found image by Stock:', stockNumber);
+          return data.key_photo_url;
+        }
+      }
+
+      console.log('📸 [VehicleInfo] No image found in Stock inventory');
+      return null;
+    },
+    enabled: !!(order.dealer_id && (order.vehicle_vin || order.vehicleVin || order.stock_number || order.stockNumber)),
+    staleTime: 5 * 60 * 1000 // Cache 5 minutes
+  });
 
   // Memoize vehicle info array - simplified version with required fields only
   const vehicleInfo = useMemo(() => [
@@ -76,17 +129,18 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
     };
   }, [order.vin_decoded, t]);
 
-  // Memoize vehicle image display
+  // Memoize vehicle image display - Use stockImage from query or fallback to order.vehicle_image
   const vehicleImageData = useMemo(() => {
-    const imageUrl = order.vehicle_image || order.vehicleImage;
+    const imageUrl = stockImage || order.vehicle_image || order.vehicleImage;
     const hasImage = imageUrl && imageUrl.trim() !== '';
 
     return {
       hasImage,
       imageUrl,
-      fallbackText: t('vehicle_info.no_image_available')
+      fallbackText: t('vehicle_info.no_image_available'),
+      fromStock: !!stockImage
     };
-  }, [order.vehicle_image, order.vehicleImage, t]);
+  }, [stockImage, order.vehicle_image, order.vehicleImage, t]);
 
   return (
     <Card className="h-full">
@@ -135,33 +189,51 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
             <span className="text-sm font-medium">{t('vehicle_info.vehicle_image')}</span>
           </div>
 
-          <div className="p-3 bg-muted/50 rounded-lg border border-dashed min-h-[120px] flex items-center justify-center">
-            {vehicleImageData.hasImage ? (
-              <div className="w-full">
-                <img
-                  src={vehicleImageData.imageUrl}
-                  alt={t('vehicle_info.vehicle_image_alt')}
-                  className="w-full h-auto max-h-32 object-cover rounded-md"
-                  onError={(e) => {
-                    // Fallback if image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallback = target.nextElementSibling as HTMLDivElement;
-                    if (fallback) fallback.style.display = 'block';
-                  }}
-                />
-                <div className="hidden text-center text-sm text-muted-foreground">
+          {isLoadingImage ? (
+            <div className="p-3 bg-muted/50 rounded-lg border border-dashed min-h-[120px] animate-pulse" />
+          ) : (
+            <div
+              className={`p-3 bg-muted/50 rounded-lg border border-dashed min-h-[120px] flex items-center justify-center ${
+                vehicleImageData.hasImage ? 'cursor-pointer group relative' : ''
+              }`}
+              onClick={() => vehicleImageData.hasImage && setLightboxOpen(true)}
+            >
+              {vehicleImageData.hasImage ? (
+                <div className="w-full">
+                  <img
+                    src={vehicleImageData.imageUrl}
+                    alt={t('vehicle_info.vehicle_image_alt')}
+                    className="w-full h-auto max-h-32 object-cover rounded-md group-hover:opacity-90 transition-opacity"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling as HTMLDivElement;
+                      if (fallback) fallback.style.display = 'block';
+                    }}
+                  />
+                  <div className="hidden text-center text-sm text-muted-foreground">
+                    <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
+                    {vehicleImageData.fallbackText}
+                  </div>
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-md flex items-center justify-center">
+                    <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  {/* Badge if from Stock */}
+                  {vehicleImageData.fromStock && (
+                    <Badge className="absolute bottom-2 right-2 text-[10px] bg-blue-600">
+                      {t('stock.image_from_inventory')}
+                    </Badge>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center text-sm text-muted-foreground">
                   <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
                   {vehicleImageData.fallbackText}
                 </div>
-              </div>
-            ) : (
-              <div className="text-center text-sm text-muted-foreground">
-                <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
-                {vehicleImageData.fallbackText}
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           {/* VIN Display under image */}
           <div className="mt-2 text-center">
@@ -170,6 +242,16 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
             </p>
           </div>
         </div>
+
+        {/* Stock Image Lightbox */}
+        {vehicleImageData.hasImage && vehicleImageData.imageUrl && (
+          <StockImageLightbox
+            imageUrl={vehicleImageData.imageUrl}
+            vehicleInfo={order.vehicle_info || order.vehicleInfo || 'Vehicle'}
+            open={lightboxOpen}
+            onOpenChange={setLightboxOpen}
+          />
+        )}
       </CardContent>
     </Card>
   );

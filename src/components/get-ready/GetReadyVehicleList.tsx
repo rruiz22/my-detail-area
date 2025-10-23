@@ -74,7 +74,7 @@ export function GetReadyVehicleList({
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   // Get vehicle management functions
   const { moveVehicle, isMoving } = useVehicleManagement();

@@ -115,34 +115,10 @@ export function WorkItemsGroupedTable({
     cancelled: workItems.filter((item) => item.status === 'cancelled'),
   };
 
-  const getStatusIcon = (status: WorkItemStatus) => {
-    switch (status) {
-      case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'in_progress':
-        return <Circle className="h-4 w-4 text-blue-600" />;
-      case 'pending':
-        return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
-      case 'declined':
-        return <Pause className="h-4 w-4 text-red-600" />;
-      default:
-        return <Circle className="h-4 w-4 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status: WorkItemStatus) => {
-    switch (status) {
-      case 'completed':
-        return 'border-l-4 border-l-green-500 bg-green-50/50';
-      case 'in_progress':
-        return 'border-l-4 border-l-blue-500 bg-blue-50/50';
-      case 'pending':
-        return 'border-l-4 border-l-yellow-500 bg-yellow-50/50';
-      case 'declined':
-        return 'border-l-4 border-l-red-500 bg-red-50/50';
-      default:
-        return 'border-l-4 border-l-gray-500';
-    }
+  // ✨ NEW: Use imported getStatusColor helper for border colors
+  const getStatusBorderColor = (status: WorkItemStatus) => {
+    const config = getStatusColor(status);
+    return `border-l-4 ${config.borderColor.replace('border-', 'border-l-')} ${config.bgColor}`;
   };
 
   const getPriorityLabel = (priority: number) => {
@@ -161,23 +137,27 @@ export function WorkItemsGroupedTable({
   const renderWorkItem = (item: WorkItem) => (
     <TableRow
       key={item.id}
-      className={cn('hover:bg-muted/50 transition-colors', getStatusColor(item.status))}
+      className={cn('hover:bg-muted/50 transition-colors', getStatusBorderColor(item.status))}
     >
       {/* Title & Description */}
       <TableCell className="min-w-[200px]">
         <div className="flex items-start gap-2">
-          {getStatusIcon(item.status)}
+          {/* ✨ NEW: Use WorkItemStatusBadge component */}
+          <div className="pt-0.5">
+            <WorkItemStatusBadge status={item.status} size="sm" showIcon={true} />
+          </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-medium text-sm line-clamp-1">{item.title}</span>
-              {item.approval_required && !item.approval_status && (
-                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 text-xs">
-                  {t('get_ready.work_items.approval_required')}
+              {/* Show reason badges for special states */}
+              {item.status === 'blocked' && item.blocked_reason && (
+                <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs">
+                  {t('get_ready.work_items.blocked')}: {item.blocked_reason}
                 </Badge>
               )}
-              {item.approval_status === 'approved' && (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300 text-xs">
-                  {t('get_ready.approvals.status.approved')}
+              {item.status === 'on_hold' && item.on_hold_reason && (
+                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-300 text-xs">
+                  {t('get_ready.work_items.on_hold')}: {item.on_hold_reason}
                 </Badge>
               )}
             </div>
@@ -278,8 +258,10 @@ export function WorkItemsGroupedTable({
       {/* Quick Actions */}
       <TableCell className="text-right">
         <div className="flex items-center justify-end gap-1">
-          {/* Approval Actions - IMPROVED VISIBILITY */}
-          {item.approval_required && !item.approval_status && (
+          {/* ✨ NEW: Contextual Actions Based on Status */}
+
+          {/* Approval Actions - awaiting_approval status */}
+          {item.status === 'awaiting_approval' && (
             <>
               <Button
                 size="sm"
@@ -303,8 +285,8 @@ export function WorkItemsGroupedTable({
             </>
           )}
 
-          {/* Start Action */}
-          {item.status === 'pending' && !item.approval_required && (
+          {/* Start Action - ready or rejected status */}
+          {(item.status === 'ready' || item.status === 'rejected') && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -320,70 +302,192 @@ export function WorkItemsGroupedTable({
                 <TooltipContent>
                   <div className="text-center">
                     <div className="font-semibold">{t('get_ready.work_items.start')}</div>
-                    <div className="text-xs text-muted-foreground">Pending → In Progress</div>
+                    <div className="text-xs text-muted-foreground">Ready → In Progress</div>
                   </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
 
-          {/* Complete Action */}
+          {/* In Progress Actions - pause, block, complete */}
           {item.status === 'in_progress' && (
+            <>
+              {/* Pause Action */}
+              {onPause && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+                        onClick={() => onPause(item)}
+                      >
+                        <Pause className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div className="text-center">
+                        <div className="font-semibold">{t('get_ready.work_items.pause')}</div>
+                        <div className="text-xs text-muted-foreground">In Progress → On Hold</div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+
+              {/* Block Action */}
+              {onBlock && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                        onClick={() => onBlock(item)}
+                      >
+                        <AlertTriangle className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div className="text-center">
+                        <div className="font-semibold">{t('get_ready.work_items.block')}</div>
+                        <div className="text-xs text-muted-foreground">In Progress → Blocked</div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+
+              {/* Complete Action */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                      onClick={() => onComplete(item)}
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="text-center">
+                      <div className="font-semibold">{t('get_ready.work_items.complete')}</div>
+                      <div className="text-xs text-muted-foreground">In Progress → Completed</div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </>
+          )}
+
+          {/* Resume Action - on_hold status */}
+          {item.status === 'on_hold' && onResume && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
-                    onClick={() => onComplete(item)}
+                    className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    onClick={() => onResume(item.id)}
                   >
-                    <CheckCircle className="h-4 w-4" />
+                    <RotateCcw className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-center">
-                    <div className="font-semibold">{t('get_ready.work_items.complete')}</div>
-                    <div className="text-xs text-muted-foreground">In Progress → Completed</div>
+                    <div className="font-semibold">{t('get_ready.work_items.resume')}</div>
+                    <div className="text-xs text-muted-foreground">On Hold → In Progress</div>
                   </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
 
-          {/* Edit Action */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => onEdit(item)}
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{t('get_ready.actions.edit')}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {/* Unblock Action - blocked status */}
+          {item.status === 'blocked' && onUnblock && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    onClick={() => onUnblock(item.id)}
+                  >
+                    <Unlock className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="text-center">
+                    <div className="font-semibold">{t('get_ready.work_items.unblock')}</div>
+                    <div className="text-xs text-muted-foreground">Blocked → In Progress</div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
 
-          {/* Delete Action */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                  onClick={() => onDelete(item.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{t('get_ready.actions.delete')}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {/* Edit Action - available for all non-completed/cancelled */}
+          {item.status !== 'completed' && item.status !== 'cancelled' && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => onEdit(item)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{t('get_ready.actions.edit')}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+
+          {/* Cancel Action - available for all pre-completion statuses */}
+          {item.status !== 'completed' && item.status !== 'cancelled' && onCancel && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => onCancel(item)}
+                  >
+                    <Ban className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{t('get_ready.work_items.cancel')}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+
+          {/* Delete Action - only for completed/cancelled or rejected */}
+          {(item.status === 'completed' || item.status === 'cancelled' || item.status === 'rejected') && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    onClick={() => onDelete(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{t('get_ready.actions.delete')}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </TableCell>
     </TableRow>
@@ -396,7 +500,7 @@ export function WorkItemsGroupedTable({
       <div key={status} className="mb-6">
         {/* Group Header */}
         <div className="flex items-center gap-2 mb-2 px-2">
-          {getStatusIcon(status)}
+          <WorkItemStatusBadge status={status} size="sm" showIcon={true} />
           <h3 className="font-semibold text-sm">
             {groupLabel}
           </h3>
@@ -429,11 +533,22 @@ export function WorkItemsGroupedTable({
 
   return (
     <div className="space-y-4">
-      {/* Render groups in order: pending, in_progress, declined, completed */}
-      {renderGroup('pending', groupedItems.pending, t('get_ready.work_items.status.pending'))}
+      {/* ✨ NEW: Render groups in logical workflow order (pre-work → execution → completion) */}
+
+      {/* Pre-Work Phase */}
+      {renderGroup('awaiting_approval', groupedItems.awaiting_approval, t('get_ready.work_items.status.awaiting_approval'))}
+      {renderGroup('rejected', groupedItems.rejected, t('get_ready.work_items.status.rejected'))}
+      {renderGroup('ready', groupedItems.ready, t('get_ready.work_items.status.ready'))}
+      {renderGroup('scheduled', groupedItems.scheduled, t('get_ready.work_items.status.scheduled'))}
+
+      {/* Execution Phase */}
       {renderGroup('in_progress', groupedItems.in_progress, t('get_ready.work_items.status.in_progress'))}
-      {renderGroup('declined', groupedItems.declined, t('get_ready.work_items.status.declined'))}
+      {renderGroup('on_hold', groupedItems.on_hold, t('get_ready.work_items.status.on_hold'))}
+      {renderGroup('blocked', groupedItems.blocked, t('get_ready.work_items.status.blocked'))}
+
+      {/* Completion Phase */}
       {renderGroup('completed', groupedItems.completed, t('get_ready.work_items.status.completed'))}
+      {renderGroup('cancelled', groupedItems.cancelled, t('get_ready.work_items.status.cancelled'))}
 
       {/* Empty State */}
       {workItems.length === 0 && !isLoading && (

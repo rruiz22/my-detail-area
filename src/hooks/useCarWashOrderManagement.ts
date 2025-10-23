@@ -217,11 +217,8 @@ export const useCarWashOrderManagement = () => {
   // Simplified refreshData - uses polling query for consistency
   const refreshData = useCallback(async () => {
     await carWashOrdersPollingQuery.refetch();
-    toast({
-      description: t('common.data_refreshed') || 'Data refreshed',
-      variant: 'default'
-    });
-  }, [carWashOrdersPollingQuery, t]);
+    // Toast is shown in the component's handleManualRefresh to avoid duplication
+  }, [carWashOrdersPollingQuery]);
 
   const createOrder = useCallback(async (orderData: CarWashOrderData) => {
     if (!user) return;
@@ -260,7 +257,7 @@ export const useCarWashOrderManagement = () => {
         stock_number: orderData.stockNumber,
         tag: orderData.tag,
         order_type: 'carwash',
-        status: 'pending',
+        status: orderData.status || 'pending',
         priority: orderData.isWaiter ? 'urgent' : 'normal',
         services: orderData.services || [],
         total_amount: orderData.totalAmount || 0,
@@ -447,10 +444,8 @@ export const useCarWashOrderManagement = () => {
         oldData ? oldData.map(order => order.id === orderId ? updatedOrder : order) : []
       );
 
-      toast({
-        description: t('car_wash.order_updated_successfully') || 'Car wash order updated successfully',
-        variant: 'default'
-      });
+      // Toast is shown in the component's handleStatusChange/handleUpdate
+      // Not here to avoid duplication
 
       // Invalidate React Query cache to force fresh data from polling
       await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
@@ -573,6 +568,17 @@ export const useCarWashOrderManagement = () => {
       setLastRefresh(new Date(carWashOrdersPollingQuery.dataUpdatedAt));
     }
   }, [carWashOrdersPollingQuery.isFetching, carWashOrdersPollingQuery.dataUpdatedAt]);
+
+  // Listen for status updates to trigger immediate refresh
+  useEffect(() => {
+    const handleStatusUpdate = () => {
+      console.log('🔄 [CarWash] Status update detected, triggering immediate polling refresh');
+      carWashOrdersPollingQuery.refetch();
+    };
+
+    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
+    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+  }, [carWashOrdersPollingQuery]);
 
   return {
     orders: allOrders,

@@ -2,15 +2,18 @@
  * Services Display Component
  *
  * Reusable component for displaying order services in different formats:
- * - table: Compact multiline format for data tables
- * - modal: Full details with prices for modal view
- * - kanban: Badge format for kanban cards
+ * - table: Compact multiline format for data tables with color badges
+ * - modal: Full details with prices for modal view with color badges
+ * - kanban: Badge format for kanban cards with color badges
+ *
+ * Now uses category colors from service_categories table for visual distinction
  */
 
 import React, { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { ServiceBadge } from './ServiceBadge';
 import {
   Wrench,
   Car,
@@ -22,15 +25,16 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { usePermissionContext } from '@/contexts/PermissionContext';
-import { useServices } from '@/contexts/ServicesContext';
+import { useServices, type DealerService } from '@/contexts/ServicesContext';
 
-// Service data interface
+// Service data interface (legacy support)
 interface OrderService {
   id: string;
   name: string;
   price?: number;
   description?: string;
   duration?: number;
+  category_color?: string;
 }
 
 interface ServicesDisplayProps {
@@ -117,26 +121,33 @@ export function ServicesDisplay({
     return null;
   }
 
-  // Table variant - Compact multiline with centering
+  // Table variant - Compact with color badges
   if (variant === 'table') {
     const displayServices = processedServices.slice(0, maxServicesShown);
     const hasMore = processedServices.length > maxServicesShown;
 
     return (
-      <div className={`space-y-1 text-center ${className}`}>
-        {displayServices.map((service, index) => (
-          <div key={service.id} className="flex items-center justify-center gap-2 text-sm">
-            {getServiceIcon(service.name)}
-            <span className="truncate font-semibold">{service.name}</span>
-          </div>
+      <div className={`space-y-1.5 flex flex-col items-center ${className}`}>
+        {displayServices.map((service) => (
+          <ServiceBadge
+            key={service.id}
+            serviceName={service.name}
+            color={(service as any).color || (service as any).category_color}
+            size="sm"
+            showIcon={true}
+            description={(service as any).description}
+            price={(service as any).price}
+            duration={(service as any).duration}
+            categoryName={(service as any).category_name}
+            showPricing={canViewPrices}
+          />
         ))}
 
         {hasMore && (
-          <div className="text-xs text-muted-foreground text-center">
-            +{processedServices.length - maxServicesShown} more services
-          </div>
+          <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 border-gray-300 bg-gray-50 text-gray-600">
+            +{processedServices.length - maxServicesShown} more
+          </Badge>
         )}
-
       </div>
     );
   }
@@ -156,15 +167,17 @@ export function ServicesDisplay({
             <div key={service.id}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 flex-1">
-                  {getServiceIcon(service.name)}
-                  <div className="flex-1">
-                    <div className="font-medium text-sm">{service.name}</div>
-                    {service.description && (
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {service.description}
-                      </div>
-                    )}
-                  </div>
+                  <ServiceBadge
+                    serviceName={service.name}
+                    color={(service as any).color || (service as any).category_color}
+                    size="md"
+                    showIcon={true}
+                  />
+                  {service.description && (
+                    <div className="text-xs text-muted-foreground">
+                      {service.description}
+                    </div>
+                  )}
                 </div>
                 {canViewPrices && service.price && (
                   <div className="text-sm font-mono font-semibold">
@@ -197,21 +210,24 @@ export function ServicesDisplay({
     );
   }
 
-  // Kanban variant - Show all services as badges
+  // Kanban variant - Show all services as color badges
   if (variant === 'kanban') {
     if (processedServices.length === 0) return null;
 
     return (
       <div className={`flex flex-wrap gap-2 ${className}`}>
         {processedServices.map((service) => (
-          <Badge key={service.id} variant="outline" className="flex items-center gap-1 text-xs">
-            {getServiceIcon(service.name)}
-            <span className="font-semibold">{service.name}</span>
-          </Badge>
+          <ServiceBadge
+            key={service.id}
+            serviceName={service.name}
+            color={(service as any).color || (service as any).category_color}
+            size="sm"
+            showIcon={true}
+          />
         ))}
 
         {canViewPrices && totalAmount && totalAmount > 0 && (
-          <Badge variant="outline" className="flex items-center gap-1 text-xs">
+          <Badge variant="outline" className="flex items-center gap-1 text-xs border-gray-300 bg-gray-50 text-gray-700">
             <DollarSign className="h-3 w-3" />
             <span>{formatPrice(totalAmount)}</span>
           </Badge>

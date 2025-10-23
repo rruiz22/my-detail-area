@@ -26,6 +26,12 @@ import {
     useUpdateWorkItem,
     useWorkItems,
     WorkItemType,
+    // ✨ NEW: Import new hooks for enhanced status system
+    usePauseWorkItem,
+    useResumeWorkItem,
+    useBlockWorkItem,
+    useUnblockWorkItem,
+    useCancelWorkItem,
 } from '@/hooks/useVehicleWorkItems';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -57,6 +63,12 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   const startWorkItem = useStartWorkItem();
   const completeWorkItem = useCompleteWorkItem();
   const deleteWorkItem = useDeleteWorkItem();
+  // ✨ NEW: Initialize new hooks for enhanced status system
+  const pauseWorkItem = usePauseWorkItem();
+  const resumeWorkItem = useResumeWorkItem();
+  const blockWorkItem = useBlockWorkItem();
+  const unblockWorkItem = useUnblockWorkItem();
+  const cancelWorkItem = useCancelWorkItem();
 
   // Modal states
   const [quickAddModalOpen, setQuickAddModalOpen] = useState(false);
@@ -65,6 +77,10 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
   const [completeModalOpen, setCompleteModalOpen] = useState(false);
   const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
+  // ✨ NEW: Modal states for new actions
+  const [pauseModalOpen, setPauseModalOpen] = useState(false);
+  const [blockModalOpen, setBlockModalOpen] = useState(false);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedWorkItem, setSelectedWorkItem] = useState<any>(null);
 
   // Form states
@@ -78,19 +94,27 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   });
   const [declineReason, setDeclineReason] = useState('');
   const [completionData, setCompletionData] = useState({ actualCost: 0, actualHours: 0 });
+  // ✨ NEW: Form states for new actions
+  const [pauseReason, setPauseReason] = useState('');
+  const [blockReason, setBlockReason] = useState('');
+  const [cancelReason, setCancelReason] = useState('');
 
-  // Calculate counters
+  // ✨ NEW: Calculate counters with enhanced status system
   const counters = workItems.reduce(
     (acc, item) => {
-      if (item.approval_required && !item.approval_status) {
+      // Need Attention: awaiting_approval + blocked
+      if (item.status === 'awaiting_approval' || item.status === 'blocked') {
         acc.needAttention++;
       }
+      // In Progress: in_progress only
       if (item.status === 'in_progress') acc.inProgress++;
-      if (item.status === 'declined') acc.declined++;
+      // On Hold + Rejected combined
+      if (item.status === 'on_hold' || item.status === 'rejected') acc.onHold++;
+      // Completed
       if (item.status === 'completed') acc.completed++;
       return acc;
     },
-    { needAttention: 0, inProgress: 0, declined: 0, completed: 0 }
+    { needAttention: 0, inProgress: 0, onHold: 0, completed: 0 }
   );
 
 
@@ -165,6 +189,51 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
     });
   };
 
+  // ✨ NEW: Handlers for enhanced status system
+  const handlePause = async () => {
+    if (!selectedWorkItem) return;
+    await pauseWorkItem.mutateAsync({
+      id: selectedWorkItem.id,
+      vehicleId,
+      reason: pauseReason || undefined,
+    });
+    setPauseModalOpen(false);
+    setPauseReason('');
+    setSelectedWorkItem(null);
+  };
+
+  const handleResume = async (workItemId: string) => {
+    await resumeWorkItem.mutateAsync({ id: workItemId, vehicleId });
+  };
+
+  const handleBlock = async () => {
+    if (!selectedWorkItem || !blockReason) return;
+    await blockWorkItem.mutateAsync({
+      id: selectedWorkItem.id,
+      vehicleId,
+      reason: blockReason,
+    });
+    setBlockModalOpen(false);
+    setBlockReason('');
+    setSelectedWorkItem(null);
+  };
+
+  const handleUnblock = async (workItemId: string) => {
+    await unblockWorkItem.mutateAsync({ id: workItemId, vehicleId });
+  };
+
+  const handleCancel = async () => {
+    if (!selectedWorkItem || !cancelReason) return;
+    await cancelWorkItem.mutateAsync({
+      id: selectedWorkItem.id,
+      vehicleId,
+      reason: cancelReason,
+    });
+    setCancelModalOpen(false);
+    setCancelReason('');
+    setSelectedWorkItem(null);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
@@ -197,10 +266,10 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
         </Card>
         <Card className="p-3">
           <div className="flex items-center gap-2">
-            <Pause className="h-4 w-4 text-red-600" />
+            <Pause className="h-4 w-4 text-gray-600" />
             <div>
-              <div className="text-2xl font-bold">{counters.declined}</div>
-              <div className="text-xs text-muted-foreground">{t('get_ready.work_items.declined')}</div>
+              <div className="text-2xl font-bold">{counters.onHold}</div>
+              <div className="text-xs text-muted-foreground">{t('get_ready.work_items.status.on_hold')}</div>
             </div>
           </div>
         </Card>
@@ -257,6 +326,20 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           onDelete={handleDelete}
           onNavigateToMedia={handleNavigateToMedia}
           onNavigateToNotes={handleNavigateToNotes}
+          onPause={(item) => {
+            setSelectedWorkItem(item);
+            setPauseModalOpen(true);
+          }}
+          onResume={handleResume}
+          onBlock={(item) => {
+            setSelectedWorkItem(item);
+            setBlockModalOpen(true);
+          }}
+          onUnblock={handleUnblock}
+          onCancel={(item) => {
+            setSelectedWorkItem(item);
+            setCancelModalOpen(true);
+          }}
           isLoading={isLoading}
         />
       </div>
@@ -600,6 +683,95 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
             >
               {updateWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               {t('common.action_buttons.save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✨ NEW: Pause Work Item Modal */}
+      <Dialog open={pauseModalOpen} onOpenChange={setPauseModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('get_ready.work_items.pause_title')}</DialogTitle>
+            <DialogDescription>{t('get_ready.work_items.pause_description')}</DialogDescription>
+          </DialogHeader>
+          <div>
+            <Label htmlFor="pause_reason">{t('get_ready.work_items.pause_reason')}</Label>
+            <Textarea
+              id="pause_reason"
+              value={pauseReason}
+              onChange={(e) => setPauseReason(e.target.value)}
+              placeholder={t('get_ready.work_items.pause_reason_placeholder')}
+              rows={3}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPauseModalOpen(false)}>
+              {t('common.actions.cancel')}
+            </Button>
+            <Button onClick={handlePause} disabled={pauseWorkItem.isPending}>
+              {pauseWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {t('get_ready.work_items.pause')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✨ NEW: Block Work Item Modal */}
+      <Dialog open={blockModalOpen} onOpenChange={setBlockModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('get_ready.work_items.block_title')}</DialogTitle>
+            <DialogDescription>{t('get_ready.work_items.block_description')}</DialogDescription>
+          </DialogHeader>
+          <div>
+            <Label htmlFor="block_reason">{t('get_ready.work_items.block_reason')}</Label>
+            <Textarea
+              id="block_reason"
+              value={blockReason}
+              onChange={(e) => setBlockReason(e.target.value)}
+              placeholder={t('get_ready.work_items.block_reason_placeholder')}
+              rows={3}
+              required
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBlockModalOpen(false)}>
+              {t('common.actions.cancel')}
+            </Button>
+            <Button onClick={handleBlock} disabled={blockWorkItem.isPending || !blockReason} variant="destructive">
+              {blockWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {t('get_ready.work_items.block')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ✨ NEW: Cancel Work Item Modal */}
+      <Dialog open={cancelModalOpen} onOpenChange={setCancelModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('get_ready.work_items.cancel_title')}</DialogTitle>
+            <DialogDescription>{t('get_ready.work_items.cancel_description')}</DialogDescription>
+          </DialogHeader>
+          <div>
+            <Label htmlFor="cancel_reason">{t('get_ready.work_items.cancel_reason')}</Label>
+            <Textarea
+              id="cancel_reason"
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              placeholder={t('get_ready.work_items.cancel_reason_placeholder')}
+              rows={3}
+              required
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelModalOpen(false)}>
+              {t('common.actions.cancel')}
+            </Button>
+            <Button onClick={handleCancel} disabled={cancelWorkItem.isPending || !cancelReason} variant="destructive">
+              {cancelWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {t('get_ready.work_items.cancel')}
             </Button>
           </DialogFooter>
         </DialogContent>

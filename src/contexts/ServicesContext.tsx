@@ -17,6 +17,11 @@ export interface DealerService {
   price?: number;
   duration?: number;
   dealer_id: number;
+  category_id?: string;
+  category_name?: string;
+  category_color?: string;
+  color?: string; // Individual service color (overrides category_color)
+  is_active?: boolean;
 }
 
 interface ServicesContextType {
@@ -71,12 +76,41 @@ export const ServicesProvider = ({ children }: { children: React.ReactNode }) =>
         // Fallback: load all services (for system admin)
         const { data: allServices, error: servicesError } = await supabase
           .from('dealer_services')
-          .select('id, name, description, price, duration, dealer_id');
+          .select(`
+            id,
+            name,
+            description,
+            price,
+            duration,
+            dealer_id,
+            category_id,
+            color,
+            is_active,
+            service_categories (
+              name,
+              color
+            )
+          `);
 
         if (servicesError) throw servicesError;
 
+        // Transform data to flatten category fields
+        const transformedServices = (allServices || []).map((service: any) => ({
+          id: service.id,
+          name: service.name,
+          description: service.description,
+          price: service.price,
+          duration: service.duration,
+          dealer_id: service.dealer_id,
+          category_id: service.category_id,
+          is_active: service.is_active,
+          category_name: service.service_categories?.name,
+          category_color: service.service_categories?.color || '#6B7280', // Gray-500 fallback
+          color: service.color, // Individual service color
+        }));
+
         const cache = new Map(
-          (allServices || []).map(service => [service.id, service])
+          transformedServices.map(service => [service.id, service])
         );
 
         setServicesCache(cache);
@@ -87,14 +121,43 @@ export const ServicesProvider = ({ children }: { children: React.ReactNode }) =>
       // Fetch services for user's dealerships
       const { data: services, error: servicesError } = await supabase
         .from('dealer_services')
-        .select('id, name, description, price, duration, dealer_id')
+        .select(`
+          id,
+          name,
+          description,
+          price,
+          duration,
+          dealer_id,
+          category_id,
+          color,
+          is_active,
+          service_categories (
+            name,
+            color
+          )
+        `)
         .in('dealer_id', dealerIds);
 
       if (servicesError) throw servicesError;
 
+      // Transform data to flatten category fields
+      const transformedServices = (services || []).map((service: any) => ({
+        id: service.id,
+        name: service.name,
+        description: service.description,
+        price: service.price,
+        duration: service.duration,
+        dealer_id: service.dealer_id,
+        category_id: service.category_id,
+        is_active: service.is_active,
+        category_name: service.service_categories?.name,
+        category_color: service.service_categories?.color || '#6B7280', // Gray-500 fallback
+        color: service.color, // Individual service color
+      }));
+
       // Create Map cache for O(1) lookup
       const cache = new Map(
-        (services || []).map(service => [service.id, service])
+        transformedServices.map(service => [service.id, service])
       );
 
       setServicesCache(cache);

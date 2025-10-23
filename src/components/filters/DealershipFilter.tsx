@@ -28,12 +28,6 @@ export const DealershipFilter = () => {
     return null;
   }
 
-  // Single dealer user - don't show filter (EXCEPT for system_admin)
-  // system_admin should always see the filter to manage multiple dealerships
-  if (dealerships.length === 1 && user?.role !== 'system_admin') {
-    return null;
-  }
-
   // Get current dealer name for display
   const getCurrentDealerName = () => {
     if (selectedDealerId === 'all') {
@@ -43,10 +37,20 @@ export const DealershipFilter = () => {
     return currentDealer?.name || t('dealerships.none_selected');
   };
 
-  // Multi-dealer user - show filter with badge
+  // Single dealer user - show ONLY informative badge (no dropdown)
+  if (dealerships.length === 1 && user?.role !== 'system_admin') {
+    return (
+      <Badge variant="outline" className="gap-2 px-3 py-1 rounded-sm">
+        <Building2 className="h-3 w-3" />
+        <span className="font-medium text-xs">{dealerships[0].name}</span>
+      </Badge>
+    );
+  }
+
+  // Multi-dealer user or system_admin - show filter with badge + dropdown
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <Badge variant="outline" className="gap-2 px-3 py-1 hidden lg:flex">
+      <Badge variant="outline" className="gap-2 px-3 py-1 hidden lg:flex rounded-sm">
         <Building2 className="h-3 w-3" />
         <span className="font-medium text-xs">{getCurrentDealerName()}</span>
       </Badge>

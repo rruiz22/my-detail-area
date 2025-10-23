@@ -22,8 +22,10 @@ interface DealerService {
   name: string;
   description?: string;
   price?: number;
+  category_id: string;
   category_name: string;
   category_color: string;
+  color?: string;
   duration?: number;
   is_active: boolean;
   assigned_groups: string[];
@@ -71,6 +73,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     price: '',
     category_id: '',
     duration: '',
+    color: '#6B7280',
     is_active: true,
     assigned_groups: [] as string[]
   });
@@ -172,6 +175,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         price: formData.price ? parseFloat(formData.price) : null,
         category_id: formData.category_id,
         duration: formData.duration ? parseInt(formData.duration) : null,
+        color: formData.color || '#6B7280',
         is_active: formData.is_active,
         dealer_id: parseInt(dealerId)
       };
@@ -268,6 +272,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
       price: '',
       category_id: '',
       duration: '',
+      color: '#6B7280',
       is_active: true,
       assigned_groups: []
     });
@@ -276,14 +281,13 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
   const openEditModal = (service: DealerService) => {
     setEditingService(service);
-    // Find category by name to get the ID
-    const category = categories.find(cat => cat.name.toLowerCase() === service.category_name.toLowerCase());
     setFormData({
       name: service.name,
       description: service.description || '',
       price: service.price?.toString() || '',
-      category_id: category?.id || '',
+      category_id: service.category_id || '', // Usar category_id directamente
       duration: service.duration?.toString() || '',
+      color: service.color || service.category_color || '#6B7280', // Fallback a category_color
       is_active: service.is_active,
       assigned_groups: service.assigned_groups
     });
@@ -332,7 +336,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   {editingService ? t('services.edit') : t('services.add')}
                 </DialogTitle>
                 <DialogDescription>
-                  {editingService ? 'Update service details and group assignments' : 'Create a new service for this dealer'}
+                  {editingService ? t('services.editDescription') : t('services.addDescription')}
                 </DialogDescription>
               </DialogHeader>
 
@@ -349,23 +353,23 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                   </div>
 
                   <div>
-                    <Label htmlFor="category">{t('services.category')} *</Label>
+                    <Label htmlFor="category">{t('services.department')} *</Label>
                     <Select value={formData.category_id} onValueChange={(value) =>
                       setFormData(prev => ({ ...prev, category_id: value }))
                     }>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category..." />
+                        <SelectValue placeholder={t('services.selectDepartment')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="adf6477f-0819-44b0-813f-4869a2cf5a27">
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#3B82F6' }} />
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10B981' }} />
                             <span>Sales Dept</span>
                           </div>
                         </SelectItem>
                         <SelectItem value="bd46fe22-7023-4b84-974d-db35e9fa6a03">
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10B981' }} />
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#6366F1' }} />
                             <span>Service Dept</span>
                           </div>
                         </SelectItem>
@@ -418,6 +422,30 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                       onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
                     />
                   </div>
+                </div>
+
+                {/* Badge Color Picker */}
+                <div>
+                  <Label htmlFor="color">{t('services.color')}</Label>
+                  <div className="flex gap-3 items-center">
+                    <Input
+                      type="color"
+                      id="color"
+                      value={formData.color}
+                      onChange={(e) => setFormData(prev => ({ ...prev, color: e.target.value }))}
+                      className="w-20 h-10 cursor-pointer"
+                    />
+                    <Badge style={{
+                      backgroundColor: formData.color + '20',
+                      color: formData.color,
+                      border: `1px solid ${formData.color}40`
+                    }}>
+                      {formData.name || t('services.colorPreview')}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Choose a color for this service's badge in orders
+                  </p>
                 </div>
 
                 <div>

@@ -3,7 +3,9 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
+import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
+import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -29,7 +31,6 @@ export default function CarWash() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
-  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
@@ -43,6 +44,9 @@ export default function CarWash() {
     updateOrder,
     deleteOrder,
   } = useCarWashOrderManagement();
+
+  // Use custom hook for manual refresh with consistent behavior
+  const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Real-time updates are handled by useCarWashOrderManagement hook
 
@@ -209,23 +213,20 @@ export default function CarWash() {
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    try {
-      await updateOrder(orderId, { status: newStatus });
+    // NOTE: OrderDataTable already handles the DB update via updateOrderStatus
+    // This callback is just for showing toast and dispatching events
+    console.log('✅ [CarWash] Status change callback:', { orderId, newStatus });
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId, newStatus, timestamp: Date.now() }
-      }));
+    // Show success toast
+    toast({
+      description: t('orders.status_updated_successfully'),
+      variant: 'default'
+    });
 
-      // Refresh table data immediately after successful status change
-      setTimeout(() => refreshData(), 100);
-    } catch (error) {
-      console.error('Status change failed:', error);
-      // Trigger refresh to revert any optimistic UI updates
-      setTimeout(() => refreshData(), 100);
-      throw error;
-    }
+    // Dispatch event to notify other components (already done by OrderDataTable but doesn't hurt)
+    window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+      detail: { orderId, newStatus, timestamp: Date.now() }
+    }));
   };
 
   const handleUpdate = async (orderId: string, updates: any) => {
@@ -246,24 +247,6 @@ export default function CarWash() {
     }
   };
 
-  const handleManualRefresh = async () => {
-    setIsManualRefreshing(true);
-    try {
-      await refreshData();
-      toast({
-        description: t('common.data_refreshed') || 'Data refreshed successfully',
-        variant: 'default'
-      });
-    } catch (error) {
-      console.error('Manual refresh failed:', error);
-      toast({
-        description: t('common.refresh_failed') || 'Failed to refresh data',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsManualRefreshing(false);
-    }
-  };
 
   // Filter orders based on search term (after tab filtering)
   const filteredOrders = filteredOrdersByTab.filter((order: any) => {
@@ -287,14 +270,18 @@ export default function CarWash() {
             <h1 className="text-2xl font-bold">{t('pages.car_wash')}</h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            <LiveTimer
+              lastRefresh={lastRefresh}
+              isRefreshing={isRefreshing}
+            />
             <Button
               variant="outline"
               size="sm"
-              onClick={handleManualRefresh}
-              disabled={isManualRefreshing}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>
@@ -325,6 +312,7 @@ export default function CarWash() {
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onView={handleViewOrder}
+            onStatusChange={handleStatusChange}
             tabType="carwash"
           />
         </div>

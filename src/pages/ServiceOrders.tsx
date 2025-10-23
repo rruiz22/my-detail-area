@@ -2,6 +2,7 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderFilters } from '@/components/orders/OrderFilters';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
@@ -43,7 +44,6 @@ export default function ServiceOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [previewOrder, setPreviewOrder] = useState(null);
   const [weekOffset, setWeekOffset] = useState(0);
-  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
 
   const {
@@ -58,6 +58,9 @@ export default function ServiceOrders() {
     updateOrder,
     deleteOrder,
   } = useServiceOrderManagement(activeFilter, weekOffset);
+
+  // Use custom hook for manual refresh with consistent behavior
+  const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
@@ -162,28 +165,6 @@ export default function ServiceOrders() {
     }
   };
 
-  const handleManualRefresh = async () => {
-    setIsManualRefreshing(true);
-    try {
-      // Force refetch of polling query
-      const result = await queryClient.refetchQueries({
-        queryKey: ['orders', 'service']
-      });
-      console.log('🔄 Manual refresh completed:', result);
-      toast({
-        description: t('common.data_refreshed') || 'Data refreshed successfully',
-        variant: 'default'
-      });
-    } catch (error) {
-      console.error('Manual refresh failed:', error);
-      toast({
-        description: t('common.refresh_failed') || 'Failed to refresh data',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsManualRefreshing(false);
-    }
-  };
 
   const handleCardClick = (filter: string) => {
     setActiveFilter(filter);
@@ -219,15 +200,15 @@ export default function ServiceOrders() {
           <div className="flex items-center gap-4">
             <LiveTimer
               lastRefresh={lastRefresh}
-              isRefreshing={isManualRefreshing}
+              isRefreshing={isRefreshing}
             />
             <Button
               variant="outline"
               size="sm"
-              onClick={handleManualRefresh}
-              disabled={isManualRefreshing}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isManualRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
             <Button size="sm" onClick={handleCreateOrder}>

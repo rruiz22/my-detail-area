@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Clock, AlertCircle, BarChart3, List, Kanban, Filter, Search } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, BarChart3, List, Kanban, Filter, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
@@ -136,8 +136,19 @@ export function QuickFilterBar({
               placeholder={t('layout.search_placeholder')}
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 bg-background"
+              className="pl-10 pr-10 bg-background"
             />
+            {searchTerm && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onSearchChange('')}
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
+                aria-label={t('layout.clear_search')}
+              >
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </Button>
+            )}
           </div>
 
           {/* View Mode & Filters Toggle */}

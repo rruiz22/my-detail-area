@@ -404,18 +404,30 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                         {tabType === 'service' ? 'Tag' : 'Stock'}
                       </label>
-                      <DuplicateTooltip
-                        orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
-                        field="stockNumber"
-                        value={order.stockNumber || ''}
-                        onOrderClick={onView}
-                        debug={import.meta.env.DEV}
-                      >
-                        <span className="inline-flex items-baseline gap-2 text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
-                          {order.stockNumber || t('data_table.no_stock')}
-                          <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
+                      {order.stockNumber || order.tag ? (
+                        <DuplicateTooltip
+                          orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
+                          field="stockNumber"
+                          value={order.stockNumber || order.tag || ''}
+                          onOrderClick={onView}
+                          debug={import.meta.env.DEV}
+                        >
+                          <span className="inline-flex items-baseline gap-2 text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
+                            {order.stockNumber || `T:${order.tag}`}
+                            <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
+                          </span>
+                        </DuplicateTooltip>
+                      ) : (
+                        <span className="text-sm font-semibold text-muted-foreground">
+                          {t('data_table.no_stock')}
                         </span>
-                      </DuplicateTooltip>
+                      )}
+                      {/* Assigned To */}
+                      {order.assignedTo && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {order.assignedTo}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -601,19 +613,31 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
                     {/* Column 2: Stock */}
                     <TableCell className="py-2 text-center">
-                      <div className="space-y-0">
-                        <DuplicateTooltip
-                          orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
-                          field="stockNumber"
-                          value={order.stockNumber || ''}
-                          onOrderClick={onView}
-                          debug={import.meta.env.DEV}
-                        >
-                          <span className="inline-flex items-baseline gap-2 text-base font-bold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
-                            {order.stockNumber || t('data_table.no_stock')}
-                            <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
+                      <div className="space-y-1">
+                        {order.stockNumber || order.tag ? (
+                          <DuplicateTooltip
+                            orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
+                            field="stockNumber"
+                            value={order.stockNumber || order.tag || ''}
+                            onOrderClick={onView}
+                            debug={import.meta.env.DEV}
+                          >
+                            <span className="inline-flex items-baseline gap-2 text-base font-bold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
+                              {order.stockNumber || `T:${order.tag}`}
+                              <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
+                            </span>
+                          </DuplicateTooltip>
+                        ) : (
+                          <span className="text-base font-bold text-muted-foreground">
+                            {t('data_table.no_stock')}
                           </span>
-                        </DuplicateTooltip>
+                        )}
+                        {/* Assigned To */}
+                        {order.assignedTo && (
+                          <div className="text-xs text-muted-foreground">
+                            {order.assignedTo}
+                          </div>
+                        )}
                       </div>
                     </TableCell>
 
