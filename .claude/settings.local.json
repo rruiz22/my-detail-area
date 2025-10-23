@@ -34,7 +34,8 @@
       "Bash(if [ -d \"supabase/functions\" ])",
       "Bash(then ls -la supabase/functions)",
       "Bash(else echo \"Folder does not exist\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
     "ask": []

@@ -154,7 +154,10 @@ export default defineConfig(({ mode }) => ({
       // Prevent @emotion/is-prop-valid from loading in browser
       "@emotion/is-prop-valid": path.resolve(__dirname, "./src/utils/empty-module.js"),
       "@emotion/styled": path.resolve(__dirname, "./src/utils/empty-module.js"),
-      "@emotion/react": path.resolve(__dirname, "./src/utils/empty-module.js")
+      "@emotion/react": path.resolve(__dirname, "./src/utils/empty-module.js"),
+      // Mock jsPDF optional dependencies (we don't use these features)
+      "html2canvas": path.resolve(__dirname, "./src/utils/empty-module.js"),
+      "canvg": path.resolve(__dirname, "./src/utils/empty-module.js")
     },
   },
   define: {
@@ -210,6 +213,10 @@ export default defineConfig(({ mode }) => ({
           'opencv': ['@techstark/opencv-js'], // Computer vision - correct package name
           'huggingface': ['@huggingface/transformers'], // ML models
 
+          // Report export libraries
+          'pdf-export': ['jspdf', 'jspdf-autotable'],
+          'excel-export': ['exceljs'],
+
           // Animation & interactions
           'framer-motion': ['framer-motion'],
           'dnd': ['@hello-pangea/dnd'],
@@ -246,12 +253,23 @@ export default defineConfig(({ mode }) => ({
       'lodash-es/isObject',
       'lodash-es/throttle',
       // Pre-bundle recharts with its lodash dependencies
-      'recharts'
+      'recharts',
+      // Report export libraries
+      'jspdf',
+      'jspdf-autotable',
+      'exceljs'
     ],
     exclude: [
       'fabric',
       '@techstark/opencv-js',
-      '@huggingface/transformers'
-    ]
+      '@huggingface/transformers',
+      // jsPDF optional dependencies (we don't use these features)
+      'html2canvas',
+      'canvg'
+    ],
+    esbuildOptions: {
+      // Mark optional jsPDF dependencies as external to prevent bundling errors
+      external: ['html2canvas', 'canvg']
+    }
   }
 }));

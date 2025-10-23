@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { 
-  Download, 
-  FileText, 
-  FileSpreadsheet, 
+import {
+  Download,
+  FileText,
+  FileSpreadsheet,
   Mail,
   Calendar,
   Loader2
@@ -15,6 +15,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { ReportsFilters } from '@/hooks/useReportsData';
+import { useOrdersAnalytics, useRevenueAnalytics, usePerformanceTrends } from '@/hooks/useReportsData';
+import { useInvoiceSummary } from '@/hooks/useInvoices';
+import { generateReportPDF } from '@/utils/generateReportPDF';
+import { generateReportExcel } from '@/utils/generateReportExcel';
+import { generateReportCSV } from '@/utils/generateReportCSV';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 
 interface ExportCenterProps {
   filters: ReportsFilters;
@@ -22,6 +28,7 @@ interface ExportCenterProps {
 
 export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
   const { t } = useTranslation();
+  const { dealerships } = useAccessibleDealerships();
   const [exportFormat, setExportFormat] = useState<'pdf' | 'excel' | 'csv'>('pdf');
   const [exportSections, setExportSections] = useState({
     summary: true,
@@ -30,6 +37,16 @@ export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
     trends: false
   });
   const [isExporting, setIsExporting] = useState(false);
+
+  // Fetch data for exports
+  const { data: ordersData } = useOrdersAnalytics(filters);
+  const { data: revenueData } = useRevenueAnalytics(filters);
+  const { data: performanceData } = usePerformanceTrends(filters);
+  const { data: invoicesData } = useInvoiceSummary({
+    dealerId: filters.dealerId,
+    startDate: filters.startDate,
+    endDate: filters.endDate
+  });
 
   const exportReports = [
     {
@@ -65,16 +82,66 @@ export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
   const handleExport = async (reportType: string) => {
     setIsExporting(true);
     try {
-      // Simulate export process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real implementation, this would call an edge function to generate the report
-      toast.success(t('reports.export.success_message', { 
+      // Get dealership name
+      const dealership = dealerships.find(d => d.id === filters.dealerId);
+      const dealershipName = dealership?.name || 'My Detail Area';
+
+      // Select data based on report type
+      let reportData = null;
+      switch (reportType) {
+        case 'operational':
+          reportData = ordersData || null;
+          break;
+        case 'financial':
+          reportData = revenueData || null;
+          break;
+        case 'performance':
+          reportData = performanceData || null;
+          break;
+        case 'invoices':
+        case 'custom':
+          reportData = invoicesData || null;
+          break;
+      }
+
+      if (!reportData) {
+        throw new Error('No data available for export');
+      }
+
+      // Export based on format
+      const exportOptions = {
+        reportType: reportType as 'operational' | 'financial' | 'performance' | 'invoices',
+        data: reportData,
+        dealershipName,
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        includeSections: {
+          summary: exportSections.summary,
+          charts: exportSections.charts,
+          tables: exportSections.tables,
+        },
+      };
+
+      switch (exportFormat) {
+        case 'pdf':
+          await generateReportPDF(exportOptions);
+          break;
+        case 'excel':
+          await generateReportExcel(exportOptions);
+          break;
+        case 'csv':
+          await generateReportCSV(exportOptions);
+          break;
+      }
+
+      toast.success(t('reports.export.success_message', {
         format: exportFormat.toUpperCase(),
-        type: reportType 
+        type: reportType
       }));
     } catch (error) {
-      toast.error(t('reports.export.error_message'));
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(t('reports.export.error_message') + ': ' + errorMessage);
+      console.error('Export error:', error);
     } finally {
       setIsExporting(false);
     }

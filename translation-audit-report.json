@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 623,
-  "totalStrings": 5845,
-  "hardcodedStrings": 1383,
-  "translatedStrings": 4462,
+  "scannedFiles": 629,
+  "totalStrings": 5870,
+  "hardcodedStrings": 1384,
+  "translatedStrings": 4486,
   "issues": {
     "critical": [
       {
@@ -20858,165 +20858,170 @@
         "hardcodedStrings": [
           {
             "text": "Excel",
-            "line": 123,
-            "context": "122: <div className=\"flex items-center gap-2\">\n123: <FileSpreadsheet className=\"h-4 w-4\" />\n124: Excel"
+            "line": 190,
+            "context": "189: <div className=\"flex items-center gap-2\">\n190: <FileSpreadsheet className=\"h-4 w-4\" />\n191: Excel"
+          },
+          {
+            "text": ", error);\r\n    } finally {\r\n      setIsExporting(false);\r\n    }\r\n  };\r\n\r\n  const handleScheduleEmail = async () => {\r\n    setIsExporting(true);\r\n    try {\r\n      // Simulate scheduling process\r\n      await new Promise(resolve => setTimeout(resolve, 1500));\r\n      toast.success(t(",
+            "line": 144,
+            "context": "143: toast.error(t('reports.export.error_message') + ': ' + errorMessage);\n144: console.error('Export error:', error);\n145: } finally {"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.export.operational_report",
-            "line": 37,
+            "line": 54,
             "exists": true
           },
           {
             "key": "reports.export.operational_description",
-            "line": 38,
+            "line": 55,
             "exists": true
           },
           {
             "key": "reports.export.financial_report",
-            "line": 44,
+            "line": 61,
             "exists": true
           },
           {
             "key": "reports.export.financial_description",
-            "line": 45,
+            "line": 62,
             "exists": true
           },
           {
             "key": "reports.export.performance_report",
-            "line": 51,
+            "line": 68,
             "exists": true
           },
           {
             "key": "reports.export.performance_description",
-            "line": 52,
+            "line": 69,
             "exists": true
           },
           {
             "key": "reports.export.custom_report",
-            "line": 58,
+            "line": 75,
             "exists": true
           },
           {
             "key": "reports.export.custom_description",
-            "line": 59,
+            "line": 76,
             "exists": true
           },
           {
             "key": "reports.export.success_message",
-            "line": 72,
+            "line": 137,
             "exists": true
           },
           {
             "key": "reports.export.error_message",
-            "line": 77,
+            "line": 143,
             "exists": true
           },
           {
             "key": "reports.export.schedule_success",
-            "line": 88,
+            "line": 155,
             "exists": true
           },
           {
             "key": "reports.export.schedule_error",
-            "line": 90,
+            "line": 157,
             "exists": true
           },
           {
             "key": "reports.export.configuration",
-            "line": 101,
+            "line": 168,
             "exists": true
           },
           {
             "key": "reports.export.configuration_description",
-            "line": 103,
+            "line": 170,
             "exists": true
           },
           {
             "key": "reports.export.format",
-            "line": 109,
+            "line": 176,
             "exists": true
           },
           {
             "key": "reports.export.include_sections",
-            "line": 138,
+            "line": 205,
             "exists": true
           },
           {
             "key": "reports.export.summary_section",
-            "line": 149,
+            "line": 216,
             "exists": true
           },
           {
             "key": "reports.export.charts_section",
-            "line": 161,
+            "line": 228,
             "exists": true
           },
           {
             "key": "reports.export.tables_section",
-            "line": 173,
+            "line": 240,
             "exists": true
           },
           {
             "key": "reports.export.trends_section",
-            "line": 185,
+            "line": 252,
             "exists": true
           },
           {
             "key": "reports.export.available_reports",
-            "line": 197,
+            "line": 264,
             "exists": true
           },
           {
             "key": "reports.export.available_reports_description",
-            "line": 199,
+            "line": 266,
             "exists": true
           },
           {
             "key": "common.exporting",
-            "line": 230,
+            "line": 297,
             "exists": false
           },
           {
             "key": "reports.export.download",
-            "line": 230,
+            "line": 297,
             "exists": true
           },
           {
             "key": "reports.export.scheduled_reports",
-            "line": 243,
+            "line": 310,
             "exists": true
           },
           {
             "key": "reports.export.scheduled_reports_description",
-            "line": 245,
+            "line": 312,
             "exists": true
           },
           {
             "key": "reports.export.email_reports",
-            "line": 253,
+            "line": 320,
             "exists": true
           },
           {
             "key": "reports.export.email_reports_description",
-            "line": 255,
+            "line": 322,
             "exists": true
           },
           {
             "key": "reports.export.schedule",
-            "line": 269,
+            "line": 336,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.exporting",
-            "line": 230,
-            "context": "229: )}\n230: {isExporting ? t('common.exporting') : t('reports.export.download')}\n231: </Button>"
+            "line": 297,
+            "context": "296: )}\n297: {isExporting ? t('common.exporting') : t('reports.export.download')}\n298: </Button>"
           }
         ],
-        "coverage": 97,
+        "coverage": 94,
         "severity": "low"
       },
       {
@@ -21055,6 +21060,226 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\reports\\invoices\\EmailInvoiceDialog.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "reports.invoices.email.duplicate_cc",
+            "line": 64,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.invalid_email",
+            "line": 66,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.invalid_recipient",
+            "line": 83,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.max_cc_exceeded",
+            "line": 88,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.sent_success",
+            "line": 107,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.sent_error",
+            "line": 119,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.send_email",
+            "line": 139,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.email.description",
+            "line": 142,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.invoice_number",
+            "line": 152,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.amount",
+            "line": 156,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.customer",
+            "line": 161,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.email.recipient_email",
+            "line": 170,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.recipient_placeholder",
+            "line": 174,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.recipient_name",
+            "line": 183,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.name_placeholder",
+            "line": 187,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.cc_emails",
+            "line": 195,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.cc_placeholder",
+            "line": 200,
+            "exists": false
+          },
+          {
+            "key": "common.add",
+            "line": 216,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.cc_limit",
+            "line": 235,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.custom_message",
+            "line": 241,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.message_placeholder",
+            "line": 244,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 263,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.email.sending",
+            "line": 272,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.send_email",
+            "line": 277,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "reports.invoices.email.duplicate_cc",
+            "line": 64,
+            "context": "63: } else if (ccEmails.includes(email)) {\n64: toast.error(t('reports.invoices.email.duplicate_cc'));\n65: } else {"
+          },
+          {
+            "key": "reports.invoices.email.invalid_email",
+            "line": 66,
+            "context": "65: } else {\n66: toast.error(t('reports.invoices.email.invalid_email'));\n67: }"
+          },
+          {
+            "key": "reports.invoices.email.invalid_recipient",
+            "line": 83,
+            "context": "82: if (!recipientEmail || !isValidEmail(recipientEmail)) {\n83: toast.error(t('reports.invoices.email.invalid_recipient'));\n84: return;"
+          },
+          {
+            "key": "reports.invoices.email.max_cc_exceeded",
+            "line": 88,
+            "context": "87: if (ccEmails.length > 5) {\n88: toast.error(t('reports.invoices.email.max_cc_exceeded'));\n89: return;"
+          },
+          {
+            "key": "reports.invoices.email.sent_success",
+            "line": 107,
+            "context": "106: \n107: toast.success(t('reports.invoices.email.sent_success', { email: recipientEmail }));\n108: onOpenChange(false);"
+          },
+          {
+            "key": "reports.invoices.email.sent_error",
+            "line": 119,
+            "context": "118: const errorMessage = error instanceof Error ? error.message : 'Unknown error';\n119: toast.error(t('reports.invoices.email.sent_error', { error: errorMessage }));\n120: } finally {"
+          },
+          {
+            "key": "reports.invoices.email.description",
+            "line": 142,
+            "context": "141: <DialogDescription>\n142: {t('reports.invoices.email.description')}\n143: </DialogDescription>"
+          },
+          {
+            "key": "reports.invoices.email.recipient_email",
+            "line": 170,
+            "context": "169: <div className=\"space-y-2\">\n170: <Label htmlFor=\"recipient-email\">{t('reports.invoices.email.recipient_email')} *</Label>\n171: <Input"
+          },
+          {
+            "key": "reports.invoices.email.recipient_placeholder",
+            "line": 174,
+            "context": "173: type=\"email\"\n174: placeholder={t('reports.invoices.email.recipient_placeholder')}\n175: value={recipientEmail}"
+          },
+          {
+            "key": "reports.invoices.email.recipient_name",
+            "line": 183,
+            "context": "182: <div className=\"space-y-2\">\n183: <Label htmlFor=\"recipient-name\">{t('reports.invoices.email.recipient_name')}</Label>\n184: <Input"
+          },
+          {
+            "key": "reports.invoices.email.name_placeholder",
+            "line": 187,
+            "context": "186: type=\"text\"\n187: placeholder={t('reports.invoices.email.name_placeholder')}\n188: value={recipientName}"
+          },
+          {
+            "key": "reports.invoices.email.cc_emails",
+            "line": 195,
+            "context": "194: <div className=\"space-y-2\">\n195: <Label htmlFor=\"cc-email\">{t('reports.invoices.email.cc_emails')}</Label>\n196: <div className=\"flex gap-2\">"
+          },
+          {
+            "key": "reports.invoices.email.cc_placeholder",
+            "line": 200,
+            "context": "199: type=\"email\"\n200: placeholder={t('reports.invoices.email.cc_placeholder')}\n201: value={ccInput}"
+          },
+          {
+            "key": "common.add",
+            "line": 216,
+            "context": "215: >\n216: {t('common.add')}\n217: </Button>"
+          },
+          {
+            "key": "reports.invoices.email.cc_limit",
+            "line": 235,
+            "context": "234: <p className=\"text-xs text-muted-foreground\">\n235: {t('reports.invoices.email.cc_limit')}\n236: </p>"
+          },
+          {
+            "key": "reports.invoices.email.custom_message",
+            "line": 241,
+            "context": "240: <div className=\"space-y-2\">\n241: <Label htmlFor=\"custom-message\">{t('reports.invoices.email.custom_message')}</Label>\n242: <Textarea"
+          },
+          {
+            "key": "reports.invoices.email.message_placeholder",
+            "line": 244,
+            "context": "243: id=\"custom-message\"\n244: placeholder={t('reports.invoices.email.message_placeholder')}\n245: value={customMessage}"
+          },
+          {
+            "key": "reports.invoices.email.sending",
+            "line": 272,
+            "context": "271: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n272: {t('reports.invoices.email.sending')}\n273: </>"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -43234,7 +43459,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "300 Component components need translation",
+      "description": "301 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -43368,6 +43593,7 @@
         "src\\components\\ProtectedLayout.tsx",
         "src\\components\\ui\\carousel.tsx",
         "src\\components\\scanner\\QuickScanMode.tsx",
+        "src\\components\\reports\\sections\\ExportCenter.tsx",
         "src\\components\\reports\\invoices\\RecordPaymentDialog.tsx",
         "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
@@ -43411,7 +43637,6 @@
         "src\\components\\scanner\\enhanced\\BatchVinProcessor.tsx",
         "src\\components\\scanner\\engines\\StickerTemplateEngine.tsx",
         "src\\components\\scanner\\engines\\StickerImageProcessor.tsx",
-        "src\\components\\reports\\sections\\ExportCenter.tsx",
         "src\\components\\recon-hub\\analytics\\BottleneckAnalysis.tsx",
         "src\\components\\qr\\QRCodeCard.tsx",
         "src\\components\\permissions\\UserGroupAssignment.tsx",
@@ -43462,6 +43687,7 @@
         "src\\components\\scanner\\engines\\VinValidator.tsx",
         "src\\components\\scanner\\analytics\\VinScannerHistory.tsx",
         "src\\components\\scanner\\analytics\\ScannerAnalytics.tsx",
+        "src\\components\\reports\\invoices\\EmailInvoiceDialog.tsx",
         "src\\components\\reports\\charts\\StatusDistributionChart.tsx",
         "src\\components\\reports\\charts\\OrderVolumeChart.tsx",
         "src\\components\\recon-hub\\ReconHubDashboard.tsx",
@@ -43537,14 +43763,14 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "150 hours"
+      "estimatedEffort": "151 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2105 translation keys are referenced but missing",
+      "description": "2123 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "106 hours"
+      "estimatedEffort": "107 hours"
     }
   ],
   "coverage": 76
