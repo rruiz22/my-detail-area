@@ -293,7 +293,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
       </div>
 
       {/* Work Items Grouped Table */}
-      <div className="flex-1 overflow-y-auto pb-4">
+      <div className="flex-1  pb-4">
         <WorkItemsGroupedTable
           workItems={workItems}
           onApprove={handleApprove}

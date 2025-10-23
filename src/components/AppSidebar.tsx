@@ -233,7 +233,7 @@ export function AppSidebar() {
   return (
     <TooltipProvider delayDuration={300}>
       <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
-        <SidebarHeader className="p-4 space-y-3">
+        <SidebarHeader className="sticky top-0 z-10 bg-sidebar p-4 space-y-3 border-b border-border/40">
         {/* 1️⃣ Dealership Logo (First Row) */}
         {currentDealership && (
           <div className="flex flex-col items-center gap-2 py-2 border-y border-border/40">
@@ -280,7 +280,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {coreNavItems.map(item => (
                 <SidebarMenuItem key={item.title}>
-                  {collapsed ? (
+                  {collapsed && !isMobile ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
@@ -305,7 +305,7 @@ export function AppSidebar() {
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
-                        <span>{item.title}</span>
+                        {!collapsed && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   )}
@@ -323,7 +323,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {toolsNavItems.map(item => (
                 <SidebarMenuItem key={item.title}>
-                  {collapsed ? (
+                  {collapsed && !isMobile ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
@@ -348,7 +348,7 @@ export function AppSidebar() {
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
-                        <span>{item.title}</span>
+                        {!collapsed && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   )}
@@ -367,7 +367,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {managementNavItems.map(item => (
                 <SidebarMenuItem key={item.title}>
-                  {collapsed ? (
+                  {collapsed && !isMobile ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <SidebarMenuButton asChild>
@@ -392,7 +392,7 @@ export function AppSidebar() {
                         className={getNavClasses(item.url)}
                       >
                         <item.icon className="w-4 h-4 flex-shrink-0" />
-                        <span>{item.title}</span>
+                        {!collapsed && <span>{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   )}
@@ -411,7 +411,7 @@ export function AppSidebar() {
               <SidebarMenu>
                 {systemAdminNavItems.map(item => (
                   <SidebarMenuItem key={item.title}>
-                    {collapsed ? (
+                    {collapsed && !isMobile ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <SidebarMenuButton asChild>
@@ -434,7 +434,7 @@ export function AppSidebar() {
                           className={getNavClasses(item.url)}
                         >
                           <item.icon className="w-4 h-4 flex-shrink-0" />
-                          <span>{item.title}</span>
+                          {!collapsed && <span>{item.title}</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     )}

@@ -214,7 +214,7 @@ export default defineConfig(({ mode }) => ({
           'huggingface': ['@huggingface/transformers'], // ML models
 
           // Report export libraries
-          'pdf-export': ['jspdf', 'jspdf-autotable'],
+          'pdf-export': ['jspdf', 'jspdf-autotable', 'dompurify'],
           'excel-export': ['exceljs'],
 
           // Animation & interactions
@@ -257,6 +257,7 @@ export default defineConfig(({ mode }) => ({
       // Report export libraries
       'jspdf',
       'jspdf-autotable',
+      'dompurify',
       'exceljs'
     ],
     exclude: [
