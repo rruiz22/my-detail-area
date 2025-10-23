@@ -6,6 +6,7 @@ import { calculateDIS, calculateDTF, calculateT2L } from '@/utils/timeFormatUtil
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
 import type { GetReadyWorkItemSummary, VehicleDatabaseResponse, VehicleSortField } from '@/types/getReady';
+import { sanitizeAndLowercase } from '@/utils/searchSanitization';
 import { validateDealershipObject } from '@/utils/dealerValidation';
 
 // Type definition for vehicle detail
@@ -87,8 +88,10 @@ export function useOverviewTable() {
 
       // Apply filters
       if (searchTerm) {
-        const term = searchTerm.toLowerCase();
-        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%`);
+        const sanitized = sanitizeAndLowercase(searchTerm);
+        if (sanitized) {
+          query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%`);
+        }
       }
 
       if (priorityFilter && priorityFilter !== 'all') {
@@ -325,8 +328,9 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 
       // Apply search filter
       if (searchQuery) {
-        const term = searchQuery.toLowerCase();
-        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
+        const sanitized = sanitizeAndLowercase(searchQuery);
+        if (sanitized) {
+          query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
       }
 
       // Apply sorting
@@ -530,8 +534,9 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
 
       // Apply search filter
       if (searchQuery) {
-        const term = searchQuery.toLowerCase();
-        query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
+        const sanitized = sanitizeAndLowercase(searchQuery);
+        if (sanitized) {
+          query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
       }
 
       // Apply sorting
