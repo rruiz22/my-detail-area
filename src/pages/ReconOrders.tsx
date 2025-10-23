@@ -5,22 +5,21 @@ import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailM
 import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { LiveTimer } from '@/components/ui/LiveTimer';
-import type { ReconOrder } from "@/hooks/useReconOrderManagement";
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
+import { usePermissions } from '@/hooks/usePermissions';
+import type { ReconOrder } from "@/hooks/useReconOrderManagement";
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { getSystemTimezone } from '@/utils/dateUtils';
 import { useQueryClient } from '@tanstack/react-query';
-import { Calendar as CalendarIcon, Kanban, List, Plus, RefreshCw, Search } from 'lucide-react';
+import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function ReconOrders() {
   const { t } = useTranslation();
@@ -31,6 +30,7 @@ export default function ReconOrders() {
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
+  const { hasModulePermission, enhancedUser } = usePermissions();
 
   // Persistent state
   const [viewMode, setViewMode] = useViewModePersistence('recon_orders');
@@ -57,6 +57,9 @@ export default function ReconOrders() {
 
   // Use custom hook for manual refresh with consistent behavior
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
+
+  // Check if user can create recon orders
+  const canCreate = hasModulePermission('recon_orders', 'create');
 
   // Reset week offset when changing to a different filter
   useEffect(() => {
@@ -172,11 +175,32 @@ export default function ReconOrders() {
   }, [allOrders, activeFilter, weekOffset, getSystemTimezoneDates]);
 
   const handleCreateOrder = () => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create recon orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    console.log('✅ User has permission to create recon orders');
     setSelectedOrder(null);
     setShowModal(true);
   };
 
   const handleCreateOrderWithDate = (selectedDate?: Date) => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create recon orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setSelectedOrder(null);
     // If date is provided from calendar, we could pre-populate the due_date
     // For now, just open the modal
@@ -369,7 +393,12 @@ export default function ReconOrders() {
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
-            <Button size="sm" onClick={handleCreateOrder}>
+            <Button
+              size="sm"
+              onClick={handleCreateOrder}
+              disabled={!canCreate}
+              title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+            >
               <Plus className="h-4 w-4 mr-2" />
               {t('recon.new_recon_order')}
             </Button>

@@ -4,16 +4,17 @@ import { OrderModal } from '@/components/orders/OrderModal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { useQueryClient } from '@tanstack/react-query';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 
 // New improved components
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
@@ -34,6 +35,7 @@ export default function SalesOrders() {
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
+  const { hasModulePermission, enhancedUser } = usePermissions();
 
   useEffect(() => {
     console.log('[RouteMount] SalesOrders mounted');
@@ -74,6 +76,9 @@ export default function SalesOrders() {
   // Use custom hook for manual refresh with consistent behavior
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
+  // Check if user can create sales orders
+  const canCreate = hasModulePermission('sales_orders', 'create');
+
   // Real-time updates handle most data changes automatically
   // Only manual refresh needed for initial load and special cases
 
@@ -108,11 +113,32 @@ export default function SalesOrders() {
   }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t]);
 
   const handleCreateOrder = () => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create sales orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    console.log('✅ User has permission to create sales orders');
     setSelectedOrder(null);
     setShowModal(true);
   };
 
   const handleCreateOrderWithDate = (selectedDate?: Date) => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create sales orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setSelectedOrder(null);
 
     // Pre-populate the due_date with the selected calendar date
@@ -289,7 +315,12 @@ export default function SalesOrders() {
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
-            <Button size="sm" onClick={handleCreateOrder}>
+            <Button
+              size="sm"
+              onClick={handleCreateOrder}
+              disabled={!canCreate}
+              title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+            >
               <Plus className="h-4 w-4 mr-2" />
               {t('common.new_order')}
             </Button>

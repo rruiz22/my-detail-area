@@ -1,32 +1,29 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useDealerActiveModules } from '@/hooks/useDealerActiveModules';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Shield, 
-  ChevronDown, 
-  ChevronRight, 
-  User, 
-  Users,
-  Lock,
-  Unlock,
-  Eye,
-  Edit,
-  Trash2,
-  Settings,
-  AlertTriangle,
-  History,
-  CheckCircle
+import {
+    AlertTriangle,
+    CheckCircle,
+    ChevronDown,
+    ChevronRight,
+    Edit,
+    Eye,
+    History,
+    Lock,
+    Settings,
+    Shield,
+    Trash2,
+    Unlock,
+    Users
 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Permission {
   module: string;
@@ -233,10 +230,10 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  
+
   // Get active modules for dealer (if dealerId provided)
   const { activeModules, isModuleActive, loading: modulesLoading } = useDealerActiveModules(dealerId || null);
-  
+
   // State management
   const [roles, setRoles] = useState<Role[]>([]);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -250,38 +247,97 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
     try {
       setLoading(true);
 
-      // Fetch roles
-      const { data: rolesData, error: rolesError } = await supabase
-        .from('roles')
-        .select(`
-          *,
-          role_permissions (
-            module,
-            permission_level
-          )
-        `)
-        .eq('is_active', true);
+      // If customRoleId is provided, fetch dealer custom role
+      if (customRoleId) {
+        const { data: customRoleData, error: customRoleError } = await supabase
+          .from('dealer_custom_roles')
+          .select('*')
+          .eq('id', customRoleId)
+          .single();
 
-      if (rolesError) throw rolesError;
+        if (customRoleError) throw customRoleError;
 
-      const processedRoles: Role[] = (rolesData || []).map(role => ({
-        id: role.id,
-        name: role.name,
-        display_name: role.display_name,
-        description: role.description,
-        user_type: role.user_type,
-        is_system_role: role.is_system_role,
-        permissions: role.role_permissions || []
-      }));
+        // Fetch permissions for this custom role
+        const { data: permissionsData, error: permissionsError } = await supabase
+          .from('role_module_permissions_new')
+          .select('module, permission_key')
+          .eq('role_id', customRoleId)
+          .eq('is_active', true);
 
-      setRoles(processedRoles);
+        if (permissionsError) throw permissionsError;
 
-      // If roleId is provided, select that role
-      if (roleId) {
-        const role = processedRoles.find(r => r.id === roleId);
-        if (role) {
-          setSelectedRole(role);
-          setPermissions(role.permissions);
+        // Convert to the format expected by the component
+        // Group permissions by module and take the highest level
+        const modulePermissions: Permission[] = [];
+        const moduleMap = new Map<string, Set<string>>();
+
+        (permissionsData || []).forEach(p => {
+          if (!moduleMap.has(p.module)) {
+            moduleMap.set(p.module, new Set());
+          }
+          moduleMap.get(p.module)!.add(p.permission_key);
+        });
+
+        // Convert permission keys to levels
+        moduleMap.forEach((keys, module) => {
+          let level: Permission['permission_level'] = 'none';
+          if (keys.has('admin') || keys.has('manage')) level = 'admin';
+          else if (keys.has('delete')) level = 'delete';
+          else if (keys.has('write') || keys.has('create') || keys.has('edit')) level = 'write';
+          else if (keys.has('read') || keys.has('view')) level = 'read';
+
+          if (level !== 'none') {
+            modulePermissions.push({ module, permission_level: level });
+          }
+        });
+
+        const roleFormatted: Role = {
+          id: customRoleData.id,
+          name: customRoleData.role_name,
+          display_name: customRoleData.display_name,
+          description: customRoleData.description,
+          user_type: 'dealer',
+          is_system_role: false,
+          permissions: modulePermissions
+        };
+
+        setRoles([roleFormatted]);
+        setSelectedRole(roleFormatted);
+        setPermissions(modulePermissions);
+      } else {
+        // Fetch system roles
+        const { data: rolesData, error: rolesError } = await supabase
+          .from('roles')
+          .select(`
+            *,
+            role_permissions (
+              module,
+              permission_level
+            )
+          `)
+          .eq('is_active', true);
+
+        if (rolesError) throw rolesError;
+
+        const processedRoles: Role[] = (rolesData || []).map(role => ({
+          id: role.id,
+          name: role.name,
+          display_name: role.display_name,
+          description: role.description,
+          user_type: role.user_type,
+          is_system_role: role.is_system_role,
+          permissions: role.role_permissions || []
+        }));
+
+        setRoles(processedRoles);
+
+        // If roleId is provided, select that role
+        if (roleId) {
+          const role = processedRoles.find(r => r.id === roleId);
+          if (role) {
+            setSelectedRole(role);
+            setPermissions(role.permissions);
+          }
         }
       }
 
@@ -295,12 +351,12 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
     } finally {
       setLoading(false);
     }
-  }, [roleId, t, toast]);
+  }, [roleId, customRoleId, t, toast]);
 
   // Update permission level for a module
   const updatePermissionLevel = (module: string, level: Permission['permission_level']) => {
     const updatedPermissions = permissions.filter(p => p.module !== module);
-    
+
     if (level !== 'none') {
       updatedPermissions.push({
         module,
@@ -331,27 +387,79 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
     try {
       setSaving(true);
 
-      // Delete existing permissions
-      const { error: deleteError } = await supabase
-        .from('role_permissions')
-        .delete()
-        .eq('role_id', selectedRole.id);
+      // If working with custom roles
+      if (customRoleId) {
+        // Delete existing permissions for this custom role
+        const { error: deleteError } = await supabase
+          .from('role_module_permissions_new')
+          .delete()
+          .eq('role_id', selectedRole.id);
 
-      if (deleteError) throw deleteError;
+        if (deleteError) throw deleteError;
 
-      // Insert new permissions
-      if (permissions.length > 0) {
-        const { error: insertError } = await supabase
-          .from('role_permissions')
-          .insert(
-            permissions.map(p => ({
+        // Convert permission levels to granular permission keys
+        const permissionsToInsert: any[] = [];
+        permissions.forEach(p => {
+          const permissionKeys = [];
+
+          // Map permission levels to specific keys
+          switch (p.permission_level) {
+            case 'admin':
+              permissionKeys.push('view', 'create', 'edit', 'delete', 'manage', 'admin');
+              break;
+            case 'delete':
+              permissionKeys.push('view', 'create', 'edit', 'delete');
+              break;
+            case 'write':
+              permissionKeys.push('view', 'create', 'edit');
+              break;
+            case 'read':
+              permissionKeys.push('view');
+              break;
+          }
+
+          permissionKeys.forEach(key => {
+            permissionsToInsert.push({
               role_id: selectedRole.id,
-              module: p.module as any, // Type assertion for enum compatibility
-              permission_level: p.permission_level
-            }))
-          );
+              module: p.module,
+              permission_key: key,
+              is_active: true
+            });
+          });
+        });
 
-        if (insertError) throw insertError;
+        // Insert new permissions
+        if (permissionsToInsert.length > 0) {
+          const { error: insertError } = await supabase
+            .from('role_module_permissions_new')
+            .insert(permissionsToInsert);
+
+          if (insertError) throw insertError;
+        }
+      } else {
+        // Working with system roles
+        // Delete existing permissions
+        const { error: deleteError } = await supabase
+          .from('role_permissions')
+          .delete()
+          .eq('role_id', selectedRole.id);
+
+        if (deleteError) throw deleteError;
+
+        // Insert new permissions
+        if (permissions.length > 0) {
+          const { error: insertError } = await supabase
+            .from('role_permissions')
+            .insert(
+              permissions.map(p => ({
+                role_id: selectedRole.id,
+                module: p.module as any, // Type assertion for enum compatibility
+                permission_level: p.permission_level
+              }))
+            );
+
+          if (insertError) throw insertError;
+        }
       }
 
       toast({
@@ -375,7 +483,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
 
   // Toggle module expansion
   const toggleModule = (moduleName: string) => {
-    setExpandedModules(prev => 
+    setExpandedModules(prev =>
       prev.includes(moduleName)
         ? prev.filter(m => m !== moduleName)
         : [...prev, moduleName]
@@ -390,7 +498,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
   const visibleModules = React.useMemo(() => {
     // If dealerId is provided, filter to only active modules
     if (dealerId && activeModules.length > 0) {
-      return PERMISSION_MODULES.filter(module => 
+      return PERMISSION_MODULES.filter(module =>
         isModuleActive(module.name as any)
       );
     }
@@ -423,8 +531,8 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
           </p>
         </div>
         {selectedRole && (
-          <Button 
-            onClick={savePermissions} 
+          <Button
+            onClick={savePermissions}
             disabled={saving}
             className="flex items-center gap-2"
           >
@@ -512,7 +620,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                       <div className="text-center py-8">
                         <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                         <p className="text-muted-foreground">
-                          {dealerId 
+                          {dealerId
                             ? 'No active modules found for this dealer. Please activate modules in the Modules tab first.'
                             : 'No modules available.'}
                         </p>
@@ -521,7 +629,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                       visibleModules.map((module) => {
                       const isExpanded = expandedModules.includes(module.name);
                       const currentLevel = getPermissionLevel(module.name);
-                      
+
                       return (
                         <Collapsible
                           key={module.name}
@@ -560,7 +668,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                                 </div>
                               </CardHeader>
                             </CollapsibleTrigger>
-                            
+
                             <CollapsibleContent>
                               <CardContent>
                                 <div className="space-y-3">
@@ -570,19 +678,19 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                                       {currentLevel === 'none' ? 'No Access' : currentLevel}
                                     </Badge>
                                   </div>
-                                  
+
                                   <div className="grid gap-2">
                                     {['none', ...module.permissions.map(p => p.level)].map((level) => {
                                       const permissionInfo = module.permissions.find(p => p.level === level);
                                       const isActive = currentLevel === level;
                                       const IconComponent = permissionInfo?.icon || Lock;
-                                      
+
                                       return (
                                         <div
                                           key={level}
                                           className={`flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                                            isActive 
-                                              ? 'border-primary bg-primary/5' 
+                                            isActive
+                                              ? 'border-primary bg-primary/5'
                                               : 'border-muted hover:border-muted-foreground/50'
                                           }`}
                                           onClick={() => updatePermissionLevel(module.name, level as Permission['permission_level'])}
@@ -594,8 +702,8 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                                                 {level === 'none' ? 'No Access' : level.charAt(0).toUpperCase() + level.slice(1)}
                                               </p>
                                               <p className="text-xs text-muted-foreground">
-                                                {level === 'none' 
-                                                  ? 'No access to this module' 
+                                                {level === 'none'
+                                                  ? 'No access to this module'
                                                   : permissionInfo?.description || `${level} access`
                                                 }
                                               </p>

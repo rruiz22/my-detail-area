@@ -180,6 +180,15 @@
       "timeout": "Error de tiempo de espera",
       "fix_validation_errors": "Por favor corrige los errores de validación"
     },
+    "success": {
+      "status_updated": "Estado de la orden actualizado exitosamente"
+    },
+    "errors": {
+      "no_permission": "Sin Permiso",
+      "no_permission_create_order": "No tienes permiso para crear órdenes",
+      "no_permission_status_change": "No tienes permiso para cambiar el estado de la orden",
+      "status_update_failed": "Error al actualizar el estado de la orden"
+    },
     "info": {
       "loading": "Cargando...",
       "no_data": "No hay datos disponibles",
@@ -254,6 +263,7 @@
     "tools_communication": "Herramientas y Comunicación",
     "productivity_section": "Productividad",
     "management_reports": "Gestión y Reportes",
+    "administration": "Administración",
     "administration_reports": "Administración y Reportes",
     "system_admin": "Administración del Sistema",
     "landing_page": "Página de Inicio",

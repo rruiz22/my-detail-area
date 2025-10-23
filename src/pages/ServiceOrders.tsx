@@ -2,16 +2,17 @@ import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderFilters } from '@/components/orders/OrderFilters';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 
 // New improved components
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
@@ -32,6 +33,7 @@ export default function ServiceOrders() {
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
+  const { hasModulePermission, enhancedUser } = usePermissions();
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('service_orders');
@@ -62,6 +64,9 @@ export default function ServiceOrders() {
   // Use custom hook for manual refresh with consistent behavior
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
+  // Check if user can create service orders
+  const canCreate = hasModulePermission('service_orders', 'create');
+
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && orders.length > 0 && !hasProcessedUrlOrder) {
@@ -86,11 +91,32 @@ export default function ServiceOrders() {
   }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t]);
 
   const handleCreateOrder = () => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create service orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    console.log('✅ User has permission to create service orders');
     setSelectedOrder(null);
     setShowModal(true);
   };
 
   const handleCreateOrderWithDate = (selectedDate?: Date) => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create service orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setSelectedOrder(null);
     // If date is provided from calendar, we could pre-populate the due_date
     // For now, just open the modal
@@ -211,7 +237,12 @@ export default function ServiceOrders() {
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
-            <Button size="sm" onClick={handleCreateOrder}>
+            <Button
+              size="sm"
+              onClick={handleCreateOrder}
+              disabled={!canCreate}
+              title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+            >
               <Plus className="h-4 w-4 mr-2" />
               {t('common.new_order')}
             </Button>

@@ -1,3 +1,4 @@
+import { DealerCustomRoles } from '@/components/dealer/DealerCustomRoles';
 import { DealerModules } from '@/components/dealer/DealerModules';
 import { DealerOverview } from '@/components/dealer/DealerOverview';
 import { DealerRoles } from '@/components/dealer/DealerRoles';
@@ -107,7 +108,7 @@ const DealerView = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">{t('dealer.view.tabs.overview')}</span>
@@ -117,6 +118,11 @@ const DealerView = () => {
               <Shield className="h-4 w-4" />
               <span className="hidden sm:inline">Roles</span>
               <span className="sm:hidden">Roles</span>
+            </TabsTrigger>
+            <TabsTrigger value="custom-roles" className="flex items-center space-x-2">
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">Custom Roles</span>
+              <span className="sm:hidden">Custom</span>
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
@@ -161,6 +167,10 @@ const DealerView = () => {
 
           <TabsContent value="groups" className="space-y-6">
             <DealerRoles dealerId={id} />
+          </TabsContent>
+
+          <TabsContent value="custom-roles" className="space-y-6">
+            <DealerCustomRoles dealerId={id} />
           </TabsContent>
 
           <TabsContent value="users" className="space-y-6">

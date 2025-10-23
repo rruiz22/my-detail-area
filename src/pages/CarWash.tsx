@@ -4,16 +4,17 @@ import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailM
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
+import { useToast } from '@/hooks/use-toast';
 import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
+import { getSystemTimezone } from '@/utils/dateUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function CarWash() {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ export default function CarWash() {
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
+  const { hasModulePermission, enhancedUser } = usePermissions();
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('car_wash');
@@ -47,6 +49,9 @@ export default function CarWash() {
 
   // Use custom hook for manual refresh with consistent behavior
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
+
+  // Check if user can create car wash orders
+  const canCreate = hasModulePermission('car_wash', 'create');
 
   // Real-time updates are handled by useCarWashOrderManagement hook
 
@@ -164,6 +169,17 @@ export default function CarWash() {
   }, [allOrders, activeFilter, weekOffset, getSystemTimezoneDates]);
 
   const handleCreateOrder = () => {
+    if (!canCreate) {
+      console.warn('⚠️ User does not have permission to create car wash orders');
+      toast({
+        title: t('errors.no_permission', 'No Permission'),
+        description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    console.log('✅ User has permission to create car wash orders');
     setSelectedOrder(null);
     setShowModal(true);
   };
@@ -284,7 +300,12 @@ export default function CarWash() {
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
             </Button>
-            <Button size="sm" onClick={handleCreateOrder}>
+            <Button
+              size="sm"
+              onClick={handleCreateOrder}
+              disabled={!canCreate}
+              title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+            >
               <Plus className="h-4 w-4 mr-2" />
               {t('car_wash_orders.quick_order')}
             </Button>

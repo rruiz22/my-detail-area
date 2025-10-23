@@ -1,40 +1,39 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { AdvancedPermissionManager } from '@/components/permissions/AdvancedPermissionManager';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { AdvancedPermissionManager } from '@/components/permissions/AdvancedPermissionManager';
-import { 
-  Shield, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Users, 
-  Loader2,
-  AlertCircle
+import {
+    AlertCircle,
+    Edit,
+    Loader2,
+    Plus,
+    Shield,
+    Trash2,
+    Users
 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface CustomRole {
   id: string;
@@ -55,7 +54,7 @@ interface DealerCustomRolesProps {
 export const DealerCustomRoles: React.FC<DealerCustomRolesProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  
+
   const [roles, setRoles] = useState<CustomRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -73,7 +72,7 @@ export const DealerCustomRoles: React.FC<DealerCustomRolesProps> = ({ dealerId }
   const fetchRoles = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       // Fetch roles
       const { data: rolesData, error: rolesError } = await supabase
         .from('dealer_custom_roles')
@@ -92,7 +91,7 @@ export const DealerCustomRoles: React.FC<DealerCustomRolesProps> = ({ dealerId }
             .select('id', { count: 'exact', head: true })
             .eq('custom_role_id', role.id)
             .eq('is_active', true);
-          
+
           return {
             ...role,
             user_count: count || 0
@@ -209,7 +208,7 @@ export const DealerCustomRoles: React.FC<DealerCustomRolesProps> = ({ dealerId }
       // Soft delete by setting is_active to false
       const { error } = await supabase
         .from('dealer_custom_roles')
-        .update({ 
+        .update({
           is_active: false,
           updated_at: new Date().toISOString()
         })
@@ -366,7 +365,7 @@ export const DealerCustomRoles: React.FC<DealerCustomRolesProps> = ({ dealerId }
               {editingRole ? 'Edit Role' : 'Create New Role'}
             </DialogTitle>
             <DialogDescription>
-              {editingRole 
+              {editingRole
                 ? 'Update role information. Configure permissions after saving.'
                 : 'Create a new custom role for your dealership. You can configure permissions after creating the role.'}
             </DialogDescription>
@@ -473,4 +472,3 @@ export const DealerCustomRoles: React.FC<DealerCustomRolesProps> = ({ dealerId }
     </div>
   );
 };
-

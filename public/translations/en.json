@@ -191,6 +191,15 @@
       "timeout": "Timeout error",
       "fix_validation_errors": "Please fix the validation errors"
     },
+    "success": {
+      "status_updated": "Order status updated successfully"
+    },
+    "errors": {
+      "no_permission": "No Permission",
+      "no_permission_create_order": "You do not have permission to create orders",
+      "no_permission_status_change": "You do not have permission to change order status",
+      "status_update_failed": "Failed to update order status"
+    },
     "info": {
       "loading": "Loading...",
       "no_data": "No data available",
@@ -265,6 +274,7 @@
     "tools_communication": "Tools & Communication",
     "productivity_section": "Productivity",
     "management_reports": "Management & Reports",
+    "administration": "Administration",
     "administration_reports": "Administration & Reports",
     "system_admin": "System Administration",
     "landing_page": "Landing Page",

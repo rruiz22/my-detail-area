@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
-import type { AppModule } from './usePermissions';
 import { useCallback, useEffect, useState } from 'react';
+import type { AppModule } from './usePermissions';
 
 interface DealerActiveModulesResult {
   activeModules: AppModule[];
@@ -71,4 +71,3 @@ export function useDealerActiveModules(dealerId: number | null): DealerActiveMod
     refetch: fetchActiveModules
   };
 }
-

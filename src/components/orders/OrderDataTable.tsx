@@ -83,14 +83,6 @@ interface StatusBadgeProps {
   status: string;
 }
 
-interface StatusBadgeInteractiveProps {
-  status: string;
-  orderId: string;
-  dealerId: string;
-  canUpdateStatus: boolean;
-  onStatusChange: (orderId: string, newStatus: string) => void;
-}
-
 interface MobileActionsProps {
   order: Order;
   onView: (order: Order) => void;
@@ -214,9 +206,23 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
     if (!order) return;
 
     try {
+      // Check permission before attempting to change status
+      const allowed = await canUpdateStatus(
+        order.dealer_id?.toString() || '',
+        order.status || '',
+        newStatus,
+        order.order_type // Pass orderType for correct permission validation
+      );
+
+      if (!allowed) {
+        toast.error(t('errors.no_permission_status_change', 'You do not have permission to change order status'));
+        return;
+      }
+
       const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
       if (success) {
         console.log(`Status updated for order ${orderId} to ${newStatus}`);
+        toast.success(t('success.status_updated', 'Order status updated successfully'));
 
         // Trigger immediate refresh of order data
         if (onStatusChange) {
@@ -230,6 +236,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       }
     } catch (error) {
       console.error('Failed to update status:', error);
+      toast.error(t('errors.status_update_failed', 'Failed to update order status'));
     }
   };
 
@@ -354,7 +361,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                         status={order.status}
                         orderId={order.id}
                         dealerId={order.dealer_id?.toString() || ''}
-                        canUpdateStatus={true}
+                        orderType={order.order_type}
                         onStatusChange={handleStatusChange}
                       />
                       {/* Due Date Indicator for time-based orders */}
@@ -740,7 +747,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
                           status={order.status}
                           orderId={order.id}
                           dealerId={order.dealer_id?.toString() || ''}
-                          canUpdateStatus={true}
+                          orderType={order.order_type}
                           onStatusChange={handleStatusChange}
                         />
                       </div>
