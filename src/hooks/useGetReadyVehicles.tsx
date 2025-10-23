@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { calculateDIS, calculateDTF, calculateT2L } from '@/utils/timeFormatUtils';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
+import { validateDealershipObject } from '@/utils/dealerValidation';
 
 // Type definition for vehicle detail
 export interface VehicleDetail {
@@ -37,12 +38,13 @@ export interface VehicleDetail {
 
 export function useOverviewTable() {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
   const { searchTerm, priorityFilter, statusFilter } = useGetReadyStore();
 
   return useOrderPolling(
     ['get-ready-vehicles', 'overview', currentDealership?.id, searchTerm, priorityFilter, statusFilter],
     async (): Promise<ReconVehicle[]> => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected for vehicle query');
         return [];
       }
@@ -78,7 +80,7 @@ export function useOverviewTable() {
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
@@ -154,11 +156,12 @@ function calculateDaysInStep(intakeDate: string): string {
 
 export function useVehicleDetail(vehicleId: string | null) {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
 
   return useQuery<VehicleDetail | null>({
     queryKey: ['get-ready-vehicle-detail', vehicleId, currentDealership?.id],
     queryFn: async () => {
-      if (!vehicleId || !currentDealership?.id) return null;
+      if (!vehicleId || !dealerId) return null;
 
       const { data, error } = await supabase
         .from('get_ready_vehicles')
@@ -171,7 +174,7 @@ export function useVehicleDetail(vehicleId: string | null) {
           )
         `)
         .eq('id', vehicleId)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null)
         .single();
 
@@ -212,7 +215,7 @@ export function useVehicleDetail(vehicleId: string | null) {
         } : undefined
       };
     },
-    enabled: !!vehicleId && !!currentDealership?.id,
+    enabled: !!vehicleId && !!dealerId,
     staleTime: 1000 * 30, // 30 seconds
   });
 }
@@ -229,6 +232,7 @@ export interface GetReadyVehicleListFilters {
 
 export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
   const {
     searchQuery = '',
     selectedStep = 'all',
@@ -251,7 +255,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       sortOrder
     ],
     async () => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected for vehicle list query');
         return [];
       }
@@ -300,7 +304,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null);
 
       // ✅ Apply step filter (ignored when search is active for global search)
@@ -351,7 +355,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
         const { data: stockImages, error: stockError } = await supabase
           .from('dealer_vehicle_inventory')
           .select('vin, key_photo_url')
-          .eq('dealer_id', currentDealership.id)
+          .eq('dealer_id', dealerId)
           .in('vin', vins)
           .not('key_photo_url', 'is', null);
 
@@ -425,6 +429,7 @@ const PAGE_SIZE = 5; // Show 5 vehicles initially, load more with infinite scrol
 
 export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
   const queryClient = useQueryClient();
   const {
     searchQuery = '',
@@ -455,7 +460,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       sortOrder
     ],
     queryFn: async ({ pageParam = 0 }) => {
-      if (!currentDealership?.id) {
+      if (!dealerId) {
         console.warn('No dealership selected for vehicle list query');
         return { vehicles: [], hasMore: false };
       }
@@ -504,7 +509,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
             approval_status
           )
         `)
-        .eq('dealer_id', currentDealership.id)
+        .eq('dealer_id', dealerId)
         .is('deleted_at', null);
 
       // ✅ Apply step filter (ignored when search is active for global search)
@@ -561,7 +566,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         const { data: stockImages, error: stockError } = await supabase
           .from('dealer_vehicle_inventory')
           .select('vin, key_photo_url')
-          .eq('dealer_id', currentDealership.id)
+          .eq('dealer_id', dealerId)
           .in('vin', vins)
           .not('key_photo_url', 'is', null);
 
@@ -644,7 +649,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.hasMore ? allPages.length : undefined;
     },
-    enabled: !!currentDealership?.id,
+    enabled: !!dealerId,
     staleTime: 1000 * 30,
     refetchOnMount: 'always', // ✅ FIX: Always refetch when dealer changes from null to valid
   });
