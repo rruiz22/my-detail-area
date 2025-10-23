@@ -5,7 +5,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReady } from '@/hooks/useGetReady';
 import { cn } from '@/lib/utils';
-import { AlertTriangle, ChevronLeft, ChevronRight, Clock, Layers, TrendingUp } from 'lucide-react';
+import {
+  AlertTriangle, ChevronLeft, ChevronRight, Clock, Layers, TrendingUp,
+  Search, Wrench, Hammer, Sparkles, CheckCircle2, Circle, Settings, ClipboardCheck,
+  Package, Truck, Car, Droplet, Paintbrush, Gauge, ShieldCheck, Zap, Flag, Target, Award
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -24,8 +28,52 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
   const steps = getReadySteps;
   const isLoading = getReadyLoading;
 
+  // 🔍 DIAGNOSTIC LOGGING - Remove after debugging
+  React.useEffect(() => {
+    if (kpis) {
+      console.log('📊 [Sidebar KPIs]:', {
+        avgT2L: kpis.avgT2L,
+        slaCompliance: kpis.slaCompliance,
+        dailyThroughput: kpis.dailyThroughput,
+        weeklyCapacity: kpis.weeklyCapacity,
+        totalHoldingCosts: kpis.totalHoldingCosts
+      });
+    }
+    console.log('🚨 [Sidebar Alerts]:', {
+      bottleneck: bottleneckAlerts.length,
+      sla: slaAlerts.length,
+      total: bottleneckAlerts.length + slaAlerts.length
+    });
+    console.log('📍 [Sidebar Steps]:', {
+      count: steps.length,
+      steps: steps.map(s => ({ id: s.id, name: s.name, vehicles: s.vehicle_count }))
+    });
+  }, [kpis, bottleneckAlerts, slaAlerts, steps]);
+
   const getStepIcon = (iconName: string) => {
-    return Layers;
+    const iconMap: Record<string, any> = {
+      'search': Search,
+      'wrench': Wrench,
+      'hammer': Hammer,
+      'sparkles': Sparkles,
+      'check': CheckCircle2,
+      'circle': Circle,
+      'layers': Layers,
+      'settings': Settings,
+      'clipboard': ClipboardCheck,
+      'package': Package,
+      'truck': Truck,
+      'car': Car,
+      'droplet': Droplet,
+      'paintbrush': Paintbrush,
+      'gauge': Gauge,
+      'shield': ShieldCheck,
+      'zap': Zap,
+      'flag': Flag,
+      'target': Target,
+      'award': Award,
+    };
+    return iconMap[iconName.toLowerCase()] || Circle;
   };
 
   const getStepSLAStatus = (stepId: string) => {
@@ -84,46 +132,111 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                   <h2 className="font-semibold text-sm text-foreground">
                     {t('get_ready.title')}
                   </h2>
-                  {kpis && (
-                    <div className="flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-xs font-medium text-muted-foreground">
-                        {t('get_ready.sidebar.t2l')}: {kpis.avgT2L}d
-                      </span>
-                    </div>
-                  )}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1">
+                        <TrendingUp className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-xs font-medium text-muted-foreground">
+                          {t('get_ready.sidebar.t2l')}: {kpis?.avgT2L > 0 ? `${kpis.avgT2L}d` : '--'}
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs">
+                      <p>Average Time to Line (last 30 days)</p>
+                      {kpis?.avgT2L > 0 && <p className="text-muted-foreground">Target: {kpis.targetT2L}d</p>}
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
 
-                {/* Quick Stats - REAL DATA */}
+                {/* Quick Stats - REAL DATA with tooltips */}
                 {kpis && (
                   <div className="grid grid-cols-2 gap-1.5 mb-2">
-                    <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-1.5 border border-emerald-200/50 dark:border-emerald-800/50">
-                      <div className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-                        {t('get_ready.sidebar.sla')}
-                      </div>
-                      <div className="text-sm font-bold text-emerald-800 dark:text-emerald-300">
-                        {Math.round(kpis.slaCompliance * 100)}%
-                      </div>
-                    </div>
-                    <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded p-1.5 border border-indigo-200/50 dark:border-indigo-800/50">
-                      <div className="text-xs text-indigo-700 dark:text-indigo-400 font-medium">
-                        {t('get_ready.sidebar.daily')}
-                      </div>
-                      <div className="text-sm font-bold text-indigo-800 dark:text-indigo-300">
-                        {kpis.dailyThroughput}
-                      </div>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded p-1.5 border border-emerald-200/50 dark:border-emerald-800/50 cursor-help">
+                          <div className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+                            {t('get_ready.sidebar.sla')}
+                          </div>
+                          <div className="text-sm font-bold text-emerald-800 dark:text-emerald-300">
+                            {kpis.slaCompliance > 0 ? `${Math.round(kpis.slaCompliance * 100)}%` : '--'}
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs">
+                        <p>SLA Compliance Rate</p>
+                        <p className="text-muted-foreground">
+                          {kpis.slaCompliance > 0
+                            ? `${Math.round(kpis.slaCompliance * 100)}% of vehicles on track`
+                            : 'No active vehicles to track'}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="bg-indigo-50 dark:bg-indigo-950/30 rounded p-1.5 border border-indigo-200/50 dark:border-indigo-800/50 cursor-help">
+                          <div className="text-xs text-indigo-700 dark:text-indigo-400 font-medium">
+                            {t('get_ready.sidebar.daily')}
+                          </div>
+                          <div className="text-sm font-bold text-indigo-800 dark:text-indigo-300">
+                            {kpis.dailyThroughput > 0 ? kpis.dailyThroughput : '--'}
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs">
+                        <p>Daily Throughput</p>
+                        <p className="text-muted-foreground">
+                          {kpis.dailyThroughput > 0
+                            ? `${kpis.dailyThroughput} vehicle${kpis.dailyThroughput !== 1 ? 's' : ''} completed today`
+                            : 'No vehicles completed today'}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 )}
 
-                {/* Alerts Summary */}
+                {/* Alerts Summary - Expandable with details */}
                 {(bottleneckAlerts.length > 0 || slaAlerts.length > 0) && (
-                  <div className="flex items-center gap-2 mb-2 p-1.5 bg-amber-50 dark:bg-amber-950/30 rounded border border-amber-200/50 dark:border-amber-800/50">
-                    <AlertTriangle className="h-3 w-3 text-amber-600 dark:text-amber-400" />
-                    <span className="text-xs text-amber-700 dark:text-amber-400 font-medium">
-                      {bottleneckAlerts.length + slaAlerts.length} {t('get_ready.sidebar.alerts')}
-                    </span>
-                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 mb-2 p-1.5 bg-amber-50 dark:bg-amber-950/30 rounded border border-amber-200/50 dark:border-amber-800/50 cursor-help">
+                        <AlertTriangle className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+                        <span className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                          {bottleneckAlerts.length + slaAlerts.length} {t('get_ready.sidebar.alerts')}
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs max-w-xs">
+                      <div className="space-y-2">
+                        <p className="font-semibold">Active Alerts</p>
+                        {bottleneckAlerts.length > 0 && (
+                          <div>
+                            <p className="text-red-400 font-medium">Bottleneck Alerts: {bottleneckAlerts.length}</p>
+                            {bottleneckAlerts.slice(0, 3).map((alert, i) => (
+                              <p key={i} className="text-muted-foreground text-[10px]">
+                                • {alert.step_name}: {alert.vehicle_count} vehicles ({alert.severity})
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        {slaAlerts.length > 0 && (
+                          <div>
+                            <p className="text-yellow-400 font-medium">SLA Alerts: {slaAlerts.length}</p>
+                            {slaAlerts.slice(0, 3).map((alert, i) => (
+                              <p key={i} className="text-muted-foreground text-[10px]">
+                                • {alert.stock_number}: {alert.hours_overdue}h overdue ({alert.severity})
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        {(bottleneckAlerts.length + slaAlerts.length) > 6 && (
+                          <p className="text-muted-foreground italic">
+                            +{bottleneckAlerts.length + slaAlerts.length - 6} more alerts
+                          </p>
+                        )}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
 
               </div>
@@ -196,40 +309,23 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                       <button
                         onClick={() => handleStepClick(step.id)}
                         className={cn(
-                          "w-full flex items-center justify-center p-1.5 rounded-md transition-all duration-200 relative",
+                          "w-full rounded-md transition-all duration-200 relative h-[52px] flex items-center justify-center",
                           isActive
                             ? "bg-primary/10 dark:bg-primary/20"
                             : "hover:bg-muted dark:hover:bg-muted/50"
                         )}
                       >
-                        <div className="relative">
-                          <div
-                            className={cn(
-                              "flex-shrink-0 rounded-full flex items-center justify-center text-xs font-semibold shadow-sm w-6 h-6",
-                              isActive
-                                ? "bg-primary text-white border-2 border-primary/20"
-                                : "text-white"
-                            )}
-                            style={{ backgroundColor: !isActive ? step.color : undefined }}
-                          >
-                            {step.name === 'All' ? <Icon className="h-3 w-3" /> : step.order_index}
-                          </div>
-                          {slaStatus !== 'green' && (
-                            <div
-                              className={cn(
-                                "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card dark:border-card flex items-center justify-center",
-                                slaStatus === 'red' ? "bg-red-500" : "bg-yellow-500"
-                              )}
-                            >
-                              {slaStatus === 'red' && <AlertTriangle className="h-1.5 w-1.5 text-white" />}
-                              {slaStatus === 'yellow' && <Clock className="h-1.5 w-1.5 text-white" />}
-                            </div>
-                          )}
-                        </div>
+                        {/* Step icon - Centered */}
+                        <Icon className={cn(
+                          "h-6 w-6",
+                          isActive ? "text-primary" : "text-foreground"
+                        )} />
+
+                        {/* Vehicle count badge - top right corner */}
                         {step.vehicle_count > 0 && (
                           <Badge
                             variant={isActive ? "secondary" : "outline"}
-                            className="absolute -right-0.5 -top-0.5 h-4 w-4 rounded-full p-0 text-[10px] font-semibold flex items-center justify-center"
+                            className="absolute right-0.5 top-0.5 h-4 min-w-[16px] px-1 text-[10px] font-semibold flex items-center justify-center pointer-events-none"
                           >
                             {step.vehicle_count > 9 ? '9+' : step.vehicle_count}
                           </Badge>
@@ -314,52 +410,25 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                         : "bg-card dark:bg-card hover:bg-muted/50 dark:hover:bg-muted/30 hover:shadow-sm"
                     )}
                   >
-                    {/* Top Row: Icon, Name, Total Count */}
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <div
+                    {/* Top Row: Name and Total Count */}
+                    <div className="flex items-center justify-between">
+                      <span className={cn(
+                        "font-bold text-base tracking-wide truncate",
+                        isActive ? "text-primary-foreground" : "text-foreground"
+                      )}>
+                        {step.name}
+                      </span>
+                      {step.vehicle_count > 0 && (
+                        <Badge
+                          variant={isActive ? "secondary" : "outline"}
                           className={cn(
-                            "flex-shrink-0 rounded-full flex items-center justify-center text-xs font-semibold shadow-sm w-7 h-7",
-                            isActive
-                              ? "bg-white dark:bg-card text-primary border-2 border-primary/20 dark:border-primary/30"
-                              : "text-white"
+                            "ml-2 h-5 px-2 text-xs font-semibold",
+                            isActive && "bg-white/20 text-primary-foreground border-white/30"
                           )}
-                          style={{ backgroundColor: !isActive ? step.color : undefined }}
                         >
-                          {step.name === 'All' ? <Icon className="h-3.5 w-3.5" /> : step.order_index}
-                        </div>
-                        {slaStatus !== 'green' && (
-                          <div
-                            className={cn(
-                              "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card dark:border-card flex items-center justify-center",
-                              slaStatus === 'red' ? "bg-red-500" : "bg-yellow-500"
-                            )}
-                          >
-                            {slaStatus === 'red' && <AlertTriangle className="h-1.5 w-1.5 text-white" />}
-                            {slaStatus === 'yellow' && <Clock className="h-1.5 w-1.5 text-white" />}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex-1 min-w-0 flex items-center justify-between">
-                        <span className={cn(
-                          "font-medium text-sm truncate",
-                          isActive ? "text-primary-foreground" : "text-foreground"
-                        )}>
-                          {step.name}
-                        </span>
-                        {step.vehicle_count > 0 && (
-                          <Badge
-                            variant={isActive ? "secondary" : "outline"}
-                            className={cn(
-                              "ml-2 h-5 px-2 text-xs font-semibold",
-                              isActive && "bg-white/20 text-primary-foreground border-white/30"
-                            )}
-                          >
-                            {step.vehicle_count}
-                          </Badge>
-                        )}
-                      </div>
+                          {step.vehicle_count}
+                        </Badge>
+                      )}
                     </div>
 
                     {/* Vehicle Breakdown by Days */}

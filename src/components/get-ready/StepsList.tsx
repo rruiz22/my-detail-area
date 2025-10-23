@@ -17,6 +17,7 @@ import { AlertCircle, Clock, DollarSign, Edit2, Layers, Plus, Trash2, TrendingUp
 import { useTranslation } from 'react-i18next';
 import { StepFormModal } from './StepFormModal';
 import { GetReadyStep } from '@/types/getReady';
+import { AVAILABLE_ICONS } from './IconPicker';
 import React, { useState } from 'react';
 import {
   DndContext,
@@ -257,12 +258,16 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
               <GripVertical className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             </div>
 
-            {/* Step Number Badge */}
+            {/* Step Icon */}
             <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold shadow-sm"
+              className="w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm"
               style={{ backgroundColor: step.color }}
             >
-              {step.order_index}
+              {(() => {
+                const iconOption = AVAILABLE_ICONS.find(i => i.name === step.icon);
+                const Icon = iconOption ? iconOption.icon : Layers;
+                return <Icon className="h-5 w-5" />;
+              })()}
             </div>
 
             {/* Step Name and Description */}

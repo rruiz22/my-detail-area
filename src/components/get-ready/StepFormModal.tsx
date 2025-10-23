@@ -14,6 +14,7 @@ import { useStepManagement } from '@/hooks/useStepManagement';
 import { GetReadyStep } from '@/types/getReady';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IconPicker } from './IconPicker';
 
 interface StepFormModalProps {
   open: boolean;
@@ -41,6 +42,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
     name: step?.name || '',
     description: step?.description || '',
     color: step?.color || DEFAULT_COLORS[0],
+    icon: step?.icon || 'circle',
     sla_hours: step?.sla_hours?.toString() || '24',
     cost_per_day: step?.cost_per_day?.toString() || '0',
   });
@@ -54,6 +56,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
         name: step.name || '',
         description: step.description || '',
         color: step.color || DEFAULT_COLORS[0],
+        icon: step.icon || 'circle',
         sla_hours: step.sla_hours?.toString() || '24',
         cost_per_day: step.cost_per_day?.toString() || '0',
       });
@@ -63,6 +66,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
         name: '',
         description: '',
         color: DEFAULT_COLORS[0],
+        icon: 'circle',
         sla_hours: '24',
         cost_per_day: '0',
       });
@@ -94,6 +98,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       name: formData.name.trim(),
       description: formData.description.trim() || undefined,
       color: formData.color,
+      icon: formData.icon,
       sla_hours: parseInt(formData.sla_hours),
       cost_per_day: parseFloat(formData.cost_per_day) || 0,
       order_index: step?.order_index || nextOrderIndex,
@@ -114,6 +119,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       name: '',
       description: '',
       color: DEFAULT_COLORS[0],
+      icon: 'circle',
       sla_hours: '24',
       cost_per_day: '0',
     });
@@ -188,6 +194,13 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
                 ))}
               </div>
             </div>
+
+            {/* Icon Picker */}
+            <IconPicker
+              value={formData.icon}
+              onChange={(icon) => setFormData({ ...formData, icon })}
+              label={t('get_ready.setup.form.fields.icon')}
+            />
 
             <div className="grid grid-cols-2 gap-4">
               {/* SLA Hours */}

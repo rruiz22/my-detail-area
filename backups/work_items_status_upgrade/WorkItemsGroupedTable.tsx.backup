@@ -1,5 +1,4 @@
 import { LiveWorkTimer } from '@/components/get-ready/LiveWorkTimer';
-import { WorkItemStatusBadge, getStatusColor } from '@/components/get-ready/WorkItemStatusBadge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -16,7 +15,6 @@ import type { WorkItemStatus } from '@/hooks/useVehicleWorkItems';
 import { cn } from '@/lib/utils';
 import {
     AlertTriangle,
-    Ban,
     CheckCheck,
     CheckCircle,
     Circle,
@@ -27,9 +25,7 @@ import {
     Image,
     Pause,
     Play,
-    RotateCcw,
     Trash2,
-    Unlock,
     User,
     XCircle,
 } from 'lucide-react';
@@ -66,14 +62,8 @@ interface WorkItemsGroupedTableProps {
   onComplete: (item: WorkItem) => void;
   onEdit: (item: WorkItem) => void;
   onDelete: (id: string) => void;
-  onNavigateToMedia?: (workItemId: string) => void;
-  onNavigateToNotes?: (workItemId: string) => void;
-  // ✨ NEW: Additional action handlers for new statuses
-  onPause?: (item: WorkItem) => void;
-  onResume?: (id: string) => void;
-  onBlock?: (item: WorkItem) => void;
-  onUnblock?: (id: string) => void;
-  onCancel?: (item: WorkItem) => void;
+  onNavigateToMedia?: (workItemId: string) => void; // NEW
+  onNavigateToNotes?: (workItemId: string) => void; // NEW
   isLoading?: boolean;
 }
 
@@ -87,32 +77,16 @@ export function WorkItemsGroupedTable({
   onDelete,
   onNavigateToMedia,
   onNavigateToNotes,
-  // ✨ NEW: Destructure new action handlers
-  onPause,
-  onResume,
-  onBlock,
-  onUnblock,
-  onCancel,
   isLoading,
 }: WorkItemsGroupedTableProps) {
   const { t } = useTranslation();
 
-  // ✨ NEW: Group work items by status (including new statuses)
+  // Group work items by status
   const groupedItems = {
-    // Pre-Work Phase
-    awaiting_approval: workItems.filter((item) => item.status === 'awaiting_approval'),
-    rejected: workItems.filter((item) => item.status === 'rejected'),
-    ready: workItems.filter((item) => item.status === 'ready'),
-    scheduled: workItems.filter((item) => item.status === 'scheduled'),
-
-    // Execution Phase
+    pending: workItems.filter((item) => item.status === 'pending'),
     in_progress: workItems.filter((item) => item.status === 'in_progress'),
-    on_hold: workItems.filter((item) => item.status === 'on_hold'),
-    blocked: workItems.filter((item) => item.status === 'blocked'),
-
-    // Completion Phase
     completed: workItems.filter((item) => item.status === 'completed'),
-    cancelled: workItems.filter((item) => item.status === 'cancelled'),
+    declined: workItems.filter((item) => item.status === 'declined'),
   };
 
   const getStatusIcon = (status: WorkItemStatus) => {

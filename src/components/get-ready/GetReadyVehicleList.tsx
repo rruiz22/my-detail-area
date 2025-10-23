@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
+import { VehicleImageWithLoader } from '@/components/get-ready/VehicleImageWithLoader';
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
@@ -302,19 +303,18 @@ export function GetReadyVehicleList({
               <CardHeader className="pb-2">
                 {/* Vehicle Image - Click to open lightbox */}
                 <div
-                  className="mb-2 cursor-pointer group relative"
+                  className={cn(
+                    "mb-2 relative",
+                    vehicle.images[0] && "cursor-pointer group"
+                  )}
                   onClick={(e) => handleImageClick(e, vehicle)}
                 >
-                  <Avatar className="h-32 w-full rounded-md transition-opacity group-hover:opacity-90">
-                    <AvatarImage
-                      src={vehicle.images[0]}
-                      alt={`${vehicle.make} ${vehicle.model}`}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="rounded-md">
-                      <Car className="h-8 w-8 text-muted-foreground" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <VehicleImageWithLoader
+                    src={vehicle.images[0]}
+                    alt={`${vehicle.make} ${vehicle.model}`}
+                    className="h-32 w-full rounded-md transition-opacity group-hover:opacity-90"
+                    fallbackClassName="rounded-md"
+                  />
                   {vehicle.images[0] && (
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-md flex items-center justify-center">
                       <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -590,15 +590,18 @@ export function GetReadyVehicleList({
                 {/* Image - Click to open lightbox */}
                 <TableCell className="w-[70px] py-1 text-center">
                   <div
-                    className="flex justify-center cursor-pointer group relative"
+                    className={cn(
+                      "flex justify-center relative",
+                      vehicle.images[0] && "cursor-pointer group"
+                    )}
                     onClick={(e) => handleImageClick(e, vehicle)}
                   >
-                    <Avatar className="h-8 w-12 rounded-sm transition-opacity group-hover:opacity-90">
-                      <AvatarImage src={vehicle.images[0]} alt={`${vehicle.make} ${vehicle.model}`} />
-                      <AvatarFallback className="rounded-sm">
-                        <Car className="h-3 w-3" />
-                      </AvatarFallback>
-                    </Avatar>
+                    <VehicleImageWithLoader
+                      src={vehicle.images[0]}
+                      alt={`${vehicle.make} ${vehicle.model}`}
+                      className="h-8 w-12 rounded-sm transition-opacity group-hover:opacity-90"
+                      fallbackClassName="rounded-sm"
+                    />
                     {vehicle.images[0] && (
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-sm flex items-center justify-center">
                         <Eye className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-opacity" />

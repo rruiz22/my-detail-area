@@ -353,6 +353,11 @@
       "create_order": "Create Order",
       "view_reports": "View Reports",
       "manage_users": "Manage Users",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exporting": "Exporting...",
+      "export_csv": "Export to CSV",
+      "export_excel": "Export to Excel",
       "success": "{{action}} started successfully",
       "started": "Action Initiated"
     },
@@ -2869,6 +2874,7 @@
           "name": "Step Name",
           "description": "Description",
           "color": "Color",
+          "icon": "Icon",
           "sla_hours": "SLA (Hours)",
           "cost_per_day": "Cost per Day"
         },

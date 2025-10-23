@@ -11,6 +11,7 @@ export function useRealtimeSubscription(config: {
   filter?: string;
   filterValue?: string;
   queryKeysToInvalidate: string[][];
+  onEvent?: () => void;  // Optional callback for custom invalidation
   enabled?: boolean;
 }) {
   const queryClient = useQueryClient();
@@ -35,12 +36,17 @@ export function useRealtimeSubscription(config: {
           ...filterConfig,
         },
         (payload) => {
-          console.log(`[Real-time] ${config.table} changed:`, payload);
+          console.log(`✅ [Real-time] ${config.table} changed:`, payload.eventType);
 
           // Invalidate all specified query keys
           config.queryKeysToInvalidate.forEach((queryKey) => {
             queryClient.invalidateQueries({ queryKey });
           });
+
+          // Call optional custom callback
+          if (config.onEvent) {
+            config.onEvent();
+          }
         }
       )
       .subscribe();

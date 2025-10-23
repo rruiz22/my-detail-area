@@ -23,6 +23,8 @@ import { useGetReadyStore } from "@/hooks/useGetReadyStore";
 import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
 import { useVehicleManagement } from "@/hooks/useVehicleManagement";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { formatVehiclesForExport } from "@/utils/exportUtils";
 import { useServerExport } from "@/hooks/useServerExport";
@@ -94,30 +96,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // Ref to track processed vehicle IDs from URL to prevent infinite loops
   const processedVehicleIdRef = useRef<string | null>(null);
 
-  // ✅ Auto-clear search and navigate to vehicle's step when selecting a vehicle
-  useEffect(() => {
-    if (selectedVehicleId && searchQuery) {
-      console.log('🔍 [Get Ready] Vehicle selected from search:', selectedVehicleId);
-
-      // Find the selected vehicle to get its step (use unfiltered list to ensure we find it)
-      const selectedVehicle = allVehiclesUnfiltered.find(v => v.id === selectedVehicleId) || allVehicles.find(v => v.id === selectedVehicleId);
-
-      if (selectedVehicle?.step_id) {
-        console.log('✅ [Get Ready] Navigating to step:', selectedVehicle.step_name);
-        // Navigate to the vehicle's step
-        setSelectedStepId(selectedVehicle.step_id);
-      }
-
-      // Clear search after short delay so user sees what they searched
-      const timer = setTimeout(() => {
-        console.log('🧹 [Get Ready] Clearing search query');
-        setSearchQuery('');
-      }, 200);
-
-      return () => clearTimeout(timer);
-    }
-  }, [selectedVehicleId]);
-
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || "all";
 
@@ -142,69 +120,86 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const allVehiclesUnfiltered =
     allVehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
 
-  // ✅ Handle vehicle ID from URL (from Global Search)
+  const { currentDealership } = useAccessibleDealerships();
+
+  // ✅ Handle vehicle ID from URL (from Global Search) - Direct DB query
   useEffect(() => {
-    // Only process if:
-    // 1. We have a vehicleId from URL
-    // 2. We haven't already processed this exact vehicleId
-    // 3. We have vehicles loaded
-    if (vehicleId && vehicleId !== processedVehicleIdRef.current && allVehiclesUnfiltered.length > 0) {
-      console.log('🔍 [Get Ready] Vehicle ID from URL:', vehicleId, 'Type:', typeof vehicleId);
-      console.log('🔍 [Get Ready] Total vehicles loaded:', allVehiclesUnfiltered.length);
-      console.log('🔍 [Get Ready] Sample vehicle ID:', allVehiclesUnfiltered[0]?.id, 'Type:', typeof allVehiclesUnfiltered[0]?.id);
+    if (vehicleId && vehicleId !== processedVehicleIdRef.current && currentDealership?.id) {
+      const fetchVehicleFromUrl = async () => {
+        console.log('🔍 [Get Ready] Fetching vehicle from URL:', vehicleId);
 
-      // Mark this vehicleId as processed
-      processedVehicleIdRef.current = vehicleId;
+        const { data, error } = await supabase
+          .from('get_ready_vehicles')
+          .select('id, stock_number, vin, vehicle_year, vehicle_make, vehicle_model, step_id, get_ready_steps(name)')
+          .eq('id', vehicleId)
+          .eq('dealer_id', currentDealership.id)
+          .is('deleted_at', null)
+          .single();
 
-      // Find the vehicle in the unfiltered list (compare as strings)
-      const targetVehicle = allVehiclesUnfiltered.find(v => String(v.id) === String(vehicleId));
+        processedVehicleIdRef.current = vehicleId;
 
-      if (targetVehicle) {
-        console.log('✅ [Get Ready] Found vehicle:', targetVehicle.stock_number, 'in step:', targetVehicle.step_name);
+        if (!error && data) {
+          console.log('✅ [Get Ready] Found vehicle:', data.stock_number, 'in step:', (data.get_ready_steps as any)?.name);
 
-        // Navigate to details view
-        navigate('/get-ready/details', { replace: true });
+          navigate('/get-ready/details', { replace: true });
 
-        // Set the vehicle's step as selected
-        if (targetVehicle.step_id) {
-          setSelectedStepId(targetVehicle.step_id);
+          if (data.step_id) {
+            setSelectedStepId(data.step_id);
+          }
+
+          setSelectedVehicleId(vehicleId);
+
+          toast({
+            description: `Viewing ${data.vehicle_year} ${data.vehicle_make} ${data.vehicle_model}`,
+            variant: 'default',
+          });
+        } else {
+          console.warn('⚠️ [Get Ready] Vehicle not found or not accessible:', vehicleId, error);
+          toast({
+            description: t('get_ready.vehicle_not_found') || 'Vehicle not found',
+            variant: 'destructive',
+          });
+          navigate('/get-ready/details', { replace: true });
         }
+      };
 
-        // Select the vehicle to open detail panel
-        setSelectedVehicleId(String(vehicleId));
-
-        toast({
-          description: `Viewing ${targetVehicle.vehicle_year} ${targetVehicle.vehicle_make} ${targetVehicle.vehicle_model}`,
-          variant: 'default',
-        });
-      } else {
-        console.warn('⚠️ [Get Ready] Vehicle not found:', vehicleId);
-        console.warn('⚠️ [Get Ready] Available vehicle IDs:', allVehiclesUnfiltered.slice(0, 5).map(v => v.id));
-        toast({
-          description: t('get_ready.vehicle_not_found') || 'Vehicle not found',
-          variant: 'destructive',
-        });
-        navigate('/get-ready/details', { replace: true });
-      }
+      fetchVehicleFromUrl();
     }
 
-    // Reset the ref when vehicleId becomes null/undefined (navigated away)
     if (!vehicleId) {
       processedVehicleIdRef.current = null;
     }
-  }, [vehicleId, allVehiclesUnfiltered.length]);
+  }, [vehicleId, currentDealership?.id, navigate, setSelectedStepId, setSelectedVehicleId, toast, t]);
 
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
-      await Promise.all([refetchSteps(), refetchKPIs()]);
+      // Invalidate ALL Get Ready queries for complete refresh
+      await queryClient.invalidateQueries({
+        predicate: (query) => {
+          const key = query.queryKey[0] as string;
+          return [
+            'get-ready-vehicles',      // Vehicle list
+            'get-ready-vehicle-detail', // Detail panel
+            'vehicle-notes',           // Notes tab
+            'note-replies',           // Note replies
+            'vehicle-work-items',     // Work items tab
+            'vehicle-media',          // Media tab
+            'vehicle-activity-log',   // Timeline tab
+            'get-ready-steps',        // Sidebar steps
+            'get-ready-kpis',         // Sidebar KPIs
+          ].includes(key);
+        }
+      });
+
+      console.log('✅ [Refresh] All Get Ready queries invalidated');
+
       toast({
-        description:
-          t("common.data_refreshed") || "Data refreshed successfully",
+        description: t("common.data_refreshed") || "Data refreshed successfully",
         variant: "default",
       });
     } catch (error) {
-      console.error("Manual refresh failed:", error);
+      console.error("❌ [Refresh] Manual refresh failed:", error);
       toast({
         description: t("common.refresh_failed") || "Failed to refresh data",
         variant: "destructive",
@@ -672,15 +667,25 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {/* Search Box - Now in Details View */}
+            {/* Search Box - Now in Details View with Clear Button */}
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Input
                 placeholder={t('get_ready.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-9 text-sm"
+                className="pl-8 pr-8 h-9 text-sm"
               />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-transparent"
+                >
+                  <XCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                </Button>
+              )}
             </div>
 
             <Button
@@ -693,7 +698,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                 className={`h-4 w-4 mr-2 ${isManualRefreshing ? "animate-spin" : ""}`}
               />
               <span className="hidden sm:inline">
-                {t("common.actions.refresh")}
+                {t("common.action_buttons.refresh")}
               </span>
             </Button>
 
@@ -706,24 +711,24 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                   />
                   <span className="hidden sm:inline">
                     {isExporting
-                      ? t("common.actions.exporting")
-                      : t("common.actions.export")}
+                      ? t("common.action_buttons.exporting")
+                      : t("common.action_buttons.export")}
                   </span>
                   <ChevronDown className="h-3 w-3 ml-1 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>
-                  {t("common.actions.export")}
+                  {t("common.action_buttons.export")}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => handleExport("csv")}>
                   <FileText className="h-4 w-4 mr-2" />
-                  {t("common.actions.export_csv")}
+                  {t("common.action_buttons.export_csv")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport("excel")}>
                   <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  {t("common.actions.export_excel")}
+                  {t("common.action_buttons.export_excel")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

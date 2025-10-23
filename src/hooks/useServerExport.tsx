@@ -49,13 +49,8 @@ export function useServerExport(options: UseServerExportOptions = {}) {
         throw new Error('No active session');
       }
 
-      // Get function URL
-      const { data: { project_url } } = await supabase.functions.invoke('_internal', { method: 'GET' })
-        .then(() => ({ data: { project_url: '' } }))
-        .catch(() => ({ data: { project_url: '' } }));
-
-      // Construct Edge Function URL
-      const functionUrl = `${Deno.env?.get?.('SUPABASE_URL') || supabase.supabaseUrl}/functions/v1/generate-excel-report`;
+      // Construct Edge Function URL (client-side - no Deno access)
+      const functionUrl = `${supabase.supabaseUrl}/functions/v1/generate-excel-report`;
 
       // Call Edge Function to generate Excel
       const response = await fetch(functionUrl, {

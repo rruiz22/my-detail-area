@@ -50,6 +50,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MediaLightbox } from '../MediaLightbox';
 import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
+import imageCompression from 'browser-image-compression';
 
 interface VehicleMediaTabProps {
   vehicleId: string;
@@ -95,6 +96,8 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadCategory, setUploadCategory] = useState<string>('intake');
   const [uploadWorkItemId, setUploadWorkItemId] = useState<string>('');
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionProgress, setCompressionProgress] = useState(0);
 
   // Edit state
   const [editCategory, setEditCategory] = useState('');
@@ -167,11 +170,43 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
   const handleUpload = async () => {
     if (selectedFiles.length === 0) return;
 
+    setIsCompressing(true);
+
     try {
-      for (const file of selectedFiles) {
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        let fileToUpload = file;
+
+        // Compress images only (not videos/documents)
+        if (file.type.startsWith('image/')) {
+          const options = {
+            maxSizeMB: 0.8,         // Target 800KB max
+            maxWidthOrHeight: 1920, // Full HD resolution
+            useWebWorker: true,     // Non-blocking compression
+            initialQuality: 0.85,   // 85% quality (good balance)
+            onProgress: (progress: number) => {
+              setCompressionProgress(Math.round(progress));
+            }
+          };
+
+          try {
+            const compressedBlob = await imageCompression(file, options);
+            fileToUpload = new File([compressedBlob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+
+            console.log(`📸 [Hybrid Step 1] Client compressed: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(compressedBlob.size / 1024 / 1024).toFixed(2)}MB`);
+          } catch (compressionError) {
+            console.warn('⚠️ Client compression failed, uploading original:', compressionError);
+            // If compression fails, upload original
+          }
+        }
+
+        // Upload (compressed or original)
         await uploadMedia.mutateAsync({
           vehicle_id: vehicleId,
-          file,
+          file: fileToUpload,
           category: uploadCategory,
           linked_work_item_id: uploadWorkItemId || undefined,
         });
@@ -182,7 +217,10 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
       setUploadCategory('intake');
       setUploadWorkItemId('');
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('❌ Upload error:', error);
+    } finally {
+      setIsCompressing(false);
+      setCompressionProgress(0);
     }
   };
 
@@ -740,12 +778,16 @@ export function VehicleMediaTab({ vehicleId, className }: VehicleMediaTabProps) 
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setUploadModalOpen(false)}>
+            <Button variant="outline" onClick={() => setUploadModalOpen(false)} disabled={isCompressing || uploadMedia.isPending}>
               {t('common.action_buttons.cancel')}
             </Button>
-            <Button onClick={handleUpload} disabled={uploadMedia.isPending}>
-              {uploadMedia.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              {t('get_ready.media.upload')}
+            <Button onClick={handleUpload} disabled={isCompressing || uploadMedia.isPending}>
+              {(isCompressing || uploadMedia.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {isCompressing
+                ? `Compressing... ${compressionProgress}%`
+                : uploadMedia.isPending
+                  ? 'Uploading...'
+                  : t('get_ready.media.upload')}
             </Button>
           </DialogFooter>
         </DialogContent>

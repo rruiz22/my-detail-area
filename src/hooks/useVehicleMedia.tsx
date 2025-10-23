@@ -197,12 +197,33 @@ export function useUploadMedia() {
 
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['vehicle-media', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
+      queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] });
       toast.success(t('get_ready.media.uploaded_successfully'));
+
+      // Generate thumbnail in background (Hybrid Step 2)
+      if (variables.file.type.startsWith('image/')) {
+        console.log('🖼️ [Hybrid Step 2] Requesting thumbnail generation...');
+
+        supabase.functions.invoke('generate-vehicle-thumbnail', {
+          body: {
+            filePath: data.file_path,
+            vehicleId: data.vehicle_id
+          }
+        }).then(({ data: thumbData, error: thumbError }) => {
+          if (thumbError) {
+            console.warn('⚠️ Thumbnail generation failed (non-critical):', thumbError);
+          } else {
+            console.log('✅ [Hybrid Step 2] Thumbnail generated:', thumbData);
+            queryClient.invalidateQueries({ queryKey: ['vehicle-media', data.vehicle_id] });
+          }
+        }).catch((error) => {
+          console.warn('⚠️ Thumbnail generation error (non-critical):', error);
+        });
+      }
     },
     onError: (error) => {
       console.error('Upload media mutation error:', error);

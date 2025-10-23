@@ -342,6 +342,11 @@
       "create_order": "Crear Orden",
       "view_reports": "Ver Reportes",
       "manage_users": "Gestionar Usuarios",
+      "refresh": "Actualizar",
+      "export": "Exportar",
+      "exporting": "Exportando...",
+      "export_csv": "Exportar a CSV",
+      "export_excel": "Exportar a Excel",
       "success": "{{action}} iniciado exitosamente",
       "started": "Acción Iniciada"
     },
@@ -2763,6 +2768,7 @@
           "name": "Nombre del Paso",
           "description": "Descripción",
           "color": "Color",
+          "icon": "Icono",
           "sla_hours": "SLA (Horas)",
           "cost_per_day": "Costo por Día"
         },

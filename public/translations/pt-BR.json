@@ -342,6 +342,11 @@
       "create_order": "Criar Pedido",
       "view_reports": "Ver Relatórios",
       "manage_users": "Gerenciar Usuários",
+      "refresh": "Atualizar",
+      "export": "Exportar",
+      "exporting": "Exportando...",
+      "export_csv": "Exportar para CSV",
+      "export_excel": "Exportar para Excel",
       "success": "{{action}} iniciado com sucesso",
       "started": "Ação Iniciada"
     },
@@ -2618,6 +2623,7 @@
           "name": "Nome da Etapa",
           "description": "Descrição",
           "color": "Cor",
+          "icon": "Ícone",
           "sla_hours": "SLA (Horas)",
           "cost_per_day": "Custo por Dia"
         },

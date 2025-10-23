@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
 import {
     useCreateVehicleNote,
     useDeleteVehicleNote,
@@ -84,17 +85,28 @@ export function VehicleNotesTab({ vehicleId, className }: VehicleNotesTabProps) 
       ['vehicle-notes', vehicleId],
       ['vehicle-activity-log'],
     ],
+    onEvent: () => {
+      console.log('✅ [Real-time] Vehicle notes updated');
+    },
     enabled: !!vehicleId,
   });
 
   // Real-time subscription for note replies
+  const queryClient = useQueryClient();
+
   useRealtimeSubscription({
     table: 'vehicle_note_replies',
     queryKeysToInvalidate: [
-      ['note-replies'],
-      ['vehicle-notes', vehicleId],
-      ['vehicle-activity-log'],
+      ['vehicle-notes', vehicleId],  // Refresh notes to update reply count
+      ['vehicle-activity-log'],      // Activity log
     ],
+    onEvent: () => {
+      // Force invalidate ALL note-replies queries (for any noteId)
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === 'note-replies'
+      });
+      console.log('✅ [Real-time] Note replies updated - all reply queries invalidated');
+    },
     enabled: !!vehicleId,
   });
 

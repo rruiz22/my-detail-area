@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 
 // Translation cache version - increment this when translations are updated
 // This forces browsers to reload translation files
-const TRANSLATION_VERSION = '1.2.0'; // Updated: 2025-10-22 - Added stock.image_from_inventory translation
+const TRANSLATION_VERSION = `1.3.0-${Date.now()}`; // Force reload with timestamp
 
 // Language resources will be loaded dynamically
 const resources = {};

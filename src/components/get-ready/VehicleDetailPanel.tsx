@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
@@ -16,8 +17,14 @@ import {
     Circle,
     Clock,
     DollarSign,
+    Download,
+    Edit,
+    FileSpreadsheet,
+    FileText,
     Image,
     MessageSquare,
+    MoreHorizontal,
+    Printer,
     Users,
     Wrench,
     X
@@ -71,6 +78,26 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
   const handleClose = () => {
     setSelectedVehicleId(null);
+  };
+
+  const handlePrint = () => {
+    window.print();
+    // TODO: Implement VehiclePrintView component for better print layout
+  };
+
+  const handleExportPDF = () => {
+    alert('Export to PDF - Coming soon');
+    // TODO: Implement PDF export functionality
+  };
+
+  const handleExportExcel = () => {
+    alert('Export to Excel - Coming soon');
+    // TODO: Implement Excel export functionality
+  };
+
+  const handleEdit = () => {
+    alert('Edit Vehicle - Coming soon');
+    // TODO: Implement edit vehicle modal
   };
 
   if (!selectedVehicleId) {
@@ -137,46 +164,84 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     >
       {/* Vehicle Header - Enhanced with Time Tracking */}
       <div className="border-b bg-gradient-to-br from-card/50 to-muted/30 relative">
-        {/* Close Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-2 right-2 h-8 w-8 z-10"
-          onClick={handleClose}
-          aria-label={t('get_ready.detail_panel.close')}
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        {/* Action Buttons */}
+        <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+          {/* Actions Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                aria-label="Vehicle actions"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>{t('common.actions')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handlePrint}>
+                <Printer className="h-4 w-4 mr-2" />
+                {t('common.action_buttons.print')} Report
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportPDF}>
+                <FileText className="h-4 w-4 mr-2" />
+                Export to PDF
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportExcel}>
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                {t('common.action_buttons.export_excel')}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleEdit}>
+                <Edit className="h-4 w-4 mr-2" />
+                {t('common.action_buttons.edit')} Vehicle
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <div className="p-4">
-          {/* Single Row: Vehicle Info + All Time Cards Aligned Right */}
-          <div className="flex items-center justify-between gap-4 pr-10">
-            {/* Left: Vehicle Info */}
-            <div className="flex-shrink-0">
-              <h2 className="text-lg font-semibold flex items-center gap-2">
+          {/* Close Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={handleClose}
+            aria-label={t('get_ready.detail_panel.close')}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="p-4 pr-20">
+          {/* Two-Row Responsive Layout */}
+          <div className="space-y-3">
+            {/* Row 1: Vehicle Info */}
+            <div>
+              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                 {vehicle.vehicle_trim && (
-                  <span className="text-sm font-normal text-muted-foreground">({vehicle.vehicle_trim})</span>
+                  <span className="text-xs sm:text-sm font-normal text-muted-foreground">({vehicle.vehicle_trim})</span>
                 )}
               </h2>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-muted-foreground mt-1">
                 <span className="font-medium">Stock: {vehicle.stock_number}</span>
-                <span>•</span>
-                <span>VIN: {vehicle.vin}</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="truncate">VIN: {vehicle.vin}</span>
               </div>
             </div>
 
-            {/* Right: All Time Cards + Step Badge - Fully Responsive */}
-            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-              {/* T2L - Time to Line (Hidden on small screens) */}
+            {/* Row 2: Metrics - Grid Responsive (Always Visible) */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:flex lg:flex-wrap gap-2">
+              {/* T2L - Time to Line (Always Visible, Compact) */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="hidden md:flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-2 rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
+                    <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-2 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
                       <Clock className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                      <div>
-                        <span className="text-xs text-muted-foreground block">{t('get_ready.vehicle_list.t2l_full')}</span>
-                        <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-sm">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-muted-foreground hidden sm:block">T2L</span>
+                        <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-xs sm:text-sm">
                           {timeToLine?.total_hours ? formatTimeDuration(timeToLine?.total_hours * 60 * 60 * 1000) : '-'}
                         </span>
                       </div>
@@ -191,69 +256,36 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                 </Tooltip>
               </TooltipProvider>
 
-              {/* Work Items (Hidden on small screens) */}
-              <div className="hidden lg:flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800">
+              {/* Work Items (Always Visible, Compact) */}
+              <div className="flex items-center gap-1.5 bg-purple-50 dark:bg-purple-950/30 px-2 py-1.5 rounded-lg border border-purple-200 dark:border-purple-800">
                 <Wrench className="h-4 w-4 text-purple-600 flex-shrink-0" />
-                <div>
-                  <span className="text-xs text-muted-foreground block">{t('get_ready.tabs.work_items')}</span>
-                  <span className="font-bold text-purple-900 dark:text-purple-100 text-sm">
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground hidden sm:block">Work</span>
+                  <span className="font-bold text-purple-900 dark:text-purple-100 text-xs sm:text-sm">
                     {counts.workItems}
                   </span>
                 </div>
               </div>
 
-              {/* Current Step Time - Previous + Current */}
-              <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800">
+              {/* Current Step Time - Previous + Current (Compact) */}
+              <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/30 px-2 py-1.5 rounded-lg border border-amber-200 dark:border-amber-800">
                 <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                <div>
-                  <span className="text-xs text-muted-foreground block">{t('get_ready.time_tracking.current_step')}</span>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground hidden sm:block">Step</span>
 
-                  {/* Show Previous + Current if revisited, otherwise just Current */}
-                  {currentVisit?.previous_visits_hours && currentVisit.previous_visits_hours > 0 ? (
-                    <div className="flex items-center gap-2">
-                      {/* Previous Time (with tooltip) */}
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="flex flex-col cursor-help">
-                              <span className="text-[10px] text-muted-foreground uppercase">{t('get_ready.time_tracking.previous_time')}</span>
-                              <span className="font-bold text-amber-700 dark:text-amber-300 text-xs whitespace-nowrap">
-                                {formatTimeDuration(currentVisit.previous_visits_hours * 60 * 60 * 1000)}
-                              </span>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="text-xs">{t('get_ready.time_tracking.previous_visits_tooltip')}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-
-                      {/* Separator */}
-                      <div className="h-8 w-px bg-amber-300 dark:bg-amber-700" />
-
-                      {/* Current Time */}
-                      <div className="flex flex-col">
-                        <span className="text-[10px] text-muted-foreground uppercase">{t('get_ready.time_tracking.current_time')}</span>
-                        <span className="font-bold text-amber-900 dark:text-amber-100 text-sm whitespace-nowrap">
-                          {formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000)}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    /* First visit - show only current time (no Previous/Current labels) */
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-sm">
-                        {currentVisit?.current_visit_hours ? formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000) : '-'}
-                      </span>
-                    </div>
-                  )}
+                  {/* Simplified: Show current time (total if revisited) */}
+                  <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-xs sm:text-sm">
+                    {currentVisit?.current_visit_hours
+                      ? formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000)
+                      : '-'}
+                  </span>
                 </div>
               </div>
 
-              {/* Step Badge */}
+              {/* Step Badge (Compact) */}
               <Badge
                 variant="outline"
-                className="text-sm px-3 py-2 font-semibold"
+                className="text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 font-semibold col-span-3 sm:col-span-1"
                 style={{
                   borderColor: vehicle.step_color || '#6B7280',
                   color: vehicle.step_color || '#6B7280',

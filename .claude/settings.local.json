@@ -28,7 +28,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(taskkill:*)",
-      "Bash(timeout /t 8 /nobreak)"
+      "Bash(timeout /t 8 /nobreak)",
+      "Bash(if not exist backupswork_items_status_upgrade mkdir backupswork_items_status_upgrade)"
     ],
     "deny": [],
     "ask": []

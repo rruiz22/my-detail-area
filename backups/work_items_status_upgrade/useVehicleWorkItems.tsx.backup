@@ -6,27 +6,7 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
 // Types based on database schema
-// ✨ ENHANCED STATUS SYSTEM - Option 2: Simplified Enterprise System
-// Pre-Work: awaiting_approval → rejected OR ready → scheduled
-// During Work: in_progress ⇄ on_hold / blocked
-// Post-Work: completed | cancelled
-export type WorkItemStatus =
-  // Pre-Work Phase
-  | 'awaiting_approval'  // Waiting for approval (when approval_required=true)
-  | 'rejected'           // Rejected by approver (needs correction)
-  | 'ready'              // Approved or no approval needed, ready to start
-  | 'scheduled'          // Scheduled for future date
-
-  // Execution Phase
-  | 'in_progress'        // Active work in progress
-  | 'on_hold'            // Temporarily paused
-  | 'blocked'            // Blocked by dependencies (parts, other work, etc.)
-
-  // Completion Phase
-  | 'completed'          // Successfully completed
-  | 'cancelled'          // Cancelled (can occur at any pre-completion stage)
-  ;
-
+export type WorkItemStatus = 'pending' | 'in_progress' | 'completed' | 'declined';
 export type WorkItemType = 'mechanical' | 'body_repair' | 'detailing' | 'safety_inspection' | 'reconditioning' | 'parts_ordering' | 'other';
 
 export interface WorkItem {
@@ -57,11 +37,6 @@ export interface WorkItem {
   }>;
   parts_status?: string;
   blocked_by?: string[];
-  blocked_reason?: string; // NEW: Reason for blocking
-  on_hold_reason?: string; // NEW: Reason for putting on hold
-  cancelled_reason?: string; // NEW: Reason for cancellation
-  cancelled_by?: string; // NEW: User who cancelled
-  cancelled_at?: string; // NEW: Timestamp of cancellation
   scheduled_start?: string;
   scheduled_end?: string;
   actual_start?: string;
@@ -255,18 +230,13 @@ export function useCreateWorkItem() {
         throw new Error('No dealership selected');
       }
 
-      // ✨ NEW: Determine initial status based on approval requirement
-      const initialStatus: WorkItemStatus = input.approval_required
-        ? 'awaiting_approval'  // Needs approval first
-        : 'ready';             // Ready to start immediately
-
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .insert({
           ...input,
           dealer_id: currentDealership.id,
           created_by: user?.id,
-          status: initialStatus,
+          status: 'pending',
           priority: input.priority || 2,
           estimated_cost: input.estimated_cost || 0,
           actual_cost: 0,
@@ -369,14 +339,13 @@ export function useApproveWorkItem() {
         throw new Error('User not authenticated');
       }
 
-      // ✨ NEW: After approval, work item becomes 'ready' to start
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
           approval_status: 'approved',
           approved_by: user.id,
           approved_at: new Date().toISOString(),
-          status: 'ready', // ✨ NEW: Change from 'pending' to 'ready'
+          status: 'pending', // Move to pending after approval
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
@@ -422,11 +391,10 @@ export function useDeclineWorkItem() {
         throw new Error('User not authenticated');
       }
 
-      // ✨ NEW: Use 'rejected' instead of 'declined' for approval rejection
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
-          status: 'rejected', // ✨ NEW: Change from 'declined' to 'rejected'
+          status: 'declined',
           approval_status: 'declined',
           decline_reason: reason,
           approved_by: user.id,
@@ -606,213 +574,6 @@ export function useDeleteWorkItem() {
     onError: (error) => {
       console.error('Delete work item mutation error:', error);
       toast.error(t('get_ready.work_items.error_deleting'));
-    },
-  });
-}
-
-/**
- * ✨ NEW: Hook to pause a work item (in_progress → on_hold)
- */
-export function usePauseWorkItem() {
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, vehicleId, reason }: { id: string; vehicleId: string; reason?: string }) => {
-      const { data, error } = await supabase
-        .from('get_ready_work_items')
-        .update({
-          status: 'on_hold',
-          on_hold_reason: reason,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error pausing work item:', error);
-        throw error;
-      }
-
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.paused_successfully'));
-    },
-    onError: (error) => {
-      console.error('Pause work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_pausing'));
-    },
-  });
-}
-
-/**
- * ✨ NEW: Hook to block a work item (in_progress → blocked)
- */
-export function useBlockWorkItem() {
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, vehicleId, reason }: { id: string; vehicleId: string; reason: string }) => {
-      const { data, error } = await supabase
-        .from('get_ready_work_items')
-        .update({
-          status: 'blocked',
-          blocked_reason: reason,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error blocking work item:', error);
-        throw error;
-      }
-
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.blocked_successfully'));
-    },
-    onError: (error) => {
-      console.error('Block work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_blocking'));
-    },
-  });
-}
-
-/**
- * ✨ NEW: Hook to resume a work item (on_hold → in_progress)
- */
-export function useResumeWorkItem() {
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, vehicleId }: { id: string; vehicleId: string }) => {
-      const { data, error } = await supabase
-        .from('get_ready_work_items')
-        .update({
-          status: 'in_progress',
-          on_hold_reason: null, // Clear the hold reason
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error resuming work item:', error);
-        throw error;
-      }
-
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.resumed_successfully'));
-    },
-    onError: (error) => {
-      console.error('Resume work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_resuming'));
-    },
-  });
-}
-
-/**
- * ✨ NEW: Hook to unblock a work item (blocked → in_progress)
- */
-export function useUnblockWorkItem() {
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, vehicleId }: { id: string; vehicleId: string }) => {
-      const { data, error } = await supabase
-        .from('get_ready_work_items')
-        .update({
-          status: 'in_progress',
-          blocked_reason: null, // Clear the blocked reason
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error unblocking work item:', error);
-        throw error;
-      }
-
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.unblocked_successfully'));
-    },
-    onError: (error) => {
-      console.error('Unblock work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_unblocking'));
-    },
-  });
-}
-
-/**
- * ✨ NEW: Hook to cancel a work item (any pre-completion status → cancelled)
- */
-export function useCancelWorkItem() {
-  const { t } = useTranslation();
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, vehicleId, reason }: { id: string; vehicleId: string; reason: string }) => {
-      if (!user?.id) {
-        throw new Error('User not authenticated');
-      }
-
-      const { data, error } = await supabase
-        .from('get_ready_work_items')
-        .update({
-          status: 'cancelled',
-          cancelled_reason: reason,
-          cancelled_by: user.id,
-          cancelled_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error cancelling work item:', error);
-        throw error;
-      }
-
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
-      queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.cancelled_successfully'));
-    },
-    onError: (error) => {
-      console.error('Cancel work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_cancelling'));
     },
   });
 }
