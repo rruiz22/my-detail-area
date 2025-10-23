@@ -1,8 +1,8 @@
 {
   "scannedFiles": 631,
-  "totalStrings": 5925,
+  "totalStrings": 5947,
   "hardcodedStrings": 1405,
-  "translatedStrings": 4520,
+  "translatedStrings": 4542,
   "issues": {
     "critical": [
       {
@@ -8132,220 +8132,250 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 375,
-            "context": "374: <div className=\"p-2 rounded\">\n375: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n376: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
+            "line": 382,
+            "context": "381: <div className=\"p-2 rounded\">\n382: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n383: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
           },
           {
             "text": "Previous",
-            "line": 518,
-            "context": "517: disabled={currentPage === 1}\n518: >\n519: Previous"
+            "line": 525,
+            "context": "524: disabled={currentPage === 1}\n525: >\n526: Previous"
           },
           {
             "text": "Next",
-            "line": 529,
-            "context": "528: disabled={currentPage >= totalPages}\n529: >\n530: Next"
+            "line": 536,
+            "context": "535: disabled={currentPage >= totalPages}\n536: >\n537: Next"
           },
           {
             "text": "Order ID",
-            "line": 550,
-            "context": "549: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n550: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n551: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>"
+            "line": 557,
+            "context": "556: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n557: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n558: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 552,
-            "context": "551: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>\n552: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n553: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+            "line": 559,
+            "context": "558: <TableHead className=\"font-medium text-foreground text-center\">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>\n559: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n560: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
           },
           {
             "text": "Status",
-            "line": 555,
-            "context": "554: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n555: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n556: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+            "line": 562,
+            "context": "561: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n562: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n563: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 556,
-            "context": "555: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n556: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n557: </TableRow>"
+            "line": 563,
+            "context": "562: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n563: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n564: </TableRow>"
           },
           {
             "text": "Previous",
-            "line": 830,
-            "context": "829: disabled={currentPage === 1}\n830: >\n831: Previous"
+            "line": 837,
+            "context": "836: disabled={currentPage === 1}\n837: >\n838: Previous"
           },
           {
             "text": "Next",
-            "line": 841,
-            "context": "840: disabled={currentPage >= totalPages}\n841: >\n842: Next"
+            "line": 848,
+            "context": "847: disabled={currentPage >= totalPages}\n848: >\n849: Next"
           }
         ],
         "translationCalls": [
           {
+            "key": "errors.no_permission_status_change",
+            "line": 218,
+            "exists": false
+          },
+          {
+            "key": "success.status_updated",
+            "line": 225,
+            "exists": false
+          },
+          {
+            "key": "errors.status_update_failed",
+            "line": 239,
+            "exists": false
+          },
+          {
             "key": "data_table.days_overdue",
-            "line": 258,
+            "line": 265,
             "exists": false
           },
           {
             "key": "data_table.due_today",
-            "line": 260,
+            "line": 267,
             "exists": true
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 262,
+            "line": 269,
             "exists": false
           },
           {
             "key": "data_table.due_in_days",
-            "line": 264,
+            "line": 271,
             "exists": false
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 349,
+            "line": 356,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 398,
+            "line": 405,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 422,
+            "line": 429,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 437,
+            "line": 444,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 451,
+            "line": 458,
             "exists": true
           },
           {
             "key": "data_table.view",
-            "line": 471,
+            "line": 478,
             "exists": true
           },
           {
             "key": "data_table.edit",
-            "line": 483,
+            "line": 490,
             "exists": true
           },
           {
             "key": "data_table.delete",
-            "line": 496,
+            "line": 503,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 510,
+            "line": 517,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 522,
+            "line": 529,
             "exists": true
           },
           {
             "key": "data_table.orders_count",
-            "line": 541,
+            "line": 548,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 553,
+            "line": 560,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 554,
+            "line": 561,
             "exists": true
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 609,
+            "line": 616,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 632,
+            "line": 639,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 670,
+            "line": 677,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 709,
+            "line": 716,
             "exists": true
           },
           {
             "key": "data_table.no_time_set",
-            "line": 728,
+            "line": 735,
             "exists": true
           },
           {
             "key": "data_table.view_details",
-            "line": 757,
+            "line": 764,
             "exists": true
           },
           {
             "key": "data_table.edit_order",
-            "line": 769,
+            "line": 776,
             "exists": true
           },
           {
             "key": "data_table.print_order",
-            "line": 780,
+            "line": 787,
             "exists": true
           },
           {
             "key": "data_table.delete_order",
-            "line": 792,
+            "line": 799,
             "exists": true
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 808,
+            "line": 815,
             "exists": true
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 809,
+            "line": 816,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 822,
+            "line": 829,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 834,
+            "line": 841,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "errors.no_permission_status_change",
+            "line": 218,
+            "context": "217: if (!allowed) {\n218: toast.error(t('errors.no_permission_status_change', 'You do not have permission to change order status'));\n219: return;"
+          },
+          {
+            "key": "success.status_updated",
+            "line": 225,
+            "context": "224: console.log(`Status updated for order ${orderId} to ${newStatus}`);\n225: toast.success(t('success.status_updated', 'Order status updated successfully'));\n226: "
+          },
+          {
+            "key": "errors.status_update_failed",
+            "line": 239,
+            "context": "238: console.error('Failed to update status:', error);\n239: toast.error(t('errors.status_update_failed', 'Failed to update order status'));\n240: }"
+          },
+          {
             "key": "data_table.days_overdue",
-            "line": 258,
-            "context": "257: if (diffDays < 0) {\n258: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n259: } else if (diffDays === 0) {"
+            "line": 265,
+            "context": "264: if (diffDays < 0) {\n265: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n266: } else if (diffDays === 0) {"
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 262,
-            "context": "261: } else if (diffDays === 1) {\n262: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n263: } else {"
+            "line": 269,
+            "context": "268: } else if (diffDays === 1) {\n269: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n270: } else {"
           },
           {
             "key": "data_table.due_in_days",
-            "line": 264,
-            "context": "263: } else {\n264: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n265: }"
+            "line": 271,
+            "context": "270: } else {\n271: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n272: }"
           }
         ],
-        "coverage": 77,
+        "coverage": 79,
         "severity": "medium"
       },
       {
@@ -10208,30 +10238,80 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 80,
+            "line": 85,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 97,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 98,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 113,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 114,
             "exists": false
           },
           {
             "key": "pages.service_orders",
-            "line": 197,
+            "line": 223,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 212,
+            "line": 238,
             "exists": true
           },
           {
+            "key": "errors.no_permission_create_order",
+            "line": 244,
+            "exists": false
+          },
+          {
             "key": "common.new_order",
-            "line": 216,
+            "line": 247,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 80,
-            "context": "79: toast({\n80: description: t('orders.order_not_found'),\n81: variant: 'destructive'"
+            "line": 85,
+            "context": "84: toast({\n85: description: t('orders.order_not_found'),\n86: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 97,
+            "context": "96: toast({\n97: title: t('errors.no_permission', 'No Permission'),\n98: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 98,
+            "context": "97: title: t('errors.no_permission', 'No Permission'),\n98: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n99: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 113,
+            "context": "112: toast({\n113: title: t('errors.no_permission', 'No Permission'),\n114: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 114,
+            "context": "113: title: t('errors.no_permission', 'No Permission'),\n114: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n115: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 244,
+            "context": "243: disabled={!canCreate}\n244: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n245: >"
           }
         ],
         "coverage": 100,
@@ -10243,105 +10323,155 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 102,
+            "line": 107,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 119,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 120,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 135,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 136,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 143,
+            "line": 169,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 153,
+            "line": 179,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 159,
+            "line": 185,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 173,
+            "line": 199,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 193,
+            "line": 219,
             "exists": true
           },
           {
             "key": "orders.status_change_failed",
-            "line": 201,
+            "line": 227,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 240,
+            "line": 266,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 241,
+            "line": 267,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 242,
+            "line": 268,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 243,
+            "line": 269,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 244,
+            "line": 270,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 245,
+            "line": 271,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 246,
+            "line": 272,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.services",
-            "line": 247,
+            "line": 273,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 248,
+            "line": 274,
             "exists": true
           },
           {
             "key": "pages.sales_orders",
-            "line": 275,
+            "line": 301,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 290,
+            "line": 316,
             "exists": true
           },
           {
+            "key": "errors.no_permission_create_order",
+            "line": 322,
+            "exists": false
+          },
+          {
             "key": "common.new_order",
-            "line": 294,
+            "line": 325,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 102,
-            "context": "101: toast({\n102: description: t('orders.order_not_found'),\n103: variant: 'destructive'"
+            "line": 107,
+            "context": "106: toast({\n107: description: t('orders.order_not_found'),\n108: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 119,
+            "context": "118: toast({\n119: title: t('errors.no_permission', 'No Permission'),\n120: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 120,
+            "context": "119: title: t('errors.no_permission', 'No Permission'),\n120: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n121: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 135,
+            "context": "134: toast({\n135: title: t('errors.no_permission', 'No Permission'),\n136: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 136,
+            "context": "135: title: t('errors.no_permission', 'No Permission'),\n136: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n137: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 322,
+            "context": "321: disabled={!canCreate}\n322: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n323: >"
           }
         ],
         "coverage": 100,
@@ -10353,70 +10483,120 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 83,
+            "line": 86,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 181,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 182,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 197,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 198,
             "exists": false
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 286,
+            "line": 310,
             "exists": true
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 287,
+            "line": 311,
             "exists": true
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 329,
+            "line": 353,
             "exists": true
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 330,
+            "line": 354,
             "exists": true
           },
           {
             "key": "common.general",
-            "line": 330,
+            "line": 354,
             "exists": false
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 332,
+            "line": 356,
             "exists": true
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 333,
+            "line": 357,
             "exists": true
           },
           {
             "key": "pages.recon_orders",
-            "line": 355,
+            "line": 379,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 370,
+            "line": 394,
             "exists": true
           },
           {
+            "key": "errors.no_permission_create_order",
+            "line": 400,
+            "exists": false
+          },
+          {
             "key": "recon.new_recon_order",
-            "line": 374,
+            "line": 403,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 83,
-            "context": "82: toast({\n83: description: t('orders.order_not_found'),\n84: variant: 'destructive'"
+            "line": 86,
+            "context": "85: toast({\n86: description: t('orders.order_not_found'),\n87: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 181,
+            "context": "180: toast({\n181: title: t('errors.no_permission', 'No Permission'),\n182: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 182,
+            "context": "181: title: t('errors.no_permission', 'No Permission'),\n182: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n183: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 197,
+            "context": "196: toast({\n197: title: t('errors.no_permission', 'No Permission'),\n198: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 198,
+            "context": "197: title: t('errors.no_permission', 'No Permission'),\n198: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n199: variant: 'destructive'"
           },
           {
             "key": "common.general",
-            "line": 330,
-            "context": "329: service: t('recon_defaults.default_service'),\n330: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n331: price: order.reconCost || 0,"
+            "line": 354,
+            "context": "353: service: t('recon_defaults.default_service'),\n354: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n355: price: order.reconCost || 0,"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 400,
+            "context": "399: disabled={!canCreate}\n400: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n401: >"
           }
         ],
         "coverage": 100,
@@ -12445,40 +12625,70 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 75,
+            "line": 80,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 175,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 176,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 182,
+            "line": 198,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 222,
+            "line": 238,
             "exists": true
           },
           {
             "key": "pages.car_wash",
-            "line": 270,
+            "line": 286,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 285,
+            "line": 301,
             "exists": true
           },
           {
+            "key": "errors.no_permission_create_order",
+            "line": 307,
+            "exists": false
+          },
+          {
             "key": "car_wash_orders.quick_order",
-            "line": 289,
+            "line": 310,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 75,
-            "context": "74: toast({\n75: description: t('orders.order_not_found'),\n76: variant: 'destructive'"
+            "line": 80,
+            "context": "79: toast({\n80: description: t('orders.order_not_found'),\n81: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 175,
+            "context": "174: toast({\n175: title: t('errors.no_permission', 'No Permission'),\n176: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 176,
+            "context": "175: title: t('errors.no_permission', 'No Permission'),\n176: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n177: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 307,
+            "context": "306: disabled={!canCreate}\n307: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n308: >"
           }
         ],
         "coverage": 100,
@@ -13178,12 +13388,12 @@
           {
             "text": "Promise",
             "line": 6,
-            "context": "5: interface UseStatusPermissionsReturn {\n6: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string) => Promise<boolean>;\n7: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;"
+            "context": "5: interface UseStatusPermissionsReturn {\n6: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n7: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;"
           },
           {
             "text": "Promise",
             "line": 7,
-            "context": "6: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string) => Promise<boolean>;\n7: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;\n8: }"
+            "context": "6: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n7: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;\n8: }"
           }
         ],
         "translationCalls": [],
@@ -14495,19 +14705,30 @@
         "hardcodedStrings": [
           {
             "text": "Change order status",
-            "line": 77,
-            "context": "76: className=\"h-auto p-0 hover:bg-transparent\"\n77: aria-label=\"Change order status\"\n78: >"
+            "line": 115,
+            "context": "114: className=\"h-auto p-0 hover:bg-transparent\"\n115: aria-label=\"Change order status\"\n116: >"
           }
         ],
         "translationCalls": [
           {
             "key": "sweetalert.confirm_status",
-            "line": 47,
+            "line": 85,
             "exists": true
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 102,
+            "exists": false
           }
         ],
-        "missingKeys": [],
-        "coverage": 50,
+        "missingKeys": [
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 102,
+            "context": "101: </Badge>\n102: <Lock className=\"w-3 h-3 text-muted-foreground\" title={t('errors.no_permission_status_change', 'No permission to change status')} />\n103: </div>"
+          }
+        ],
+        "coverage": 67,
         "severity": "low"
       },
       {
@@ -44096,9 +44317,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2127 translation keys are referenced but missing",
+      "description": "2149 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "107 hours"
+      "estimatedEffort": "108 hours"
     }
   ],
   "coverage": 76
