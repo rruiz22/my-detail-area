@@ -116,7 +116,7 @@ export function WorkItemStatusBadge({
   size = 'md',
 }: WorkItemStatusBadgeProps) {
   const { t } = useTranslation();
-  const config = statusConfig[status];
+  const config = statusConfig[visualStatus];
   const Icon = config.icon;
 
   const sizeClasses = {
