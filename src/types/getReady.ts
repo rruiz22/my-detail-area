@@ -417,3 +417,120 @@ export interface NotificationGroup {
   latest_notification: GetReadyNotification;
   notifications: GetReadyNotification[];
 }
+// =====================================================
+// WORK ITEMS TYPES
+// =====================================================
+
+export type WorkItemStatus = 'pending' | 'in_progress' | 'completed' | 'declined';
+export type WorkItemType = 'mechanical' | 'body_repair' | 'detailing' | 'safety_inspection' | 'reconditioning' | 'parts_ordering' | 'other';
+
+/**
+ * Work Item - Complete interface matching database schema
+ */
+export interface GetReadyWorkItem {
+  id: string;
+  vehicle_id: string;
+  dealer_id: number;
+  title: string;
+  description: string | null;
+  work_type: WorkItemType;
+  status: WorkItemStatus;
+  priority: number;
+  estimated_cost: number | null;
+  actual_cost: number | null;
+  estimated_hours: number | null;
+  actual_hours: number | null;
+  assigned_technician: string | null;
+  assigned_vendor_id: string | null;
+  approval_required: boolean | null;
+  approval_status: string | null;
+  decline_reason: string | null;
+  approved_by: string | null;
+  approved_at: string | null;
+  parts_required: Record<string, unknown> | null;
+  parts_status: string | null;
+  blocked_by: string[] | null;
+  scheduled_start: string | null;
+  scheduled_end: string | null;
+  actual_start: string | null;
+  actual_end: string | null;
+  photos_before: string[] | null;
+  photos_after: string[] | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Work Item Summary - Minimal fields for counts and lists
+ * Used in vehicle queries where we only need basic info
+ */
+export interface GetReadyWorkItemSummary {
+  id: string;
+  title: string;
+  description: string | null;
+  status: WorkItemStatus;
+  approval_required: boolean | null;
+  approval_status: string | null;
+}
+
+/**
+ * Step Vehicle Count Data - Response from RPC function
+ */
+export interface StepVehicleCountData {
+  step_id: string;
+  vehicle_count: number;
+  avg_days_in_step: number;
+}
+
+/**
+ * Vehicles By Days Data - Response from get_vehicles_by_days_in_step RPC
+ */
+export interface VehiclesByDaysData {
+  step_id: string;
+  total_vehicles: number;
+  vehicles_1_day: number;
+  vehicles_2_3_days: number;
+  vehicles_4_plus_days: number;
+  avg_days_in_step: number;
+}
+
+/**
+ * Vehicle Database Response - Raw response from Supabase query
+ */
+export interface VehicleDatabaseResponse {
+  id: string;
+  stock_number: string;
+  vin: string;
+  vehicle_year: number | null;
+  vehicle_make: string | null;
+  vehicle_model: string | null;
+  vehicle_trim: string | null;
+  step_id: string;
+  dealer_id: number;
+  workflow_type: WorkflowPath;
+  priority: string;
+  intake_date: string;
+  sla_status: SLAStatus;
+  requires_approval: boolean;
+  approval_status: ApprovalStatus;
+  get_ready_work_items?: GetReadyWorkItemSummary[];
+  get_ready_steps?: {
+    name: string;
+    color: string;
+    order_index: number;
+  };
+}
+
+/**
+ * Valid sort fields for vehicle queries
+ */
+export type VehicleSortField = 
+  | 'stock_number'
+  | 'intake_date'
+  | 'days_in_step'
+  | 'priority'
+  | 'sla_status'
+  | 'updated_at'
+  | 'created_at';
+

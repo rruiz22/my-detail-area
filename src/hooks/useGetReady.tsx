@@ -1,7 +1,7 @@
 import { mockVehicles } from '@/data/mockVehicles';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
-import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert } from '@/types/getReady';
+import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert, StepVehicleCountData, VehiclesByDaysData } from '@/types/getReady';
 import { validateDealershipObject } from '@/utils/dealerValidation';
 
 import { useOrderPolling } from '@/hooks/useSmartPolling';
@@ -295,7 +295,7 @@ export function useGetReadySteps() {
         if (!stepsData) return [];
 
         return stepsData.map(step => {
-          const countData = data?.find((d: any) => d.step_id === step.id);
+          const countData = data?.find((d: StepVehicleCountData) => d.step_id === step.id);
           return {
             ...step,
             vehicle_count: countData?.vehicle_count || 0,
@@ -317,8 +317,8 @@ export function useGetReadySteps() {
 
       // Merge step data with vehicle counts and day groupings
       return stepsData.map(step => {
-        const daysData = vehiclesByDays?.find((d: any) => d.step_id === step.id);
-        const countData = data?.find((d: any) => d.step_id === step.id);
+        const daysData = vehiclesByDays?.find((d: StepVehicleCountData) => d.step_id === step.id);
+        const countData = data?.find((d: StepVehicleCountData) => d.step_id === step.id);
 
         return {
           ...step,

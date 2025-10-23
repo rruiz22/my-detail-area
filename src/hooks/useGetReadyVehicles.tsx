@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { calculateDIS, calculateDTF, calculateT2L } from '@/utils/timeFormatUtils';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
+import type { GetReadyWorkItemSummary, VehicleDatabaseResponse, VehicleSortField } from '@/types/getReady';
 import { validateDealershipObject } from '@/utils/dealerValidation';
 
 // Type definition for vehicle detail
@@ -28,7 +29,7 @@ export interface VehicleDetail {
   notes: string;
   location: string;
   technician: string;
-  work_orders: any[];
+  work_orders: unknown[]; // TODO: Define WorkOrder type if needed
   current_step?: {
     name: string;
     color: string;
@@ -108,14 +109,14 @@ export function useOverviewTable() {
       if (!data) return [];
 
       // Transform data to ReconVehicle format
-      return data.map((vehicle: any) => {
+      return data.map((vehicle: VehicleDatabaseResponse) => {
         // Calculate work items counts by status
         const workItems = vehicle.get_ready_work_items || [];
         const work_item_counts = {
-          pending: workItems.filter((item: any) => item.status === 'pending').length,
-          in_progress: workItems.filter((item: any) => item.status === 'in_progress').length,
-          completed: workItems.filter((item: any) => item.status === 'completed').length,
-          declined: workItems.filter((item: any) => item.status === 'declined').length,
+          pending: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'pending').length,
+          in_progress: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'in_progress').length,
+          completed: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'completed').length,
+          declined: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'declined').length,
         };
 
         return {
@@ -185,7 +186,7 @@ export function useVehicleDetail(vehicleId: string | null) {
 
       if (!data) return null;
 
-      const currentStep = data.get_ready_steps as any;
+      const currentStep = data.get_ready_steps;
 
       return {
         id: data.id,
@@ -335,7 +336,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       } else if (sortBy === 'stock_number') {
         query = query.order('stock_number', { ascending });
       } else {
-        query = query.order(sortBy as any, { ascending });
+        query = query.order(sortBy as VehicleSortField, { ascending });
       }
 
       const { data, error } = await query;
@@ -370,16 +371,16 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       }
 
       // Transform to match MockVehicle interface
-      return data.map((vehicle: any) => {
+      return data.map((vehicle: VehicleDatabaseResponse) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
 
         // Calculate work items counts by status
         const workItems = vehicle.get_ready_work_items || [];
         const work_item_counts = {
-          pending: workItems.filter((item: any) => item.status === 'pending').length,
-          in_progress: workItems.filter((item: any) => item.status === 'in_progress').length,
-          completed: workItems.filter((item: any) => item.status === 'completed').length,
-          declined: workItems.filter((item: any) => item.status === 'declined').length,
+          pending: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'pending').length,
+          in_progress: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'in_progress').length,
+          completed: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'completed').length,
+          declined: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'declined').length,
         };
 
         return {
@@ -540,7 +541,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       } else if (sortBy === 'stock_number') {
         query = query.order('stock_number', { ascending });
       } else {
-        query = query.order(sortBy as any, { ascending });
+        query = query.order(sortBy as VehicleSortField, { ascending });
       }
 
       // Add pagination
@@ -581,20 +582,20 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       }
 
       // Transform data
-      const vehicles = data.map((vehicle: any) => {
+      const vehicles = data.map((vehicle: VehicleDatabaseResponse) => {
         const stepOrder = vehicle.get_ready_steps?.order_index || 0;
 
         // Calculate work items counts by status
         const workItems = vehicle.get_ready_work_items || [];
         const work_item_counts = {
-          pending: workItems.filter((item: any) => item.status === 'pending').length,
-          in_progress: workItems.filter((item: any) => item.status === 'in_progress').length,
-          completed: workItems.filter((item: any) => item.status === 'completed').length,
-          declined: workItems.filter((item: any) => item.status === 'declined').length,
+          pending: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'pending').length,
+          in_progress: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'in_progress').length,
+          completed: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'completed').length,
+          declined: workItems.filter((item: GetReadyWorkItemSummary) => item.status === 'declined').length,
         };
 
         // Get pending work items that need approval
-        const pendingApprovalWorkItems = workItems.filter((item: any) =>
+        const pendingApprovalWorkItems = workItems.filter((item: GetReadyWorkItemSummary) =>
           item.approval_required === true &&
           (!item.approval_status || item.approval_status !== 'approved')
         );
