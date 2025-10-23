@@ -1,8 +1,8 @@
 {
   "scannedFiles": 618,
-  "totalStrings": 5895,
+  "totalStrings": 5889,
   "hardcodedStrings": 1384,
-  "translatedStrings": 4511,
+  "translatedStrings": 4505,
   "issues": {
     "critical": [
       {
@@ -5786,7 +5786,7 @@
           {
             "key": "dealerships.logo_upload_after_creation",
             "line": 372,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.primary_color",
@@ -5829,11 +5829,6 @@
             "key": "messages.saved",
             "line": 130,
             "context": "129: if (error) throw error;\n130: toast.success(t('messages.saved'));\n131: }"
-          },
-          {
-            "key": "dealerships.logo_upload_after_creation",
-            "line": 372,
-            "context": "371: <p className=\"text-sm text-muted-foreground py-4 px-3 border border-dashed rounded-lg text-center\">\n372: {t('dealerships.logo_upload_after_creation')}\n373: </p>"
           },
           {
             "key": "common.save",
@@ -13949,56 +13944,30 @@
           {
             "key": "dealerships.logo_too_large",
             "line": 44,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.logo_updated_successfully",
             "line": 167,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.logo_upload_failed",
             "line": 173,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.logo_removed_successfully",
             "line": 236,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.logo_upload_failed",
             "line": 242,
-            "exists": false
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "dealerships.logo_too_large",
-            "line": 44,
-            "context": "43: if (file.size > MAX_FILE_SIZE) {\n44: throw new Error(t('dealerships.logo_too_large'));\n45: }"
-          },
-          {
-            "key": "dealerships.logo_updated_successfully",
-            "line": 167,
-            "context": "166: toast({\n167: title: t('dealerships.logo_updated_successfully'),\n168: });"
-          },
-          {
-            "key": "dealerships.logo_upload_failed",
-            "line": 173,
-            "context": "172: toast({\n173: title: t('dealerships.logo_upload_failed'),\n174: description: error.message,"
-          },
-          {
-            "key": "dealerships.logo_removed_successfully",
-            "line": 236,
-            "context": "235: toast({\n236: title: t('dealerships.logo_removed_successfully'),\n237: });"
-          },
-          {
-            "key": "dealerships.logo_upload_failed",
-            "line": 242,
-            "context": "241: toast({\n242: title: t('dealerships.logo_upload_failed'),\n243: description: error.message,"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 50,
         "severity": "low"
       },
@@ -39111,71 +39080,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\dealerships\\LogoUploader.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "dealerships.logo_invalid_format",
-            "line": 73,
-            "exists": false
-          },
-          {
-            "key": "dealerships.logo_too_large",
-            "line": 85,
-            "exists": false
-          },
-          {
-            "key": "dealerships.logo",
-            "line": 137,
-            "exists": true
-          },
-          {
-            "key": "dealerships.change_logo",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "dealerships.upload_logo",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "dealerships.remove_logo",
-            "line": 187,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "dealerships.logo_invalid_format",
-            "line": 73,
-            "context": "72: toast({\n73: title: t('dealerships.logo_invalid_format'),\n74: variant: 'destructive'"
-          },
-          {
-            "key": "dealerships.logo_too_large",
-            "line": 85,
-            "context": "84: toast({\n85: title: t('dealerships.logo_too_large'),\n86: variant: 'destructive'"
-          },
-          {
-            "key": "dealerships.change_logo",
-            "line": 175,
-            "context": "174: <Upload className=\"h-4 w-4 mr-2\" />\n175: {previewUrl ? t('dealerships.change_logo') : t('dealerships.upload_logo')}\n176: </Button>"
-          },
-          {
-            "key": "dealerships.upload_logo",
-            "line": 175,
-            "context": "174: <Upload className=\"h-4 w-4 mr-2\" />\n175: {previewUrl ? t('dealerships.change_logo') : t('dealerships.upload_logo')}\n176: </Button>"
-          },
-          {
-            "key": "dealerships.remove_logo",
-            "line": 187,
-            "context": "186: <X className=\"h-4 w-4 mr-2\" />\n187: {t('dealerships.remove_logo')}\n188: </Button>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -43631,7 +43535,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "302 Component components need translation",
+      "description": "301 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -43915,7 +43819,6 @@
         "src\\components\\get-ready\\tabs\\VehicleVendorsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
-        "src\\components\\dealerships\\LogoUploader.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "src\\components\\dealer\\DealerUsers_OLD_BACKUP.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
@@ -43941,10 +43844,10 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2130 translation keys are referenced but missing",
+      "description": "2119 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "107 hours"
+      "estimatedEffort": "106 hours"
     }
   ],
-  "coverage": 77
+  "coverage": 76
 }
