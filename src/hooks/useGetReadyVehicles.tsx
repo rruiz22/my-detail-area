@@ -331,6 +331,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
         const sanitized = sanitizeAndLowercase(searchQuery);
         if (sanitized) {
           query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
+        }
       }
 
       // Apply sorting
@@ -537,6 +538,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         const sanitized = sanitizeAndLowercase(searchQuery);
         if (sanitized) {
           query = query.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
+        }
       }
 
       // Apply sorting
