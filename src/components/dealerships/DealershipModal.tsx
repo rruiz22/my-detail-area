@@ -22,6 +22,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Dealership, DealershipFormData, DealershipStatus, SubscriptionPlan } from '@/types/dealership';
 import { toast } from 'sonner';
 import { Building2, Palette } from 'lucide-react';
+import { LogoUploader } from './LogoUploader';
 
 interface DealershipModalProps {
   isOpen: boolean;
@@ -357,17 +358,23 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
               <div>
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.branding')}</h3>
                 <div className="space-y-4">
+                  {/* Logo Uploader */}
                   <div>
-                    <Label htmlFor="logo_url" className="block mb-3">{t('dealerships.logo')}</Label>
-                    <Input
-                      id="logo_url"
-                      value={formData.logo_url}
-                      onChange={(e) => handleInputChange('logo_url', e.target.value)}
-                      placeholder="Enter logo URL"
-                      type="url"
-                    />
+                    <Label className="block mb-3">{t('dealerships.logo')}</Label>
+                    {isEditing && dealership ? (
+                      <LogoUploader
+                        dealershipId={dealership.id}
+                        currentLogoUrl={dealership.logo_url}
+                        size="md"
+                      />
+                    ) : (
+                      <p className="text-sm text-muted-foreground py-4 px-3 border border-dashed rounded-lg text-center">
+                        {t('dealerships.logo_upload_after_creation')}
+                      </p>
+                    )}
                   </div>
 
+                  {/* Primary Color */}
                   <div>
                     <Label htmlFor="primary_color" className="flex items-center gap-2 mb-3">
                       <Palette className="h-4 w-4" />
