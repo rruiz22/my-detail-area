@@ -35,9 +35,9 @@ const statusConfig: Record<WorkItemStatus, StatusConfig> = {
   },
   approved: {
     icon: CheckCircle,
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-600',
-    textColor: 'text-emerald-900 dark:text-emerald-100',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/30',
+    borderColor: 'border-orange-500',
+    textColor: 'text-orange-900 dark:text-orange-100',
     phase: 'pre-work',
   },
   rejected: {
