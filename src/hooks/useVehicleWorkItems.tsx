@@ -376,7 +376,7 @@ export function useApproveWorkItem() {
           approval_status: 'approved',
           approved_by: user.id,
           approved_at: new Date().toISOString(),
-          status: 'ready', // ✨ NEW: Change from 'pending' to 'ready'
+          status: 'approved', // Changed to 'approved' for approved work items
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)

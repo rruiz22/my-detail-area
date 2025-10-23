@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
+import { useDealerActiveModules } from '@/hooks/useDealerActiveModules';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Shield, 
@@ -87,6 +88,102 @@ const PERMISSION_MODULES: PermissionModule[] = [
     ]
   },
   {
+    name: 'recon_orders',
+    display_name: 'Recon Orders',
+    description: 'Vehicle reconditioning workflow management',
+    permissions: [
+      { level: 'read', description: 'View recon orders', icon: Eye },
+      { level: 'write', description: 'Create and edit recon orders', icon: Edit },
+      { level: 'delete', description: 'Delete recon orders', icon: Trash2 },
+      { level: 'admin', description: 'Manage recon settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'car_wash',
+    display_name: 'Car Wash',
+    description: 'Quick service and car wash order management',
+    permissions: [
+      { level: 'read', description: 'View car wash orders', icon: Eye },
+      { level: 'write', description: 'Create and edit car wash orders', icon: Edit },
+      { level: 'delete', description: 'Delete car wash orders', icon: Trash2 },
+      { level: 'admin', description: 'Manage car wash settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'stock',
+    display_name: 'Stock/Inventory',
+    description: 'Vehicle inventory and stock management',
+    permissions: [
+      { level: 'read', description: 'View stock', icon: Eye },
+      { level: 'write', description: 'Create and edit stock', icon: Edit },
+      { level: 'delete', description: 'Delete stock items', icon: Trash2 },
+      { level: 'admin', description: 'Manage stock settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'get_ready',
+    display_name: 'Get Ready',
+    description: 'Vehicle preparation workflow management',
+    permissions: [
+      { level: 'read', description: 'View get ready tasks', icon: Eye },
+      { level: 'write', description: 'Create and edit tasks', icon: Edit },
+      { level: 'delete', description: 'Delete tasks', icon: Trash2 },
+      { level: 'admin', description: 'Manage get ready settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'chat',
+    display_name: 'Team Chat',
+    description: 'Team communication and messaging',
+    permissions: [
+      { level: 'read', description: 'View messages', icon: Eye },
+      { level: 'write', description: 'Send messages', icon: Edit },
+      { level: 'admin', description: 'Manage chat settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'contacts',
+    display_name: 'Contacts',
+    description: 'Customer and dealer contact management',
+    permissions: [
+      { level: 'read', description: 'View contacts', icon: Eye },
+      { level: 'write', description: 'Create and edit contacts', icon: Edit },
+      { level: 'delete', description: 'Delete contacts', icon: Trash2 },
+      { level: 'admin', description: 'Manage contact settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'productivity',
+    display_name: 'Productivity',
+    description: 'Task management, calendar, and productivity tools',
+    permissions: [
+      { level: 'read', description: 'View tasks and calendar', icon: Eye },
+      { level: 'write', description: 'Create and edit tasks', icon: Edit },
+      { level: 'delete', description: 'Delete tasks', icon: Trash2 },
+      { level: 'admin', description: 'Manage productivity settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'reports',
+    display_name: 'Reports & Analytics',
+    description: 'Access to reports and analytical data',
+    permissions: [
+      { level: 'read', description: 'View reports', icon: Eye },
+      { level: 'write', description: 'Create custom reports', icon: Edit },
+      { level: 'admin', description: 'Manage report settings', icon: Settings }
+    ]
+  },
+  {
+    name: 'settings',
+    display_name: 'Settings',
+    description: 'System configuration and preferences',
+    permissions: [
+      { level: 'read', description: 'View settings', icon: Eye },
+      { level: 'write', description: 'Modify settings', icon: Edit },
+      { level: 'admin', description: 'Manage all settings', icon: Settings }
+    ]
+  },
+  {
     name: 'users',
     display_name: 'User Management',
     description: 'Manage users, roles, and permissions',
@@ -98,12 +195,23 @@ const PERMISSION_MODULES: PermissionModule[] = [
     ]
   },
   {
-    name: 'reports',
-    display_name: 'Reports & Analytics',
-    description: 'Access to reports and analytical data',
+    name: 'dealerships',
+    display_name: 'Dealerships',
+    description: 'Multi-dealership management and configuration',
     permissions: [
-      { level: 'read', description: 'View reports', icon: Eye },
-      { level: 'admin', description: 'Manage report settings', icon: Settings }
+      { level: 'read', description: 'View dealerships', icon: Eye },
+      { level: 'write', description: 'Edit dealership info', icon: Edit },
+      { level: 'admin', description: 'Manage dealerships', icon: Shield }
+    ]
+  },
+  {
+    name: 'management',
+    display_name: 'Management',
+    description: 'Advanced management tools and admin functions',
+    permissions: [
+      { level: 'read', description: 'View management data', icon: Eye },
+      { level: 'write', description: 'Perform management actions', icon: Edit },
+      { level: 'admin', description: 'Full management access', icon: Shield }
     ]
   }
 ];
@@ -111,16 +219,23 @@ const PERMISSION_MODULES: PermissionModule[] = [
 interface AdvancedPermissionManagerProps {
   roleId?: string;
   userId?: string;
+  dealerId?: number; // Dealer ID to filter active modules
+  customRoleId?: string; // For editing dealer custom roles
   onPermissionsChange?: (permissions: Permission[]) => void;
 }
 
 export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps> = ({
   roleId,
   userId,
+  dealerId,
+  customRoleId,
   onPermissionsChange
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  
+  // Get active modules for dealer (if dealerId provided)
+  const { activeModules, isModuleActive, loading: modulesLoading } = useDealerActiveModules(dealerId || null);
   
   // State management
   const [roles, setRoles] = useState<Role[]>([]);
@@ -271,7 +386,19 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
     fetchRolesAndPermissions();
   }, [roleId, userId, fetchRolesAndPermissions]);
 
-  if (loading) {
+  // Filter modules based on dealer's active modules
+  const visibleModules = React.useMemo(() => {
+    // If dealerId is provided, filter to only active modules
+    if (dealerId && activeModules.length > 0) {
+      return PERMISSION_MODULES.filter(module => 
+        isModuleActive(module.name as any)
+      );
+    }
+    // Otherwise show all modules (for system roles)
+    return PERMISSION_MODULES;
+  }, [dealerId, activeModules, isModuleActive]);
+
+  if (loading || modulesLoading) {
     return (
       <Card className="animate-pulse">
         <CardContent className="p-6">
@@ -381,7 +508,17 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                     )}
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {PERMISSION_MODULES.map((module) => {
+                    {visibleModules.length === 0 ? (
+                      <div className="text-center py-8">
+                        <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground">
+                          {dealerId 
+                            ? 'No active modules found for this dealer. Please activate modules in the Modules tab first.'
+                            : 'No modules available.'}
+                        </p>
+                      </div>
+                    ) : (
+                      visibleModules.map((module) => {
                       const isExpanded = expandedModules.includes(module.name);
                       const currentLevel = getPermissionLevel(module.name);
                       
@@ -477,7 +614,7 @@ export const AdvancedPermissionManager: React.FC<AdvancedPermissionManagerProps>
                           </Card>
                         </Collapsible>
                       );
-                    })}
+                    }))}
                   </CardContent>
                 </Card>
               ) : (

@@ -421,7 +421,7 @@ export interface NotificationGroup {
 // WORK ITEMS TYPES
 // =====================================================
 
-export type WorkItemStatus = 'pending' | 'in_progress' | 'completed' | 'declined';
+export type WorkItemStatus = 'awaiting_approval' | 'approved' | 'pending' | 'rejected' | 'ready' | 'scheduled' | 'in_progress' | 'on_hold' | 'blocked' | 'completed' | 'cancelled' | 'declined';
 export type WorkItemType = 'mechanical' | 'body_repair' | 'detailing' | 'safety_inspection' | 'reconditioning' | 'parts_ordering' | 'other';
 
 /**

@@ -102,6 +102,7 @@ export function WorkItemsGroupedTable({
     // Pre-Work Phase
     awaiting_approval: workItems.filter((item) => item.status === 'awaiting_approval'),
     rejected: workItems.filter((item) => item.status === 'rejected'),
+    approved: workItems.filter((item) => item.status === 'approved'),
     ready: workItems.filter((item) => item.status === 'ready'),
     scheduled: workItems.filter((item) => item.status === 'scheduled'),
 
@@ -286,7 +287,7 @@ export function WorkItemsGroupedTable({
           )}
 
           {/* Start Action - ready or rejected status */}
-          {(item.status === 'ready' || item.status === 'rejected') && (
+          {(item.status === 'approved' || item.status === 'ready' || item.status === 'rejected') && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>

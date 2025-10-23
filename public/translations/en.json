@@ -2521,6 +2521,7 @@
         "awaiting_approval": "Awaiting Approval",
         "rejected": "Rejected",
         "ready": "Ready",
+        "approved": "Approved",
         "scheduled": "Scheduled",
         "in_progress": "In Progress",
         "on_hold": "On Hold",
@@ -3260,10 +3261,13 @@
       "all_departments": "All Departments",
       "sales": "Sales",
       "service": "Service",
+      "recon": "Recon",
+      "car_wash": "Car Wash",
       "pending": "Pending",
       "in_progress": "In Progress",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "active_filters": "Active Filters"
     },
     "metrics": {
       "total_orders": "Total Orders",

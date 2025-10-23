@@ -20,6 +20,19 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Function to detect if a quick range is currently active
+  const isActiveRange = (days: number): boolean => {
+    const diffTime = filters.endDate.getTime() - filters.startDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    // Check if end date is today (within 24 hours tolerance)
+    const now = new Date();
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const isEndToday = Math.abs(filters.endDate.getTime() - endOfToday.getTime()) < 86400000;
+
+    return diffDays === days && isEndToday;
+  };
+
   const quickDateRanges = [
     {
       label: t('reports.filters.last_7_days'),
@@ -70,17 +83,23 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     <div className="space-y-4">
       {/* Quick Date Ranges */}
       <div className="flex flex-wrap gap-2">
-        {quickDateRanges.map((range) => (
-          <Button
-            key={range.value}
-            variant="outline"
-            size="sm"
-            onClick={() => handleQuickDateRange(range.value)}
-            className="text-sm"
-          >
-            {range.label}
-          </Button>
-        ))}
+        {quickDateRanges.map((range) => {
+          const isActive = isActiveRange(range.value);
+          return (
+            <Button
+              key={range.value}
+              variant={isActive ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleQuickDateRange(range.value)}
+              className={cn(
+                "text-sm",
+                isActive && "bg-primary text-primary-foreground shadow-sm"
+              )}
+            >
+              {range.label}
+            </Button>
+          );
+        })}
         <Button
           variant="ghost"
           size="sm"
@@ -174,6 +193,8 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
             <SelectItem value="all">{t('reports.filters.all_departments')}</SelectItem>
             <SelectItem value="sales">{t('reports.filters.sales')}</SelectItem>
             <SelectItem value="service">{t('reports.filters.service')}</SelectItem>
+            <SelectItem value="recon">{t('reports.filters.recon')}</SelectItem>
+            <SelectItem value="car_wash">{t('reports.filters.car_wash')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -196,6 +217,25 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           </SelectContent>
         </Select>
       </div>
+
+      {/* Active Filters Indicator */}
+      {(filters.orderType !== 'all' || filters.status !== 'all') && (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground px-4">
+          <span className="font-medium">{t('reports.filters.active_filters')}:</span>
+          <div className="flex gap-2">
+            {filters.orderType !== 'all' && (
+              <span className="px-2 py-1 bg-primary/10 text-primary rounded-md font-medium">
+                {t(`reports.filters.${filters.orderType}`)}
+              </span>
+            )}
+            {filters.status !== 'all' && (
+              <span className="px-2 py-1 bg-emerald-500/10 text-emerald-600 rounded-md font-medium">
+                {t(`reports.filters.${filters.status}`)}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
