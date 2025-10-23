@@ -426,7 +426,7 @@ export function useDeclineWorkItem() {
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
-          status: 'rejected', // ✨ NEW: Change from 'declined' to 'rejected'
+          status: 'cancelled', approval_status: 'rejected', // ✨ NEW: Change from 'declined' to 'rejected'
           approval_status: 'declined',
           decline_reason: reason,
           approved_by: user.id,

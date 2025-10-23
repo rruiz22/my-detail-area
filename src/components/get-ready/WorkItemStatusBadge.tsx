@@ -107,6 +107,8 @@ interface WorkItemStatusBadgeProps {
   className?: string;
   showIcon?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  approval_required?: boolean;
+  approval_status?: string | null;
 }
 
 export function WorkItemStatusBadge({
@@ -114,8 +116,24 @@ export function WorkItemStatusBadge({
   className,
   showIcon = true,
   size = 'md',
+  approval_required,
+  approval_status,
 }: WorkItemStatusBadgeProps) {
   const { t } = useTranslation();
+  
+  // Calculate visual status for dynamic badge display
+  const getVisualStatus = (): WorkItemStatus => {
+    if (status === 'cancelled' && approval_status === 'rejected') {
+      return 'rejected';
+    }
+    if (status === 'pending' && approval_required) {
+      if (!approval_status) return 'awaiting_approval';
+      if (approval_status === 'approved') return 'approved';
+    }
+    return status;
+  };
+  
+  const visualStatus = getVisualStatus();
   const config = statusConfig[visualStatus];
   const Icon = config.icon;
 
