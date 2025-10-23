@@ -30,7 +30,11 @@
       "Bash(taskkill:*)",
       "Bash(timeout /t 8 /nobreak)",
       "Bash(if not exist backupswork_items_status_upgrade mkdir backupswork_items_status_upgrade)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(if [ -d \"supabase/functions\" ])",
+      "Bash(then ls -la supabase/functions)",
+      "Bash(else echo \"Folder does not exist\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

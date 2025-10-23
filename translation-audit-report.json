@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 618,
-  "totalStrings": 5889,
-  "hardcodedStrings": 1384,
-  "translatedStrings": 4505,
+  "scannedFiles": 623,
+  "totalStrings": 5845,
+  "hardcodedStrings": 1383,
+  "translatedStrings": 4462,
   "issues": {
     "critical": [
       {
@@ -381,108 +381,108 @@
           },
           {
             "text": "All Status",
-            "line": 216,
-            "context": "215: <SelectContent>\n216: <SelectItem value=\"all\">All Status</SelectItem>\n217: <SelectItem value=\"pending\">Pending</SelectItem>"
+            "line": 219,
+            "context": "218: <SelectContent>\n219: <SelectItem value=\"all\">All Status</SelectItem>\n220: <SelectItem value=\"pending\">Pending</SelectItem>"
           },
           {
             "text": "Pending",
-            "line": 217,
-            "context": "216: <SelectItem value=\"all\">All Status</SelectItem>\n217: <SelectItem value=\"pending\">Pending</SelectItem>\n218: <SelectItem value=\"paid\">Paid</SelectItem>"
+            "line": 220,
+            "context": "219: <SelectItem value=\"all\">All Status</SelectItem>\n220: <SelectItem value=\"pending\">Pending</SelectItem>\n221: <SelectItem value=\"paid\">Paid</SelectItem>"
           },
           {
             "text": "Paid",
-            "line": 218,
-            "context": "217: <SelectItem value=\"pending\">Pending</SelectItem>\n218: <SelectItem value=\"paid\">Paid</SelectItem>\n219: <SelectItem value=\"overdue\">Overdue</SelectItem>"
+            "line": 221,
+            "context": "220: <SelectItem value=\"pending\">Pending</SelectItem>\n221: <SelectItem value=\"paid\">Paid</SelectItem>\n222: <SelectItem value=\"overdue\">Overdue</SelectItem>"
           },
           {
             "text": "Overdue",
-            "line": 219,
-            "context": "218: <SelectItem value=\"paid\">Paid</SelectItem>\n219: <SelectItem value=\"overdue\">Overdue</SelectItem>\n220: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
+            "line": 222,
+            "context": "221: <SelectItem value=\"paid\">Paid</SelectItem>\n222: <SelectItem value=\"overdue\">Overdue</SelectItem>\n223: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
           },
           {
             "text": "Partial",
-            "line": 220,
-            "context": "219: <SelectItem value=\"overdue\">Overdue</SelectItem>\n220: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n221: </SelectContent>"
+            "line": 223,
+            "context": "222: <SelectItem value=\"overdue\">Overdue</SelectItem>\n223: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n224: </SelectContent>"
           },
           {
             "text": "All Types",
-            "line": 231,
-            "context": "230: <SelectContent>\n231: <SelectItem value=\"all\">All Types</SelectItem>\n232: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 237,
+            "context": "236: <SelectContent>\n237: <SelectItem value=\"all\">All Types</SelectItem>\n238: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 232,
-            "context": "231: <SelectItem value=\"all\">All Types</SelectItem>\n232: <SelectItem value=\"sales\">Sales</SelectItem>\n233: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 238,
+            "context": "237: <SelectItem value=\"all\">All Types</SelectItem>\n238: <SelectItem value=\"sales\">Sales</SelectItem>\n239: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 233,
-            "context": "232: <SelectItem value=\"sales\">Sales</SelectItem>\n233: <SelectItem value=\"service\">Service</SelectItem>\n234: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 239,
+            "context": "238: <SelectItem value=\"sales\">Sales</SelectItem>\n239: <SelectItem value=\"service\">Service</SelectItem>\n240: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 234,
-            "context": "233: <SelectItem value=\"service\">Service</SelectItem>\n234: <SelectItem value=\"recon\">Recon</SelectItem>\n235: <SelectItem value=\"car_wash\">Car Wash</SelectItem>"
+            "line": 240,
+            "context": "239: <SelectItem value=\"service\">Service</SelectItem>\n240: <SelectItem value=\"recon\">Recon</SelectItem>\n241: <SelectItem value=\"car_wash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 235,
-            "context": "234: <SelectItem value=\"recon\">Recon</SelectItem>\n235: <SelectItem value=\"car_wash\">Car Wash</SelectItem>\n236: </SelectContent>"
+            "line": 241,
+            "context": "240: <SelectItem value=\"recon\">Recon</SelectItem>\n241: <SelectItem value=\"car_wash\">Car Wash</SelectItem>\n242: </SelectContent>"
           },
           {
             "text": "No invoices found",
-            "line": 249,
-            "context": "248: <FileText className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n249: <p className=\"text-muted-foreground\">No invoices found</p>\n250: <Button"
+            "line": 255,
+            "context": "254: <FileText className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n255: <p className=\"text-muted-foreground\">No invoices found</p>\n256: <Button"
           },
           {
             "text": "Create your first invoice",
-            "line": 254,
-            "context": "253: onClick={() => setShowCreateDialog(true)}\n254: >\n255: Create your first invoice"
+            "line": 260,
+            "context": "259: onClick={() => setShowCreateDialog(true)}\n260: >\n261: Create your first invoice"
           },
           {
             "text": "Invoice",
-            "line": 262,
-            "context": "261: <TableRow className=\"border-b hover:bg-transparent\">\n262: <TableHead className=\"font-semibold\">Invoice</TableHead>\n263: <TableHead className=\"font-semibold\">Customer</TableHead>"
+            "line": 268,
+            "context": "267: <TableRow className=\"border-b hover:bg-transparent\">\n268: <TableHead className=\"font-semibold\">Invoice</TableHead>\n269: <TableHead className=\"font-semibold\">Customer</TableHead>"
           },
           {
             "text": "Customer",
-            "line": 263,
-            "context": "262: <TableHead className=\"font-semibold\">Invoice</TableHead>\n263: <TableHead className=\"font-semibold\">Customer</TableHead>\n264: <TableHead className=\"font-semibold\">Order</TableHead>"
+            "line": 269,
+            "context": "268: <TableHead className=\"font-semibold\">Invoice</TableHead>\n269: <TableHead className=\"font-semibold\">Customer</TableHead>\n270: <TableHead className=\"font-semibold\">Order</TableHead>"
           },
           {
             "text": "Order",
-            "line": 264,
-            "context": "263: <TableHead className=\"font-semibold\">Customer</TableHead>\n264: <TableHead className=\"font-semibold\">Order</TableHead>\n265: <TableHead className=\"font-semibold\">Issue Date</TableHead>"
+            "line": 270,
+            "context": "269: <TableHead className=\"font-semibold\">Customer</TableHead>\n270: <TableHead className=\"font-semibold\">Order</TableHead>\n271: <TableHead className=\"font-semibold\">Issue Date</TableHead>"
           },
           {
             "text": "Issue Date",
-            "line": 265,
-            "context": "264: <TableHead className=\"font-semibold\">Order</TableHead>\n265: <TableHead className=\"font-semibold\">Issue Date</TableHead>\n266: <TableHead className=\"font-semibold\">Due Date</TableHead>"
+            "line": 271,
+            "context": "270: <TableHead className=\"font-semibold\">Order</TableHead>\n271: <TableHead className=\"font-semibold\">Issue Date</TableHead>\n272: <TableHead className=\"font-semibold\">Due Date</TableHead>"
           },
           {
             "text": "Due Date",
-            "line": 266,
-            "context": "265: <TableHead className=\"font-semibold\">Issue Date</TableHead>\n266: <TableHead className=\"font-semibold\">Due Date</TableHead>\n267: <TableHead className=\"font-semibold text-right\">Amount</TableHead>"
+            "line": 272,
+            "context": "271: <TableHead className=\"font-semibold\">Issue Date</TableHead>\n272: <TableHead className=\"font-semibold\">Due Date</TableHead>\n273: <TableHead className=\"font-semibold text-right\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 267,
-            "context": "266: <TableHead className=\"font-semibold\">Due Date</TableHead>\n267: <TableHead className=\"font-semibold text-right\">Amount</TableHead>\n268: <TableHead className=\"font-semibold text-right\">Paid</TableHead>"
+            "line": 273,
+            "context": "272: <TableHead className=\"font-semibold\">Due Date</TableHead>\n273: <TableHead className=\"font-semibold text-right\">Amount</TableHead>\n274: <TableHead className=\"font-semibold text-right\">Paid</TableHead>"
           },
           {
             "text": "Paid",
-            "line": 268,
-            "context": "267: <TableHead className=\"font-semibold text-right\">Amount</TableHead>\n268: <TableHead className=\"font-semibold text-right\">Paid</TableHead>\n269: <TableHead className=\"font-semibold text-right\">Due</TableHead>"
+            "line": 274,
+            "context": "273: <TableHead className=\"font-semibold text-right\">Amount</TableHead>\n274: <TableHead className=\"font-semibold text-right\">Paid</TableHead>\n275: <TableHead className=\"font-semibold text-right\">Due</TableHead>"
           },
           {
             "text": "Status",
-            "line": 270,
-            "context": "269: <TableHead className=\"font-semibold text-right\">Due</TableHead>\n270: <TableHead className=\"font-semibold\">Status</TableHead>\n271: <TableHead className=\"font-semibold text-right\">Actions</TableHead>"
+            "line": 276,
+            "context": "275: <TableHead className=\"font-semibold text-right\">Due</TableHead>\n276: <TableHead className=\"font-semibold\">Status</TableHead>\n277: <TableHead className=\"font-semibold text-right\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 271,
-            "context": "270: <TableHead className=\"font-semibold\">Status</TableHead>\n271: <TableHead className=\"font-semibold text-right\">Actions</TableHead>\n272: </TableRow>"
+            "line": 277,
+            "context": "276: <TableHead className=\"font-semibold\">Status</TableHead>\n277: <TableHead className=\"font-semibold text-right\">Actions</TableHead>\n278: </TableRow>"
           },
           {
             "text": "Search invoices...",
@@ -491,13 +491,13 @@
           },
           {
             "text": "Status",
-            "line": 213,
-            "context": "212: <SelectTrigger className=\"w-[150px] border-gray-200\">\n213: <SelectValue placeholder=\"Status\" />\n214: </SelectTrigger>"
+            "line": 216,
+            "context": "215: <SelectTrigger className=\"w-[150px] border-gray-200\">\n216: <SelectValue placeholder=\"Status\" />\n217: </SelectTrigger>"
           },
           {
             "text": "Type",
-            "line": 228,
-            "context": "227: <SelectTrigger className=\"w-[150px] border-gray-200\">\n228: <SelectValue placeholder=\"Type\" />\n229: </SelectTrigger>"
+            "line": 234,
+            "context": "233: <SelectTrigger className=\"w-[150px] border-gray-200\">\n234: <SelectValue placeholder=\"Type\" />\n235: </SelectTrigger>"
           }
         ],
         "translationCalls": [],
@@ -9492,6 +9492,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\utils\\dealerValidation.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Invalid dealer ID",
+            "line": 173,
+            "context": "172: *   // Logs will show why it's invalid\n173: *   return { vehicles: [], error: 'Invalid dealer ID' };\n174: * }"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\utils\\activityFormatters.ts",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -14528,151 +14542,6 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\AppSidebar.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "My Detail Area",
-            "line": 243,
-            "context": "242: <div className=\"text-center\">\n243: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n244: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>"
-          },
-          {
-            "text": "Enterprise Dealership Management",
-            "line": 244,
-            "context": "243: <h1 className=\"font-bold text-lg\">My Detail Area</h1>\n244: <p className=\"text-[9px] text-muted-foreground\">Enterprise Dealership Management</p>\n245: </div>"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "navigation.dashboard",
-            "line": 40,
-            "exists": true
-          },
-          {
-            "key": "navigation.sales_orders",
-            "line": 46,
-            "exists": true
-          },
-          {
-            "key": "navigation.service_orders",
-            "line": 52,
-            "exists": true
-          },
-          {
-            "key": "navigation.recon_orders",
-            "line": 58,
-            "exists": true
-          },
-          {
-            "key": "navigation.car_wash",
-            "line": 64,
-            "exists": true
-          },
-          {
-            "key": "navigation.get_ready",
-            "line": 82,
-            "exists": true
-          },
-          {
-            "key": "navigation.stock",
-            "line": 87,
-            "exists": true
-          },
-          {
-            "key": "navigation.detail_hub",
-            "line": 92,
-            "exists": true
-          },
-          {
-            "key": "chat.title",
-            "line": 113,
-            "exists": true
-          },
-          {
-            "key": "contacts.title",
-            "line": 118,
-            "exists": true
-          },
-          {
-            "key": "vin_scanner_hub.title",
-            "line": 123,
-            "exists": true
-          },
-          {
-            "key": "nfc_tracking.title",
-            "line": 128,
-            "exists": true
-          },
-          {
-            "key": "navigation.productivity",
-            "line": 144,
-            "exists": true
-          },
-          {
-            "key": "profile.title",
-            "line": 149,
-            "exists": true
-          },
-          {
-            "key": "admin.administration",
-            "line": 166,
-            "exists": true
-          },
-          {
-            "key": "admin.administration_description",
-            "line": 171,
-            "exists": true
-          },
-          {
-            "key": "navigation.reports",
-            "line": 174,
-            "exists": true
-          },
-          {
-            "key": "navigation.settings",
-            "line": 181,
-            "exists": true
-          },
-          {
-            "key": "navigation.landing_page",
-            "line": 202,
-            "exists": true
-          },
-          {
-            "key": "navigation.core_operations",
-            "line": 290,
-            "exists": true
-          },
-          {
-            "key": "navigation.workflow_management",
-            "line": 333,
-            "exists": true
-          },
-          {
-            "key": "navigation.tools_communication",
-            "line": 377,
-            "exists": true
-          },
-          {
-            "key": "navigation.productivity_section",
-            "line": 421,
-            "exists": true
-          },
-          {
-            "key": "navigation.administration_reports",
-            "line": 465,
-            "exists": true
-          },
-          {
-            "key": "navigation.system_admin",
-            "line": 509,
-            "exists": true
-          }
-        ],
-        "missingKeys": [],
-        "coverage": 93,
         "severity": "low"
       },
       {
@@ -20985,161 +20854,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\reports\\ReportFilters.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "reports.filters.last_7_days",
-            "line": 25,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.last_30_days",
-            "line": 29,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.last_90_days",
-            "line": 33,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.this_year",
-            "line": 37,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.clear_all",
-            "line": 91,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.filters",
-            "line": 99,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.start_date",
-            "line": 117,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.end_date",
-            "line": 146,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.select_department",
-            "line": 171,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.all_departments",
-            "line": 174,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.sales",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.service",
-            "line": 176,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.select_status",
-            "line": 188,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.all_statuses",
-            "line": 191,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.pending",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.in_progress",
-            "line": 193,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.completed",
-            "line": 194,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.cancelled",
-            "line": 195,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "reports.filters.filters",
-            "line": 99,
-            "context": "98: <Filter className=\"h-4 w-4\" />\n99: {t('reports.filters.filters')}:\n100: </div>"
-          },
-          {
-            "key": "reports.filters.start_date",
-            "line": 117,
-            "context": "116: ) : (\n117: <span>{t('reports.filters.start_date')}</span>\n118: )}"
-          },
-          {
-            "key": "reports.filters.end_date",
-            "line": 146,
-            "context": "145: ) : (\n146: <span>{t('reports.filters.end_date')}</span>\n147: )}"
-          },
-          {
-            "key": "reports.filters.select_department",
-            "line": 171,
-            "context": "170: <SelectTrigger className=\"w-48\">\n171: <SelectValue placeholder={t('reports.filters.select_department')} />\n172: </SelectTrigger>"
-          },
-          {
-            "key": "reports.filters.all_departments",
-            "line": 174,
-            "context": "173: <SelectContent>\n174: <SelectItem value=\"all\">{t('reports.filters.all_departments')}</SelectItem>\n175: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>"
-          },
-          {
-            "key": "reports.filters.sales",
-            "line": 175,
-            "context": "174: <SelectItem value=\"all\">{t('reports.filters.all_departments')}</SelectItem>\n175: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>\n176: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>"
-          },
-          {
-            "key": "reports.filters.service",
-            "line": 176,
-            "context": "175: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>\n176: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>\n177: </SelectContent>"
-          },
-          {
-            "key": "reports.filters.pending",
-            "line": 192,
-            "context": "191: <SelectItem value=\"all\">{t('reports.filters.all_statuses')}</SelectItem>\n192: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>\n193: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>"
-          },
-          {
-            "key": "reports.filters.in_progress",
-            "line": 193,
-            "context": "192: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>\n193: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>\n194: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>"
-          },
-          {
-            "key": "reports.filters.completed",
-            "line": 194,
-            "context": "193: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>\n194: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>\n195: <SelectItem value=\"cancelled\">{t('reports.filters.cancelled')}</SelectItem>"
-          },
-          {
-            "key": "reports.filters.cancelled",
-            "line": 195,
-            "context": "194: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>\n195: <SelectItem value=\"cancelled\">{t('reports.filters.cancelled')}</SelectItem>\n196: </SelectContent>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\reports\\sections\\ExportCenter.tsx",
         "hardcodedStrings": [
           {
@@ -21368,30 +21082,25 @@
         "translationCalls": [
           {
             "key": "reports.status.${item.name}",
-            "line": 28,
+            "line": 29,
             "exists": false
           },
           {
             "key": "reports.charts.orders",
-            "line": 39,
+            "line": 40,
             "exists": true
           },
           {
             "key": "reports.charts.percentage",
-            "line": 41,
-            "exists": false
+            "line": 42,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "reports.status.${item.name}",
-            "line": 28,
-            "context": "27: const chartData = data.status_distribution.map((item) => ({\n28: name: t(`reports.status.${item.name}`),\n29: value: item.value,"
-          },
-          {
-            "key": "reports.charts.percentage",
-            "line": 41,
-            "context": "40: <p className=\"text-sm text-muted-foreground\">\n41: {`${t('reports.charts.percentage')}: ${((data.value / data.payload.total) * 100).toFixed(1)}%`}\n42: </p>"
+            "line": 29,
+            "context": "28: const chartData = data.status_distribution.map((item) => ({\n29: name: t(`reports.status.${item.name}`),\n30: value: item.value,"
           }
         ],
         "coverage": 100,
@@ -21403,35 +21112,35 @@
         "translationCalls": [
           {
             "key": "common.date",
-            "line": 39,
+            "line": 40,
             "exists": false
           },
           {
             "key": "reports.charts.orders",
-            "line": 79,
+            "line": 80,
             "exists": true
           },
           {
             "key": "reports.charts.revenue",
-            "line": 86,
+            "line": 87,
             "exists": true
           },
           {
             "key": "reports.charts.orders",
-            "line": 124,
+            "line": 125,
             "exists": true
           },
           {
             "key": "reports.charts.revenue",
-            "line": 133,
+            "line": 134,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.date",
-            "line": 39,
-            "context": "38: <div className=\"bg-background border border-border rounded-lg shadow-lg p-3\">\n39: <p className=\"font-medium text-foreground\">{`${t('common.date')}: ${label}`}</p>\n40: {payload.map((entry: any, index: number) => ("
+            "line": 40,
+            "context": "39: <div className=\"bg-background border border-border rounded-lg shadow-lg p-3\">\n40: <p className=\"font-medium text-foreground\">{`${t('common.date')}: ${label}`}</p>\n41: {payload.map((entry, index) => ("
           }
         ],
         "coverage": 100,
@@ -38997,7 +38706,7 @@
           {
             "key": "dealerships.all_selected",
             "line": 34,
-            "exists": false
+            "exists": true
           },
           {
             "key": "dealerships.none_selected",
@@ -39012,24 +38721,14 @@
           {
             "key": "dealerships.all_dealerships",
             "line": 71,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "dealerships.all_selected",
-            "line": 34,
-            "context": "33: if (selectedDealerId === 'all') {\n34: return t('dealerships.all_selected');\n35: }"
-          },
-          {
             "key": "dealerships.none_selected",
             "line": 37,
             "context": "36: const currentDealer = dealerships.find(d => d.id === selectedDealerId);\n37: return currentDealer?.name || t('dealerships.none_selected');\n38: };"
-          },
-          {
-            "key": "dealerships.all_dealerships",
-            "line": 71,
-            "context": "70: <div className=\"w-2 h-2 bg-gray-500 rounded-full shrink-0\" />\n71: <span className=\"truncate\">{t('dealerships.all_dealerships')}</span>\n72: </div>"
           }
         ],
         "coverage": 100,
@@ -43535,7 +43234,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "301 Component components need translation",
+      "description": "300 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -43667,7 +43366,6 @@
         "src\\hooks\\useAdvancedVinScanner.tsx",
         "src\\config\\firebase.ts",
         "src\\components\\ProtectedLayout.tsx",
-        "src\\components\\AppSidebar.tsx",
         "src\\components\\ui\\carousel.tsx",
         "src\\components\\scanner\\QuickScanMode.tsx",
         "src\\components\\reports\\invoices\\RecordPaymentDialog.tsx",
@@ -43684,6 +43382,7 @@
         "src\\workers\\vinOcrWorker.ts",
         "src\\utils\\lazyImports.ts",
         "src\\utils\\imageCompression.ts",
+        "src\\utils\\dealerValidation.ts",
         "src\\tests\\config\\performance-setup.ts",
         "src\\test\\validation\\phase4-integration.test.ts",
         "src\\services\\supabaseQueryOptimizer.ts",
@@ -43763,7 +43462,6 @@
         "src\\components\\scanner\\engines\\VinValidator.tsx",
         "src\\components\\scanner\\analytics\\VinScannerHistory.tsx",
         "src\\components\\scanner\\analytics\\ScannerAnalytics.tsx",
-        "src\\components\\reports\\ReportFilters.tsx",
         "src\\components\\reports\\charts\\StatusDistributionChart.tsx",
         "src\\components\\reports\\charts\\OrderVolumeChart.tsx",
         "src\\components\\recon-hub\\ReconHubDashboard.tsx",
@@ -43839,12 +43537,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "151 hours"
+      "estimatedEffort": "150 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2119 translation keys are referenced but missing",
+      "description": "2105 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "106 hours"
     }

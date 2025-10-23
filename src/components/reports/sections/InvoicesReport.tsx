@@ -48,13 +48,13 @@ interface InvoicesReportProps {
   filters: ReportsFilters;
 }
 
-// Status styling - Notion-inspired
+// Status styling - Notion-approved muted colors only
 const getStatusBadge = (status: InvoiceStatus) => {
   const styles = {
     draft: { variant: 'secondary' as const, color: 'text-gray-600', bg: 'bg-gray-50', label: 'Draft' },
-    pending: { variant: 'outline' as const, color: 'text-blue-600', bg: 'bg-blue-50', label: 'Pending' },
-    paid: { variant: 'default' as const, color: 'text-green-600', bg: 'bg-green-50', label: 'Paid' },
-    partially_paid: { variant: 'secondary' as const, color: 'text-yellow-600', bg: 'bg-yellow-50', label: 'Partial' },
+    pending: { variant: 'outline' as const, color: 'text-muted-foreground', bg: 'bg-muted', label: 'Pending' },
+    paid: { variant: 'default' as const, color: 'text-emerald-600', bg: 'bg-emerald-50', label: 'Paid' },
+    partially_paid: { variant: 'secondary' as const, color: 'text-amber-600', bg: 'bg-amber-50', label: 'Partial' },
     overdue: { variant: 'destructive' as const, color: 'text-red-600', bg: 'bg-red-50', label: 'Overdue' },
     cancelled: { variant: 'outline' as const, color: 'text-gray-500', bg: 'bg-gray-50', label: 'Cancelled' }
   };
@@ -123,16 +123,16 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       value: formatCurrency(summary?.totalAmount || 0),
       icon: DollarSign,
       trend: `${summary?.totalInvoices || 0} invoices`,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
+      color: 'text-indigo-500',
+      bgColor: 'bg-indigo-50'
     },
     {
       title: 'Collected',
       value: formatCurrency(summary?.totalPaid || 0),
       icon: CheckCircle2,
       trend: `${summary?.paidCount || 0} paid`,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      color: 'text-emerald-500',
+      bgColor: 'bg-emerald-50'
     },
     {
       title: 'Outstanding',
@@ -187,7 +187,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
             </div>
             <Button
               onClick={() => setShowCreateDialog(true)}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary/90"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create Invoice
@@ -207,7 +207,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
             </div>
             <Select
               value={invoiceFilters.status || 'all'}
-              onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, status: value as any }))}
+              onValueChange={(value) => setInvoiceFilters(prev => ({
+                ...prev,
+                status: value as InvoiceFilters['status']
+              }))}
             >
               <SelectTrigger className="w-[150px] border-gray-200">
                 <SelectValue placeholder="Status" />
@@ -222,7 +225,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
             </Select>
             <Select
               value={invoiceFilters.orderType || 'all'}
-              onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, orderType: value as any }))}
+              onValueChange={(value) => setInvoiceFilters(prev => ({
+                ...prev,
+                orderType: value as InvoiceFilters['orderType']
+              }))}
             >
               <SelectTrigger className="w-[150px] border-gray-200">
                 <SelectValue placeholder="Type" />
@@ -305,7 +311,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     <TableCell className="text-right font-medium">
                       {formatCurrency(invoice.totalAmount)}
                     </TableCell>
-                    <TableCell className="text-right text-green-600">
+                    <TableCell className="text-right text-emerald-600">
                       {formatCurrency(invoice.amountPaid)}
                     </TableCell>
                     <TableCell className="text-right font-medium">

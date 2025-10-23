@@ -999,6 +999,8 @@
     "status": "Estado",
     "all_statuses": "Todos los Estados",
     "all_plans": "Todos los Planes",
+    "all_dealerships": "Todos los Concesionarios",
+    "all_selected": "Todos Seleccionados",
     "active": "Activo",
     "inactive": "Inactivo",
     "suspended": "Suspendido",
@@ -3145,7 +3147,18 @@
       "select_status": "Estado",
       "all_statuses": "Todos los Estados",
       "clear_all": "Limpiar Todo",
-      "custom_range": "Rango Personalizado"
+      "custom_range": "Rango Personalizado",
+      "filters": "Filtros",
+      "start_date": "Fecha Inicial",
+      "end_date": "Fecha Final",
+      "select_department": "Seleccionar Departamento",
+      "all_departments": "Todos los Departamentos",
+      "sales": "Ventas",
+      "service": "Servicio",
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completado",
+      "cancelled": "Cancelado"
     },
     "metrics": {
       "total_orders": "Total de Órdenes",
@@ -3185,7 +3198,8 @@
       "aov_analysis_over_time": "Análisis de AOV a lo largo del tiempo",
       "avg_order_value": "Valor Promedio de Orden",
       "revenue": "Ingresos",
-      "orders": "Órdenes"
+      "orders": "Órdenes",
+      "percentage": "Porcentaje"
     },
     "export": {
       "configuration": "Configuración de Exportación",

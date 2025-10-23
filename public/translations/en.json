@@ -1286,6 +1286,8 @@
     "status": "Status",
     "all_statuses": "All Status",
     "all_plans": "All Plans",
+    "all_dealerships": "All Dealerships",
+    "all_selected": "All Selected",
     "active": "Active",
     "inactive": "Inactive",
     "suspended": "Suspended",
@@ -3250,7 +3252,18 @@
       "select_status": "Status",
       "all_statuses": "All Statuses",
       "clear_all": "Clear All",
-      "custom_range": "Custom Range"
+      "custom_range": "Custom Range",
+      "filters": "Filters",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "select_department": "Select Department",
+      "all_departments": "All Departments",
+      "sales": "Sales",
+      "service": "Service",
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
     },
     "metrics": {
       "total_orders": "Total Orders",
@@ -3290,7 +3303,8 @@
       "aov_analysis_over_time": "AOV analysis over time",
       "avg_order_value": "Avg Order Value",
       "revenue": "Revenue",
-      "orders": "Orders"
+      "orders": "Orders",
+      "percentage": "Percentage"
     },
     "export": {
       "configuration": "Export Configuration",
