@@ -87,12 +87,7 @@ export function useOverviewTable() {
 
       // Apply filters
       if (searchTerm) {
-        const sanitized = term.replace(/\/g, '\\').replace(/%/g, '\%').replace(_/g, '\_');
-        // Sanitize search sanitized to prevent wildcard bypass
-        const sanitized = term
-          .replace(/\/g, '\\')  // Escape backslash first
-          .replace(/%/g, '\%')        // Escape percent wildcard
-          .replace(/_/g, '\_');       // Escape underscore wildcard
+        const term = searchTerm.toLowerCase();
         query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%`);
       }
 
@@ -331,11 +326,6 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       // Apply search filter
       if (searchQuery) {
         const term = searchQuery.toLowerCase();
-        // Sanitize search term to prevent wildcard bypass
-        const sanitized = term
-          .replace(/\/g, '\\')  // Escape backslash first
-          .replace(/%/g, '\%')        // Escape percent wildcard
-          .replace(/_/g, '\_');       // Escape underscore wildcard
         query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
       }
 
@@ -541,11 +531,6 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       // Apply search filter
       if (searchQuery) {
         const term = searchQuery.toLowerCase();
-        // Sanitize search term to prevent wildcard bypass
-        const sanitized = term
-          .replace(/\/g, '\\')  // Escape backslash first
-          .replace(/%/g, '\%')        // Escape percent wildcard
-          .replace(/_/g, '\_');       // Escape underscore wildcard
         query = query.or(`stock_number.ilike.%${term}%,vin.ilike.%${term}%,vehicle_make.ilike.%${term}%,vehicle_model.ilike.%${term}%,assigned_to.ilike.%${term}%`);
       }
 

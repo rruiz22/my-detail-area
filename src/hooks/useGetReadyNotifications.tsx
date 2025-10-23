@@ -420,11 +420,13 @@ export function useGetReadyNotifications(
   useEffect(() => {
     if (!enabled || !dealerId || !user?.id) return;
 
+    let isMounted = true;
+
     console.log('[useGetReadyNotifications] Setting up real-time subscription');
 
     // Subscribe to notifications table changes
     const channel = supabase
-      .channel('get_ready_notifications_changes')
+      .channel(`get_ready_notifications_${dealerId}_${user.id}`)
       .on(
         'postgres_changes',
         {
@@ -434,6 +436,7 @@ export function useGetReadyNotifications(
           filter: `dealer_id=eq.${dealerId}`,
         },
         (payload) => {
+          if (!isMounted) return;
           console.log('[Real-time] New notification received:', payload);
 
           // Check if notification is for this user (broadcast or specific user)
@@ -482,6 +485,7 @@ export function useGetReadyNotifications(
         },
         () => {
           console.log('[Real-time] Notification updated');
+          if (!isMounted) return;
           queryClient.invalidateQueries({
             queryKey: ['getReadyNotifications'],
           });
@@ -493,12 +497,11 @@ export function useGetReadyNotifications(
       .subscribe();
 
     return () => {
-      console.log(
-        '[useGetReadyNotifications] Cleaning up real-time subscription'
-      );
-      channel.unsubscribe();
+      console.log('[useGetReadyNotifications] Cleaning up subscription');
+      isMounted = false;
+      supabase.removeChannel(channel);
     };
-  }, [enabled, selectedDealerId, user?.id, queryClient, toast]);
+  }, [enabled, dealerId, user?.id]);
 
   // =====================================================
   // RETURN HOOK INTERFACE
