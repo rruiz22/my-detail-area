@@ -171,14 +171,14 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Custom Roles</h2>
+          <h2 className="text-2xl font-bold">{t('roles.custom_roles_title')}</h2>
           <p className="text-sm text-muted-foreground">
-            Manage custom roles with granular permissions for this dealership
+            {t('roles.custom_roles_description')}
           </p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Create Role
+          {t('roles.create_role')}
         </Button>
       </div>
 
@@ -226,15 +226,15 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Users className="h-4 w-4" />
-                  <span>{role.users_count || 0} {role.users_count === 1 ? 'user' : 'users'}</span>
+                  <span>{role.users_count || 0} {t('roles.users').toLowerCase()}</span>
                 </div>
                 <div>
                   <div className="text-sm font-medium mb-2">
-                    Permissions: {role.permissions.length} granular permission(s)
+                    {t('permissions.module_permissions')}: {role.permissions.length}
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {role.permissions.length === 0 ? (
-                      <span className="text-sm text-muted-foreground">No permissions assigned</span>
+                      <span className="text-sm text-muted-foreground">{t('roles.no_permissions_assigned')}</span>
                     ) : (
                       // Group by module and show count
                       Object.entries(
@@ -244,7 +244,7 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                         }, {} as Record<string, number>)
                       ).map(([module, count]) => (
                         <Badge key={module} variant="secondary" className="text-xs">
-                          {module}: {count} perm{count > 1 ? 's' : ''}
+                          {module}: {count}
                         </Badge>
                       ))
                     )}
@@ -262,14 +262,14 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
             <div className="text-center space-y-4">
               <Shield className="h-12 w-12 mx-auto text-muted-foreground" />
               <div>
-                <h3 className="text-lg font-semibold">No custom roles yet</h3>
+                <h3 className="text-lg font-semibold">{t('roles.no_custom_roles')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Create your first custom role to manage user permissions
+                  {t('roles.create_role_description')}
                 </p>
               </div>
               <Button onClick={() => setShowCreateModal(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Create First Role
+                {t('roles.create_first_role')}
               </Button>
             </div>
           </CardContent>

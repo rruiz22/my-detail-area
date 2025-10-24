@@ -206,15 +206,11 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
                     className="w-full h-auto max-h-32 object-cover rounded-md group-hover:opacity-90 transition-opacity"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      const fallback = target.nextElementSibling as HTMLDivElement;
-                      if (fallback) fallback.style.display = 'block';
+                      if (target.src !== window.location.origin + '/images/vehicle-placeholder.png') {
+                        target.src = '/images/vehicle-placeholder.png';
+                      }
                     }}
                   />
-                  <div className="hidden text-center text-sm text-muted-foreground">
-                    <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
-                    {vehicleImageData.fallbackText}
-                  </div>
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-md flex items-center justify-center">
                     <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -227,10 +223,11 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
                   )}
                 </div>
               ) : (
-                <div className="text-center text-sm text-muted-foreground">
-                  <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
-                  {vehicleImageData.fallbackText}
-                </div>
+                <img
+                  src="/images/vehicle-placeholder.png"
+                  alt="Photos Coming Soon"
+                  className="w-full h-auto max-h-32 object-cover rounded-md opacity-60"
+                />
               )}
             </div>
           )}

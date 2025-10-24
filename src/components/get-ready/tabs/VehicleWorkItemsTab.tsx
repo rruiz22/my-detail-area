@@ -99,17 +99,21 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   const [blockReason, setBlockReason] = useState('');
   const [cancelReason, setCancelReason] = useState('');
 
-  // ✨ NEW: Calculate counters with enhanced status system
+  // ✨ Calculate counters with simplified workflow (no 'approved')
   const counters = workItems.reduce(
     (acc, item) => {
-      // Need Attention: awaiting_approval + blocked
-      if (item.status === 'awaiting_approval' || item.status === 'blocked') {
+      // Need Attention: awaiting_approval + rejected + blocked
+      if (
+        item.status === 'awaiting_approval' ||
+        item.status === 'rejected' ||
+        item.status === 'blocked'
+      ) {
         acc.needAttention++;
       }
       // In Progress: in_progress only
       if (item.status === 'in_progress') acc.inProgress++;
-      // On Hold + Rejected combined
-      if (item.status === 'on_hold' || item.status === 'rejected') acc.onHold++;
+      // On Hold: ONLY on_hold (NOT rejected - that needs attention)
+      if (item.status === 'on_hold') acc.onHold++;
       // Completed
       if (item.status === 'completed') acc.completed++;
       return acc;

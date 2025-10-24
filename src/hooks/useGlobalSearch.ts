@@ -3,6 +3,18 @@ import { supabase } from '@/integrations/supabase/client';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { usePermissions } from '@/hooks/usePermissions';
 
+// DMS Status Code Mapping (1-letter codes → readable names)
+const DMS_STATUS_MAP: Record<string, string> = {
+  'S': 'in_stock',      // Stock/En Stock
+  'T': 'in_transit',    // En Tránsito
+  'D': 'delivered',     // Entregado
+  'R': 'retail',        // Vendido (Retail)
+  'W': 'wholesale',     // Vendido (Mayoreo)
+  'P': 'pending',       // Pendiente
+  'H': 'hold',          // En Espera
+  'X': 'unavailable',   // No Disponible
+};
+
 export interface SearchResult {
   id: number;
   type: 'sales_order' | 'service_order' | 'recon_order' | 'car_wash' | 'contact' | 'user' | 'get_ready' | 'stock';
@@ -20,6 +32,7 @@ export interface SearchResult {
   priority?: string;
   step_name?: string;
   location?: string;
+  image_url?: string;
 }
 
 interface UseGlobalSearchReturn {
@@ -332,11 +345,10 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
     if (enhancedUser?.is_system_admin || hasModulePermission('stock', 'view_inventory')) {
       try {
         let stockQuery = supabase
-          .from('get_ready_vehicles')
-          .select('id, stock_number, vin, vehicle_year, vehicle_make, vehicle_model, status, location')
-          .eq('is_in_stock', true)
-          .or('stock_number.ilike.' + searchPattern + ',vin.ilike.' + searchPattern + ',vehicle_make.ilike.' + searchPattern + ',vehicle_model.ilike.' + searchPattern)
-          .is('deleted_at', null);
+          .from('dealer_vehicle_inventory')
+          .select('id, stock_number, vin, year, make, model, trim, dms_status, lot_location, price, age_days, photo_count, key_photo_url')
+          .eq('is_active', true)
+          .or('stock_number.ilike.' + searchPattern + ',vin.ilike.' + searchPattern + ',make.ilike.' + searchPattern + ',model.ilike.' + searchPattern);
 
         if (selectedDealerId !== 'all') {
           stockQuery = stockQuery.eq('dealer_id', selectedDealerId);
@@ -346,22 +358,41 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
 
         if (!error && stockVehicles) {
           stockVehicles.forEach((vehicle: any) => {
-            const vehicleTitle = `${vehicle.vehicle_year || ''} ${vehicle.vehicle_make || ''} ${vehicle.vehicle_model || ''}`.trim();
+            const vehicleTitle = `${vehicle.year || ''} ${vehicle.make || ''} ${vehicle.model || ''}`.trim();
+
+            // Map DMS status code to readable name
+            const readableStatus = vehicle.dms_status && DMS_STATUS_MAP[vehicle.dms_status]
+              ? DMS_STATUS_MAP[vehicle.dms_status]
+              : vehicle.dms_status;
+
+            // Build comprehensive subtitle like Get Ready
+            const vinLabel = vehicle.vin ? `VIN: ${vehicle.vin.slice(-8)}` : '';
+            const locationLabel = vehicle.lot_location ? `Location: ${vehicle.lot_location}` : '';
+            const ageDaysLabel = vehicle.age_days ? `${vehicle.age_days}d` : '';
+
+            const subtitleParts = [
+              `Stock: ${vehicle.stock_number}`,
+              vinLabel,
+              locationLabel,
+              ageDaysLabel
+            ].filter(Boolean);
+
             searchResults.push({
               id: vehicle.id,
               type: 'stock',
               title: vehicleTitle || `Stock #${vehicle.stock_number}`,
-              subtitle: `Stock: ${vehicle.stock_number} | Location: ${vehicle.location || 'N/A'}`,
-              url: `/stock/${vehicle.id}`,
+              subtitle: subtitleParts.join(' | '),
+              url: `/stock?vehicle=${vehicle.id}`,
               stock_number: vehicle.stock_number || undefined,
               vehicle_vin: vehicle.vin || undefined,
-              status: vehicle.status || undefined,
-              location: vehicle.location || undefined,
+              status: readableStatus || undefined,
+              location: vehicle.lot_location || undefined,
+              image_url: vehicle.key_photo_url || undefined,
             });
           });
         }
       } catch (error) {
-        // Silently ignore - user may not have access or table may not exist
+        console.error('❌ Stock inventory search failed:', error);
       }
     }
 

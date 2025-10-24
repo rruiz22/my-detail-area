@@ -33,13 +33,6 @@ const statusConfig: Record<WorkItemStatus, StatusConfig> = {
     textColor: 'text-amber-900 dark:text-amber-100',
     phase: 'pre-work',
   },
-  approved: {
-    icon: CheckCircle,
-    bgColor: 'bg-orange-50 dark:bg-orange-950/30',
-    borderColor: 'border-orange-500',
-    textColor: 'text-orange-900 dark:text-orange-100',
-    phase: 'pre-work',
-  },
   rejected: {
     icon: XCircle,
     bgColor: 'bg-red-50 dark:bg-red-950/30',
@@ -47,18 +40,25 @@ const statusConfig: Record<WorkItemStatus, StatusConfig> = {
     textColor: 'text-red-900 dark:text-red-100',
     phase: 'pre-work',
   },
-  ready: {
-    icon: CheckCircle,
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-500',
-    textColor: 'text-emerald-900 dark:text-emerald-100',
+  queued: {
+    icon: Circle,
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/30',
+    borderColor: 'border-indigo-500',
+    textColor: 'text-indigo-900 dark:text-indigo-100',
     phase: 'pre-work',
   },
   scheduled: {
     icon: Calendar,
-    bgColor: 'bg-indigo-50 dark:bg-indigo-950/30',
-    borderColor: 'border-indigo-500',
-    textColor: 'text-indigo-900 dark:text-indigo-100',
+    bgColor: 'bg-violet-50 dark:bg-violet-950/30',
+    borderColor: 'border-violet-500',
+    textColor: 'text-violet-900 dark:text-violet-100',
+    phase: 'pre-work',
+  },
+  ready: {
+    icon: CheckCircle,
+    bgColor: 'bg-lime-50 dark:bg-lime-950/30',
+    borderColor: 'border-lime-500',
+    textColor: 'text-lime-900 dark:text-lime-100',
     phase: 'pre-work',
   },
 
@@ -123,7 +123,8 @@ export function WorkItemStatusBadge({
   
   // Calculate visual status for dynamic badge display
   const getVisualStatus = (): WorkItemStatus => {
-    if (status === 'cancelled' && approval_status === 'rejected') {
+    // ✅ FIXED: Check for status='rejected' directly (not cancelled + rejected)
+    if (status === 'rejected') {
       return 'rejected';
     }
     if (status === 'pending' && approval_required) {

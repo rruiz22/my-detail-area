@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { APP_VERSION } from "@/config/version";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
+import { PrivacyPolicyModal } from "@/components/legal/PrivacyPolicyModal";
+import { TermsOfServiceModal } from "@/components/legal/TermsOfServiceModal";
 import { Menu } from "lucide-react";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
@@ -29,6 +32,8 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
   const { currentDealership } = useAccessibleDealerships();
   const { open, setOpen } = useSidebar();
   const previousPathRef = useRef<string>('');
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [termsModalOpen, setTermsModalOpen] = useState(false);
 
   // Auto-collapse/expand sidebar for Get Ready module
   useEffect(() => {
@@ -161,20 +166,51 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
            })()}
           </main>
 
-          {/* Footer - Minimalist */}
-          <footer className="border-t bg-background px-6 py-3">
-            <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
-              <span>© 2025 My Detail Area</span>
-              <span>•</span>
-              <span>Privacy Policy</span>
-              <span>•</span>
-              <span>Terms of Service</span>
+          {/* Footer - Enterprise */}
+          <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 px-6 py-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 text-sm text-muted-foreground flex-wrap justify-center sm:justify-start">
+                <span>{t('layout.footer.copyright', { year: new Date().getFullYear() })}</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="text-xs">{t('layout.footer.version', { version: APP_VERSION })}</span>
+              </div>
+
+              <div className="flex items-center gap-4 text-sm">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground h-auto p-0"
+                  onClick={() => setPrivacyModalOpen(true)}
+                >
+                  {t('layout.footer.privacy_policy')}
+                </Button>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground h-auto p-0"
+                  onClick={() => setTermsModalOpen(true)}
+                >
+                  {t('layout.footer.terms_of_service')}
+                </Button>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground h-auto p-0"
+                  onClick={() => window.open('mailto:support@mydetailarea.com', '_blank')}
+                >
+                  {t('layout.footer.support')}
+                </Button>
+              </div>
             </div>
           </footer>
         </div>
 
       {/* Floating Chat Bubble */}
       {currentDealership?.id && <FloatingChatBubble />}
+
+      {/* Legal Modals */}
+      <PrivacyPolicyModal open={privacyModalOpen} onOpenChange={setPrivacyModalOpen} />
+      <TermsOfServiceModal open={termsModalOpen} onOpenChange={setTermsModalOpen} />
     </div>
   );
 };

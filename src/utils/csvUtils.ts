@@ -158,12 +158,20 @@ export function detectSeparator(csvContent: string): string {
 export function mapColumnToField(columnName: string): string | null {
   const normalized = columnName.toLowerCase().trim();
 
+  // First pass: exact matches only
   for (const [field, variations] of Object.entries(COLUMN_MAPPINGS)) {
-    if (variations.some(variation =>
-      normalized === variation ||
-      normalized.includes(variation) ||
-      variation.includes(normalized)
-    )) {
+    if (variations.some(variation => normalized === variation)) {
+      return field;
+    }
+  }
+
+  // Second pass: partial matches (more permissive)
+  for (const [field, variations] of Object.entries(COLUMN_MAPPINGS)) {
+    if (variations.some(variation => {
+      // Only match if normalized contains the full variation
+      // Avoid false positives like "model" matching "model year"
+      return normalized.includes(variation) && variation.split(' ').length === 1;
+    })) {
       return field;
     }
   }
@@ -256,6 +264,32 @@ export function extractFileTimestamp(filename: string): Date | null {
   }
 
   return null;
+}
+
+/**
+ * Validates critical columns and returns detailed analysis
+ */
+export interface ColumnValidation {
+  criticalColumns: string[];
+  detectedColumns: string[];
+  missingColumns: string[];
+  unmappedHeaders: string[];
+}
+
+export function validateCriticalColumns(
+  parseResult: CSVParseResult
+): ColumnValidation {
+  const critical = ['stock_number', 'vin', 'year', 'make', 'model', 'trim'];
+  const detected = Object.keys(parseResult.detectedColumns);
+  const missing = critical.filter(col => !detected.includes(col));
+  const unmapped = parseResult.headers.filter(h => !mapColumnToField(h));
+
+  return {
+    criticalColumns: critical,
+    detectedColumns: detected,
+    missingColumns: missing,
+    unmappedHeaders: unmapped
+  };
 }
 
 /**
@@ -386,12 +420,15 @@ export function processVehicleData(
             break;
           case 'photo_count':
             const photoCount = parseInt(value);
-            if (!isNaN(photoCount)) {
+            if (!isNaN(photoCount) && photoCount > 0) {
               vehicle.photo_count = photoCount;
             }
             break;
           case 'key_photo_url':
-            vehicle.key_photo_url = value;
+            // Only save valid URLs (not empty strings or quotes)
+            if (value && value !== '""' && value.trim().length > 5 && value.startsWith('http')) {
+              vehicle.key_photo_url = value;
+            }
             break;
           case 'leads_last_7_days':
             const leads7 = parseInt(value);

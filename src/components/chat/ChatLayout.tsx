@@ -23,7 +23,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
   const { user } = useAuth();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   
-  const { conversations, loading: conversationsLoading } = useChatConversations(dealerId);
+  const { conversations, loading: conversationsLoading, createConversation } = useChatConversations(dealerId);
   const messagesHook = useChatMessages(selectedConversationId || '');
 
   if (!user) {
@@ -55,6 +55,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
               selectedId={selectedConversationId}
               onSelectConversation={setSelectedConversationId}
               dealerId={dealerId}
+              onCreateConversation={createConversation}
             />
           </div>
         </ResizablePanel>

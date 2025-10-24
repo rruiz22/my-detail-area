@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,12 +50,12 @@ export const StockDashboard: React.FC = () => {
       await refreshInventory();
       toast({
         title: t('common.success'),
-        description: t('common.actions.export_success')
+        description: t('stock.actions.refresh_success', 'Inventory refreshed successfully')
       });
     } catch (error) {
       toast({
         title: t('common.error'),
-        description: t('common.actions.export_failed'),
+        description: t('stock.actions.refresh_failed', 'Failed to refresh inventory'),
         variant: 'destructive'
       });
     } finally {
@@ -162,14 +161,9 @@ export const StockDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold tracking-tight">
-              {t('stock.title')}
-            </h1>
-            <Badge variant="outline" className="ml-2">
-              {inventory.length} {t('stock.metrics.totalVehicles')}
-            </Badge>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t('stock.title')}
+          </h1>
           <p className="text-muted-foreground">
             {t('stock.description')} • {currentDealership.name}
           </p>

@@ -1,30 +1,50 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import { 
-  History, 
-  CheckCircle, 
-  AlertCircle, 
-  Clock,
-  Download,
-  Search,
-  FileText,
-  RefreshCw,
-  AlertTriangle
+import { supabase } from '@/integrations/supabase/client';
+import {
+    AlertCircle,
+    AlertTriangle,
+    CheckCircle,
+    Clock,
+    Download,
+    FileText,
+    History,
+    RefreshCw,
+    Search
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+interface SyncHistoryRecord {
+  id: string;
+  dealer_id: number;
+  sync_started_at: string;
+  sync_completed_at: string | null;
+  sync_type: string;
+  sync_status: string;
+  records_processed: number | null;
+  records_added: number | null;
+  records_updated: number | null;
+  records_removed: number | null;
+  file_name: string | null;
+  file_size: number | null;
+  sync_errors: any | null;
+  sync_details: any | null;
+  processed_by: string | null;
+}
 
 interface StockSyncHistoryProps {
   dealerId?: number;
@@ -32,65 +52,55 @@ interface StockSyncHistoryProps {
 
 export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) => {
   const { t } = useTranslation();
-  const { loading } = useStockManagement();
+  const { loading: stockLoading } = useStockManagement();
+  const { hasModulePermission } = usePermissions();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [syncHistory, setSyncHistory] = useState<SyncHistoryRecord[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
 
-  // Mock sync history data - replace with real data
-  const mockSyncHistory = [
-    {
-      id: '1',
-      sync_started_at: '2024-01-15T10:30:00Z',
-      sync_completed_at: '2024-01-15T10:32:15Z',
-      sync_type: 'auto_sync',
-      sync_status: 'completed',
-      records_processed: 245,
-      records_added: 12,
-      records_updated: 28,
-      records_removed: 5,
-      file_name: null,
-      file_size: null,
-      sync_errors: [],
-      sync_details: { source: 'Max Inventory API' }
-    },
-    {
-      id: '2',
-      sync_started_at: '2024-01-14T15:45:00Z',
-      sync_completed_at: '2024-01-14T15:46:30Z',
-      sync_type: 'csv_upload',
-      sync_status: 'completed',
-      records_processed: 156,
-      records_added: 156,
-      records_updated: 0,
-      records_removed: 0,
-      file_name: 'inventory_update_20240114.csv',
-      file_size: 2048576,
-      sync_errors: [],
-      sync_details: { uploaded_by: 'user@example.com' }
-    },
-    {
-      id: '3',
-      sync_started_at: '2024-01-13T08:15:00Z',
-      sync_completed_at: null,
-      sync_type: 'auto_sync',
-      sync_status: 'failed',
-      records_processed: 0,
-      records_added: 0,
-      records_updated: 0,
-      records_removed: 0,
-      file_name: null,
-      file_size: null,
-      sync_errors: [{ message: 'API connection timeout', code: 'TIMEOUT' }],
-      sync_details: { source: 'Max Inventory API' }
-    }
-  ];
+  const canViewHistory = hasModulePermission('stock', 'view');
 
-  const filteredHistory = mockSyncHistory.filter(sync => {
-    const matchesSearch = 
+  // Fetch sync history from Supabase
+  useEffect(() => {
+    const fetchSyncHistory = async () => {
+      if (!dealerId || !canViewHistory) {
+        setHistoryLoading(false);
+        return;
+      }
+
+      try {
+        setHistoryLoading(true);
+        const { data, error } = await supabase
+          .from('dealer_inventory_sync_log')
+          .select('*')
+          .eq('dealer_id', dealerId)
+          .order('sync_started_at', { ascending: false })
+          .limit(50);
+
+        if (error) {
+          console.error('Error fetching sync history:', error);
+          setSyncHistory([]);
+        } else {
+          setSyncHistory(data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching sync history:', error);
+        setSyncHistory([]);
+      } finally {
+        setHistoryLoading(false);
+      }
+    };
+
+    fetchSyncHistory();
+  }, [dealerId, canViewHistory]);
+
+  const filteredHistory = syncHistory.filter(sync => {
+    const matchesSearch =
       sync.file_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       sync.sync_type.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesStatus = statusFilter === 'all' || sync.sync_status === statusFilter;
     const matchesType = typeFilter === 'all' || sync.sync_type === typeFilter;
 
@@ -136,11 +146,11 @@ export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) 
 
   const formatDuration = (startTime: string, endTime?: string | null) => {
     if (!endTime) return '--';
-    
+
     const start = new Date(startTime);
     const end = new Date(endTime);
     const duration = Math.floor((end.getTime() - start.getTime()) / 1000);
-    
+
     if (duration < 60) return `${duration}s`;
     if (duration < 3600) return `${Math.floor(duration / 60)}m ${duration % 60}s`;
     return `${Math.floor(duration / 3600)}h ${Math.floor((duration % 3600) / 60)}m`;
@@ -148,7 +158,7 @@ export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) 
 
   const formatFileSize = (bytes?: number | null) => {
     if (!bytes) return '--';
-    
+
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
     return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
@@ -163,7 +173,12 @@ export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) 
             <span>{t('stock.sync_history.title')}</span>
             <Badge variant="secondary">{filteredHistory.length}</Badge>
           </CardTitle>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!canViewHistory}
+            title={!canViewHistory ? t('errors.no_permission') : ''}
+          >
             <Download className="w-4 h-4 mr-2" />
             {t('stock.sync_history.export')}
           </Button>
@@ -223,7 +238,7 @@ export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) 
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading ? (
+              {historyLoading || stockLoading ? (
                 <TableRow>
                   <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                     {t('common.loading')}...
@@ -266,21 +281,21 @@ export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) 
                       {formatDuration(sync.sync_started_at, sync.sync_completed_at)}
                     </TableCell>
                     <TableCell className="text-right font-medium">
-                      {sync.records_processed.toLocaleString()}
+                      {(sync.records_processed || 0).toLocaleString()}
                     </TableCell>
                     <TableCell className="text-right">
                       <Badge variant="outline" className="text-success">
-                        +{sync.records_added}
+                        +{sync.records_added || 0}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <Badge variant="outline" className="text-primary">
-                        ~{sync.records_updated}
+                        ~{sync.records_updated || 0}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <Badge variant="outline" className="text-destructive">
-                        -{sync.records_removed}
+                        -{sync.records_removed || 0}
                       </Badge>
                     </TableCell>
                     <TableCell>

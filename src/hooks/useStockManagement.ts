@@ -151,7 +151,199 @@ export const useStockManagement = (): UseStockManagementReturn => {
     ) || null;
   }, [inventory]);
 
+  // Helper: Validate CSV file content
+  const validateCSVFile = async (file: File): Promise<string> => {
+    const text = await file.text();
+    if (!text.trim()) {
+      throw new Error('CSV file is empty');
+    }
+    return text;
+  };
+
+  // Helper: Get current active vehicle count
+  const getActiveVehicleCount = async (dealerId: number): Promise<number> => {
+    const { count } = await supabase
+      .from('dealer_vehicle_inventory')
+      .select('*', { count: 'exact', head: true })
+      .eq('dealer_id', dealerId)
+      .eq('is_active', true);
+
+    return count || 0;
+  };
+
+  // Helper: Deactivate all existing vehicles for a dealer
+  const deactivateExistingVehicles = async (dealerId: number): Promise<void> => {
+    console.log(`🔄 Marking existing vehicles as inactive for dealer ${dealerId}...`);
+    const { error } = await supabase
+      .from('dealer_vehicle_inventory')
+      .update({ is_active: false, updated_at: new Date().toISOString() })
+      .eq('dealer_id', dealerId);
+
+    if (error) {
+      console.warn('⚠️ Warning: Could not deactivate old vehicles:', error);
+      // Non-critical error, continue
+    }
+  };
+
+  // Helper: Upsert vehicles to database
+  const upsertVehicles = async (vehicles: any[]): Promise<void> => {
+    // Deduplicate vehicles by stock_number (keep last occurrence)
+    const deduplicatedMap = new Map();
+    vehicles.forEach(vehicle => {
+      deduplicatedMap.set(vehicle.stock_number, vehicle);
+    });
+
+    const uniqueVehicles = Array.from(deduplicatedMap.values());
+    const duplicateCount = vehicles.length - uniqueVehicles.length;
+
+    if (duplicateCount > 0) {
+      console.warn(`⚠️  Found ${duplicateCount} duplicate stock numbers - using latest occurrence`);
+      toast({
+        title: t('common.warning', 'Advertencia'),
+        description: `Se encontraron ${duplicateCount} stock numbers duplicados. Se usará la última ocurrencia.`,
+        variant: 'default'
+      });
+    }
+
+    const { error } = await supabase
+      .from('dealer_vehicle_inventory')
+      .upsert(uniqueVehicles, {
+        onConflict: 'dealer_id,stock_number'
+      });
+
+    if (error) {
+      throw new Error(`Failed to upsert vehicles: ${error.message}`);
+    }
+  };
+
+  // Helper: Log sync results to database
+  const logSyncResults = async (logData: any): Promise<void> => {
+    try {
+      await supabase
+        .from('dealer_inventory_sync_log')
+        .insert(logData);
+    } catch (error) {
+      console.warn('⚠️ Could not save sync log (non-critical):', error);
+      // Non-critical error, continue
+    }
+  };
+
+  // Helper: Build sync log data
+  const buildSyncLogData = (
+    file: File,
+    parseResult: any,
+    processingResult: any,
+    oldVehicleCount: number,
+    fileTimestamp: Date | null,
+    userId: string
+  ) => {
+    const removedVehicles = Math.max(0, oldVehicleCount - processingResult.vehicles.length);
+
+    return {
+      dealer_id: dealerId!,
+      sync_type: 'csv_upload',
+      sync_status: 'completed',
+      records_processed: processingResult.stats.processed,
+      records_added: processingResult.vehicles.length,
+      records_updated: Math.min(processingResult.vehicles.length, oldVehicleCount),
+      records_removed: removedVehicles,
+      file_name: file.name,
+      file_size: file.size,
+      file_timestamp: fileTimestamp?.toISOString() || null,
+      separator_detected: parseResult.separator,
+      columns_mapped: JSON.stringify(Object.keys(parseResult.detectedColumns)),
+      processing_logs: JSON.stringify(processingResult.logs.slice(-20)),
+      processed_by: userId
+    };
+  };
+
+  // Helper: Show success message
+  const showSuccessMessage = (vehicleCount: number, removedCount: number, detectedColumns: string[]) => {
+    const criticalDetected = ['year', 'make', 'model', 'trim', 'vin', 'stock_number']
+      .filter(col => detectedColumns.includes(col));
+
+    const columnsEmoji = criticalDetected.map(col => {
+      const labels: Record<string, string> = {
+        year: 'Year',
+        make: 'Make',
+        model: 'Model',
+        trim: 'Trim',
+        vin: 'VIN',
+        stock_number: 'Stock#'
+      };
+      return `${labels[col]} ✅`;
+    }).join(' ');
+
+    const baseMessage = removedCount > 0
+      ? `${vehicleCount} vehicles active (${removedCount} removed)`
+      : `${vehicleCount} vehicles processed`;
+
+    const message = `${baseMessage}\n${columnsEmoji}`;
+
+    toast({
+      title: t('common.success'),
+      description: message,
+      duration: 6000
+    });
+  };
+
+  // Helper: Build success response
+  const buildSuccessResponse = (
+    parseResult: any,
+    processingResult: any,
+    fileTimestamp: Date | null
+  ) => {
+    return {
+      success: true,
+      message: `Successfully processed ${processingResult.vehicles.length} of ${processingResult.stats.processed} vehicles`,
+      details: {
+        processed: processingResult.stats.processed,
+        valid: processingResult.vehicles.length,
+        invalid: processingResult.stats.invalid,
+        separator: parseResult.separator,
+        mappedColumns: parseResult.detectedColumns,
+        fileTimestamp,
+        logs: processingResult.logs.slice(-10)
+      }
+    };
+  };
+
+  // Helper: Handle no valid vehicles error
+  const handleNoValidVehiclesError = (parseResult: any, processingResult: any) => {
+    const errorMessage = `No valid vehicles found. Processed ${processingResult.stats.processed} rows but none had required fields (stock_number AND vin).`;
+
+    console.error('❌ No valid vehicles:', {
+      stats: processingResult.stats,
+      detectedColumns: parseResult.detectedColumns,
+      recentLogs: processingResult.logs.slice(-5)
+    });
+
+    toast({
+      title: t('common.error'),
+      description: errorMessage,
+      variant: 'destructive'
+    });
+
+    return {
+      success: false,
+      message: errorMessage,
+      details: {
+        stats: processingResult.stats,
+        detectedColumns: parseResult.detectedColumns,
+        separator: parseResult.separator,
+        logs: processingResult.logs,
+        suggestions: [
+          'Verify your CSV has Stock Number and VIN columns',
+          `Detected separator: "${parseResult.separator}"`,
+          `Mapped columns: ${Object.keys(parseResult.detectedColumns).join(', ') || 'None'}`
+        ]
+      }
+    };
+  };
+
+  // Main CSV upload function (refactored)
   const uploadCSV = useCallback(async (file: File): Promise<{ success: boolean; message: string; details?: any }> => {
+    // Validate prerequisites
     if (!dealerId || !user) {
       toast({
         title: t('common.error'),
@@ -164,26 +356,17 @@ export const useStockManagement = (): UseStockManagementReturn => {
     try {
       console.log(`🔄 Starting CSV upload: ${file.name} (${file.size} bytes)`);
 
-      const text = await file.text();
+      // Step 1: Validate and read file
+      const text = await validateCSVFile(file);
 
-      if (!text.trim()) {
-        toast({
-          title: t('common.error'),
-          description: 'CSV file is empty',
-          variant: 'destructive'
-        });
-        return { success: false, message: 'CSV file is empty' };
-      }
-
-      // Parse CSV with intelligent detection
-      const { parseCSV, processVehicleData, extractFileTimestamp } = await import('@/utils/csvUtils');
-
-      // Extract timestamp from filename
+      // Step 2: Parse and process CSV
+      const { parseCSV, processVehicleData, extractFileTimestamp, validateCriticalColumns } = await import('@/utils/csvUtils');
       const fileTimestamp = extractFileTimestamp(file.name);
-      console.log('📅 File timestamp:', fileTimestamp);
-
-      // Parse CSV content
       const parseResult = parseCSV(text);
+
+      // Validate critical columns
+      const validation = validateCriticalColumns(parseResult);
+
       console.log('📊 Parse results:', {
         separator: parseResult.separator,
         headers: parseResult.headers.length,
@@ -191,140 +374,62 @@ export const useStockManagement = (): UseStockManagementReturn => {
         detectedColumns: Object.keys(parseResult.detectedColumns)
       });
 
-      // Process vehicle data with detailed logging
+      console.log('📋 Columnas detectadas:', validation.detectedColumns.join(', '));
+      console.log('⚠️  Columnas críticas faltantes:', validation.missingColumns.length > 0 ? validation.missingColumns.join(', ') : 'Ninguna');
+      console.log('❓ Headers no mapeados:', validation.unmappedHeaders.length > 0 ? validation.unmappedHeaders.slice(0, 5).join(', ') : 'Ninguno');
+
+      // Warning if Model column is missing
+      if (validation.missingColumns.includes('model')) {
+        toast({
+          title: t('common.warning', 'Advertencia'),
+          description: 'El CSV no contiene columna "Model". Los vehículos tendrán este campo vacío.',
+          variant: 'default'
+        });
+      }
+
       const processingResult = processVehicleData(parseResult, dealerId);
 
-      // Log detailed processing information
       console.log('🚗 Processing results:', processingResult.stats);
       processingResult.logs.forEach(log => {
         console.log(`[${log.step}] ${log.message}`, log.data || '');
       });
 
-      if (processingResult.vehicles.length > 0) {
-        console.log(`📤 Uploading ${processingResult.vehicles.length} vehicles to database...`);
-
-        // Step 1: Get count of existing vehicles before deactivating
-        const { count: oldVehicleCount } = await supabase
-          .from('dealer_vehicle_inventory')
-          .select('*', { count: 'exact', head: true })
-          .eq('dealer_id', dealerId)
-          .eq('is_active', true);
-
-        console.log(`📊 Current active vehicles: ${oldVehicleCount || 0}`);
-
-        // Step 2: Mark ALL existing vehicles for this dealer as inactive
-        console.log(`🔄 Marking existing vehicles as inactive for dealer ${dealerId}...`);
-        const { error: deactivateError } = await supabase
-          .from('dealer_vehicle_inventory')
-          .update({ is_active: false, updated_at: new Date().toISOString() })
-          .eq('dealer_id', dealerId);
-
-        if (deactivateError) {
-          console.warn('⚠️ Warning: Could not deactivate old vehicles:', deactivateError);
-          // Continue anyway - this is not critical
-        }
-
-        // Step 3: Upsert new vehicles (they will be marked as active)
-        const { error: upsertError } = await supabase
-          .from('dealer_vehicle_inventory')
-          .upsert(processingResult.vehicles, {
-            onConflict: 'dealer_id,stock_number'
-          });
-
-        if (upsertError) throw upsertError;
-
-        // Step 4: Get count of vehicles that are now marked as inactive (removed from inventory)
-        const removedVehicles = Math.max(0, (oldVehicleCount || 0) - processingResult.vehicles.length);
-
-        // Enhanced sync logging with processing details
-        const syncLogData = {
-          dealer_id: dealerId,
-          sync_type: 'csv_upload',
-          sync_status: 'completed',
-          records_processed: processingResult.stats.processed,
-          records_added: processingResult.vehicles.length,
-          records_updated: Math.min(processingResult.vehicles.length, oldVehicleCount || 0),
-          records_removed: removedVehicles,
-          records_invalid: processingResult.stats.invalid,
-          file_name: file.name,
-          file_size: file.size,
-          file_timestamp: fileTimestamp?.toISOString() || null,
-          separator_detected: parseResult.separator,
-          columns_mapped: JSON.stringify(Object.keys(parseResult.detectedColumns)),
-          processing_logs: JSON.stringify(processingResult.logs.slice(-20)), // Only last 20 logs
-          processed_by: user.id
-        };
-
-        // Try to insert sync log, but don't fail if it doesn't work
-        try {
-          await supabase
-            .from('dealer_inventory_sync_log')
-            .insert(syncLogData);
-        } catch (logError) {
-          console.warn('⚠️ Could not save sync log (non-critical):', logError);
-          // Continue anyway - log is not critical for operation
-        }
-
-        // Invalidate queries to refresh data
-        await queryClient.invalidateQueries({ queryKey: ['stock-inventory', dealerId] });
-
-        console.log('✅ CSV upload completed successfully');
-        console.log(`📦 Active inventory: ${processingResult.vehicles.length} vehicles (${removedVehicles} removed)`);
-
-        // Show success toast
-        const successMessage = removedVehicles > 0
-          ? `${processingResult.vehicles.length} vehicles active (${removedVehicles} removed from inventory)`
-          : `${processingResult.vehicles.length} vehicles processed successfully`;
-
-        toast({
-          title: t('common.success'),
-          description: successMessage
-        });
-
-        return {
-          success: true,
-          message: `Successfully processed ${processingResult.vehicles.length} of ${processingResult.stats.processed} vehicles`,
-          details: {
-            processed: processingResult.stats.processed,
-            valid: processingResult.vehicles.length,
-            invalid: processingResult.stats.invalid,
-            separator: parseResult.separator,
-            mappedColumns: parseResult.detectedColumns,
-            fileTimestamp,
-            logs: processingResult.logs.slice(-10) // Last 10 log entries
-          }
-        };
-      } else {
-        const errorMessage = `No valid vehicles found. Processed ${processingResult.stats.processed} rows but none had required fields (stock_number AND vin).`;
-
-        console.error('❌ No valid vehicles:', {
-          stats: processingResult.stats,
-          detectedColumns: parseResult.detectedColumns,
-          recentLogs: processingResult.logs.slice(-5)
-        });
-
-        toast({
-          title: t('common.error'),
-          description: errorMessage,
-          variant: 'destructive'
-        });
-
-        return {
-          success: false,
-          message: errorMessage,
-          details: {
-            stats: processingResult.stats,
-            detectedColumns: parseResult.detectedColumns,
-            separator: parseResult.separator,
-            logs: processingResult.logs,
-            suggestions: [
-              'Verify your CSV has Stock Number and VIN columns',
-              `Detected separator: "${parseResult.separator}"`,
-              `Mapped columns: ${Object.keys(parseResult.detectedColumns).join(', ') || 'None'}`
-            ]
-          }
-        };
+      // Step 3: Check if we have valid vehicles to process
+      if (processingResult.vehicles.length === 0) {
+        return handleNoValidVehiclesError(parseResult, processingResult);
       }
+
+      // Step 4: Database operations
+      console.log(`📤 Uploading ${processingResult.vehicles.length} vehicles to database...`);
+
+      const oldVehicleCount = await getActiveVehicleCount(dealerId);
+      console.log(`📊 Current active vehicles: ${oldVehicleCount}`);
+
+      await deactivateExistingVehicles(dealerId);
+      await upsertVehicles(processingResult.vehicles);
+
+      // Step 5: Log sync results
+      const syncLogData = buildSyncLogData(
+        file,
+        parseResult,
+        processingResult,
+        oldVehicleCount,
+        fileTimestamp,
+        user.id
+      );
+      await logSyncResults(syncLogData);
+
+      // Step 6: Refresh data
+      await queryClient.invalidateQueries({ queryKey: ['stock-inventory', dealerId] });
+
+      // Step 7: Show success feedback
+      const removedVehicles = Math.max(0, oldVehicleCount - processingResult.vehicles.length);
+      console.log('✅ CSV upload completed successfully');
+      console.log(`📦 Active inventory: ${processingResult.vehicles.length} vehicles (${removedVehicles} removed)`);
+
+      showSuccessMessage(processingResult.vehicles.length, removedVehicles, validation.detectedColumns);
+
+      return buildSuccessResponse(parseResult, processingResult, fileTimestamp);
 
     } catch (err) {
       console.error('💥 Error uploading CSV:', err);

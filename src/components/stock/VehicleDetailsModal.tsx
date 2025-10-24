@@ -57,21 +57,17 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                 <Card className="lg:col-span-1 shadow-sm hover:shadow-md transition-shadow">
                   <CardContent className="p-0">
                     <div className="relative h-96 bg-muted rounded-lg overflow-hidden">
-                      {vehicle.key_photo_url ? (
-                        <img
-                          src={vehicle.key_photo_url}
-                          alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = '/placeholder.svg';
-                          }}
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <Camera className="h-12 w-12 text-muted-foreground" />
-                        </div>
-                      )}
+                      <img
+                        src={vehicle.key_photo_url || '/images/vehicle-placeholder.png'}
+                        alt={vehicle.key_photo_url ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : 'Photos Coming Soon'}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          if (target.src !== window.location.origin + '/images/vehicle-placeholder.png') {
+                            target.src = '/images/vehicle-placeholder.png';
+                          }
+                        }}
+                      />
 
                       {/* Enhanced Status Badges */}
                       <div className="absolute bottom-2 right-2 flex flex-col gap-1">

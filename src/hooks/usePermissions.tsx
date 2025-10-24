@@ -147,7 +147,11 @@ export const usePermissions = () => {
       }
 
       // Fetch user's role assignments from BOTH tables
-      // 1. New system: user_custom_role_assignments
+      // ========================================================================
+      // 1. Load dealer-specific custom roles (assigned via user_custom_role_assignments)
+      // ========================================================================
+      // These are roles specific to a dealer (dealer_id != NULL)
+      // Example: "used_car_manager", "service_manager", etc.
       const { data: assignmentsData, error: assignmentsError } = await supabase
         .from('user_custom_role_assignments')
         .select(`
@@ -164,10 +168,14 @@ export const usePermissions = () => {
         .eq('is_active', true);
 
       if (assignmentsError) {
-        console.error('❌ Error fetching role assignments:', assignmentsError);
+        console.error('❌ Error fetching dealer custom role assignments:', assignmentsError);
       }
 
-      // 2. Legacy system: dealer_memberships with custom_role_id
+      // ========================================================================
+      // 2. Load system-level role (assigned via dealer_memberships.custom_role_id)
+      // ========================================================================
+      // These are global system roles (dealer_id = NULL)
+      // Example: "user", "manager", "system_admin"
       const { data: membershipsData, error: membershipsError } = await supabase
         .from('dealer_memberships')
         .select(`
@@ -185,21 +193,51 @@ export const usePermissions = () => {
         .not('custom_role_id', 'is', null);
 
       if (membershipsError) {
-        console.error('❌ Error fetching dealer memberships:', membershipsError);
+        console.error('❌ Error fetching system role from memberships:', membershipsError);
       }
 
-      // Combine role IDs from both sources
+      // ========================================================================
+      // Combine role IDs from both sources with validation
+      // ========================================================================
       const roleIds = new Set<string>();
+      const rolesDebug: any[] = [];
 
+      // Process dealer custom roles (dealer_id should be a number, not NULL)
       (assignmentsData || []).forEach(a => {
         if (a.dealer_custom_roles?.id) {
           roleIds.add(a.dealer_custom_roles.id);
+          rolesDebug.push({
+            source: 'user_custom_role_assignments',
+            type: 'dealer_custom_role',
+            role_id: a.dealer_custom_roles.id,
+            role_name: a.dealer_custom_roles.role_name,
+            display_name: a.dealer_custom_roles.display_name,
+            dealer_id: a.dealer_custom_roles.dealer_id
+          });
         }
       });
 
+      // Process system role (must have dealer_id = NULL)
       (membershipsData || []).forEach(m => {
         if (m.dealer_custom_roles?.id) {
-          roleIds.add(m.dealer_custom_roles.id);
+          // VALIDATION: System roles MUST have dealer_id = NULL
+          if (m.dealer_custom_roles.dealer_id === null) {
+            roleIds.add(m.dealer_custom_roles.id);
+            rolesDebug.push({
+              source: 'dealer_memberships',
+              type: 'system_role',
+              role_id: m.dealer_custom_roles.id,
+              role_name: m.dealer_custom_roles.role_name,
+              display_name: m.dealer_custom_roles.display_name,
+              dealer_id: null
+            });
+          } else {
+            console.warn(
+              '⚠️ Invalid system role assignment - dealer_id should be NULL for system roles:',
+              m.dealer_custom_roles.role_name,
+              '(dealer_id:', m.dealer_custom_roles.dealer_id, ')'
+            );
+          }
         }
       });
 
@@ -218,9 +256,15 @@ export const usePermissions = () => {
         };
       }
 
-      console.log(`📋 Found ${roleIdsArray.length} custom role(s) for user`);
-      console.log(`   - From user_custom_role_assignments: ${(assignmentsData || []).length}`);
-      console.log(`   - From dealer_memberships: ${(membershipsData || []).length}`);
+      // Count system roles (dealer_id = NULL)
+      const systemRoleCount = membershipsData?.filter(m =>
+        m.dealer_custom_roles?.dealer_id === null
+      ).length || 0;
+
+      console.log(`📋 Found ${roleIdsArray.length} total role(s) for user`);
+      console.log(`   - Dealer custom roles: ${(assignmentsData || []).length}`);
+      console.log(`   - System role: ${systemRoleCount}`);
+      console.log(`📋 Roles breakdown:`, rolesDebug);
 
       // Fetch system-level permissions for all assigned roles
       const { data: systemPermsData, error: systemPermsError } = await supabase
@@ -275,7 +319,7 @@ export const usePermissions = () => {
       const rolesMap = new Map<string, GranularCustomRole>();
 
       // Helper function to process a role
-      const processRole = (role: any) => {
+      const processRole = (role: any, roleType: 'system_role' | 'dealer_custom_role') => {
         if (!role || rolesMap.has(role.id)) return; // Skip if already processed
 
         // Get system permissions for this role
@@ -323,14 +367,27 @@ export const usePermissions = () => {
           role_name: role.role_name,
           display_name: role.display_name,
           dealer_id: role.dealer_id,
+          role_type: roleType, // NEW: Track role type
           system_permissions: new Set(roleSystemPerms),
           module_permissions: modulePermissionsMap
         });
       };
 
+      // ========================================================================
       // Process roles from both sources
-      (assignmentsData || []).forEach(a => processRole(a.dealer_custom_roles));
-      (membershipsData || []).forEach(m => processRole(m.dealer_custom_roles));
+      // ========================================================================
+      // Dealer custom roles (dealer_id != NULL)
+      (assignmentsData || []).forEach(a =>
+        processRole(a.dealer_custom_roles, 'dealer_custom_role')
+      );
+
+      // System roles (dealer_id = NULL)
+      (membershipsData || []).forEach(m => {
+        // Only process if dealer_id is NULL (system role)
+        if (m.dealer_custom_roles?.dealer_id === null) {
+          processRole(m.dealer_custom_roles, 'system_role');
+        }
+      });
 
       // Aggregate all permissions from all roles (OR logic - union)
       const aggregatedSystemPerms = new Set<SystemPermissionKey>();

@@ -10,7 +10,9 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
     Table,
     TableBody,
@@ -19,11 +21,14 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { toast } from '@/hooks/use-toast';
-import { useStockManagement, VehicleInventory } from '@/hooks/useStockManagement';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useServerExport } from '@/hooks/useServerExport';
+import { VehicleInventory } from '@/hooks/useStockManagement';
+import { supabase } from '@/integrations/supabase/client';
+import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
+    ArrowUpDown,
     Car,
     ChevronDown,
     ChevronLeft,
@@ -35,9 +40,9 @@ import {
     MoreHorizontal,
     Search
 } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { VehicleDetailsModal } from './VehicleDetailsModal';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface StockInventoryTableProps {
   dealerId?: number;
@@ -47,28 +52,142 @@ const ITEMS_PER_PAGE = 25;
 
 export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealerId }) => {
   const { t } = useTranslation();
-  const { inventory, loading } = useStockManagement(dealerId);
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { exportToExcel, exportToCSV, isExporting } = useServerExport({ reportType: 'stock_inventory' });
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Server-side pagination state
+  const [inventory, setInventory] = useState<VehicleInventory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const [uniqueMakesData, setUniqueMakesData] = useState<string[]>([]);
+
+  // Filter and pagination state
   const [searchTerm, setSearchTerm] = useState('');
   const [makeFilter, setMakeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('created_at');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleInventory | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{
+    column: string;
+    direction: 'asc' | 'desc';
+  }>({ column: 'created_at', direction: 'desc' });
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Fetch inventory from server with pagination
+  const fetchInventory = useCallback(async () => {
+    if (!dealerId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // Build query
+      let query = supabase
+        .from('dealer_vehicle_inventory')
+        .select('*', { count: 'exact' })
+        .eq('dealer_id', dealerId)
+        .eq('is_active', true);
+
+      // Apply search filter
+      if (searchTerm) {
+        query = query.or(`stock_number.ilike.%${searchTerm}%,vin.ilike.%${searchTerm}%,make.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`);
+      }
+
+      // Apply make filter
+      if (makeFilter !== 'all') {
+        query = query.eq('make', makeFilter);
+      }
+
+      // Apply status filter
+      if (statusFilter !== 'all') {
+        query = query.eq('dms_status', statusFilter);
+      }
+
+      // Apply sorting
+      query = query.order(sortConfig.column, { ascending: sortConfig.direction === 'asc' });
+
+      // Apply pagination
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      query = query.range(startIndex, startIndex + ITEMS_PER_PAGE - 1);
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        console.error('Error fetching inventory:', error);
+        setInventory([]);
+        setTotalCount(0);
+      } else {
+        setInventory(data || []);
+        setTotalCount(count || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching inventory:', error);
+      setInventory([]);
+      setTotalCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [dealerId, currentPage, searchTerm, makeFilter, statusFilter, sortConfig.column, sortConfig.direction]);
+
+  // Fetch unique makes for filter dropdown
+  const fetchUniqueMakes = useCallback(async () => {
+    if (!dealerId) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('dealer_vehicle_inventory')
+        .select('make')
+        .eq('dealer_id', dealerId)
+        .eq('is_active', true)
+        .not('make', 'is', null);
+
+      if (!error && data) {
+        const makes = [...new Set(data.map(item => item.make).filter(Boolean))].sort();
+        setUniqueMakesData(makes as string[]);
+      }
+    } catch (error) {
+      console.error('Error fetching unique makes:', error);
+    }
+  }, [dealerId]);
+
+  // Fetch data on mount and when dependencies change
+  useEffect(() => {
+    fetchInventory();
+  }, [fetchInventory]);
+
+  // Fetch unique makes only once on mount
+  useEffect(() => {
+    fetchUniqueMakes();
+  }, [fetchUniqueMakes]);
+
+  // Handle ?vehicle=id URL parameter from global search
+  useEffect(() => {
+    const vehicleId = searchParams.get('vehicle');
+    if (vehicleId) {
+      // Navigate to vehicle details page
+      navigate(`/stock/vehicles/${vehicleId}`);
+      // Remove the vehicle param from URL to clean it up
+      searchParams.delete('vehicle');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams, navigate]);
+
   const handleVehicleClick = (vehicle: VehicleInventory) => {
-    setSelectedVehicle(vehicle);
-    setIsModalOpen(true);
+    // Navigate to vehicle details page
+    navigate(`/stock/vehicles/${vehicle.id}`);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedVehicle(null);
+  // Handle column sorting
+  const handleSort = (column: string) => {
+    setSortConfig(prev => ({
+      column,
+      direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
   };
 
-  // Export functions
+  // Export functions (fetch all data for export)
   const formatInventoryForExport = (vehicles: VehicleInventory[]) => {
     return vehicles.map((vehicle, index) => ({
       '#': index + 1,
@@ -93,69 +212,67 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   };
 
   const handleExport = async (format: 'csv' | 'excel') => {
-    const formattedData = formatInventoryForExport(filteredInventory);
-    const filename = `inventory-${new Date().toISOString().split('T')[0]}`;
+    // For export, fetch ALL matching records (not paginated)
+    if (!dealerId) return;
 
-    if (format === 'csv') {
-      exportToCSV(formattedData, filename);
-    } else {
-      await exportToExcel(formattedData, filename);
+    try {
+      let query = supabase
+        .from('dealer_vehicle_inventory')
+        .select('*')
+        .eq('dealer_id', dealerId)
+        .eq('is_active', true);
+
+      // Apply same filters as current view
+      if (searchTerm) {
+        query = query.or(`stock_number.ilike.%${searchTerm}%,vin.ilike.%${searchTerm}%,make.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`);
+      }
+      if (makeFilter !== 'all') {
+        query = query.eq('make', makeFilter);
+      }
+      if (statusFilter !== 'all') {
+        query = query.eq('dms_status', statusFilter);
+      }
+      query = query.order(sortConfig.column, { ascending: sortConfig.direction === 'asc' });
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching data for export:', error);
+        return;
+      }
+
+      const formattedData = formatInventoryForExport(data || []);
+      const filename = `inventory-${new Date().toISOString().split('T')[0]}`;
+
+      if (format === 'csv') {
+        exportToCSV(formattedData, filename);
+      } else {
+        await exportToExcel(formattedData, filename);
+      }
+    } catch (error) {
+      console.error('Error exporting inventory:', error);
     }
   };
 
-  // Get unique makes for filter
+  // Get unique makes from fetched data
   const uniqueMakes = useMemo(() => {
-    const makes = inventory?.map(item => item.make).filter(Boolean) || [];
-    return [...new Set(makes)].sort();
-  }, [inventory]);
-
-  // Filter and sort inventory
-  const filteredInventory = useMemo(() => {
-    if (!inventory) return [];
-
-    const filtered = inventory.filter(item => {
-      const matchesSearch =
-        item.stock_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.vin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.make?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.model?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesMake = makeFilter === 'all' || item.make === makeFilter;
-      const matchesStatus = statusFilter === 'all' || item.dms_status === statusFilter;
-
-      return matchesSearch && matchesMake && matchesStatus;
-    });
-
-    // Sort
-    filtered.sort((a, b) => {
-      let aValue = a[sortBy as keyof typeof a] || '';
-      let bValue = b[sortBy as keyof typeof b] || '';
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      if (sortOrder === 'asc') {
-        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-      } else {
-        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-      }
-    });
-
-    return filtered;
-  }, [inventory, searchTerm, makeFilter, statusFilter, sortBy, sortOrder]);
+    return uniqueMakesData;
+  }, [uniqueMakesData]);
 
   // Pagination calculations
-  const totalItems = filteredInventory.length;
+  const totalItems = totalCount;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
-  const paginatedInventory = filteredInventory.slice(startIndex, endIndex);
+  const paginatedInventory = inventory; // Already paginated from server
 
-  // Reset to page 1 when filters change
-  useMemo(() => {
-    setCurrentPage(1);
+  // Reset to page 1 when filters change (debounced for search)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCurrentPage(1);
+    }, 300); // Debounce search by 300ms
+
+    return () => clearTimeout(timer);
   }, [searchTerm, makeFilter, statusFilter]);
 
   const getStatusColor = (status?: string) => {
@@ -168,6 +285,19 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
         return 'bg-warning/10 text-warning hover:bg-warning/20';
       default:
         return 'bg-muted/10 text-muted-foreground hover:bg-muted/20';
+    }
+  };
+
+  const getStatusRowColor = (status?: string) => {
+    switch (status?.toLowerCase()) {
+      case 'sold':
+        return 'bg-destructive/5 hover:bg-destructive/10';
+      case 'available':
+        return 'bg-success/5 hover:bg-success/10';
+      case 'pending':
+        return 'bg-warning/5 hover:bg-warning/10';
+      default:
+        return 'hover:bg-muted/50';
     }
   };
 
@@ -232,19 +362,25 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder={t('stock.filters.search_placeholder')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="search-input">{t('common.search')}</Label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                id="search-input"
+                placeholder={t('stock.filters.search_placeholder')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
           </div>
-          <div className="flex gap-2">
+
+          <div className="space-y-2">
+            <Label htmlFor="make-filter">{t('stock.filters.make')}</Label>
             <Select value={makeFilter} onValueChange={setMakeFilter}>
-              <SelectTrigger className="w-[140px]">
+              <SelectTrigger id="make-filter">
                 <SelectValue placeholder={t('stock.filters.make')} />
               </SelectTrigger>
               <SelectContent>
@@ -254,8 +390,12 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="status-filter">{t('stock.filters.status')}</Label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[140px]">
+              <SelectTrigger id="status-filter">
                 <SelectValue placeholder={t('stock.filters.status')} />
               </SelectTrigger>
               <SelectContent>
@@ -268,118 +408,269 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
           </div>
         </div>
 
-        {/* Table */}
-        <div className="rounded-md border overflow-hidden">
-          <div className="max-h-[600px] overflow-auto">
-            <Table data-sticky-header>
-              <TableHeader className="sticky top-0 bg-background z-10 after:absolute after:inset-x-0 after:bottom-0 after:border-b">
-                <TableRow className="border-b-0">
-                  <TableHead className="w-[120px] bg-background">{t('stock.table.stock_number')}</TableHead>
-                  <TableHead className="w-[150px] bg-background">{t('stock.table.vin')}</TableHead>
-                  <TableHead className="bg-background">{t('stock.table.vehicle')}</TableHead>
-                  <TableHead className="text-right bg-background">{t('stock.table.year')}</TableHead>
-                  <TableHead className="text-right bg-background">{t('stock.table.mileage')}</TableHead>
-                  <TableHead className="text-right bg-background">{t('stock.table.price')}</TableHead>
-                  <TableHead className="text-right bg-background">{t('stock.table.age_days')}</TableHead>
-                  <TableHead className="bg-background">{t('stock.table.status')}</TableHead>
-                  <TableHead className="w-[50px] bg-background"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                      {t('common.loading')}...
-                    </TableCell>
-                  </TableRow>
-                ) : paginatedInventory.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                      {t('stock.inventory.no_vehicles')}
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedInventory.map((vehicle) => (
-                  <TableRow key={vehicle.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => handleVehicleClick(vehicle)}>
-                    <TableCell className="font-mono font-medium">
-                      {vehicle.stock_number}
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-mono text-sm">
-                        {vehicle.vin || 'N/A'}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors"
-                           onClick={() => handleVehicleClick(vehicle)}>
-                        <div className="w-10 h-10 bg-muted rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          {vehicle.key_photo_url ? (
-                            <img
-                              src={vehicle.key_photo_url}
-                              alt="Vehicle"
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.style.display = 'none';
-                                target.parentElement!.innerHTML = '<div class="h-4 w-4 text-muted-foreground"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg></div>';
-                              }}
-                            />
-                          ) : (
-                            <Car className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-medium">
-                            {vehicle.year} {vehicle.make} {vehicle.model}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {vehicle.trim}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">{vehicle.year || '--'}</TableCell>
-                    <TableCell className="text-right">
-                      {formatNumber(vehicle.mileage)}
-                    </TableCell>
-                    <TableCell className="text-right font-medium">
-                      {formatCurrency(vehicle.price)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Badge variant="outline" className="font-mono whitespace-nowrap">
-                        {formatAgeDays(vehicle.age_days)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(vehicle.dms_status)}>
-                        {vehicle.dms_status || t('stock.status.unknown')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation();
-                            handleVehicleClick(vehicle);
-                          }}>
-                            <Eye className="w-4 h-4 mr-2" />
-                            {t('stock.actions.view_details')}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-              </TableBody>
-            </Table>
+        {/* Loading State */}
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex gap-4 p-4 border rounded-lg">
+                <Skeleton className="w-16 h-16 rounded-lg flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-1/4" />
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+        ) : isMobile ? (
+          /* Mobile Card View */
+          <div className="space-y-3">
+            {paginatedInventory.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Car className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>{t('stock.inventory.no_vehicles')}</p>
+              </div>
+            ) : (
+              paginatedInventory.map(vehicle => (
+                <Card
+                  key={vehicle.id}
+                  className={cn(
+                    "cursor-pointer transition-colors",
+                    getStatusRowColor(vehicle.dms_status)
+                  )}
+                  onClick={() => handleVehicleClick(vehicle)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex gap-3">
+                      {/* Image */}
+                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                        <img
+                          src={vehicle.key_photo_url || '/images/vehicle-placeholder.png'}
+                          alt={vehicle.key_photo_url ? 'Vehicle' : 'Photos Coming Soon'}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            if (target.src !== window.location.origin + '/images/vehicle-placeholder.png') {
+                              target.src = '/images/vehicle-placeholder.png';
+                            }
+                          }}
+                        />
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-base mb-1">
+                          {vehicle.year} {vehicle.make} {vehicle.model}
+                        </div>
+                        <div className="text-sm text-muted-foreground mb-2 font-mono">
+                          {vehicle.stock_number} • {vehicle.vin?.slice(-8)}
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="font-bold text-lg">
+                            {formatCurrency(vehicle.price)}
+                          </div>
+                          <Badge className={getStatusColor(vehicle.dms_status)}>
+                            {vehicle.dms_status || t('stock.status.unknown')}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        ) : (
+          /* Desktop Table View */
+          <div className="rounded-md border overflow-hidden">
+            <div className="max-h-[600px] overflow-auto">
+              <Table data-sticky-header>
+                <TableHeader className="sticky top-0 bg-background z-10 after:absolute after:inset-x-0 after:bottom-0 after:border-b">
+                  <TableRow className="border-b-0">
+                    <TableHead className="bg-background min-w-[300px]">
+                      <button
+                        onClick={() => handleSort('make')}
+                        className="flex items-center gap-2 hover:text-foreground transition-colors"
+                      >
+                        {t('stock.table.vehicle')}
+                        {sortConfig.column === 'make' && (
+                          <ArrowUpDown className={cn(
+                            "h-4 w-4 transition-transform",
+                            sortConfig.direction === 'desc' && "rotate-180"
+                          )} />
+                        )}
+                      </button>
+                    </TableHead>
+                    <TableHead className="bg-background">
+                      {t('stock.table.stock_number')} / {t('stock.table.vin')}
+                    </TableHead>
+                    <TableHead className="text-right bg-background">
+                      <button
+                        onClick={() => handleSort('mileage')}
+                        className="flex items-center gap-2 hover:text-foreground transition-colors ml-auto"
+                      >
+                        {t('stock.table.mileage')}
+                        {sortConfig.column === 'mileage' && (
+                          <ArrowUpDown className={cn(
+                            "h-4 w-4 transition-transform",
+                            sortConfig.direction === 'desc' && "rotate-180"
+                          )} />
+                        )}
+                      </button>
+                    </TableHead>
+                    <TableHead className="text-right bg-background">
+                      <button
+                        onClick={() => handleSort('price')}
+                        className="flex items-center gap-2 hover:text-foreground transition-colors ml-auto"
+                      >
+                        {t('stock.table.price')}
+                        {sortConfig.column === 'price' && (
+                          <ArrowUpDown className={cn(
+                            "h-4 w-4 transition-transform",
+                            sortConfig.direction === 'desc' && "rotate-180"
+                          )} />
+                        )}
+                      </button>
+                    </TableHead>
+                    <TableHead className="text-right bg-background">
+                      <button
+                        onClick={() => handleSort('age_days')}
+                        className="flex items-center gap-2 hover:text-foreground transition-colors ml-auto"
+                      >
+                        {t('stock.table.age_days')}
+                        {sortConfig.column === 'age_days' && (
+                          <ArrowUpDown className={cn(
+                            "h-4 w-4 transition-transform",
+                            sortConfig.direction === 'desc' && "rotate-180"
+                          )} />
+                        )}
+                      </button>
+                    </TableHead>
+                    <TableHead className="bg-background">{t('stock.table.status')}</TableHead>
+                    <TableHead className="w-[50px] bg-background"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paginatedInventory.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-12">
+                        <Car className="w-12 h-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
+                        <p className="text-muted-foreground">{t('stock.inventory.no_vehicles')}</p>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    paginatedInventory.map((vehicle) => (
+                      <TableRow
+                        key={vehicle.id}
+                        className={cn(
+                          "cursor-pointer transition-colors",
+                          getStatusRowColor(vehicle.dms_status)
+                        )}
+                        onClick={() => handleVehicleClick(vehicle)}
+                      >
+                        {/* Vehicle with Image */}
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                              <img
+                                src={vehicle.key_photo_url || '/images/vehicle-placeholder.png'}
+                                alt={vehicle.key_photo_url ? 'Vehicle' : 'Photos Coming Soon'}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  if (target.src !== window.location.origin + '/images/vehicle-placeholder.png') {
+                                    target.src = '/images/vehicle-placeholder.png';
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-base">
+                                {vehicle.year} {vehicle.make} {vehicle.model}
+                              </div>
+                              {vehicle.trim && (
+                                <div className="text-sm text-muted-foreground">
+                                  {vehicle.trim}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+
+                        {/* Stock# / VIN */}
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="font-mono font-semibold text-sm">
+                              {vehicle.stock_number}
+                            </div>
+                            <div className="font-mono text-xs text-muted-foreground">
+                              {vehicle.vin?.slice(-8) || 'N/A'}
+                            </div>
+                          </div>
+                        </TableCell>
+
+                        {/* Mileage */}
+                        <TableCell className="text-right">
+                          {formatNumber(vehicle.mileage)}
+                        </TableCell>
+
+                        {/* Price */}
+                        <TableCell className="text-right">
+                          <div className="font-bold text-lg">
+                            {formatCurrency(vehicle.price)}
+                          </div>
+                          {vehicle.msrp && vehicle.msrp !== vehicle.price && (
+                            <div className="text-xs text-muted-foreground line-through">
+                              {formatCurrency(vehicle.msrp)}
+                            </div>
+                          )}
+                        </TableCell>
+
+                        {/* Age */}
+                        <TableCell className="text-right">
+                          <Badge variant="outline" className="font-mono whitespace-nowrap">
+                            {formatAgeDays(vehicle.age_days)}
+                          </Badge>
+                        </TableCell>
+
+                        {/* Status */}
+                        <TableCell>
+                          <Badge className={getStatusColor(vehicle.dms_status)}>
+                            {vehicle.dms_status || t('stock.status.unknown')}
+                          </Badge>
+                        </TableCell>
+
+                        {/* Actions */}
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                handleVehicleClick(vehicle);
+                              }}>
+                                <Eye className="w-4 h-4 mr-2" />
+                                {t('stock.actions.view_details')}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
 
         {/* Pagination */}
         {totalPages > 1 && (
@@ -410,12 +701,6 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
           </div>
         )}
       </CardContent>
-
-      <VehicleDetailsModal
-        vehicle={selectedVehicle}
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-      />
     </Card>
   );
 };

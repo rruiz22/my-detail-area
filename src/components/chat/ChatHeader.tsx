@@ -30,6 +30,11 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   }
 
   const getConversationName = () => {
+    // For direct conversations, show other participant's name
+    if (conversation.conversation_type === 'direct' && conversation.other_participant) {
+      return conversation.other_participant.name;
+    }
+    // For other types, use conversation name or fallback
     if (conversation.name) return conversation.name;
     return t('chat.unnamed_conversation');
   };

@@ -210,6 +210,16 @@ const PERMISSION_MODULES: PermissionModule[] = [
       { level: 'write', description: 'Perform management actions', icon: Edit },
       { level: 'admin', description: 'Full management access', icon: Shield }
     ]
+  },
+  {
+    name: 'vin_scanner',
+    display_name: 'VIN Scanner',
+    description: 'VIN scanning and vehicle decoding tools',
+    permissions: [
+      { level: 'read', description: 'View VIN scanner', icon: Eye },
+      { level: 'write', description: 'Use VIN scanner', icon: Edit },
+      { level: 'admin', description: 'Manage VIN scanner settings', icon: Settings }
+    ]
   }
 ];
 

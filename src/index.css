@@ -618,3 +618,67 @@ All colors MUST be HSL.
     background-color: hsl(var(--border));
   }
 }
+
+/* ============================================
+   3D Carousel Flow - Vehicle Photos
+   ============================================ */
+
+.vehicle-carousel-container {
+  max-width: 100% !important;
+  width: 100%;
+  perspective: 1200px;
+  -webkit-perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  position: relative;
+  overflow: hidden;
+}
+
+.vehicle-carousel-flow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  backface-visibility: visible;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  cursor: pointer;
+  transition: 1s all ease-out;
+}
+
+.vehicle-carousel-item {
+  width: 400px;
+  height: 400px;
+  transform-origin: 50% 100%;
+  position: absolute;
+  backface-visibility: visible;
+  top: -200px;
+  left: -200px;
+  border: 4px solid hsl(var(--border));
+  border-radius: 12px;
+  background-color: hsl(var(--background));
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  transition: 1.25s all cubic-bezier(0.17, 0.75, 0.58, 0.95);
+  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.vehicle-carousel-item:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0px 15px 40px 0px rgba(0, 0, 0, 0.7);
+}
+
+/* Mobile responsive - reduce 3D effect */
+@media (max-width: 768px) {
+  .vehicle-carousel-container {
+    perspective: 800px;
+  }
+  
+  .vehicle-carousel-item {
+    width: 280px;
+    height: 280px;
+    top: -140px;
+    left: -140px;
+  }
+}

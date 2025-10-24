@@ -602,9 +602,13 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         };
 
         // Get pending work items that need approval
+        // ✅ CORRECTED: Exclude both approved AND declined/rejected items
         const pendingApprovalWorkItems = workItems.filter((item: GetReadyWorkItemSummary) =>
           item.approval_required === true &&
-          (!item.approval_status || item.approval_status !== 'approved')
+          (!item.approval_status || (
+            item.approval_status !== 'approved' &&
+            item.approval_status !== 'declined'  // Exclude rejected work items from pending count
+          ))
         );
 
         return {

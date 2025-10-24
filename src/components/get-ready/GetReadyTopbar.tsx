@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
-import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
+import { useGetReadyApprovalCount } from '@/hooks/useGetReadyApprovalCount';
 import { NotificationBell } from '@/components/get-ready/notifications/NotificationBell';
 import { DeletedVehiclesDialog } from '@/components/get-ready/DeletedVehiclesDialog';
 import {
@@ -42,29 +42,9 @@ export function GetReadyTopbar() {
   const location = useLocation();
   const [showDeletedDialog, setShowDeletedDialog] = useState(false);
 
-  // Get vehicles to count pending approvals (vehicles + work items)
-  const { data: vehiclesData } = useGetReadyVehiclesInfinite({});
-  const allVehicles = vehiclesData?.pages.flatMap(page => page.vehicles) ?? [];
-  
-  // Count vehicles needing approval
-  const vehicleApprovalsCount = allVehicles.filter(
-    v => v.requires_approval === true && v.approval_status === 'pending' && !v.approved_by
-  ).length;
-  
-  // Count work items needing approval
-  const workItemApprovalsCount = allVehicles.reduce((count, vehicle) => {
-    // Check if work_items exists and is an array
-    if (!vehicle.work_items || !Array.isArray(vehicle.work_items)) {
-      return count;
-    }
-    
-    const workItemsNeedingApproval = vehicle.work_items.filter(
-      item => item.approval_required === true && !item.approval_status
-    ).length;
-    return count + workItemsNeedingApproval;
-  }, 0);
-  
-  const pendingApprovalsCount = vehicleApprovalsCount + workItemApprovalsCount;
+  // Get accurate count of vehicles needing approval (optimized query)
+  const { data: pendingApprovalsCount = 0 } = useGetReadyApprovalCount();
+
   const { hasModulePermission } = usePermissions();
 
   // Filter tabs based on granular permissions

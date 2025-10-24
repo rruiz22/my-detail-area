@@ -301,12 +301,15 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
 
   // Send text message
   const sendMessage = useCallback(async (content: string, mentions: string[] = []): Promise<ChatMessage | null> => {
-    return sendMessageWithOptions({
+    console.log('📤 [MESSAGES] Sending message:', { content, mentions, conversationId });
+    const result = await sendMessageWithOptions({
       content,
       mentions,
       message_type: 'text'
     });
-  }, [sendMessageWithOptions]);
+    console.log('📤 [MESSAGES] Send result:', result ? 'success' : 'failed');
+    return result;
+  }, [sendMessageWithOptions, conversationId]);
 
   // Send voice message
   const sendVoiceMessage = useCallback(async (audioBlob: Blob, transcription?: string): Promise<ChatMessage | null> => {
@@ -544,7 +547,12 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
 
   // Real-time subscriptions
   useEffect(() => {
-    if (!user?.id || !conversationId) return;
+    if (!user?.id || !conversationId) {
+      console.log('📡 [MESSAGES] Skipping subscription - missing user or conversation');
+      return;
+    }
+
+    console.log(`📡 [MESSAGES] Setting up real-time subscription for conversation: ${conversationId}`);
 
     // Subscribe to new messages
     const messageChannel = supabase
@@ -557,8 +565,44 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           table: 'chat_messages',
           filter: `conversation_id=eq.${conversationId}`
         },
-        () => {
-          loadNewerMessages();
+        async (payload) => {
+          console.log('📨 [MESSAGES] New message INSERT detected:', payload);
+          // Fetch the new message with full details
+          try {
+            const { data: newMessageData } = await supabase
+              .from('chat_messages')
+              .select('*')
+              .eq('id', payload.new.id)
+              .single();
+
+            if (newMessageData) {
+              // Get sender profile
+              const { data: senderProfile } = await supabase
+                .from('profiles')
+                .select('id, first_name, last_name, email')
+                .eq('id', newMessageData.user_id)
+                .single();
+
+              const processedMessage: ChatMessage = {
+                ...newMessageData,
+                reactions: (newMessageData.reactions as Record<string, string[]>) || {},
+                mentions: (newMessageData.mentions as string[]) || [],
+                metadata: (newMessageData.metadata as Record<string, any>) || {},
+                sender: senderProfile ? {
+                  id: senderProfile.id,
+                  name: `${senderProfile.first_name} ${senderProfile.last_name}`.trim() || senderProfile.email,
+                  avatar_url: undefined
+                } : undefined,
+                is_own_message: newMessageData.user_id === user.id,
+                is_mentioned: false
+              };
+
+              console.log('📨 [MESSAGES] Adding new message to state:', processedMessage);
+              setMessages(prev => [...prev, processedMessage]);
+            }
+          } catch (error) {
+            console.error('❌ [MESSAGES] Error processing new message:', error);
+          }
         }
       )
       .on(
@@ -570,22 +614,32 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           filter: `conversation_id=eq.${conversationId}`
         },
         (payload) => {
-          setMessages(prev => prev.map(msg => 
-            msg.id === payload.new.id 
+          console.log('✏️ [MESSAGES] Message UPDATE detected:', payload);
+          setMessages(prev => prev.map(msg =>
+            msg.id === payload.new.id
               ? { ...msg, ...payload.new }
               : msg
           ));
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log(`📡 [MESSAGES] Subscription status:`, status);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ [MESSAGES] Successfully subscribed to real-time updates');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ [MESSAGES] Subscription error');
+        }
+      });
 
     return () => {
+      console.log(`📡 [MESSAGES] Cleaning up subscription for: ${conversationId}`);
       supabase.removeChannel(messageChannel);
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
     };
-  }, [user?.id, conversationId, loadNewerMessages]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, conversationId]);
 
   // Initial load
   useEffect(() => {

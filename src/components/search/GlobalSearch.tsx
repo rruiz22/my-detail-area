@@ -211,8 +211,21 @@ export const GlobalSearch = () => {
                                 className="cursor-pointer p-3 sm:p-4 rounded-lg hover:bg-gray-50 data-[selected=true]:bg-gray-100 data-[selected=true]:text-foreground mb-1.5 transition-colors duration-150"
                               >
                                 <div className="flex items-start gap-3 w-full">
+                                  {/* Image or Icon */}
                                   <div className="flex-shrink-0 mt-0.5">
-                                    <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+                                    {result.image_url ? (
+                                      <img
+                                        src={result.image_url}
+                                        alt={result.title}
+                                        className="h-12 w-12 sm:h-14 sm:w-14 object-cover rounded-md border border-gray-200"
+                                        onError={(e) => {
+                                          // Fallback to icon if image fails to load
+                                          e.currentTarget.style.display = 'none';
+                                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                        }}
+                                      />
+                                    ) : null}
+                                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground ${result.image_url ? 'hidden' : ''}`} />
                                   </div>
 
                                   <div className="flex-1 min-w-0 space-y-1.5">

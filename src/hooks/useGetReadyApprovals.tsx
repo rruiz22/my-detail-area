@@ -212,6 +212,9 @@ export function useApproveVehicle() {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
+
+      // ✅ Invalidate approval count to update badge immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
     },
     onError: (error: Error) => {
       toast({
@@ -261,6 +264,9 @@ export function useRejectVehicle() {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
+
+      // ✅ Invalidate approval count to update badge immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
     },
     onError: (error: Error) => {
       toast({
@@ -306,6 +312,9 @@ export function useBulkApproveVehicles() {
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
+      // ✅ Invalidate approval count to update badge immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
     },
     onError: (error: Error) => {
       toast({
@@ -347,6 +356,9 @@ export function useRequestApproval() {
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
+      // ✅ Invalidate approval count to update badge immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
     },
     onError: (error: Error) => {
       toast({

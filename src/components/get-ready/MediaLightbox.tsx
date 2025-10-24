@@ -118,13 +118,38 @@ export function MediaLightbox({
     setIsFullscreen(!isFullscreen);
   };
 
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = currentMedia.file_url || '';
-    link.download = currentMedia.file_name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    try {
+      // Fetch the file as a blob to handle CORS properly
+      const response = await fetch(currentMedia.file_url || '');
+      const blob = await response.blob();
+
+      // Create a temporary URL for the blob
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      // Create download link with original filename
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = currentMedia.file_name; // Preserves original filename
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+
+      toast({
+        title: t('common.success'),
+        description: t('get_ready.media.download_success'),
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.media.error_downloading'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleSaveAnnotations = async (annotations: Annotation[]) => {

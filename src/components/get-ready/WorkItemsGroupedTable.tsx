@@ -97,12 +97,12 @@ export function WorkItemsGroupedTable({
 }: WorkItemsGroupedTableProps) {
   const { t } = useTranslation();
 
-  // ✨ NEW: Group work items by status (including new statuses)
+  // ✨ Group work items by status (simplified workflow - no 'approved')
   const groupedItems = {
     // Pre-Work Phase
     awaiting_approval: workItems.filter((item) => item.status === 'awaiting_approval'),
     rejected: workItems.filter((item) => item.status === 'rejected'),
-    approved: workItems.filter((item) => item.status === 'approved'),
+    queued: workItems.filter((item) => item.status === 'queued'), // Approved items go here
     ready: workItems.filter((item) => item.status === 'ready'),
     scheduled: workItems.filter((item) => item.status === 'scheduled'),
 
@@ -286,8 +286,8 @@ export function WorkItemsGroupedTable({
             </>
           )}
 
-          {/* Start Action - ready or rejected status */}
-          {(item.status === 'approved' || item.status === 'ready' || item.status === 'rejected') && (
+          {/* Start Action - queued, ready or rejected status */}
+          {(item.status === 'queued' || item.status === 'ready' || item.status === 'rejected') && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -303,7 +303,7 @@ export function WorkItemsGroupedTable({
                 <TooltipContent>
                   <div className="text-center">
                     <div className="font-semibold">{t('get_ready.work_items.start')}</div>
-                    <div className="text-xs text-muted-foreground">Ready → In Progress</div>
+                    <div className="text-xs text-muted-foreground">Queued → In Progress</div>
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -534,11 +534,12 @@ export function WorkItemsGroupedTable({
 
   return (
     <div className="space-y-4">
-      {/* ✨ NEW: Render groups in logical workflow order (pre-work → execution → completion) */}
+      {/* ✨ Render groups in logical workflow order (pre-work → execution → completion) */}
 
-      {/* Pre-Work Phase */}
+      {/* Pre-Work Phase - Simplified workflow */}
       {renderGroup('awaiting_approval', groupedItems.awaiting_approval, t('get_ready.work_items.status.awaiting_approval'))}
       {renderGroup('rejected', groupedItems.rejected, t('get_ready.work_items.status.rejected'))}
+      {renderGroup('queued', groupedItems.queued, t('get_ready.work_items.status.queued'))}
       {renderGroup('ready', groupedItems.ready, t('get_ready.work_items.status.ready'))}
       {renderGroup('scheduled', groupedItems.scheduled, t('get_ready.work_items.status.scheduled'))}
 

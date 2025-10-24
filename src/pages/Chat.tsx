@@ -2,16 +2,14 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { ChatLayout } from '@/components/chat/ChatLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageCircle, Users, Shield, Zap } from 'lucide-react';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MessageCircle, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Chat: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { dealerships, loading } = useAccessibleDealerships();
-
-  const activeDealership = dealerships[0];
+  const { currentDealership, loading } = useAccessibleDealerships();
 
   if (loading) {
     return (
@@ -43,7 +41,7 @@ const Chat: React.FC = () => {
     );
   }
 
-  if (!activeDealership) {
+  if (!currentDealership) {
     return (
       <>
         <div className="container mx-auto px-4 py-8">
@@ -73,58 +71,19 @@ const Chat: React.FC = () => {
               {t('chat.title')}
             </h1>
             <p className="text-muted-foreground mt-2">
-              {t('chat.subtitle', { dealership: activeDealership.name })}
+              {t('chat.subtitle', { dealership: currentDealership.name })}
             </p>
           </div>
-          
+
           <div className="flex items-center space-x-2 text-sm text-muted-foreground" data-testid="dealership-context">
             <Users className="h-4 w-4" />
-            <span>{activeDealership.name}</span>
+            <span>{currentDealership.name}</span>
           </div>
-        </div>
-
-        {/* Feature Highlights */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="p-4" data-testid="feature-realtime">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                <MessageCircle className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">{t('chat.feature_realtime')}</h3>
-                <p className="text-sm text-muted-foreground">{t('chat.feature_realtime_desc')}</p>
-              </div>
-            </div>
-          </Card>
-          
-          <Card className="p-4" data-testid="feature-secure">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Shield className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">{t('chat.feature_secure')}</h3>
-                <p className="text-sm text-muted-foreground">{t('chat.feature_secure_desc')}</p>
-              </div>
-            </div>
-          </Card>
-          
-          <Card className="p-4" data-testid="feature-multimedia">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Zap className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-foreground">{t('chat.feature_multimedia')}</h3>
-                <p className="text-sm text-muted-foreground">{t('chat.feature_multimedia_desc')}</p>
-              </div>
-            </div>
-          </Card>
         </div>
 
         {/* Main Chat Interface */}
-        <ChatLayout 
-          dealerId={activeDealership.id} 
+        <ChatLayout
+          dealerId={currentDealership.id}
           className="shadow-sm border-0"
           data-testid="chat-layout"
         />

@@ -167,7 +167,8 @@ export interface GranularCustomRole {
   id: string;
   role_name: string;
   display_name: string;
-  dealer_id: number;
+  dealer_id: number | null; // NULL = system role, number = dealer-specific role
+  role_type: 'system_role' | 'dealer_custom_role'; // Type of role
   system_permissions: Set<SystemPermissionKey>;
   module_permissions: Map<AppModule, Set<ModulePermissionKey>>;
 }

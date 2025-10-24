@@ -33,7 +33,11 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
     loadMore,
     typingUsers,
     setIsTyping,
-    markAsRead
+    markAsRead,
+    addReaction,
+    removeReaction,
+    editMessage,
+    deleteMessage
   } = messagesHook;
 
   // Auto-scroll to bottom on new messages
@@ -151,9 +155,10 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
                   onReply={(content) => {
                     // TODO: Implement reply functionality
                   }}
-                  onReact={(emoji) => {
-                    // TODO: Implement reactions
-                  }}
+                  onReact={addReaction}
+                  onRemoveReact={removeReaction}
+                  onEdit={editMessage}
+                  onDelete={deleteMessage}
                 />
               </React.Fragment>
             );

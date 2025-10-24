@@ -1,39 +1,70 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { 
-  Reply, 
-  MoreHorizontal, 
-  Copy, 
-  Edit, 
-  Trash2, 
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  Reply,
+  MoreHorizontal,
+  Copy,
+  Edit,
+  Trash2,
   Download,
   Play,
   Pause,
   FileText,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Smile,
+  Check,
+  X as XIcon
 } from 'lucide-react';
 import { ChatMessage } from '@/hooks/useChatMessages';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface MessageBubbleProps {
   message: ChatMessage;
   showAvatar: boolean;
   onReply: (content: string) => void;
-  onReact: (emoji: string) => void;
+  onReact: (messageId: string, emoji: string) => Promise<boolean>;
+  onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;
+  onEdit: (messageId: string, newContent: string) => Promise<boolean>;
+  onDelete: (messageId: string) => Promise<boolean>;
 }
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
   message,
   showAvatar,
   onReply,
-  onReact
+  onReact,
+  onRemoveReact,
+  onEdit,
+  onDelete
 }) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(message.content || '');
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const editInputRef = useRef<HTMLInputElement>(null);
   const isOwnMessage = message.is_own_message;
 
   const getInitials = (name: string) => {
@@ -44,7 +75,127 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     return format(new Date(timestamp), 'HH:mm');
   };
 
+  // Handle emoji picker selection
+  const handleEmojiClick = async (emojiData: EmojiClickData) => {
+    const success = await onReact(message.id, emojiData.emoji);
+    if (success) {
+      setShowEmojiPicker(false);
+    } else {
+      toast({
+        variant: "destructive",
+        title: t('chat.reaction_error')
+      });
+    }
+  };
+
+  // Toggle reaction (add/remove)
+  const handleReactionClick = async (emoji: string) => {
+    if (!user?.id) return;
+
+    const userReacted = message.reactions[emoji]?.includes(user.id);
+
+    if (userReacted) {
+      await onRemoveReact(message.id, emoji);
+    } else {
+      await onReact(message.id, emoji);
+    }
+  };
+
+  // Handle edit message
+  const handleEditSave = async () => {
+    if (!editedContent.trim() || editedContent === message.content) {
+      setIsEditing(false);
+      return;
+    }
+
+    const success = await onEdit(message.id, editedContent.trim());
+    if (success) {
+      setIsEditing(false);
+      toast({
+        title: t('chat.message_updated')
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: t('chat.edit_error')
+      });
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditedContent(message.content || '');
+    setIsEditing(false);
+  };
+
+  // Handle delete message
+  const handleDeleteConfirm = async () => {
+    const success = await onDelete(message.id);
+    if (success) {
+      setShowDeleteDialog(false);
+      toast({
+        title: t('chat.message_deleted')
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: t('chat.delete_error')
+      });
+    }
+  };
+
+  // Handle copy message
+  const handleCopyMessage = () => {
+    if (message.content) {
+      navigator.clipboard.writeText(message.content);
+      toast({
+        title: t('chat.message_copied')
+      });
+    }
+  };
+
   const renderMessageContent = () => {
+    // Edit mode for text messages
+    if (isEditing && message.message_type === 'text') {
+      return (
+        <div className="space-y-2">
+          <Input
+            ref={editInputRef}
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleEditSave();
+              } else if (e.key === 'Escape') {
+                handleEditCancel();
+              }
+            }}
+            className="bg-background"
+            autoFocus
+          />
+          <div className="flex justify-end gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleEditCancel}
+              className="h-7"
+            >
+              <XIcon className="h-3 w-3 mr-1" />
+              {t('common.cancel')}
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleEditSave}
+              className="h-7"
+            >
+              <Check className="h-3 w-3 mr-1" />
+              {t('common.save')}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     switch (message.message_type) {
       case 'text':
         return (
@@ -240,19 +391,47 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           </div>
 
           {/* Reactions */}
-          {Object.keys(message.reactions).length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
-              {Object.entries(message.reactions).map(([emoji, userIds]) => (
-                <Button
-                  key={emoji}
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs bg-muted/50 hover:bg-muted"
-                  onClick={() => onReact(emoji)}
-                >
-                  {emoji} {userIds.length}
-                </Button>
-              ))}
+          {(Object.keys(message.reactions).length > 0 || showEmojiPicker) && (
+            <div className="flex flex-wrap gap-1 mt-1 items-center">
+              {Object.entries(message.reactions).map(([emoji, userIds]) => {
+                const userReacted = user?.id && userIds.includes(user.id);
+                return (
+                  <Button
+                    key={emoji}
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                      "h-6 px-2 text-xs transition-colors",
+                      userReacted
+                        ? "bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50"
+                        : "bg-muted/50 hover:bg-muted"
+                    )}
+                    onClick={() => handleReactionClick(emoji)}
+                  >
+                    {emoji} {userIds.length}
+                  </Button>
+                );
+              })}
+
+              {/* Add Reaction Button */}
+              <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs bg-muted/30 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Smile className="h-3 w-3" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiClick}
+                    autoFocusSearch={false}
+                    lazyLoadEmojis={true}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           )}
 
@@ -284,17 +463,20 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 <Reply className="h-4 w-4 mr-2" />
                 {t('chat.reply')}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCopyMessage}>
                 <Copy className="h-4 w-4 mr-2" />
                 {t('chat.copy')}
               </DropdownMenuItem>
-              {isOwnMessage && (
+              {isOwnMessage && message.message_type === 'text' && (
                 <>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsEditing(true)}>
                     <Edit className="h-4 w-4 mr-2" />
                     {t('chat.edit')}
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="text-destructive">
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive"
+                    onClick={() => setShowDeleteDialog(true)}
+                  >
                     <Trash2 className="h-4 w-4 mr-2" />
                     {t('chat.delete')}
                   </DropdownMenuItem>
@@ -309,6 +491,27 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           <div className="w-8" />
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('chat.delete_message_confirm_title')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('chat.delete_message_confirm')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {t('chat.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

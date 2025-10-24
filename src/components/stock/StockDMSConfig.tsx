@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import { 
-  Settings, 
-  Database, 
-  RefreshCw, 
-  AlertCircle, 
-  CheckCircle,
-  Clock,
-  Key,
-  Link,
-  TestTube2,
-  Save
+import { supabase } from '@/integrations/supabase/client';
+import {
+    AlertCircle,
+    CheckCircle,
+    Clock,
+    Database,
+    Key,
+    Link,
+    RefreshCw,
+    Save,
+    Settings,
+    TestTube2
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DMSConfig {
   dms_provider: string;
@@ -49,13 +51,16 @@ interface StockDMSConfigProps {
 export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { loading } = useStockManagement();
-  
-  // Mock config for now
-  const [config, setConfig] = useState<DMSConfig>({
-    dms_provider: 'max_inventory',
+  const { loading: stockLoading } = useStockManagement();
+  const { hasModulePermission } = usePermissions();
+
+  const canAdmin = hasModulePermission('stock', 'admin');
+
+  // Default config for new dealers
+  const defaultConfig: DMSConfig = {
+    dms_provider: 'none',
     auto_sync_enabled: false,
-    sync_frequency: 'daily',
+    sync_frequency: 'manual',
     sync_settings: {
       sync_fields: ['stock_number', 'vin', 'make', 'model', 'year', 'price', 'mileage'],
       filters: {
@@ -63,37 +68,120 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
         max_age_days: 365
       }
     }
-  });
+  };
+
+  const [config, setConfig] = useState<DMSConfig>(defaultConfig);
+  const [configLoading, setConfigLoading] = useState(true);
+  const [configId, setConfigId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
+  // Fetch DMS config from database
   useEffect(() => {
-    if (config) {
-      setConfig(config);
-    }
-  }, [config]);
+    const fetchDMSConfig = async () => {
+      if (!dealerId || !canAdmin) {
+        setConfigLoading(false);
+        return;
+      }
+
+      try {
+        setConfigLoading(true);
+        const { data, error } = await supabase
+          .from('dealer_dms_config')
+          .select('*')
+          .eq('dealer_id', dealerId)
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error fetching DMS config:', error);
+          setConfig(defaultConfig);
+        } else if (data) {
+          setConfigId(data.id);
+          setConfig({
+            dms_provider: data.dms_provider,
+            auto_sync_enabled: data.auto_sync_enabled,
+            sync_frequency: data.sync_frequency,
+            last_sync_at: data.last_sync_at,
+            sync_settings: data.sync_settings as DMSConfig['sync_settings']
+          });
+        } else {
+          // No config exists yet
+          setConfig(defaultConfig);
+        }
+      } catch (error) {
+        console.error('Error fetching DMS config:', error);
+        setConfig(defaultConfig);
+      } finally {
+        setConfigLoading(false);
+      }
+    };
+
+    fetchDMSConfig();
+  }, [dealerId, canAdmin]);
 
   const handleSave = async () => {
-    try {
-      // Mock save - would call actual API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    if (!dealerId || !canAdmin) {
       toast({
-        title: t('stock.dms.config_saved'),
-        description: t('stock.dms.config_saved_message'),
+        title: t('common.error'),
+        description: t('errors.no_permission_admin'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const configData = {
+        dealer_id: dealerId,
+        dms_provider: config.dms_provider,
+        auto_sync_enabled: config.auto_sync_enabled,
+        sync_frequency: config.sync_frequency,
+        sync_settings: config.sync_settings,
+        updated_at: new Date().toISOString()
+      };
+
+      if (configId) {
+        // Update existing config
+        const { error } = await supabase
+          .from('dealer_dms_config')
+          .update(configData)
+          .eq('id', configId);
+
+        if (error) throw error;
+      } else {
+        // Insert new config
+        const { data, error } = await supabase
+          .from('dealer_dms_config')
+          .insert([configData])
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (data) setConfigId(data.id);
+      }
+
+      toast({
+        title: t('common.success'),
+        description: t('stock.dms.config_saved_message', 'DMS configuration saved successfully'),
       });
     } catch (error) {
+      console.error('Error saving DMS config:', error);
       toast({
-        title: t('stock.dms.config_error'),
-        description: error instanceof Error ? error.message : t('stock.dms.config_error_message'),
-        variant: "destructive",
+        title: t('common.error'),
+        description: error instanceof Error ? error.message : t('stock.dms.config_error_message', 'Failed to save configuration'),
+        variant: 'destructive',
       });
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleTest = async () => {
     setTesting(true);
     setTestResult(null);
-    
+
     try {
       // Mock test - would call actual API
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -109,6 +197,7 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
   };
 
   const dmsProviders = [
+    { value: 'none', label: t('stock.dms.provider_none', 'None (Manual Upload)') },
     { value: 'max_inventory', label: 'Max Inventory' },
     { value: 'cdk_global', label: 'CDK Global' },
     { value: 'dealertrack', label: 'DealerTrack' },
@@ -130,6 +219,14 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
     'price', 'msrp', 'unit_cost', 'color', 'drivetrain', 'segment',
     'dms_status', 'lot_location', 'is_certified', 'certified_program'
   ];
+
+  if (configLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <RefreshCw className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -160,7 +257,8 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
               variant="outline"
               size="sm"
               onClick={handleTest}
-              disabled={testing}
+              disabled={!canAdmin || testing}
+              title={!canAdmin ? t('errors.no_permission_admin') : ''}
             >
               <TestTube2 className={`w-4 h-4 mr-2 ${testing ? 'animate-spin' : ''}`} />
               {t('stock.dms.test_connection')}
@@ -203,9 +301,10 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
           {/* Provider Selection */}
           <div className="space-y-2">
             <Label>{t('stock.dms.provider')}</Label>
-            <Select 
-              value={config.dms_provider} 
+            <Select
+              value={config.dms_provider}
               onValueChange={(value) => setConfig(prev => ({ ...prev, dms_provider: value }))}
+              disabled={!canAdmin}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -242,6 +341,7 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
                       api_endpoint: e.target.value
                     }
                   }))}
+                  disabled={!canAdmin}
                 />
               </div>
 
@@ -257,6 +357,7 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
                       dealer_code: e.target.value
                     }
                   }))}
+                  disabled={!canAdmin}
                 />
               </div>
             </div>
@@ -277,6 +378,7 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
                     api_key: e.target.value
                   }
                 }))}
+                disabled={!canAdmin}
               />
             </div>
           </div>
@@ -300,14 +402,16 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
               <Switch
                 checked={config.auto_sync_enabled}
                 onCheckedChange={(checked) => setConfig(prev => ({ ...prev, auto_sync_enabled: checked }))}
+                disabled={!canAdmin}
               />
             </div>
 
             <div className="space-y-2">
               <Label>{t('stock.dms.sync_frequency')}</Label>
-              <Select 
-                value={config.sync_frequency} 
+              <Select
+                value={config.sync_frequency}
                 onValueChange={(value) => setConfig(prev => ({ ...prev, sync_frequency: value }))}
+                disabled={!canAdmin}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -349,6 +453,7 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
                       }
                     }
                   }))}
+                  disabled={!canAdmin}
                 />
               </div>
 
@@ -368,6 +473,7 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
                       }
                     }
                   }))}
+                  disabled={!canAdmin}
                 />
               </div>
             </div>
@@ -375,11 +481,20 @@ export const StockDMSConfig: React.FC<StockDMSConfigProps> = ({ dealerId }) => {
 
           {/* Save Button */}
           <div className="flex justify-end pt-4">
-            <Button onClick={handleSave} disabled={loading}>
-              <Save className="w-4 h-4 mr-2" />
-              {t('stock.dms.save_configuration')}
+            <Button onClick={handleSave} disabled={!canAdmin || saving || stockLoading}>
+              <Save className={`w-4 h-4 mr-2 ${saving ? 'animate-spin' : ''}`} />
+              {saving ? t('common.saving', 'Saving...') : t('stock.dms.save_configuration', 'Save Configuration')}
             </Button>
           </div>
+
+          {!canAdmin && (
+            <Alert className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {t('errors.no_permission_admin_settings')}
+              </AlertDescription>
+            </Alert>
+          )}
         </CardContent>
       </Card>
     </div>

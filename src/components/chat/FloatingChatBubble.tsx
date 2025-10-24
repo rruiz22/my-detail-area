@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Tooltip,
@@ -256,7 +255,7 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
                   </Button>
                 </div>
 
-                <ScrollArea className="h-[200px]">
+                <div className="h-[200px] overflow-y-auto">
                   <div className="space-y-2">
                     {filteredTeamPresence.map((member) => (
                       <div
@@ -307,7 +306,7 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
                       </div>
                     ))}
                   </div>
-                </ScrollArea>
+                </div>
               </div>
             </div>
 

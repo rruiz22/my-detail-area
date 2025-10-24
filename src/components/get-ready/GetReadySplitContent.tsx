@@ -110,7 +110,21 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   });
 
   // Fetch ALL vehicles without step filter for Approvals tab
-  const { data: allVehiclesData } = useGetReadyVehiclesInfinite({});
+  const {
+    data: allVehiclesData,
+    fetchNextPage: fetchNextApprovalPage,
+    hasNextPage: hasNextApprovalPage,
+    isFetchingNextPage: isFetchingNextApprovalPage
+  } = useGetReadyVehiclesInfinite({});
+
+  // Auto-load ALL pages for accurate approval counting and display
+  // This ensures the Approvals page shows all vehicles needing approval, not just the first page
+  useEffect(() => {
+    if (hasNextApprovalPage && !isFetchingNextApprovalPage) {
+      console.log('📄 [Approvals] Auto-fetching next page for complete approval list');
+      fetchNextApprovalPage();
+    }
+  }, [hasNextApprovalPage, isFetchingNextApprovalPage, fetchNextApprovalPage]);
 
   // Flatten all vehicles from infinite query
   const allVehicles =
@@ -846,9 +860,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
         </div>
 
         {/* Enhanced Vehicle List with Detail Panel Below */}
-        <div className="flex-1 flex flex-col gap-4 overflow-hidden">
-          {/* Vehicle List - Fixed height to show 4 rows with infinite scroll */}
-          <div className="flex-none">
+        <div className="flex-1 flex flex-col gap-4 overflow-y-auto overflow-x-hidden">
+          {/* Vehicle List - Compact height to show rows */}
+          <div className="flex-shrink-0">
             <GetReadyVehicleList
               searchQuery={searchQuery}
               selectedStep={selectedStep}
@@ -864,9 +878,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             />
           </div>
 
-          {/* Detail Panel Below - Only when vehicle is selected */}
+          {/* Detail Panel Below - Expands naturally without height restriction */}
           {selectedVehicleId && (
-            <div className="flex-none border-t pt-4">
+            <div className="border-t pt-4 pb-4">
               <VehicleDetailPanel />
             </div>
           )}

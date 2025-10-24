@@ -2,18 +2,30 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { 
-  Send, 
-  Paperclip, 
-  Mic, 
-  MicOff, 
-  Image as ImageIcon, 
-  FileText, 
+import { useToast } from '@/hooks/use-toast';
+import {
+  Send,
+  Paperclip,
+  Mic,
+  MicOff,
+  Image as ImageIcon,
+  FileText,
   Smile,
   X
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+
+// File upload constants
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+const ALLOWED_FILE_TYPES = [
+  'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+  'application/pdf',
+  'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/plain', 'text/csv'
+];
 
 interface MessageSendResult {
   id: string;
@@ -44,6 +56,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   placeholder
 }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [message, setMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
@@ -133,10 +146,39 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     }
   };
 
-  // Handle file selection
+  // Handle file selection with validation
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setAttachedFiles(prev => [...prev, ...files]);
+    const validFiles: File[] = [];
+
+    for (const file of files) {
+      // Validate file size
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        toast({
+          variant: "destructive",
+          title: t('chat.file_too_large', { maxSize: MAX_FILE_SIZE_MB }),
+          description: `${file.name} (${formatFileSize(file.size)})`
+        });
+        continue;
+      }
+
+      // Validate file type
+      if (!ALLOWED_FILE_TYPES.includes(file.type) && !file.type.startsWith('image/')) {
+        toast({
+          variant: "destructive",
+          title: t('chat.invalid_file_type'),
+          description: file.name
+        });
+        continue;
+      }
+
+      validFiles.push(file);
+    }
+
+    if (validFiles.length > 0) {
+      setAttachedFiles(prev => [...prev, ...validFiles]);
+    }
+
     if (e.target) e.target.value = '';
   };
 
@@ -145,9 +187,10 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Start voice recording
+  // Start voice recording with error handling
   const startRecording = async () => {
     try {
+      // Request microphone permission
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -161,6 +204,17 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(recordingChunksRef.current, { type: 'audio/webm' });
+
+        // Validate voice message size
+        if (audioBlob.size > MAX_FILE_SIZE_BYTES) {
+          toast({
+            variant: "destructive",
+            title: t('chat.file_too_large', { maxSize: MAX_FILE_SIZE_MB })
+          });
+          stream.getTracks().forEach(track => track.stop());
+          return;
+        }
+
         await onSendVoiceMessage(audioBlob);
         stream.getTracks().forEach(track => track.stop());
       };
@@ -169,6 +223,20 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       setIsRecording(true);
     } catch (error) {
       console.error('Error starting recording:', error);
+
+      // Handle permission denied
+      if (error instanceof DOMException && error.name === 'NotAllowedError') {
+        toast({
+          variant: "destructive",
+          title: t('chat.voice_permission_denied'),
+          description: t('common.check_browser_permissions')
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: t('chat.voice_recording_error')
+        });
+      }
     }
   };
 

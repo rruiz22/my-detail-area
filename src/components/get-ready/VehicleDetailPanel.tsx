@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
@@ -43,6 +44,7 @@ interface VehicleDetailPanelProps {
 
 export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { selectedVehicleId, setSelectedVehicleId } = useGetReadyStore();
   const { data: vehicleDetail, isLoading } = useVehicleDetail(selectedVehicleId);
 
@@ -86,17 +88,26 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   };
 
   const handleExportPDF = () => {
-    alert('Export to PDF - Coming soon');
+    toast({
+      title: t('get_ready.detail_panel.export_pdf'),
+      description: t('get_ready.detail_panel.coming_soon'),
+    });
     // TODO: Implement PDF export functionality
   };
 
   const handleExportExcel = () => {
-    alert('Export to Excel - Coming soon');
+    toast({
+      title: t('common.action_buttons.export_excel'),
+      description: t('get_ready.detail_panel.coming_soon'),
+    });
     // TODO: Implement Excel export functionality
   };
 
   const handleEdit = () => {
-    alert('Edit Vehicle - Coming soon');
+    toast({
+      title: t('get_ready.detail_panel.edit_vehicle'),
+      description: t('get_ready.detail_panel.coming_soon'),
+    });
     // TODO: Implement edit vehicle modal
   };
 
@@ -160,7 +171,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
   return (
     <div
-      className={cn("flex-1 flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300 h-[calc(100vh-12rem)] min-h-[700px]", className)}
+      className={cn("flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300", className)}
     >
       {/* Vehicle Header - Enhanced with Time Tracking */}
       <div className="border-b bg-gradient-to-br from-card/50 to-muted/30 relative">
@@ -183,11 +194,11 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handlePrint}>
                 <Printer className="h-4 w-4 mr-2" />
-                {t('common.action_buttons.print')} Report
+                {t('get_ready.detail_panel.print_report')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleExportPDF}>
                 <FileText className="h-4 w-4 mr-2" />
-                Export to PDF
+                {t('get_ready.detail_panel.export_pdf')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleExportExcel}>
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
@@ -196,7 +207,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleEdit}>
                 <Edit className="h-4 w-4 mr-2" />
-                {t('common.action_buttons.edit')} Vehicle
+                {t('get_ready.detail_panel.edit_vehicle')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -292,7 +303,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                   borderWidth: '2px'
                 }}
               >
-                {vehicle.step_name || vehicle.current_step?.name || 'No Step'}
+                {vehicle.step_name || vehicle.current_step?.name || t('get_ready.detail_panel.no_step')}
               </Badge>
             </div>
           </div>
@@ -300,9 +311,9 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       </div>
 
       {/* Tabs Content */}
-      <div className="flex-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-6 mx-4 mt-4">
+      <div className="flex-1">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col">
+          <TabsList className="grid w-full grid-cols-6 mt-4">
             <TabsTrigger value="work-items" className="flex items-center gap-1.5">
               <Wrench className="h-4 w-4" />
               <span className="hidden sm:inline">{t('get_ready.tabs.work_items')}</span>
@@ -360,25 +371,25 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
           </TabsList>
 
           {/* Work Items Tab */}
-          <TabsContent value="work-items" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
+          <TabsContent value="work-items" className="px-4 pt-4 pb-6 overflow-auto">
             <VehicleWorkItemsTab vehicleId={selectedVehicleId} onSwitchTab={setActiveTab} />
           </TabsContent>
 
           {/* Media Tab */}
-          <TabsContent value="media" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
+          <TabsContent value="media" className="px-4 pt-4 pb-6">
             <VehicleMediaTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="notes" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
+          <TabsContent value="notes" className="px-4 pt-4 pb-6">
             <VehicleNotesTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
           {/* Vendors Tab - NEW: Full vendor integration */}
-          <TabsContent value="vendors" className="flex-1 overflow-hidden px-4 pt-4 pb-6">
+          <TabsContent value="vendors" className="px-4 pt-4 pb-6">
             <VehicleVendorsTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="timeline" className="flex-1 overflow-auto px-4 pt-4 pb-8">
+          <TabsContent value="timeline" className="px-4 pt-4 pb-8">
             {selectedVehicleId && (
               <VehicleActivityLog vehicleId={selectedVehicleId} />
             )}

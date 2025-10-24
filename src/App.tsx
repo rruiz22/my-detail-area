@@ -38,6 +38,7 @@ import SalesOrders from "./pages/SalesOrders";
 import ServiceOrders from "./pages/ServiceOrders";
 import Settings from "./pages/Settings";
 import Stock from "./pages/Stock";
+import VehicleDetailsPage from "./pages/VehicleDetailsPage";
 import VinScanner from "./pages/VinScanner";
 
     console.log('🚀 App starting up with improved navigation');
@@ -107,6 +108,14 @@ const AppRoutes = () => {
             element={
               <PermissionGuard module="stock" permission="view" checkDealerModule={true}>
                 <Stock />
+              </PermissionGuard>
+            }
+          />
+          <Route
+            path="stock/vehicles/:id"
+            element={
+              <PermissionGuard module="stock" permission="view" checkDealerModule={true}>
+                <VehicleDetailsPage />
               </PermissionGuard>
             }
           />

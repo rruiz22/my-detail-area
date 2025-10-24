@@ -1,24 +1,24 @@
-import React, { useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDropzone } from 'react-dropzone';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import { 
-  Upload, 
-  FileText, 
-  AlertCircle, 
-  CheckCircle, 
-  Download,
-  Trash2,
-  Play,
-  X
+import {
+    AlertCircle,
+    CheckCircle,
+    Download,
+    FileText,
+    Play,
+    Trash2,
+    Upload,
+    X
 } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useTranslation } from 'react-i18next';
 
 interface UploadFile {
   file: File;
@@ -41,9 +41,12 @@ interface StockCSVUploaderProps {
 export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { uploadCSV, loading } = useStockManagement(dealerId);
+  const { uploadCSV, loading } = useStockManagement();
+  const { hasModulePermission } = usePermissions();
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [showPreview, setShowPreview] = useState(false);
+
+  const canUpload = hasModulePermission('stock', 'create');
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles: UploadFile[] = acceptedFiles.map(file => ({
@@ -52,9 +55,9 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
       status: 'pending',
       progress: 0
     }));
-    
+
     setUploadFiles(prev => [...prev, ...newFiles]);
-    
+
     // Auto-preview first file
     if (newFiles.length > 0) {
       previewFile(newFiles[0]);
@@ -76,24 +79,24 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
     try {
       const text = await uploadFile.file.text();
       const { detectSeparator, extractFileTimestamp } = await import('@/utils/csvUtils');
-      
+
       // Detect separator and use it for consistent parsing
       const separator = detectSeparator(text);
       const timestamp = extractFileTimestamp(uploadFile.file.name);
-      
+
       const lines = text.split('\n').filter(line => line.trim()).slice(0, 6);
       const preview = lines.map(line => line.split(separator));
-      
+
       console.log(`📋 Preview for ${uploadFile.file.name}:`, {
         separator: `"${separator}"`,
         timestamp,
         columns: preview[0]?.length || 0,
         rows: preview.length - 1
       });
-      
-      setUploadFiles(prev => 
-        prev.map(f => f.id === uploadFile.id ? { 
-          ...f, 
+
+      setUploadFiles(prev =>
+        prev.map(f => f.id === uploadFile.id ? {
+          ...f,
           preview,
           metadata: { separator, timestamp }
         } : f)
@@ -109,13 +112,13 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
 
   const uploadFile = async (uploadFile: UploadFile) => {
     try {
-      setUploadFiles(prev => 
+      setUploadFiles(prev =>
         prev.map(f => f.id === uploadFile.id ? { ...f, status: 'uploading', progress: 0 } : f)
       );
 
       // Simulate progress
       const progressInterval = setInterval(() => {
-        setUploadFiles(prev => 
+        setUploadFiles(prev =>
           prev.map(f => {
             if (f.id === uploadFile.id && f.progress < 90) {
               return { ...f, progress: f.progress + 10 };
@@ -126,41 +129,41 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
       }, 200);
 
       const result = await uploadCSV(uploadFile.file);
-      
+
       clearInterval(progressInterval);
-      
+
       if (result.success) {
-        setUploadFiles(prev => 
-          prev.map(f => 
-            f.id === uploadFile.id 
-              ? { ...f, status: 'success', progress: 100, result } 
+        setUploadFiles(prev =>
+          prev.map(f =>
+            f.id === uploadFile.id
+              ? { ...f, status: 'success', progress: 100, result }
               : f
           )
         );
-        
+
         toast({
           title: t('stock.upload.success'),
-          description: result.details ? 
-            `${result.message}. Separator: "${result.details.separator}"` : 
+          description: result.details ?
+            `${result.message}. Separator: "${result.details.separator}"` :
             result.message,
         });
       } else {
         throw new Error(result.message || 'Upload failed');
       }
     } catch (error) {
-      setUploadFiles(prev => 
-        prev.map(f => 
-          f.id === uploadFile.id 
-            ? { 
-                ...f, 
-                status: 'error', 
-                progress: 0, 
-                error: error instanceof Error ? error.message : 'Unknown error' 
-              } 
+      setUploadFiles(prev =>
+        prev.map(f =>
+          f.id === uploadFile.id
+            ? {
+                ...f,
+                status: 'error',
+                progress: 0,
+                error: error instanceof Error ? error.message : 'Unknown error'
+              }
             : f
         )
       );
-      
+
       toast({
         title: t('stock.upload.error'),
         description: error instanceof Error ? error.message : t('stock.upload.error_message'),
@@ -171,7 +174,7 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
 
   const uploadAllFiles = async () => {
     const pendingFiles = uploadFiles.filter(f => f.status === 'pending' || f.status === 'error');
-    
+
     for (const file of pendingFiles) {
       await uploadFile(file);
     }
@@ -204,16 +207,25 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
           <div
             {...getRootProps()}
             className={`
-              border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
-              ${isDragActive 
-                ? 'border-primary bg-primary/5' 
-                : 'border-muted-foreground/25 hover:border-primary/50'
+              border-2 border-dashed rounded-lg p-8 text-center transition-colors
+              ${!canUpload
+                ? 'cursor-not-allowed opacity-50'
+                : isDragActive
+                  ? 'cursor-pointer border-primary bg-primary/5'
+                  : 'cursor-pointer border-muted-foreground/25 hover:border-primary/50'
               }
             `}
           >
-            <input {...getInputProps()} />
+            <input {...getInputProps()} disabled={!canUpload} />
             <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            {isDragActive ? (
+            {!canUpload ? (
+              <div className="space-y-2">
+                <p className="text-lg font-medium text-destructive">{t('errors.no_permission')}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t('errors.no_permission_upload')}
+                </p>
+              </div>
+            ) : isDragActive ? (
               <p className="text-lg font-medium">{t('stock.upload.drop_files')}</p>
             ) : (
               <div className="space-y-2">
@@ -254,18 +266,19 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
             <div className="flex items-center justify-between">
               <CardTitle>{t('stock.upload.files_to_upload')}</CardTitle>
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => setUploadFiles([])}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   {t('stock.upload.clear_all')}
                 </Button>
-                <Button 
+                <Button
                   size="sm"
                   onClick={uploadAllFiles}
-                  disabled={loading || uploadFiles.every(f => f.status === 'success')}
+                  disabled={!canUpload || loading || uploadFiles.every(f => f.status === 'success')}
+                  title={!canUpload ? t('errors.no_permission_create') : ''}
                 >
                   <Play className="w-4 h-4 mr-2" />
                   {t('stock.upload.upload_all')}

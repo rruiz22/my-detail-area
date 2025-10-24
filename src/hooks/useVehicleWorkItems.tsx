@@ -6,15 +6,16 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
 // Types based on database schema
-// ✨ ENHANCED STATUS SYSTEM - Option 2: Simplified Enterprise System
-// Pre-Work: awaiting_approval → rejected OR ready → scheduled
+// ✨ SIMPLIFIED WORKFLOW - Direct path from approval to queue
+// Pre-Work: awaiting_approval → queued → ready → scheduled
 // During Work: in_progress ⇄ on_hold / blocked
 // Post-Work: completed | cancelled
 export type WorkItemStatus =
   // Pre-Work Phase
   | 'awaiting_approval'  // Waiting for approval (when approval_required=true)
   | 'rejected'           // Rejected by approver (needs correction)
-  | 'ready'              // Approved or no approval needed, ready to start
+  | 'queued'             // Approved or no approval needed, queued to start (shows Start button)
+  | 'ready'              // Ready to begin work immediately
   | 'scheduled'          // Scheduled for future date
 
   // Execution Phase
@@ -258,7 +259,7 @@ export function useCreateWorkItem() {
       // ✨ NEW: Determine initial status based on approval requirement
       const initialStatus: WorkItemStatus = input.approval_required
         ? 'awaiting_approval'  // Needs approval first
-        : 'ready';             // Ready to start immediately
+        : 'queued';            // Queued to start immediately
 
       const { data, error } = await supabase
         .from('get_ready_work_items')
@@ -369,14 +370,14 @@ export function useApproveWorkItem() {
         throw new Error('User not authenticated');
       }
 
-      // ✨ NEW: After approval, work item becomes 'ready' to start
+      // ✨ SIMPLIFIED: After approval, work item goes directly to 'queued' (ready to Start)
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
           approval_status: 'approved',
           approved_by: user.id,
           approved_at: new Date().toISOString(),
-          status: 'approved', // Changed to 'approved' for approved work items
+          status: 'queued', // Goes directly to queued - shows Start button
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
@@ -395,9 +396,11 @@ export function useApproveWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
 
-      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
-      // Approving work item might remove vehicle from Approvals via trigger
+      // ✅ Invalidate vehicles query to refresh Approvals page
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
+      // ✅ Invalidate approval count to update badge immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
 
       toast.success(t('get_ready.work_items.approved_successfully'));
     },
@@ -422,12 +425,12 @@ export function useDeclineWorkItem() {
         throw new Error('User not authenticated');
       }
 
-      // ✨ NEW: Use 'rejected' instead of 'declined' for approval rejection
+      // ✅ CORRECTED: Use 'rejected' status for approval rejection (consistent with UI and types)
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
-          status: 'cancelled', approval_status: 'rejected', // ✨ NEW: Change from 'declined' to 'rejected'
-          approval_status: 'declined',
+          status: 'rejected',           // ✅ Consistent with WorkItemStatus type and UI expectations
+          approval_status: 'declined',  // Track approval rejection in approval_status
           decline_reason: reason,
           approved_by: user.id,
           approved_at: new Date().toISOString(),
@@ -449,9 +452,11 @@ export function useDeclineWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
 
-      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
-      // Declining work item affects vehicle approval status via trigger
+      // ✅ Invalidate vehicles query to refresh Approvals page
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+
+      // ✅ Invalidate approval count to update badge immediately
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
 
       toast.success(t('get_ready.work_items.declined_successfully'));
     },

@@ -201,10 +201,10 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
 
   const getDeliveryStatusIcon = (status?: string) => {
     switch (status) {
-      case 'sent': return <Check className="h-3 w-3 text-gray-400" />;
-      case 'delivered': return <CheckCheck className="h-3 w-3 text-gray-400" />;
-      case 'read': return <CheckCheck className="h-3 w-3 text-blue-500" />;
-      default: return <Clock className="h-3 w-3 text-gray-300" />;
+      case 'sent': return <Check className="h-3 w-3 text-muted-foreground" />;
+      case 'delivered': return <CheckCheck className="h-3 w-3 text-muted-foreground" />;
+      case 'read': return <CheckCheck className="h-3 w-3 text-emerald-500" />;
+      default: return <Clock className="h-3 w-3 text-muted-foreground/50" />;
     }
   };
 
@@ -257,7 +257,7 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
 
             {message.message_type === 'text' && (
               <p className="text-sm whitespace-pre-wrap break-words">
-                {renderMessageContent(message.content)}
+                <MessageContent content={message.content} />
               </p>
             )}
 
@@ -383,9 +383,27 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
     );
   };
 
-  const renderMessageContent = (content: string) => {
-    // Simple mention highlighting
-    return content.replace(/@(\w+)/g, '<span class="bg-blue-100 text-blue-800 px-1 rounded">@$1</span>');
+  // Safe mention highlighting component
+  const MessageContent = ({ content }: { content: string }) => {
+    const parts = content.split(/(@\w+)/g);
+
+    return (
+      <>
+        {parts.map((part, index) => {
+          if (part.startsWith('@')) {
+            return (
+              <span
+                key={index}
+                className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-1 rounded font-medium"
+              >
+                {part}
+              </span>
+            );
+          }
+          return <span key={index}>{part}</span>;
+        })}
+      </>
+    );
   };
 
   return (
