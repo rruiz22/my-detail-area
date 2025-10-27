@@ -1,20 +1,28 @@
-import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
-import { OrderDataTable } from '@/components/orders/OrderDataTable';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useToast } from '@/hooks/use-toast';
-import { useCarWashOrderManagement } from '@/hooks/useCarWashOrderManagement';
+import { useCarWashOrderManagement, type CarWashOrder, type CarWashOrderData } from '@/hooks/useCarWashOrderManagement';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { getSystemTimezone } from '@/utils/dateUtils';
+import { orderEvents } from '@/utils/eventBus';
+import logger from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
+// Always-loaded components (small, critical)
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
+import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
+
+// Code-split heavy view components (40-60KB initial bundle reduction)
+const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(module => ({ default: module.OrderDataTable })));
+const CarWashOrderModal = lazy(() => import('@/components/orders/CarWashOrderModal'));
 
 export default function CarWash() {
   const { t } = useTranslation();
@@ -36,6 +44,9 @@ export default function CarWash() {
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
+
+  // Accessibility: Live region for screen reader announcements
+  const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
 
   const {
     orders: allOrders,
@@ -65,17 +76,17 @@ export default function CarWash() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
-      console.log('🎯 [CarWash] Processing order from URL (one-time):', orderIdFromUrl);
+      logger.dev('[CarWash] Processing order from URL (one-time):', orderIdFromUrl);
 
       // Find the order in the loaded orders
       const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        console.log('✅ [CarWash] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        logger.success('[CarWash] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        console.warn('⚠️ [CarWash] Order not found in current orders list:', orderIdFromUrl);
+        logger.warn('[CarWash] Order not found in current orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -83,7 +94,7 @@ export default function CarWash() {
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t]);
+  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t, toast]);
 
   // Helper function to get dates in system timezone for filtering
   const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {
@@ -168,9 +179,9 @@ export default function CarWash() {
     }
   }, [allOrders, activeFilter, weekOffset, getSystemTimezoneDates]);
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create car wash orders');
+      logger.warn('[CarWash] User does not have permission to create car wash orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -179,29 +190,31 @@ export default function CarWash() {
       return;
     }
 
-    console.log('✅ User has permission to create car wash orders');
+    logger.success('[CarWash] User has permission to create car wash orders');
     setSelectedOrder(null);
     setShowModal(true);
-  };
+  }, [canCreate, t, toast]);
 
-  const handleEditOrder = (order: any) => {
+  const handleEditOrder = useCallback((order: CarWashOrder) => {
     setSelectedOrder(order);
     setShowModal(true);
     setPreviewOrder(null); // Close preview if open
-  };
+  }, []);
 
-  const handleViewOrder = (order: any) => {
+  const handleViewOrder = useCallback((order: CarWashOrder) => {
     setPreviewOrder(order);
-  };
+  }, []);
 
-  const handleDeleteOrder = async (orderId: string) => {
+  const handleDeleteOrder = useCallback(async (orderId: string) => {
     if (confirm(t('messages.confirm_delete_order'))) {
       await deleteOrder(orderId);
+      // Accessibility: Announce deletion to screen readers
+      setLiveRegionMessage(t('accessibility.car_wash_orders.order_deleted'));
     }
-  };
+  }, [deleteOrder, t]);
 
-  const handleSaveOrder = async (orderData: any) => {
-    console.log('🎯 [CarWash] handleSaveOrder called with:', {
+  const handleSaveOrder = useCallback(async (orderData: CarWashOrderData) => {
+    logger.dev('[CarWash] handleSaveOrder called with:', {
       hasSelectedOrder: !!selectedOrder,
       selectedOrderId: selectedOrder?.id,
       orderData: orderData,
@@ -213,25 +226,31 @@ export default function CarWash() {
 
     try {
       if (selectedOrder) {
-        console.log('📝 [CarWash] Calling updateOrder...');
+        logger.dev('[CarWash] Calling updateOrder...');
         await updateOrder(selectedOrder.id, orderData);
-        console.log('✅ [CarWash] updateOrder completed');
+        logger.success('[CarWash] updateOrder completed');
+        // Accessibility: Announce update to screen readers
+        setLiveRegionMessage(t('accessibility.car_wash_orders.order_updated'));
       } else {
-        console.log('➕ [CarWash] Calling createOrder...');
+        logger.dev('[CarWash] Calling createOrder...');
         await createOrder(orderData);
-        console.log('✅ [CarWash] createOrder completed');
+        logger.success('[CarWash] createOrder completed');
+        // Accessibility: Announce creation to screen readers
+        setLiveRegionMessage(t('accessibility.car_wash_orders.order_created'));
       }
       setShowModal(false);
       refreshData();
     } catch (error) {
-      console.error('❌ [CarWash] Error in handleSaveOrder:', error);
+      logger.error('[CarWash] Error in handleSaveOrder:', error);
+      // Re-throw to let modal handle it
+      throw error;
     }
-  };
+  }, [selectedOrder, updateOrder, createOrder, refreshData, t]);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     // NOTE: OrderDataTable already handles the DB update via updateOrderStatus
     // This callback is just for showing toast and dispatching events
-    console.log('✅ [CarWash] Status change callback:', { orderId, newStatus });
+    logger.success('[CarWash] Status change callback:', { orderId, newStatus });
 
     // Show success toast
     toast({
@@ -239,13 +258,11 @@ export default function CarWash() {
       variant: 'default'
     });
 
-    // Dispatch event to notify other components (already done by OrderDataTable but doesn't hurt)
-    window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-      detail: { orderId, newStatus, timestamp: Date.now() }
-    }));
-  };
+    // Emit typed event using EventBus
+    orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
+  }, [t, toast]);
 
-  const handleUpdate = async (orderId: string, updates: any) => {
+  const handleUpdate = useCallback(async (orderId: string, updates: Partial<CarWashOrderData>) => {
     try {
       await updateOrder(orderId, updates);
 
@@ -253,19 +270,17 @@ export default function CarWash() {
       // This is faster than polling and doesn't cause visible reload
       queryClient.invalidateQueries({ queryKey: ['orders', 'car_wash'] });
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderUpdated', {
-        detail: { orderId, updates, timestamp: Date.now() }
-      }));
+      // Emit typed event using EventBus
+      orderEvents.emit('orderUpdated', { orderId, updates, timestamp: Date.now() });
     } catch (error) {
-      console.error('Order update failed:', error);
+      logger.error('[CarWash] Order update failed:', error);
       throw error;
     }
-  };
+  }, [updateOrder, queryClient]);
 
 
   // Filter orders based on search term (after tab filtering)
-  const filteredOrders = filteredOrdersByTab.filter((order: any) => {
+  const filteredOrders = filteredOrdersByTab.filter((order: CarWashOrder) => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -280,6 +295,11 @@ export default function CarWash() {
   return (
     <>
       <div className="space-y-6">
+        {/* Accessibility: Live region for screen reader announcements */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {liveRegionMessage}
+        </div>
+
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
@@ -296,6 +316,8 @@ export default function CarWash() {
               size="sm"
               onClick={handleRefresh}
               disabled={isRefreshing}
+              aria-label={t('accessibility.car_wash_orders.refresh_button')}
+              aria-busy={isRefreshing}
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
@@ -305,6 +327,7 @@ export default function CarWash() {
               onClick={handleCreateOrder}
               disabled={!canCreate}
               title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+              aria-label={t('accessibility.car_wash_orders.create_button')}
             >
               <Plus className="h-4 w-4 mr-2" />
               {t('car_wash_orders.quick_order')}
@@ -325,27 +348,33 @@ export default function CarWash() {
           onWeekChange={setWeekOffset}
         />
 
-        {/* Main Content - Table View Only */}
-        <div className="space-y-6">
-          <OrderDataTable
-            orders={filteredOrders}
-            loading={loading}
-            onEdit={handleEditOrder}
-            onDelete={handleDeleteOrder}
-            onView={handleViewOrder}
-            onStatusChange={handleStatusChange}
-            tabType="carwash"
-          />
-        </div>
+        {/* Main Content - Code Split with Suspense and Error Boundaries */}
+        <main aria-label={t('accessibility.car_wash_orders.main_content')} className="space-y-6">
+          <OrderViewErrorBoundary viewType="table">
+            <Suspense fallback={<OrderViewLoadingFallback viewType="table" />}>
+              <OrderDataTable
+                orders={filteredOrders}
+                loading={loading}
+                onEdit={handleEditOrder}
+                onDelete={handleDeleteOrder}
+                onView={handleViewOrder}
+                onStatusChange={handleStatusChange}
+                tabType="carwash"
+              />
+            </Suspense>
+          </OrderViewErrorBoundary>
+        </main>
 
-        {/* Modals */}
+        {/* Modals - Code Split */}
         {showModal && (
-          <CarWashOrderModal
-            order={selectedOrder}
-            open={showModal}
-            onClose={() => setShowModal(false)}
-            onSave={handleSaveOrder}
-          />
+          <Suspense fallback={<OrderViewLoadingFallback viewType="modal" />}>
+            <CarWashOrderModal
+              order={selectedOrder}
+              open={showModal}
+              onClose={() => setShowModal(false)}
+              onSave={handleSaveOrder}
+            />
+          </Suspense>
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}

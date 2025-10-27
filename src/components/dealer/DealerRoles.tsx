@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { confirmDelete, showError, showSuccess } from '@/utils/sweetalert';
 import { Edit, Plus, Shield, Trash2, Users } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +38,8 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<CustomRole | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState<CustomRole | null>(null);
 
   const fetchRoles = useCallback(async () => {
     try {
@@ -107,50 +109,47 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
     fetchRoles();
   }, [fetchRoles]);
 
-  const handleDeleteRole = async (role: CustomRole) => {
+  const handleDeleteRole = (role: CustomRole) => {
     // Check if role has users assigned
     if (role.users_count && role.users_count > 0) {
-      await showError(
-        t('roles.cannot_delete_role'),
-        t('roles.role_has_users', { count: role.users_count, name: role.display_name }),
-        t('common.action_buttons.close')
-      );
+      toast({
+        variant: 'destructive',
+        title: t('roles.cannot_delete_role'),
+        description: t('roles.role_has_users', { count: role.users_count, name: role.display_name })
+      });
       return;
     }
 
-    // Confirm deletion with SweetAlert
-    const result = await confirmDelete(
-      t('roles.confirm_delete_role', { name: role.display_name }),
-      t('roles.delete_warning'),
-      t('common.action_buttons.delete'),
-      t('common.action_buttons.cancel')
-    );
+    setRoleToDelete(role);
+    setDeleteDialogOpen(true);
+  };
 
-    if (!result.isConfirmed) {
-      return;
-    }
+  const confirmDeleteRole = async () => {
+    if (!roleToDelete) return;
 
     try {
       // Soft delete: set is_active = false
       const { error } = await supabase
         .from('dealer_custom_roles')
         .update({ is_active: false, updated_at: new Date().toISOString() })
-        .eq('id', role.id);
+        .eq('id', roleToDelete.id);
 
       if (error) throw error;
 
-      await showSuccess(
-        t('common.success'),
-        t('roles.role_deleted', { name: role.display_name })
-      );
+      toast({
+        title: t('common.success'),
+        description: t('roles.role_deleted', { name: roleToDelete.display_name })
+      });
 
+      setRoleToDelete(null);
       fetchRoles();
     } catch (error) {
       console.error('Error deleting role:', error);
-      await showError(
-        t('common.error'),
-        t('roles.error_deleting_role')
-      );
+      toast({
+        variant: 'destructive',
+        title: t('common.error'),
+        description: t('roles.error_deleting_role')
+      });
     }
   };
 
@@ -294,6 +293,18 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
         role={selectedRole}
         dealerId={dealerId}
         onRoleUpdated={fetchRoles}
+      />
+
+      {/* Delete Confirmation Dialog - Team Chat Style */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('roles.confirm_delete_role_title', 'Delete Role?')}
+        description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete "${roleToDelete.display_name}"? This action cannot be undone.` : '')}
+        confirmText={t('common.delete', 'Delete')}
+        cancelText={t('common.cancel', 'Cancel')}
+        onConfirm={confirmDeleteRole}
+        variant="destructive"
       />
     </div>
   );

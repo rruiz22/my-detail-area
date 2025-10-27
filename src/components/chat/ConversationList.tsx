@@ -1,26 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
-import { Plus, Search, Users, User, X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { ChatConversation } from '@/hooks/useChatConversations';
-import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { ChatConversation } from '@/hooks/useChatConversations';
+import { supabase } from '@/integrations/supabase/client';
+import { cn } from '@/lib/utils';
+import { ImageIcon, MessageCircle, Mic, Paperclip, Plus, Search, User, Users, X } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TeamMember {
   id: string;
@@ -88,6 +87,24 @@ export const ConversationList: React.FC<ConversationListProps> = ({
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  // Format relative time for last message preview
+  const formatRelativeTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return t('chat.just_now');
+    if (diffMins < 60) return t('chat.minutes_ago', { count: diffMins });
+    if (diffHours < 24) return t('chat.hours_ago', { count: diffHours });
+    if (diffDays < 7) return t('chat.days_ago', { count: diffDays });
+
+    // More than 7 days: show date
+    return date.toLocaleDateString();
   };
 
   // Fetch team members when dialog opens
@@ -277,7 +294,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
             className="pl-9 h-9"
           />
         </div>
-        
+
         <div className="flex gap-1">
           <Button
             variant={filter === 'all' ? 'default' : 'ghost'}
@@ -519,95 +536,169 @@ export const ConversationList: React.FC<ConversationListProps> = ({
       <div className="flex-1 overflow-y-auto">
         <div className="p-2">
           {loading ? (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-3 p-4">
               {[1, 2, 3].map(i => (
-                <div key={i} className="flex items-center space-x-3 p-3 rounded-lg">
-                  <div className="w-10 h-10 bg-muted rounded-full animate-pulse" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-muted rounded animate-pulse" />
-                    <div className="h-3 bg-muted rounded w-3/4 animate-pulse" />
-                  </div>
+                <div key={i} className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-gray-100 rounded w-full"></div>
                 </div>
               ))}
             </div>
           ) : filteredConversations.length === 0 ? (
-            <div className="text-center text-muted-foreground py-8">
-              <Users className="h-12 w-12 mx-auto mb-3 opacity-30" />
-              <p className="text-sm">
+            <div className="flex flex-col items-center justify-center p-8 text-center">
+              <MessageCircle className="h-12 w-12 text-gray-300 mb-4" />
+              <h3 className="text-lg font-semibold text-gray-700 mb-2">
                 {searchQuery ? t('chat.no_conversations_found') : t('chat.no_conversations')}
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                {t('chat.start_conversation_hint')}
               </p>
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
+                {t('chat.new_conversation')}
+              </Button>
             </div>
           ) : (
             <div className="space-y-1">
               {filteredConversations.map((conversation) => {
                 const Icon = getConversationIcon(conversation.conversation_type);
                 const isSelected = conversation.id === selectedId;
-                
+
                 return (
                   <button
                     key={conversation.id}
                     onClick={() => onSelectConversation(conversation.id)}
                     className={cn(
-                      "w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-muted/50 transition-colors",
-                      isSelected && "bg-primary/10 border border-primary/20"
+                      "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
+                      "hover:bg-gray-50",
+                      isSelected && "bg-emerald-50/20 border border-emerald-500/30",
+                      conversation.unread_count && conversation.unread_count > 0 && !isSelected &&
+                        "bg-emerald-50/30 border-l-4 border-l-emerald-500"
                     )}
                     data-testid="conversation-item"
                   >
-                    <div className="relative">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={conversation.avatar_url} />
-                        <AvatarFallback className="text-xs">
-                          {conversation.avatar_url ? (
+                    <div className="relative flex-shrink-0">
+                      {conversation.conversation_type === 'direct' && conversation.other_participant ? (
+                        <div className="h-10 w-10 rounded-full overflow-hidden">
+                          <AvatarSystem
+                            name={conversation.other_participant.name}
+                            email={conversation.other_participant.email}
+                            seed={conversation.other_participant.avatar_seed as any}
+                            size={40}
+                          />
+                        </div>
+                      ) : (
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="text-xs bg-gray-100 text-gray-700">
                             <Icon className="h-4 w-4" />
-                          ) : (
-                            getInitials(getConversationName(conversation))
-                          )}
-                        </AvatarFallback>
-                      </Avatar>
-                      
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+
                       {conversation.conversation_type === 'group' && (
-                        <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
-                          <Users className="h-2 w-2 text-primary-foreground" />
+                        <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1">
+                          <Users className="h-2 w-2 text-white" />
                         </div>
                       )}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className={cn(
-                          "font-medium truncate text-sm",
-                          isSelected ? "text-primary" : "text-foreground"
-                        )}>
-                          {getConversationName(conversation)}
-                        </h4>
-                        
-                        {conversation.last_message_at && (
-                          <span className="text-xs text-muted-foreground flex-shrink-0 ml-2">
-                            {formatDistanceToNow(new Date(conversation.last_message_at), { addSuffix: true })}
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-muted-foreground truncate">
-                          {conversation.last_message_preview || t('chat.no_messages')}
-                        </p>
+                      {/* Desktop Layout (sm+) */}
+                      <div className="hidden sm:block">
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <div className="flex-1 min-w-0">
+                            <h4 className={cn(
+                              "font-semibold truncate text-sm",
+                              isSelected ? "text-emerald-600" : "text-gray-900"
+                            )}>
+                              {getConversationName(conversation)}
+                            </h4>
+                          </div>
 
-                        {conversation.unread_count && conversation.unread_count > 0 && (
-                          <Badge variant="default" className="ml-2 px-1.5 py-0 h-5 text-xs">
-                            {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
-                          </Badge>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {conversation.unread_count && conversation.unread_count > 0 && (
+                              <Badge className="bg-emerald-500 text-white hover:bg-emerald-600 text-xs px-2 py-0.5 rounded-full border-0 font-semibold">
+                                {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
+                              </Badge>
+                            )}
+                            {conversation.last_message_preview && (
+                              <span className="text-xs text-gray-400">
+                                {formatRelativeTime(conversation.last_message_preview.at)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Last Message Preview */}
+                        {conversation.last_message_preview ? (
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            {/* Icon based on message type */}
+                            {conversation.last_message_preview.type === 'image' && (
+                              <ImageIcon className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                            )}
+                            {conversation.last_message_preview.type === 'file' && (
+                              <Paperclip className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                            )}
+                            {conversation.last_message_preview.type === 'voice' && (
+                              <Mic className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                            )}
+
+                            {/* Message content - truncate long messages */}
+                            <p className="flex-1 truncate text-xs">
+                              {conversation.last_message_preview.content}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-400 italic">{t('chat.no_messages_yet')}</p>
+                        )}
+
+                        {/* Participant count for groups */}
+                        {conversation.conversation_type === 'group' && conversation.participant_count && (
+                          <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
+                            <Users className="h-3.5 w-3.5" />
+                            <span>{conversation.participant_count} {t('chat.members')}</span>
+                          </div>
                         )}
                       </div>
-                      
-                      {conversation.conversation_type === 'group' && (
-                        <div className="flex items-center mt-1">
-                          <Users className="h-3 w-3 text-muted-foreground mr-1" />
-                          <span className="text-xs text-muted-foreground">
-                            {conversation.max_participants || 0} {t('chat.members')}
-                          </span>
+
+                      {/* Mobile Layout (<sm) */}
+                      <div className="sm:hidden">
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className={cn(
+                            "font-semibold truncate text-sm flex-1",
+                            isSelected ? "text-emerald-600" : "text-gray-900"
+                          )}>
+                            {getConversationName(conversation)}
+                          </h4>
+                          {conversation.unread_count && conversation.unread_count > 0 && (
+                            <Badge className="ml-2 bg-emerald-500 text-white hover:bg-emerald-600 text-xs px-2 py-0.5 rounded-full border-0 font-semibold">
+                              {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
+                            </Badge>
+                          )}
                         </div>
-                      )}
+
+                        {/* Preview in separate line on mobile */}
+                        {conversation.last_message_preview ? (
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 text-sm text-gray-500 flex-1 truncate">
+                              {conversation.last_message_preview.type === 'image' && (
+                                <ImageIcon className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                              )}
+                              {conversation.last_message_preview.type === 'file' && (
+                                <Paperclip className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                              )}
+                              {conversation.last_message_preview.type === 'voice' && (
+                                <Mic className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                              )}
+                              <span className="truncate text-xs">{conversation.last_message_preview.content}</span>
+                            </div>
+                            <span className="text-xs text-gray-400 flex-shrink-0">
+                              {formatRelativeTime(conversation.last_message_preview.at)}
+                            </span>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-400 italic">{t('chat.no_messages_yet')}</p>
+                        )}
+                      </div>
                     </div>
                   </button>
                 );

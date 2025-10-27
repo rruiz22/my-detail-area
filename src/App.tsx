@@ -1,4 +1,5 @@
 import { RouteLogger } from "@/components/debug/RouteLogger";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { PermissionGuard } from "@/components/permissions/PermissionGuard";
@@ -15,6 +16,7 @@ import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 import { TooltipTester } from "./components/debug/TooltipTester";
 import AdminDashboard from "./pages/AdminDashboard";
+import Announcements from "./pages/Announcements";
 import Auth from "./pages/Auth";
 import CarWash from "./pages/CarWash";
 import Chat from "./pages/Chat";
@@ -83,7 +85,9 @@ const AppRoutes = () => {
             path="service"
             element={
               <PermissionGuard module="service_orders" permission="view" checkDealerModule={true}>
-                <ServiceOrders />
+                <ErrorBoundary>
+                  <ServiceOrders />
+                </ErrorBoundary>
               </PermissionGuard>
             }
           />
@@ -91,7 +95,9 @@ const AppRoutes = () => {
             path="recon"
             element={
               <PermissionGuard module="recon_orders" permission="view" checkDealerModule={true}>
-                <ReconOrders />
+                <ErrorBoundary>
+                  <ReconOrders />
+                </ErrorBoundary>
               </PermissionGuard>
             }
           />
@@ -99,23 +105,20 @@ const AppRoutes = () => {
             path="carwash"
             element={
               <PermissionGuard module="car_wash" permission="view" checkDealerModule={true}>
-                <CarWash />
+                <ErrorBoundary>
+                  <CarWash />
+                </ErrorBoundary>
               </PermissionGuard>
             }
           />
           <Route
-            path="stock"
+            path="stock/*"
             element={
               <PermissionGuard module="stock" permission="view" checkDealerModule={true}>
-                <Stock />
-              </PermissionGuard>
-            }
-          />
-          <Route
-            path="stock/vehicles/:id"
-            element={
-              <PermissionGuard module="stock" permission="view" checkDealerModule={true}>
-                <VehicleDetailsPage />
+                <Routes>
+                  <Route index element={<Stock />} />
+                  <Route path="vehicles/:id" element={<VehicleDetailsPage />} />
+                </Routes>
               </PermissionGuard>
             }
           />
@@ -200,6 +203,14 @@ const AppRoutes = () => {
               <PermissionGuard module="dealerships" permission="admin" checkDealerModule={true}>
                 <DealerView />
               </PermissionGuard>
+            }
+          />
+          <Route
+            path="announcements"
+            element={
+              <ProtectedRoute>
+                <Announcements />
+              </ProtectedRoute>
             }
           />
 

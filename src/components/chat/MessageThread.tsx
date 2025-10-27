@@ -12,11 +12,17 @@ import { MessageCircle } from 'lucide-react';
 interface MessageThreadProps {
   conversationId: string;
   messagesHook: UseChatMessagesReturn;
+  participants?: Array<{
+    user_id: string;
+    user_name: string;
+    user_avatar_url?: string;
+  }>;
 }
 
 export const MessageThread: React.FC<MessageThreadProps> = ({
   conversationId,
-  messagesHook
+  messagesHook,
+  participants = []
 }) => {
   const { t } = useTranslation();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -37,7 +43,8 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
     addReaction,
     removeReaction,
     editMessage,
-    deleteMessage
+    deleteMessage,
+    getUserName
   } = messagesHook;
 
   // Auto-scroll to bottom on new messages
@@ -159,6 +166,7 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
                   onRemoveReact={removeReaction}
                   onEdit={editMessage}
                   onDelete={deleteMessage}
+                  getUserName={getUserName}
                 />
               </React.Fragment>
             );
@@ -182,6 +190,11 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
           onSendFileMessage={sendFileMessage}
           onTyping={setIsTyping}
           disabled={loading}
+          participants={participants.map((p) => ({
+            id: p.user_id,
+            name: p.user_name,
+            avatar_url: p.user_avatar_url,
+          }))}
         />
       </div>
     </div>

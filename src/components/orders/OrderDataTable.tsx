@@ -13,10 +13,12 @@ import {
     TableHeader,
     TableRow
 } from '@/components/ui/table';
+import { Order } from '@/hooks/useOrderManagement';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { usePermissions } from '@/hooks/usePermissions';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
+import { useDuplicateDetection } from '@/hooks/useDuplicateDetection';
 import { cn } from '@/lib/utils';
 import '@/styles/order-animations.css';
 import { safeParseDate } from '@/utils/dateUtils';
@@ -26,6 +28,7 @@ import {
     isSameDayOrder,
     isTimeBasedOrder
 } from '@/utils/dueDateUtils';
+import { dev, error as logError } from '@/utils/logger';
 import { getOrderAnimationClass } from '@/utils/orderAnimationUtils';
 import { formatOrderNumber } from '@/utils/orderUtils';
 import { getStatusRowColor } from '@/utils/statusUtils';
@@ -39,32 +42,14 @@ import {
     Printer,
     Trash2
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { ServicesDisplay } from './ServicesDisplay';
 import { SkeletonLoader } from './SkeletonLoader';
 
-interface Order {
-  id: string;
-  createdAt: string;
-  orderNumber?: string;
-  customOrderNumber?: string;
-  stockNumber?: string;
-  vehicleYear?: number;
-  vehicleMake?: string;
-  vehicleModel?: string;
-  vehicleVin?: string;
-  vehicleInfo?: string;
-  customerName?: string;
-  status: string;
-  dealer_id?: number;
-  dueDate?: string;
-  totalAmount?: number;
-  shortLink?: string;
-  comments?: number;
-  followers?: number;
-}
+// Constants for magic numbers
+const DEFAULT_PAGE_SIZE = 10;
 
 interface StatusInfo {
   text: string;
@@ -91,21 +76,21 @@ interface MobileActionsProps {
 }
 
 interface OrderDataTableProps {
-  orders: any[];
+  orders: Order[];
   loading: boolean;
-  onEdit: (order: any) => void;
+  onEdit: (order: Order) => void;
   onDelete: (orderId: string) => void;
-  onView: (order: any) => void;
+  onView: (order: Order) => void;
   onStatusChange?: (orderId: string, newStatus: string) => void;
-  tabType: string;
+  tabType: 'sales' | 'service' | 'recon' | 'carwash';
 }
 
-export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onStatusChange, tabType }: OrderDataTableProps) {
+export const OrderDataTable = memo(function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onStatusChange, tabType }: OrderDataTableProps) {
   const { t } = useTranslation();
   const { printOrder, previewPrint } = usePrintOrder();
   const { canEditOrder, canDeleteOrder } = usePermissions();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = DEFAULT_PAGE_SIZE;
   const isMobile = useIsMobile();
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
@@ -113,93 +98,17 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
   useEffect(() => {
     const totalPages = Math.ceil(orders.length / itemsPerPage);
     if (currentPage > totalPages && totalPages > 0) {
-      console.log(`📄 Auto-resetting pagination: page ${currentPage} > ${totalPages} total pages`);
+      dev(`📄 Auto-resetting pagination: page ${currentPage} > ${totalPages} total pages`);
       setCurrentPage(1);
     }
   }, [orders.length, currentPage, itemsPerPage]);
 
-  // Enhanced memoized duplicate detection with caching
-  const duplicateData = useMemo(() => {
-    const startTime = performance.now();
-    // Debug only on first calculation or significant data changes
-    if (import.meta.env.DEV && orders.length > 100) {
-      console.log('🔄 Calculating duplicates for', orders.length, 'orders...');
-    }
-
-    const stockDuplicates = new Map<string, number>();
-    const vinDuplicates = new Map<string, number>();
-    const stockDuplicateOrders = new Map<string, Order[]>();
-    const vinDuplicateOrders = new Map<string, Order[]>();
-
-    // More efficient duplicate detection using grouping
-    const stockGroups = new Map<string, Order[]>();
-    const vinGroups = new Map<string, Order[]>();
-
-    // Group orders by normalized values
-    orders.forEach(order => {
-      // Group by stock number
-      if (order.stockNumber && order.stockNumber.trim()) {
-        const normalizedStock = order.stockNumber.trim().toLowerCase();
-        const key = `${normalizedStock}-${order.dealer_id || 'no-dealer'}`;
-        if (!stockGroups.has(key)) {
-          stockGroups.set(key, []);
-        }
-        stockGroups.get(key)!.push(order);
-      }
-
-      // Group by VIN
-      if (order.vehicleVin && order.vehicleVin.trim()) {
-        const normalizedVin = order.vehicleVin.trim().toLowerCase().replace(/[-\s]/g, '');
-        const key = `${normalizedVin}-${order.dealer_id || 'no-dealer'}`;
-        if (!vinGroups.has(key)) {
-          vinGroups.set(key, []);
-        }
-        vinGroups.get(key)!.push(order);
-      }
-    });
-
-    // Process stock duplicates
-    stockGroups.forEach((groupOrders, key) => {
-      if (groupOrders.length > 1) {
-        groupOrders.forEach(order => {
-          stockDuplicates.set(order.id, groupOrders.length);
-          stockDuplicateOrders.set(order.id, groupOrders);
-        });
-      }
-    });
-
-    // Process VIN duplicates
-    vinGroups.forEach((groupOrders, key) => {
-      if (groupOrders.length > 1) {
-        groupOrders.forEach(order => {
-          vinDuplicates.set(order.id, groupOrders.length);
-          vinDuplicateOrders.set(order.id, groupOrders);
-        });
-      }
-    });
-
-    const endTime = performance.now();
-    const duplicateStats = {
-      stockDuplicateGroups: stockGroups.size,
-      vinDuplicateGroups: vinGroups.size,
-      stockDuplicateOrders: stockDuplicates.size,
-      vinDuplicateOrders: vinDuplicates.size,
-      calculationTime: `${(endTime - startTime).toFixed(2)}ms`
-    };
-
-    // Only log performance stats for larger datasets
-    if (import.meta.env.DEV && orders.length > 100) {
-      console.log('✅ Duplicate calculation complete:', duplicateStats);
-    }
-
-    return {
-      stockDuplicates,
-      vinDuplicates,
-      stockDuplicateOrders,
-      vinDuplicateOrders,
-      stats: duplicateStats
-    };
-  }, [orders]);
+  // Optimized duplicate detection using custom hook
+  // Benefits: Debounced recalculation, dealer-scoped caching, non-blocking UI
+  const duplicateData = useDuplicateDetection(orders, {
+    debounceMs: 300, // Wait 300ms after last change before recalculating
+    cacheByDealer: true // Enable dealer-scoped caching for better multi-tenant performance
+  });
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     const order = orders.find(o => o.id === orderId);
@@ -221,7 +130,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
 
       const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
       if (success) {
-        console.log(`Status updated for order ${orderId} to ${newStatus}`);
+        dev(`Status updated for order ${orderId} to ${newStatus}`);
         toast.success(t('success.status_updated', 'Order status updated successfully'));
 
         // Trigger immediate refresh of order data
@@ -235,7 +144,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
         }));
       }
     } catch (error) {
-      console.error('Failed to update status:', error);
+      logError('Failed to update status:', error);
       toast.error(t('errors.status_update_failed', 'Failed to update order status'));
     }
   };
@@ -246,7 +155,7 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       await navigator.clipboard.writeText(vin);
       toast.success('VIN copied to clipboard');
     } catch (error) {
-      console.error('Failed to copy VIN:', error);
+      logError('Failed to copy VIN:', error);
       toast.error('Failed to copy VIN');
     }
   };
@@ -854,4 +763,16 @@ export function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onSt
       </Card>
     </>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison function - only re-render if critical props change
+  return (
+    prevProps.orders.length === nextProps.orders.length &&
+    prevProps.loading === nextProps.loading &&
+    prevProps.tabType === nextProps.tabType &&
+    // Deep check: compare order IDs and statuses to detect changes
+    prevProps.orders.every((order, index) =>
+      order.id === nextProps.orders[index]?.id &&
+      order.status === nextProps.orders[index]?.status
+    )
+  );
+});

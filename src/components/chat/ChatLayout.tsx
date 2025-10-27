@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ConversationList } from './ConversationList';
 import { MessageThread } from './MessageThread';
@@ -15,16 +15,40 @@ interface ChatLayoutProps {
   className?: string;
 }
 
-export const ChatLayout: React.FC<ChatLayoutProps> = ({ 
-  dealerId, 
-  className = '' 
+export const ChatLayout: React.FC<ChatLayoutProps> = ({
+  dealerId,
+  className = ''
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
-  
-  const { conversations, loading: conversationsLoading, createConversation } = useChatConversations(dealerId);
+  const [participants, setParticipants] = useState<Array<{
+    user_id: string;
+    user_name: string;
+    user_avatar_url?: string;
+  }>>([]);
+
+  const { conversations, loading: conversationsLoading, createConversation, getConversationParticipants } = useChatConversations(dealerId);
   const messagesHook = useChatMessages(selectedConversationId || '');
+
+  // Fetch participants when conversation changes
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      if (selectedConversationId && getConversationParticipants) {
+        try {
+          const conversationParticipants = await getConversationParticipants(selectedConversationId);
+          setParticipants(conversationParticipants || []);
+        } catch (error) {
+          console.error('Error fetching participants:', error);
+          setParticipants([]);
+        }
+      } else {
+        setParticipants([]);
+      }
+    };
+
+    fetchParticipants();
+  }, [selectedConversationId, getConversationParticipants]);
 
   if (!user) {
     return (
@@ -38,7 +62,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
   }
 
   return (
-    <Card className={`h-[700px] overflow-hidden ${className}`}>
+    <Card className={`h-[calc(100vh-12rem)] min-h-[500px] max-h-[900px] overflow-hidden ${className}`}>
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Conversations Panel */}
         <ResizablePanel defaultSize={30} minSize={25} maxSize={50}>
@@ -74,6 +98,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
                 <MessageThread
                   conversationId={selectedConversationId}
                   messagesHook={messagesHook}
+                  participants={participants}
                 />
               </>
             ) : (

@@ -19,7 +19,6 @@ import {
     Ban,
     CheckCheck,
     CheckCircle,
-    Circle,
     Clock,
     DollarSign,
     Edit,
@@ -31,7 +30,7 @@ import {
     Trash2,
     Unlock,
     User,
-    XCircle,
+    XCircle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -54,8 +53,12 @@ interface WorkItem {
     first_name: string;
     last_name: string;
   };
-  media_count?: number; // NEW
-  notes_count?: number; // NEW
+  media_count?: number;
+  notes_count?: number;
+  // ✨ NEW: Phase 1 - Add missing status reason fields
+  blocked_reason?: string;
+  on_hold_reason?: string;
+  cancel_reason?: string;
 }
 
 interface WorkItemsGroupedTableProps {
@@ -97,13 +100,12 @@ export function WorkItemsGroupedTable({
 }: WorkItemsGroupedTableProps) {
   const { t } = useTranslation();
 
-  // ✨ Group work items by status (simplified workflow - no 'approved')
+  // ✨ Group work items by status (simplified workflow - no 'ready' or 'queued')
   const groupedItems = {
     // Pre-Work Phase
+    pending: workItems.filter((item) => item.status === 'pending' || item.status === 'queued'), // Map 'queued' to 'pending'
     awaiting_approval: workItems.filter((item) => item.status === 'awaiting_approval'),
     rejected: workItems.filter((item) => item.status === 'rejected'),
-    queued: workItems.filter((item) => item.status === 'queued'), // Approved items go here
-    ready: workItems.filter((item) => item.status === 'ready'),
     scheduled: workItems.filter((item) => item.status === 'scheduled'),
 
     // Execution Phase
@@ -116,9 +118,12 @@ export function WorkItemsGroupedTable({
     cancelled: workItems.filter((item) => item.status === 'cancelled'),
   };
 
+
   // ✨ NEW: Use imported getStatusColor helper for border colors
   const getStatusBorderColor = (status: WorkItemStatus) => {
-    const config = getStatusColor(status);
+    // Map 'queued' to 'pending' for display purposes
+    const displayStatus = status === 'queued' ? 'pending' : status;
+    const config = getStatusColor(displayStatus);
     return `border-l-4 ${config.borderColor.replace('border-', 'border-l-')} ${config.bgColor}`;
   };
 
@@ -145,20 +150,76 @@ export function WorkItemsGroupedTable({
         <div className="flex items-start gap-2">
           {/* ✨ NEW: Use WorkItemStatusBadge component */}
           <div className="pt-0.5">
-            <WorkItemStatusBadge status={item.status} size="sm" showIcon={true} />
+            <WorkItemStatusBadge
+              status={item.status === 'queued' ? 'pending' : item.status}
+              size="sm"
+              showIcon={true}
+            />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-sm line-clamp-1">{item.title}</span>
-              {/* Show reason badges for special states */}
-              {item.status === 'blocked' && item.blocked_reason && (
-                <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs">
-                  {t('get_ready.work_items.blocked')}: {item.blocked_reason}
+            {/* ✨ ENHANCED: Title with inline timer and badges */}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className="font-medium text-sm line-clamp-1">{item.title}</span>
+
+                {/* Show reason badges for special states */}
+                {item.status === 'blocked' && item.blocked_reason && (
+                  <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs">
+                    {t('get_ready.work_items.status.blocked')}: {item.blocked_reason}
+                  </Badge>
+                )}
+                {item.status === 'on_hold' && item.on_hold_reason && (
+                  <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-300 text-xs">
+                    {t('get_ready.work_items.status.on_hold')}: {item.on_hold_reason}
+                  </Badge>
+                )}
+              </div>
+
+              {/* ✨ NEW: Timer always visible for in_progress items */}
+              {item.status === 'in_progress' && item.actual_start && (
+                <div className="flex-shrink-0">
+                  <LiveWorkTimer
+                    startTime={item.actual_start}
+                    size="sm"
+                    showStopButton={false}
+                  />
+                </div>
+              )}
+
+              {/* ✨ NEW: Final time for completed items */}
+              {item.status === 'completed' && item.actual_hours && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 font-mono text-xs flex-shrink-0"
+                >
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  {item.actual_hours.toFixed(1)}h
                 </Badge>
               )}
-              {item.status === 'on_hold' && item.on_hold_reason && (
-                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-300 text-xs">
-                  {t('get_ready.work_items.on_hold')}: {item.on_hold_reason}
+
+              {/* ✨ NEW: Elapsed time for on_hold/blocked (if has actual_start) */}
+              {(item.status === 'on_hold' || item.status === 'blocked') && item.actual_start && (
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "font-mono text-xs flex-shrink-0",
+                    item.status === 'on_hold'
+                      ? "bg-gray-50 dark:bg-gray-950/30 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800"
+                      : "bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800"
+                  )}
+                >
+                  {item.status === 'on_hold' ? (
+                    <Pause className="h-3 w-3 mr-1" />
+                  ) : (
+                    <AlertTriangle className="h-3 w-3 mr-1" />
+                  )}
+                  {/* Calculate elapsed from actual_start to now */}
+                  {(() => {
+                    const start = new Date(item.actual_start);
+                    const now = new Date();
+                    const hours = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+                    return hours.toFixed(1);
+                  })()}h
                 </Badge>
               )}
             </div>
@@ -236,25 +297,17 @@ export function WorkItemsGroupedTable({
 
       {/* Assigned */}
       <TableCell className="hidden lg:table-cell">
-        {(item.assigned_technician_profile || (item as any).assigned_to) && (
+        {item.assigned_technician_profile && (
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <User className="h-3 w-3" />
             <span className="truncate max-w-[120px]">
-              {item.assigned_technician_profile
-                ? `${item.assigned_technician_profile.first_name} ${item.assigned_technician_profile.last_name}`
-                : (item as any).assigned_to
-              }
+              {`${item.assigned_technician_profile.first_name} ${item.assigned_technician_profile.last_name}`}
             </span>
           </div>
         )}
       </TableCell>
 
-      {/* Timer */}
-      <TableCell className="hidden xl:table-cell">
-        {item.status === 'in_progress' && item.actual_start && (
-          <LiveWorkTimer startTime={item.actual_start} size="sm" showStopButton={false} />
-        )}
-      </TableCell>
+      {/* ❌ REMOVED: Timer column (now inline with title) */}
 
       {/* Quick Actions */}
       <TableCell className="text-right">
@@ -286,8 +339,8 @@ export function WorkItemsGroupedTable({
             </>
           )}
 
-          {/* Start Action - queued, ready or rejected status */}
-          {(item.status === 'queued' || item.status === 'ready' || item.status === 'rejected') && (
+          {/* Start Action - pending or rejected status */}
+          {(item.status === 'pending' || item.status === 'rejected') && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -303,7 +356,7 @@ export function WorkItemsGroupedTable({
                 <TooltipContent>
                   <div className="text-center">
                     <div className="font-semibold">{t('get_ready.work_items.start')}</div>
-                    <div className="text-xs text-muted-foreground">Queued → In Progress</div>
+                    <div className="text-xs text-muted-foreground">Pending → In Progress</div>
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -471,8 +524,8 @@ export function WorkItemsGroupedTable({
             </TooltipProvider>
           )}
 
-          {/* Delete Action - only for completed/cancelled or rejected */}
-          {(item.status === 'completed' || item.status === 'cancelled' || item.status === 'rejected') && (
+          {/* Delete Action - pending, completed, cancelled or rejected */}
+          {(item.status === 'pending' || item.status === 'completed' || item.status === 'cancelled' || item.status === 'rejected') && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -485,7 +538,12 @@ export function WorkItemsGroupedTable({
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>{t('get_ready.actions.delete')}</TooltipContent>
+                <TooltipContent>
+                  <div className="text-center">
+                    <div className="font-semibold">{t('get_ready.work_items.delete')}</div>
+                    <div className="text-xs text-muted-foreground">{t('get_ready.work_items.delete_description')}</div>
+                  </div>
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
@@ -519,7 +577,7 @@ export function WorkItemsGroupedTable({
                 <TableHead className="hidden sm:table-cell w-[140px]">Type & Priority</TableHead>
                 <TableHead className="hidden md:table-cell w-[100px]">Cost & Hours</TableHead>
                 <TableHead className="hidden lg:table-cell w-[120px]">Assigned</TableHead>
-                <TableHead className="hidden xl:table-cell w-[100px]">Timer</TableHead>
+                {/* ❌ REMOVED: Timer column (now inline with title) */}
                 <TableHead className="text-right w-[180px]">{t('get_ready.actions.actions')}</TableHead>
               </TableRow>
             </TableHeader>
@@ -538,9 +596,8 @@ export function WorkItemsGroupedTable({
 
       {/* Pre-Work Phase - Simplified workflow */}
       {renderGroup('awaiting_approval', groupedItems.awaiting_approval, t('get_ready.work_items.status.awaiting_approval'))}
+      {renderGroup('pending', groupedItems.pending, t('get_ready.work_items.status.pending'))}
       {renderGroup('rejected', groupedItems.rejected, t('get_ready.work_items.status.rejected'))}
-      {renderGroup('queued', groupedItems.queued, t('get_ready.work_items.status.queued'))}
-      {renderGroup('ready', groupedItems.ready, t('get_ready.work_items.status.ready'))}
       {renderGroup('scheduled', groupedItems.scheduled, t('get_ready.work_items.status.scheduled'))}
 
       {/* Execution Phase */}

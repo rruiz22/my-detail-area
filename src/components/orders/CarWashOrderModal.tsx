@@ -1,3 +1,4 @@
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,12 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { useDealerServices, useDealerships } from '@/hooks/useDealerships';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
 import { AlertCircle, Clock, Loader2, Zap } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -102,77 +103,31 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   });
 
   const [selectedDealership, setSelectedDealership] = useState('');
-  const [dealerships, setDealerships] = useState([]);
-  const [services, setServices] = useState([]);
+
+  // Use React Query hooks for dealerships and services (with caching)
+  const { data: dealerships = [], isLoading: dealershipsLoading } = useDealerships();
+  const { data: services = [], isLoading: servicesLoading } = useDealerServices(
+    selectedDealership ? parseInt(selectedDealership) : null,
+    'CarWash Dept'
+  );
+
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Combine loading states
+  const loading = dealershipsLoading || servicesLoading;
 
   // Check for global dealer filter
   const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
   const isGlobalFilterActive = globalDealerFilter && globalDealerFilter !== 'all';
   const isDealerFieldReadOnly = Boolean(isGlobalFilterActive);
 
-  // Declare fetchDealerships BEFORE useEffect to avoid hoisting issues
-  const fetchDealerships = useCallback(async () => {
-    try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase.rpc('get_user_accessible_dealers', {
-        user_uuid: user.user.id
-      });
-
-      if (error) throw error;
-      setDealerships(data || []);
-
-      // Auto-select if only one dealership
-      if (data && data.length === 1) {
-        setSelectedDealership(data[0].id.toString());
-        fetchDealerServices(data[0].id.toString());
-      }
-    } catch (error) {
-      console.error('Error fetching dealerships:', error);
-    }
-  }, []);
-
-  const fetchDealerServices = async (dealershipId: string) => {
-    if (!dealershipId) return;
-
-    setLoading(true);
-    try {
-      // Use department-specific function like Recon - DB filters by department
-      const { data: servicesResult, error: servicesError } = await supabase
-        .rpc('get_dealer_services_by_department', {
-          p_dealer_id: parseInt(dealershipId),
-          p_department_name: 'CarWash Dept'
-        });
-
-      if (servicesError) {
-        console.error('Error fetching services:', servicesError);
-        setServices([]);
-        return;
-      }
-
-      // No additional filtering needed - DB function already filters by department
-      setServices(servicesResult || []);
-    } catch (error) {
-      console.error('Error fetching dealer services:', error);
-      setServices([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Declare handleDealershipChange BEFORE useEffect to avoid hoisting issues
+  // Declare handleDealershipChange
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealership(dealershipId);
-    setServices([]);
     setSelectedServices([]);
-
-    if (dealershipId) {
-      fetchDealerServices(dealershipId);
-    }
+    // Services are now loaded automatically via React Query hook when selectedDealership changes
   };
 
   // Auto-generate vehicle display when VIN is decoded or fields change
@@ -189,7 +144,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   useEffect(() => {
     if (open) {
-      fetchDealerships();
+      // Dealerships are now loaded via React Query hook - no need to fetch manually
 
       if (order) {
         setFormData({
@@ -257,7 +212,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
         setVinDecoded(false);
       }
     }
-  }, [order, open, fetchDealerships]);
+  }, [order, open]);
 
   // Auto-select dealership from global filter for new orders (like Recon)
   useEffect(() => {
@@ -278,7 +233,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
       if (dealershipId) {
         setSelectedDealership(dealershipId);
-        fetchDealerServices(dealershipId);
+        // Services are now loaded automatically via React Query hook
       }
     }
   }, [dealerships.length, order, selectedDealership]);
@@ -329,11 +284,15 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     totalAmount: 0,
     notes: formData.notes || undefined,
     completedAt: formData.completedAt || undefined,
-    dealerId: selectedDealership ? parseInt(selectedDealership) : undefined,
+    dealerId: selectedDealership && Number.isInteger(Number(selectedDealership))
+      ? parseInt(selectedDealership)
+      : undefined,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null); // Reset any previous errors
+
     const dbData = transformToDbFormat(formData);
 
     console.log('📤 [CarWash Modal] Sending data to handleSaveOrder:', {
@@ -349,7 +308,18 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
       fullData: dbData
     });
 
-    onSave(dbData);
+    try {
+      await onSave(dbData);
+      // Only close on success
+      onClose();
+    } catch (error: any) {
+      // Keep modal open and show error
+      console.error('Submit error:', error);
+      const errorMessage = error?.message || 'Failed to save order';
+      setSubmitError(errorMessage);
+      toast.error(errorMessage);
+      // Modal stays open with data intact
+    }
   };
 
   return (
@@ -372,6 +342,14 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
         <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
+            {/* Error Alert */}
+            {submitError && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{submitError}</AlertDescription>
+              </Alert>
+            )}
+
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="p-3 sm:p-4">

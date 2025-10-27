@@ -1,7 +1,7 @@
 import { mockVehicles } from '@/data/mockVehicles';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
-import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert, StepVehicleCountData, VehiclesByDaysData } from '@/types/getReady';
+import { BottleneckAlert, GetReadyKPIs, GetReadyStep, SLAAlert, StepVehicleCountData } from '@/types/getReady';
 import { validateDealershipObject } from '@/utils/dealerValidation';
 
 import { useOrderPolling } from '@/hooks/useSmartPolling';
@@ -519,5 +519,112 @@ export function useGetReady() {
       bottleneckAlerts.refetch();
       slaAlerts.refetch();
     }
+  };
+}
+
+// =====================================================
+// Enhanced KPIs Hook with Historical Trends
+// =====================================================
+
+export function useGetReadyKPIsWithTrends(timeRange: '7d' | '30d' | '90d' = '30d') {
+  const baseKPIs = useGetReadyKPIs();
+  const { usePeriodComparison, useHistoricalKPIs } = require('./useGetReadyHistoricalAnalytics');
+
+  const periodComparison = usePeriodComparison(timeRange);
+  const historicalKPIs = useHistoricalKPIs(timeRange);
+
+  // Calculate trend indicators
+  const trends = {
+    t2l: calculateTrendIndicator(
+      baseKPIs.data?.avgT2L || 0,
+      periodComparison.data?.previous.avg_t2l || 0,
+      'lower_is_better'
+    ),
+    throughput: calculateTrendIndicator(
+      baseKPIs.data?.dailyThroughput || 0,
+      periodComparison.data?.previous.throughput || 0,
+      'higher_is_better'
+    ),
+    slaCompliance: calculateTrendIndicator(
+      baseKPIs.data?.slaCompliance || 0,
+      periodComparison.data?.previous.sla_compliance || 0,
+      'higher_is_better'
+    ),
+    holdingCost: calculateTrendIndicator(
+      baseKPIs.data?.avgHoldingCost || 0,
+      0, // Need to add to period comparison
+      'lower_is_better'
+    ),
+    utilizationRate: calculateTrendIndicator(
+      baseKPIs.data?.utilizationRate || 0,
+      0, // Need to add to period comparison
+      'higher_is_better'
+    ),
+  };
+
+  // Generate sparkline data from historical KPIs
+  const timeSeries = {
+    t2l: (historicalKPIs.data || []).map(d => ({
+      date: d.date,
+      value: d.avg_t2l,
+    })),
+    throughput: (historicalKPIs.data || []).map(d => ({
+      date: d.date,
+      value: d.daily_throughput,
+    })),
+    slaCompliance: (historicalKPIs.data || []).map(d => ({
+      date: d.date,
+      value: d.sla_compliance * 100, // Convert to percentage
+    })),
+  };
+
+  return {
+    ...baseKPIs,
+    data: baseKPIs.data ? {
+      ...baseKPIs.data,
+      trends,
+      timeSeries,
+    } : undefined,
+    periodComparison: periodComparison.data,
+  };
+}
+
+// Helper function to calculate trend indicators
+function calculateTrendIndicator(
+  current: number,
+  previous: number,
+  context: 'higher_is_better' | 'lower_is_better'
+): import('@/types/getReady').TrendIndicator {
+  if (previous === 0) {
+    return {
+      direction: 'stable',
+      percentChange: 0,
+      isImprovement: false,
+      previousValue: previous,
+      currentValue: current,
+    };
+  }
+
+  const percentChange = ((current - previous) / previous) * 100;
+  let direction: 'up' | 'down' | 'stable' = 'stable';
+
+  if (Math.abs(percentChange) < 2) {
+    direction = 'stable';
+  } else if (current > previous) {
+    direction = 'up';
+  } else {
+    direction = 'down';
+  }
+
+  const isImprovement = context === 'higher_is_better'
+    ? current > previous
+    : current < previous;
+
+  return {
+    direction,
+    percentChange: Math.round(percentChange * 10) / 10,
+    isImprovement,
+    previousValue: Math.round(previous * 100) / 100,
+    currentValue: Math.round(current * 100) / 100,
   };
 }

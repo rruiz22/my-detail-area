@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 
 // Translation cache version - increment this when translations are updated
 // This forces browsers to reload translation files
-const TRANSLATION_VERSION = `1.4.0-${Date.now()}`; // v1.4.0: Added orders.status translation
+const TRANSLATION_VERSION = `1.5.0-${Date.now()}`; // v1.5.0: Added getReady.analytics translations (58 keys)
 
 // Language resources will be loaded dynamically
 const resources = {};

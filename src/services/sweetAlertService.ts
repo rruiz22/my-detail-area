@@ -1,6 +1,11 @@
 import Swal from 'sweetalert2';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * @deprecated This service is deprecated. Use ConfirmDialog component instead for Team Chat style modals.
+ * @see useSweetAlert.tsx for migration guide
+ */
+
 export interface SweetAlertOptions {
   title?: string;
   text?: string;

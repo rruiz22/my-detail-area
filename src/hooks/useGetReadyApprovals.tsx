@@ -1,16 +1,15 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { supabase } from '@/integrations/supabase/client';
 import type {
-  GetReadyVehicle,
-  ApprovalSummary,
-  ApprovalHistory,
-  ApprovalHistoryWithUser,
-  ApprovalRequest,
-  RejectRequest,
-  ApprovalResponse
+    ApprovalHistoryWithUser,
+    ApprovalRequest,
+    ApprovalResponse,
+    ApprovalSummary,
+    GetReadyVehicle,
+    RejectRequest
 } from '@/types/getReady';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // =====================================================
 // QUERY HOOKS
@@ -57,7 +56,8 @@ export function usePendingApprovals() {
       return data as GetReadyVehicle[];
     },
     enabled: !!currentDealerId,
-    refetchInterval: 10000 // Refresh every 10 seconds for testing
+    staleTime: 30000, // 30 seconds - balance between freshness and performance
+    refetchInterval: 60000 // Refresh every minute instead of 10 seconds
   });
 }
 

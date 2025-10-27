@@ -136,7 +136,6 @@ const Management = () => {
             </PermissionGuard>
           </TabsContent>
 
-
           {import.meta.env.DEV && (
             <TabsContent value="migration" className="space-y-6">
               <PermissionGuard module="management" permission="admin">

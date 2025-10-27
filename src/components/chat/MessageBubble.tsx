@@ -1,42 +1,41 @@
-import React, { useState, useRef } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  Reply,
-  MoreHorizontal,
-  Copy,
-  Edit,
-  Trash2,
-  Download,
-  Play,
-  Pause,
-  FileText,
-  Image as ImageIcon,
-  Smile,
-  Check,
-  X as XIcon
-} from 'lucide-react';
+import { AvatarSystem } from '@/components/ui/avatar-system';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { ChatMessage } from '@/hooks/useChatMessages';
-import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import {
+    Check,
+    Copy,
+    Download,
+    Edit,
+    FileText,
+    MoreHorizontal,
+    Play,
+    Reply,
+    Smile,
+    Trash2,
+    X as XIcon
+} from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -46,6 +45,7 @@ interface MessageBubbleProps {
   onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;
   onEdit: (messageId: string, newContent: string) => Promise<boolean>;
   onDelete: (messageId: string) => Promise<boolean>;
+  getUserName: (userId: string) => string;
 }
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
@@ -55,7 +55,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   onReact,
   onRemoveReact,
   onEdit,
-  onDelete
+  onDelete,
+  getUserName
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -219,8 +220,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 <div className="h-1 bg-primary rounded-full w-1/3" />
               </div>
               <div className="text-xs text-muted-foreground mt-1">
-                {message.voice_duration_ms ? 
-                  `${Math.ceil(message.voice_duration_ms / 1000)}s` : 
+                {message.voice_duration_ms ?
+                  `${Math.ceil(message.voice_duration_ms / 1000)}s` :
                   '0s'
                 }
               </div>
@@ -242,8 +243,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 {message.file_name || 'Unknown file'}
               </p>
               <p className="text-xs text-muted-foreground">
-                {message.file_size ? 
-                  `${(message.file_size / 1024).toFixed(1)} KB` : 
+                {message.file_size ?
+                  `${(message.file_size / 1024).toFixed(1)} KB` :
                   'Unknown size'
                 }
               </p>
@@ -316,12 +317,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       )}>
         {/* Avatar */}
         {showAvatar && !isOwnMessage && (
-          <Avatar className="h-8 w-8 mt-1">
-            <AvatarImage src={message.sender?.avatar_url} />
-            <AvatarFallback className="text-xs">
-              {message.sender?.name ? getInitials(message.sender.name) : 'U'}
-            </AvatarFallback>
-          </Avatar>
+          <div className="h-8 w-8 mt-1 rounded-full overflow-hidden flex-shrink-0">
+            <AvatarSystem
+              name={message.sender?.name || 'User'}
+              email={message.sender?.email}
+              seed={message.sender?.avatar_seed as any}
+              size={32}
+            />
+          </div>
         )}
 
         {/* Message Content */}
@@ -391,49 +394,75 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           </div>
 
           {/* Reactions */}
-          {(Object.keys(message.reactions).length > 0 || showEmojiPicker) && (
+          <TooltipProvider delayDuration={300}>
             <div className="flex flex-wrap gap-1 mt-1 items-center">
+              {/* Existing Reactions */}
               {Object.entries(message.reactions).map(([emoji, userIds]) => {
                 const userReacted = user?.id && userIds.includes(user.id);
+
+                // Build tooltip content with user names
+                const reactionUsers = userIds.map(id => getUserName(id));
+                const tooltipText = (() => {
+                  if (userReacted) {
+                    const otherUsers = reactionUsers.filter(name => name !== getUserName(user.id));
+                    if (otherUsers.length === 0) {
+                      return t('chat.you_reacted');
+                    } else if (otherUsers.length === 1) {
+                      return t('chat.you_and_one_other', { name: otherUsers[0] });
+                    } else {
+                      return t('chat.you_and_others', { count: otherUsers.length });
+                    }
+                  } else {
+                    if (reactionUsers.length === 1) {
+                      return reactionUsers[0];
+                    } else if (reactionUsers.length === 2) {
+                      return `${reactionUsers[0]} ${t('chat.and')} ${reactionUsers[1]}`;
+                    } else {
+                      return `${reactionUsers[0]} ${t('chat.and')} ${reactionUsers.length - 1} ${t('chat.others')}`;
+                    }
+                  }
+                })();
+
                 return (
-                  <Button
-                    key={emoji}
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      "h-6 px-2 text-xs transition-colors",
-                      userReacted
-                        ? "bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50"
-                        : "bg-muted/50 hover:bg-muted"
-                    )}
-                    onClick={() => handleReactionClick(emoji)}
-                  >
-                    {emoji} {userIds.length}
-                  </Button>
+                  <Tooltip key={emoji}>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-xs bg-muted/50 hover:bg-muted transition-colors"
+                        onClick={() => handleReactionClick(emoji)}
+                      >
+                        {emoji} {userIds.length}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs">
+                      {tooltipText}
+                    </TooltipContent>
+                  </Tooltip>
                 );
               })}
 
-              {/* Add Reaction Button */}
-              <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs bg-muted/30 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Smile className="h-3 w-3" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <EmojiPicker
-                    onEmojiClick={handleEmojiClick}
-                    autoFocusSearch={false}
-                    lazyLoadEmojis={true}
-                  />
-                </PopoverContent>
-              </Popover>
+            {/* Add Reaction Button - Always rendered, visible on hover */}
+            <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs bg-muted/30 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Smile className="h-3 w-3" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  autoFocusSearch={false}
+                  lazyLoadEmojis={true}
+                />
+              </PopoverContent>
+            </Popover>
             </div>
-          )}
+          </TooltipProvider>
 
           {/* Only show timestamp without avatar for subsequent messages */}
           {!showAvatar && (

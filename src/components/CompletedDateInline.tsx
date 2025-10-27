@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Edit2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import Swal from 'sweetalert2';
 
 interface CompletedDateInlineProps {
   completedAt?: string | Date | null;
@@ -25,6 +25,7 @@ export function CompletedDateInline({
 }: CompletedDateInlineProps) {
   const [open, setOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   const currentDate = completedAt ? new Date(completedAt) : null;
 
@@ -54,87 +55,27 @@ export function CompletedDateInline({
     }
   };
 
-  const handleClearDate = async (e: React.MouseEvent) => {
+  const handleClearDate = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Close the popover first to avoid z-index conflicts
+    // Close the popover first to avoid conflicts
     setOpen(false);
 
-    // Use SweetAlert2 with high z-index for modal compatibility
-    const result = await Swal.fire({
-      title: 'Clear completion date?',
-      text: 'This will remove the completion date from this order.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, clear it',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#6b7280',
-      reverseButtons: true,
-      customClass: {
-        container: 'swal2-in-modal',
-        popup: 'rounded-lg shadow-xl',
-        title: 'text-base sm:text-xl font-bold text-gray-900',
-        htmlContainer: 'text-sm text-gray-600',
-        confirmButton: 'bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md',
-        actions: 'flex-col sm:flex-row gap-2 w-full'
-      },
-      buttonsStyling: false,
-      width: 'auto',
-      // Ensure it appears above the dialog modal (Dialog is z-50, SweetAlert should be z-60+)
-      didOpen: (popup) => {
-        const container = popup.parentElement;
-        if (container) {
-          container.style.zIndex = '60';
-        }
-        popup.style.zIndex = '65';
-        popup.style.position = 'relative';
+    // Show confirmation dialog
+    setShowClearDialog(true);
+  };
 
-        // Ensure buttons are clickable
-        const actions = popup.querySelector('.swal2-actions');
-        if (actions) {
-          (actions as HTMLElement).style.zIndex = '66';
-          (actions as HTMLElement).style.position = 'relative';
-        }
-
-        const buttons = popup.querySelectorAll('.swal2-confirm, .swal2-cancel, .swal2-styled');
-        buttons.forEach(btn => {
-          (btn as HTMLElement).style.zIndex = '67';
-          (btn as HTMLElement).style.position = 'relative';
-          (btn as HTMLElement).style.pointerEvents = 'auto';
-        });
-      },
-      didClose: () => {
-        // Clean up any lingering elements after close
-        setTimeout(() => {
-          const containers = document.querySelectorAll('.swal2-container, .swal2-backdrop-show, .swal2-shown');
-          containers.forEach(el => {
-            if (el && el.parentNode) {
-              el.remove();
-            }
-          });
-          // Also remove any body classes added by SweetAlert2
-          document.body.classList.remove('swal2-shown', 'swal2-height-auto');
-        }, 50);
-      },
-      allowOutsideClick: true,
-      allowEscapeKey: true,
-      backdrop: true
-    });
-
-    if (result.isConfirmed) {
-      setUpdating(true);
-      try {
-        await onDateChange(orderId, null);
-        toast.success('Completion date has been removed.');
-      } catch (error) {
-        console.error('Error clearing completed date:', error);
-        toast.error('Failed to clear completion date.');
-      } finally {
-        setUpdating(false);
-      }
+  const confirmClearDate = async () => {
+    setUpdating(true);
+    try {
+      await onDateChange(orderId, null);
+      toast.success('Completion date has been removed.');
+    } catch (error) {
+      console.error('Error clearing completed date:', error);
+      toast.error('Failed to clear completion date.');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -153,6 +94,7 @@ export function CompletedDateInline({
 
   // Editable with popover
   return (
+    <>
     <Popover open={open} onOpenChange={setOpen} modal={false}>
       <PopoverTrigger asChild>
         <Button
@@ -218,5 +160,19 @@ export function CompletedDateInline({
         </div>
       </PopoverContent>
     </Popover>
+
+    {/* Clear Date Confirmation Dialog - Team Chat Style */}
+    <ConfirmDialog
+      open={showClearDialog}
+      onOpenChange={setShowClearDialog}
+      title="Clear completion date?"
+      description="This will remove the completion date from this order. Are you sure?"
+      confirmText="Yes, clear it"
+      cancelText="Cancel"
+      onConfirm={confirmClearDate}
+      variant="destructive"
+    />
+    </>
   );
 }
+

@@ -1,31 +1,16 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, memo } from 'react';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
-  MoreHorizontal,
   Calendar,
   Clock,
   AlertTriangle,
-  Edit,
-  Eye,
-  Trash
+  type LucideIcon
 } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
 import { Order } from '@/hooks/useOrderManagement';
-import { safeFormatDateOnly, calculateDaysFromNow, getSystemTimezone } from '@/utils/dateUtils';
 import { usePermissions } from '@/hooks/usePermissions';
-import { PermissionGuard } from '@/components/permissions/PermissionGuard';
-import { getStatusRowColor, getStatusBorder } from '@/utils/statusUtils';
-import { ServicesDisplay } from '@/components/orders/ServicesDisplay';
-import { DueDateIndicator } from '@/components/ui/due-date-indicator';
+import { OrderCard } from '@/components/sales/OrderCard';
 
 interface OrderKanbanBoardProps {
   orders: Order[];
@@ -41,10 +26,10 @@ interface KanbanColumn {
   status: string[];
   color: string;
   bgColor: string;
-  icon: any;
+  icon: LucideIcon;
 }
 
-export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusChange }: OrderKanbanBoardProps) {
+export const OrderKanbanBoard = memo(function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusChange }: OrderKanbanBoardProps) {
   const { t } = useTranslation();
   const { canEditOrder, canDeleteOrder } = usePermissions();
   const [draggedOrder, setDraggedOrder] = useState<Order | null>(null);
@@ -128,71 +113,25 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
     setDraggedOrder(null);
   };
 
-  const getPriorityColor = (priority?: string) => {
-    switch (priority?.toLowerCase()) {
-      case 'urgent': return 'border-l-destructive bg-destructive/5';
-      case 'high': return 'border-l-warning bg-warning/5';
-      case 'normal': return 'border-l-primary bg-primary/5';
-      case 'low': return 'border-l-muted bg-muted/5';
-      default: return 'border-l-border bg-background';
-    }
-  };
-
-  const formatDueDate = (dueDate?: string) => {
-    if (!dueDate) return null;
-
-    const diffDays = calculateDaysFromNow(dueDate);
-    if (diffDays === null) return null;
-
-    if (diffDays < 0) {
-      return { text: 'Overdue', variant: 'destructive' as const, days: Math.abs(diffDays) };
-    } else if (diffDays === 0) {
-      return { text: 'Due today', variant: 'warning' as const, days: 0 };
-    } else if (diffDays === 1) {
-      return { text: 'Due tomorrow', variant: 'secondary' as const, days: 1 };
-    } else {
-      return { text: `${diffDays}d`, variant: 'outline' as const, days: diffDays };
-    }
-  };
-
-  // Format due date for time/date display
-  const formatDueDateTimeDisplay = (dueDate?: string) => {
-    if (!dueDate) return null;
-
-    try {
-      const date = new Date(dueDate);
-      const timezone = getSystemTimezone();
-
-      return {
-        time: date.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-          timeZone: timezone
-        }),
-        date: date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          timeZone: timezone
-        })
-      };
-    } catch (error) {
-      return null;
-    }
-  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-[calc(100vh-300px)] overflow-hidden">
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-[calc(100vh-300px)] overflow-hidden"
+      role="region"
+      aria-label={t('accessibility.kanban.board_label')}
+    >
       {columns.map((column) => {
         const columnOrders = getOrdersByColumn(column.status);
         const Icon = column.icon;
-        
+
         return (
           <div
             key={column.id}
             className="flex flex-col min-h-0"
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, column.id)}
+            role="region"
+            aria-label={t('accessibility.kanban.column_label', { title: column.title, count: columnOrders.length })}
           >
             {/* Column Header */}
             <Card className="border-border shadow-sm mb-4">
@@ -212,195 +151,33 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
             </Card>
 
             {/* Order Cards */}
-            <div 
+            <div
               className={`flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent min-h-[200px] ${
                 draggedOrder ? 'bg-accent/5 border-2 border-dashed border-accent rounded-lg' : ''
               }`}
+              role="list"
+              aria-label={t('accessibility.kanban.orders_list', { status: column.title })}
             >
-              {columnOrders.map((order) => {
-                const dueInfo = formatDueDate(order.dueDate);
-                const dueDateTimeDisplay = formatDueDateTimeDisplay(order.dueDate);
-
-                return (
-                  <Card
-                    key={order.id}
-                    draggable={true}
-                    onDragStart={(e) => handleDragStart(e, order)}
+              {columnOrders.map((order) => (
+                <div key={order.id} role="listitem">
+                  <OrderCard
+                    order={order}
+                    isDragging={draggedOrder?.id === order.id}
+                    onEdit={onEdit}
+                    onView={onView}
+                    onDelete={onDelete}
+                    canEdit={canEditOrder(order)}
+                    canDelete={canDeleteOrder(order)}
+                    onDragStart={handleDragStart}
                     onDragEnd={() => setDraggedOrder(null)}
-                    onDoubleClick={() => onView(order)}
-                    className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 ${getStatusBorder(order.status)} ${getStatusRowColor(order.status)} group ${
-                      draggedOrder?.id === order.id ? 'opacity-50 scale-95' : ''
-                    }`}
-                  >
-                    <CardContent className="p-2">
-                      {/* Header: Order Number + Due Time */}
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium text-sm text-foreground">
-                            #{order.orderNumber || order.order_number || order.id}
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <MoreHorizontal className="h-3 w-3" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-popover border border-border">
-                              <DropdownMenuItem onClick={() => onView(order)}>
-                                <Eye className="w-4 h-4 mr-2" />
-                                View
-                              </DropdownMenuItem>
+                  />
+                </div>
+              ))}
 
-                              {/* Edit - Only if user can edit this specific order */}
-                              {canEditOrder(order) && (
-                                <DropdownMenuItem onClick={() => onEdit(order)}>
-                                  <Edit className="w-4 h-4 mr-2" />
-                                  Edit
-                                </DropdownMenuItem>
-                              )}
-
-                              {/* Delete - Only if user can delete orders (system admin only) */}
-                              {canDeleteOrder(order) && (
-                                <DropdownMenuItem
-                                  onClick={() => onDelete(order.id)}
-                                  className="text-destructive focus:text-destructive"
-                                >
-                                  <Trash className="w-4 h-4 mr-2" />
-                                  Delete
-                                </DropdownMenuItem>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-
-                        {/* Due Time - Prominent */}
-                        <div className="text-right">
-                          {dueDateTimeDisplay ? (
-                            <>
-                              <div className="text-sm font-bold text-primary">
-                                {dueDateTimeDisplay.time}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {dueDateTimeDisplay.date}
-                              </div>
-                            </>
-                          ) : (
-                            <div className="text-xs text-muted-foreground">
-                              No due date
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Main Content: 2 Column Layout */}
-                      <div className="grid grid-cols-3 gap-2 mb-2">
-                        {/* Left Column: Names & Info */}
-                        <div className="col-span-2 space-y-1">
-                          {/* Assigned To */}
-                          <div className="text-sm font-medium text-foreground truncate">
-                            {order.assignedTo && order.assignedTo !== 'Unassigned' ? order.assignedTo : 'Unassigned'}
-                          </div>
-
-                          {/* Customer */}
-                          {order.customerName && (
-                            <div className="text-xs text-muted-foreground truncate">
-                              Customer: {order.customerName}
-                            </div>
-                          )}
-
-                          {/* Services Badge */}
-                          <ServicesDisplay
-                            services={order.services}
-                            dealerId={order.dealer_id}
-                            variant="kanban"
-                            showPrices={false}
-                            className="mt-2"
-                          />
-
-                          {/* Vehicle Info */}
-                          {order.vehicleInfo && (
-                            <div className="text-sm font-bold text-foreground truncate mt-1" title={order.vehicleInfo}>
-                              {order.vehicleInfo}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Right Column: Stock/Tag & VIN */}
-                        <div className="space-y-1 text-right">
-                          {order.stockNumber && (
-                            <div className="text-xs font-medium text-foreground">
-                              <span className="text-muted-foreground/60 text-[10px]">Tag: </span>
-                              {order.stockNumber}
-                            </div>
-                          )}
-                          {order.vehicleVin && (
-                            <div className="text-xs font-mono">
-                              <span className="text-muted-foreground/60">L8V: </span>
-                              <span className="font-semibold text-foreground">{order.vehicleVin.slice(-8)}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Footer: Badges + Actions */}
-                      <div className="flex items-center justify-between pt-1 border-t border-border">
-                        <div className="flex items-center gap-1">
-                          {/* Use DueDateIndicator component same as table (hide for completed/cancelled) */}
-                          {order.status !== 'completed' && order.status !== 'cancelled' && (
-                            <DueDateIndicator
-                              dueDate={order.dueDate}
-                              orderStatus={order.status}
-                              orderType="service"
-                              compact={true}
-                            />
-                          )}
-                          {order.priority && order.priority !== 'normal' && (
-                            <Badge
-                              variant={order.priority === 'urgent' ? 'destructive' : 'outline'}
-                              className="text-xs px-1 py-0 h-4"
-                            >
-                              {order.priority}
-                            </Badge>
-                          )}
-                        </div>
-
-                        {/* Quick Actions */}
-                        <div className="flex items-center gap-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => onView(order)}
-                            className="h-5 w-5 p-0 hover:bg-primary/10"
-                          >
-                            <Eye className="w-3 h-3" />
-                          </Button>
-
-                          {/* Edit - Only if user can edit this specific order */}
-                          {canEditOrder(order) && (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => onEdit(order)}
-                              className="h-5 w-5 p-0 hover:bg-primary/10"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-              
               {columnOrders.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
-                  <div className="text-sm">No orders</div>
-                  <div className="text-xs">Drag orders here</div>
+                <div className="text-center py-8 text-muted-foreground" role="status">
+                  <div className="text-sm">{t('accessibility.kanban.no_orders')}</div>
+                  <div className="text-xs">{t('accessibility.kanban.drag_hint')}</div>
                 </div>
               )}
             </div>
@@ -409,4 +186,13 @@ export function OrderKanbanBoard({ orders, onEdit, onView, onDelete, onStatusCha
       })}
     </div>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison - re-render only if orders array changes
+  return (
+    prevProps.orders.length === nextProps.orders.length &&
+    prevProps.orders.every((order, index) =>
+      order.id === nextProps.orders[index]?.id &&
+      order.status === nextProps.orders[index]?.status
+    )
+  );
+});

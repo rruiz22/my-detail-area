@@ -3,28 +3,31 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetReady } from '@/hooks/useGetReady';
+import { TimeRange } from '@/hooks/useGetReadyHistoricalAnalytics';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { cn } from '@/lib/utils';
 import {
-  AlertTriangle,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  FileText,
-  Image,
-  Layers,
-  Shield,
-  Target,
-  TrendingUp,
-  Users,
-  Zap
+    AlertTriangle,
+    ArrowRight,
+    Calendar,
+    CheckCircle2,
+    Clock,
+    FileText,
+    Layers,
+    Shield,
+    Target,
+    TrendingUp,
+    Users,
+    Zap
 } from 'lucide-react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
 import { GetReadyAlerts } from './GetReadyAlerts';
+import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
+import { BottleneckAnalysis, StepPerformanceMatrix, TimeSeriesCharts } from './analytics';
 
 interface GetReadyOverviewProps {
   className?: string;
@@ -36,6 +39,17 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
   const { steps } = useGetReady();
   const { setSelectedStepId } = useGetReadyStore();
   const navigate = useNavigate();
+
+  // Time Range State with localStorage persistence
+  const [timeRange, setTimeRange] = useState<TimeRange>(() => {
+    const stored = localStorage.getItem('getReady.overview.timeRange');
+    return (stored as TimeRange) || '30d';
+  });
+
+  // Persist time range selection
+  useEffect(() => {
+    localStorage.setItem('getReady.overview.timeRange', timeRange);
+  }, [timeRange]);
 
   // Calculate workflow distribution
   const workflowStats = useMemo(() => {
@@ -206,8 +220,38 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
 
   const totalVehicles = allVehicles.length;
 
+  const handleStepClick = (stepId: string) => {
+    setSelectedStepId(stepId);
+    navigate('/get-ready/details');
+  };
+
   return (
     <div className={cn("h-full overflow-auto space-y-6 p-6", className)}>
+      {/* Time Range Selector */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-muted-foreground" />
+              <span className="font-medium">{t('get_ready.analytics.timeRange')}:</span>
+            </div>
+            <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)}>
+              <TabsList>
+                <TabsTrigger value="7d">
+                  {t('get_ready.analytics.last7Days')}
+                </TabsTrigger>
+                <TabsTrigger value="30d">
+                  {t('get_ready.analytics.last30Days')}
+                </TabsTrigger>
+                <TabsTrigger value="90d">
+                  {t('get_ready.analytics.last90Days')}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Executive KPIs */}
       <GetReadyDashboardWidget />
 
@@ -575,16 +619,29 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
         </CardContent>
       </Card>
 
-      {/* Active Alerts */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Active Alerts</CardTitle>
-          <CardDescription>Issues requiring immediate attention</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <GetReadyAlerts />
-        </CardContent>
-      </Card>
+      {/* Historical Analytics Section - RE-ENABLED with improved caching */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-6 w-6 text-primary" />
+          <h2 className="text-2xl font-bold">{t('get_ready.analytics.historicalAnalytics')}</h2>
+        </div>
+
+        {/* Time Series Charts */}
+        <TimeSeriesCharts timeRange={timeRange} />
+
+        {/* Bottleneck Detection */}
+        <BottleneckAnalysis
+          timeRange={timeRange}
+          onStepClick={handleStepClick}
+          onViewAffectedVehicles={handleStepClick}
+        />
+
+        {/* Step Performance Matrix */}
+        <StepPerformanceMatrix
+          timeRange={timeRange}
+          onStepClick={handleStepClick}
+        />
+      </div>
     </div>
   );
 }

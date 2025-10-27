@@ -1,6 +1,9 @@
 import Swal from 'sweetalert2';
 
 /**
+ * @deprecated This utility is deprecated. Use ConfirmDialog component instead for Team Chat style modals.
+ * @see useSweetAlert.tsx for migration guide
+ *
  * Custom SweetAlert2 configuration following Notion design system
  * - Flat colors (no gradients)
  * - Muted palette (gray-based with subtle accents)

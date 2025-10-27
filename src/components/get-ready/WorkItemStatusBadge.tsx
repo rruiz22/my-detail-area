@@ -2,16 +2,15 @@ import { Badge } from '@/components/ui/badge';
 import type { WorkItemStatus } from '@/hooks/useVehicleWorkItems';
 import { cn } from '@/lib/utils';
 import {
-  AlertTriangle,
-  Ban,
-  Calendar,
-  CheckCheck,
-  CheckCircle,
-  Circle,
-  Clock,
-  Pause,
-  XCircle,
-  type LucideIcon,
+    AlertTriangle,
+    Ban,
+    Calendar,
+    CheckCheck,
+    Circle,
+    Clock,
+    Pause,
+    XCircle,
+    type LucideIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,6 +25,13 @@ interface StatusConfig {
 // ✨ Notion-style Status Configuration (No gradients, muted colors)
 const statusConfig: Record<WorkItemStatus, StatusConfig> = {
   // Pre-Work Phase
+  pending: {
+    icon: Circle,
+    bgColor: 'bg-yellow-50 dark:bg-yellow-950/30',
+    borderColor: 'border-yellow-500',
+    textColor: 'text-yellow-900 dark:text-yellow-100',
+    phase: 'pre-work',
+  },
   awaiting_approval: {
     icon: Clock,
     bgColor: 'bg-amber-50 dark:bg-amber-950/30',
@@ -40,25 +46,11 @@ const statusConfig: Record<WorkItemStatus, StatusConfig> = {
     textColor: 'text-red-900 dark:text-red-100',
     phase: 'pre-work',
   },
-  queued: {
-    icon: Circle,
-    bgColor: 'bg-indigo-50 dark:bg-indigo-950/30',
-    borderColor: 'border-indigo-500',
-    textColor: 'text-indigo-900 dark:text-indigo-100',
-    phase: 'pre-work',
-  },
   scheduled: {
     icon: Calendar,
     bgColor: 'bg-violet-50 dark:bg-violet-950/30',
     borderColor: 'border-violet-500',
     textColor: 'text-violet-900 dark:text-violet-100',
-    phase: 'pre-work',
-  },
-  ready: {
-    icon: CheckCircle,
-    bgColor: 'bg-lime-50 dark:bg-lime-950/30',
-    borderColor: 'border-lime-500',
-    textColor: 'text-lime-900 dark:text-lime-100',
     phase: 'pre-work',
   },
 
@@ -120,7 +112,7 @@ export function WorkItemStatusBadge({
   approval_status,
 }: WorkItemStatusBadgeProps) {
   const { t } = useTranslation();
-  
+
   // Calculate visual status for dynamic badge display
   const getVisualStatus = (): WorkItemStatus => {
     // ✅ FIXED: Check for status='rejected' directly (not cancelled + rejected)
@@ -133,7 +125,7 @@ export function WorkItemStatusBadge({
     }
     return status;
   };
-  
+
   const visualStatus = getVisualStatus();
   const config = statusConfig[visualStatus];
   const Icon = config.icon;

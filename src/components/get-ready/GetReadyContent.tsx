@@ -1,11 +1,11 @@
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useGetReadySidebarState } from '@/hooks/useGetReadyPersistence';
 import { cn } from '@/lib/utils';
 import React, { useEffect } from 'react';
-import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { SelectDealershipPrompt } from './SelectDealershipPrompt';
 import { GetReadySplitContent } from './GetReadySplitContent';
 import { GetReadyStepsSidebar } from './GetReadyStepsSidebar';
 import { GetReadyTopbar } from './GetReadyTopbar';
-import { useGetReadySidebarState } from '@/hooks/useGetReadyPersistence';
+import { SelectDealershipPrompt } from './SelectDealershipPrompt';
 
 interface GetReadyContentProps {
   children?: React.ReactNode;
@@ -13,10 +13,12 @@ interface GetReadyContentProps {
 
 export function GetReadyContent({ children }: GetReadyContentProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useGetReadySidebarState();
-  const { currentDealership } = useAccessibleDealerships();
+  const { currentDealership, loading: dealershipsLoading } = useAccessibleDealerships();
 
-  // ✅ VALIDATION: Require specific dealership for Get Ready module
+  // ✅ PERF FIX: Don't show prompt while dealerships are loading
+  // This prevents the flash of "select dealership" screen
   const hasValidDealership = currentDealership && typeof currentDealership.id === 'number';
+  const isLoadingDealership = dealershipsLoading && !currentDealership;
 
   // Auto-collapse sidebar on small screens
   useEffect(() => {
@@ -40,8 +42,18 @@ export function GetReadyContent({ children }: GetReadyContentProps) {
 
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Show prompt if no valid dealership selected */}
-        {!hasValidDealership ? (
+        {/* ✅ PERF FIX: Show loading skeleton while dealerships load */}
+        {isLoadingDealership ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="space-y-6 animate-pulse max-w-md w-full p-6">
+              <div className="h-16 w-16 bg-muted rounded-full mx-auto"></div>
+              <div className="h-6 bg-muted rounded w-2/3 mx-auto"></div>
+              <div className="h-4 bg-muted rounded w-full"></div>
+              <div className="h-4 bg-muted rounded w-5/6 mx-auto"></div>
+            </div>
+          </div>
+        ) : !hasValidDealership ? (
+          /* Show prompt only if dealerships loaded but none selected */
           <div className="flex-1">
             <SelectDealershipPrompt />
           </div>

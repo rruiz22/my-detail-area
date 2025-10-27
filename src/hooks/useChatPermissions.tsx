@@ -1,38 +1,98 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 
-export type ChatPermissionLevel = 'read' | 'write' | 'moderate' | 'admin';
+// ============================================================================
+// TYPE DEFINITIONS
+// ============================================================================
 
+/**
+ * Chat permission levels from database ENUM
+ */
+export type ChatPermissionLevel = 'none' | 'read' | 'restricted_write' | 'write' | 'moderate' | 'admin';
+
+/**
+ * RPC response structure from get_chat_effective_permissions
+ */
+interface ChatPermissionsRPCResponse {
+  has_access: boolean;
+  level: ChatPermissionLevel;
+  capabilities: {
+    messages: {
+      send_text: boolean;
+      send_voice: boolean;
+      send_files: boolean;
+      edit_own: boolean;
+      delete_own: boolean;
+      delete_others: boolean;
+    };
+    participants: {
+      invite_users: boolean;
+      remove_users: boolean;
+      change_permissions: boolean;
+    };
+    conversation: {
+      update_settings: boolean;
+      archive: boolean;
+      delete: boolean;
+    };
+  };
+}
+
+/**
+ * Chat permissions interface for conversation-specific permissions
+ * Used by UI components to check what actions user can perform
+ */
 export interface ChatPermissions {
-  // Conversation permissions
-  canCreateDirectChats: boolean;
-  canCreateGroups: boolean;
-  canCreateChannels: boolean;
-  canCreateAnnouncements: boolean;
-  
-  // Message permissions
-  canSendMessages: boolean;
-  canSendVoiceMessages: boolean;
+  // Access control
+  hasAccess: boolean;
+  level: ChatPermissionLevel;
+
+  // Message capabilities
+  canSendText: boolean;
+  canSendVoice: boolean;
   canSendFiles: boolean;
   canEditOwnMessages: boolean;
   canDeleteOwnMessages: boolean;
   canDeleteOthersMessages: boolean;
-  
-  // Moderation permissions
-  canModerateConversations: boolean;
-  canManageParticipants: boolean;
-  canMuteUsers: boolean;
-  canKickUsers: boolean;
-  canBanUsers: boolean;
-  
-  // System permissions
-  canViewAllConversations: boolean;
-  canManageChatSettings: boolean;
+
+  // Participant management
+  canInviteUsers: boolean;
+  canRemoveUsers: boolean;
+  canChangePermissions: boolean;
+
+  // Conversation management
+  canUpdateSettings: boolean;
+  canArchiveConversation: boolean;
+  canDeleteConversation: boolean;
+
+  // Derived permissions (computed helpers)
   isAdmin: boolean;
+  isModerator: boolean;
+  canModerate: boolean;
+  canSendMessages: boolean; // any message type
+  isReadOnly: boolean;
 }
 
+/**
+ * Global chat permissions (not conversation-specific)
+ * Used for creating conversations and global chat features
+ */
+export interface GlobalChatPermissions {
+  canCreateDirectChats: boolean;
+  canCreateGroups: boolean;
+  canCreateChannels: boolean;
+  canCreateAnnouncements: boolean;
+  canViewAllConversations: boolean;
+  canManageChatSettings: boolean;
+}
+
+/**
+ * User contact permissions for managing blocked users and favorites
+ * Maintained for backward compatibility with existing contact system
+ */
 export interface UserContactPermissions {
   user_id: string;
   dealer_id: number;
@@ -46,156 +106,348 @@ export interface UserContactPermissions {
   auto_accept_invites: boolean;
 }
 
+/**
+ * Return type for conversation-specific permissions hook
+ */
 interface UseChatPermissionsReturn {
-  // Current user permissions
   permissions: ChatPermissions;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+/**
+ * Return type for global chat permissions hook
+ */
+interface UseGlobalChatPermissionsReturn {
+  permissions: GlobalChatPermissions;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+/**
+ * Return type for contact permissions hook (backward compatibility)
+ */
+interface UseContactPermissionsReturn {
   contactPermissions: UserContactPermissions | null;
-  
-  // Permission checks
-  canPerformAction: (action: keyof ChatPermissions) => boolean;
-  canContactUser: (targetUserId: string) => Promise<boolean>;
-  canInviteToGroup: (targetUserId: string) => Promise<boolean>;
-  canMentionInChannel: (targetUserId: string) => Promise<boolean>;
-  
-  // Contact management
+  isLoading: boolean;
+  error: Error | null;
+
+  // Contact management methods
   blockUser: (userId: string) => Promise<boolean>;
   unblockUser: (userId: string) => Promise<boolean>;
   addToFavorites: (userId: string) => Promise<boolean>;
   removeFromFavorites: (userId: string) => Promise<boolean>;
   isUserBlocked: (userId: string) => boolean;
   isUserFavorite: (userId: string) => boolean;
-  
-  // Settings management
   updateContactPermissions: (updates: Partial<UserContactPermissions>) => Promise<boolean>;
-  
-  loading: boolean;
-  error: string | null;
-  refreshPermissions: () => void;
+
+  // Contact permission checks
+  canContactUser: (targetUserId: string) => Promise<boolean>;
+  canInviteToGroup: (targetUserId: string) => Promise<boolean>;
+  canMentionInChannel: (targetUserId: string) => Promise<boolean>;
 }
 
-export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn => {
-  const { user } = useAuth();
-  const { dealerships } = useAccessibleDealerships();
-  
-  const [permissions, setPermissions] = useState<ChatPermissions>({
-    canCreateDirectChats: false,
-    canCreateGroups: false,
-    canCreateChannels: false,
-    canCreateAnnouncements: false,
-    canSendMessages: false,
-    canSendVoiceMessages: false,
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Transform RPC response from snake_case to camelCase and add derived properties
+ */
+function transformPermissions(data: ChatPermissionsRPCResponse | null): ChatPermissions {
+  if (!data || !data.has_access) {
+    return getDefaultNoAccessPermissions();
+  }
+
+  const caps = data.capabilities || {
+    messages: {},
+    participants: {},
+    conversation: {}
+  };
+  const messages = caps.messages || {};
+  const participants = caps.participants || {};
+  const conversation = caps.conversation || {};
+
+  return {
+    hasAccess: data.has_access,
+    level: data.level,
+
+    // Message capabilities
+    canSendText: messages.send_text ?? false,
+    canSendVoice: messages.send_voice ?? false,
+    canSendFiles: messages.send_files ?? false,
+    canEditOwnMessages: messages.edit_own ?? false,
+    canDeleteOwnMessages: messages.delete_own ?? false,
+    canDeleteOthersMessages: messages.delete_others ?? false,
+
+    // Participant management
+    canInviteUsers: participants.invite_users ?? false,
+    canRemoveUsers: participants.remove_users ?? false,
+    canChangePermissions: participants.change_permissions ?? false,
+
+    // Conversation management
+    canUpdateSettings: conversation.update_settings ?? false,
+    canArchiveConversation: conversation.archive ?? false,
+    canDeleteConversation: conversation.delete ?? false,
+
+    // Derived permissions
+    isAdmin: data.level === 'admin',
+    isModerator: data.level === 'moderate' || data.level === 'admin',
+    canModerate: data.level === 'moderate' || data.level === 'admin',
+    canSendMessages: messages.send_text || messages.send_voice || messages.send_files,
+    isReadOnly: data.level === 'read'
+  };
+}
+
+/**
+ * Get default permissions for users with no access
+ */
+function getDefaultNoAccessPermissions(): ChatPermissions {
+  return {
+    hasAccess: false,
+    level: 'none',
+
+    canSendText: false,
+    canSendVoice: false,
     canSendFiles: false,
     canEditOwnMessages: false,
     canDeleteOwnMessages: false,
     canDeleteOthersMessages: false,
-    canModerateConversations: false,
-    canManageParticipants: false,
-    canMuteUsers: false,
-    canKickUsers: false,
-    canBanUsers: false,
-    canViewAllConversations: false,
-    canManageChatSettings: false,
-    isAdmin: false
+
+    canInviteUsers: false,
+    canRemoveUsers: false,
+    canChangePermissions: false,
+
+    canUpdateSettings: false,
+    canArchiveConversation: false,
+    canDeleteConversation: false,
+
+    isAdmin: false,
+    isModerator: false,
+    canModerate: false,
+    canSendMessages: false,
+    isReadOnly: true
+  };
+}
+
+/**
+ * Parse global chat permissions from dealer_groups permissions array
+ */
+function parseGlobalPermissions(groupsData: any[]): GlobalChatPermissions {
+  const permissions = new Set<string>();
+
+  // Collect all permissions from all groups
+  groupsData?.forEach((membership: any) => {
+    const groupPerms = membership.dealer_groups?.permissions || [];
+    groupPerms.forEach((perm: string) => permissions.add(perm));
   });
-  
-  const [contactPermissions, setContactPermissions] = useState<UserContactPermissions | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const activeDealerId = dealerId || dealerships[0]?.id;
+  const hasWildcard = permissions.has('chat.*');
 
-  // Fetch user permissions based on roles and group memberships
-  const fetchPermissions = useCallback(async () => {
-    if (!user?.id || !activeDealerId) return;
+  return {
+    canCreateDirectChats: hasWildcard || permissions.has('chat.create_direct'),
+    canCreateGroups: hasWildcard || permissions.has('chat.create_groups'),
+    canCreateChannels: hasWildcard || permissions.has('chat.create_channels'),
+    canCreateAnnouncements: hasWildcard || permissions.has('chat.create_announcements'),
+    canViewAllConversations: hasWildcard || permissions.has('chat.view_all'),
+    canManageChatSettings: hasWildcard || permissions.has('chat.manage_settings')
+  };
+}
 
-    try {
-      setError(null);
+// ============================================================================
+// PRIMARY HOOKS
+// ============================================================================
 
-      // Check if user is admin
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
+/**
+ * Get conversation-specific permissions using RPC-based granular system
+ *
+ * @param conversationId - UUID of the conversation
+ * @param dealerId - Optional dealer ID (defaults to current dealership)
+ *
+ * @example
+ * ```tsx
+ * const { permissions, isLoading } = useChatPermissions(conversationId);
+ *
+ * if (permissions.canSendText) {
+ *   // Show message input
+ * }
+ *
+ * if (permissions.canDeleteOthersMessages) {
+ *   // Show delete button for all messages
+ * }
+ * ```
+ */
+export function useChatPermissions(
+  conversationId?: string,
+  dealerId?: number
+): UseChatPermissionsReturn {
+  const { user } = useAuth();
+  const { currentDealership } = useAccessibleDealerships();
+  const effectiveDealerId = dealerId || currentDealership?.id;
 
-      const isAdmin = profile?.role === 'admin';
+  const { data: permissions, isLoading, error } = useQuery({
+    queryKey: ['chat-permissions', conversationId, user?.id, effectiveDealerId],
+    queryFn: async () => {
+      if (!conversationId || !user?.id || !effectiveDealerId) {
+        return getDefaultNoAccessPermissions();
+      }
 
-      // Get user's dealer membership and group permissions
-      const { data: membershipData } = await supabase
-        .from('dealer_memberships')
-        .select(`
-          *,
-          dealer_membership_groups (
-            group_id,
-            dealer_groups (
-              name,
-              permissions
-            )
-          )
-        `)
-        .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId)
-        .eq('is_active', true)
-        .single();
-
-      // Collect all permissions from groups
-      const groupPermissions = new Set<string>();
-      
-      membershipData?.dealer_membership_groups?.forEach((membership: any) => {
-        const groupPerms = membership.dealer_groups?.permissions || [];
-        groupPerms.forEach((perm: string) => groupPermissions.add(perm));
+      const { data, error: rpcError } = await supabase.rpc('get_chat_effective_permissions', {
+        p_user_id: user.id,
+        p_conversation_id: conversationId,
+        p_dealer_id: effectiveDealerId
       });
 
-      // Define permission mappings
-      const permissionMap: ChatPermissions = {
-        canCreateDirectChats: isAdmin || groupPermissions.has('chat.create_direct') || groupPermissions.has('chat.*'),
-        canCreateGroups: isAdmin || groupPermissions.has('chat.create_groups') || groupPermissions.has('chat.*'),
-        canCreateChannels: isAdmin || groupPermissions.has('chat.create_channels') || groupPermissions.has('chat.*'),
-        canCreateAnnouncements: isAdmin || groupPermissions.has('chat.create_announcements') || groupPermissions.has('chat.*'),
-        
-        canSendMessages: isAdmin || groupPermissions.has('chat.send_messages') || groupPermissions.has('chat.*'),
-        canSendVoiceMessages: isAdmin || groupPermissions.has('chat.send_voice') || groupPermissions.has('chat.*'),
-        canSendFiles: isAdmin || groupPermissions.has('chat.send_files') || groupPermissions.has('chat.*'),
-        canEditOwnMessages: isAdmin || groupPermissions.has('chat.edit_messages') || groupPermissions.has('chat.*'),
-        canDeleteOwnMessages: isAdmin || groupPermissions.has('chat.delete_messages') || groupPermissions.has('chat.*'),
-        canDeleteOthersMessages: isAdmin || groupPermissions.has('chat.delete_others_messages') || groupPermissions.has('chat.*'),
-        
-        canModerateConversations: isAdmin || groupPermissions.has('chat.moderate') || groupPermissions.has('chat.*'),
-        canManageParticipants: isAdmin || groupPermissions.has('chat.manage_participants') || groupPermissions.has('chat.*'),
-        canMuteUsers: isAdmin || groupPermissions.has('chat.mute_users') || groupPermissions.has('chat.*'),
-        canKickUsers: isAdmin || groupPermissions.has('chat.kick_users') || groupPermissions.has('chat.*'),
-        canBanUsers: isAdmin || groupPermissions.has('chat.ban_users') || groupPermissions.has('chat.*'),
-        
-        canViewAllConversations: isAdmin || groupPermissions.has('chat.view_all') || groupPermissions.has('chat.*'),
-        canManageChatSettings: isAdmin || groupPermissions.has('chat.manage_settings') || groupPermissions.has('chat.*'),
-        isAdmin
-      };
+      if (rpcError) {
+        console.error('[useChatPermissions] Error fetching chat permissions:', rpcError);
+        throw rpcError;
+      }
 
-      setPermissions(permissionMap);
+      return transformPermissions(data as ChatPermissionsRPCResponse);
+    },
+    enabled: !!conversationId && !!user?.id && !!effectiveDealerId,
+    staleTime: 5 * 60 * 1000, // 5 minutes - permissions don't change frequently
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    retry: 1,
+    refetchOnWindowFocus: false
+  });
 
-    } catch (err) {
-      console.error('Error fetching permissions:', err);
-      setError(err instanceof Error ? err.message : 'Error fetching permissions');
-    }
-  }, [user?.id, activeDealerId]);
+  return {
+    permissions: permissions || getDefaultNoAccessPermissions(),
+    isLoading,
+    error: error as Error | null
+  };
+}
 
-  // Fetch user contact permissions
-  const fetchContactPermissions = useCallback(async () => {
-    if (!user?.id || !activeDealerId) return;
+/**
+ * Get global chat permissions (not conversation-specific)
+ * Used for creating conversations and accessing global chat features
+ *
+ * @param dealerId - Optional dealer ID (defaults to current dealership)
+ *
+ * @example
+ * ```tsx
+ * const { permissions } = useGlobalChatPermissions();
+ *
+ * if (permissions.canCreateDirectChats) {
+ *   // Show "New Chat" button
+ * }
+ * ```
+ */
+export function useGlobalChatPermissions(dealerId?: number): UseGlobalChatPermissionsReturn {
+  const { user } = useAuth();
+  const { currentDealership } = useAccessibleDealerships();
+  const effectiveDealerId = dealerId || currentDealership?.id;
 
-    try {
+  const { data: permissions, isLoading, error } = useQuery({
+    queryKey: ['global-chat-permissions', user?.id, effectiveDealerId],
+    queryFn: async () => {
+      if (!user?.id || !effectiveDealerId) {
+        return {
+          canCreateDirectChats: false,
+          canCreateGroups: false,
+          canCreateChannels: false,
+          canCreateAnnouncements: false,
+          canViewAllConversations: false,
+          canManageChatSettings: false
+        };
+      }
+
+      // Check if user is admin (bypass permission checks)
+      if (user.role === 'admin' || user.user_type === 'system_admin') {
+        return {
+          canCreateDirectChats: true,
+          canCreateGroups: true,
+          canCreateChannels: true,
+          canCreateAnnouncements: true,
+          canViewAllConversations: true,
+          canManageChatSettings: true
+        };
+      }
+
+      // Fetch dealer_groups permissions
+      const { data: groupsData, error: fetchError } = await supabase
+        .from('dealer_membership_groups')
+        .select(`
+          dealer_groups (
+            permissions
+          )
+        `)
+        .eq('dealer_memberships.user_id', user.id)
+        .eq('dealer_memberships.dealer_id', effectiveDealerId)
+        .eq('dealer_memberships.is_active', true);
+
+      if (fetchError) {
+        console.error('[useGlobalChatPermissions] Error fetching global permissions:', fetchError);
+        throw fetchError;
+      }
+
+      return parseGlobalPermissions(groupsData || []);
+    },
+    enabled: !!user?.id && !!effectiveDealerId,
+    staleTime: 10 * 60 * 1000, // 10 minutes - global permissions change rarely
+    gcTime: 20 * 60 * 1000, // 20 minutes
+    retry: 1,
+    refetchOnWindowFocus: false
+  });
+
+  return {
+    permissions: permissions || {
+      canCreateDirectChats: false,
+      canCreateGroups: false,
+      canCreateChannels: false,
+      canCreateAnnouncements: false,
+      canViewAllConversations: false,
+      canManageChatSettings: false
+    },
+    isLoading,
+    error: error as Error | null
+  };
+}
+
+/**
+ * Get user contact permissions for managing blocked users and favorites
+ * Maintained for backward compatibility with existing contact system
+ *
+ * @param dealerId - Optional dealer ID (defaults to current dealership)
+ *
+ * @example
+ * ```tsx
+ * const { contactPermissions, blockUser, isUserBlocked } = useContactPermissions();
+ *
+ * if (isUserBlocked(userId)) {
+ *   // Show unblock button
+ * }
+ *
+ * await blockUser(userId);
+ * ```
+ */
+export function useContactPermissions(dealerId?: number): UseContactPermissionsReturn {
+  const { user } = useAuth();
+  const { currentDealership } = useAccessibleDealerships();
+  const effectiveDealerId = dealerId || currentDealership?.id;
+  const queryClient = useQueryClient();
+
+  // Fetch contact permissions
+  const { data: contactPermissions, isLoading, error } = useQuery({
+    queryKey: ['contact-permissions', user?.id, effectiveDealerId],
+    queryFn: async () => {
+      if (!user?.id || !effectiveDealerId) {
+        return null;
+      }
+
       const { data, error: fetchError } = await supabase
         .from('user_contact_permissions')
         .select('*')
         .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId)
+        .eq('dealer_id', effectiveDealerId)
         .single();
 
       if (fetchError && fetchError.code === 'PGRST116') {
-        // Create default contact permissions
-        const defaultPermissions = {
+        // Create default contact permissions if not exists
+        const defaultPermissions: Partial<UserContactPermissions> = {
           user_id: user.id,
-          dealer_id: activeDealerId,
+          dealer_id: effectiveDealerId,
           allow_direct_messages: true,
           allow_group_invitations: true,
           allow_channel_mentions: true,
@@ -206,63 +458,193 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
           auto_accept_invites: false
         };
 
-        const newPermissions = {
-          ...defaultPermissions,
-          user_id: user.id,
-          dealer_id: activeDealerId,
-          blocked_users: [],
-          favorite_contacts: []
-        };
-
-        const { data: newPermissionsData, error: createError } = await supabase
+        const { data: newData, error: createError } = await supabase
           .from('user_contact_permissions')
-          .insert(newPermissions)
+          .insert(defaultPermissions)
           .select()
           .single();
 
-        if (createError) throw createError;
-        const typedNewPermissions = {
-          ...newPermissionsData,
-          blocked_users: (newPermissionsData.blocked_users as string[]) || [],
-          favorite_contacts: (newPermissionsData.favorite_contacts as string[]) || []
-        };
-        setContactPermissions(typedNewPermissions);
-      } else if (fetchError) {
-        throw fetchError;
-      } else {
-        // Cast JSON fields to proper types
-        const typedPermissions = {
-          ...data,
-          blocked_users: (data.blocked_users as string[]) || [],
-          favorite_contacts: (data.favorite_contacts as string[]) || []
-        };
-        setContactPermissions(typedPermissions);
-      }
-    } catch (err) {
-      console.error('Error fetching contact permissions:', err);
-      setError(err instanceof Error ? err.message : 'Error fetching contact permissions');
-    }
-  }, [user?.id, activeDealerId]);
+        if (createError) {
+          console.error('[useContactPermissions] Error creating default permissions:', createError);
+          throw createError;
+        }
 
-  // Permission check utility
-  const canPerformAction = useCallback((action: keyof ChatPermissions): boolean => {
-    return permissions[action] === true;
-  }, [permissions]);
+        return {
+          ...newData,
+          blocked_users: (newData.blocked_users as string[]) || [],
+          favorite_contacts: (newData.favorite_contacts as string[]) || []
+        } as UserContactPermissions;
+      }
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      return {
+        ...data,
+        blocked_users: (data.blocked_users as string[]) || [],
+        favorite_contacts: (data.favorite_contacts as string[]) || []
+      } as UserContactPermissions;
+    },
+    enabled: !!user?.id && !!effectiveDealerId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000
+  });
+
+  // Block user
+  const blockUser = useCallback(async (userId: string): Promise<boolean> => {
+    if (!user?.id || !contactPermissions || !effectiveDealerId) return false;
+
+    try {
+      const currentBlocked = contactPermissions.blocked_users || [];
+      if (currentBlocked.includes(userId)) return true;
+
+      const updatedBlocked = [...currentBlocked, userId];
+
+      const { error: updateError } = await supabase
+        .from('user_contact_permissions')
+        .update({ blocked_users: updatedBlocked })
+        .eq('user_id', user.id)
+        .eq('dealer_id', effectiveDealerId);
+
+      if (updateError) throw updateError;
+
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: ['contact-permissions', user.id, effectiveDealerId] });
+
+      return true;
+    } catch (error) {
+      console.error('[useContactPermissions] Error blocking user:', error);
+      return false;
+    }
+  }, [user?.id, contactPermissions, effectiveDealerId, queryClient]);
+
+  // Unblock user
+  const unblockUser = useCallback(async (userId: string): Promise<boolean> => {
+    if (!user?.id || !contactPermissions || !effectiveDealerId) return false;
+
+    try {
+      const currentBlocked = contactPermissions.blocked_users || [];
+      const updatedBlocked = currentBlocked.filter(id => id !== userId);
+
+      const { error: updateError } = await supabase
+        .from('user_contact_permissions')
+        .update({ blocked_users: updatedBlocked })
+        .eq('user_id', user.id)
+        .eq('dealer_id', effectiveDealerId);
+
+      if (updateError) throw updateError;
+
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: ['contact-permissions', user.id, effectiveDealerId] });
+
+      return true;
+    } catch (error) {
+      console.error('[useContactPermissions] Error unblocking user:', error);
+      return false;
+    }
+  }, [user?.id, contactPermissions, effectiveDealerId, queryClient]);
+
+  // Add to favorites
+  const addToFavorites = useCallback(async (userId: string): Promise<boolean> => {
+    if (!user?.id || !contactPermissions || !effectiveDealerId) return false;
+
+    try {
+      const currentFavorites = contactPermissions.favorite_contacts || [];
+      if (currentFavorites.includes(userId)) return true;
+
+      const updatedFavorites = [...currentFavorites, userId];
+
+      const { error: updateError } = await supabase
+        .from('user_contact_permissions')
+        .update({ favorite_contacts: updatedFavorites })
+        .eq('user_id', user.id)
+        .eq('dealer_id', effectiveDealerId);
+
+      if (updateError) throw updateError;
+
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: ['contact-permissions', user.id, effectiveDealerId] });
+
+      return true;
+    } catch (error) {
+      console.error('[useContactPermissions] Error adding to favorites:', error);
+      return false;
+    }
+  }, [user?.id, contactPermissions, effectiveDealerId, queryClient]);
+
+  // Remove from favorites
+  const removeFromFavorites = useCallback(async (userId: string): Promise<boolean> => {
+    if (!user?.id || !contactPermissions || !effectiveDealerId) return false;
+
+    try {
+      const currentFavorites = contactPermissions.favorite_contacts || [];
+      const updatedFavorites = currentFavorites.filter(id => id !== userId);
+
+      const { error: updateError } = await supabase
+        .from('user_contact_permissions')
+        .update({ favorite_contacts: updatedFavorites })
+        .eq('user_id', user.id)
+        .eq('dealer_id', effectiveDealerId);
+
+      if (updateError) throw updateError;
+
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: ['contact-permissions', user.id, effectiveDealerId] });
+
+      return true;
+    } catch (error) {
+      console.error('[useContactPermissions] Error removing from favorites:', error);
+      return false;
+    }
+  }, [user?.id, contactPermissions, effectiveDealerId, queryClient]);
+
+  // Check if user is blocked
+  const isUserBlocked = useCallback((userId: string): boolean => {
+    return contactPermissions?.blocked_users?.includes(userId) || false;
+  }, [contactPermissions?.blocked_users]);
+
+  // Check if user is favorite
+  const isUserFavorite = useCallback((userId: string): boolean => {
+    return contactPermissions?.favorite_contacts?.includes(userId) || false;
+  }, [contactPermissions?.favorite_contacts]);
+
+  // Update contact permissions
+  const updateContactPermissions = useCallback(async (
+    updates: Partial<UserContactPermissions>
+  ): Promise<boolean> => {
+    if (!user?.id || !effectiveDealerId) return false;
+
+    try {
+      const { error: updateError } = await supabase
+        .from('user_contact_permissions')
+        .update(updates)
+        .eq('user_id', user.id)
+        .eq('dealer_id', effectiveDealerId);
+
+      if (updateError) throw updateError;
+
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: ['contact-permissions', user.id, effectiveDealerId] });
+
+      return true;
+    } catch (error) {
+      console.error('[useContactPermissions] Error updating contact permissions:', error);
+      return false;
+    }
+  }, [user?.id, effectiveDealerId, queryClient]);
 
   // Check if user can contact another user
   const canContactUser = useCallback(async (targetUserId: string): Promise<boolean> => {
     if (!user?.id || targetUserId === user.id) return false;
 
     try {
-      // Check if current user has permission to send direct messages
-      if (!permissions.canCreateDirectChats) return false;
-
       // Check if target user allows direct messages
       const { data: targetPermissions } = await supabase
         .from('user_contact_permissions')
         .select('allow_direct_messages, blocked_users')
         .eq('user_id', targetUserId)
-        .eq('dealer_id', activeDealerId)
+        .eq('dealer_id', effectiveDealerId)
         .single();
 
       if (!targetPermissions?.allow_direct_messages) return false;
@@ -272,30 +654,27 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
       if (blockedUsers.includes(user.id)) return false;
 
       // Check if current user has blocked the target
-      const currentUserBlockedUsers = (contactPermissions?.blocked_users as string[]) || [];
+      const currentUserBlockedUsers = contactPermissions?.blocked_users || [];
       if (currentUserBlockedUsers.includes(targetUserId)) return false;
 
       return true;
-    } catch (err) {
-      console.error('Error checking contact permissions:', err);
+    } catch (error) {
+      console.error('[useContactPermissions] Error checking contact permissions:', error);
       return false;
     }
-  }, [user?.id, permissions.canCreateDirectChats, contactPermissions?.blocked_users, activeDealerId]);
+  }, [user?.id, contactPermissions?.blocked_users, effectiveDealerId]);
 
   // Check if user can invite to group
   const canInviteToGroup = useCallback(async (targetUserId: string): Promise<boolean> => {
     if (!user?.id || targetUserId === user.id) return false;
 
     try {
-      // Check if current user has permission to manage participants
-      if (!permissions.canManageParticipants) return false;
-
       // Check if target user allows group invitations
       const { data: targetPermissions } = await supabase
         .from('user_contact_permissions')
         .select('allow_group_invitations, blocked_users')
         .eq('user_id', targetUserId)
-        .eq('dealer_id', activeDealerId)
+        .eq('dealer_id', effectiveDealerId)
         .single();
 
       if (!targetPermissions?.allow_group_invitations) return false;
@@ -304,15 +683,15 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
       const blockedUsers = (targetPermissions.blocked_users as string[]) || [];
       if (blockedUsers.includes(user.id)) return false;
 
-      const currentUserBlockedUsers = (contactPermissions?.blocked_users as string[]) || [];
+      const currentUserBlockedUsers = contactPermissions?.blocked_users || [];
       if (currentUserBlockedUsers.includes(targetUserId)) return false;
 
       return true;
-    } catch (err) {
-      console.error('Error checking group invite permissions:', err);
+    } catch (error) {
+      console.error('[useContactPermissions] Error checking group invite permissions:', error);
       return false;
     }
-  }, [user?.id, permissions.canManageParticipants, contactPermissions?.blocked_users, activeDealerId]);
+  }, [user?.id, contactPermissions?.blocked_users, effectiveDealerId]);
 
   // Check if user can mention in channel
   const canMentionInChannel = useCallback(async (targetUserId: string): Promise<boolean> => {
@@ -324,7 +703,7 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
         .from('user_contact_permissions')
         .select('allow_channel_mentions, blocked_users')
         .eq('user_id', targetUserId)
-        .eq('dealer_id', activeDealerId)
+        .eq('dealer_id', effectiveDealerId)
         .single();
 
       if (!targetPermissions?.allow_channel_mentions) return false;
@@ -334,189 +713,16 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
       if (blockedUsers.includes(user.id)) return false;
 
       return true;
-    } catch (err) {
-      console.error('Error checking mention permissions:', err);
+    } catch (error) {
+      console.error('[useContactPermissions] Error checking mention permissions:', error);
       return false;
     }
-  }, [user?.id, activeDealerId]);
-
-  // Block user
-  const blockUser = useCallback(async (userId: string): Promise<boolean> => {
-    if (!user?.id || !contactPermissions) return false;
-
-    try {
-      const currentBlocked = contactPermissions.blocked_users || [];
-      if (currentBlocked.includes(userId)) return true;
-
-      const updatedBlocked = [...currentBlocked, userId];
-
-      const { error } = await supabase
-        .from('user_contact_permissions')
-        .update({ blocked_users: updatedBlocked })
-        .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId);
-
-      if (error) throw error;
-
-      setContactPermissions(prev => prev ? {
-        ...prev,
-        blocked_users: updatedBlocked
-      } : null);
-
-      return true;
-    } catch (err) {
-      console.error('Error blocking user:', err);
-      setError(err instanceof Error ? err.message : 'Error blocking user');
-      return false;
-    }
-  }, [user?.id, contactPermissions, activeDealerId]);
-
-  // Unblock user
-  const unblockUser = useCallback(async (userId: string): Promise<boolean> => {
-    if (!user?.id || !contactPermissions) return false;
-
-    try {
-      const currentBlocked = contactPermissions.blocked_users || [];
-      const updatedBlocked = currentBlocked.filter(id => id !== userId);
-
-      const { error } = await supabase
-        .from('user_contact_permissions')
-        .update({ blocked_users: updatedBlocked })
-        .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId);
-
-      if (error) throw error;
-
-      setContactPermissions(prev => prev ? {
-        ...prev,
-        blocked_users: updatedBlocked
-      } : null);
-
-      return true;
-    } catch (err) {
-      console.error('Error unblocking user:', err);
-      setError(err instanceof Error ? err.message : 'Error unblocking user');
-      return false;
-    }
-  }, [user?.id, contactPermissions, activeDealerId]);
-
-  // Add to favorites
-  const addToFavorites = useCallback(async (userId: string): Promise<boolean> => {
-    if (!user?.id || !contactPermissions) return false;
-
-    try {
-      const currentFavorites = contactPermissions.favorite_contacts || [];
-      if (currentFavorites.includes(userId)) return true;
-
-      const updatedFavorites = [...currentFavorites, userId];
-
-      const { error } = await supabase
-        .from('user_contact_permissions')
-        .update({ favorite_contacts: updatedFavorites })
-        .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId);
-
-      if (error) throw error;
-
-      setContactPermissions(prev => prev ? {
-        ...prev,
-        favorite_contacts: updatedFavorites
-      } : null);
-
-      return true;
-    } catch (err) {
-      console.error('Error adding to favorites:', err);
-      setError(err instanceof Error ? err.message : 'Error adding to favorites');
-      return false;
-    }
-  }, [user?.id, contactPermissions, activeDealerId]);
-
-  // Remove from favorites
-  const removeFromFavorites = useCallback(async (userId: string): Promise<boolean> => {
-    if (!user?.id || !contactPermissions) return false;
-
-    try {
-      const currentFavorites = contactPermissions.favorite_contacts || [];
-      const updatedFavorites = currentFavorites.filter(id => id !== userId);
-
-      const { error } = await supabase
-        .from('user_contact_permissions')
-        .update({ favorite_contacts: updatedFavorites })
-        .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId);
-
-      if (error) throw error;
-
-      setContactPermissions(prev => prev ? {
-        ...prev,
-        favorite_contacts: updatedFavorites
-      } : null);
-
-      return true;
-    } catch (err) {
-      console.error('Error removing from favorites:', err);
-      setError(err instanceof Error ? err.message : 'Error removing from favorites');
-      return false;
-    }
-  }, [user?.id, contactPermissions, activeDealerId]);
-
-  // Utility functions
-  const isUserBlocked = useCallback((userId: string): boolean => {
-    return contactPermissions?.blocked_users?.includes(userId) || false;
-  }, [contactPermissions?.blocked_users]);
-
-  const isUserFavorite = useCallback((userId: string): boolean => {
-    return contactPermissions?.favorite_contacts?.includes(userId) || false;
-  }, [contactPermissions?.favorite_contacts]);
-
-  // Update contact permissions
-  const updateContactPermissions = useCallback(async (updates: Partial<UserContactPermissions>): Promise<boolean> => {
-    if (!user?.id || !activeDealerId) return false;
-
-    try {
-      const { error } = await supabase
-        .from('user_contact_permissions')
-        .update(updates)
-        .eq('user_id', user.id)
-        .eq('dealer_id', activeDealerId);
-
-      if (error) throw error;
-
-      setContactPermissions(prev => prev ? { ...prev, ...updates } : null);
-      return true;
-    } catch (err) {
-      console.error('Error updating contact permissions:', err);
-      setError(err instanceof Error ? err.message : 'Error updating contact permissions');
-      return false;
-    }
-  }, [user?.id, activeDealerId]);
-
-  // Refresh all permissions
-  const refreshPermissions = useCallback(() => {
-    if (user?.id && activeDealerId) {
-      fetchPermissions();
-      fetchContactPermissions();
-    }
-  }, [user?.id, activeDealerId, fetchPermissions, fetchContactPermissions]);
-
-  // Initial load
-  useEffect(() => {
-    if (user?.id && activeDealerId) {
-      setLoading(true);
-      Promise.all([
-        fetchPermissions(),
-        fetchContactPermissions()
-      ]).finally(() => setLoading(false));
-    }
-  }, [user?.id, activeDealerId, fetchPermissions, fetchContactPermissions]);
+  }, [user?.id, effectiveDealerId]);
 
   return {
-    permissions,
-    contactPermissions,
-    canPerformAction,
-    canContactUser,
-    canInviteToGroup,
-    canMentionInChannel,
+    contactPermissions: contactPermissions || null,
+    isLoading,
+    error: error as Error | null,
     blockUser,
     unblockUser,
     addToFavorites,
@@ -524,8 +730,38 @@ export const useChatPermissions = (dealerId?: number): UseChatPermissionsReturn 
     isUserBlocked,
     isUserFavorite,
     updateContactPermissions,
-    loading,
-    error,
-    refreshPermissions
+    canContactUser,
+    canInviteToGroup,
+    canMentionInChannel
   };
-};
+}
+
+// ============================================================================
+// UTILITY HOOKS
+// ============================================================================
+
+/**
+ * Invalidate chat permissions cache
+ * Use after permission changes or role updates
+ *
+ * @example
+ * ```tsx
+ * const invalidatePermissions = useInvalidateChatPermissions();
+ *
+ * // After updating user role
+ * await updateUserRole(userId, newRole);
+ * invalidatePermissions(conversationId);
+ * ```
+ */
+export function useInvalidateChatPermissions() {
+  const queryClient = useQueryClient();
+
+  return useCallback((conversationId?: string) => {
+    if (conversationId) {
+      queryClient.invalidateQueries({ queryKey: ['chat-permissions', conversationId] });
+    } else {
+      queryClient.invalidateQueries({ queryKey: ['chat-permissions'] });
+    }
+    queryClient.invalidateQueries({ queryKey: ['global-chat-permissions'] });
+  }, [queryClient]);
+}

@@ -1,64 +1,64 @@
+import { ApprovalCharts } from "@/components/get-ready/approvals/ApprovalCharts";
+import { ApprovalFilters } from "@/components/get-ready/approvals/ApprovalFilters";
+import { ApprovalHeader } from "@/components/get-ready/approvals/ApprovalHeader";
+import { ApprovalHistoryTable } from "@/components/get-ready/approvals/ApprovalHistoryTable";
+import { ApprovalMetricsDashboard } from "@/components/get-ready/approvals/ApprovalMetricsDashboard";
+import { PendingApprovalsTable } from "@/components/get-ready/approvals/PendingApprovalsTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
+import {
+    useGetReadyPriorityFilter,
+    useGetReadySearchQuery,
+    useGetReadySortPreferences,
+    useGetReadyWorkflowFilter,
+} from "@/hooks/useGetReadyPersistence";
 import { useGetReadyStore } from "@/hooks/useGetReadyStore";
 import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
+import { useServerExport } from "@/hooks/useServerExport";
 import { useVehicleManagement } from "@/hooks/useVehicleManagement";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { formatVehiclesForExport } from "@/utils/exportUtils";
-import { useServerExport } from "@/hooks/useServerExport";
-import { GetReadyOverview } from "./GetReadyOverview";
 import {
-  CheckCircle2,
-  ChevronDown,
-  ChevronRight,
-  Download,
-  FileSpreadsheet,
-  FileText,
-  MoreHorizontal,
-  Plus,
-  RefreshCw,
-  Search,
-  XCircle,
+    CheckCircle2,
+    ChevronDown,
+    Download,
+    FileSpreadsheet,
+    FileText,
+    Plus,
+    RefreshCw,
+    Search,
+    XCircle
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
-import { GetReadyAlerts } from "./GetReadyAlerts";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { GetReadyDashboardWidget } from "./GetReadyDashboardWidget";
+import { GetReadyOverview } from "./GetReadyOverview";
 import { GetReadyVehicleList } from "./GetReadyVehicleList";
-import { GetReadyWorkflowActions } from "./GetReadyWorkflowActions";
 import { VehicleDetailPanel } from "./VehicleDetailPanel";
 import { VehicleFormModal } from "./VehicleFormModal";
 import { VehicleTable } from "./VehicleTable";
-import { GetReadyVehicle } from "@/types/getReady";
-import {
-  useGetReadySearchQuery,
-  useGetReadyWorkflowFilter,
-  useGetReadyPriorityFilter,
-  useGetReadySortPreferences,
-} from "@/hooks/useGetReadyPersistence";
 
 interface GetReadySplitContentProps {
   className?: string;
@@ -289,8 +289,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const isApprovalsView = location.pathname === "/get-ready/approvals";
 
   // Overview Tab - Enhanced Dashboard with Real Data
+  // ⚠️ IMPORTANT: Overview must ALWAYS show data from ALL steps, not filtered by selected step
   if (isOverview) {
-    return <GetReadyOverview allVehicles={allVehicles} className={className} />;
+    return <GetReadyOverview allVehicles={allVehiclesUnfiltered} className={className} />;
   }
 
   // Reports View Tab - Analytics and Reports
@@ -375,15 +376,30 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   }
 
   // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab
-  
+  // ✅ IMPROVED: Only count vehicles that have active work items needing approval
   const pendingApprovalVehicles = allVehiclesUnfiltered.filter((v) => {
-    // Vehicle-level approval
+    // Vehicle-level approval check
     const vehicleNeedsApproval = v.requires_approval === true && v.approval_status === "pending";
 
-    // Work item-level approval
-    const hasWorkItemsNeedingApproval = Array.isArray(v.pending_approval_work_items) && v.pending_approval_work_items.length > 0;
+    if (!vehicleNeedsApproval) {
+      return false;
+    }
 
-    return vehicleNeedsApproval || hasWorkItemsNeedingApproval;
+    // ✅ CRITICAL: Must have at least ONE work item that needs approval
+    // A work item needs approval if: approval_required=true AND approval_status NOT IN ('declined', 'approved')
+    const workItemsNeedingApproval = (v.work_items || []).filter(
+      (wi: any) => wi.approval_required &&
+                   wi.approval_status !== 'declined' &&
+                   wi.approval_status !== 'approved'
+    );
+
+    const hasActiveWorkItemsNeedingApproval = workItemsNeedingApproval.length > 0;
+
+    if (!hasActiveWorkItemsNeedingApproval) {
+      console.log(`⏭️ [Approvals Filter] Skipped vehicle: ${v.stock_number} - No active work items needing approval`);
+    }
+
+    return hasActiveWorkItemsNeedingApproval;
   });
 
   const approvedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
@@ -411,169 +427,28 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     );
   });
 
-  // Approvals View Tab - Approval Queue
+  // Approvals View Tab - Enterprise Dashboard
   if (isApprovalsView) {
     return (
-      <div className={cn("h-full overflow-auto space-y-6", className)}>
-        {/* Approvals Header */}
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            {t("get_ready.approvals.title") || "Approvals"}
-          </h2>
-          <p className="text-muted-foreground">
-            {t("get_ready.approvals.subtitle") ||
-              "Review and approve vehicles ready to move to the next step"}
-          </p>
-        </div>
+      <div className={cn("h-full overflow-auto", className)}>
+        <div className="space-y-6 p-6">
+          {/* Enterprise Header */}
+          <ApprovalHeader />
 
-        {/* Summary Cards */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("get_ready.approvals.summary.pending")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {pendingApprovalVehicles.length}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("get_ready.approvals.summary.awaiting_review")}
-              </p>
-            </CardContent>
-          </Card>
+          {/* Metrics Dashboard - 6 KPI Cards */}
+          <ApprovalMetricsDashboard />
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("get_ready.approvals.summary.approved_today")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {approvedTodayVehicles.length}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("get_ready.approvals.summary.processed_today")}
-              </p>
-            </CardContent>
-          </Card>
+          {/* Charts Section - 2x2 Grid */}
+          <ApprovalCharts />
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("get_ready.approvals.summary.rejected_today")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {rejectedTodayVehicles.length}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("get_ready.approvals.summary.needs_attention")}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Advanced Filters + Search */}
+          <ApprovalFilters />
 
-        {/* Approval Queues */}
-        <div className="grid gap-6">
-          {/* Pending Approvals */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>{t("get_ready.approvals.queue.pending_title")}</span>
-                <Badge variant="secondary">
-                  {pendingApprovalVehicles.length}
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {pendingApprovalVehicles.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  {t("get_ready.approvals.queue.no_pending")}
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {pendingApprovalVehicles.map((vehicle) => (
-                    <div
-                      key={vehicle.id}
-                      onClick={() => {
-                        setSelectedVehicleId(vehicle.id);
-                        navigate("/get-ready/details");
-                      }}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer group"
-                    >
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium">
-                            {vehicle.year} {vehicle.make} {vehicle.model}
-                          </p>
-                          <Badge variant="outline" className="text-xs">
-                            {vehicle.workflow_type?.toUpperCase()}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Stock: {vehicle.stock_number || "N/A"} •{" "}
-                          {t("get_ready.steps.dis")}:{" "}
-                          {vehicle.days_in_step || "0d"} • Step:{" "}
-                          {vehicle.step_name}
-                        </p>
-                        {/* Show work items needing approval with details */}
-                        {(vehicle as any).pending_approval_work_items &&
-                          (vehicle as any).pending_approval_work_items.length >
-                            0 && (
-                            <div className="space-y-2">
-                              {(vehicle as any).pending_approval_work_items.map(
-                                (workItem: any) => (
-                                  <div
-                                    key={workItem.id}
-                                    className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800"
-                                  >
-                                    <Badge
-                                      variant="outline"
-                                      className="bg-amber-100 text-amber-700 border-amber-300 text-xs shrink-0 mt-0.5"
-                                    >
-                                      {t(
-                                        "get_ready.work_items.approval_required",
-                                      )}
-                                    </Badge>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium text-foreground">
-                                        {workItem.title}
-                                      </p>
-                                      {workItem.description && (
-                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                          {workItem.description}
-                                        </p>
-                                      )}
-                                    </div>
-                                  </div>
-                                ),
-                              )}
-                            </div>
-                          )}
-                        {vehicle.approval_notes && (
-                          <p className="text-xs text-muted-foreground italic">
-                            "{vehicle.approval_notes}"
-                          </p>
-                        )}
-                        {/* Click to approve indicator */}
-                        <div className="mt-3 pt-3 border-t">
-                          <p className="text-xs text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            <ChevronRight className="h-3 w-3" />
-                            {t("get_ready.approvals.actions.click_to_approve") || "Click to view and approve work items"}
-                          </p>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {/* Pending Approvals - Optimized Table View */}
+          <PendingApprovalsTable
+            vehicles={pendingApprovalVehicles}
+            onSelectVehicle={setSelectedVehicleId}
+          />
 
           {/* Recently Approved */}
           <Card>
@@ -616,14 +491,18 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           </Card>
 
           {/* Recently Rejected */}
-          {rejectedTodayVehicles.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {t("get_ready.approvals.queue.rejected_title")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {t("get_ready.approvals.queue.rejected_title")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {rejectedTodayVehicles.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  {t("get_ready.approvals.queue.no_rejected")}
+                </p>
+              ) : (
                 <div className="space-y-2">
                   {rejectedTodayVehicles.slice(0, 5).map((vehicle) => (
                     <div
@@ -653,9 +532,12 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Historical Data Table */}
+          <ApprovalHistoryTable />
         </div>
       </div>
     );

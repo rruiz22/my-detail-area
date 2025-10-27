@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import type { AppModule } from '@/hooks/usePermissions';
+import { supabase } from '@/integrations/supabase/client';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface DealershipModule {
   module: AppModule;
@@ -26,17 +26,32 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
   const refreshModules = useCallback(async () => {
     if (!dealerId) {
       // If no dealerId provided, immediately set loading to false with empty modules
-      // This allows the fail-open logic to work correctly
       setLoading(false);
       setModules([]);
       setError(null);
       return;
     }
 
+    // ✅ FIX #10: Input validation to prevent SQL injection and invalid data
+    if (!Number.isInteger(dealerId) || dealerId <= 0) {
+      console.error('❌ Invalid dealerId:', dealerId, typeof dealerId);
+      setError('Invalid dealership ID format');
+      setLoading(false);
+      return;
+    }
+
+    // Additional safety: Check for extremely large numbers (potential DoS)
+    if (dealerId > Number.MAX_SAFE_INTEGER) {
+      console.error('❌ dealerId exceeds safe integer range:', dealerId);
+      setError('Dealership ID out of range');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
-      
+
       const { data, error: fetchError } = await supabase.rpc('get_dealership_modules', {
         p_dealer_id: dealerId
       });
@@ -53,6 +68,28 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
   }, [dealerId]);
 
   const updateModule = useCallback(async (module: AppModule, isEnabled: boolean): Promise<boolean> => {
+    // ✅ FIX #10: Validate dealerId before update
+    if (!Number.isInteger(dealerId) || dealerId <= 0) {
+      console.error('❌ Invalid dealerId for module update:', dealerId);
+      setError('Invalid dealership ID format');
+      return false;
+    }
+
+    // ✅ Validate module name (should be alphanumeric with underscores only)
+    const validModulePattern = /^[a-z_]+$/;
+    if (!validModulePattern.test(module)) {
+      console.error('❌ Invalid module name format:', module);
+      setError('Invalid module name format');
+      return false;
+    }
+
+    // ✅ Validate isEnabled is boolean
+    if (typeof isEnabled !== 'boolean') {
+      console.error('❌ Invalid isEnabled value:', isEnabled, typeof isEnabled);
+      setError('Invalid enabled status');
+      return false;
+    }
+
     try {
       const { error: updateError } = await supabase.rpc('update_dealership_module', {
         p_dealer_id: dealerId,
@@ -66,8 +103,8 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
       setModules(prev => {
         const existing = prev.find(m => m.module === module);
         if (existing) {
-          return prev.map(m => 
-            m.module === module 
+          return prev.map(m =>
+            m.module === module
               ? { ...m, is_enabled: isEnabled, enabled_at: new Date().toISOString() }
               : m
           );
@@ -90,21 +127,25 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
   }, [dealerId]);
 
   const hasModuleAccess = useCallback((module: AppModule): boolean => {
-    // Security: If no dealership modules are configured yet (new dealership or no explicit config),
-    // allow access by default. This makes the system "fail-open" for module configuration,
-    // while still enforcing role-based permissions (which are checked separately).
-    // This prevents blocking users when dealership_modules table is empty.
+    // ✅ FIX: Implement fail-closed security policy (deny by default)
+    // If no dealership modules are configured, DENY access (more secure)
+    // This should never happen now because:
+    // 1. New dealerships auto-seed modules via trigger
+    // 2. Existing dealerships were backfilled
     if (modules.length === 0) {
-      console.log(`[hasModuleAccess] No modules configured - allowing ${module} by default (permissions still enforced)`);
-      return true;
+      console.warn(`[hasModuleAccess] ⚠️ No modules configured - DENYING ${module} (fail-closed security)`);
+      console.warn('  This should not happen - dealership may need module configuration');
+      return false; // ✅ DENY by default (fail-closed)
     }
 
-    // If modules ARE configured, check if this specific module is enabled
+    // Check if this specific module is explicitly enabled
     const moduleData = modules.find(m => m.module === module);
     const isEnabled = moduleData?.is_enabled || false;
 
     if (!isEnabled) {
       console.log(`[hasModuleAccess] Module ${module} is explicitly disabled for dealership`);
+    } else {
+      console.log(`[hasModuleAccess] ✅ Module ${module} is enabled for dealership`);
     }
 
     return isEnabled;
