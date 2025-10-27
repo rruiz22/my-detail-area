@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyDetailArea - Clear All Cache</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      color: #1f2937;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .status {
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .status-line {
+      padding: 4px 0;
+      line-height: 1.6;
+    }
+
+    .success { color: #10b981; }
+    .error { color: #ef4444; }
+    .info { color: #6366f1; }
+    .warning { color: #f59e0b; }
+
+    button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #4f46e5;
+    }
+
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      margin-top: 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧹 Clear All Cache</h1>
+    <p class="subtitle">MyDetailArea Cache Management Tool</p>
+
+    <div class="status" id="status">
+      <div class="status-line info">Ready to clear all cache...</div>
+      <div class="status-line info">This will remove:</div>
+      <div class="status-line">  • localStorage (permissions, preferences, etc.)</div>
+      <div class="status-line">  • sessionStorage (temporary data)</div>
+      <div class="status-line">  • indexedDB (offline data)</div>
+      <div class="status-line">  • Cookies (session data)</div>
+      <div class="status-line">  • Service Workers</div>
+      <div class="status-line">  • Cache Storage</div>
+    </div>
+
+    <button id="clearBtn" onclick="clearAllCache()">🚀 Clear All Cache Now</button>
+
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <script>
+    let statusDiv = document.getElementById('status');
+    let progressDiv = document.getElementById('progress');
+    let clearBtn = document.getElementById('clearBtn');
+
+    function log(message, type = 'info') {
+      const line = document.createElement('div');
+      line.className = `status-line ${type}`;
+      line.textContent = message;
+      statusDiv.appendChild(line);
+      statusDiv.scrollTop = statusDiv.scrollHeight;
+    }
+
+    async function clearAllCache() {
+      clearBtn.disabled = true;
+      statusDiv.innerHTML = '';
+
+      log('🧹 Starting complete cache cleanup...', 'info');
+      log('', 'info');
+
+      try {
+        // 1. Clear localStorage
+        log('🗑️  Clearing localStorage...', 'info');
+        const localStorageKeys = Object.keys(localStorage);
+        const localStorageCount = localStorageKeys.length;
+
+        if (localStorageCount > 0) {
+          log(`   Found ${localStorageCount} items:`, 'info');
+          localStorageKeys.forEach(key => {
+            log(`      - ${key}`, 'info');
+          });
+          localStorage.clear();
+          log(`   ✅ Cleared ${localStorageCount} localStorage items`, 'success');
+        } else {
+          log('   ℹ️  localStorage is already empty', 'info');
+        }
+        log('', 'info');
+
+        // 2. Clear sessionStorage
+        log('🗑️  Clearing sessionStorage...', 'info');
+        const sessionStorageKeys = Object.keys(sessionStorage);
+        const sessionStorageCount = sessionStorageKeys.length;
+
+        if (sessionStorageCount > 0) {
+          log(`   Found ${sessionStorageCount} items:`, 'info');
+          sessionStorageKeys.forEach(key => {
+            log(`      - ${key}`, 'info');
+          });
+          sessionStorage.clear();
+          log(`   ✅ Cleared ${sessionStorageCount} sessionStorage items`, 'success');
+        } else {
+          log('   ℹ️  sessionStorage is already empty', 'info');
+        }
+        log('', 'info');
+
+        // 3. Clear indexedDB
+        log('🗑️  Clearing indexedDB...', 'info');
+        if (window.indexedDB && window.indexedDB.databases) {
+          const databases = await window.indexedDB.databases();
+          log(`   Found ${databases.length} databases:`, 'info');
+
+          for (const db of databases) {
+            if (db.name) {
+              log(`      - Deleting: ${db.name}`, 'info');
+              window.indexedDB.deleteDatabase(db.name);
+            }
+          }
+          log(`   ✅ Cleared ${databases.length} indexedDB database(s)`, 'success');
+        } else {
+          log('   ℹ️  indexedDB not available or no databases', 'info');
+        }
+        log('', 'info');
+
+        // 4. Clear service workers
+        log('🗑️  Clearing service workers...', 'info');
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          log(`   Found ${registrations.length} service worker(s)`, 'info');
+
+          for (const registration of registrations) {
+            await registration.unregister();
+            log(`      - Unregistered service worker at: ${registration.scope}`, 'info');
+          }
+          log(`   ✅ Cleared ${registrations.length} service worker(s)`, 'success');
+        } else {
+          log('   ℹ️  Service workers not available', 'info');
+        }
+        log('', 'info');
+
+        // 5. Clear cache storage
+        log('🗑️  Clearing cache storage...', 'info');
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          log(`   Found ${cacheNames.length} cache(s):`, 'info');
+
+          for (const cacheName of cacheNames) {
+            log(`      - Deleting: ${cacheName}`, 'info');
+            await caches.delete(cacheName);
+          }
+          log(`   ✅ Cleared ${cacheNames.length} cache storage(s)`, 'success');
+        } else {
+          log('   ℹ️  Cache storage not available', 'info');
+        }
+        log('', 'info');
+
+        // Summary
+        log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+        log('✨ CACHE CLEANUP COMPLETED SUCCESSFULLY!', 'success');
+        log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+        log('', 'info');
+        log('📊 Summary:', 'info');
+        log(`   • localStorage: ${localStorageCount} items cleared`, 'info');
+        log(`   • sessionStorage: ${sessionStorageCount} items cleared`, 'info');
+        log(`   • indexedDB: ${databases.length} databases cleared`, 'info');
+        log(`   • Service Workers: ${registrations.length} unregistered`, 'info');
+        log(`   • Cache Storage: ${cacheNames.length} caches cleared`, 'info');
+        log('', 'info');
+        log('🔄 Reloading page in 3 seconds...', 'warning');
+
+        // Countdown
+        progressDiv.textContent = 'Reloading in 3...';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        progressDiv.textContent = 'Reloading in 2...';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        progressDiv.textContent = 'Reloading in 1...';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Reload to http://localhost:8080/dashboard
+        window.location.href = 'http://localhost:8080/dashboard';
+
+      } catch (error) {
+        log('', 'info');
+        log('❌ Error during cleanup:', 'error');
+        log(`   ${error.message}`, 'error');
+        log('', 'info');
+        log('💡 Try manual cleanup:', 'warning');
+        log('   1. Open DevTools (F12)', 'info');
+        log('   2. Application tab → Clear storage', 'info');
+        log('   3. Hard reload: Ctrl + Shift + R', 'info');
+        clearBtn.disabled = false;
+      }
+    }
+
+    // Also provide manual instructions
+    document.addEventListener('DOMContentLoaded', () => {
+      log('', 'info');
+      log('💡 Alternative: Manual cleanup in DevTools', 'info');
+      log('   1. Press F12 to open DevTools', 'info');
+      log('   2. Go to Application tab', 'info');
+      log('   3. Click "Clear storage"', 'info');
+      log('   4. Check all boxes and click "Clear site data"', 'info');
+      log('   5. Hard reload: Ctrl + Shift + R', 'info');
+    });
+  </script>
+</body>
+</html>

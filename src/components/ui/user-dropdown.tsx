@@ -1,21 +1,21 @@
-import { useState } from 'react';
+import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { User, Settings, LogOut, Shield, UserCog, Building2 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
-import { usePermissions } from '@/hooks/usePermissions';
-import { useNavigate } from 'react-router-dom';
-import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { usePermissions } from '@/hooks/usePermissions';
+import { Building2, LogOut, Settings, Shield, User, UserCog } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export function UserDropdown() {
   const { t } = useTranslation();
@@ -70,6 +70,16 @@ export function UserDropdown() {
     return t('roles.user');
   };
 
+  // Debug: Log enhancedUser data
+  console.log('🔍 [UserDropdown] Enhanced User Data:', {
+    enhancedUser,
+    is_system_admin: enhancedUser?.is_system_admin,
+    custom_roles: enhancedUser?.custom_roles,
+    custom_roles_length: enhancedUser?.custom_roles?.length,
+    has_custom_roles: enhancedUser?.custom_roles && enhancedUser.custom_roles.length > 0,
+    enhancedUser_full: JSON.stringify(enhancedUser, null, 2)
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -120,14 +130,21 @@ export function UserDropdown() {
               </div>
             )}
 
-            <div className="flex justify-between items-center gap-2">
-              <Badge variant="secondary" className="text-xs px-2 py-1 flex-shrink-0">
-                {getUserRole()}
-              </Badge>
-              {enhancedUser?.is_system_admin && (
-                <Badge variant="outline" className="text-xs px-2 py-1 border-orange-200 text-orange-700 flex-shrink-0">
+            <div className="flex flex-wrap items-center gap-2">
+              {enhancedUser?.is_system_admin ? (
+                <Badge variant="destructive" className="text-xs px-2 py-1 flex-shrink-0">
                   <Shield className="w-3 h-3 mr-1" />
-                  {t('roles.admin')}
+                  System Admin
+                </Badge>
+              ) : enhancedUser?.custom_roles && enhancedUser.custom_roles.length > 0 ? (
+                enhancedUser.custom_roles.map((role) => (
+                  <Badge key={role.id} variant="secondary" className="text-xs px-2 py-1 flex-shrink-0">
+                    {role.display_name}
+                  </Badge>
+                ))
+              ) : (
+                <Badge variant="secondary" className="text-xs px-2 py-1 flex-shrink-0">
+                  {getUserRole()}
                 </Badge>
               )}
             </div>
