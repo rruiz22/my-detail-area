@@ -1,13 +1,14 @@
+import { PrivacyPolicyModal } from "@/components/legal/PrivacyPolicyModal";
+import { TermsOfServiceModal } from "@/components/legal/TermsOfServiceModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { APP_VERSION } from "@/config/version";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
-import { PrivacyPolicyModal } from "@/components/legal/PrivacyPolicyModal";
-import { TermsOfServiceModal } from "@/components/legal/TermsOfServiceModal";
 import { Search } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AnnouncementBanner } from "./announcements/AnnouncementBanner";
 import { AppSidebar } from "./AppSidebar";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { DealershipFilter } from "./filters/DealershipFilter";
@@ -55,6 +56,9 @@ function DashboardLayoutInner({ children, title }: DashboardLayoutProps) {
             {currentDealership?.id ? <NotificationBell dealerId={currentDealership.id} /> : null}
           </div>
         </header>
+
+        {/* Announcement Banner */}
+        <AnnouncementBanner />
 
         {/* Main Content */}
         <main className="flex-1 p-6">
