@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,7 +8,6 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
-import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { ChevronDown, Lock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,9 +37,10 @@ export function StatusBadgeInteractive({
   onStatusChange
 }: StatusBadgeInteractiveProps) {
   const { t } = useTranslation();
-  const { confirmStatusChange } = useSweetAlert();
-  const { canUpdateStatus: checkCanUpdateStatus } = useStatusPermissions();
+  const { canUpdateStatus: checkCanUpdateStatus, loading: permissionsLoading } = useStatusPermissions();
   const [hasPermission, setHasPermission] = useState<boolean>(canUpdateStatusProp !== undefined ? canUpdateStatusProp : true);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<string | null>(null);
 
   const currentStatusConfig = STATUS_OPTIONS.find(option => option.value === status.toLowerCase()) || STATUS_OPTIONS[0];
 
@@ -49,6 +50,11 @@ export function StatusBadgeInteractive({
       // If canUpdateStatus is explicitly provided, use it
       if (canUpdateStatusProp !== undefined) {
         setHasPermission(canUpdateStatusProp);
+        return;
+      }
+
+      // Wait for permissions to load before checking
+      if (permissionsLoading) {
         return;
       }
 
@@ -63,7 +69,7 @@ export function StatusBadgeInteractive({
     };
 
     checkPermission();
-  }, [dealerId, status, orderType, canUpdateStatusProp, checkCanUpdateStatus]);
+  }, [dealerId, status, orderType, canUpdateStatusProp, checkCanUpdateStatus, permissionsLoading]);
 
   const handleStatusSelect = async (selectedStatus: string) => {
     // Double-check permission for the specific status change
@@ -80,17 +86,18 @@ export function StatusBadgeInteractive({
 
     // Show confirmation for critical status changes
     if (selectedStatus === 'completed' || selectedStatus === 'cancelled') {
-      const confirmed = await confirmStatusChange(
-        t(STATUS_OPTIONS.find(s => s.value === selectedStatus)?.label || ''),
-        t('sweetalert.confirm_status')
-      );
-
-      if (confirmed) {
-        onStatusChange(orderId, selectedStatus);
-      }
+      setPendingStatus(selectedStatus);
+      setShowConfirmDialog(true);
     } else {
       onStatusChange(orderId, selectedStatus);
     }
+  };
+
+  const confirmChange = () => {
+    if (!pendingStatus) return;
+
+    onStatusChange(orderId, pendingStatus);
+    setPendingStatus(null);
   };
 
   if (!hasPermission) {
@@ -135,6 +142,18 @@ export function StatusBadgeInteractive({
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Status Change Confirmation Dialog - Team Chat Style */}
+      <ConfirmDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={t('orders.confirm_status_change_title', 'Confirm Status Change')}
+        description={t('sweetalert.confirm_status', pendingStatus ? `Change status to "${t(STATUS_OPTIONS.find(s => s.value === pendingStatus)?.label || '')}"?` : '')}
+        confirmText={t('common.confirm', 'Confirm')}
+        cancelText={t('common.cancel', 'Cancel')}
+        onConfirm={confirmChange}
+        variant={pendingStatus === 'cancelled' ? 'destructive' : 'default'}
+      />
     </>
   );
 }
