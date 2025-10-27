@@ -62,7 +62,12 @@ export default function CarWash() {
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Check if user can create car wash orders
-  const canCreate = hasModulePermission('car_wash', 'create');
+  const canCreate = hasModulePermission('car_wash', 'create_orders');
+
+  // ⚡ PERF: Preload modal on hover to reduce perceived latency
+  const preloadModal = useCallback(() => {
+    import('@/components/orders/CarWashOrderModal');
+  }, []);
 
   // Real-time updates are handled by useCarWashOrderManagement hook
 
@@ -325,6 +330,7 @@ export default function CarWash() {
             <Button
               size="sm"
               onClick={handleCreateOrder}
+              onMouseEnter={preloadModal}
               disabled={!canCreate}
               title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
               aria-label={t('accessibility.car_wash_orders.create_button')}
