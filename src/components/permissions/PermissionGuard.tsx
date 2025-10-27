@@ -67,7 +67,9 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
 
   // ✅ ALWAYS call all hooks in the same order
   // Loading state check - REMOVED useMemo to prevent hook order issues
-  const isLoading = loading || (checkDealerModule && modulesLoading);
+  // ⚡ PERF FIX: Always wait for modules to load if we're going to check them
+  // This prevents false "No modules configured" warnings during initial load
+  const isLoading = loading || modulesLoading;
 
   // Early return after all hooks are called
   // ✅ PERF FIX: Show full-page skeleton instead of small bar
@@ -119,6 +121,7 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
         }
 
         // First, check if dealership has the module enabled
+        // ✅ Safe to call here: modules finished loading (isLoading=false above)
         const dealerHasModule = hasModuleAccess(module);
         if (!dealerHasModule) {
           if (import.meta.env.DEV) {

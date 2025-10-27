@@ -17,7 +17,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
 interface PermissionBoundaryProps {
   children: React.ReactNode;
@@ -66,11 +65,13 @@ const PermissionErrorFallback: React.FC<{ resetErrorBoundary: () => void }> = ({
               {t('common.try_again') || 'Try Again'}
             </Button>
 
-            <Button asChild variant="outline" className="gap-2">
-              <Link to="/dashboard">
-                <Home className="h-4 w-4" />
-                {t('common.back_to_dashboard') || 'Back to Dashboard'}
-              </Link>
+            <Button
+              onClick={() => window.location.href = '/dashboard'}
+              variant="outline"
+              className="gap-2"
+            >
+              <Home className="h-4 w-4" />
+              {t('common.back_to_dashboard') || 'Back to Dashboard'}
             </Button>
           </div>
 
