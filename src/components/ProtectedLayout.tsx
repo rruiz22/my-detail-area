@@ -1,15 +1,16 @@
+import { PrivacyPolicyModal } from "@/components/legal/PrivacyPolicyModal";
+import { TermsOfServiceModal } from "@/components/legal/TermsOfServiceModal";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { APP_VERSION } from "@/config/version";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
-import { PrivacyPolicyModal } from "@/components/legal/PrivacyPolicyModal";
-import { TermsOfServiceModal } from "@/components/legal/TermsOfServiceModal";
 import { Menu } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { AnnouncementBanner } from "./announcements/AnnouncementBanner";
 import { AppSidebar } from "./AppSidebar";
 import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { DealershipFilter } from "./filters/DealershipFilter";
@@ -149,6 +150,9 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
               </Sheet>
             </div>
           </header>
+
+          {/* Announcement Banner */}
+          <AnnouncementBanner />
 
           {/* Breadcrumbs */}
           <Breadcrumbs />

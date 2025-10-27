@@ -1,30 +1,37 @@
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
-import { OrderDataTable } from '@/components/orders/OrderDataTable';
-import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
-import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { usePermissions } from '@/hooks/usePermissions';
-import type { ReconOrder } from "@/hooks/useReconOrderManagement";
+import type { ReconOrder, ReconOrderData } from "@/hooks/useReconOrderManagement";
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
-import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { getSystemTimezone } from '@/utils/dateUtils';
+import { orderEvents } from '@/utils/eventBus';
+import logger from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
+// Always-loaded components (small, critical)
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
+import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
+
+// Code-split heavy view components (40-60KB initial bundle reduction)
+const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(module => ({ default: module.OrderDataTable })));
+const OrderKanbanBoard = lazy(() => import('@/components/sales/OrderKanbanBoard').then(module => ({ default: module.OrderKanbanBoard })));
+const OrderCalendarView = lazy(() => import('@/components/orders/OrderCalendarView').then(module => ({ default: module.OrderCalendarView })));
+const ReconOrderModal = lazy(() => import('@/components/orders/ReconOrderModal').then(module => ({ default: module.ReconOrderModal })));
 
 export default function ReconOrders() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { confirmDelete } = useSweetAlert();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -44,6 +51,11 @@ export default function ReconOrders() {
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+
+  // Accessibility: Live region for screen reader announcements
+  const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
 
   const {
     orders: allOrders,
@@ -71,17 +83,17 @@ export default function ReconOrders() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
-      console.log('🎯 [Recon] Processing order from URL (one-time):', orderIdFromUrl);
+      logger.dev('🎯 [Recon] Processing order from URL (one-time):', orderIdFromUrl);
 
       // Find the order in the loaded orders
       const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        console.log('✅ [Recon] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        logger.success('[Recon] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        console.warn('⚠️ [Recon] Order not found in current orders list:', orderIdFromUrl);
+        logger.warn('[Recon] Order not found in current orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -89,7 +101,7 @@ export default function ReconOrders() {
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t]);
+  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t, toast]);
 
   // Helper function to get dates in system timezone for filtering
   const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {
@@ -174,9 +186,9 @@ export default function ReconOrders() {
     }
   }, [allOrders, activeFilter, weekOffset, getSystemTimezoneDates]);
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create recon orders');
+      logger.warn('[Recon] User does not have permission to create recon orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -185,14 +197,14 @@ export default function ReconOrders() {
       return;
     }
 
-    console.log('✅ User has permission to create recon orders');
+    logger.success('[Recon] User has permission to create recon orders');
     setSelectedOrder(null);
     setShowModal(true);
-  };
+  }, [canCreate, t, toast]);
 
-  const handleCreateOrderWithDate = (selectedDate?: Date) => {
+  const handleCreateOrderWithDate = useCallback((selectedDate?: Date) => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create recon orders');
+      logger.warn('[Recon] User does not have permission to create recon orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -205,32 +217,45 @@ export default function ReconOrders() {
     // If date is provided from calendar, we could pre-populate the due_date
     // For now, just open the modal
     setShowModal(true);
-  };
+  }, [canCreate, t, toast]);
 
-  const handleEditOrder = (order: ReconOrder) => {
+  const handleEditOrder = useCallback((order: ReconOrder) => {
     setSelectedOrder(order);
     setShowModal(true);
     setPreviewOrder(null); // Close preview if open
-  };
+  }, []);
 
-  const handleViewOrder = (order: ReconOrder) => {
+  const handleViewOrder = useCallback((order: ReconOrder) => {
     setPreviewOrder(order);
-  };
+  }, []);
 
-  const handleDeleteOrder = async (orderId: string) => {
-    const confirmed = await confirmDelete();
+  const handleDeleteOrder = useCallback((orderId: string) => {
+    setOrderToDelete(orderId);
+    setDeleteDialogOpen(true);
+  }, []);
 
-    if (confirmed) {
-      try {
-        await deleteOrder(orderId);
-      } catch (error) {
-        console.error('❌ Delete failed:', error);
-      }
+  const confirmDeleteOrder = useCallback(async () => {
+    if (!orderToDelete) return;
+
+    try {
+      await deleteOrder(orderToDelete);
+      setOrderToDelete(null);
+      // Accessibility: Announce deletion to screen readers
+      setLiveRegionMessage(t('accessibility.recon_orders.order_deleted'));
+      toast({
+        title: t('orders.deleted_success', 'Order deleted successfully')
+      });
+    } catch (error) {
+      logger.error('[Recon] Delete failed:', error);
+      toast({
+        variant: 'destructive',
+        title: t('orders.delete_error', 'Failed to delete order')
+      });
     }
-  };
+  }, [orderToDelete, deleteOrder, t, toast]);
 
-  const handleSaveOrder = async (orderData: any) => {
-    console.log('🎯 handleSaveOrder called with:', {
+  const handleSaveOrder = useCallback(async (orderData: ReconOrderData) => {
+    logger.dev('[Recon] handleSaveOrder called with:', {
       hasSelectedOrder: !!selectedOrder,
       selectedOrderId: selectedOrder?.id,
       orderData: orderData,
@@ -242,45 +267,49 @@ export default function ReconOrders() {
 
     try {
       if (selectedOrder) {
-        console.log('📝 Calling updateOrder with:', {
+        logger.dev('[Recon] Calling updateOrder with:', {
           orderId: selectedOrder.id,
           orderData: orderData
         });
         await updateOrder(selectedOrder.id, orderData);
-        console.log('✅ updateOrder completed successfully');
+        logger.success('[Recon] updateOrder completed successfully');
+        // Accessibility: Announce update to screen readers
+        setLiveRegionMessage(t('accessibility.recon_orders.order_updated'));
       } else {
-        console.log('➕ Calling createOrder with:', {
+        logger.dev('[Recon] Calling createOrder with:', {
           orderData: orderData
         });
         await createOrder(orderData);
-        console.log('✅ createOrder completed successfully');
+        logger.success('[Recon] createOrder completed successfully');
+        // Accessibility: Announce creation to screen readers
+        setLiveRegionMessage(t('accessibility.recon_orders.order_created'));
       }
       setShowModal(false);
       refreshData();
     } catch (error) {
-      console.error('❌ Error in handleSaveOrder:', error);
+      logger.error('[Recon] Error in handleSaveOrder:', error);
+      // Re-throw to let modal handle it
+      throw error;
     }
-  };
+  }, [selectedOrder, updateOrder, createOrder, refreshData, t]);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
       await updateOrder(orderId, { status: newStatus });
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId, newStatus, timestamp: Date.now() }
-      }));
+      // Emit typed events using EventBus
+      orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'recon' });
+      orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
 
       // Event listener in hook will handle immediate refresh
     } catch (error) {
-      console.error('Status change failed:', error);
+      logger.error('[Recon] Status change failed:', error);
       // Event listener will handle refresh
       throw error;
     }
-  };
+  }, [updateOrder]);
 
-  const handleUpdate = async (orderId: string, updates: any) => {
+  const handleUpdate = useCallback(async (orderId: string, updates: Partial<ReconOrder>) => {
     try {
       await updateOrder(orderId, updates);
 
@@ -288,22 +317,21 @@ export default function ReconOrders() {
       // This is faster than polling and doesn't cause visible reload
       queryClient.invalidateQueries({ queryKey: ['orders', 'recon'] });
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderUpdated', {
-        detail: { orderId, updates, timestamp: Date.now() }
-      }));
+      // Emit typed event using EventBus
+      orderEvents.emit('orderUpdated', { orderId, updates, timestamp: Date.now() });
     } catch (error) {
-      console.error('Order update failed:', error);
+      logger.error('[Recon] Order update failed:', error);
       throw error;
     }
-  };
+  }, [updateOrder, queryClient]);
 
 
   // Force table view on mobile (disable kanban and calendar)
   const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   // Transform ReconOrder to Order format for compatibility with OrderKanbanBoard/OrderDataTable
-  const transformedOrders = filteredOrdersByTab.map(order => {
+  // Memoized to prevent recalculation on every render
+  const transformedOrders = useMemo(() => filteredOrdersByTab.map(order => {
     return {
       id: order.id,
       order_number: order.orderNumber,
@@ -356,10 +384,10 @@ export default function ReconOrders() {
       advisor: t('recon_defaults.default_advisor'),
       department: t('recon_defaults.default_department')
     };
-  });
+  }), [filteredOrdersByTab, t]);
 
   // Filter orders based on search term
-  const filteredOrders = transformedOrders.filter((order: any) => {
+  const filteredOrders = transformedOrders.filter((order) => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -373,6 +401,11 @@ export default function ReconOrders() {
 
   return (
     <div className="space-y-6">
+        {/* Accessibility: Live region for screen reader announcements */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {liveRegionMessage}
+        </div>
+
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
@@ -389,6 +422,8 @@ export default function ReconOrders() {
               size="sm"
               onClick={handleRefresh}
               disabled={isRefreshing}
+              aria-label={t('accessibility.recon_orders.refresh_button')}
+              aria-busy={isRefreshing}
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
@@ -398,6 +433,7 @@ export default function ReconOrders() {
               onClick={handleCreateOrder}
               disabled={!canCreate}
               title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+              aria-label={t('accessibility.recon_orders.create_button')}
             >
               <Plus className="h-4 w-4 mr-2" />
               {t('recon.new_recon_order')}
@@ -420,48 +456,62 @@ export default function ReconOrders() {
           onWeekChange={setWeekOffset}
         />
 
-        {/* Main Content - Mobile forces table */}
-        <div className="space-y-6">
+        {/* Main Content - Code Split with Suspense and Error Boundaries */}
+        <main aria-label={t('accessibility.recon_orders.main_content')} className="space-y-6">
           {effectiveViewMode === 'kanban' ? (
-            <OrderKanbanBoard
-              orders={filteredOrders}
-              onEdit={handleEditOrder}
-              onView={handleViewOrder}
-              onDelete={handleDeleteOrder}
-              onStatusChange={handleStatusChange}
-            />
+            <OrderViewErrorBoundary viewType="kanban">
+              <Suspense fallback={<OrderViewLoadingFallback viewType="kanban" />}>
+                <OrderKanbanBoard
+                  orders={filteredOrders}
+                  onEdit={handleEditOrder}
+                  onView={handleViewOrder}
+                  onDelete={handleDeleteOrder}
+                  onStatusChange={handleStatusChange}
+                />
+              </Suspense>
+            </OrderViewErrorBoundary>
           ) : effectiveViewMode === 'calendar' ? (
-            <OrderCalendarView
-              orders={filteredOrders}
-              loading={loading}
-              onEdit={handleEditOrder}
-              onView={handleViewOrder}
-              onDelete={handleDeleteOrder}
-              onStatusChange={handleStatusChange}
-              onCreateOrder={handleCreateOrderWithDate}
-            />
+            <OrderViewErrorBoundary viewType="calendar">
+              <Suspense fallback={<OrderViewLoadingFallback viewType="calendar" />}>
+                <OrderCalendarView
+                  orders={filteredOrders}
+                  loading={loading}
+                  onEdit={handleEditOrder}
+                  onView={handleViewOrder}
+                  onDelete={handleDeleteOrder}
+                  onStatusChange={handleStatusChange}
+                  onCreateOrder={handleCreateOrderWithDate}
+                />
+              </Suspense>
+            </OrderViewErrorBoundary>
           ) : (
-            <OrderDataTable
-              orders={filteredOrders}
-              loading={loading}
-              onEdit={handleEditOrder}
-              onDelete={handleDeleteOrder}
-              onView={handleViewOrder}
-              onStatusChange={handleStatusChange}
-              tabType="recon"
-            />
+            <OrderViewErrorBoundary viewType="table">
+              <Suspense fallback={<OrderViewLoadingFallback viewType="table" />}>
+                <OrderDataTable
+                  orders={filteredOrders}
+                  loading={loading}
+                  onEdit={handleEditOrder}
+                  onDelete={handleDeleteOrder}
+                  onView={handleViewOrder}
+                  onStatusChange={handleStatusChange}
+                  tabType="recon"
+                />
+              </Suspense>
+            </OrderViewErrorBoundary>
           )}
-        </div>
+        </main>
 
-        {/* Modals */}
+        {/* Modals - Code Split */}
         {showModal && (
-          <ReconOrderModal
-            open={showModal}
-            onClose={() => setShowModal(false)}
-            onSave={handleSaveOrder}
-            order={selectedOrder}
-            mode={selectedOrder ? 'edit' : 'create'}
-          />
+          <Suspense fallback={<OrderViewLoadingFallback viewType="modal" />}>
+            <ReconOrderModal
+              open={showModal}
+              onClose={() => setShowModal(false)}
+              onSave={handleSaveOrder}
+              order={selectedOrder}
+              mode={selectedOrder ? 'edit' : 'create'}
+            />
+          </Suspense>
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}
@@ -483,6 +533,18 @@ export default function ReconOrders() {
             onUpdate={handleUpdate}
           />
         )}
+
+        {/* Delete Confirmation Dialog - Team Chat Style */}
+        <ConfirmDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          title={t('orders.confirm_delete_title', 'Delete Order?')}
+          description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
+          confirmText={t('common.delete', 'Delete')}
+          cancelText={t('common.cancel', 'Cancel')}
+          onConfirm={confirmDeleteOrder}
+          variant="destructive"
+        />
     </div>
   );
 }

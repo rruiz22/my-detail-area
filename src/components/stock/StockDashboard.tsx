@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useStockManagement } from '@/hooks/useStockManagement';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockAnalytics } from './StockAnalytics';
 import { StockCSVUploader } from './StockCSVUploader';
@@ -14,6 +14,7 @@ import { StockInventoryTable } from './StockInventoryTable';
 import { StockSyncHistory } from './StockSyncHistory';
 
 import {
+    AlertCircle,
     BarChart3,
     Calendar,
     DollarSign,
@@ -28,6 +29,7 @@ export const StockDashboard: React.FC = () => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('inventory');
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null); // ✅ FIX BUG-03: Track refresh errors
 
   const {
     currentDealership,
@@ -43,9 +45,10 @@ export const StockDashboard: React.FC = () => {
 
   const loading = dealerLoading || inventoryLoading;
 
-  // Handle manual refresh with toast
-  const handleManualRefresh = async () => {
+  // ✅ FIX PERF-01 & BUG-03: Memoize handler and track errors
+  const handleManualRefresh = useCallback(async () => {
     setIsManualRefreshing(true);
+    setRefreshError(null); // Clear previous errors
     try {
       await refreshInventory();
       toast({
@@ -53,17 +56,19 @@ export const StockDashboard: React.FC = () => {
         description: t('stock.actions.refresh_success', 'Inventory refreshed successfully')
       });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to refresh inventory';
+      setRefreshError(errorMessage);
       toast({
         title: t('common.error'),
-        description: t('stock.actions.refresh_failed', 'Failed to refresh inventory'),
+        description: t('stock.actions.refresh_failed', errorMessage),
         variant: 'destructive'
       });
     } finally {
       setIsManualRefreshing(false);
     }
-  };
+  }, [refreshInventory, t]);
 
-  // Calculate real metrics from inventory data
+  // ✅ FIX PERF-02: Optimized metrics calculation - single pass through inventory
   const metrics = React.useMemo(() => {
     if (!inventory?.length) {
       return {
@@ -74,24 +79,35 @@ export const StockDashboard: React.FC = () => {
       };
     }
 
-    const validPrices = inventory.filter(v => v.price && v.price > 0);
-    const validAges = inventory.filter(v => v.age_days !== null && v.age_days !== undefined);
+    // Single pass through inventory to calculate all metrics
+    const result = inventory.reduce((acc, vehicle) => {
+      // Count total value
+      if (vehicle.price && vehicle.price > 0) {
+        acc.totalValue += vehicle.price;
+        acc.totalPrice += vehicle.price;
+        acc.priceCount++;
+      }
 
-    const averagePrice = validPrices.length > 0
-      ? validPrices.reduce((sum, v) => sum + (v.price || 0), 0) / validPrices.length
-      : 0;
+      // Count total age
+      if (vehicle.age_days !== null && vehicle.age_days !== undefined) {
+        acc.totalAge += vehicle.age_days;
+        acc.ageCount++;
+      }
 
-    const averageAgeDays = validAges.length > 0
-      ? validAges.reduce((sum, v) => sum + (v.age_days || 0), 0) / validAges.length
-      : 0;
-
-    const totalValue = inventory.reduce((sum, v) => sum + (v.price || 0), 0);
+      return acc;
+    }, {
+      totalValue: 0,
+      totalPrice: 0,
+      priceCount: 0,
+      totalAge: 0,
+      ageCount: 0
+    });
 
     return {
       totalVehicles: inventory.length,
-      averagePrice: Math.round(averagePrice),
-      averageAgeDays: Math.round(averageAgeDays),
-      totalValue: Math.round(totalValue)
+      averagePrice: result.priceCount > 0 ? Math.round(result.totalPrice / result.priceCount) : 0,
+      averageAgeDays: result.ageCount > 0 ? Math.round(result.totalAge / result.ageCount) : 0,
+      totalValue: Math.round(result.totalValue)
     };
   }, [inventory]);
 
@@ -180,6 +196,27 @@ export const StockDashboard: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* ✅ FIX BUG-03: Show persistent error with AlertCircle */}
+      {refreshError && (
+        <Card className="border-destructive bg-destructive/5">
+          <CardContent className="flex items-center gap-3 p-4">
+            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-destructive">{t('stock.errors.refresh_failed', 'Failed to Refresh Inventory')}</p>
+              <p className="text-sm text-muted-foreground mt-1">{refreshError}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setRefreshError(null)}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              ×
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

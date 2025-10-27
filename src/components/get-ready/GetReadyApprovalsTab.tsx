@@ -1,55 +1,53 @@
-import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
 } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
-  usePendingApprovals,
-  useApprovalSummary,
-  useApproveVehicle,
-  useRejectVehicle,
-  useBulkApproveVehicles
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import {
+    useApprovalSummary,
+    useApproveVehicle,
+    useBulkApproveVehicles,
+    usePendingApprovals,
+    useRejectVehicle
 } from '@/hooks/useGetReadyApprovals';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useApproveWorkItem, useDeclineWorkItem } from '@/hooks/useVehicleWorkItems';
-import {
-  Search,
-  CheckCircle,
-  XCircle,
-  Clock,
-  DollarSign,
-  AlertTriangle,
-  CheckCheck,
-  Filter,
-  ArrowRight,
-  User,
-  Calendar,
-  Wrench,
-  Info
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
+import {
+    AlertTriangle,
+    ArrowRight,
+    Calendar,
+    CheckCheck,
+    CheckCircle,
+    Clock,
+    DollarSign,
+    Filter,
+    Search,
+    Wrench,
+    XCircle
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 type FilterType = 'all' | 'vehicles' | 'work_items' | 'critical';
 type SortBy = 'oldest' | 'newest' | 'priority' | 'cost';
@@ -57,6 +55,8 @@ type SortBy = 'oldest' | 'newest' | 'priority' | 'cost';
 export function GetReadyApprovalsTab() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { hasModulePermission } = usePermissions();
+  const { toast } = useToast();
 
   // Data hooks
   const { data: pendingVehicles = [], isLoading } = usePendingApprovals();
@@ -85,7 +85,11 @@ export function GetReadyApprovalsTab() {
   const pendingWorkItems = useMemo(() => {
     return pendingVehicles.flatMap(vehicle =>
       (vehicle.work_items || [])
-        .filter(item => item.approval_required && !item.approval_status)
+        .filter(item =>
+          item.approval_required &&
+          item.approval_status !== 'declined' &&
+          item.approval_status !== 'approved'
+        )
         .map(item => ({
           ...item,
           vehicle_id: vehicle.id,
@@ -99,22 +103,56 @@ export function GetReadyApprovalsTab() {
 
   // Combined approval queue (vehicles + work items)
   const approvalQueue = useMemo(() => {
+    console.log(`\n🔄 [Approvals Tab] Building approval queue...`);
+    console.log(`   - Total pending vehicles: ${pendingVehicles.length}`);
+    console.log(`   - Filter type: ${filterType}`);
+
     const items: any[] = [];
 
     // Add vehicles requiring approval
+    // ✅ IMPROVED: Only add vehicles that have at least ONE work item actively needing approval
     if (filterType === 'all' || filterType === 'vehicles') {
-      pendingVehicles
-        .filter(v => v.requires_approval === true && v.approval_status === 'pending' && !v.approved_by)
-        .forEach(vehicle => {
-          items.push({
-            type: 'vehicle',
-            id: vehicle.id,
-            vehicle: vehicle,
-            priority: vehicle.priority_score || 0,
-            created_at: vehicle.intake_date,
-            isCritical: vehicle.escalation_level >= 2
+      const vehiclesWithRequiresApproval = pendingVehicles.filter(
+        v => v.requires_approval === true && v.approval_status === 'pending' && !v.approved_by
+      );
+
+      console.log(`📋 [Approvals Tab] Total vehicles with requires_approval=true: ${vehiclesWithRequiresApproval.length}`);
+
+      const filteredVehicles = vehiclesWithRequiresApproval.filter(v => {
+        // Must have at least ONE work item that needs approval
+        // (approval_required=true AND approval_status NOT IN ('declined', 'approved'))
+        const workItemsNeedingApproval = (v.work_items || []).filter(
+          wi => wi.approval_required &&
+                wi.approval_status !== 'declined' &&
+                wi.approval_status !== 'approved'
+        );
+
+        const hasActiveWorkItemsNeedingApproval = workItemsNeedingApproval.length > 0;
+
+        if (!hasActiveWorkItemsNeedingApproval) {
+          console.log(`⏭️ [Approvals Tab] Skipped vehicle: ${v.stock_number} - No active work items needing approval`);
+          (v.work_items || []).forEach(wi => {
+            if (wi.approval_required) {
+              console.log(`   └─ Work item: "${wi.title}" (approval_status: ${wi.approval_status})`);
+            }
           });
+        }
+
+        return hasActiveWorkItemsNeedingApproval;
+      });
+
+      console.log(`✅ [Approvals Tab] Vehicles to display: ${filteredVehicles.length}`);
+
+      filteredVehicles.forEach(vehicle => {
+        items.push({
+          type: 'vehicle',
+          id: vehicle.id,
+          vehicle: vehicle,
+          priority: vehicle.priority_score || 0,
+          created_at: vehicle.intake_date,
+          isCritical: vehicle.escalation_level >= 2
         });
+      });
     }
 
     // Add work items requiring approval
@@ -211,6 +249,15 @@ export function GetReadyApprovalsTab() {
 
   // Approval handlers
   const handleApproveVehicle = async (vehicleId: string, notes?: string) => {
+    if (!hasModulePermission('get_ready', 'approve_vehicles')) {
+      toast({
+        title: t('common.error'),
+        description: t('common.insufficient_permissions'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     await approveVehicle.mutateAsync({ vehicleId, notes });
     setSelectedItems(prev => {
       const next = new Set(prev);
@@ -262,29 +309,50 @@ export function GetReadyApprovalsTab() {
   };
 
   const handleBulkApprove = async () => {
-    // Approve vehicles
-    const vehicleIds = sortedQueue
-      .filter(item => item.type === 'vehicle' && selectedItems.has(item.id))
-      .map(item => item.id);
-
-    if (vehicleIds.length > 0) {
-      await bulkApprove.mutateAsync({ vehicleIds });
+    if (!hasModulePermission('get_ready', 'approve_vehicles')) {
+      toast({
+        title: t('common.error'),
+        description: t('common.insufficient_permissions'),
+        variant: 'destructive',
+      });
+      return;
     }
 
-    // Approve work items individually
-    const workItemPromises = sortedQueue
-      .filter(item => item.type === 'work_item' && selectedItems.has(item.id))
-      .map(item => handleApproveWorkItem(item.id, item.workItem.vehicle_id));
+    try {
+      // Approve vehicles
+      const vehicleIds = sortedQueue
+        .filter(item => item.type === 'vehicle' && selectedItems.has(item.id))
+        .map(item => item.id);
 
-    await Promise.all(workItemPromises);
+      if (vehicleIds.length > 0) {
+        await bulkApprove.mutateAsync({ vehicleIds });
+      }
 
-    setSelectedItems(new Set());
+      // Approve work items individually
+      const workItemPromises = sortedQueue
+        .filter(item => item.type === 'work_item' && selectedItems.has(item.id))
+        .map(item => handleApproveWorkItem(item.id, item.workItem.vehicle_id));
+
+      await Promise.all(workItemPromises);
+
+      setSelectedItems(new Set());
+    } catch (error) {
+      console.error('Bulk approval failed:', error);
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.approvals.errors.bulk_approval_failed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
-        <div className="animate-spin">⏳</div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
+        </div>
       </div>
     );
   }
@@ -417,10 +485,10 @@ export function GetReadyApprovalsTab() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="vehicles">Vehicles Only</SelectItem>
-                <SelectItem value="work_items">Work Items Only</SelectItem>
-                <SelectItem value="critical">Critical Only</SelectItem>
+                <SelectItem value="all">{t('get_ready.approvals.filter.all')}</SelectItem>
+                <SelectItem value="vehicles">{t('get_ready.approvals.filter.vehicles')}</SelectItem>
+                <SelectItem value="work_items">{t('get_ready.approvals.filter.work_items')}</SelectItem>
+                <SelectItem value="critical">{t('get_ready.approvals.filter.critical')}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -442,11 +510,11 @@ export function GetReadyApprovalsTab() {
               <div className="flex gap-2">
                 <Button
                   onClick={handleBulkApprove}
-                  disabled={bulkApprove.isPending}
+                  disabled={bulkApprove.isPending || !hasModulePermission('get_ready', 'approve_vehicles')}
                   size="sm"
                 >
                   <CheckCheck className="h-4 w-4 mr-2" />
-                  {t('get_ready.approvals.approve_selected')} ({selectedItems.size})
+                  {bulkApprove.isPending ? t('common.processing') : t('get_ready.approvals.approve_selected')} ({selectedItems.size})
                 </Button>
               </div>
             )}

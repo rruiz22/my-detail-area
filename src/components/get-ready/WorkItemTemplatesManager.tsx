@@ -1,48 +1,48 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
-import {
-  Plus,
-  Edit2,
-  Trash2,
-  GripVertical,
-  CheckCircle2,
-  Circle,
-  Settings
-} from 'lucide-react';
-import {
-  useWorkItemTemplates,
-  useCreateTemplate,
-  useUpdateTemplate,
-  useDeleteTemplate,
-  useToggleTemplateAutoAssign,
-  useToggleTemplateActive,
-  type WorkItemTemplate,
-  type CreateTemplateInput
-} from '@/hooks/useWorkItemTemplates';
-import type { WorkItemType } from '@/hooks/useVehicleWorkItems';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { useGetReadySteps } from '@/hooks/useGetReady';
+import type { WorkItemType } from '@/hooks/useVehicleWorkItems';
+import {
+    useCreateTemplate,
+    useDeleteTemplate,
+    useToggleTemplateActive,
+    useToggleTemplateAutoAssign,
+    useUpdateTemplate,
+    useWorkItemTemplates,
+    type CreateTemplateInput,
+    type WorkItemTemplate
+} from '@/hooks/useWorkItemTemplates';
+import {
+    CheckCircle2,
+    Circle,
+    Edit2,
+    GripVertical,
+    Plus,
+    Settings,
+    Trash2
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const WORK_TYPES: { value: WorkItemType; label: string }[] = [
   { value: 'mechanical', label: 'Mechanical' },
@@ -471,7 +471,7 @@ function TemplateFormDialog({ open, onOpenChange, template }: TemplateFormDialog
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button type="submit" disabled={createTemplate.isPending || updateTemplate.isPending}>
               {createTemplate.isPending || updateTemplate.isPending ? t('common.loading') : t('common.actions.save')}

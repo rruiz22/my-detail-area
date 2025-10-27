@@ -4,14 +4,16 @@ import { Card } from '@/components/ui/card';
 import { Calendar, Clock, AlertCircle, BarChart3, List, Kanban, Filter, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { WeekNavigator } from '@/components/ui/WeekNavigator';
+
+import type { LucideIcon } from 'lucide-react';
 
 interface FilterOption {
   id: string;
   label: string;
   count: number;
-  icon: any;
+  icon: LucideIcon;
   color: string;
 }
 
@@ -29,7 +31,7 @@ interface QuickFilterBarProps {
   onWeekChange?: (offset: number) => void;
 }
 
-export function QuickFilterBar({
+export const QuickFilterBar = memo(function QuickFilterBar({
   activeFilter,
   tabCounts,
   onFilterChange,
@@ -281,4 +283,4 @@ export function QuickFilterBar({
       </div>
     </Card>
   );
-}
+});

@@ -23,7 +23,7 @@ interface CarWashServiceItem {
 }
 
 // CarWash order creation data
-interface CarWashOrderData {
+export interface CarWashOrderData {
   vehicleYear?: number | string;
   vehicleMake?: string;
   vehicleModel?: string;
@@ -35,6 +35,7 @@ interface CarWashOrderData {
   services?: CarWashServiceItem[];
   totalAmount?: number;
   notes?: string;
+  status?: string;
   completedAt?: Date; // Service completion date
   dealerId: number | string;
 }
@@ -150,10 +151,15 @@ export const useCarWashOrderManagement = () => {
             .eq('is_active', true);
 
           if (dealershipError) {
-            console.error('Error fetching user dealerships:', dealershipError);
-            ordersQuery = ordersQuery.eq('dealer_id', 5);
+            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
+            console.error('❌ CarWash - Failed to fetch dealer memberships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+          } else if (!userDealerships || userDealerships.length === 0) {
+            // 🔒 SECURITY: No memberships = no data access (fail-secure)
+            console.warn('⚠️ CarWash - Multi-dealer user has NO dealer memberships - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
-            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
+            const dealerIds = userDealerships.map(d => d.dealer_id);
             console.log(`🏢 [CarWash Polling] Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
@@ -263,7 +269,9 @@ export const useCarWashOrderManagement = () => {
         total_amount: orderData.totalAmount || 0,
         notes: orderData.notes,
         completed_at: orderData.completedAt ? orderData.completedAt.toISOString() : null,
-        dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
+        dealer_id: orderData.dealerId && Number.isInteger(Number(orderData.dealerId))
+          ? parseInt(orderData.dealerId.toString())
+          : null,
       };
 
       console.log('💾 [CarWash Hook] Sending INSERT to Supabase:', {
@@ -509,51 +517,6 @@ export const useCarWashOrderManagement = () => {
     }
   }, [user, queryClient, t]);
 
-  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
-  // useEffect(() => {
-  //   refreshData();
-  // }, [refreshData]);
-
-  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
-  // useEffect(() => {
-  //   if (!user) return;
-  //
-  //   const channel = supabase
-  //     .channel('car_wash_orders_realtime')
-  //     .on(
-  //       'postgres_changes',
-  //       {
-  //         event: '*',
-  //         schema: 'public',
-  //         table: 'orders',
-  //         filter: 'order_type=eq.car_wash'
-  //       },
-  //       async (payload) => {
-  //         console.log('Car wash order real-time update:', payload);
-  //
-  //         if (payload.eventType === 'INSERT') {
-  //           const newOrder = transformCarWashOrder(payload.new as SupabaseOrder);
-  //           setAllOrders(prevOrders => [newOrder, ...prevOrders]);
-  //         } else if (payload.eventType === 'UPDATE') {
-  //           const updatedOrder = transformCarWashOrder(payload.new as SupabaseOrder);
-  //           setAllOrders(prevOrders =>
-  //             prevOrders.map(order =>
-  //               order.id === updatedOrder.id ? updatedOrder : order
-  //             )
-  //           );
-  //         } else if (payload.eventType === 'DELETE') {
-  //           setAllOrders(prevOrders =>
-  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-  //           );
-  //         }
-  //       }
-  //     )
-  //     .subscribe();
-  //
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [user]);
 
   // Trigger initial fetch when enhancedUser becomes available
   useEffect(() => {
@@ -569,15 +532,23 @@ export const useCarWashOrderManagement = () => {
     }
   }, [carWashOrdersPollingQuery.isFetching, carWashOrdersPollingQuery.dataUpdatedAt]);
 
-  // Listen for status updates to trigger immediate refresh
+  // Listen for status updates to trigger immediate refresh using EventBus
   useEffect(() => {
     const handleStatusUpdate = () => {
       console.log('🔄 [CarWash] Status update detected, triggering immediate polling refresh');
       carWashOrdersPollingQuery.refetch();
     };
 
-    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
-    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+    // Import dynamically to avoid circular dependencies
+    import('@/utils/eventBus').then(({ orderEvents }) => {
+      orderEvents.on('orderStatusUpdated', handleStatusUpdate);
+    });
+
+    return () => {
+      import('@/utils/eventBus').then(({ orderEvents }) => {
+        orderEvents.off('orderStatusUpdated', handleStatusUpdate);
+      });
+    };
   }, [carWashOrdersPollingQuery]);
 
   return {

@@ -29,7 +29,13 @@ interface PermissionGuardProps {
   requireSystemPermission?: boolean;
 }
 
-export const PermissionGuard: React.FC<PermissionGuardProps> = ({
+/**
+ * ✅ FIX #9: Memoized PermissionGuard to prevent unnecessary re-renders
+ * Performance optimization using React.memo
+ *
+ * ⚠️ CRITICAL: All hooks must be called in the same order every render
+ */
+export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
   module,
   permission,
   children,
@@ -42,31 +48,59 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   const { hasPermission, hasModulePermission, hasSystemPermission, canEditOrder, canDeleteOrder, loading, enhancedUser } = usePermissions();
   const { t } = useTranslation();
 
-  // Get dealership modules only if needed
+  // Get dealership modules - ALWAYS call hook regardless of checkDealerModule
   const userDealershipId = (enhancedUser as any)?.dealership_id || 0;
   const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(
-    checkDealerModule ? userDealershipId : 0
-  );
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(userDealershipId);
 
-  // Debug logging
-  console.log(`🔍 [PermissionGuard] Checking access:`, {
-    module,
-    permission,
-    checkDealerModule,
-    isSystemAdmin,
-    requireSystemPermission,
-    hasEnhancedUser: !!enhancedUser
-  });
+  // Debug logging (only in dev)
+  if (import.meta.env.DEV) {
+    console.log(`🔍 [PermissionGuard] Checking access:`, {
+      module,
+      permission,
+      checkDealerModule,
+      isSystemAdmin,
+      requireSystemPermission,
+      hasEnhancedUser: !!enhancedUser
+    });
+  }
 
-  if (loading || (checkDealerModule && modulesLoading)) {
+  // ✅ ALWAYS call all hooks in the same order
+  // Loading state check - REMOVED useMemo to prevent hook order issues
+  const isLoading = loading || (checkDealerModule && modulesLoading);
+
+  // Early return after all hooks are called
+  // ✅ PERF FIX: Show full-page skeleton instead of small bar
+  if (isLoading) {
     return (
-      <div className="animate-pulse">
-        <div className="h-4 bg-muted rounded w-20"></div>
+      <div className="container mx-auto py-8 space-y-6 animate-pulse">
+        <div className="h-8 bg-muted rounded w-1/3"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="h-32 bg-muted rounded"></div>
+          <div className="h-32 bg-muted rounded"></div>
+          <div className="h-32 bg-muted rounded"></div>
+        </div>
+        <div className="h-64 bg-muted rounded"></div>
       </div>
     );
   }
 
+  // ✅ PERF FIX: Prevent "Access Denied" flash when permissions aren't loaded yet
+  if (!enhancedUser && loading) {
+    return (
+      <div className="container mx-auto py-8 space-y-6 animate-pulse">
+        <div className="h-8 bg-muted rounded w-1/3"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="h-32 bg-muted rounded"></div>
+          <div className="h-32 bg-muted rounded"></div>
+          <div className="h-32 bg-muted rounded"></div>
+        </div>
+        <div className="h-64 bg-muted rounded"></div>
+      </div>
+    );
+  }
+
+  // ✅ Simplified hasAccess calculation - REMOVED useMemo to prevent hook order issues
   let hasAccess = false;
 
   try {
@@ -77,41 +111,41 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
     // Check module-level permission (granular or legacy)
     else if (module) {
       // IMPORTANT: When checkDealerModule is true, we enforce stricter checks
-      // User must have at least ONE permission in the specific module
       if (checkDealerModule && !isSystemAdmin) {
-        console.log(`🔍 [PermissionGuard] Enforcing strict module check for ${module}`);
-
-        // Debug: Show what modules the user has permissions for
-        const allUserModules = Array.from(enhancedUser?.module_permissions?.keys() || []);
-        console.log(`   📋 User has permissions in ${allUserModules.length} modules: [${allUserModules.join(', ')}]`);
+        if (import.meta.env.DEV) {
+          console.log(`🔍 [PermissionGuard] Enforcing strict module check for ${module}`);
+          const allUserModules = Array.from(enhancedUser?.module_permissions?.keys() || []);
+          console.log(`   📋 User has permissions in ${allUserModules.length} modules: [${allUserModules.join(', ')}]`);
+        }
 
         // First, check if dealership has the module enabled
         const dealerHasModule = hasModuleAccess(module);
         if (!dealerHasModule) {
-          console.warn(`🚫 [PermissionGuard] Dealership doesn't have ${module} module enabled`);
+          if (import.meta.env.DEV) {
+            console.warn(`🚫 [PermissionGuard] Dealership doesn't have ${module} module enabled`);
+          }
           hasAccess = false;
         } else {
           // Second, verify user has AT LEAST ONE permission in this module
-          // This is the PRIMARY check - user must have module-specific permissions
           const userModulePerms = enhancedUser?.module_permissions?.get(module);
           const hasAnyModulePermission = userModulePerms && userModulePerms.size > 0;
 
-          console.log(`   🔑 Permissions in "${module}": ${userModulePerms ? `[${Array.from(userModulePerms).join(', ')}]` : 'NONE (size: 0)'}`);
+          if (import.meta.env.DEV) {
+            console.log(`   🔑 Permissions in "${module}": ${userModulePerms ? `[${Array.from(userModulePerms).join(', ')}]` : 'NONE'}`);
+          }
 
           if (!hasAnyModulePermission) {
-            console.warn(`🚫 [PermissionGuard] User has NO permissions for ${module} module`);
-            console.warn(`   User has permissions for: ${allUserModules.join(', ')}`);
+            if (import.meta.env.DEV) {
+              console.warn(`🚫 [PermissionGuard] User has NO permissions for ${module} module`);
+            }
             hasAccess = false;
           } else {
-            console.log(`✅ [PermissionGuard] User has ${userModulePerms?.size} permission(s) in ${module}`);
-            // User has permissions in this module, now check the specific permission
+            // User has permissions, check the specific permission
             const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
 
             if (isLegacyLevel) {
-              // Use legacy hasPermission for backward compatibility
               hasAccess = hasPermission(module, permission as PermissionLevel);
             } else {
-              // Use new granular permission system
               hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
             }
 
@@ -126,14 +160,12 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
           }
         }
       } else {
-        // Standard permission check (no module access verification)
+        // Standard permission check
         const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
 
         if (isLegacyLevel) {
-          // Use legacy hasPermission for backward compatibility
           hasAccess = hasPermission(module, permission as PermissionLevel);
         } else {
-          // Use new granular permission system
           hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
         }
 
@@ -147,7 +179,9 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
         }
       }
     } else {
-      console.warn('PermissionGuard: No module specified and not a system permission');
+      if (import.meta.env.DEV) {
+        console.warn('PermissionGuard: No module specified and not a system permission');
+      }
       hasAccess = false;
     }
   } catch (error) {
@@ -155,6 +189,7 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
     hasAccess = false;
   }
 
+  // ✅ Direct render without useMemo to prevent hook order issues
   if (!hasAccess) {
     if (fallback !== undefined) {
       return fallback ? <>{fallback}</> : null;
@@ -186,7 +221,22 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   }
 
   return <>{children}</>;
-};
+}, (prevProps, nextProps) => {
+  // ✅ Custom comparison function for React.memo
+  // Only re-render if these props actually changed
+  return (
+    prevProps.module === nextProps.module &&
+    prevProps.permission === nextProps.permission &&
+    prevProps.checkDealerModule === nextProps.checkDealerModule &&
+    prevProps.requireSystemPermission === nextProps.requireSystemPermission &&
+    prevProps.requireOrderAccess === nextProps.requireOrderAccess &&
+    prevProps.order?.id === nextProps.order?.id &&
+    prevProps.order?.status === nextProps.order?.status &&
+    prevProps.fallback === nextProps.fallback
+  );
+});
+
+PermissionGuard.displayName = 'PermissionGuard';
 
 interface WithPermissionProps {
   module: AppModule;

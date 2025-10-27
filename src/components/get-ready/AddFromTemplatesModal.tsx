@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, FileStack, DollarSign, Clock, AlertCircle } from 'lucide-react';
+import { useCreateWorkItemsFromSelectedTemplates, useWorkItemTemplates } from '@/hooks/useWorkItemTemplates';
 import { cn } from '@/lib/utils';
-import { useWorkItemTemplates, useCreateWorkItemsFromSelectedTemplates } from '@/hooks/useWorkItemTemplates';
+import { AlertCircle, Clock, DollarSign, FileStack, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface AddFromTemplatesModalProps {
   vehicleId: string;
@@ -183,7 +183,7 @@ export function AddFromTemplatesModal({ vehicleId, open, onOpenChange }: AddFrom
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={createFromTemplates.isPending}>
-            {t('common.actions.cancel')}
+            {t('common.action_buttons.cancel')}
           </Button>
           <Button
             onClick={handleAddFromTemplates}

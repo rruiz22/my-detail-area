@@ -6,7 +6,7 @@ import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useDealershipModules } from "@/hooks/useDealershipModules";
 import { usePermissions } from "@/hooks/usePermissions";
 import { getSystemTimezone } from "@/utils/dateUtils";
-import { Building2, Calendar, Clock, Droplets, FileText, Globe, LayoutDashboard, MessageCircle, Nfc, Package, QrCode, RefreshCw, Settings, Shield, ShoppingCart, Sparkles, User, Users2, Wrench, Zap } from "lucide-react";
+import { Building2, Calendar, Clock, Droplets, FileText, Globe, LayoutDashboard, Megaphone, MessageCircle, Nfc, Package, QrCode, RefreshCw, Settings, Shield, ShoppingCart, Sparkles, User, Users2, Wrench, Zap } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation } from "react-router-dom";
@@ -195,9 +195,15 @@ export function AppSidebar() {
 
   // System Admin - only navigation items
   const systemAdminNavItems = React.useMemo(() => {
-    if (enhancedUser?.role !== 'system_admin') return [];
+    // Use same logic as isAdmin check to ensure consistency
+    if (!isAdmin) return [];
 
     return [
+      {
+        title: t('announcements.title', 'Announcements'),
+        url: "/announcements",
+        icon: Megaphone
+      },
       {
         title: t('navigation.landing_page'),
         url: "/landing",
@@ -209,7 +215,7 @@ export function AppSidebar() {
         icon: Sparkles
       }
     ];
-  }, [enhancedUser?.role, t]);
+  }, [isAdmin, t]);
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
 

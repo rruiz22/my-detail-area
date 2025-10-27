@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,6 +66,8 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const [editingService, setEditingService] = useState<DealerService | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -238,14 +241,19 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     }
   };
 
-  const handleDelete = async (serviceId: string) => {
-    if (!confirm(t('services.confirmDelete'))) return;
+  const handleDelete = (serviceId: string) => {
+    setServiceToDelete(serviceId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteService = async () => {
+    if (!serviceToDelete) return;
 
     try {
       const { error } = await supabase
         .from('dealer_services')
         .delete()
-        .eq('id', serviceId);
+        .eq('id', serviceToDelete);
 
       if (error) throw error;
 
@@ -254,6 +262,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         description: t('services.deleted')
       });
 
+      setServiceToDelete(null);
       fetchServices();
     } catch (error) {
       console.error('Error deleting service:', error);
@@ -624,6 +633,18 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
           )}
         </div>
       )}
+
+      {/* Delete Confirmation Dialog - Team Chat Style */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('services.confirm_delete_title', 'Delete Service?')}
+        description={t('services.confirmDelete', 'Are you sure you want to delete this service? This action cannot be undone.')}
+        confirmText={t('common.delete', 'Delete')}
+        cancelText={t('common.cancel', 'Cancel')}
+        onConfirm={confirmDeleteService}
+        variant="destructive"
+      />
     </div>
   );
 };

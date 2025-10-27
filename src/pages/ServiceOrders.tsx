@@ -1,4 +1,3 @@
-import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderFilters } from '@/components/orders/OrderFilters';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
@@ -6,34 +5,43 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { usePermissions } from '@/hooks/usePermissions';
+import type { ServiceOrder, ServiceOrderData } from '@/hooks/useServiceOrderManagement';
 import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
-import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { orderEvents } from '@/utils/eventBus';
+import { dev, warn } from '@/utils/logger';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-// New improved components
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
-import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
-import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { SmartDashboard } from '@/components/sales/SmartDashboard';
 import { useQueryClient } from '@tanstack/react-query';
 
+// Code-split heavy components for better performance
+import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
+import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
+
+const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(m => ({ default: m.OrderDataTable })));
+const OrderKanbanBoard = lazy(() => import('@/components/sales/OrderKanbanBoard').then(m => ({ default: m.OrderKanbanBoard })));
+const SmartDashboard = lazy(() => import('@/components/sales/SmartDashboard').then(m => ({ default: m.SmartDashboard })));
+const OrderCalendarView = lazy(() => import('@/components/orders/OrderCalendarView').then(m => ({ default: m.OrderCalendarView })));
+const ServiceOrderModal = lazy(() => import('@/components/orders/ServiceOrderModal'));
+const UnifiedOrderDetailModal = lazy(() => import('@/components/orders/UnifiedOrderDetailModal').then(m => ({ default: m.UnifiedOrderDetailModal })));
+const QuickFilterBar = lazy(() => import('@/components/sales/QuickFilterBar').then(m => ({ default: m.QuickFilterBar })));
+const ConfirmDialog = lazy(() => import('@/components/ui/confirm-dialog').then(m => ({ default: m.ConfirmDialog })));
+
 export default function ServiceOrders() {
-  console.log('🔵 ServiceOrders component is RENDERING');
+  dev('🔵 ServiceOrders component is RENDERING');
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { confirmDelete } = useSweetAlert();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
   const { hasModulePermission, enhancedUser } = usePermissions();
+
+  // Accessibility: Live region for screen reader announcements
+  const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
 
   // Persistent state
   const [activeFilter, setActiveFilter] = useTabPersistence('service_orders');
@@ -43,10 +51,12 @@ export default function ServiceOrders() {
   // Non-persistent UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [previewOrder, setPreviewOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<ServiceOrder | null>(null);
+  const [previewOrder, setPreviewOrder] = useState<ServiceOrder | null>(null);
   const [weekOffset, setWeekOffset] = useState(0);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
 
   const {
     orders,
@@ -70,17 +80,17 @@ export default function ServiceOrders() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && orders.length > 0 && !hasProcessedUrlOrder) {
-      console.log('🎯 [Service] Processing order from URL (one-time):', orderIdFromUrl);
+      dev('🎯 [Service] Processing order from URL (one-time):', orderIdFromUrl);
 
       // Find the order in the loaded orders
       const targetOrder = orders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        console.log('✅ [Service] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        dev('✅ [Service] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        console.warn('⚠️ [Service] Order not found in current orders list:', orderIdFromUrl);
+        warn('⚠️ [Service] Order not found in current orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -88,11 +98,11 @@ export default function ServiceOrders() {
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t]);
+  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t, toast]);
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create service orders');
+      warn('⚠️ User does not have permission to create service orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -101,14 +111,14 @@ export default function ServiceOrders() {
       return;
     }
 
-    console.log('✅ User has permission to create service orders');
+    dev('✅ User has permission to create service orders');
     setSelectedOrder(null);
     setShowModal(true);
-  };
+  }, [canCreate, t, toast]);
 
-  const handleCreateOrderWithDate = (selectedDate?: Date) => {
+  const handleCreateOrderWithDate = useCallback((selectedDate?: Date) => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create service orders');
+      warn('⚠️ User does not have permission to create service orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -121,59 +131,88 @@ export default function ServiceOrders() {
     // If date is provided from calendar, we could pre-populate the due_date
     // For now, just open the modal
     setShowModal(true);
-  };
+  }, [canCreate, t, toast]);
 
-  const handleEditOrder = (order: any) => {
+  const handleEditOrder = useCallback((order: ServiceOrder) => {
     setSelectedOrder(order);
     setShowModal(true);
     setPreviewOrder(null); // Close preview if open
-  };
+  }, []);
 
-  const handleViewOrder = (order: any) => {
+  const handleViewOrder = useCallback((order: ServiceOrder) => {
     setPreviewOrder(order);
-  };
+  }, []);
 
-  const handleDeleteOrder = async (orderId: string) => {
-    const confirmed = await confirmDelete();
+  const handleDeleteOrder = useCallback((orderId: string) => {
+    setOrderToDelete(orderId);
+    setDeleteDialogOpen(true);
+  }, []);
 
-    if (confirmed) {
-      try {
-        await deleteOrder(orderId);
-      } catch (error) {
-        console.error('❌ Delete failed:', error);
-      }
+  const confirmDeleteOrder = useCallback(async () => {
+    if (!orderToDelete) return;
+
+    try {
+      await deleteOrder(orderToDelete);
+      setOrderToDelete(null);
+      toast({
+        title: t('orders.deleted_success', 'Order deleted successfully')
+      });
+    } catch (error) {
+      console.error('❌ Delete failed:', error);
+      toast({
+        variant: 'destructive',
+        title: t('orders.delete_error', 'Failed to delete order')
+      });
     }
-  };
+  }, [orderToDelete, deleteOrder, t, toast]);
 
-  const handleSaveOrder = async (orderData: any) => {
+  const handleSaveOrder = useCallback(async (orderData: ServiceOrderData) => {
     try {
       if (selectedOrder) {
         await updateOrder(selectedOrder.id, orderData);
+        const message = t('orders.updated_successfully');
+        toast({
+          description: message,
+          variant: 'default'
+        });
+        setLiveRegionMessage(message);
       } else {
         await createOrder(orderData);
+        const message = t('orders.created_successfully');
+        toast({
+          description: message,
+          variant: 'default'
+        });
+        setLiveRegionMessage(message);
       }
       setShowModal(false);
     } catch (error) {
       console.error('Error saving order:', error);
+      const message = t('orders.save_failed');
+      toast({
+        description: message,
+        variant: 'destructive'
+      });
+      setLiveRegionMessage(message);
+      // Re-throw to let modal handle it
+      throw error;
     }
-  };
+  }, [selectedOrder, updateOrder, createOrder, t, toast]);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
       await updateOrder(orderId, { status: newStatus });
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderStatusChanged'));
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId, newStatus, timestamp: Date.now() }
-      }));
+      // Emit typed events using EventBus
+      orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'service' });
+      orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
     } catch (error) {
       console.error('Status change failed:', error);
       throw error;
     }
-  };
+  }, [updateOrder]);
 
-  const handleUpdate = async (orderId: string, updates: any) => {
+  const handleUpdate = useCallback(async (orderId: string, updates: Partial<ServiceOrder>) => {
     try {
       await updateOrder(orderId, updates);
 
@@ -181,42 +220,40 @@ export default function ServiceOrders() {
       // This is faster than polling and doesn't cause visible reload
       queryClient.invalidateQueries({ queryKey: ['orders', 'service'] });
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new CustomEvent('orderUpdated', {
-        detail: { orderId, updates, timestamp: Date.now() }
-      }));
+      // Emit typed event using EventBus
+      orderEvents.emit('orderUpdated', { orderId, updates, timestamp: Date.now() });
     } catch (error) {
       console.error('Order update failed:', error);
       throw error;
     }
-  };
+  }, [updateOrder, queryClient]);
 
 
-  const handleCardClick = (filter: string) => {
+  const handleCardClick = useCallback((filter: string) => {
     setActiveFilter(filter);
     if (filter !== 'dashboard') {
       setViewMode('kanban');
     }
-  };
+  }, [setViewMode]);
 
   // Force table view on mobile (disable kanban and calendar)
   const effectiveViewMode = isMobile ? 'table' : viewMode;
 
-  // Filter orders based on search term
-  const filteredOrders = orders.filter((order: any) => {
-    if (!searchTerm) return true;
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      order.id.toLowerCase().includes(searchLower) ||
-      order.customerName?.toLowerCase().includes(searchLower) ||
-      order.po?.toLowerCase().includes(searchLower) ||
-      order.ro?.toLowerCase().includes(searchLower) ||
-      `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
-    );
-  });
+  // NOTE: Filtering is already done in useServiceOrderManagement hook
+  // No need to filter again here - hook returns filteredOrders based on search
 
   return (
     <div className="space-y-6">
+        {/* Accessibility: Live region for screen reader announcements */}
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+        >
+          {liveRegionMessage}
+        </div>
+
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
@@ -233,6 +270,8 @@ export default function ServiceOrders() {
               size="sm"
               onClick={handleRefresh}
               disabled={isRefreshing}
+              aria-label={t('accessibility.service_orders.refresh_button', 'Refresh service orders')}
+              aria-busy={isRefreshing}
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               {t('common.refresh')}
@@ -242,6 +281,7 @@ export default function ServiceOrders() {
               onClick={handleCreateOrder}
               disabled={!canCreate}
               title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+              aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}
             >
               <Plus className="h-4 w-4 mr-2" />
               {t('common.new_order')}
@@ -250,19 +290,23 @@ export default function ServiceOrders() {
         </div>
 
         {/* Quick Filter Bar */}
-        <QuickFilterBar
-          activeFilter={activeFilter}
-          tabCounts={tabCounts}
-          onFilterChange={setActiveFilter}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          showFilters={showFilters}
-          onToggleFilters={() => setShowFilters(!showFilters)}
-          weekOffset={weekOffset}
-          onWeekChange={setWeekOffset}
-        />
+        <OrderViewErrorBoundary>
+          <Suspense fallback={<OrderViewLoadingFallback />}>
+            <QuickFilterBar
+              activeFilter={activeFilter}
+              tabCounts={tabCounts}
+              onFilterChange={setActiveFilter}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              showFilters={showFilters}
+              onToggleFilters={() => setShowFilters(!showFilters)}
+              weekOffset={weekOffset}
+              onWeekChange={setWeekOffset}
+            />
+          </Suspense>
+        </OrderViewErrorBoundary>
 
         {/* Filters */}
         {showFilters && (
@@ -274,77 +318,105 @@ export default function ServiceOrders() {
         )}
 
         {/* Main Content Area */}
-        <div className="space-y-6">
-          {activeFilter === 'dashboard' ? (
-            <SmartDashboard
-              allOrders={orders}
-              tabCounts={tabCounts}
-              onCardClick={handleCardClick}
-            />
-          ) : (
-            <>
-              {/* Table/Kanban/Calendar Content - Mobile forces table */}
-              {effectiveViewMode === 'kanban' ? (
-                <OrderKanbanBoard
-                  orders={filteredOrders}
-                  onEdit={handleEditOrder}
-                  onView={handleViewOrder}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                />
-              ) : effectiveViewMode === 'calendar' ? (
-                <OrderCalendarView
-                  orders={filteredOrders}
-                  loading={loading}
-                  onEdit={handleEditOrder}
-                  onView={handleViewOrder}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                  onCreateOrder={handleCreateOrderWithDate}
+        <main className="space-y-6" aria-label={t('accessibility.service_orders.main_content', 'Service orders main content')}>
+          <OrderViewErrorBoundary>
+            <Suspense fallback={<OrderViewLoadingFallback />}>
+              {activeFilter === 'dashboard' ? (
+                <SmartDashboard
+                  allOrders={orders}
+                  tabCounts={tabCounts}
+                  onCardClick={handleCardClick}
                 />
               ) : (
-                <OrderDataTable
-                  orders={filteredOrders}
-                  loading={loading}
-                  onEdit={handleEditOrder}
-                  onDelete={handleDeleteOrder}
-                  onView={handleViewOrder}
-                  tabType="service"
-                />
+                <>
+                  {/* Table/Kanban/Calendar Content - Mobile forces table */}
+                  {effectiveViewMode === 'kanban' ? (
+                    <OrderKanbanBoard
+                      orders={orders}
+                      onEdit={handleEditOrder}
+                      onView={handleViewOrder}
+                      onDelete={handleDeleteOrder}
+                      onStatusChange={handleStatusChange}
+                    />
+                  ) : effectiveViewMode === 'calendar' ? (
+                    <OrderCalendarView
+                      orders={orders}
+                      loading={loading}
+                      onEdit={handleEditOrder}
+                      onView={handleViewOrder}
+                      onDelete={handleDeleteOrder}
+                      onStatusChange={handleStatusChange}
+                      onCreateOrder={handleCreateOrderWithDate}
+                    />
+                  ) : (
+                    <OrderDataTable
+                      orders={orders}
+                      loading={loading}
+                      onEdit={handleEditOrder}
+                      onDelete={handleDeleteOrder}
+                      onView={handleViewOrder}
+                      tabType="service"
+                    />
+                  )}
+                </>
               )}
-            </>
-          )}
-        </div>
+            </Suspense>
+          </OrderViewErrorBoundary>
+        </main>
 
         {/* Modals */}
         {showModal && (
-          <ServiceOrderModal
-            order={selectedOrder}
-            open={showModal}
-            onClose={() => setShowModal(false)}
-            onSave={handleSaveOrder}
-          />
+          <OrderViewErrorBoundary>
+            <Suspense fallback={<OrderViewLoadingFallback />}>
+              <ServiceOrderModal
+                order={selectedOrder}
+                open={showModal}
+                onClose={() => setShowModal(false)}
+                onSave={handleSaveOrder}
+              />
+            </Suspense>
+          </OrderViewErrorBoundary>
         )}
 
         {/* Detail Modal - Unified Full Screen */}
         {previewOrder && (
-          <UnifiedOrderDetailModal
-            orderType="service"
-            order={previewOrder}
-            open={true}
-            onClose={() => {
-              setPreviewOrder(null);
-              // If we came from URL parameter, redirect to clean /service to avoid loop
-              if (orderIdFromUrl) {
-                navigate('/service', { replace: true });
-              }
-            }}
-            onEdit={handleEditOrder}
-            onDelete={handleDeleteOrder}
-            onStatusChange={handleStatusChange}
-            onUpdate={handleUpdate}
-          />
+          <OrderViewErrorBoundary>
+            <Suspense fallback={<OrderViewLoadingFallback />}>
+              <UnifiedOrderDetailModal
+                orderType="service"
+                order={previewOrder}
+                open={true}
+                onClose={() => {
+                  setPreviewOrder(null);
+                  // If we came from URL parameter, redirect to clean /service to avoid loop
+                  if (orderIdFromUrl) {
+                    navigate('/service', { replace: true });
+                  }
+                }}
+                onEdit={handleEditOrder}
+                onDelete={handleDeleteOrder}
+                onStatusChange={handleStatusChange}
+                onUpdate={handleUpdate}
+              />
+            </Suspense>
+          </OrderViewErrorBoundary>
         )}
+
+        {/* Delete Confirmation Dialog - Team Chat Style */}
+        <OrderViewErrorBoundary>
+          <Suspense fallback={null}>
+            <ConfirmDialog
+              open={deleteDialogOpen}
+              onOpenChange={setDeleteDialogOpen}
+              title={t('orders.confirm_delete_title', 'Delete Order?')}
+              description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
+              confirmText={t('common.delete', 'Delete')}
+              cancelText={t('common.cancel', 'Cancel')}
+              onConfirm={confirmDeleteOrder}
+              variant="destructive"
+            />
+          </Suspense>
+        </OrderViewErrorBoundary>
     </div>
   );
 }

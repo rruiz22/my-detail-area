@@ -1,14 +1,14 @@
-import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { UserPresenceIndicator } from '../presence/UserPresenceIndicator';
 import type { EntityFollower } from '@/hooks/useEntityFollowers';
+import { UserPresenceIndicator } from '../presence/UserPresenceIndicator';
 
 interface FollowersAvatarStackProps {
   followers: EntityFollower[];
@@ -27,6 +27,12 @@ export function FollowersAvatarStack({
 }: FollowersAvatarStackProps) {
   const visibleFollowers = followers.slice(0, maxVisible);
   const remainingCount = Math.max(0, followers.length - maxVisible);
+
+  const sizePixels = {
+    sm: 24,
+    md: 32,
+    lg: 40
+  };
 
   const sizeClasses = {
     sm: 'h-6 w-6',
@@ -47,7 +53,7 @@ export function FollowersAvatarStack({
           {visibleFollowers.map((follower, index) => (
             <Tooltip key={follower.id}>
               <TooltipTrigger asChild>
-                <div 
+                <div
                   className={`relative ${index > 0 ? offsetClasses[size] : ''} transition-transform hover:scale-110 hover:z-10`}
                   style={{ zIndex: visibleFollowers.length - index }}
                 >
@@ -56,21 +62,14 @@ export function FollowersAvatarStack({
                     size={size}
                     showRing
                   >
-                    <Avatar className={`${sizeClasses[size]} border-2 border-background`}>
-                      <AvatarImage 
-                        src={`https://api.dicebear.com/7.x/initials/svg?seed=${follower.user_name}`}
-                        alt={follower.user_name}
+                    <div className={`${sizeClasses[size]} border-2 border-background rounded-full overflow-hidden`}>
+                      <AvatarSystem
+                        name={follower.user_name}
+                        email={follower.user_email}
+                        seed={follower.avatar_seed as any}
+                        size={sizePixels[size]}
                       />
-                      <AvatarFallback className="text-xs">
-                        {follower.user_name
-                          .split(' ')
-                          .map(n => n[0])
-                          .join('')
-                          .toUpperCase()
-                          .slice(0, 2)
-                        }
-                      </AvatarFallback>
-                    </Avatar>
+                    </div>
                   </UserPresenceIndicator>
                 </div>
               </TooltipTrigger>
@@ -83,8 +82,8 @@ export function FollowersAvatarStack({
                   <div className="text-xs text-muted-foreground mt-1">
                     Following since {new Date(follower.followed_at).toLocaleDateString()}
                   </div>
-                  <Badge 
-                    variant="outline" 
+                  <Badge
+                    variant="outline"
                     className="mt-1 text-xs"
                   >
                     {follower.notification_level}
@@ -93,11 +92,11 @@ export function FollowersAvatarStack({
               </TooltipContent>
             </Tooltip>
           ))}
-          
+
           {remainingCount > 0 && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div 
+                <div
                   className={`relative ${offsetClasses[size]} transition-transform hover:scale-110`}
                   style={{ zIndex: 0 }}
                 >
@@ -121,10 +120,10 @@ export function FollowersAvatarStack({
             </Tooltip>
           )}
         </div>
-        
+
         {showCount && (
-          <Badge 
-            variant="secondary" 
+          <Badge
+            variant="secondary"
             className="ml-3 text-xs"
           >
             {followers.length} follower{followers.length === 1 ? '' : 's'}

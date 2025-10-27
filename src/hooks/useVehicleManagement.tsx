@@ -1,10 +1,10 @@
 // Vehicle Management Hook - Updated 2025-10-01
-import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 
 interface CreateVehicleInput {
   stock_number: string;
@@ -29,6 +29,7 @@ export function useVehicleManagement() {
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { toast } = useToast();
 
 
   // Create Vehicle
@@ -108,11 +109,18 @@ export function useVehicleManagement() {
       // Invalidate both vehicles and steps queries to update counts
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.vehicle_form.success.created'));
+      toast({
+        title: t('common.success'),
+        description: t('get_ready.vehicle_form.success.created'),
+      });
     },
     onError: (error: Error) => {
       console.error('Failed to create vehicle:', error);
-      toast.error(t('get_ready.vehicle_form.errors.save_failed'));
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.vehicle_form.errors.save_failed'),
+        variant: 'destructive',
+      });
     },
   });
 
@@ -160,11 +168,18 @@ export function useVehicleManagement() {
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.vehicle_form.success.updated'));
+      toast({
+        title: t('common.success'),
+        description: t('get_ready.vehicle_form.success.updated'),
+      });
     },
     onError: (error: Error) => {
       console.error('Failed to update vehicle:', error);
-      toast.error(t('get_ready.vehicle_form.errors.save_failed'));
+      toast({
+        title: t('common.error'),
+        description: t('get_ready.vehicle_form.errors.save_failed'),
+        variant: 'destructive',
+      });
     },
   });
 
@@ -211,11 +226,58 @@ export function useVehicleManagement() {
   // Move Vehicle to Step
   const moveVehicleMutation = useMutation({
     mutationFn: async ({ vehicleId, stepId }: { vehicleId: string; stepId: string }) => {
+      // ✨ NEW: Check for pending or in-progress work items before moving
+      const { data: workItems, error: workItemsError } = await supabase
+        .from('get_ready_work_items')
+        .select('id, title, status')
+        .eq('vehicle_id', vehicleId)
+        .in('status', ['pending', 'in_progress', 'awaiting_approval', 'rejected', 'blocked']);
+
+      if (workItemsError) {
+        console.error('Error checking work items:', workItemsError);
+        throw new Error('Failed to check work items');
+      }
+
+      if (workItems && workItems.length > 0) {
+        const pendingItems = workItems.filter(item => item.status === 'pending');
+        const inProgressItems = workItems.filter(item => item.status === 'in_progress');
+        const awaitingApprovalItems = workItems.filter(item => item.status === 'awaiting_approval');
+        const rejectedItems = workItems.filter(item => item.status === 'rejected');
+        const blockedItems = workItems.filter(item => item.status === 'blocked');
+
+        let errorMessage = 'Cannot move vehicle to next step. ';
+        const issues = [];
+
+        if (pendingItems.length > 0) {
+          issues.push(`${pendingItems.length} pending work item${pendingItems.length > 1 ? 's' : ''}`);
+        }
+        if (inProgressItems.length > 0) {
+          issues.push(`${inProgressItems.length} work item${inProgressItems.length > 1 ? 's' : ''} in progress`);
+        }
+        if (awaitingApprovalItems.length > 0) {
+          issues.push(`${awaitingApprovalItems.length} work item${awaitingApprovalItems.length > 1 ? 's' : ''} awaiting approval`);
+        }
+        if (rejectedItems.length > 0) {
+          issues.push(`${rejectedItems.length} rejected work item${rejectedItems.length > 1 ? 's' : ''}`);
+        }
+        if (blockedItems.length > 0) {
+          issues.push(`${blockedItems.length} blocked work item${blockedItems.length > 1 ? 's' : ''}`);
+        }
+
+        errorMessage += issues.join(', ') + '. Please complete or resolve all work items before moving to the next step.';
+        throw new Error(errorMessage);
+      }
+
+      // ✨ UPDATED: Don't reset intake_date - let trigger handle step history
+      // The manage_vehicle_step_history trigger will automatically:
+      // - Close the previous step visit with exit_date
+      // - Create a new step history entry with current timestamp
+      // - Track visit numbers and backtrack detection
       const { data, error } = await supabase
         .from('get_ready_vehicles')
         .update({
           step_id: stepId,
-          intake_date: new Date().toISOString(), // Reset intake date for new step
+          // ❌ REMOVED: intake_date reset (preserves original intake date)
         })
         .eq('id', vehicleId)
         .select()
@@ -236,11 +298,28 @@ export function useVehicleManagement() {
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.vehicle_form.success.moved'));
+      toast({
+        title: t('common.success'),
+        description: t('get_ready.vehicle_form.success.moved'),
+      });
     },
     onError: (error: Error) => {
       console.error('Failed to move vehicle:', error);
-      toast.error(t('get_ready.vehicle_form.errors.move_failed'));
+
+      // Show specific error message if it's a work items validation error
+      if (error.message && error.message.includes('Cannot move vehicle to next step')) {
+        toast({
+          title: t('common.error'),
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: t('common.error'),
+          description: t('get_ready.vehicle_form.errors.move_failed'),
+          variant: 'destructive',
+        });
+      }
     },
   });
 
@@ -358,5 +437,3 @@ export function useVehicleManagement() {
     isRequestingApproval: requestApprovalMutation.isPending,
   };
 }
- 
-

@@ -61,20 +61,25 @@ export function QuickAddWorkItemModal({
   };
 
   const handleSelectTemplate = async (template: typeof templates[0]) => {
-    const workItemData: CreateWorkItemInput = {
-      vehicle_id: vehicleId,
-      title: template.name,
-      description: template.description,
-      work_type: template.work_type,
-      priority: template.priority,
-      estimated_cost: template.estimated_cost,
-      estimated_hours: template.estimated_hours,
-      approval_required: template.approval_required,
-    };
+    try {
+      const workItemData: CreateWorkItemInput = {
+        vehicle_id: vehicleId,
+        title: template.name,
+        description: template.description,
+        work_type: template.work_type,
+        priority: template.priority,
+        estimated_cost: template.estimated_cost,
+        estimated_hours: template.estimated_hours,
+        approval_required: template.approval_required,
+      };
 
-    await createWorkItem.mutateAsync(workItemData);
-    onOpenChange(false);
-    setSearchQuery('');
+      await createWorkItem.mutateAsync(workItemData);
+      onOpenChange(false);
+      setSearchQuery('');
+    } catch (error) {
+      // Error is already handled by the hook's onError callback
+      // No need to do anything here, just prevent the modal from closing
+    }
   };
 
   const handleCreateCustomClick = () => {

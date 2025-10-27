@@ -11,9 +11,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { IntegrationSettings } from '@/components/settings/IntegrationSettings';
+import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
+import { PlatformBrandingSettings } from '@/components/settings/platform/PlatformBrandingSettings';
+import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
+import { SecurityAuditLogViewer } from '@/components/settings/security/SecurityAuditLogViewer';
+import { NotificationTemplatesManager } from '@/components/settings/notifications/NotificationTemplatesManager';
 import { StorageDevTools } from "@/components/dev/StorageDevTools";
 import { developmentConfig } from "@/config/development";
-import { Save, Database, Mail, MessageSquare, User, Building2, Palette, Bell } from "lucide-react";
+import { Save, Database, Mail, MessageSquare, User, Building2, Palette, Bell, Shield, Settings as SettingsIcon } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 
 interface UserPreferences {
@@ -29,6 +34,7 @@ export default function Settings() {
   const { toast } = useToast();
   const { enhancedUser } = usePermissions();
   const [activeTab, setActiveTab] = useTabPersistence('settings');
+  const perms = useSettingsPermissions();
 
   const [userPrefs, setUserPrefs] = useState<UserPreferences>({
     email_notifications: true,
@@ -182,7 +188,7 @@ export default function Settings() {
         {/* Tabs Skeleton */}
         <div className="space-y-6">
           <div className="flex space-x-1 border rounded-lg p-1">
-            {[1, 2, 3, 4].map(i => (
+            {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="h-9 bg-muted rounded flex-1 animate-pulse"></div>
             ))}
           </div>
@@ -222,7 +228,13 @@ export default function Settings() {
 
       {/* Settings Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
+          {perms.canAccessPlatform && (
+            <TabsTrigger value="platform" className="flex items-center gap-2">
+              <SettingsIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('settings.platform')}</span>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">{t('settings.profile')}</span>
@@ -239,7 +251,40 @@ export default function Settings() {
             <Database className="h-4 w-4" />
             <span className="hidden sm:inline">{t('settings.integrations')}</span>
           </TabsTrigger>
+          {perms.canAccessSecurity && (
+            <TabsTrigger value="security" className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('settings.security')}</span>
+            </TabsTrigger>
+          )}
         </TabsList>
+
+
+        {/* Platform Settings */}
+        {perms.canAccessPlatform && (
+          <TabsContent value="platform" className="space-y-6">
+            <Tabs defaultValue="branding" className="space-y-6">
+              <TabsList>
+                <TabsTrigger value="branding" className="flex items-center gap-2">
+                  <Palette className="h-4 w-4" />
+                  {t('settings.branding')}
+                </TabsTrigger>
+                <TabsTrigger value="general" className="flex items-center gap-2">
+                  <SettingsIcon className="h-4 w-4" />
+                  {t('settings.general')}
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="branding">
+                <PlatformBrandingSettings />
+              </TabsContent>
+
+              <TabsContent value="general">
+                <PlatformGeneralSettings />
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
+        )}
 
         {/* Profile Settings */}
         <TabsContent value="profile" className="space-y-6">
@@ -283,64 +328,87 @@ export default function Settings() {
 
         {/* Notification Settings */}
         <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                {t('settings.notification_preferences')}
-              </CardTitle>
-              <CardDescription>
-                {t('settings.notification_description')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>{t('settings.email_notifications')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.email_alerts_description')}
-                  </p>
-                </div>
-                <Switch
-                  checked={userPrefs.email_notifications}
-                  onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, email_notifications: checked }))}
-                />
-              </div>
+          <Tabs defaultValue="preferences" className="space-y-6">
+            <TabsList>
+              <TabsTrigger value="preferences" className="flex items-center gap-2">
+                <Bell className="h-4 w-4" />
+                {t('settings.preferences')}
+              </TabsTrigger>
+              {perms.canManageTemplates && (
+                <TabsTrigger value="templates" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  {t('settings.templates')}
+                </TabsTrigger>
+              )}
+            </TabsList>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>{t('settings.sms_notifications')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.sms_alerts_description')}
-                  </p>
-                </div>
-                <Switch
-                  checked={userPrefs.sms_notifications}
-                  onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, sms_notifications: checked }))}
-                />
-              </div>
+            <TabsContent value="preferences">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5" />
+                    {t('settings.notification_preferences')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('settings.notification_description')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label>{t('settings.email_notifications')}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t('settings.email_alerts_description')}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={userPrefs.email_notifications}
+                      onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, email_notifications: checked }))}
+                    />
+                  </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>{t('settings.in_app_alerts')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.toast_description')}
-                  </p>
-                </div>
-                <Switch
-                  checked={userPrefs.in_app_alerts}
-                  onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, in_app_alerts: checked }))}
-                />
-              </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label>{t('settings.sms_notifications')}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t('settings.sms_alerts_description')}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={userPrefs.sms_notifications}
+                      onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, sms_notifications: checked }))}
+                    />
+                  </div>
 
-              <div className="pt-4">
-                <Button onClick={saveUserPreferences} disabled={saving}>
-                  <Save className="h-4 w-4 mr-2" />
-                  {t('settings.save_preferences')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label>{t('settings.in_app_alerts')}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t('settings.toast_description')}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={userPrefs.in_app_alerts}
+                      onCheckedChange={(checked) => setUserPrefs(prev => ({ ...prev, in_app_alerts: checked }))}
+                    />
+                  </div>
+
+                  <div className="pt-4">
+                    <Button onClick={saveUserPreferences} disabled={saving}>
+                      <Save className="h-4 w-4 mr-2" />
+                      {t('settings.save_preferences')}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {perms.canManageTemplates && (
+              <TabsContent value="templates">
+                <NotificationTemplatesManager />
+              </TabsContent>
+            )}
+          </Tabs>
         </TabsContent>
 
         {/* Dealership Settings */}
@@ -398,6 +466,14 @@ export default function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
+
+
+        {/* Security Settings */}
+        {perms.canAccessSecurity && (
+          <TabsContent value="security" className="space-y-6">
+            <SecurityAuditLogViewer />
+          </TabsContent>
+        )}
 
         {/* System Integrations */}
         <TabsContent value="integrations" className="space-y-6">
