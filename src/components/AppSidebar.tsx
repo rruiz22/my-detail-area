@@ -46,31 +46,36 @@ export function AppSidebar() {
         title: t('navigation.sales_orders'),
         url: "/sales",
         icon: ShoppingCart,
-        orderType: 'sales'
+        orderType: 'sales',
+        module: 'sales_orders' as const
       },
       {
         title: t('navigation.service_orders'),
         url: "/service",
         icon: Wrench,
-        orderType: 'service'
+        orderType: 'service',
+        module: 'service_orders' as const
       },
       {
         title: t('navigation.recon_orders'),
         url: "/recon",
         icon: RefreshCw,
-        orderType: 'recon'
+        orderType: 'recon',
+        module: 'recon_orders' as const
       },
       {
         title: t('navigation.car_wash'),
         url: "/carwash",
         icon: Droplets,
-        orderType: 'carwash'
+        orderType: 'carwash',
+        module: 'car_wash' as const
       },
       {
         title: t('navigation.reports'),
         url: "/reports",
         icon: FileText,
-        orderType: null // Reports is accessible to all users with permission
+        orderType: null, // Reports is accessible based on module permissions
+        module: 'reports' as const
       },
       {
         title: t('navigation.get_ready'),
