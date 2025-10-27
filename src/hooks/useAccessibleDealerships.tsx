@@ -199,14 +199,17 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
     if (currentDealership && dealerships.length > 0) {
       const updatedDealership = dealerships.find(d => d.id === currentDealership.id);
       if (updatedDealership) {
-        // Only update if the data actually changed (prevent unnecessary re-renders)
-        if (JSON.stringify(updatedDealership) !== JSON.stringify(currentDealership)) {
-          console.log('🔄 [Sync] Updating currentDealership with fresh data from query');
+        // Only update if logo_url or thumbnail_logo_url changed (specific comparison)
+        if (
+          updatedDealership.logo_url !== currentDealership.logo_url ||
+          updatedDealership.thumbnail_logo_url !== currentDealership.thumbnail_logo_url
+        ) {
+          console.log('🔄 [Sync] Logo changed - updating currentDealership');
           setCurrentDealership(updatedDealership);
         }
       }
     }
-  }, [dealerships]); // Re-run when dealerships array changes (after refetch)
+  }, [dealerships, currentDealership]); // Include currentDealership to prevent stale closure
 
   // Listen for dealership filter changes from DealershipFilter component
   useEffect(() => {
