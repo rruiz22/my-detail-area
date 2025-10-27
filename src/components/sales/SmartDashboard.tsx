@@ -12,7 +12,14 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
+
+interface OrderService {
+  id: string;
+  name: string;
+  price?: number;
+  description?: string;
+}
 
 interface Order {
   id: string;
@@ -23,7 +30,7 @@ interface Order {
   comments?: number;
   vehicleMake?: string;
   vehicleModel?: string;
-  services?: any[];
+  services?: OrderService[];
 }
 
 interface SmartDashboardProps {
@@ -32,83 +39,95 @@ interface SmartDashboardProps {
   onCardClick: (filter: string) => void;
 }
 
-export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashboardProps) {
+export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashboardProps) {
   const { t } = useTranslation();
 
-  // Calculate real metrics from orders
+  // Calculate real metrics from orders - OPTIMIZED: Single-pass reduce O(n)
   const metrics = useMemo(() => {
     const now = new Date();
+    const nowDateString = now.toDateString();
 
-    // Delayed orders: past due date and not completed
-    const delayed = allOrders.filter(order => {
-      if (!order.dueDate || order.status === 'completed' || order.status === 'cancelled') {
-        return false;
+    // Single-pass accumulator for ALL metrics
+    const calculated = allOrders.reduce((acc, order) => {
+      // Total orders count
+      acc.total++;
+
+      // Delayed orders logic
+      if (order.dueDate && order.status !== 'completed' && order.status !== 'cancelled') {
+        const dueDate = new Date(order.dueDate);
+        if (dueDate < now) {
+          acc.delayed++;
+          // Delayed today specifically
+          if (dueDate.toDateString() === nowDateString) {
+            acc.delayedToday++;
+          }
+        }
       }
-      return new Date(order.dueDate) < now;
-    }).length;
 
-    // Delayed today specifically
-    const delayedToday = allOrders.filter(order => {
-      if (!order.dueDate || order.status === 'completed' || order.status === 'cancelled') {
-        return false;
+      // Unassigned orders
+      if (!order.assignedTo || order.assignedTo === 'Unassigned') {
+        acc.unassigned++;
       }
-      const dueDate = new Date(order.dueDate);
-      return dueDate < now && dueDate.toDateString() === now.toDateString();
-    }).length;
 
-    // Unassigned orders
-    const unassigned = allOrders.filter(order =>
-      !order.assignedTo || order.assignedTo === 'Unassigned'
-    ).length;
+      // Comments tracking
+      const commentsCount = typeof order.comments === 'number' ? order.comments : 0;
+      if (commentsCount > 0) {
+        acc.withComments++;
+        acc.totalComments += commentsCount;
+      }
 
-    // Orders with comments
-    const withComments = allOrders.filter(order =>
-      typeof order.comments === 'number' && order.comments > 0
-    ).length;
+      // Vehicle make tracking
+      if (order.vehicleMake) {
+        acc.makeCount[order.vehicleMake] = (acc.makeCount[order.vehicleMake] || 0) + 1;
+      }
 
-    // Total comments
-    const totalComments = allOrders.reduce((sum, order) =>
-      sum + (typeof order.comments === 'number' ? order.comments : 0), 0
-    );
+      // VIN/Vehicle model tracking
+      if (order.vehicleModel) {
+        acc.withVin++;
+      }
 
-    // Avg comments per order (with comments)
-    const avgComments = withComments > 0
-      ? (totalComments / withComments).toFixed(1)
+      return acc;
+    }, {
+      total: 0,
+      delayed: 0,
+      delayedToday: 0,
+      unassigned: 0,
+      withComments: 0,
+      totalComments: 0,
+      makeCount: {} as Record<string, number>,
+      withVin: 0
+    });
+
+    // Post-processing (single operations, not iterations)
+    const avgComments = calculated.withComments > 0
+      ? (calculated.totalComments / calculated.withComments).toFixed(1)
       : '0';
 
-    // Top 3 vehicle makes
-    const makeCount = allOrders.reduce((acc, order) => {
-      if (order.vehicleMake) {
-        acc[order.vehicleMake] = (acc[order.vehicleMake] || 0) + 1;
-      }
-      return acc;
-    }, {} as Record<string, number>);
-
-    const topMakes = Object.entries(makeCount)
+    const topMakes = Object.entries(calculated.makeCount)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 3);
 
-    // Orders with VIN
-    const total = allOrders.length;
-    const withVin = allOrders.filter(order => order.vehicleModel).length;
-    const vinCompletion = total > 0 ? Math.round((withVin / total) * 100) : 0;
+    const vinCompletion = calculated.total > 0
+      ? Math.round((calculated.withVin / calculated.total) * 100)
+      : 0;
 
-    // Completion rate
     const completed = tabCounts.complete || 0;
-    const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const completionRate = calculated.total > 0
+      ? Math.round((completed / calculated.total) * 100)
+      : 0;
 
     return {
-      delayed,
-      delayedToday,
-      unassigned,
-      withComments,
-      totalComments,
+      delayed: calculated.delayed,
+      delayedToday: calculated.delayedToday,
+      unassigned: calculated.unassigned,
+      withComments: calculated.withComments,
+      totalComments: calculated.totalComments,
       avgComments,
       topMakes,
       vinCompletion,
       completionRate,
       completed,
-      total
+      total: calculated.total
     };
   }, [allOrders, tabCounts]);
 
@@ -156,16 +175,25 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="region" aria-label={t('accessibility.dashboard.overview')}>
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" role="list" aria-label={t('accessibility.dashboard.kpi_cards')}>
         {kpiCards.map((card) => {
           const Icon = card.icon;
           return (
             <Card
               key={card.id}
-              className="border-border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] group"
+              className="border-border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
               onClick={() => onCardClick(card.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onCardClick(card.id);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label={t('accessibility.dashboard.kpi_card', { title: card.title, value: card.value })}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
@@ -194,12 +222,12 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" role="list" aria-label={t('accessibility.dashboard.stats_cards')}>
         {/* Completion Rate */}
-        <Card className="border-border shadow-sm">
+        <Card className="border-border shadow-sm" role="article" aria-label={t('accessibility.dashboard.completion_rate')}>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <CheckCircle className="h-4 w-4" />
+              <CheckCircle className="h-4 w-4" aria-hidden="true" />
               Completion Rate
             </CardTitle>
           </CardHeader>
@@ -207,9 +235,9 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Progress</span>
-                <span className="font-medium">{metrics.completionRate}%</span>
+                <span className="font-medium" aria-label={t('accessibility.dashboard.progress_percentage', { value: metrics.completionRate })}>{metrics.completionRate}%</span>
               </div>
-              <Progress value={metrics.completionRate} className="h-2" />
+              <Progress value={metrics.completionRate} className="h-2" aria-label={`${metrics.completionRate}% complete`} />
               <p className="text-xs text-muted-foreground">
                 {metrics.completed} of {metrics.total} orders completed
               </p>
@@ -218,10 +246,10 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
         </Card>
 
         {/* Team Activity */}
-        <Card className="border-border shadow-sm">
+        <Card className="border-border shadow-sm" role="article" aria-label={t('accessibility.dashboard.team_activity')}>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
               Team Activity
             </CardTitle>
           </CardHeader>
@@ -229,25 +257,25 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Orders with comments</span>
-                <span className="font-semibold">{metrics.withComments}</span>
+                <span className="font-semibold" aria-label={t('accessibility.dashboard.orders_with_comments', { count: metrics.withComments })}>{metrics.withComments}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Total comments</span>
-                <span className="font-semibold">{metrics.totalComments}</span>
+                <span className="font-semibold" aria-label={t('accessibility.dashboard.total_comments', { count: metrics.totalComments })}>{metrics.totalComments}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Avg per order</span>
-                <span className="font-semibold">{metrics.avgComments}</span>
+                <span className="font-semibold" aria-label={t('accessibility.dashboard.average_comments', { value: metrics.avgComments })}>{metrics.avgComments}</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Vehicle Insights */}
-        <Card className="border-border shadow-sm">
+        <Card className="border-border shadow-sm" role="article" aria-label={t('accessibility.dashboard.vehicle_insights')}>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Car className="h-4 w-4" />
+              <Car className="h-4 w-4" aria-hidden="true" />
               Vehicle Insights
             </CardTitle>
           </CardHeader>
@@ -259,12 +287,12 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
                   {metrics.topMakes.map(([make, count]) => (
                     <div key={make} className="flex justify-between text-sm">
                       <span className="font-medium">{make}</span>
-                      <span className="text-muted-foreground">{count} orders</span>
+                      <span className="text-muted-foreground" aria-label={t('accessibility.dashboard.vehicle_count', { make, count })}>{count} orders</span>
                     </div>
                   ))}
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">No vehicle data yet</p>
+                <p className="text-sm text-muted-foreground" role="status">No vehicle data yet</p>
               )}
             </div>
           </CardContent>
@@ -272,4 +300,14 @@ export function SmartDashboard({ allOrders, tabCounts, onCardClick }: SmartDashb
       </div>
     </div>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison - compare allOrders and tabCounts
+  return (
+    prevProps.allOrders.length === nextProps.allOrders.length &&
+    JSON.stringify(prevProps.tabCounts) === JSON.stringify(nextProps.tabCounts) &&
+    prevProps.allOrders.every((order, index) =>
+      order.id === nextProps.allOrders[index]?.id &&
+      order.status === nextProps.allOrders[index]?.status
+    )
+  );
+});
