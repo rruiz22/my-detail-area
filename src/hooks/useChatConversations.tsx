@@ -20,39 +20,63 @@ export interface ChatConversation {
   max_participants?: number;
   allow_external_users: boolean;
   metadata: Record<string, any>;
-  
-  // Computed fields
+
+  // Computed fields from RPCs
   participant_count?: number;
   unread_count?: number;
-  last_message_preview?: string;
+
+  // Enhanced last message preview from get_conversation_last_messages RPC
+  last_message_preview?: {
+    content: string;
+    type: string;
+    at: string;
+    user_id: string;
+  };
+
+  // Other participant info for direct conversations
   other_participant?: {
     id: string;
     name: string;
     avatar_url?: string;
     is_online?: boolean;
   };
+
+  // Full participants list (populated on-demand via getConversationParticipants)
+  participants?: Array<{
+    user_id: string;
+    user_name: string;
+    user_email: string;
+    user_avatar_url: string;
+    permission_level: string;
+    is_active: boolean;
+    last_read_at: string;
+    presence_status: string;
+  }>;
 }
 
 interface UseChatConversationsReturn {
   conversations: ChatConversation[];
   loading: boolean;
   error: string | null;
-  
+
   // Actions
   createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;
   updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;
   archiveConversation: (id: string) => Promise<boolean>;
   deleteConversation: (id: string) => Promise<boolean>;
-  
+
   // Search and filters
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   conversationType: string;
   setConversationType: (type: string) => void;
-  
+
   // Utils
   refreshConversations: () => void;
   getConversationById: (id: string) => ChatConversation | undefined;
+
+  // NEW: On-demand participant fetching from get_conversation_participants RPC
+  getConversationParticipants: (conversationId: string) => Promise<ChatConversation['participants']>;
 }
 
 interface CreateConversationData {
@@ -76,7 +100,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
 
   const activeDealerId = dealerId || dealerships[0]?.id;
 
-  // Fetch conversations with participants and unread counts
+  // Fetch conversations with optimized batch RPC calls
   const fetchConversations = useCallback(async () => {
     if (!user?.id || !activeDealerId) return;
 
@@ -84,7 +108,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
       setLoading(true);
       setError(null);
 
-      // Get conversations where user is participant
+      // Step 1: Get base conversations where user is participant
       const { data: conversationsData, error: conversationsError } = await supabase
         .from('chat_conversations')
         .select(`
@@ -102,63 +126,96 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
         .order('last_message_at', { ascending: false, nullsFirst: false });
 
       if (conversationsError) throw conversationsError;
+      if (!conversationsData || conversationsData.length === 0) {
+        setConversations([]);
+        return;
+      }
 
-      // Get real unread counts for each conversation
-      const conversationIds = conversationsData?.map(c => c.id) || [];
-      
-      let unreadData: { conversation_id: string; unread_count: number }[] = [];
-      if (conversationIds.length > 0) {
+      const conversationIds = conversationsData.map(c => c.id);
+
+      // Step 2: Batch call RPC #1 - get_unread_message_counts
+      let unreadData: Array<{ conversation_id: string; unread_count: number }> = [];
+      try {
         const { data: unreadCounts, error: unreadError } = await supabase
           .rpc('get_unread_message_counts', {
             conversation_ids: conversationIds,
             user_id: user.id
           });
 
-        if (!unreadError && unreadCounts) {
+        if (unreadError) {
+          console.error('Error fetching unread counts (non-critical):', unreadError);
+          // Graceful degradation - continue without unread counts
+        } else if (unreadCounts) {
           unreadData = unreadCounts;
         }
+      } catch (error) {
+        console.error('Failed to fetch unread counts (non-critical):', error);
+        // Graceful degradation - continue without unread counts
       }
 
-      // Get real last message previews
-      let lastMessages: any[] = [];
-      if (conversationIds.length > 0) {
+      // Step 3: Batch call RPC #2 - get_conversation_last_messages
+      let lastMessages: Array<{
+        conversation_id: string;
+        last_message_content: string;
+        last_message_at: string;
+        last_message_type: string;
+        last_message_user_id: string;
+      }> = [];
+      try {
         const { data: lastMessageData, error: lastMessageError } = await supabase
           .rpc('get_conversation_last_messages', {
             conversation_ids: conversationIds
           });
 
-        if (!lastMessageError && lastMessageData) {
+        if (lastMessageError) {
+          console.error('Error fetching last messages (non-critical):', lastMessageError);
+          // Graceful degradation - continue without last messages
+        } else if (lastMessageData) {
           lastMessages = lastMessageData;
         }
+      } catch (error) {
+        console.error('Failed to fetch last messages (non-critical):', error);
+        // Graceful degradation - continue without last messages
       }
 
-      // Get participants data with real profiles
+      // Step 4: Batch call RPC #3 - get_conversation_participants (for participant count and direct chat info)
       const participantsPromises = conversationIds.map(async (convId) => {
-        const { data: participants } = await supabase
-          .rpc('get_conversation_participants', {
-            conversation_uuid: convId,
-            requesting_user_id: user.id
-          });
-        return { convId, participants: participants || [] };
+        try {
+          const { data: participants, error: participantsError } = await supabase
+            .rpc('get_conversation_participants', {
+              conversation_uuid: convId,
+              requesting_user_id: user.id
+            });
+
+          if (participantsError) {
+            console.error(`Error fetching participants for ${convId} (non-critical):`, participantsError);
+            return { convId, participants: [] };
+          }
+
+          return { convId, participants: participants || [] };
+        } catch (error) {
+          console.error(`Failed to fetch participants for ${convId} (non-critical):`, error);
+          return { convId, participants: [] };
+        }
       });
 
       const participantsResults = await Promise.all(participantsPromises);
 
-      // Process conversations with real data
-      const processedConversations: ChatConversation[] = conversationsData?.map(conv => {
-        const unreadInfo = unreadData?.find((u: any) => u.conversation_id === conv.id);
-        const lastMessage = lastMessages?.find(m => m.conversation_id === conv.id);
+      // Step 5: Merge all RPC results into conversations
+      const enrichedConversations: ChatConversation[] = conversationsData.map(conv => {
+        const unreadInfo = unreadData.find((u) => u.conversation_id === conv.id);
+        const lastMessage = lastMessages.find(m => m.conversation_id === conv.id);
         const participantsInfo = participantsResults.find(p => p.convId === conv.id);
         const otherParticipants = participantsInfo?.participants?.filter((p: any) => p.user_id !== user.id) || [];
-        
-        // For direct conversations, get the other participant
+
+        // For direct conversations, extract the other participant
         let otherParticipant = undefined;
-        if (conv.conversation_type === 'direct' && otherParticipants?.length > 0) {
+        if (conv.conversation_type === 'direct' && otherParticipants.length > 0) {
           const participant = otherParticipants[0];
           otherParticipant = {
             id: participant.user_id,
             name: participant.user_name,
-            avatar_url: undefined,
+            avatar_url: participant.user_avatar_url || undefined,
             is_online: participant.presence_status === 'online'
           };
         }
@@ -168,13 +225,18 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           metadata: (conv.metadata as Record<string, any>) || {},
           unread_count: unreadInfo?.unread_count || 0,
           participant_count: participantsInfo?.participants?.length || 0,
-          other_participant: otherParticipant,
-          last_message_preview: lastMessage?.last_message_content,
-          last_message_at: lastMessage?.last_message_at || conv.last_message_at
+          last_message_preview: lastMessage ? {
+            content: lastMessage.last_message_content,
+            type: lastMessage.last_message_type,
+            at: lastMessage.last_message_at,
+            user_id: lastMessage.last_message_user_id
+          } : undefined,
+          last_message_at: lastMessage?.last_message_at || conv.last_message_at,
+          other_participant: otherParticipant
         };
-      }) || [];
+      });
 
-      setConversations(processedConversations);
+      setConversations(enrichedConversations);
     } catch (err) {
       console.error('Error fetching conversations:', err);
       setError(err instanceof Error ? err.message : 'Error fetching conversations');
@@ -303,6 +365,37 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
     return conversations.find(conv => conv.id === id);
   }, [conversations]);
 
+  /**
+   * Fetch detailed participants for a specific conversation on-demand
+   * Uses RPC #3: get_conversation_participants
+   * @param conversationId - UUID of the conversation
+   * @returns Array of participant objects with full details
+   */
+  const getConversationParticipants = useCallback(async (conversationId: string): Promise<ChatConversation['participants']> => {
+    if (!user?.id) {
+      console.error('Cannot fetch participants: user not authenticated');
+      return [];
+    }
+
+    try {
+      const { data, error } = await supabase
+        .rpc('get_conversation_participants', {
+          conversation_uuid: conversationId,
+          requesting_user_id: user.id
+        });
+
+      if (error) {
+        console.error('Error fetching conversation participants:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Failed to fetch conversation participants:', error);
+      return [];
+    }
+  }, [user?.id]);
+
   // Filter conversations based on search and type
   const filteredConversations = conversations.filter(conv => {
     // Type filter
@@ -325,7 +418,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
     return true;
   });
 
-  // Real-time subscriptions
+  // Real-time subscriptions - invalidate RPC cache on changes
   useEffect(() => {
     if (!user?.id || !activeDealerId) return;
 
@@ -341,6 +434,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           filter: `dealer_id=eq.${activeDealerId}`
         },
         () => {
+          // Invalidate and re-fetch to update all RPC data
           fetchConversations();
         }
       )
@@ -358,6 +452,24 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           filter: `user_id=eq.${user.id}`
         },
         () => {
+          // Invalidate and re-fetch to update participant counts
+          fetchConversations();
+        }
+      )
+      .subscribe();
+
+    // Subscribe to new messages to update unread counts and last message previews
+    const messagesChannel = supabase
+      .channel(`messages:${activeDealerId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages'
+        },
+        () => {
+          // Invalidate and re-fetch to update unread counts and last messages
           fetchConversations();
         }
       )
@@ -366,6 +478,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
     return () => {
       supabase.removeChannel(conversationChannel);
       supabase.removeChannel(participantChannel);
+      supabase.removeChannel(messagesChannel);
     };
   }, [user?.id, activeDealerId, fetchConversations]);
 
@@ -387,6 +500,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
     conversationType,
     setConversationType,
     refreshConversations,
-    getConversationById
+    getConversationById,
+    getConversationParticipants  // NEW: On-demand participant fetching
   };
 };

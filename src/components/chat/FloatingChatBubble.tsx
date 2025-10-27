@@ -1,29 +1,29 @@
-import React, { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
+import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import {
-  MessageCircle,
-  X,
-  Minimize2,
-  Maximize2,
-  Phone,
-  Users,
-  Settings,
-  Search,
-  Plus
-} from 'lucide-react';
-import { useGlobalChat } from '@/contexts/GlobalChatProvider';
-import { UserPresenceIndicator } from '../presence/UserPresenceIndicator';
 import { Input } from '@/components/ui/input';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { useGlobalChat } from '@/contexts/GlobalChatProvider';
 import { cn } from '@/lib/utils';
+import {
+    Maximize2,
+    MessageCircle,
+    Minimize2,
+    Phone,
+    Plus,
+    Search,
+    Settings,
+    Users,
+    X
+} from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { UserPresenceIndicator } from '../presence/UserPresenceIndicator';
 
 type PresenceStatus = 'online' | 'away' | 'busy' | 'offline';
 
@@ -56,7 +56,7 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
   const dragRef = useRef<HTMLDivElement>(null);
 
   // Filter team presence based on search
-  const filteredTeamPresence = teamPresence.filter(member => 
+  const filteredTeamPresence = teamPresence.filter(member =>
     member.profiles?.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.profiles?.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.profiles?.email?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -113,8 +113,8 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
               >
                 <MessageCircle className="h-6 w-6" />
                 {totalUnreadCount > 0 && (
-                  <Badge 
-                    variant="destructive" 
+                  <Badge
+                    variant="destructive"
                     className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs"
                   >
                     {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
@@ -158,7 +158,7 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
     >
       <Card className="h-full shadow-xl border-2">
         {/* Header */}
-        <CardHeader 
+        <CardHeader
           className="pb-3 cursor-move bg-primary/5 rounded-t-lg"
           onMouseDown={handleMouseDown}
         >
@@ -268,15 +268,16 @@ export function FloatingChatBubble({ className }: FloatingChatBubbleProps) {
                           size="sm"
                           showRing
                         >
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.profiles?.first_name} ${member.profiles?.last_name}`}
+                          <div className="h-8 w-8 rounded-full overflow-hidden">
+                            <AvatarSystem
+                              name={member.profiles?.email || 'User'}
+                              firstName={member.profiles?.first_name}
+                              lastName={member.profiles?.last_name}
+                              email={member.profiles?.email}
+                              seed={member.profiles?.avatar_seed as any}
+                              size={32}
                             />
-                            <AvatarFallback className="text-xs">
-                              {member.profiles?.first_name?.charAt(0)}
-                              {member.profiles?.last_name?.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
+                          </div>
                         </UserPresenceIndicator>
 
                         <div className="flex-1 min-w-0">

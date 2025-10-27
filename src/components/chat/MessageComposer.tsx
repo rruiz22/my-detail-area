@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -15,6 +15,10 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import EmojiPicker, { EmojiClickData, Categories, Theme } from 'emoji-picker-react';
+import { useMentionDetection } from '@/hooks/useMentionDetection';
+import { MentionDropdown, MentionSuggestion } from './MentionDropdown';
+import './MessageComposer.css';
 
 // File upload constants
 const MAX_FILE_SIZE_MB = 10;
@@ -45,6 +49,7 @@ interface MessageComposerProps {
   onTyping: (typing: boolean) => void;
   disabled?: boolean;
   placeholder?: string;
+  participants?: MentionSuggestion[];
 }
 
 export const MessageComposer: React.FC<MessageComposerProps> = ({
@@ -53,7 +58,8 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   onSendFileMessage,
   onTyping,
   disabled = false,
-  placeholder
+  placeholder,
+  participants = []
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -61,13 +67,41 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const [isRecording, setIsRecording] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [sending, setSending] = useState(false);
-  
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showMentions, setShowMentions] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingChunksRef = useRef<Blob[]>([]);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Mention detection hook
+  const { mentionQuery, mentionPosition } = useMentionDetection(message, textareaRef);
+
+  // Show/hide mention dropdown based on query
+  useEffect(() => {
+    setShowMentions(mentionQuery !== null);
+  }, [mentionQuery]);
+
+  // Click outside to close emoji picker
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    if (showEmojiPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showEmojiPicker]);
 
   // Auto-resize textarea
   const adjustTextareaHeight = useCallback(() => {
@@ -140,10 +174,49 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
   // Handle key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
+    // Don't send if mention dropdown is open (let keyboard nav handle it)
+    if (showMentions) return;
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  // Handle emoji selection
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    const cursorPos = textareaRef.current?.selectionStart || message.length;
+    const before = message.slice(0, cursorPos);
+    const after = message.slice(cursorPos);
+
+    setMessage(`${before}${emojiData.emoji}${after}`);
+    setShowEmojiPicker(false);
+
+    // Focus back on textarea
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
+  };
+
+  // Handle mention selection
+  const handleMentionSelect = (mention: MentionSuggestion | null) => {
+    if (!mention) {
+      setShowMentions(false);
+      return;
+    }
+
+    // Replace @query with @username
+    const before = message.slice(0, mentionPosition);
+    const after = message.slice(mentionPosition + (mentionQuery?.length || 0) + 1);
+    const newMessage = `${before}@${mention.name} ${after}`;
+
+    setMessage(newMessage);
+    setShowMentions(false);
+
+    // Focus back on textarea
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
   };
 
   // Handle file selection with validation
@@ -259,7 +332,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const canSend = (message.trim() || attachedFiles.length > 0) && !sending && !disabled;
 
   return (
-    <div className="p-4 space-y-3" data-testid="message-composer">
+    <div className="p-2 sm:p-4 space-y-2 sm:space-y-3" data-testid="message-composer">
       {/* Attached Files Preview */}
       {attachedFiles.length > 0 && (
         <div className="flex flex-wrap gap-2">
@@ -291,17 +364,17 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       )}
 
       {/* Message Input Area */}
-      <div className="flex items-end space-x-2">
+      <div className="flex items-end space-x-1 sm:space-x-2">
         {/* Attachment Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className="h-10 w-10 p-0"
+              className="h-8 w-8 sm:h-10 sm:w-10 p-0 shrink-0"
               disabled={disabled}
             >
-              <Paperclip className="h-4 w-4" />
+              <Paperclip className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
@@ -317,42 +390,115 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         </DropdownMenu>
 
         {/* Message Input */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative min-w-0">
           <Textarea
             ref={textareaRef}
             value={message}
             onChange={handleMessageChange}
             onKeyDown={handleKeyPress}
             placeholder={placeholder || t('chat.type_message')}
-            className="min-h-10 max-h-32 resize-none pr-10"
+            className="min-h-8 sm:min-h-10 max-h-24 sm:max-h-32 resize-none pr-10 text-sm"
             disabled={disabled}
+            aria-label={t('chat.type_message')}
           />
-          
+
           {/* Emoji Button */}
           <Button
             variant="ghost"
             size="sm"
             className="absolute right-2 top-2 h-6 w-6 p-0"
             disabled={disabled}
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            type="button"
+            aria-label={t('chat.emoji.pick_reaction')}
           >
             <Smile className="h-4 w-4 text-muted-foreground" />
           </Button>
+
+          {/* Emoji Picker */}
+          {showEmojiPicker && (
+            <div
+              ref={emojiPickerRef}
+              className="emoji-picker-container"
+              data-testid="emoji-picker"
+            >
+              <EmojiPicker
+                onEmojiClick={handleEmojiClick}
+                autoFocusSearch={false}
+                theme={Theme.LIGHT}
+                searchPlaceHolder={t('chat.emoji.search')}
+                previewConfig={{ showPreview: false }}
+                skinTonesDisabled={false}
+                height={400}
+                width={320}
+                lazyLoadEmojis={true}
+                categories={[
+                  {
+                    category: Categories.SUGGESTED,
+                    name: t('chat.emoji.recent'),
+                  },
+                  {
+                    category: Categories.SMILEYS_PEOPLE,
+                    name: t('chat.emoji.smileys'),
+                  },
+                  {
+                    category: Categories.ANIMALS_NATURE,
+                    name: t('chat.emoji.animals'),
+                  },
+                  {
+                    category: Categories.FOOD_DRINK,
+                    name: t('chat.emoji.food'),
+                  },
+                  {
+                    category: Categories.TRAVEL_PLACES,
+                    name: t('chat.emoji.travel'),
+                  },
+                  {
+                    category: Categories.ACTIVITIES,
+                    name: t('chat.emoji.activities'),
+                  },
+                  {
+                    category: Categories.OBJECTS,
+                    name: t('chat.emoji.objects'),
+                  },
+                  {
+                    category: Categories.SYMBOLS,
+                    name: t('chat.emoji.symbols'),
+                  },
+                  {
+                    category: Categories.FLAGS,
+                    name: t('chat.emoji.flags'),
+                  },
+                ]}
+              />
+            </div>
+          )}
+
+          {/* Mention Dropdown */}
+          {showMentions && mentionQuery !== null && (
+            <MentionDropdown
+              query={mentionQuery}
+              participants={participants}
+              onSelect={handleMentionSelect}
+              position={mentionPosition}
+            />
+          )}
         </div>
 
         {/* Voice Recording Button */}
         <Button
           variant={isRecording ? "destructive" : "ghost"}
           size="sm"
-          className="h-10 w-10 p-0"
+          className="h-8 w-8 sm:h-10 sm:w-10 p-0 shrink-0"
           onMouseDown={startRecording}
           onMouseUp={stopRecording}
           onMouseLeave={stopRecording}
           disabled={disabled}
         >
           {isRecording ? (
-            <MicOff className="h-4 w-4" />
+            <MicOff className="h-3 w-3 sm:h-4 sm:w-4" />
           ) : (
-            <Mic className="h-4 w-4" />
+            <Mic className="h-3 w-3 sm:h-4 sm:w-4" />
           )}
         </Button>
 
@@ -362,11 +508,11 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           disabled={!canSend}
           size="sm"
           className={cn(
-            "h-10 w-10 p-0 transition-all",
+            "h-8 w-8 sm:h-10 sm:w-10 p-0 shrink-0 transition-all",
             canSend ? "bg-primary hover:bg-primary/90" : ""
           )}
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-3 w-3 sm:h-4 sm:w-4" />
         </Button>
       </div>
 

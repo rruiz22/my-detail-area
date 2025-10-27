@@ -1,0 +1,144 @@
+/* Mention Dropdown Styles - Notion Design System */
+.mention-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  width: 16rem;
+  max-height: 16rem;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0;
+  z-index: 50;
+}
+
+.mention-dropdown.empty {
+  padding: 0.5rem 0;
+}
+
+.mention-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+  color: #111827;
+  transition: background-color 150ms ease;
+}
+
+.mention-item:hover {
+  background-color: #f3f4f6;
+}
+
+.mention-item.selected {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.mention-item:focus {
+  outline: none;
+  background-color: #d1fae5;
+}
+
+/* Emoji Picker Container - Notion Design System */
+.emoji-picker-container {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Override emoji-picker-react styles to match Notion */
+.emoji-picker-container .epr-main {
+  border-color: #e5e7eb;
+}
+
+.emoji-picker-container .epr-category-nav {
+  background-color: #f9fafb;
+}
+
+.emoji-picker-container .epr-search-container input {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+}
+
+.emoji-picker-container .epr-search-container input:focus {
+  border-color: #10b981;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.emoji-picker-container .epr-emoji-category-label {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .mention-dropdown {
+    width: 14rem;
+    max-height: 12rem;
+  }
+
+  .emoji-picker-container {
+    right: auto;
+    left: 0;
+  }
+
+  .emoji-picker-container .epr-main {
+    width: 280px !important;
+    height: 350px !important;
+  }
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  .mention-dropdown {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .mention-item {
+    color: #f3f4f6;
+  }
+
+  .mention-item:hover {
+    background-color: #374151;
+  }
+
+  .mention-item.selected {
+    background-color: #065f46;
+    color: #d1fae5;
+  }
+}
+
+/* Scrollbar styling for mention dropdown - Notion style */
+.mention-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mention-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mention-dropdown::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 4px;
+}
+
+.mention-dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}

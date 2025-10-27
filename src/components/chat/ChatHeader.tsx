@@ -1,12 +1,13 @@
-import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Phone, VideoIcon, Settings, Users, User, UserPlus } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { ChatConversation } from '@/hooks/useChatConversations';
 import { useUserPresence } from '@/hooks/useUserPresence';
+import { MoreVertical, Phone, Settings, User, UserPlus, Users, VideoIcon } from 'lucide-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ChatHeaderProps {
   conversationId: string;
@@ -55,22 +56,28 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
       <div className="flex items-center space-x-3">
         {/* Avatar */}
         <div className="relative">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={conversation.avatar_url} />
-            <AvatarFallback className="text-sm">
-              {conversation.avatar_url ? (
-                isDirectConversation ? <User className="h-4 w-4" /> : <Users className="h-4 w-4" />
-              ) : (
-                getInitials(getConversationName())
-              )}
-            </AvatarFallback>
-          </Avatar>
-          
+          {isDirectConversation && conversation.other_participant ? (
+            <div className="h-10 w-10 rounded-full overflow-hidden">
+              <AvatarSystem
+                name={conversation.other_participant.name}
+                email={conversation.other_participant.email}
+                seed={conversation.other_participant.avatar_seed as any}
+                size={40}
+              />
+            </div>
+          ) : (
+            <Avatar className="h-10 w-10">
+              <AvatarFallback className="text-sm">
+                {isDirectConversation ? <User className="h-4 w-4" /> : <Users className="h-4 w-4" />}
+              </AvatarFallback>
+            </Avatar>
+          )}
+
           {/* Online indicator for direct conversations */}
           {isDirectConversation && isOtherUserOnline && (
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
           )}
-          
+
           {/* Group indicator */}
           {!isDirectConversation && (
             <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
@@ -84,7 +91,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
           <h3 className="font-semibold text-foreground truncate">
             {getConversationName()}
           </h3>
-          
+
           <div className="flex items-center space-x-2 text-xs text-muted-foreground">
             {isDirectConversation ? (
               <span>
@@ -116,7 +123,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
           <Phone className="h-4 w-4" />
         </Button>
-        
+
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
           <VideoIcon className="h-4 w-4" />
         </Button>
