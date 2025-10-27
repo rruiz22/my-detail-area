@@ -1,4 +1,3 @@
-import { OrderDataTable } from '@/components/orders/OrderDataTable';
 import { OrderFilters } from '@/components/orders/OrderFilters';
 import { OrderModal } from '@/components/orders/OrderModal';
 import { Badge } from '@/components/ui/badge';
@@ -7,21 +6,27 @@ import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { useManualRefresh } from '@/hooks/useManualRefresh';
-import { useOrderManagement } from '@/hooks/useOrderManagement';
+import { Order, useOrderManagement } from '@/hooks/useOrderManagement';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { dev, warn, error as logError } from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// New improved components
-import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
+// Always-loaded components (small, critical)
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { SmartDashboard } from '@/components/sales/SmartDashboard';
+import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
+import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
+
+// Code-split heavy view components (40-60KB initial bundle reduction)
+const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(module => ({ default: module.OrderDataTable })));
+const OrderKanbanBoard = lazy(() => import('@/components/sales/OrderKanbanBoard').then(module => ({ default: module.OrderKanbanBoard })));
+const SmartDashboard = lazy(() => import('@/components/sales/SmartDashboard').then(module => ({ default: module.SmartDashboard })));
+const OrderCalendarView = lazy(() => import('@/components/orders/OrderCalendarView').then(module => ({ default: module.OrderCalendarView })));
 
 // Removed TABS - now using QuickFilterBar instead
 
@@ -37,12 +42,15 @@ export default function SalesOrders() {
   const orderIdFromUrl = searchParams.get('order');
   const { hasModulePermission, enhancedUser } = usePermissions();
 
+  // Accessibility: Live region for screen reader announcements
+  const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
+
   useEffect(() => {
-    console.log('[RouteMount] SalesOrders mounted');
+    dev('[RouteMount] SalesOrders mounted');
     if (orderIdFromUrl) {
-      console.log('🎯 Order ID detected from URL:', orderIdFromUrl);
+      dev('🎯 Order ID detected from URL:', orderIdFromUrl);
     }
-    return () => console.log('[RouteUnmount] SalesOrders unmounted');
+    return () => dev('[RouteUnmount] SalesOrders unmounted');
   }, [orderIdFromUrl]);
 
   // Persistent state
@@ -53,8 +61,8 @@ export default function SalesOrders() {
   // Non-persistent UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [previewOrder, setPreviewOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [previewOrder, setPreviewOrder] = useState<Order | null>(null);
   const [preSelectedDate, setPreSelectedDate] = useState<Date | null>(null);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
@@ -92,17 +100,17 @@ export default function SalesOrders() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && orders.length > 0 && !hasProcessedUrlOrder) {
-      console.log('🎯 Processing order from URL (one-time):', orderIdFromUrl);
+      dev('🎯 Processing order from URL (one-time):', orderIdFromUrl);
 
       // Find the order in the loaded orders
       const targetOrder = orders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        console.log('✅ Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+        dev('✅ Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        console.warn('⚠️ Order not found in current orders list:', orderIdFromUrl);
+        warn('⚠️ Order not found in current orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -110,11 +118,11 @@ export default function SalesOrders() {
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t]);
+  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t, toast]);
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create sales orders');
+      warn('⚠️ User does not have permission to create sales orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -123,14 +131,14 @@ export default function SalesOrders() {
       return;
     }
 
-    console.log('✅ User has permission to create sales orders');
+    dev('✅ User has permission to create sales orders');
     setSelectedOrder(null);
     setShowModal(true);
-  };
+  }, [canCreate, toast, t]);
 
-  const handleCreateOrderWithDate = (selectedDate?: Date) => {
+  const handleCreateOrderWithDate = useCallback((selectedDate?: Date) => {
     if (!canCreate) {
-      console.warn('⚠️ User does not have permission to create sales orders');
+      warn('⚠️ User does not have permission to create sales orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -143,7 +151,7 @@ export default function SalesOrders() {
 
     // Pre-populate the due_date with the selected calendar date
     if (selectedDate) {
-      console.log('📅 Calendar date selected for new order:', selectedDate);
+      dev('📅 Calendar date selected for new order:', selectedDate);
       // Set to 9 AM on the selected date (business hours)
       const prePopulatedDate = new Date(selectedDate);
       prePopulatedDate.setHours(9, 0, 0, 0);
@@ -153,38 +161,42 @@ export default function SalesOrders() {
     }
 
     setShowModal(true);
-  };
+  }, [canCreate, toast, t]);
 
-  const handleEditOrder = (order: any) => {
+  const handleEditOrder = useCallback((order: Order) => {
     setSelectedOrder(order);
     setShowModal(true);
     setPreviewOrder(null); // Close preview if open
-  };
+  }, []);
 
-  const handleViewOrder = (order: any) => {
+  const handleViewOrder = useCallback((order: Order) => {
     setPreviewOrder(order);
-  };
+  }, []);
 
-  const handleDeleteOrder = async (orderId: string) => {
+  const handleDeleteOrder = useCallback(async (orderId: string) => {
     if (confirm(t('messages.confirm_delete_order'))) {
       await deleteOrder(orderId);
     }
-  };
+  }, [t, deleteOrder]);
 
-  const handleSaveOrder = async (orderData: any) => {
+  const handleSaveOrder = useCallback(async (orderData: Partial<Order>) => {
     try {
       if (selectedOrder) {
         await updateOrder(selectedOrder.id, orderData);
+        const message = t('orders.updated_successfully');
         toast({
-          description: t('orders.updated_successfully'),
+          description: message,
           variant: 'default'
         });
+        setLiveRegionMessage(message);
       } else {
         await createOrder(orderData);
+        const message = t('orders.created_successfully');
         toast({
-          description: t('orders.created_successfully'),
+          description: message,
           variant: 'default'
         });
+        setLiveRegionMessage(message);
       }
 
       // Close modal immediately for better UX
@@ -194,18 +206,20 @@ export default function SalesOrders() {
       setTimeout(() => refreshData(), 100); // Slight delay to let real-time update first
 
     } catch (error) {
-      console.error('Error saving order:', error);
+      logError('Error saving order:', error);
+      const message = t('orders.save_failed');
       toast({
-        description: t('orders.save_failed'),
+        description: message,
         variant: 'destructive'
       });
+      setLiveRegionMessage(message);
     }
-  };
+  }, [selectedOrder, updateOrder, createOrder, toast, t, refreshData]);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
       // Status change should ONLY update status, nothing else
-      const updateData: any = { status: newStatus };
+      const updateData: Partial<Order> = { status: newStatus as 'pending' | 'in_progress' | 'completed' | 'cancelled' };
 
       // Update DB - queryClient.refetchQueries inside updateOrder will trigger UI update
       await updateOrder(orderId, updateData);
@@ -222,7 +236,7 @@ export default function SalesOrders() {
 
       // No refreshData() call - polling system handles update automatically
     } catch (error) {
-      console.error('Status change failed:', error);
+      logError('Status change failed:', error);
       toast({
         description: t('orders.status_change_failed'),
         variant: 'destructive'
@@ -231,9 +245,9 @@ export default function SalesOrders() {
       // Re-throw error so kanban can handle rollback if needed
       throw error;
     }
-  };
+  }, [updateOrder, toast, t]);
 
-  const handleUpdate = async (orderId: string, updates: any) => {
+  const handleUpdate = useCallback(async (orderId: string, updates: Partial<Order>) => {
     try {
       await updateOrder(orderId, updates);
 
@@ -247,18 +261,18 @@ export default function SalesOrders() {
 
       // No toast here - specific handlers will show appropriate messages
     } catch (error) {
-      console.error('Order update failed:', error);
+      logError('Order update failed:', error);
       throw error;
     }
-  };
+  }, [updateOrder, queryClient]);
 
 
-  const handleCardClick = (filter: string) => {
+  const handleCardClick = useCallback((filter: string) => {
     setActiveFilter(filter);
     if (filter !== 'dashboard') {
       setViewMode('kanban');
     }
-  };
+  }, [setActiveFilter, setViewMode]);
 
   // Get dynamic title based on active filter
   const getFilterTitle = (filter: string): string => {
@@ -277,13 +291,14 @@ export default function SalesOrders() {
   };
 
   // Force table view on mobile (disable kanban and calendar)
-  const effectiveViewMode = isMobile ? 'table' : viewMode;
+  const effectiveViewMode = useMemo(() => isMobile ? 'table' : viewMode, [isMobile, viewMode]);
 
   // Filter orders based on search term
-  const filteredOrders = orders.filter((order: any) => {
-    if (!searchTerm) return true;
+  const filteredOrders = useMemo(() => {
+    if (!searchTerm) return orders;
+
     const searchLower = searchTerm.toLowerCase();
-    return (
+    return orders.filter((order: Order) =>
       order.id.toLowerCase().includes(searchLower) ||
       order.vehicleVin?.toLowerCase().includes(searchLower) ||
       order.stockNumber?.toLowerCase().includes(searchLower) ||
@@ -291,10 +306,20 @@ export default function SalesOrders() {
       order.customerName?.toLowerCase().includes(searchLower) ||
       `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
     );
-  });
+  }, [orders, searchTerm]);
 
   return (
     <div className="space-y-6">
+        {/* Accessibility: Live region for screen reader announcements */}
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+        >
+          {liveRegionMessage}
+        </div>
+
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
@@ -351,14 +376,18 @@ export default function SalesOrders() {
           />
         )}
 
-        {/* Main Content Area */}
+        {/* Main Content Area - Code Split with Suspense and Error Boundaries */}
         <div className="space-y-6">
           {activeFilter === 'dashboard' ? (
-            <SmartDashboard
-              allOrders={allOrders}
-              tabCounts={tabCounts}
-              onCardClick={handleCardClick}
-            />
+            <OrderViewErrorBoundary viewType="dashboard">
+              <Suspense fallback={<OrderViewLoadingFallback viewType="dashboard" />}>
+                <SmartDashboard
+                  allOrders={allOrders}
+                  tabCounts={tabCounts}
+                  onCardClick={handleCardClick}
+                />
+              </Suspense>
+            </OrderViewErrorBoundary>
           ) : (
             <div className="space-y-4">
               {/* Responsive Table Header */}
@@ -385,33 +414,45 @@ export default function SalesOrders() {
 
               {/* Table/Kanban/Calendar Content - Mobile forces table */}
               {effectiveViewMode === 'kanban' ? (
-                <OrderKanbanBoard
-                  orders={filteredOrders}
-                  onEdit={handleEditOrder}
-                  onView={handleViewOrder}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                />
+                <OrderViewErrorBoundary viewType="kanban">
+                  <Suspense fallback={<OrderViewLoadingFallback viewType="kanban" />}>
+                    <OrderKanbanBoard
+                      orders={filteredOrders}
+                      onEdit={handleEditOrder}
+                      onView={handleViewOrder}
+                      onDelete={handleDeleteOrder}
+                      onStatusChange={handleStatusChange}
+                    />
+                  </Suspense>
+                </OrderViewErrorBoundary>
               ) : effectiveViewMode === 'calendar' ? (
-                <OrderCalendarView
-                  orders={filteredOrders}
-                  loading={false}
-                  onEdit={handleEditOrder}
-                  onView={handleViewOrder}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                  onCreateOrder={handleCreateOrderWithDate}
-                />
+                <OrderViewErrorBoundary viewType="calendar">
+                  <Suspense fallback={<OrderViewLoadingFallback viewType="calendar" />}>
+                    <OrderCalendarView
+                      orders={filteredOrders}
+                      loading={false}
+                      onEdit={handleEditOrder}
+                      onView={handleViewOrder}
+                      onDelete={handleDeleteOrder}
+                      onStatusChange={handleStatusChange}
+                      onCreateOrder={handleCreateOrderWithDate}
+                    />
+                  </Suspense>
+                </OrderViewErrorBoundary>
               ) : (
-                <OrderDataTable
-                  orders={filteredOrders}
-                  loading={false}
-                  onEdit={handleEditOrder}
-                  onDelete={handleDeleteOrder}
-                  onView={handleViewOrder}
-                  onStatusChange={handleStatusChange}
-                  tabType="sales"
-                />
+                <OrderViewErrorBoundary viewType="table">
+                  <Suspense fallback={<OrderViewLoadingFallback viewType="table" />}>
+                    <OrderDataTable
+                      orders={filteredOrders}
+                      loading={false}
+                      onEdit={handleEditOrder}
+                      onDelete={handleDeleteOrder}
+                      onView={handleViewOrder}
+                      onStatusChange={handleStatusChange}
+                      tabType="sales"
+                    />
+                  </Suspense>
+                </OrderViewErrorBoundary>
               )}
             </div>
           )}
