@@ -7,9 +7,9 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { VehicleInventory } from '@/hooks/useStockManagement';
 import { useVehiclePhotos } from '@/hooks/useVehiclePhotos';
-import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { VehiclePhotoUploader } from '@/components/stock/VehiclePhotoUploader';
 import { cn } from '@/lib/utils';
 import { Camera, Star, Trash2, X } from 'lucide-react';
@@ -24,10 +24,11 @@ interface VehiclePhotosTabProps {
 
 export const VehiclePhotosTab: React.FC<VehiclePhotosTabProps> = ({ vehicle, canEdit, canDelete }) => {
   const { t } = useTranslation();
-  const { confirmDelete } = useSweetAlert();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [photoToDelete, setPhotoToDelete] = useState<string | null>(null);
 
   // Fetch vehicle photos
   const { photos, setKeyPhoto, deletePhoto } = useVehiclePhotos({
@@ -48,18 +49,17 @@ export const VehiclePhotosTab: React.FC<VehiclePhotosTabProps> = ({ vehicle, can
     }
   };
 
-  const handleDeletePhoto = async (photoId: string) => {
-    const confirmed = await confirmDelete(
-      t('stock.photos.confirm_delete_title', 'Delete Photo?'),
-      t('stock.photos.confirm_delete', 'Are you sure you want to delete this photo? This action cannot be undone.')
-    );
+  const handleDeletePhoto = (photoId: string) => {
+    setPhotoToDelete(photoId);
+    setDeleteDialogOpen(true);
+  };
 
-    if (!confirmed) {
-      return;
-    }
+  const confirmDeletePhoto = async () => {
+    if (!photoToDelete) return;
 
     try {
-      await deletePhoto(photoId);
+      await deletePhoto(photoToDelete);
+      setPhotoToDelete(null);
     } catch (error) {
       console.error('Failed to delete photo:', error);
     }
@@ -244,6 +244,18 @@ export const VehiclePhotosTab: React.FC<VehiclePhotosTabProps> = ({ vehicle, can
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog - Team Chat Style */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('stock.photos.confirm_delete_title', 'Delete Photo?')}
+        description={t('stock.photos.confirm_delete', 'Are you sure you want to delete this photo? This action cannot be undone.')}
+        confirmText={t('common.delete', 'Delete')}
+        cancelText={t('common.cancel', 'Cancel')}
+        onConfirm={confirmDeletePhoto}
+        variant="destructive"
+      />
     </div>
   );
 };

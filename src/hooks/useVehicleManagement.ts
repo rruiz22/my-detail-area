@@ -195,6 +195,55 @@ export function useVehicleManagement() {
         throw new Error('Vehicle ID is required');
       }
 
+      console.log('🚀 [DEBUG] Attempting to move vehicle:', { actualId, stepId });
+
+      // ✨ NEW: Check for pending or in-progress work items before moving
+      const { data: workItems, error: workItemsError } = await supabase
+        .from('get_ready_work_items')
+        .select('id, title, status')
+        .eq('vehicle_id', actualId)
+        .in('status', ['pending', 'in_progress', 'awaiting_approval', 'rejected', 'blocked']);
+
+      console.log('🔍 [DEBUG] Work items check result:', { workItems, workItemsError });
+
+      if (workItemsError) {
+        console.error('Error checking work items:', workItemsError);
+        throw new Error('Failed to check work items');
+      }
+
+      if (workItems && workItems.length > 0) {
+        console.log('🚫 [DEBUG] Blocking move due to work items:', workItems);
+        const pendingItems = workItems.filter(item => item.status === 'pending');
+        const inProgressItems = workItems.filter(item => item.status === 'in_progress');
+        const awaitingApprovalItems = workItems.filter(item => item.status === 'awaiting_approval');
+        const rejectedItems = workItems.filter(item => item.status === 'rejected');
+        const blockedItems = workItems.filter(item => item.status === 'blocked');
+
+        let errorMessage = 'Cannot move vehicle to next step. ';
+        const issues = [];
+
+        if (pendingItems.length > 0) {
+          issues.push(`${pendingItems.length} pending work item${pendingItems.length > 1 ? 's' : ''}`);
+        }
+        if (inProgressItems.length > 0) {
+          issues.push(`${inProgressItems.length} work item${inProgressItems.length > 1 ? 's' : ''} in progress`);
+        }
+        if (awaitingApprovalItems.length > 0) {
+          issues.push(`${awaitingApprovalItems.length} work item${awaitingApprovalItems.length > 1 ? 's' : ''} awaiting approval`);
+        }
+        if (rejectedItems.length > 0) {
+          issues.push(`${rejectedItems.length} rejected work item${rejectedItems.length > 1 ? 's' : ''}`);
+        }
+        if (blockedItems.length > 0) {
+          issues.push(`${blockedItems.length} blocked work item${blockedItems.length > 1 ? 's' : ''}`);
+        }
+
+        errorMessage += issues.join(', ') + '. Please complete or resolve all work items before moving to the next step.';
+        throw new Error(errorMessage);
+      }
+
+      console.log('✅ [DEBUG] No blocking work items found, proceeding with move');
+
       // The step change will be automatically tracked by the database trigger
       // which will:
       // 1. Close the current step history entry (set exit_date)
@@ -242,11 +291,21 @@ export function useVehicleManagement() {
     },
     onError: (error: any) => {
       console.error('Move vehicle error:', error);
-      toast({
-        title: t('common.error'),
-        description: t('get_ready.vehicle_form.errors.move_failed'),
-        variant: 'destructive',
-      });
+
+      // Show specific error message if it's a work items validation error
+      if (error.message && error.message.includes('Cannot move vehicle to next step')) {
+        toast({
+          title: t('common.error'),
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: t('common.error'),
+          description: t('get_ready.vehicle_form.errors.move_failed'),
+          variant: 'destructive',
+        });
+      }
     },
   });
 

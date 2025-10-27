@@ -21,11 +21,16 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { STOCK_CONSTANTS } from '@/constants/stock';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useDebouncedValue } from '@/hooks/useDebounce';
 import { useServerExport } from '@/hooks/useServerExport';
+import { useStockInventoryPaginated, useStockUniqueMakes } from '@/hooks/useStockInventoryPaginated';
 import { VehicleInventory } from '@/hooks/useStockManagement';
+import { usePaginationPersistence, useSearchPersistence } from '@/hooks/useTabPersistence';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { logger } from '@/utils/logger';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
     ArrowUpDown,
@@ -48,7 +53,8 @@ interface StockInventoryTableProps {
   dealerId?: number;
 }
 
-const ITEMS_PER_PAGE = 25;
+// ✅ FIX QUALITY-03: Use centralized constants instead of magic numbers
+const ITEMS_PER_PAGE = STOCK_CONSTANTS.PAGINATION.ITEMS_PER_PAGE;
 
 export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealerId }) => {
   const { t } = useTranslation();
@@ -57,110 +63,35 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const { exportToExcel, exportToCSV, isExporting } = useServerExport({ reportType: 'stock_inventory' });
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Server-side pagination state
-  const [inventory, setInventory] = useState<VehicleInventory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
-  const [uniqueMakesData, setUniqueMakesData] = useState<string[]>([]);
+  // ✅ FIX ARCH-04: Persistent state for better UX
+  const [searchTerm, setSearchTerm] = useSearchPersistence('stock');
+  const [currentPage, setCurrentPage] = usePaginationPersistence('stock');
 
-  // Filter and pagination state
-  const [searchTerm, setSearchTerm] = useState('');
+  // Non-persisted filters (reset on page refresh for cleaner UX)
   const [makeFilter, setMakeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortConfig, setSortConfig] = useState<{
     column: string;
     direction: 'asc' | 'desc';
   }>({ column: 'created_at', direction: 'desc' });
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch inventory from server with pagination
-  const fetchInventory = useCallback(async () => {
-    if (!dealerId) {
-      setLoading(false);
-      return;
-    }
+  // ✅ FIX PERF-03: Debounce search term to reduce queries
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, STOCK_CONSTANTS.SEARCH.DEBOUNCE_DELAY);
 
-    try {
-      setLoading(true);
+  // ✅ FIX BUG-01 & ARCH-01: Use React Query hooks instead of manual fetch
+  const { inventory, totalCount, isLoading: loading } = useStockInventoryPaginated({
+    dealerId,
+    page: currentPage,
+    pageSize: ITEMS_PER_PAGE,
+    searchTerm: debouncedSearchTerm, // Use debounced value
+    makeFilter,
+    statusFilter,
+    sortColumn: sortConfig.column,
+    sortDirection: sortConfig.direction
+  });
 
-      // Build query
-      let query = supabase
-        .from('dealer_vehicle_inventory')
-        .select('*', { count: 'exact' })
-        .eq('dealer_id', dealerId)
-        .eq('is_active', true);
-
-      // Apply search filter
-      if (searchTerm) {
-        query = query.or(`stock_number.ilike.%${searchTerm}%,vin.ilike.%${searchTerm}%,make.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`);
-      }
-
-      // Apply make filter
-      if (makeFilter !== 'all') {
-        query = query.eq('make', makeFilter);
-      }
-
-      // Apply status filter
-      if (statusFilter !== 'all') {
-        query = query.eq('dms_status', statusFilter);
-      }
-
-      // Apply sorting
-      query = query.order(sortConfig.column, { ascending: sortConfig.direction === 'asc' });
-
-      // Apply pagination
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      query = query.range(startIndex, startIndex + ITEMS_PER_PAGE - 1);
-
-      const { data, error, count } = await query;
-
-      if (error) {
-        console.error('Error fetching inventory:', error);
-        setInventory([]);
-        setTotalCount(0);
-      } else {
-        setInventory(data || []);
-        setTotalCount(count || 0);
-      }
-    } catch (error) {
-      console.error('Error fetching inventory:', error);
-      setInventory([]);
-      setTotalCount(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [dealerId, currentPage, searchTerm, makeFilter, statusFilter, sortConfig.column, sortConfig.direction]);
-
-  // Fetch unique makes for filter dropdown
-  const fetchUniqueMakes = useCallback(async () => {
-    if (!dealerId) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('dealer_vehicle_inventory')
-        .select('make')
-        .eq('dealer_id', dealerId)
-        .eq('is_active', true)
-        .not('make', 'is', null);
-
-      if (!error && data) {
-        const makes = [...new Set(data.map(item => item.make).filter(Boolean))].sort();
-        setUniqueMakesData(makes as string[]);
-      }
-    } catch (error) {
-      console.error('Error fetching unique makes:', error);
-    }
-  }, [dealerId]);
-
-  // Fetch data on mount and when dependencies change
-  useEffect(() => {
-    fetchInventory();
-  }, [fetchInventory]);
-
-  // Fetch unique makes only once on mount
-  useEffect(() => {
-    fetchUniqueMakes();
-  }, [fetchUniqueMakes]);
+  // ✅ FIX BUG-04: Use React Query for unique makes with caching
+  const { makes: uniqueMakesData } = useStockUniqueMakes(dealerId);
 
   // Handle ?vehicle=id URL parameter from global search
   useEffect(() => {
@@ -211,7 +142,8 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
     }));
   };
 
-  const handleExport = async (format: 'csv' | 'excel') => {
+  // ✅ FIX ARCH-03: Use logger utility instead of console.error
+  const handleExport = useCallback(async (format: 'csv' | 'excel') => {
     // For export, fetch ALL matching records (not paginated)
     if (!dealerId) return;
 
@@ -237,7 +169,7 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
       const { data, error } = await query;
 
       if (error) {
-        console.error('Error fetching data for export:', error);
+        logger.error('Error fetching data for export:', error);
         return;
       }
 
@@ -250,9 +182,9 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
         await exportToExcel(formattedData, filename);
       }
     } catch (error) {
-      console.error('Error exporting inventory:', error);
+      logger.error('Error exporting inventory:', error);
     }
-  };
+  }, [dealerId, searchTerm, makeFilter, statusFilter, sortConfig, exportToCSV, exportToExcel]);
 
   // Get unique makes from fetched data
   const uniqueMakes = useMemo(() => {
@@ -266,14 +198,10 @@ export const StockInventoryTable: React.FC<StockInventoryTableProps> = ({ dealer
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
   const paginatedInventory = inventory; // Already paginated from server
 
-  // Reset to page 1 when filters change (debounced for search)
+  // ✅ FIX PERF-03: Reset to page 1 when filters change (search already debounced)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentPage(1);
-    }, 300); // Debounce search by 300ms
-
-    return () => clearTimeout(timer);
-  }, [searchTerm, makeFilter, statusFilter]);
+    setCurrentPage(1);
+  }, [debouncedSearchTerm, makeFilter, statusFilter]);
 
   const getStatusColor = (status?: string) => {
     switch (status?.toLowerCase()) {
