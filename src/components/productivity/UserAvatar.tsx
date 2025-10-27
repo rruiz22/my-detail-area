@@ -1,7 +1,7 @@
-import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useDealershipUsers } from '@/hooks/useDealershipUsers';
+import React from 'react';
 
 interface UserAvatarProps {
   userId: string | null;
@@ -16,22 +16,25 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   showTooltip = true,
   className = ''
 }) => {
-  const { getUserById, getDisplayName, getInitials } = useDealershipUsers();
+  const { getUserById, getDisplayName } = useDealershipUsers();
   const user = getUserById(userId);
 
-  const sizeClasses = {
-    sm: 'w-6 h-6 text-xs',
-    md: 'w-8 h-8 text-sm',
-    lg: 'w-10 h-10 text-base'
+  const sizePixels = {
+    sm: 24,
+    md: 32,
+    lg: 40
   };
 
   const avatarElement = (
-    <Avatar className={`${sizeClasses[size]} ${className}`}>
-      <AvatarImage src={user?.avatar_url || undefined} alt={getDisplayName(user)} />
-      <AvatarFallback className="bg-primary/10 text-primary font-medium">
-        {getInitials(user)}
-      </AvatarFallback>
-    </Avatar>
+    <AvatarSystem
+      name={user?.email || 'User'}
+      firstName={user?.first_name}
+      lastName={user?.last_name}
+      email={user?.email}
+      seed={user?.avatar_seed as any}
+      size={sizePixels[size]}
+      className={className}
+    />
   );
 
   if (!showTooltip || !user) {
@@ -42,7 +45,9 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          {avatarElement}
+          <div>
+            {avatarElement}
+          </div>
         </TooltipTrigger>
         <TooltipContent>
           <div className="text-xs">
@@ -54,7 +59,3 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     </TooltipProvider>
   );
 };
-
-
-
-
