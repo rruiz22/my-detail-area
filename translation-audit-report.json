@@ -2832,67 +2832,67 @@
         "file": "src\\hooks\\useVehicleWorkItems.tsx",
         "hardcodedStrings": [
           {
-            "text": ", error);\n\n      // Show specific error message if it",
+            "text": ", error);\r\n\r\n      // Show specific error message if it",
             "line": 324,
             "context": "323: onError: (error) => {\n324: console.error('Create work item mutation error:', error);\n325: "
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 390,
             "context": "389: onError: (error) => {\n390: console.error('Update work item mutation error:', error);\n391: toast.error(t('get_ready.work_items.error_updating'));"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 445,
             "context": "444: onError: (error) => {\n445: console.error('Approve work item mutation error:', error);\n446: toast.error(t('get_ready.work_items.error_approving'));"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 501,
             "context": "500: onError: (error) => {\n501: console.error('Decline work item mutation error:', error);\n502: toast.error(t('get_ready.work_items.error_declining'));"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 541,
             "context": "540: onError: (error) => {\n541: console.error('Start work item mutation error:', error);\n542: toast.error(t('get_ready.work_items.error_starting'));"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 615,
             "context": "614: onError: (error) => {\n615: console.error('Complete work item mutation error:', error);\n616: toast.error(t('get_ready.work_items.error_completing'));"
           },
           {
-            "text": ", error);\n      // ✅ Toast handled by component (ConfirmDialog)\n      // toast.error(t(",
+            "text": ", error);\r\n      // ✅ Toast handled by component (ConfirmDialog)\r\n      // toast.error(t(",
             "line": 650,
             "context": "649: onError: (error) => {\n650: console.error('Delete work item mutation error:', error);\n651: // ✅ Toast handled by component (ConfirmDialog)"
           },
           {
-            "text": ", error);\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\n      // toast.error(t(",
+            "text": ", error);\r\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\r\n      // toast.error(t(",
             "line": 692,
             "context": "691: onError: (error) => {\n692: console.error('Pause work item mutation error:', error);\n693: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
-            "text": ", error);\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\n      // toast.error(t(",
+            "text": ", error);\r\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\r\n      // toast.error(t(",
             "line": 734,
             "context": "733: onError: (error) => {\n734: console.error('Block work item mutation error:', error);\n735: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 775,
             "context": "774: onError: (error) => {\n775: console.error('Resume work item mutation error:', error);\n776: toast.error(t('get_ready.work_items.error_resuming'));"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 815,
             "context": "814: onError: (error) => {\n815: console.error('Unblock work item mutation error:', error);\n816: toast.error(t('get_ready.work_items.error_unblocking'));"
           },
           {
-            "text": ", error);\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\n      // toast.error(t(",
+            "text": ", error);\r\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\r\n      // toast.error(t(",
             "line": 863,
             "context": "862: onError: (error) => {\n863: console.error('Cancel work item mutation error:', error);\n864: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
-            "text": ", error);\n      toast.error(t(",
+            "text": ", error);\r\n      toast.error(t(",
             "line": 916,
             "context": "915: onError: (error) => {\n916: console.error('Assign vendor mutation error:', error);\n917: toast.error(t('get_ready.vendors.error_assigning_vendor'));"
           }
@@ -7269,17 +7269,17 @@
             "context": "87: </Button>\n88: <Button onClick={() => window.location.reload()}>\n89: Reload Page"
           },
           {
-            "text": "Try Again\n            ",
+            "text": "Try Again\r\n            ",
             "line": 85,
             "context": "84: <div className=\"flex gap-2\">\n85: <Button onClick={this.handleReset} variant=\"outline\">\n86: Try Again"
           },
           {
-            "text": ", error);\n    console.error(",
+            "text": ", error);\r\n    console.error(",
             "line": 35,
             "context": "34: // Log error details for debugging\n35: console.error('ErrorBoundary caught an error:', error);\n36: console.error('Error info:', errorInfo);"
           },
           {
-            "text": ", errorInfo);\n\n    // Store error info in state\n    this.setState({ errorInfo });\n\n    // ✅ FIX #12: Call onError callback if provided\n    if (this.props.onError) {\n      this.props.onError(error, errorInfo);\n    }\n\n    // Optional: Send error to external logging service (Sentry, LogRocket, etc.)\n    // logErrorToService(error, errorInfo);\n  }\n\n  handleReset = () => {\n    this.setState({ hasError: false, error: undefined, errorInfo: undefined });\n  };\n\n  render() {\n    if (this.state.hasError) {\n      // ✅ FIX #12: Support function-based fallback with resetErrorBoundary\n      if (this.props.fallback) {\n        // If fallback is a function, call it with handleReset\n        if (typeof this.props.fallback === ",
+            "text": ", errorInfo);\r\n\r\n    // Store error info in state\r\n    this.setState({ errorInfo });\r\n\r\n    // ✅ FIX #12: Call onError callback if provided\r\n    if (this.props.onError) {\r\n      this.props.onError(error, errorInfo);\r\n    }\r\n\r\n    // Optional: Send error to external logging service (Sentry, LogRocket, etc.)\r\n    // logErrorToService(error, errorInfo);\r\n  }\r\n\r\n  handleReset = () => {\r\n    this.setState({ hasError: false, error: undefined, errorInfo: undefined });\r\n  };\r\n\r\n  render() {\r\n    if (this.state.hasError) {\r\n      // ✅ FIX #12: Support function-based fallback with resetErrorBoundary\r\n      if (this.props.fallback) {\r\n        // If fallback is a function, call it with handleReset\r\n        if (typeof this.props.fallback === ",
             "line": 36,
             "context": "35: console.error('ErrorBoundary caught an error:', error);\n36: console.error('Error info:', errorInfo);\n37: "
           }
@@ -9650,22 +9650,22 @@
             "context": "155: className=\"text-sm font-normal cursor-pointer\"\n156: >\n157: Rejected"
           },
           {
-            "text": "Reset All\n                ",
+            "text": "Reset All\r\n                ",
             "line": 102,
             "context": "101: {hasActiveFilters && (\n102: <Button\n103: variant=\"ghost\""
           },
           {
-            "text": "Pending\n                  ",
+            "text": "Pending\r\n                  ",
             "line": 127,
             "context": "126: />\n127: <Label\n128: htmlFor=\"filter-pending\""
           },
           {
-            "text": "Approved\n                  ",
+            "text": "Approved\r\n                  ",
             "line": 140,
             "context": "139: />\n140: <Label\n141: htmlFor=\"filter-approved\""
           },
           {
-            "text": "Rejected\n                  ",
+            "text": "Rejected\r\n                  ",
             "line": 153,
             "context": "152: />\n153: <Label\n154: htmlFor=\"filter-rejected\""
           }
@@ -10134,7 +10134,7 @@
             "context": "234: export async function retryWithBackoff<T>(\n235: fn: () => Promise<T>,\n236: options: {"
           },
           {
-            "text": ", error);\n    }\n\n    // In production, send to error tracking service\n    if (!import.meta.env.DEV) {\n      // TODO: Integrate with Sentry, LogRocket, etc.\n      // Sentry.captureException(error);\n    }\n  }\n\n  /**\n   * Check if error is retryable\n   */\n  isRetryable(error: Error): boolean {\n    if (error instanceof AppError) {\n      // Network errors and some database errors are retryable\n      if (error instanceof NetworkError) return true;\n      if (error instanceof DatabaseError && error.statusCode >= 500) return true;\n\n      // Rate limit errors are retryable after delay\n      if (error instanceof RateLimitError) return true;\n\n      // Permission, validation, not found are NOT retryable\n      return false;\n    }\n\n    // Unknown errors - don",
+            "text": ", error);\r\n    }\r\n\r\n    // In production, send to error tracking service\r\n    if (!import.meta.env.DEV) {\r\n      // TODO: Integrate with Sentry, LogRocket, etc.\r\n      // Sentry.captureException(error);\r\n    }\r\n  }\r\n\r\n  /**\r\n   * Check if error is retryable\r\n   */\r\n  isRetryable(error: Error): boolean {\r\n    if (error instanceof AppError) {\r\n      // Network errors and some database errors are retryable\r\n      if (error instanceof NetworkError) return true;\r\n      if (error instanceof DatabaseError && error.statusCode >= 500) return true;\r\n\r\n      // Rate limit errors are retryable after delay\r\n      if (error instanceof RateLimitError) return true;\r\n\r\n      // Permission, validation, not found are NOT retryable\r\n      return false;\r\n    }\r\n\r\n    // Unknown errors - don",
             "line": 142,
             "context": "141: // Unexpected errors\n142: console.error('💥 Unexpected error:', error);\n143: }"
           }
@@ -14499,27 +14499,27 @@
         "file": "src\\hooks\\useVehicleManagement.ts",
         "hardcodedStrings": [
           {
-            "text": ", error);\n      toast({\n        title: t(",
+            "text": ", error);\r\n      toast({\r\n        title: t(",
             "line": 109,
             "context": "108: onError: (error: any) => {\n109: console.error('Create vehicle error:', error);\n110: toast({"
           },
           {
-            "text": ", error);\n      toast({\n        title: t(",
+            "text": ", error);\r\n      toast({\r\n        title: t(",
             "line": 150,
             "context": "149: onError: (error: any) => {\n150: console.error('Update vehicle error:', error);\n151: toast({"
           },
           {
-            "text": ", error);\n      toast({\n        title: t(",
+            "text": ", error);\r\n      toast({\r\n        title: t(",
             "line": 180,
             "context": "179: onError: (error: any) => {\n180: console.error('Delete vehicle error:', error);\n181: toast({"
           },
           {
-            "text": ", error);\n\n      // Show specific error message if it",
+            "text": ", error);\r\n\r\n      // Show specific error message if it",
             "line": 293,
             "context": "292: onError: (error: any) => {\n293: console.error('Move vehicle error:', error);\n294: "
           },
           {
-            "text": ", error);\n      toast({\n        title: t(",
+            "text": ", error);\r\n      toast({\r\n        title: t(",
             "line": 343,
             "context": "342: onError: (error: any) => {\n343: console.error('Bulk update error:', error);\n344: toast({"
           }
