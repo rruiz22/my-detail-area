@@ -8,9 +8,11 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { usePermissions } from '@/hooks/usePermissions';
+import { SlackIntegrationCard } from './integrations/SlackIntegrationCard';
 import {
   Mail,
   MessageSquare,
@@ -22,7 +24,8 @@ import {
   AlertCircle,
   CheckCircle,
   Key,
-  Globe
+  Globe,
+  Webhook
 } from 'lucide-react';
 
 interface SMTPConfig {
@@ -439,6 +442,70 @@ export const IntegrationSettings: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* OAuth & Third-Party Integrations */}
+      <Card className="card-enhanced">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Webhook className="h-5 w-5" />
+            {t('integrations.title')}
+          </CardTitle>
+          <CardDescription>
+            {t('integrations.description')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="slack" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="slack">Slack</TabsTrigger>
+              <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
+              <TabsTrigger value="api">API Keys</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="slack" className="mt-6">
+              <SlackIntegrationCard />
+            </TabsContent>
+
+            <TabsContent value="webhooks" className="mt-6">
+              <Card className="card-enhanced">
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    {t('integrations.webhook.title')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('integrations.webhook.description')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8 text-gray-500">
+                    <Webhook className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Webhook integration coming soon</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="api" className="mt-6">
+              <Card className="card-enhanced">
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    {t('integrations.api_keys.title')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('integrations.api_keys.description')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8 text-gray-500">
+                    <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>API key management coming soon</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+
       {/* SMTP Configuration */}
       <Card>
         <CardHeader>

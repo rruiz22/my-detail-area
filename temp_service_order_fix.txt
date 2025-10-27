@@ -1,0 +1,37 @@
+// Service Order specific interface
+export interface ServiceOrder {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  vehicleYear?: number;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleInfo?: string;
+  vehicleVin?: string;
+  po?: string;
+  ro?: string;
+  tag?: string;
+  stockNumber?: string; // Mapped from tag for table compatibility
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  services: ServiceItem[];
+  totalAmount?: number;
+  createdAt: string;
+  updatedAt: string;
+  dueDate?: string;
+  assignedTo?: string; // User name (populated from JOIN)
+  assigned_group_id?: string; // User ID from database (required for modal edit)
+  notes?: string;
+  customOrderNumber?: string;
+  dealerId?: number; // Dealer ID from Supabase (required for modal auto-population)
+  dealer_id?: number; // snake_case from database  
+  comments?: number; // Comments count from aggregation
+  order_type?: string; // Order type from database
+  completed_at?: string; // Completion timestamp
+  // Enhanced fields from JOINs
+  dealershipName?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  dueTime?: string;
+}
