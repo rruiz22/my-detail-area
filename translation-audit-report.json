@@ -13516,100 +13516,100 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 91,
+            "line": 96,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 186,
+            "line": 191,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 187,
+            "line": 192,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 209,
+            "line": 214,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_deleted",
-            "line": 212,
+            "line": 217,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_updated",
-            "line": 233,
+            "line": 238,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_created",
-            "line": 239,
+            "line": 244,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 257,
+            "line": 262,
             "exists": true
           },
           {
             "key": "pages.car_wash",
-            "line": 306,
+            "line": 311,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 319,
+            "line": 324,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 323,
+            "line": 328,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 329,
+            "line": 335,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.create_button",
-            "line": 330,
+            "line": 336,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 333,
+            "line": 339,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 352,
+            "line": 358,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 91,
-            "context": "90: toast({\n91: description: t('orders.order_not_found'),\n92: variant: 'destructive'"
+            "line": 96,
+            "context": "95: toast({\n96: description: t('orders.order_not_found'),\n97: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 186,
-            "context": "185: toast({\n186: title: t('errors.no_permission', 'No Permission'),\n187: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 191,
+            "context": "190: toast({\n191: title: t('errors.no_permission', 'No Permission'),\n192: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 187,
-            "context": "186: title: t('errors.no_permission', 'No Permission'),\n187: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n188: variant: 'destructive'"
+            "line": 192,
+            "context": "191: title: t('errors.no_permission', 'No Permission'),\n192: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n193: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 329,
-            "context": "328: disabled={!canCreate}\n329: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n330: aria-label={t('accessibility.car_wash_orders.create_button')}"
+            "line": 335,
+            "context": "334: disabled={!canCreate}\n335: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n336: aria-label={t('accessibility.car_wash_orders.create_button')}"
           }
         ],
         "coverage": 100,
