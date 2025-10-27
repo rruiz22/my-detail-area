@@ -57,8 +57,9 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
   /**
    * Handle file selection
    * - Validates file type and size
+   * - Confirms replacement if logo exists
    * - Shows instant preview
-   * - Triggers upload mutation
+   * - Triggers upload mutation with proper error handling
    */
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,6 +72,7 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
     if (!allowedTypes.includes(file.type)) {
       toast({
         title: t('dealerships.logo_invalid_format'),
+        description: t('dealerships.logo_allowed_formats'),
         variant: 'destructive'
       });
       return;
@@ -83,9 +85,30 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
     if (file.size > MAX_SIZE) {
       toast({
         title: t('dealerships.logo_too_large'),
+        description: t('dealerships.logo_size_limit'),
         variant: 'destructive'
       });
       return;
+    }
+
+    // ========================================================================
+    // CONFIRMATION: Ask user if they want to replace existing logo
+    // ========================================================================
+    if (currentLogoUrl) {
+      const confirmed = window.confirm(t('dealerships.logo_replace_confirm'));
+      if (!confirmed) {
+        // User cancelled - clear file input and exit
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        return;
+      }
+
+      // User confirmed replacement
+      toast({
+        title: t('dealerships.logo_replacing'),
+        description: t('dealerships.logo_replacing_description'),
+      });
     }
 
     // ========================================================================
@@ -102,9 +125,23 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
     // ========================================================================
     try {
       await uploadMutation.mutateAsync({ dealershipId, file });
-    } catch (error) {
+
+      // Success feedback
+      toast({
+        title: currentLogoUrl ? t('dealerships.logo_replaced_successfully') : t('dealerships.logo_uploaded_successfully'),
+        description: t('dealerships.logo_upload_success_description'),
+      });
+    } catch (error: any) {
       // Revert preview on error
       setPreviewUrl(currentLogoUrl || null);
+
+      // Detailed error feedback
+      console.error('Logo upload error:', error);
+      toast({
+        title: t('dealerships.logo_upload_failed'),
+        description: error?.message || t('dealerships.logo_upload_error_description'),
+        variant: 'destructive'
+      });
     }
 
     // Clear file input
@@ -166,6 +203,7 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
 
         {/* Upload/Change button */}
         <Button
+          type="button"
           variant="outline"
           size="sm"
           onClick={() => fileInputRef.current?.click()}
@@ -178,6 +216,7 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
         {/* Remove button (only show if logo exists) */}
         {previewUrl && (
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={handleRemoveLogo}
