@@ -1,0 +1,131 @@
+{
+  "integrations": {
+    "title": "Integraciones",
+    "description": "Conecta servicios de terceros para mejorar tu flujo de trabajo",
+    "load_error": "Error al cargar integraciones",
+    "update_error": "Error al actualizar integración",
+    "delete_error": "Error al eliminar integración",
+    "user_not_found": "Información de usuario no disponible",
+
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "error": "Error",
+      "pending": "Pendiente de Autorización",
+      "revoked": "Revocado"
+    },
+
+    "slack": {
+      "title": "Slack",
+      "description": "Envía notificaciones y actualizaciones a canales de Slack",
+      "connected_title": "Slack Conectado",
+      "connected_description": "Tu espacio de trabajo de Slack se ha conectado exitosamente",
+      "error_title": "Conexión Fallida",
+      "error_description": "Error al conectar Slack: {{reason}}",
+      "connect_error": "Error al iniciar conexión con Slack",
+      "not_connected": "Conecta tu espacio de trabajo de Slack para recibir notificaciones en tiempo real",
+      "connecting": "Conectando a Slack...",
+      "connect": "Conectar a Slack",
+      "disconnect": "Desconectar",
+      "disconnect_confirm": "¿Estás seguro de desconectar Slack? Esto detendrá todas las notificaciones.",
+      "disconnected": "Slack ha sido desconectado",
+      "enabled": "Notificaciones de Slack habilitadas",
+      "disabled": "Notificaciones de Slack deshabilitadas",
+      "enable_integration": "Habilitar Notificaciones",
+      "enable_description": "Recibe actualizaciones de órdenes y alertas en Slack",
+      "manage": "Administrar App",
+      "workspace": "Espacio de Trabajo",
+      "channel": "Canal",
+      "bot_id": "ID del Bot",
+      "scopes": "Permisos",
+      "error_occurred": "Error de Integración",
+      "benefits_title": "Lo que puedes hacer:",
+      "benefit_1": "Recibe notificaciones instantáneas cuando las órdenes se actualicen",
+      "benefit_2": "Recibe alertas de comentarios de clientes directamente en Slack",
+      "benefit_3": "Comparte actualizaciones de órdenes con tu equipo automáticamente"
+    },
+
+    "webhook": {
+      "title": "Webhooks",
+      "description": "Envía datos en tiempo real a sistemas externos",
+      "add_webhook": "Agregar Webhook",
+      "edit_webhook": "Editar Webhook",
+      "webhook_name": "Nombre del Webhook",
+      "webhook_url": "URL del Webhook",
+      "webhook_secret": "Clave Secreta",
+      "webhook_secret_hint": "Usada para verificar firmas de webhook",
+      "event_types": "Tipos de Evento",
+      "event_order_created": "Orden Creada",
+      "event_order_updated": "Orden Actualizada",
+      "event_order_completed": "Orden Completada",
+      "event_payment_received": "Pago Recibido",
+      "test_webhook": "Enviar Prueba",
+      "test_success": "Webhook de prueba enviado exitosamente",
+      "test_failed": "Webhook de prueba falló",
+      "delete_webhook": "Eliminar Webhook",
+      "delete_confirm": "¿Estás seguro de eliminar este webhook?",
+      "delivery_logs": "Registros de Entrega",
+      "last_delivery": "Última Entrega",
+      "no_deliveries": "Sin entregas de webhook aún"
+    },
+
+    "email_smtp": {
+      "title": "SMTP Personalizado",
+      "description": "Usa tu propio servidor de correo para notificaciones",
+      "smtp_host": "Host SMTP",
+      "smtp_port": "Puerto SMTP",
+      "smtp_username": "Usuario",
+      "smtp_password": "Contraseña",
+      "smtp_encryption": "Encriptación",
+      "smtp_from_email": "Email De",
+      "smtp_from_name": "Nombre De",
+      "test_connection": "Probar Conexión",
+      "connection_success": "Conexión SMTP exitosa",
+      "connection_failed": "Conexión SMTP fallida"
+    },
+
+    "api_keys": {
+      "title": "Claves API",
+      "description": "Administra el acceso API para aplicaciones externas",
+      "create_key": "Crear Clave API",
+      "key_name": "Nombre de la Clave",
+      "key_permissions": "Permisos",
+      "key_created": "Clave API Creada",
+      "key_created_description": "Guarda esta clave de forma segura. No se mostrará de nuevo.",
+      "copy_key": "Copiar Clave",
+      "revoke_key": "Revocar Clave",
+      "revoke_confirm": "¿Estás seguro de revocar esta clave API?",
+      "last_used": "Último Uso",
+      "never_used": "Nunca Usada"
+    },
+
+    "rate_limits": {
+      "title": "Límites de Tasa",
+      "description": "Límites y cuotas de uso de API",
+      "endpoint": "Endpoint",
+      "limit": "Límite",
+      "used": "Usado",
+      "remaining": "Restante",
+      "resets_at": "Se Reinicia En",
+      "per_hour": "por hora",
+      "per_minute": "por minuto"
+    },
+
+    "audit_log": {
+      "title": "Registro de Auditoría de Seguridad",
+      "description": "Rastrea el acceso y cambios en integraciones",
+      "event_type": "Evento",
+      "user": "Usuario",
+      "timestamp": "Fecha y Hora",
+      "details": "Detalles",
+      "severity_info": "Info",
+      "severity_warning": "Advertencia",
+      "severity_error": "Error",
+      "severity_critical": "Crítico",
+      "no_logs": "Sin registros de auditoría aún",
+      "filter_by_severity": "Filtrar por Severidad",
+      "filter_by_event": "Filtrar por Tipo de Evento",
+      "export_logs": "Exportar Registros"
+    }
+  }
+}

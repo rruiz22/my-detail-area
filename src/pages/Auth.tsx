@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,15 +8,35 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
-import { XCircle } from 'lucide-react';
+import { XCircle, Check, X } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { supabase } from '@/integrations/supabase/client';
 import { formatRoleName } from '@/utils/roleUtils';
+import { useAuthBranding } from '@/hooks/useAuthBranding';
+
+// TypeScript interfaces
+interface InvitationData {
+  id: string;
+  email: string;
+  role_name: string;
+  dealer_id?: number;
+  dealership: {
+    name: string;
+  };
+  invitation_token?: string;
+  created_at?: string;
+  expires_at?: string;
+}
 
 // Security utility functions
-const sanitizeInput = (input: string) => {
-  return input.trim().replace(/[<>]/g, '');
+const sanitizeInput = (input: string): string => {
+  // Remove potentially dangerous characters while preserving valid input
+  return input
+    .trim()
+    .replace(/[<>'"&]/g, '') // Remove HTML/script injection characters
+    .replace(/[^\w\s@.\-]/g, '') // Allow only alphanumeric, spaces, email chars
+    .substring(0, 500); // Enforce maximum length
 };
 
 const validateEmail = (email: string) => {
@@ -32,9 +52,49 @@ const validatePassword = (password: string) => {
     number: /\d/.test(password),
     special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
   };
-  
+
   const score = Object.values(checks).filter(Boolean).length;
-  return { checks, score, isValid: score >= 4 };
+  return { checks, score, isValid: score >= 5 }; // All 5 criteria required
+};
+
+// Rate limiting utility (brute force protection)
+const rateLimiter = {
+  tryAcquire: (email: string): boolean => {
+    try {
+      const key = `auth_attempts_${email.toLowerCase()}`;
+      const stored = localStorage.getItem(key);
+      const data = stored ? JSON.parse(stored) : { count: 0, resetTime: Date.now() + 15 * 60 * 1000 };
+
+      // Reset counter if time window expired
+      if (Date.now() > data.resetTime) {
+        data.count = 0;
+        data.resetTime = Date.now() + 15 * 60 * 1000; // 15 minutes
+      }
+
+      // Check if limit exceeded
+      if (data.count >= 5) {
+        return false; // Too many attempts
+      }
+
+      // Increment counter
+      data.count++;
+      localStorage.setItem(key, JSON.stringify(data));
+      return true;
+    } catch (error) {
+      // If localStorage fails, allow the attempt (fail open for UX)
+      console.warn('[Rate Limiter] localStorage error:', error);
+      return true;
+    }
+  },
+
+  reset: (email: string): void => {
+    try {
+      const key = `auth_attempts_${email.toLowerCase()}`;
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn('[Rate Limiter] Failed to reset:', error);
+    }
+  }
 };
 
 export default function Auth() {
@@ -47,10 +107,12 @@ export default function Auth() {
   const { user, signIn, signUp } = useAuth();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { branding } = useAuthBranding();
 
   // Invitation and signup states
   const [isSignupMode, setIsSignupMode] = useState(false);
-  const [invitationData, setInvitationData] = useState<any>(null);
+  const [invitationData, setInvitationData] = useState<InvitationData | null>(null);
   const [invitationLoading, setInvitationLoading] = useState(false);
   const [invitationError, setInvitationError] = useState<string | null>(null);
 
@@ -88,14 +150,15 @@ export default function Auth() {
       }
 
       if (!data || !data.valid) {
-        throw new Error(data?.message || 'Invalid invitation token');
+        throw new Error(data?.message || t('auth.signup.invalid_token_error'));
       }
 
       setInvitationData(data.invitation);
       setEmail(data.invitation.email); // Set email from invitation
       setInvitationError(null);
-    } catch (error: any) {
-      setInvitationError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('auth.unexpected_error');
+      setInvitationError(errorMessage);
       setInvitationData(null);
     } finally {
       setInvitationLoading(false);
@@ -125,26 +188,34 @@ export default function Auth() {
       return;
     }
 
+    // Check rate limit (brute force protection)
+    if (!rateLimiter.tryAcquire(sanitizedEmail)) {
+      toast({
+        title: t('auth.too_many_attempts_title'),
+        description: t('auth.too_many_attempts_description'),
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { error } = await signIn(sanitizedEmail, password);
 
       if (error) {
-        let errorMessage = error.message;
-
-        // Provide helpful error messages
-        if (error.message.includes('Invalid login credentials')) {
-          errorMessage = t('auth.invalid_credentials');
-        } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = t('auth.email_not_confirmed');
-        }
+        // Use generic error message to prevent email enumeration
+        // Log detailed error server-side only (not shown to user)
+        console.error('[AUTH] Sign-in failed:', error.message);
 
         toast({
           title: t('auth.sign_in_error_title'),
-          description: errorMessage,
+          description: t('auth.invalid_credentials_generic'),
           variant: "destructive",
         });
+      } else {
+        // Successful login - reset rate limiter for this email
+        rateLimiter.reset(sanitizedEmail);
       }
     } catch (error) {
       toast({
@@ -228,7 +299,7 @@ export default function Auth() {
           });
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: t('auth.error_title'),
         description: t('auth.unexpected_error'),
@@ -287,34 +358,59 @@ export default function Auth() {
         description: t('auth.signup.email_confirmation_pending_with_invitation'),
         variant: "default",
       });
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('auth.unexpected_error');
       toast({
         title: t('auth.signup.invitation_accept_error'),
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-8">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 sm:p-8">
+      {/* Skip Link for Keyboard Navigation */}
+      <a
+        href="#auth-form"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      >
+        {t('auth.skip_to_form', 'Skip to sign in form')}
+      </a>
+
       {/* Top right controls */}
-      <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
+      <header className="fixed top-4 right-4 flex items-center gap-2 z-10">
         <LanguageSwitcher />
         <ThemeToggle />
-      </div>
+      </header>
 
       {/* Centered Login Form */}
-      <div className="w-full max-w-md animate-fade-in">
+      <main className="w-full max-w-md animate-fade-in">
         {/* Logo and Brand Section */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight drop-shadow-lg dark:drop-shadow-xl" style={{
-            textShadow: 'var(--text-shadow, 2px 2px 4px rgba(0, 0, 0, 0.3), 0px 0px 8px rgba(0, 0, 0, 0.1))'
-          }}>
-            {t('auth.app_title', 'My Detail Area')}
+          {/* Custom Logo (if configured by system_admin) */}
+          {branding.logo_url && branding.enabled && (
+            <div className="flex justify-center mb-4">
+              <img
+                src={branding.logo_url}
+                alt={branding.title}
+                className="h-16 w-auto object-contain max-w-full"
+                onError={(e) => {
+                  // Hide broken image if load fails
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+
+          {/* Title (customizable by system_admin) */}
+          <h1 className="text-4xl font-bold text-foreground mb-2 tracking-tight">
+            {branding.enabled && branding.title ? branding.title : t('auth.app_title', 'My Detail Area')}
           </h1>
+
+          {/* Tagline (customizable by system_admin) */}
           <p className="text-muted-foreground text-lg">
-            {t('auth.app_subtitle', 'Dealership Operations Platform')}
+            {branding.enabled && branding.tagline ? branding.tagline : t('auth.app_subtitle', 'Dealership Operations Platform')}
           </p>
         </div>
 
@@ -329,8 +425,8 @@ export default function Auth() {
 
             {/* Invitation Info */}
             {isSignupMode && invitationData && (
-              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
+              <div className="mt-4 p-3 bg-indigo-500/10 dark:bg-indigo-500/10 rounded-lg border border-indigo-500/30 dark:border-indigo-500/30" role="status">
+                <p className="text-sm text-indigo-500 dark:text-indigo-500">
                   {t('auth.signup.invitation_info', 'You\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{formatRoleName(invitationData.role_name)}</strong>
                 </p>
               </div>
@@ -338,8 +434,8 @@ export default function Auth() {
 
             {/* Invitation Error */}
             {isSignupMode && invitationError && (
-              <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-800">
-                <p className="text-sm text-red-700 dark:text-red-300">
+              <div className="mt-4 p-3 bg-red-500/10 dark:bg-red-500/10 rounded-lg border border-red-500/30 dark:border-red-500/30" role="alert" aria-live="assertive">
+                <p className="text-sm text-red-500 dark:text-red-500">
                   {invitationError}
                 </p>
               </div>
@@ -348,9 +444,9 @@ export default function Auth() {
           <CardContent className="pt-0">
             {/* Loading State */}
             {invitationLoading && isSignupMode && (
-              <div className="flex items-center justify-center py-8">
+              <div className="flex items-center justify-center py-8" role="status" aria-live="polite">
                 <div className="flex items-center gap-3">
-                  <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                  <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" aria-hidden="true" />
                   <span className="text-muted-foreground">{t('auth.signup.verifying_invitation', 'Verifying invitation...')}</span>
                 </div>
               </div>
@@ -358,7 +454,7 @@ export default function Auth() {
 
             {/* Show form only if not loading invitation or if in signin mode */}
             {(!invitationLoading && (!isSignupMode || (isSignupMode && invitationData))) && (
-              <form onSubmit={isSignupMode ? handleSignUp : handleSignIn} className="space-y-6">
+              <form id="auth-form" onSubmit={isSignupMode ? handleSignUp : handleSignIn} className="space-y-6">
                 {/* First Name - Only for signup */}
                 {isSignupMode && (
                   <div className="grid grid-cols-2 gap-4">
@@ -369,10 +465,12 @@ export default function Auth() {
                       <Input
                         id="firstName"
                         type="text"
+                        autoComplete="given-name"
                         value={firstName}
                         onChange={(e) => setFirstName(sanitizeInput(e.target.value))}
                         maxLength={50}
                         required
+                        aria-required="true"
                         className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors"
                         placeholder={t('auth.signup.first_name_placeholder', 'Enter first name')}
                       />
@@ -384,10 +482,12 @@ export default function Auth() {
                       <Input
                         id="lastName"
                         type="text"
+                        autoComplete="family-name"
                         value={lastName}
                         onChange={(e) => setLastName(sanitizeInput(e.target.value))}
                         maxLength={50}
                         required
+                        aria-required="true"
                         className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors"
                         placeholder={t('auth.signup.last_name_placeholder', 'Enter last name')}
                       />
@@ -403,10 +503,12 @@ export default function Auth() {
                   <Input
                     id="email"
                     type="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(sanitizeInput(e.target.value))}
                     maxLength={100}
                     required
+                    aria-required="true"
                     disabled={isSignupMode && invitationData} // Disable if signup with invitation
                     className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors disabled:opacity-50"
                     placeholder={t('auth.email_placeholder', 'Enter your email address')}
@@ -429,33 +531,35 @@ export default function Auth() {
                   <Input
                     id="password"
                     type="password"
+                    autoComplete={isSignupMode ? "new-password" : "current-password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    aria-required="true"
                     className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors"
                     placeholder={isSignupMode ? t('auth.signup.password_placeholder', 'Create a strong password') : t('auth.password_placeholder', 'Enter your password')}
                   />
                   {/* Password strength indicator for signup */}
                   {isSignupMode && password && (
-                    <div className="space-y-1">
+                    <div className="space-y-1" aria-live="polite" aria-atomic="true">
                       {(() => {
                         const validation = validatePassword(password);
                         return (
                           <div className="text-xs space-y-1">
-                            <div className={`flex items-center gap-2 ${validation.checks.length ? 'text-green-600' : 'text-red-600'}`}>
-                              <div className="w-2 h-2 rounded-full bg-current" />
+                            <div className={`flex items-center gap-2 ${validation.checks.length ? 'text-emerald-500' : 'text-red-500'}`}>
+                              {validation.checks.length ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                               {t('auth.signup.password_length', 'At least 8 characters')}
                             </div>
-                            <div className={`flex items-center gap-2 ${validation.checks.uppercase ? 'text-green-600' : 'text-red-600'}`}>
-                              <div className="w-2 h-2 rounded-full bg-current" />
+                            <div className={`flex items-center gap-2 ${validation.checks.uppercase ? 'text-emerald-500' : 'text-red-500'}`}>
+                              {validation.checks.uppercase ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                               {t('auth.signup.password_uppercase', 'One uppercase letter')}
                             </div>
-                            <div className={`flex items-center gap-2 ${validation.checks.lowercase ? 'text-green-600' : 'text-red-600'}`}>
-                              <div className="w-2 h-2 rounded-full bg-current" />
+                            <div className={`flex items-center gap-2 ${validation.checks.lowercase ? 'text-emerald-500' : 'text-red-500'}`}>
+                              {validation.checks.lowercase ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                               {t('auth.signup.password_lowercase', 'One lowercase letter')}
                             </div>
-                            <div className={`flex items-center gap-2 ${validation.checks.number ? 'text-green-600' : 'text-red-600'}`}>
-                              <div className="w-2 h-2 rounded-full bg-current" />
+                            <div className={`flex items-center gap-2 ${validation.checks.number ? 'text-emerald-500' : 'text-red-500'}`}>
+                              {validation.checks.number ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                               {t('auth.signup.password_number', 'One number')}
                             </div>
                           </div>
@@ -470,10 +574,11 @@ export default function Auth() {
                   type="submit"
                   className="w-full h-11 bg-primary dark:bg-accent hover:bg-primary/90 dark:hover:bg-accent/90 text-primary-foreground dark:text-accent-foreground font-medium text-base shadow-lg"
                   disabled={loading || (isSignupMode && !invitationData)}
+                  aria-busy={loading}
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-hidden="true" />
                       {isSignupMode ? t('auth.signup.creating_account', 'Creating account...') : t('auth.signing_in', 'Signing in...')}
                     </div>
                   ) : (
@@ -488,11 +593,7 @@ export default function Auth() {
                       {t('auth.signup.already_have_account', 'Already have an account?')}{' '}
                       <button
                         type="button"
-                        onClick={() => {
-                          const newUrl = new URL(window.location.href);
-                          newUrl.searchParams.set('mode', 'signin');
-                          window.location.href = newUrl.toString();
-                        }}
+                        onClick={() => navigate('/auth?mode=signin')}
                         className="text-primary hover:underline font-medium"
                       >
                         {t('auth.signup.sign_in_instead', 'Sign in instead')}
@@ -510,9 +611,7 @@ export default function Auth() {
                   {t('auth.signup.invitation_invalid', 'This invitation is invalid or has expired.')}
                 </p>
                 <Button
-                  onClick={() => {
-                    window.location.href = '/auth';
-                  }}
+                  onClick={() => navigate('/auth')}
                   variant="outline"
                 >
                   {t('auth.signup.go_to_signin', 'Go to Sign In')}
@@ -529,10 +628,10 @@ export default function Auth() {
         </Card>
 
         {/* Footer */}
-        <div className="text-center mt-8 text-sm text-muted-foreground">
+        <footer className="text-center mt-8 text-sm text-muted-foreground">
           <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')}</p>
-        </div>
-      </div>
+        </footer>
+      </main>
     </div>
   );
 }

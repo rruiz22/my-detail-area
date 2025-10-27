@@ -43,7 +43,7 @@ export const TAB_CONFIGS = {
   settings: {
     key: 'settings',
     defaultTab: 'profile',
-    validTabs: ['profile', 'notifications', 'dealership', 'integrations']
+    validTabs: ['platform', 'profile', 'notifications', 'dealership', 'integrations']
   },
   dealer_view: {
     key: 'dealer',
@@ -59,6 +59,11 @@ export const TAB_CONFIGS = {
     key: 'profile',
     defaultTab: 'personal',
     validTabs: ['personal', 'security', 'notifications', 'activity', 'privacy']
+  },
+  stock: {
+    key: 'stock',
+    defaultTab: 'inventory',
+    validTabs: ['inventory', 'analytics', 'dms_config', 'sync_history']
   }
 } as const;
 
@@ -199,4 +204,41 @@ export function useSearchPersistence(pageKey: PageKey) {
   }, [storageKey]);
 
   return [searchTerm, setPersistedSearchTerm] as const;
+}
+
+/**
+ * Hook for pagination persistence (page number)
+ */
+export function usePaginationPersistence(pageKey: PageKey) {
+  const storageKey = `${pageKey}_currentPage`;
+
+  // Initialize from localStorage or default to 1
+  const [currentPage, setCurrentPage] = useState(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        const page = parseInt(stored, 10);
+        if (page > 0) {
+          return page;
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to read pagination from localStorage:', error);
+    }
+    return 1; // Default to first page
+  });
+
+  const setPersistedPage = useCallback((page: number) => {
+    if (page > 0) {
+      setCurrentPage(page);
+      // Save to localStorage
+      try {
+        localStorage.setItem(storageKey, page.toString());
+      } catch (error) {
+        console.warn('Failed to save pagination to localStorage:', error);
+      }
+    }
+  }, [storageKey]);
+
+  return [currentPage, setPersistedPage] as const;
 }

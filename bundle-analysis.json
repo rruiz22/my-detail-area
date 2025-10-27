@@ -1,0 +1,152 @@
+{
+  "timestamp": "2025-10-26T22:54:33.118Z",
+  "totalSize": 5670864,
+  "mainBundle": {
+    "name": "index-Bah78xfc.js",
+    "size": 2876758
+  },
+  "vendorTotal": 142275,
+  "chunks": 32,
+  "files": [
+    {
+      "name": "index-Bah78xfc.js",
+      "size": 2876758
+    },
+    {
+      "name": "excel-export-CkTdEjr1.js",
+      "size": 939759
+    },
+    {
+      "name": "pdf-export-OjNgQOlJ.js",
+      "size": 442060
+    },
+    {
+      "name": "charts-D4YKUgUY.js",
+      "size": 422994
+    },
+    {
+      "name": "supabase-Bn4L0l6d.js",
+      "size": 147160
+    },
+    {
+      "name": "react-vendor-CA82q7Og.js",
+      "size": 142275
+    },
+    {
+      "name": "framer-motion-DQbyZR9x.js",
+      "size": 115564
+    },
+    {
+      "name": "ui-radix-C9PBIsmS.js",
+      "size": 115495
+    },
+    {
+      "name": "icons-Cgb2-q9F.js",
+      "size": 74486
+    },
+    {
+      "name": "moment-utils-sgAgHLir.js",
+      "size": 60852
+    },
+    {
+      "name": "forms-DxmZTg8O.js",
+      "size": 53042
+    },
+    {
+      "name": "i18n-CMZ0gVkf.js",
+      "size": 46258
+    },
+    {
+      "name": "query-DVHQFWkx.js",
+      "size": 39745
+    },
+    {
+      "name": "date-utils-BZ4OrMcX.js",
+      "size": 27796
+    },
+    {
+      "name": "react-router-BmkmqSfn.js",
+      "size": 23584
+    },
+    {
+      "name": "shadcn-ui--BulIq_u.js",
+      "size": 20946
+    },
+    {
+      "name": "vinOcrWorker-B5ksYskw.js",
+      "size": 17741
+    },
+    {
+      "name": "ui-components-O-kfjEqM.js",
+      "size": 16776
+    },
+    {
+      "name": "scanner-qr-CZ-roqhI.js",
+      "size": 16710
+    },
+    {
+      "name": "tesseract-e6bEK8Fz.js",
+      "size": 15494
+    },
+    {
+      "name": "AccountSecurityTab-BBuWEKbg.js",
+      "size": 10307
+    },
+    {
+      "name": "PersonalInformationTab-BTQQdhtI.js",
+      "size": 9500
+    },
+    {
+      "name": "ActivityAuditTab-DpRAihRa.js",
+      "size": 8434
+    },
+    {
+      "name": "NotificationsPreferencesTab-DoPPm5Gn.js",
+      "size": 7619
+    },
+    {
+      "name": "DataPrivacyTab-CbPOlUli.js",
+      "size": 7434
+    },
+    {
+      "name": "csvUtils-DNHzTjU0.js",
+      "size": 6266
+    },
+    {
+      "name": "useProfileMutations-CAJ7EzdS.js",
+      "size": 4601
+    },
+    {
+      "name": "index-BpxOViaj.js",
+      "size": 551
+    },
+    {
+      "name": "dev-tools-Com_ce2F.js",
+      "size": 265
+    },
+    {
+      "name": "empty-module-DZ3tlZw6.js",
+      "size": 89
+    },
+    {
+      "name": "table-CVnx6HjX.js",
+      "size": 79
+    },
+    {
+      "name": "dnd-CVnx6HjX.js",
+      "size": 77
+    },
+    {
+      "name": "fabric-canvas-l0sNRNKZ.js",
+      "size": 52
+    },
+    {
+      "name": "huggingface-l0sNRNKZ.js",
+      "size": 50
+    },
+    {
+      "name": "opencv-l0sNRNKZ.js",
+      "size": 45
+    }
+  ]
+}

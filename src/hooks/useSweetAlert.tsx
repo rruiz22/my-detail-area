@@ -1,6 +1,27 @@
 import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 
+/**
+ * @deprecated This hook is deprecated. Use ConfirmDialog component instead for Team Chat style modals.
+ *
+ * Migration guide:
+ * - Replace useSweetAlert with ConfirmDialog component from '@/components/ui/confirm-dialog'
+ * - See VehiclePhotosTab.tsx, ReconOrders.tsx, or ServiceOrders.tsx for examples
+ *
+ * Example:
+ * ```tsx
+ * <ConfirmDialog
+ *   open={deleteDialogOpen}
+ *   onOpenChange={setDeleteDialogOpen}
+ *   title="Delete Item?"
+ *   description="This action cannot be undone."
+ *   confirmText="Delete"
+ *   cancelText="Cancel"
+ *   onConfirm={handleConfirm}
+ *   variant="destructive"
+ * />
+ * ```
+ */
 export function useSweetAlert() {
   const { t } = useTranslation();
 
