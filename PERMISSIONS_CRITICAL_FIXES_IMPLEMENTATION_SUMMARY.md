@@ -1,9 +1,9 @@
 # 🔐 Sistema de Permisos - Fixes Críticos Implementados
 
-**Fecha**: Octubre 26, 2025  
-**Sprint**: 1 (Críticos)  
-**Estado**: ✅ **COMPLETADO** (7/7 fixes)  
-**Tiempo Estimado**: 20 horas  
+**Fecha**: Octubre 26, 2025
+**Sprint**: 1 (Críticos)
+**Estado**: ✅ **COMPLETADO** (7/7 fixes)
+**Tiempo Estimado**: 20 horas
 **Tiempo Real**: ~4-5 horas (desarrollo en paralelo)
 
 ---
@@ -80,19 +80,19 @@ const { data: permissionsData } = await supabase.rpc('get_user_permissions_batch
 // ✅ Agregado AbortController
 const fetchUserPermissions = useCallback(async (abortSignal?: AbortSignal) => {
   // ... fetch logic
-  
+
   // Check abort before setState
   if (abortSignal?.aborted) {
     return; // No setState on unmounted component
   }
-  
+
   setEnhancedUser(userData);
 }, [user, isLoadingProfile, fetchGranularRolePermissions]);
 
 useEffect(() => {
   const abortController = new AbortController();
   fetchUserPermissions(abortController.signal);
-  
+
   // Cleanup: abort on unmount
   return () => {
     abortController.abort();
@@ -180,7 +180,7 @@ rolesMap.forEach(role => {
 
 // ✅ DESPUÉS (inmutable)
 const aggregatedSystemPerms = new Set(
-  Array.from(rolesMap.values()).flatMap(role => 
+  Array.from(rolesMap.values()).flatMap(role =>
     Array.from(role.system_permissions)
   )
 );
@@ -286,16 +286,16 @@ export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children
 export const sanitize = (data: any, redactLevel: 'partial' | 'full' = 'partial'): any => {
   // En dev/debug: mostrar todo
   if (shouldLog()) return data;
-  
+
   // En producción: redactar
   if (redactLevel === 'full') return '[REDACTED]';
-  
+
   // Partial: mostrar estructura, ocultar valores
   if (typeof data === 'object') {
     if (Array.isArray(data)) return `[Array(${data.length})]`;
     return `[Object with ${Object.keys(data).length} keys]`;
   }
-  
+
   return '[REDACTED]';
 };
 
@@ -305,16 +305,16 @@ export const secure = {
     if (shouldLog()) console.log('🔐', message, data);
     // En producción: silencio
   },
-  
+
   role: (message, roles?) => {
     if (shouldLog()) console.log('👥', message, roles);
     else if (roles) console.log('👥', message, sanitize(roles, 'partial'));
   },
-  
+
   admin: (message, data?) => {
     console.log('⚡', message, shouldLog() ? data : sanitize(data, 'full'));
   },
-  
+
   security: (message, data?) => {
     console.warn('🛡️', message, shouldLog() ? data : sanitize(data, 'full'));
   }
@@ -371,13 +371,13 @@ BEGIN
     (NEW.id, 'stock', true),
     (NEW.id, 'contacts', true),
     (NEW.id, 'chat', true),
-    
+
     -- Secondary modules (disabled por seguridad)
     (NEW.id, 'reports', false),
     (NEW.id, 'settings', false),
     (NEW.id, 'users', false),
     (NEW.id, 'management', false);
-  
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -397,7 +397,7 @@ CREATE TRIGGER trigger_dealership_created
 const hasModuleAccess = useCallback((module: AppModule): boolean => {
   // ❌ ANTES (fail-open)
   // if (modules.length === 0) return true; // Permite todo
-  
+
   // ✅ DESPUÉS (fail-closed)
   if (modules.length === 0) {
     console.warn(`⚠️ No modules configured - DENYING ${module} (fail-closed)`);
@@ -518,20 +518,20 @@ describe('usePermissions - System Admin Verification', () => {
     // Mock user with system_admin role
     const user = { id: 'test-id', email: 'admin@test.com' };
     const profileData = { role: 'system_admin' };
-    
+
     // Should query dealer_memberships
     // Should query dealer_custom_roles
     // Should verify dealer_id = NULL
     // Should verify role_name = 'system_admin'
-    
+
     const { result } = renderHook(() => usePermissions(), {
       wrapper: createWrapper(user, profileData)
     });
-    
+
     await waitFor(() => {
       expect(result.current.enhancedUser?.is_system_admin).toBe(true);
     });
-    
+
     // Verify all 4 verification layers were called
     expect(supabase.from).toHaveBeenCalledTimes(2); // memberships + roles
   });
@@ -578,9 +578,9 @@ SELECT * FROM pg_proc WHERE proname = 'get_user_permissions_batch';
 SELECT * FROM pg_trigger WHERE tgname = 'trigger_dealership_created';
 
 # Check dealerships have modules
-SELECT 
-  d.id, 
-  d.name, 
+SELECT
+  d.id,
+  d.name,
   COUNT(dm.id) as module_count
 FROM dealerships d
 LEFT JOIN dealership_modules dm ON dm.dealer_id = d.id
@@ -625,10 +625,10 @@ npm run build
 
 ## ✅ Sign-Off
 
-**Implementado por**: Claude AI  
-**Fecha**: Octubre 26, 2025  
-**Revisión**: Pendiente de testing  
-**Aprobación**: Pendiente  
+**Implementado por**: Claude AI
+**Fecha**: Octubre 26, 2025
+**Revisión**: Pendiente de testing
+**Aprobación**: Pendiente
 
 ---
 
@@ -647,13 +647,13 @@ npm run build
 
 ### Before → After
 
-**Load Time**: 350ms → 80ms (**⬇️ 77%**)  
-**Security Layers**: 1 → 4 (**⬆️ 4x**)  
-**Data Exposure**: Full → Sanitized (**🛡️ Protected**)  
-**Default Policy**: Allow → Deny (**🔐 Secure**)  
-**Memory Leaks**: Yes → No (**✅ Fixed**)  
-**DB Queries**: 3-5 → 1 (**⬇️ 70%**)  
-**Critical Issues**: 7 → 0 (**✅ 100%**)  
+**Load Time**: 350ms → 80ms (**⬇️ 77%**)
+**Security Layers**: 1 → 4 (**⬆️ 4x**)
+**Data Exposure**: Full → Sanitized (**🛡️ Protected**)
+**Default Policy**: Allow → Deny (**🔐 Secure**)
+**Memory Leaks**: Yes → No (**✅ Fixed**)
+**DB Queries**: 3-5 → 1 (**⬇️ 70%**)
+**Critical Issues**: 7 → 0 (**✅ 100%**)
 
 ### Business Impact
 
@@ -666,4 +666,3 @@ npm run build
 ---
 
 **END OF IMPLEMENTATION SUMMARY**
-
