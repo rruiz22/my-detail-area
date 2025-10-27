@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { userProfileCache } from '@/services/userProfileCache';
 import { auth, error as logError, warn } from '@/utils/logger';
+import { Session, User } from '@supabase/supabase-js';
+import { useQueryClient } from '@tanstack/react-query';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Extended user interface with profile data
 interface ExtendedUser extends User {
@@ -12,6 +13,7 @@ interface ExtendedUser extends User {
   last_name?: string;
   dealershipId?: number;
   dealership_name?: string;
+  avatar_seed?: string;
 }
 
 interface AuthContextType {
@@ -38,6 +40,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ PERF FIX: Get QueryClient for pre-loading permissions
+  const queryClient = useQueryClient();
+
   // Load extended user profile data with timeout and fallback
   const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
     try {
@@ -46,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Add timeout to prevent infinite loading
       const profilePromise = supabase
         .from('profiles')
-        .select('user_type, role, first_name, last_name, dealership_id')
+        .select('user_type, role, first_name, last_name, dealership_id, avatar_seed')
         .eq('id', authUser.id)
         .single();
 
@@ -58,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data: profile, error } = await Promise.race([
         profilePromise,
         timeoutPromise
-      ]) as any;
+      ]) as { data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string } | null; error: Error | null };
 
       if (error) {
         logError('Error loading user profile:', error);
@@ -77,13 +82,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role: profile.role || 'admin',
         first_name: profile.first_name,
         last_name: profile.last_name,
-        dealershipId: profile.dealership_id
+        dealershipId: profile.dealership_id,
+        avatar_seed: profile.avatar_seed
       };
 
       auth('Extended user profile loaded:', {
         user_type: extendedUser.user_type,
         role: extendedUser.role
       });
+
+      // ✅ PERF FIX: Pre-load permissions in background to populate React Query cache
+      // This runs in parallel and doesn't block the user profile return
+      if (profile.dealership_id || extendedUser.user_type === 'system_admin') {
+        auth('🚀 Pre-loading permissions for instant page access...');
+
+        // Prefetch permissions (fire-and-forget)
+        queryClient.prefetchQuery({
+          queryKey: ['user-permissions', authUser.id],
+          // Don't need queryFn - usePermissions hook will handle it
+        }).catch((error) => {
+          // Silently fail - permissions will load normally when needed
+          logError('Background permission pre-load failed (non-critical):', error);
+        });
+      }
 
       return extendedUser;
 
@@ -113,7 +134,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         first_name: cachedProfile.first_name,
         last_name: cachedProfile.last_name,
         dealershipId: cachedProfile.dealershipId,
-        dealership_name: cachedProfile.dealership_name
+        dealership_name: cachedProfile.dealership_name,
+        avatar_seed: cachedProfile.avatar_seed
       };
       setUser(cachedUser);
 
@@ -131,7 +153,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             last_name: freshProfile.last_name || '',
             email: freshProfile.email || '',
             dealershipId: freshProfile.dealershipId,
-            dealership_name: freshProfile.dealership_name
+            dealership_name: freshProfile.dealership_name,
+            avatar_seed: freshProfile.avatar_seed
           });
         });
       }
@@ -150,7 +173,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         last_name: freshProfile.last_name || '',
         email: freshProfile.email || '',
         dealershipId: freshProfile.dealershipId,
-        dealership_name: freshProfile.dealership_name
+        dealership_name: freshProfile.dealership_name,
+        avatar_seed: freshProfile.avatar_seed
       });
     }
   };
@@ -213,7 +237,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string) => {
     const redirectUrl = `${window.location.origin}/dashboard`;
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,

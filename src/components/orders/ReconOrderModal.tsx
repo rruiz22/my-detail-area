@@ -1,4 +1,5 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,10 +14,10 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useDealerServices, useDealerships } from '@/hooks/useDealerships';
 import { usePermissions } from '@/hooks/usePermissions';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
-import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Loader2, Zap } from 'lucide-react';
@@ -155,13 +156,22 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   // Refs to prevent double-setting in Strict Mode
   const editModeInitialized = useRef(false);
   const currentOrderId = useRef<string | null>(null);
-  const [dealerships, setDealerships] = useState<DealershipInfo[]>([]);
-  const [services, setServices] = useState<DealerService[]>([]);
+
+  // Use React Query hooks for dealerships and services (with caching)
+  const { data: dealerships = [], isLoading: dealershipsLoading } = useDealerships();
+  const { data: services = [], isLoading: servicesLoading } = useDealerServices(
+    selectedDealership ? parseInt(selectedDealership) : null,
+    'Recon Dept'
+  );
+
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Combine loading states
+  const loading = dealershipsLoading || servicesLoading;
 
   const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
 
@@ -173,7 +183,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
   useEffect(() => {
     if (open) {
-      fetchDealerships();
+      // Dealerships are now loaded via React Query hook - no need to fetch manually
 
       if (order) {
         // Prevent double initialization in React Strict Mode
@@ -270,64 +280,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
     }
   }, [order?.id, open]); // Only re-run if order ID changes or modal opens
 
-  const fetchDealerships = async () => {
-    try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
-
-      const { data, error } = await supabase.rpc('get_user_accessible_dealers', {
-        user_uuid: user.user.id
-      });
-
-      if (error) throw error;
-      const dealerships = data || [];
-      setDealerships(dealerships);
-
-      // If in edit mode, find dealership by ID or name
-      if (order) {
-        let dealershipId = null;
-
-        // Try to find by dealer_id first (most reliable)
-        if (order.dealer_id || order.dealerId) {
-          dealershipId = (order.dealer_id || order.dealerId).toString();
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching dealerships:', error);
-    }
-  };
-
-
-  const fetchDealerData = async (dealershipId: string) => {
-    if (!dealershipId) return;
-
-    setLoading(true);
-    try {
-      // Get services for Recon Dept
-      const { data: servicesResult, error: servicesError } = await supabase
-        .rpc('get_dealer_services_by_department', {
-          p_dealer_id: parseInt(dealershipId),
-          p_department_name: 'Recon Dept'
-        });
-
-      if (servicesError) {
-        console.error('Error fetching services:', servicesError);
-        toast.error('Error loading services');
-      }
-
-      if (servicesResult) {
-        setServices(servicesResult);
-      } else {
-        setServices([]);
-      }
-    } catch (error) {
-      console.error('Error fetching dealer data:', error);
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (!order && isGlobalFilterActive && globalDealerFilter && dealerships.length > 0 && !selectedDealership) {
       handleDealershipChange(globalDealerFilter);
@@ -346,19 +298,15 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
       if (dealershipId) {
         setSelectedDealership(dealershipId);
-        fetchDealerData(dealershipId);
+        // Services are now loaded automatically via React Query hook
       }
     }
   }, [dealerships.length, order, selectedDealership]);
 
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealershipWithLog(dealershipId);
-    setServices([]);
     setSelectedServices([]);
-
-    if (dealershipId) {
-      fetchDealerData(dealershipId);
-    }
+    // Services are now loaded automatically via React Query hook when selectedDealership changes
   };
 
   const handleVehicleSelect = (result: VehicleSearchResult) => {
@@ -491,10 +439,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       notes: formData.notes || undefined,
       internalNotes: formData.internalNotes || undefined,
       completedAt: formData.completedAt,
-      dealerId: selectedDealership ? parseInt(selectedDealership) : undefined,
+      dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined,
       services: selectedServices || [],
       totalAmount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
-        const service = services.find((s: any) => s.id === serviceId);
+        const service = services.find((s: DealerService) => s.id === serviceId);
         return total + (service?.price || 0);
       }, 0) : 0
     };
@@ -528,6 +476,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null); // Reset any previous errors
 
     setSubmitting(true);
 
@@ -562,18 +511,24 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       // Show immediate success feedback
       toast.success(t('orders.creating_order'));
 
-      onSave(dbData);
+      await onSave(dbData);
 
-    } catch (error) {
+      // Only close modal on successful save
+      onClose();
+
+    } catch (error: any) {
+      // Keep modal open and show error
       console.error('Submit error:', error);
-      toast.error(t('orders.creation_failed'));
+      const errorMessage = error?.message || t('orders.creation_failed') || 'Failed to save order';
+      setSubmitError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSubmitting(false);
     }
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
-    const service = services.find((s: any) => s.id === serviceId);
+    const service = services.find((s: DealerService) => s.id === serviceId);
     return total + (service?.price || 0);
   }, 0) : 0;
 
@@ -594,6 +549,14 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
         <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
+            {/* Error Alert */}
+            {submitError && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{submitError}</AlertDescription>
+              </Alert>
+            )}
+
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="p-3 sm:p-4">
@@ -763,7 +726,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                               {t('orders.noServicesAvailable')}
                             </div>
                           ) : (
-                            services.map((service: any) => (
+                            services.map((service: DealerService) => (
                               <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
                                 <div className="flex items-start space-x-3 flex-1">
                                   <Checkbox

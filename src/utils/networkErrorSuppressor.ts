@@ -21,9 +21,25 @@ const NETWORK_ERROR_PATTERNS = [
   'A network error occurred',
 ];
 
+// Node.js polyfill warnings to suppress (from Excel/CSV libraries)
+const POLYFILL_WARNING_PATTERNS = [
+  'called in browser',
+  'returning empty object',
+  'require(\'stream\')',
+  'require(\'_process\')',
+  'require(\'buffer\')',
+];
+
 // Check if message contains network error patterns
 function isNetworkError(message: string): boolean {
   return NETWORK_ERROR_PATTERNS.some((pattern) =>
+    message.includes(pattern)
+  );
+}
+
+// Check if message contains polyfill warning patterns
+function isPolyfillWarning(message: string): boolean {
+  return POLYFILL_WARNING_PATTERNS.some((pattern) =>
     message.includes(pattern)
   );
 }
@@ -43,12 +59,17 @@ console.error = (...args: any[]) => {
   originalError.apply(console, args);
 };
 
-// Enhanced console.warn for network-related warnings
+// Enhanced console.warn for network-related warnings and polyfill noise
 console.warn = (...args: any[]) => {
   const message = args[0]?.toString() || '';
 
   // Suppress network-related warnings
   if (isNetworkError(message)) {
+    return;
+  }
+
+  // ✅ Suppress Node.js polyfill warnings (from Excel/CSV libraries)
+  if (isPolyfillWarning(message)) {
     return;
   }
 
@@ -76,4 +97,4 @@ window.addEventListener('error', (event) => {
   }
 });
 
-console.log('🛡️ Network error suppressor initialized - noisy network errors will be silenced');
+console.log('🛡️ Console noise suppressor initialized - network errors and polyfill warnings will be silenced');

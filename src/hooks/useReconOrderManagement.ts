@@ -22,7 +22,7 @@ interface ReconServiceItem {
 }
 
 // Recon order creation data
-interface ReconOrderData {
+export interface ReconOrderData {
   stockNumber?: string;
   vehicleYear?: number | string;
   vehicleMake?: string;
@@ -179,10 +179,15 @@ export const useReconOrderManagement = () => {
             .eq('is_active', true);
 
           if (dealershipError) {
-            console.error('Error fetching user dealerships:', dealershipError);
-            ordersQuery = ordersQuery.eq('dealer_id', 5);
+            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
+            console.error('❌ Recon - Failed to fetch dealer memberships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+          } else if (!userDealerships || userDealerships.length === 0) {
+            // 🔒 SECURITY: No memberships = no data access (fail-secure)
+            console.warn('⚠️ Recon - Multi-dealer user has NO dealer memberships - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
-            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
+            const dealerIds = userDealerships.map(d => d.dealer_id);
             console.log(`🏢 Recon Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
@@ -535,70 +540,6 @@ export const useReconOrderManagement = () => {
     }
   }, [queryClient, t]);
 
-  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
-  // useEffect(() => {
-  //   if (user && enhancedUser) {
-  //     refreshData();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user, enhancedUser]); // Dependencies: user, enhancedUser
-
-  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
-  // useEffect(() => {
-  //   const channel = supabase
-  //     .channel('recon_orders_realtime')
-  //     .on(
-  //       'postgres_changes',
-  //       {
-  //         event: '*',
-  //         schema: 'public',
-  //         table: 'orders',
-  //         filter: 'order_type=eq.recon'
-  //       },
-  //       async (payload) => {
-  //         console.log('Recon order real-time update:', payload);
-  //
-  //         if (payload.eventType === 'INSERT') {
-  //           const newOrder = transformReconOrder(payload.new as SupabaseOrder);
-  //           setOrders(prevOrders => [newOrder, ...prevOrders]);
-  //         } else if (payload.eventType === 'UPDATE') {
-  //           const updatedOrder = transformReconOrder(payload.new as SupabaseOrder);
-  //           setOrders(prevOrders =>
-  //             prevOrders.map(order =>
-  //               order.id === updatedOrder.id ? updatedOrder : order
-  //             )
-  //           );
-  //         } else if (payload.eventType === 'DELETE') {
-  //           setOrders(prevOrders =>
-  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-  //           );
-  //         }
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   // Also listen for T2L metrics changes
-  //   const t2lChannel = supabase
-  //     .channel('recon_t2l_realtime')
-  //     .on(
-  //       'postgres_changes',
-  //       {
-  //         event: '*',
-  //         schema: 'public',
-  //         table: 'recon_t2l_metrics'
-  //       },
-  //       () => {
-  //         console.log('T2L metrics updated, data will refresh automatically via main subscription');
-  //         // Let the main useOrderManagement hook handle the refresh to avoid conflicts
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //     supabase.removeChannel(t2lChannel);
-  //   };
-  // }, []);
 
   // Trigger initial fetch when enhancedUser becomes available
   useEffect(() => {
@@ -614,15 +555,23 @@ export const useReconOrderManagement = () => {
     }
   }, [reconOrdersPollingQuery.isFetching, reconOrdersPollingQuery.dataUpdatedAt]);
 
-  // Listen for status updates to trigger immediate refresh
+  // Listen for status updates to trigger immediate refresh using EventBus
   useEffect(() => {
     const handleStatusUpdate = () => {
       console.log('🔄 [Recon] Status update detected, triggering immediate polling refresh');
       reconOrdersPollingQuery.refetch();
     };
 
-    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
-    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+    // Import dynamically to avoid circular dependencies
+    import('@/utils/eventBus').then(({ orderEvents }) => {
+      orderEvents.on('orderStatusUpdated', handleStatusUpdate);
+    });
+
+    return () => {
+      import('@/utils/eventBus').then(({ orderEvents }) => {
+        orderEvents.off('orderStatusUpdated', handleStatusUpdate);
+      });
+    };
   }, [reconOrdersPollingQuery]);
 
   return {

@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Dealership {
   id: number;
@@ -39,7 +39,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
   const hasInitialized = useRef(false);
   const prevDealerIdRef = useRef<string | number | null>(null); // Track last processed dealer ID
 
-  // ✅ OPTIMIZATION: Use TanStack Query for shared cache
+  // ✅ OPTIMIZATION: Use TanStack Query for shared cache with localStorage
   const { data: dealerships = [], isLoading: loading, error: queryError } = useQuery({
     queryKey: ['accessible_dealerships', user?.id],
     queryFn: async () => {
@@ -56,9 +56,46 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
         throw fetchError;
       }
 
-      return (data || []) as Dealership[];
+      const dealershipsData = (data || []) as Dealership[];
+
+      // ✅ PERF FIX: Cache dealerships in localStorage
+      try {
+        localStorage.setItem('dealerships-cache', JSON.stringify({
+          data: dealershipsData,
+          timestamp: Date.now(),
+          userId: user.id
+        }));
+      } catch (error) {
+        // Ignore quota errors
+        console.warn('Failed to cache dealerships in localStorage:', error);
+      }
+
+      return dealershipsData;
     },
     enabled: !!user?.id,
+    // ✅ PERF FIX: Load from localStorage for instant initial render
+    initialData: () => {
+      if (!user?.id) return undefined;
+
+      try {
+        const cached = localStorage.getItem('dealerships-cache');
+        if (cached) {
+          const { data, timestamp, userId } = JSON.parse(cached);
+          // Use cache if less than 15 minutes old AND same user
+          if (
+            userId === user.id &&
+            Date.now() - timestamp < 15 * 60 * 1000
+          ) {
+            console.log('⚡ Using cached dealerships from localStorage');
+            return data as Dealership[];
+          }
+        }
+      } catch (error) {
+        // Ignore parse errors
+        console.warn('Failed to parse dealerships cache:', error);
+      }
+      return undefined;
+    },
     staleTime: 900000, // 15 minutes - dealerships rarely change
     gcTime: 1800000, // 30 minutes
     retry: 1,
@@ -125,14 +162,14 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
 
   const filterByModule = async (moduleName: AppModule): Promise<Dealership[]> => {
     const filteredDealerships: Dealership[] = [];
-    
+
     for (const dealership of dealerships) {
       try {
         const { data: hasAccess } = await supabase.rpc('dealership_has_module_access', {
           p_dealer_id: dealership.id,
           p_module: moduleName
         });
-        
+
         if (hasAccess) {
           filteredDealerships.push(dealership);
         }
@@ -140,7 +177,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
         console.error(`Error checking module access for dealership ${dealership.id}:`, error);
       }
     }
-    
+
     return filteredDealerships;
   };
 
