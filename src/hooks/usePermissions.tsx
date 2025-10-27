@@ -240,33 +240,23 @@ export const usePermissions = () => {
     // ✅ FIX #15: Track permission fetch performance
     return measureAsync(async () => {
       try {
-        // System admins have full access to everything
-        // Note: profileData.role comes from profiles table which is the source of truth
-        if (profileData.role === 'system_admin') {
-          logger.secure.admin('User is system_admin - full access granted', {
+        // Log system admins and managers (they have full access, but we still fetch their custom roles for UI display)
+        if (profileData.role === 'system_admin' || profileData.role === 'manager') {
+          logger.secure.admin(`User is ${profileData.role} - full access granted`, {
             userId: profileData.id,
-            email: profileData.email
+            email: profileData.email,
+            role: profileData.role
           });
 
           telemetry.trackEvent({
             category: EventCategory.PERMISSION,
-            action: 'system_admin_access_granted',
+            action: `${profileData.role}_access_granted`,
             label: profileData.email,
-            metadata: { userId: profileData.id }
+            metadata: { userId: profileData.id, role: profileData.role }
           });
+        }
 
-          return {
-          id: profileData.id,
-          email: profileData.email,
-          dealership_id: profileData.dealership_id,
-          is_system_admin: true,
-          custom_roles: [],
-          system_permissions: new Set(),
-          module_permissions: new Map()
-        };
-      }
-
-      // Fetch user's role assignments from BOTH tables
+      // Fetch user's role assignments from BOTH tables (including for managers/system_admins to show role badges)
       // ========================================================================
       // 1. Load dealer-specific custom roles (assigned via user_custom_role_assignments)
       // ========================================================================
@@ -363,13 +353,28 @@ export const usePermissions = () => {
 
       const roleIdsArray = Array.from(roleIds);
 
+      console.log('🔍 [usePermissions] Role Loading Debug:', {
+        assignmentsData,
+        membershipsData,
+        roleIds: Array.from(roleIds),
+        roleIdsArray,
+        rolesDebug
+      });
+
       if (roleIdsArray.length === 0) {
         console.warn('⚠️ User has no custom roles assigned');
+        console.log('🔍 [usePermissions] Detailed Check:', {
+          assignmentsCount: assignmentsData?.length || 0,
+          membershipsCount: membershipsData?.length || 0,
+          assignmentsData: assignmentsData,
+          membershipsData: membershipsData
+        });
         return {
           id: profileData.id,
           email: profileData.email,
           dealership_id: profileData.dealership_id,
-          is_system_admin: false,
+          is_system_admin: profileData.role === 'system_admin',
+          is_manager: profileData.role === 'manager',
           custom_roles: [],
           system_permissions: new Set(),
           module_permissions: new Map()
@@ -405,7 +410,8 @@ export const usePermissions = () => {
           id: profileData.id,
           email: profileData.email,
           dealership_id: profileData.dealership_id,
-          is_system_admin: false,
+          is_system_admin: profileData.role === 'system_admin',
+          is_manager: profileData.role === 'manager',
           custom_roles: [],
           system_permissions: new Set(),
           module_permissions: new Map()
@@ -460,9 +466,14 @@ export const usePermissions = () => {
           // 2. Role has module access enabled (checked HERE - NEW)
           // 3. Role has specific permission (added below)
 
-          // If role_module_access is empty, assume all modules enabled (backwards compatible)
-          // If role_module_access exists, only include if module is in the enabled set
-          const roleHasModuleAccess = !roleModulesEnabled || roleModulesEnabled.has(module);
+          // Verificar si el rol tiene ALGUNA configuración en role_module_access
+          // Si roleModuleAccessMap tiene al menos 1 entry para este rol, significa que hay config
+          const roleHasAnyModuleAccessConfig = roleModuleAccessMap.has(role.id);
+
+          // Aplicar lógica basada en si existe configuración
+          const roleHasModuleAccess = roleHasAnyModuleAccessConfig
+            ? (roleModulesEnabled?.has(module) ?? false) // Filtro estricto: solo si está en enabled set
+            : false; // Sin configuración = DENEGAR (fail-closed policy)
 
           if (!roleHasModuleAccess) {
             // Role has module disabled - skip these permissions
@@ -493,6 +504,14 @@ export const usePermissions = () => {
       rolesFromBatch.forEach((role: any) => {
         // Determine role type based on dealer_id
         const roleType = role.dealer_id === null ? 'system_role' : 'dealer_custom_role';
+
+        // Skip system role "user" - permissions come from custom roles only
+        // System roles "system_admin" and "manager" are handled earlier (full access bypass)
+        if (roleType === 'system_role' && role.role_name === 'user') {
+          logger.dev(`⚠️ Skipping system role "user" - permissions defined by custom roles only`);
+          return;
+        }
+
         processRole(role, roleType);
       });
 
@@ -527,7 +546,8 @@ export const usePermissions = () => {
         id: profileData.id,
         email: profileData.email,
         dealership_id: profileData.dealership_id,
-        is_system_admin: false,
+        is_system_admin: profileData.role === 'system_admin',
+        is_manager: profileData.role === 'manager',
         custom_roles: Array.from(rolesMap.values()),
         system_permissions: aggregatedSystemPerms,
         module_permissions: aggregatedModulePerms
@@ -573,44 +593,48 @@ export const usePermissions = () => {
         logger.dev('✅ Granular user permissions loaded successfully');
 
         // ✅ PERF FIX: Save to localStorage for instant next load
-        try {
-          localStorage.setItem('permissions-cache', JSON.stringify({
-            data: userData,
-            timestamp: Date.now(),
-            userId: user.id
-          }));
-        } catch (error) {
-          // Ignore quota errors
-          logger.dev('Failed to cache permissions in localStorage:', error);
-        }
+        // ⚠️ TEMPORARILY DISABLED: Map/Set don't serialize correctly to JSON
+        // TODO: Implement custom serialization (convert Map/Set to arrays) before saving
+        // try {
+        //   localStorage.setItem('permissions-cache', JSON.stringify({
+        //     data: userData,
+        //     timestamp: Date.now(),
+        //     userId: user.id
+        //   }));
+        // } catch (error) {
+        //   // Ignore quota errors
+        //   logger.dev('Failed to cache permissions in localStorage:', error);
+        // }
       }
 
       return userData;
     },
     enabled: !!user && !!profileData && !isLoadingProfile,
     // ✅ PERF FIX: Load from localStorage for instant initial render
-    initialData: () => {
-      if (!user?.id) return undefined;
+    // ⚠️ TEMPORARILY DISABLED: Cache format changed (Map/Set not serializable)
+    // TODO: Re-enable after implementing proper serialization/deserialization
+    // initialData: () => {
+    //   if (!user?.id) return undefined;
 
-      try {
-        const cached = localStorage.getItem('permissions-cache');
-        if (cached) {
-          const { data, timestamp, userId } = JSON.parse(cached);
-          // Use cache if less than 5 minutes old AND same user
-          if (
-            userId === user.id &&
-            Date.now() - timestamp < 5 * 60 * 1000
-          ) {
-            logger.dev('⚡ Using cached permissions from localStorage');
-            return data;
-          }
-        }
-      } catch (error) {
-        // Ignore parse errors
-        logger.dev('Failed to parse permissions cache:', error);
-      }
-      return undefined;
-    },
+    //   try {
+    //     const cached = localStorage.getItem('permissions-cache');
+    //     if (cached) {
+    //       const { data, timestamp, userId } = JSON.parse(cached);
+    //       // Use cache if less than 5 minutes old AND same user
+    //       if (
+    //         userId === user.id &&
+    //         Date.now() - timestamp < 5 * 60 * 1000
+    //       ) {
+    //         logger.dev('⚡ Using cached permissions from localStorage');
+    //         return data;
+    //       }
+    //     }
+    //   } catch (error) {
+    //     // Ignore parse errors
+    //     logger.dev('Failed to parse permissions cache:', error);
+    //   }
+    //   return undefined;
+    // },
     // ✅ PERF FIX: Keep previous data while refetching
     placeholderData: (previousData) => previousData,
     staleTime: 1000 * 60 * 5, // 5 minutes - data stays fresh

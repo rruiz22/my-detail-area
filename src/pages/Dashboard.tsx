@@ -1,19 +1,15 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { TrendingUp, Clock, CheckCircle, AlertCircle, DollarSign, Plus, Users, Settings, BarChart3, Zap, MessageCircle, AlertTriangle } from "lucide-react";
-import { getDashboardMetrics, mockOrders } from "@/lib/mockData";
-import { StatusBadge } from "@/components/StatusBadge";
-import { useNotifications } from "@/hooks/useNotifications";
 import dealershipHero from "@/assets/dealership-hero.jpg";
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { DashboardMetrics } from '@/components/dashboard/DashboardMetrics';
 import { DepartmentOverview } from '@/components/dashboard/DepartmentOverview';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { useNotifications } from "@/hooks/useNotifications";
 import { usePermissions } from '@/hooks/usePermissions';
+import { AlertTriangle, Clock, MessageCircle, Plus, Settings, TrendingUp, Users, Zap } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
   console.log('🟢 Dashboard component is RENDERING');
   const { t } = useTranslation();
@@ -123,8 +119,8 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
                 onClick={() => handleQuickAction(t('dashboard.quick_tools.vin_scanner'), '/vin-scanner')}
               >
@@ -134,8 +130,8 @@ export default function Dashboard() {
                 <span className="text-sm font-medium">{t('dashboard.quick_tools.vin_scanner')}</span>
               </Button>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
                 onClick={() => handleQuickAction(t('dashboard.quick_tools.nfc_tracking'), '/nfc-tracking')}
               >
@@ -145,8 +141,8 @@ export default function Dashboard() {
                 <span className="text-sm font-medium">{t('dashboard.quick_tools.nfc_tracking')}</span>
               </Button>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
                 onClick={() => handleQuickAction(t('dashboard.quick_tools.chat'), '/chat')}
               >
@@ -156,8 +152,8 @@ export default function Dashboard() {
                 <span className="text-sm font-medium">{t('dashboard.quick_tools.chat')}</span>
               </Button>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
                 onClick={() => handleQuickAction(t('dashboard.quick_tools.settings'), '/settings')}
               >

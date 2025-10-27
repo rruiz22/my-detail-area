@@ -15,6 +15,7 @@ import { DealershipFilter } from "./filters/DealershipFilter";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NotificationBell } from "./notifications/NotificationBell";
 import { ThemeToggle } from "./ThemeToggle";
+import { UserProfilePopover } from "./UserProfilePopover";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -54,6 +55,7 @@ function DashboardLayoutInner({ children, title }: DashboardLayoutProps) {
             <LanguageSwitcher />
             <ThemeToggle />
             {currentDealership?.id ? <NotificationBell dealerId={currentDealership.id} /> : null}
+            <UserProfilePopover />
           </div>
         </header>
 

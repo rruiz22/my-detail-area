@@ -1,3 +1,4 @@
+import { PermissionsDebugger } from "@/components/debug/PermissionsDebugger";
 import { RouteLogger } from "@/components/debug/RouteLogger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
@@ -262,6 +263,8 @@ const App = () => (
                     }}
                   >
                     <AppRoutes />
+                    {/* Permissions Debugger - Solo en desarrollo */}
+                    {import.meta.env.DEV && <PermissionsDebugger />}
                   </BrowserRouter>
                 </NotificationProvider>
               </GlobalChatWrapper>
