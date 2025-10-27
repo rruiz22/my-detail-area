@@ -5,10 +5,11 @@ import { useCallback } from 'react';
 interface UseStatusPermissionsReturn {
   canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;
   updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;
+  loading: boolean;
 }
 
 export function useStatusPermissions(): UseStatusPermissionsReturn {
-  const { enhancedUser, hasModulePermission } = usePermissions();
+  const { enhancedUser, hasModulePermission, loading } = usePermissions();
 
   const canUpdateStatus = useCallback(async (
     dealerId: string,
@@ -113,6 +114,7 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
 
   return {
     canUpdateStatus,
-    updateOrderStatus
+    updateOrderStatus,
+    loading
   };
 }
