@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Building2, Upload, X, Loader2 } from 'lucide-react';
@@ -18,6 +18,7 @@ import { toast } from '@/hooks/use-toast';
  * - Remove logo functionality
  * - File type and size validation
  * - Fallback to Building2 icon (Notion-style)
+ * - Auto-sync with currentLogoUrl prop changes (fixes modal refresh issue)
  *
  * USAGE:
  * <LogoUploader
@@ -31,12 +32,22 @@ interface LogoUploaderProps {
   dealershipId: number;
   currentLogoUrl?: string | null;
   size?: 'sm' | 'md' | 'lg';
+  onUploadSuccess?: () => void; // Callback after successful upload
 }
 
-export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: LogoUploaderProps) {
+export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md', onUploadSuccess }: LogoUploaderProps) {
   const { t } = useTranslation();
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentLogoUrl || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ========================================================================
+  // SYNC: Update preview when currentLogoUrl prop changes
+  // ========================================================================
+  // This fixes the issue where closing and reopening the modal shows
+  // the old logo instead of the newly uploaded one
+  useEffect(() => {
+    setPreviewUrl(currentLogoUrl || null);
+  }, [currentLogoUrl]);
 
   const uploadMutation = useUploadDealershipLogo();
   const deleteMutation = useDeleteDealershipLogo();
@@ -131,6 +142,9 @@ export function LogoUploader({ dealershipId, currentLogoUrl, size = 'md' }: Logo
         title: currentLogoUrl ? t('dealerships.logo_replaced_successfully') : t('dealerships.logo_uploaded_successfully'),
         description: t('dealerships.logo_upload_success_description'),
       });
+
+      // Trigger parent component refresh if callback provided
+      onUploadSuccess?.();
     } catch (error: any) {
       // Revert preview on error
       setPreviewUrl(currentLogoUrl || null);

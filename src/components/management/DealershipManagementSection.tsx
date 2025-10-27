@@ -301,6 +301,23 @@ export const DealershipManagementSection = () => {
           setIsModalOpen(false);
           setEditingDealership(null);
         }}
+        onRefresh={async () => {
+          // Refresh data without closing modal (for logo uploads)
+          await fetchDealerships();
+
+          // Update editingDealership with fresh data
+          if (editingDealership) {
+            const { data: freshDealership } = await supabase
+              .from('dealerships')
+              .select('*')
+              .eq('id', editingDealership.id)
+              .single();
+
+            if (freshDealership) {
+              setEditingDealership(freshDealership);
+            }
+          }
+        }}
         dealership={editingDealership}
       />
     </div>

@@ -173,6 +173,24 @@ export const DealershipManagement: React.FC = () => {
     handleModalClose();
   };
 
+  const handleModalRefresh = async () => {
+    // Refresh data without closing modal (for logo uploads)
+    await fetchDealerships();
+
+    // Update editingDealership with fresh data
+    if (editingDealership) {
+      const { data: freshDealership, error } = await supabase
+        .from('dealerships')
+        .select('*')
+        .eq('id', editingDealership.id)
+        .single();
+
+      if (!error && freshDealership) {
+        setEditingDealership(freshDealership);
+      }
+    }
+  };
+
   const handleInvitationSent = () => {
     toast({
       title: t('common.success'),
@@ -391,6 +409,7 @@ export const DealershipManagement: React.FC = () => {
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onSuccess={handleModalSuccess}
+        onRefresh={handleModalRefresh}
         dealership={editingDealership}
       />
 
