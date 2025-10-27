@@ -664,7 +664,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
       // Financial data - CRITICAL for reports
       total_amount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
-        const service = services.find((s: any) => s.id === serviceId);
+        const service = services.find((s: { id: string; price?: number }) => s.id === serviceId);
         return total + (service?.price || 0);
       }, 0) : 0,
 
@@ -818,7 +818,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
-    const service = services.find((s: any) => s.id === serviceId);
+    const service = services.find((s: { id: string; price?: number }) => s.id === serviceId);
     return total + (service?.price || 0);
   }, 0) : 0;
 
@@ -869,7 +869,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
                       </SelectTrigger>
                        <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
-                         {dealerships.map((dealer: any) => (
+                         {dealerships.map((dealer: { id: number; name: string; city?: string; state?: string }) => (
                            <SelectItem key={dealer.id} value={dealer.id.toString()}>
                              {dealer.name} - {dealer.city}, {dealer.state}
                            </SelectItem>
@@ -895,7 +895,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         } />
                       </SelectTrigger>
                        <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
-                         {assignedUsers.map((user: any) => (
+                         {assignedUsers.map((user: { id: string; name: string; email: string }) => (
                            <SelectItem key={user.id} value={user.id}>
                              {user.name} - {user.email}
                            </SelectItem>
@@ -1113,7 +1113,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                               {t('orders.noServicesAvailable')}
                             </div>
                           ) : (
-                            services.map((service: any) => (
+                            services.map((service: { id: string; name: string; price?: number; description?: string; category?: string }) => (
                               <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
                                 <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
                                   <Checkbox
