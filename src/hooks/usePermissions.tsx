@@ -353,22 +353,8 @@ export const usePermissions = () => {
 
       const roleIdsArray = Array.from(roleIds);
 
-      console.log('🔍 [usePermissions] Role Loading Debug:', {
-        assignmentsData,
-        membershipsData,
-        roleIds: Array.from(roleIds),
-        roleIdsArray,
-        rolesDebug
-      });
-
       if (roleIdsArray.length === 0) {
         console.warn('⚠️ User has no custom roles assigned');
-        console.log('🔍 [usePermissions] Detailed Check:', {
-          assignmentsCount: assignmentsData?.length || 0,
-          membershipsCount: membershipsData?.length || 0,
-          assignmentsData: assignmentsData,
-          membershipsData: membershipsData
-        });
         return {
           id: profileData.id,
           email: profileData.email,

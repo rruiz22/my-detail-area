@@ -70,16 +70,6 @@ export function UserDropdown() {
     return t('roles.user');
   };
 
-  // Debug: Log enhancedUser data
-  console.log('🔍 [UserDropdown] Enhanced User Data:', {
-    enhancedUser,
-    is_system_admin: enhancedUser?.is_system_admin,
-    custom_roles: enhancedUser?.custom_roles,
-    custom_roles_length: enhancedUser?.custom_roles?.length,
-    has_custom_roles: enhancedUser?.custom_roles && enhancedUser.custom_roles.length > 0,
-    enhancedUser_full: JSON.stringify(enhancedUser, null, 2)
-  });
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

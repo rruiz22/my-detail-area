@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 711,
-  "totalStrings": 6748,
-  "hardcodedStrings": 1479,
-  "translatedStrings": 5269,
+  "scannedFiles": 713,
+  "totalStrings": 6768,
+  "hardcodedStrings": 1496,
+  "translatedStrings": 5272,
   "issues": {
     "critical": [
       {
@@ -5817,6 +5817,85 @@
             "text": "Top Employee Performance",
             "line": 323,
             "context": "322: <CardHeader>\n323: <CardTitle>Top Employee Performance</CardTitle>\n324: </CardHeader>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "high"
+      },
+      {
+        "file": "src\\components\\debug\\PermissionsDebugger.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Permissions Debugger",
+            "line": 152,
+            "context": "151: <Button variant=\"outline\" className=\"shadow-lg\">\n152: <Shield className=\"h-4 w-4 mr-2\" />\n153: Permissions Debugger"
+          },
+          {
+            "text": "Permissions Debugger",
+            "line": 164,
+            "context": "163: <CardTitle className=\"flex items-center gap-2\">\n164: <Shield className=\"h-5 w-5\" />\n165: Permissions Debugger"
+          },
+          {
+            "text": "Overview",
+            "line": 193,
+            "context": "192: <TabsList className=\"grid w-full grid-cols-4\">\n193: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n194: <TabsTrigger value=\"modules\">Modules</TabsTrigger>"
+          },
+          {
+            "text": "Modules",
+            "line": 194,
+            "context": "193: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n194: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n195: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>"
+          },
+          {
+            "text": "Permissions",
+            "line": 195,
+            "context": "194: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n195: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>\n196: <TabsTrigger value=\"raw\">Raw</TabsTrigger>"
+          },
+          {
+            "text": "Ready",
+            "line": 227,
+            "context": "226: ) : (\n227: <Badge variant=\"default\">Ready</Badge>\n228: )}"
+          },
+          {
+            "text": "Quick Stats",
+            "line": 233,
+            "context": "232: <div className=\"border-t pt-3\">\n233: <h4 className=\"text-sm font-semibold mb-2\">Quick Stats</h4>\n234: <div className=\"grid grid-cols-2 gap-2 text-sm\">"
+          },
+          {
+            "text": "System Permissions",
+            "line": 305,
+            "context": "304: <div>\n305: <h4 className=\"text-sm font-semibold mb-2\">System Permissions</h4>\n306: <div className=\"space-y-1\">"
+          },
+          {
+            "text": "No system permissions",
+            "line": 309,
+            "context": "308: const sysPerms = enhancedUser?.system_permissions;\n309: if (!sysPerms) return <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n310: "
+          },
+          {
+            "text": "No system permissions",
+            "line": 319,
+            "context": "318: </div>\n319: )) : <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n320: })()}"
+          },
+          {
+            "text": "Module Permissions",
+            "line": 326,
+            "context": "325: <div>\n326: <h4 className=\"text-sm font-semibold mb-2\">Module Permissions</h4>\n327: {(() => {"
+          },
+          {
+            "text": "No module permissions",
+            "line": 329,
+            "context": "328: const modPerms = enhancedUser?.module_permissions;\n329: if (!modPerms) return <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n330: "
+          },
+          {
+            "text": "No module permissions",
+            "line": 355,
+            "context": "354: );\n355: }) : <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n356: })()}"
+          },
+          {
+            "text": "Debug info copied to clipboard!",
+            "line": 115,
+            "context": "114: navigator.clipboard.writeText(JSON.stringify(debugInfo, null, 2));\n115: alert('Debug info copied to clipboard!');\n116: };"
           }
         ],
         "translationCalls": [],
@@ -16334,6 +16413,52 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\UserProfilePopover.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "System Admin",
+            "line": 43,
+            "context": "42: {enhancedUser?.is_system_admin ? (\n43: <Badge variant=\"destructive\" className=\"text-xs\">\n44: System Admin"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "auth.user",
+            "line": 40,
+            "exists": false
+          },
+          {
+            "key": "profile.title",
+            "line": 60,
+            "exists": true
+          },
+          {
+            "key": "navigation.settings",
+            "line": 66,
+            "exists": true
+          },
+          {
+            "key": "app.logout",
+            "line": 75,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "auth.user",
+            "line": 40,
+            "context": "39: <p className=\"truncate text-sm text-muted-foreground\">\n40: {user.user_metadata?.full_name || t('auth.user')}\n41: </p>"
+          },
+          {
+            "key": "app.logout",
+            "line": 75,
+            "context": "74: <LogOut className=\"h-4 w-4\" />\n75: {t('app.logout')}\n76: </DropdownMenuItem>"
+          }
+        ],
+        "coverage": 80,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\StatusBadgeInteractive.tsx",
         "hardcodedStrings": [
           {
@@ -16485,112 +16610,118 @@
       },
       {
         "file": "src\\components\\LandingHeader.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "System Admin",
+            "line": 82,
+            "context": "81: {enhancedUser?.is_system_admin ? (\n82: <Badge variant=\"destructive\" className=\"text-xs\">\n83: System Admin"
+          }
+        ],
         "translationCalls": [
           {
             "key": "landing.app_name",
-            "line": 30,
+            "line": 33,
             "exists": false
           },
           {
             "key": "landing.navigation.features",
-            "line": 37,
-            "exists": false
-          },
-          {
-            "key": "landing.navigation.benefits",
             "line": 40,
             "exists": false
           },
           {
-            "key": "landing.navigation.testimonials",
+            "key": "landing.navigation.benefits",
             "line": 43,
             "exists": false
           },
           {
+            "key": "landing.navigation.testimonials",
+            "line": 46,
+            "exists": false
+          },
+          {
             "key": "app.dashboard",
-            "line": 55,
+            "line": 58,
             "exists": false
           },
           {
             "key": "auth.user",
-            "line": 75,
+            "line": 79,
             "exists": false
           },
           {
             "key": "navigation.settings",
-            "line": 83,
+            "line": 99,
             "exists": true
           },
           {
             "key": "pages.user_management",
-            "line": 90,
+            "line": 106,
             "exists": true
           },
           {
             "key": "app.logout",
-            "line": 99,
+            "line": 115,
             "exists": false
           },
           {
             "key": "landing.navigation.learn_more",
-            "line": 108,
+            "line": 124,
             "exists": false
           },
           {
             "key": "landing.navigation.start_trial",
-            "line": 111,
+            "line": 127,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "landing.app_name",
-            "line": 30,
-            "context": "29: <span className=\"hidden font-bold sm:inline-block text-foreground\">\n30: {t('landing.app_name')}\n31: </span>"
+            "line": 33,
+            "context": "32: <span className=\"hidden font-bold sm:inline-block text-foreground\">\n33: {t('landing.app_name')}\n34: </span>"
           },
           {
             "key": "landing.navigation.features",
-            "line": 37,
-            "context": "36: <a href=\"#features\" className=\"text-muted-foreground hover:text-foreground transition-colors\">\n37: {t('landing.navigation.features')}\n38: </a>"
+            "line": 40,
+            "context": "39: <a href=\"#features\" className=\"text-muted-foreground hover:text-foreground transition-colors\">\n40: {t('landing.navigation.features')}\n41: </a>"
           },
           {
             "key": "landing.navigation.benefits",
-            "line": 40,
-            "context": "39: <a href=\"#benefits\" className=\"text-muted-foreground hover:text-foreground transition-colors\">\n40: {t('landing.navigation.benefits')}\n41: </a>"
+            "line": 43,
+            "context": "42: <a href=\"#benefits\" className=\"text-muted-foreground hover:text-foreground transition-colors\">\n43: {t('landing.navigation.benefits')}\n44: </a>"
           },
           {
             "key": "landing.navigation.testimonials",
-            "line": 43,
-            "context": "42: <a href=\"#testimonials\" className=\"text-muted-foreground hover:text-foreground transition-colors\">\n43: {t('landing.navigation.testimonials')}\n44: </a>"
+            "line": 46,
+            "context": "45: <a href=\"#testimonials\" className=\"text-muted-foreground hover:text-foreground transition-colors\">\n46: {t('landing.navigation.testimonials')}\n47: </a>"
           },
           {
             "key": "app.dashboard",
-            "line": 55,
-            "context": "54: <LayoutDashboard className=\"h-4 w-4\" />\n55: {t('app.dashboard')}\n56: </Link>"
+            "line": 58,
+            "context": "57: <LayoutDashboard className=\"h-4 w-4\" />\n58: {t('app.dashboard')}\n59: </Link>"
           },
           {
             "key": "auth.user",
-            "line": 75,
-            "context": "74: <p className=\"w-[200px] truncate text-sm text-muted-foreground\">\n75: {user.user_metadata?.full_name || t('auth.user')}\n76: </p>"
+            "line": 79,
+            "context": "78: <p className=\"truncate text-sm text-muted-foreground\">\n79: {user.user_metadata?.full_name || t('auth.user')}\n80: </p>"
           },
           {
             "key": "app.logout",
-            "line": 99,
-            "context": "98: <LogOut className=\"h-4 w-4\" />\n99: {t('app.logout')}\n100: </DropdownMenuItem>"
+            "line": 115,
+            "context": "114: <LogOut className=\"h-4 w-4\" />\n115: {t('app.logout')}\n116: </DropdownMenuItem>"
           },
           {
             "key": "landing.navigation.learn_more",
-            "line": 108,
-            "context": "107: <Button variant=\"outline\" size=\"sm\">\n108: {t('landing.navigation.learn_more')}\n109: </Button>"
+            "line": 124,
+            "context": "123: <Button variant=\"outline\" size=\"sm\">\n124: {t('landing.navigation.learn_more')}\n125: </Button>"
           },
           {
             "key": "landing.navigation.start_trial",
-            "line": 111,
-            "context": "110: <Button asChild size=\"sm\">\n111: <Link to=\"/auth\">{t('landing.navigation.start_trial')}</Link>\n112: </Button>"
+            "line": 127,
+            "context": "126: <Button asChild size=\"sm\">\n127: <Link to=\"/auth\">{t('landing.navigation.start_trial')}</Link>\n128: </Button>"
           }
         ],
-        "coverage": 100,
+        "coverage": 92,
         "severity": "low"
       },
       {
@@ -19548,6 +19679,11 @@
         "file": "src\\components\\ui\\user-dropdown.tsx",
         "hardcodedStrings": [
           {
+            "text": "System Admin",
+            "line": 126,
+            "context": "125: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n126: <Shield className=\"w-3 h-3 mr-1\" />\n127: System Admin"
+          },
+          {
             "text": ", error);\r\n      setIsSigningOut(false);\r\n    }\r\n  };\r\n\r\n  const handleProfileClick = () => {\r\n    navigate(",
             "line": 34,
             "context": "33: } catch (error) {\n34: console.error('Sign out error:', error);\n35: setIsSigningOut(false);"
@@ -19575,44 +19711,39 @@
             "exists": true
           },
           {
-            "key": "roles.admin",
-            "line": 130,
-            "exists": true
-          },
-          {
             "key": "navigation.profile",
-            "line": 142,
-            "exists": true
-          },
-          {
-            "key": "navigation.management",
             "line": 149,
             "exists": true
           },
           {
+            "key": "navigation.management",
+            "line": 156,
+            "exists": true
+          },
+          {
             "key": "navigation.settings",
-            "line": 155,
+            "line": 162,
             "exists": true
           },
           {
             "key": "navigation.signing_out",
-            "line": 167,
+            "line": 174,
             "exists": false
           },
           {
             "key": "navigation.sign_out",
-            "line": 167,
+            "line": 174,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "navigation.signing_out",
-            "line": 167,
-            "context": "166: <LogOut className=\"mr-2 h-4 w-4\" />\n167: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n168: </DropdownMenuItem>"
+            "line": 174,
+            "context": "173: <LogOut className=\"mr-2 h-4 w-4\" />\n174: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n175: </DropdownMenuItem>"
           }
         ],
-        "coverage": 91,
+        "coverage": 82,
         "severity": "low"
       },
       {
@@ -49047,7 +49178,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "333 Component components need translation",
+      "description": "335 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -49069,6 +49200,7 @@
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
         "src\\components\\users\\AdvancedUserFilters.tsx",
         "src\\components\\dev\\StorageDevTools.tsx",
+        "src\\components\\debug\\PermissionsDebugger.tsx",
         "src\\tests\\scripts\\run-performance-tests.ts",
         "src\\pages\\Phase3Dashboard.tsx",
         "src\\hooks\\useVehicleWorkItems.tsx",
@@ -49186,6 +49318,7 @@
         "src\\hooks\\useDealershipModules.tsx",
         "src\\hooks\\useAdvancedVinScanner.tsx",
         "src\\config\\firebase.ts",
+        "src\\components\\ui\\user-dropdown.tsx",
         "src\\components\\ui\\carousel.tsx",
         "src\\components\\stock\\StockInventoryTable.tsx",
         "src\\components\\scanner\\QuickScanMode.tsx",
@@ -49225,10 +49358,11 @@
         "src\\hooks\\useAccessibleDealerships.tsx",
         "src\\contexts\\ServicesContext.tsx",
         "src\\contexts\\GlobalChatProvider.tsx",
+        "src\\components\\UserProfilePopover.tsx",
         "src\\components\\StatusBadgeInteractive.tsx",
+        "src\\components\\LandingHeader.tsx",
         "src\\components\\workflows\\VisualWorkflowBuilder.tsx",
         "src\\components\\ui\\vehicle-search-input.tsx",
-        "src\\components\\ui\\user-dropdown.tsx",
         "src\\components\\ui\\sheet.tsx",
         "src\\components\\ui\\duplicate-popover.tsx",
         "src\\components\\ui\\dialog.tsx",
@@ -49283,7 +49417,6 @@
         "src\\hooks\\useNFCManagement.tsx",
         "src\\hooks\\useCommunications.tsx",
         "src\\components\\ProtectedLayout.tsx",
-        "src\\components\\LandingHeader.tsx",
         "src\\components\\users\\UserAuditLog.tsx",
         "src\\components\\users\\UserAnalytics.tsx",
         "src\\components\\users\\UnifiedUserManagement.tsx",
@@ -49383,12 +49516,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "167 hours"
+      "estimatedEffort": "168 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2296 translation keys are referenced but missing",
+      "description": "2298 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "115 hours"
     }
