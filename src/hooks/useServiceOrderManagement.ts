@@ -5,8 +5,10 @@ import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { isDateInWeek } from '@/utils/weekUtils';
+import { dev, warn, error as logError } from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { enrichOrdersArray, createUserDisplayName, type EnrichmentLookups } from '@/services/orderEnrichment';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -24,7 +26,7 @@ interface ServiceItem {
 }
 
 // Service order creation data
-interface ServiceOrderData {
+export interface ServiceOrderData {
   customerName: string;
   customerEmail?: string;
   customerPhone?: string;
@@ -83,6 +85,10 @@ export interface ServiceOrder {
   notes?: string;
   customOrderNumber?: string;
   dealerId?: number; // Dealer ID from Supabase (required for modal auto-population)
+  dealer_id?: number; // snake_case from database
+  comments?: number; // Comments count from aggregation
+  order_type?: string; // Order type from database
+  completed_at?: string; // Completion timestamp
   // Enhanced fields from JOINs
   dealershipName?: string;
   assignedGroupName?: string;
@@ -134,10 +140,8 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
     minute: '2-digit',
     hour12: true
   }) : undefined,
-  // Comments count from aggregation
-  comments: Array.isArray((supabaseOrder as any).order_comments) && (supabaseOrder as any).order_comments[0]?.count
-    ? (supabaseOrder as any).order_comments[0].count
-    : 0,
+  // Comments count from aggregation (enriched by orderEnrichment service)
+  comments: 0, // Will be populated by enrichOrdersArray
 });
 
 export const useServiceOrderManagement = (activeTab: string, weekOffset: number = 0) => {
@@ -162,7 +166,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     async () => {
       if (!user || !enhancedUser) return [];
 
-      console.log('🔄 Smart polling: Fetching service orders...');
+      dev('🔄 Smart polling: Fetching service orders...');
 
       // Apply same dealer filtering logic as Sales Orders
       let ordersQuery = supabase
@@ -187,16 +191,21 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             .eq('is_active', true);
 
           if (dealershipError) {
-            console.error('Error fetching user dealerships:', dealershipError);
-            ordersQuery = ordersQuery.eq('dealer_id', 5);
+            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
+            logError('❌ Service - Failed to fetch dealer memberships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+          } else if (!userDealerships || userDealerships.length === 0) {
+            // 🔒 SECURITY: No memberships = no data access (fail-secure)
+            warn('⚠️ Service - Multi-dealer user has NO dealer memberships - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
-            const dealerIds = userDealerships?.map(d => d.dealer_id) || [5];
-            console.log(`🏢 Service Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            const dealerIds = userDealerships.map(d => d.dealer_id);
+            dev(`🏢 Service Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown
-          console.log(`🎯 Service Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+          dev(`🎯 Service Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
           ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
         }
       } else {
@@ -207,43 +216,58 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
-      // Fetch dealerships, profiles, and groups in parallel for better performance
+      // OPTIMIZATION: Use orderEnrichment service for DRY, type-safe, O(1) lookups
+      // Benefits: Single source of truth, better maintainability, consistent across order types
       const [dealershipsResult, profilesResult, groupsResult] = await Promise.all([
-        supabase.from('dealerships').select('id, name'),
+        supabase.from('dealerships').select('id, name, city, state'),
         supabase.from('profiles').select('id, first_name, last_name, email'),
         supabase.from('dealer_groups').select('id, name')
       ]);
 
-      // Create lookup maps for better performance
-      const dealershipMap = new Map(dealershipsResult.data?.map(d => [d.id, d.name]) || []);
-      const userMap = new Map(profilesResult.data?.map(u => [
-        u.id,
-        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
-      ]) || []);
-      const groupMap = new Map(groupsResult.data?.map(g => [g.id, g.name]) || []);
+      // Build EnrichmentLookups using orderEnrichment service
+      const lookups: EnrichmentLookups = {
+        dealerships: new Map(
+          dealershipsResult.data?.map(d => [d.id, {
+            name: d.name,
+            city: d.city || undefined,
+            state: d.state || undefined
+          }]) || []
+        ),
+        users: new Map(
+          profilesResult.data?.map(u => [u.id, {
+            name: createUserDisplayName(u),
+            email: u.email
+          }]) || []
+        ),
+        groups: new Map(
+          groupsResult.data?.map(g => [g.id, { name: g.name }]) || []
+        )
+      };
 
-      // Transform orders with joined data
-      const serviceOrders = (orders || []).map(order => {
+      // OPTIMIZATION: Use enrichOrdersArray for batch enrichment (single pass, O(1) lookups)
+      const enrichedOrders = enrichOrdersArray(orders || [], lookups);
+
+      // Transform to ServiceOrder interface
+      const serviceOrders = enrichedOrders.map(order => {
         const transformed = transformServiceOrder(order);
 
         // DEBUG: Log polling assignment data
-        console.log('🔄 Polling Assignment Debug:', {
+        dev('🔄 Polling Assignment Debug:', {
           orderId: order.id,
           orderNumber: order.order_number,
           assigned_group_id: order.assigned_group_id,
           due_date: order.due_date
         });
 
-        // Add joined data manually
-        transformed.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
-        transformed.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
-        transformed.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+        // Enriched fields from orderEnrichment service
+        transformed.dealershipName = order.dealershipName;
+        transformed.assignedTo = order.assignedTo;
+        transformed.assignedGroupName = order.assignedGroupName;
+        transformed.createdByGroupName = order.createdByGroupName;
+        transformed.dueTime = order.dueTime;
+        transformed.comments = order.comments;
 
-        // Fix assignment mapping - assigned_group_id contains user IDs
-        transformed.assignedTo = order.assigned_group_id ?
-          userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
-
-        console.log('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
+        dev('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
 
         return transformed;
       });
@@ -259,30 +283,44 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     [serviceOrdersPollingQuery.data]
   );
 
+  // OPTIMIZATION: Single-pass reduce for tabCounts calculation O(n)
+  // Benefits: Reduces 8 separate array iterations to 1, better performance for large datasets
   const tabCounts = useMemo((): ServiceTabCounts => {
     const today = new Date();
+    const todayString = today.toDateString();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowString = tomorrow.toDateString();
 
-    return {
+    // Single-pass accumulator for ALL tab counts
+    const counts = allOrders.reduce((acc, order) => {
+      const orderDate = new Date(order.dueDate || order.createdAt);
+      const orderDateString = orderDate.toDateString();
+
+      // Date-based counts
+      if (orderDateString === todayString) acc.today++;
+      if (orderDateString === tomorrowString) acc.tomorrow++;
+      if (isDateInWeek(orderDate, weekOffset)) acc.week++;
+
+      // Status-based counts
+      if (order.status === 'pending') acc.pending++;
+      else if (order.status === 'in_progress') acc.in_process++;
+      else if (order.status === 'completed') acc.completed++;
+      else if (order.status === 'cancelled') acc.cancelled++;
+
+      return acc;
+    }, {
       all: allOrders.length,
-      today: allOrders.filter(order => {
-        const orderDate = new Date(order.dueDate || order.createdAt);
-        return orderDate.toDateString() === today.toDateString();
-      }).length,
-      tomorrow: allOrders.filter(order => {
-        const orderDate = new Date(order.dueDate || order.createdAt);
-        return orderDate.toDateString() === tomorrow.toDateString();
-      }).length,
-      pending: allOrders.filter(order => order.status === 'pending').length,
-      in_process: allOrders.filter(order => order.status === 'in_progress').length,
-      completed: allOrders.filter(order => order.status === 'completed').length,
-      cancelled: allOrders.filter(order => order.status === 'cancelled').length,
-      week: allOrders.filter(order => {
-        const orderDate = new Date(order.dueDate || order.createdAt);
-        return isDateInWeek(orderDate, weekOffset);
-      }).length,
-    };
+      today: 0,
+      tomorrow: 0,
+      pending: 0,
+      in_process: 0,
+      completed: 0,
+      cancelled: 0,
+      week: 0
+    });
+
+    return counts;
   }, [allOrders, weekOffset]);
 
   const filteredOrders = useMemo(() => {
@@ -368,7 +406,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
   // Simplified refreshData - uses polling query for consistency
   const refreshData = useCallback(async () => {
-    console.log('🔄 Manual refresh triggered - using polling query');
+    dev('🔄 Manual refresh triggered - using polling query');
     await serviceOrdersPollingQuery.refetch();
   }, [serviceOrdersPollingQuery]);
 
@@ -382,14 +420,14 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     setLoading(true);
 
     try {
-      console.log('Creating service order with data:', orderData);
+      dev('Creating service order with data:', orderData);
 
       // Use database function to generate sequential order number
       const { data: orderNumberData, error: numberError } = await supabase
         .rpc('generate_service_order_number');
 
       if (numberError || !orderNumberData) {
-        console.error('Error generating order number:', numberError);
+        logError('Error generating order number:', numberError);
         throw new Error('Failed to generate service order number');
       }
 
@@ -417,7 +455,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         created_by: user.id, // Track creator for auto-follower
       };
 
-      console.log('Inserting service order to DB:', insertData);
+      dev('Inserting service order to DB:', insertData);
 
       const { data, error } = await supabase
         .from('orders')
@@ -426,25 +464,25 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         .single();
 
       if (error) {
-        console.error('Error creating service order:', error);
+        logError('Error creating service order:', error);
         throw error;
       }
 
-      console.log('Service order created successfully:', data);
+      dev('Service order created successfully:', data);
 
       // Auto-generate QR code and shortlink
       try {
         await generateQR(data.id, data.order_number, data.dealer_id);
-        console.log('QR code and shortlink generated for service order:', data.order_number);
+        dev('QR code and shortlink generated for service order:', data.order_number);
       } catch (qrError) {
-        console.error('Failed to generate QR code:', qrError);
+        logError('Failed to generate QR code:', qrError);
         // Don't fail the order creation if QR generation fails
       }
 
       // Force immediate refetch to refresh order list
       await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
     } catch (error) {
-      console.error('Error in createOrder:', error);
+      logError('Error in createOrder:', error);
       throw error;
     } finally {
       setLoading(false);
@@ -523,7 +561,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
       // Dates
       if (orderData.dueDate !== undefined) {
-        updateData.sla_deadline = orderData.dueDate;
+        updateData.due_date = orderData.dueDate;
       }
 
       // Notes
@@ -539,16 +577,16 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         .single();
 
       if (error) {
-        console.error('Error updating service order:', error);
+        logError('Error updating service order:', error);
         throw error;
       }
 
-      console.log('Service order updated successfully:', data);
+      dev('Service order updated successfully:', data);
 
       // Force immediate refetch to get fresh data
       await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
     } catch (error) {
-      console.error('Error in updateOrder:', error);
+      logError('Error in updateOrder:', error);
       throw error;
     } finally {
       setLoading(false);
@@ -567,85 +605,48 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         .eq('id', orderId);
 
       if (error) {
-        console.error('Error deleting service order:', error);
+        logError('Error deleting service order:', error);
         throw error;
       }
 
-      console.log('Service order deleted successfully');
+      dev('Service order deleted successfully');
 
       // Force immediate refetch to refresh order list
       await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
     } catch (error) {
-      console.error('Error in deleteOrder:', error);
+      logError('Error in deleteOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
   }, [user, queryClient]);
 
-  // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
-  // useEffect(() => {
-  //   refreshData();
-  // }, [refreshData]);
-
-  // DISABLED: Real-time subscription - now using ONLY polling system to prevent multiple refresh
-  // useEffect(() => {
-  //   if (!user) return;
-
-  //   const channel = supabase
-  //     .channel('service_orders_realtime')
-  //     .on(
-  //       'postgres_changes',
-  //       {
-  //         event: '*',
-  //         schema: 'public',
-  //         table: 'orders',
-  //         filter: 'order_type=eq.service'
-  //       },
-  //       async (payload) => {
-  //         console.log('Service order real-time update:', payload);
-
-  //         if (payload.eventType === 'INSERT') {
-  //           const newOrder = transformServiceOrder(payload.new as SupabaseOrder);
-  //           setOrders(prevOrders => [newOrder, ...prevOrders]);
-  //         } else if (payload.eventType === 'UPDATE') {
-  //           const updatedOrder = transformServiceOrder(payload.new as SupabaseOrder);
-  //           setOrders(prevOrders =>
-  //             prevOrders.map(order =>
-  //               order.id === updatedOrder.id ? updatedOrder : order
-  //             )
-  //           );
-  //         } else if (payload.eventType === 'DELETE') {
-  //           setOrders(prevOrders =>
-  //             prevOrders.filter(order => order.id !== (payload.old as { id: string }).id)
-  //           );
-  //         }
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [user]);
 
   // Update lastRefresh when polling completes
   useEffect(() => {
     if (!serviceOrdersPollingQuery.isFetching && serviceOrdersPollingQuery.dataUpdatedAt) {
       setLastRefresh(new Date(serviceOrdersPollingQuery.dataUpdatedAt));
-      console.log('⏰ Service Orders LastRefresh updated:', new Date(serviceOrdersPollingQuery.dataUpdatedAt).toLocaleTimeString());
+      dev('⏰ Service Orders LastRefresh updated:', new Date(serviceOrdersPollingQuery.dataUpdatedAt).toLocaleTimeString());
     }
   }, [serviceOrdersPollingQuery.isFetching, serviceOrdersPollingQuery.dataUpdatedAt]);
 
-  // Listen for status updates to trigger immediate refresh
+  // Listen for status updates to trigger immediate refresh using EventBus
   useEffect(() => {
     const handleStatusUpdate = () => {
-      console.log('🔄 [Service] Status update detected, triggering immediate polling refresh');
+      dev('🔄 [Service] Status update detected, triggering immediate polling refresh');
       serviceOrdersPollingQuery.refetch();
     };
 
-    window.addEventListener('orderStatusUpdated', handleStatusUpdate);
-    return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
+    // Import dynamically to avoid circular dependencies
+    import('@/utils/eventBus').then(({ orderEvents }) => {
+      orderEvents.on('orderStatusUpdated', handleStatusUpdate);
+    });
+
+    return () => {
+      import('@/utils/eventBus').then(({ orderEvents }) => {
+        orderEvents.off('orderStatusUpdated', handleStatusUpdate);
+      });
+    };
   }, [serviceOrdersPollingQuery]);
 
   return {

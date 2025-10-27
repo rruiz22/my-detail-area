@@ -8,16 +8,53 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import { getSystemTimezone } from '@/utils/dateUtils';
+import { dev, error as logError, warn } from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { OrderStatus } from '@/constants/orderStatus';
+
+// Constants for magic numbers
+const REFRESH_THROTTLE_MS = 1000;
 
 // Enhanced database types
 type SupabaseOrderRow = Database['public']['Tables']['orders']['Row'];
 type SupabaseOrderInsert = Database['public']['Tables']['orders']['Insert'];
 type SupabaseOrderUpdate = Database['public']['Tables']['orders']['Update'];
 
+// Supabase order with aggregated joins
+interface SupabaseOrderWithComments extends SupabaseOrderRow {
+  order_comments?: Array<{ count: number }>;
+}
+
+// Enhanced User types
+interface EnhancedUserBase {
+  dealership_id: number | null;
+  [key: string]: unknown;
+}
+
+interface EnhancedUserV1 extends EnhancedUserBase {
+  role: string;
+  groups?: Array<{ id: string; name: string }>;
+}
+
+interface EnhancedUserV2 extends EnhancedUserBase {
+  is_system_admin: boolean;
+  custom_roles?: Array<{ id: string; name: string }>;
+}
+
+type EnhancedUserType = EnhancedUserV1 | EnhancedUserV2;
+
+// Type guards
+function isEnhancedUserV2(user: EnhancedUserBase): user is EnhancedUserV2 {
+  return 'is_system_admin' in user && 'custom_roles' in user;
+}
+
+function isEnhancedUserV1(user: EnhancedUserBase): user is EnhancedUserV1 {
+  return 'role' in user && 'groups' in user;
+}
+
 // Service item interface
-interface OrderService {
+export interface OrderService {
   id: string;
   name: string;
   price: number;
@@ -81,41 +118,67 @@ type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
 
 // Unified Order type for components
 export interface Order {
+  // Core identifiers
   id: string;
+  orderNumber?: string; // camelCase for components
+  order_number?: string; // snake_case from database
+  custom_order_number?: string; // Custom numbering system
+
+  // Customer information
   customerName: string;
   customerEmail?: string;
   customerPhone?: string;
+
+  // Vehicle information
   vehicleYear?: number;
   vehicleMake?: string;
   vehicleModel?: string;
+  vehicleTrim?: string; // Vehicle trim level (e.g., "LX", "EX-L")
   vehicleInfo?: string;
   vehicleVin?: string;
   stockNumber?: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  tag?: string; // Tag for car wash/service orders
+
+  // Order management
+  status: OrderStatus;
   priority?: string;
+  orderType?: string; // camelCase
+  order_type?: string; // snake_case from database
+
+  // Dates
   dueDate?: string;
+  dueTime?: string;
   createdAt: string;
   updatedAt: string;
-  totalAmount?: number;
-  services?: OrderService[];
-  orderType?: string;
-  assignedTo?: string;
-  notes?: string;
+  completedAt?: string; // camelCase
+  completed_at?: string; // snake_case from database (recon/carwash orders)
 
-  // QR Code and Short Link fields
+  // Financial
+  totalAmount?: number; // camelCase
+  total_amount?: number; // snake_case from database
+  services?: OrderService[];
+
+  // Assignment and relationships
+  assignedTo?: string;
+  assignedGroupName?: string;
+  createdByGroupName?: string;
+  dealer_id?: number; // CRITICAL: Foreign key to dealerships table (multi-tenant)
+  dealershipName?: string;
+
+  // QR Code and Short Link
   shortLink?: string;
   qrCodeUrl?: string;
   qrGenerationStatus?: 'pending' | 'generating' | 'completed' | 'failed';
-  orderNumber?: string;
-  // Enhanced fields from JOINs
-  dealershipName?: string;
-  assignedGroupName?: string;
-  createdByGroupName?: string;
-  dueTime?: string;
+
+  // Team collaboration
+  comments?: number; // Comment count from aggregation
+
+  // Notes
+  notes?: string;
 }
 
 // Transform Supabase order to component order
-const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
+const transformOrder = (supabaseOrder: SupabaseOrderWithComments): Order => {
   // Helper function to safely get field values
   const getFieldValue = <T>(value: T | null | undefined, defaultValue?: T): T | undefined => {
     if (value === null || value === undefined) return defaultValue;
@@ -181,9 +244,7 @@ const transformOrder = (supabaseOrder: SupabaseOrderRow): Order => {
     }) : undefined,
 
     // Comments count from aggregation
-    comments: Array.isArray((supabaseOrder as any).order_comments) && (supabaseOrder as any).order_comments[0]?.count
-      ? (supabaseOrder as any).order_comments[0].count
-      : 0,
+    comments: supabaseOrder.order_comments?.[0]?.count ?? 0,
   };
 };
 
@@ -252,6 +313,40 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       weekEnd: weekEnd,
       timezone
     };
+  }, []);
+
+  // Helper function to enrich order data with related information
+  const enrichOrderData = useCallback(async (order: SupabaseOrderRow): Promise<Order> => {
+    try {
+      // Fetch related data in parallel
+      const [dealershipsResult, userProfilesResult, dealerGroupsResult] = await Promise.all([
+        supabase.from('dealerships').select('id, name').eq('id', order.dealer_id).single(),
+        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.from('dealer_groups').select('id, name')
+      ]);
+
+      // Create lookup maps
+      const dealershipName = dealershipsResult.data?.name || 'Unknown Dealer';
+      const userMap = new Map(userProfilesResult.data?.map((u) => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
+      const groupMap = new Map(dealerGroupsResult.data?.map((g) => [g.id, g.name]) || []);
+
+      // Transform and enrich the order
+      const transformedOrder = transformOrder(order);
+      transformedOrder.dealershipName = dealershipName;
+      transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
+      transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+      transformedOrder.assignedTo = order.assigned_group_id ?
+        userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+
+      return transformedOrder;
+    } catch (error) {
+      logError('Error enriching order data:', error);
+      // Fallback to basic transformation
+      return transformOrder(order);
+    }
   }, []);
 
   const calculateTabCounts = useMemo(() => (allOrders: Order[]) => {
@@ -380,11 +475,11 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     const now = Date.now();
     const timeSinceLastRefresh = now - lastRefreshTimeRef.current;
 
-    console.log(`🔄 refreshData called (${refreshCallCountRef.current}) - dealer: ${enhancedUser.dealership_id}, skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
+    dev(`🔄 refreshData called (${refreshCallCountRef.current}) - dealer: ${enhancedUser.dealership_id}, skipFiltering: ${skipFiltering}, timeSince: ${timeSinceLastRefresh}ms`);
 
     // Prevent excessive calls (less than 1 second apart) - more aggressive throttling
-    if (timeSinceLastRefresh < 1000 && refreshCallCountRef.current > 1) {
-      console.warn('⚠️ refreshData called too frequently, skipping to prevent loop');
+    if (timeSinceLastRefresh < REFRESH_THROTTLE_MS && refreshCallCountRef.current > 1) {
+      warn('⚠️ refreshData called too frequently, skipping to prevent loop');
       return;
     }
 
@@ -405,7 +500,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
         : 'all';
       const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
-      console.log(`🔍 Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
+      dev(`🔍 Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
       if (enhancedUser.dealership_id === null) {
@@ -418,26 +513,29 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             .eq('user_id', user.id)
             .eq('is_active', true);
 
-          if (dealershipError || !userDealerships || userDealerships.length === 0) {
-            console.warn('⚠️ No dealer memberships found - showing all dealerships');
-            const { data: allDealerships } = await supabase.from('dealerships').select('id');
-            const allDealerIds = allDealerships?.map(d => d.id) || [];
-            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+          if (dealershipError) {
+            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
+            logError('❌ Failed to fetch dealer memberships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+          } else if (!userDealerships || userDealerships.length === 0) {
+            // 🔒 SECURITY: No memberships = no data access (fail-secure, not fail-open)
+            warn('⚠️ Multi-dealer user has NO dealer memberships - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            console.log(`🏢 Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            dev(`🏢 Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            console.log(`🎯 Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+            dev(`🎯 Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
-            console.warn(`⚠️ Invalid dealerFilter: ${dealerFilter}, falling back to all dealers`);
-            const { data: allDealerships } = await supabase.from('dealerships').select('id');
-            const allDealerIds = allDealerships?.map(d => d.id) || [];
-            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+            // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
+            logError(`❌ Invalid dealerFilter value: ${dealerFilter} (type: ${typeof dealerFilter})`);
+            warn('⚠️ Invalid dealer filter - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           }
         }
       } else {
@@ -449,17 +547,17 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       const allowedOrderTypes = getAllowedOrderTypes();
       if (allowedOrderTypes.length > 0) {
         ordersQuery = ordersQuery.in('order_type', allowedOrderTypes);
-        console.log(`🔒 Filtering orders by allowed types: [${allowedOrderTypes.join(', ')}] for dealer ${enhancedUser.dealership_id}`);
+        dev(`🔒 Filtering orders by allowed types: [${allowedOrderTypes.join(', ')}] for dealer ${enhancedUser.dealership_id}`);
       }
 
       const { data: orders, error } = await ordersQuery;
 
       if (error) {
-        console.error('Error fetching orders:', error);
+        logError('Error fetching orders:', error);
         return;
       }
 
-      console.log(`📊 Fetched ${orders?.length || 0} orders for dealer ${enhancedUser.dealership_id}`);
+      dev(`📊 Fetched ${orders?.length || 0} orders for dealer ${enhancedUser.dealership_id}`);
 
       // Fetch related data in PARALLEL for better performance
       const [
@@ -473,13 +571,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       ]);
 
       if (dealershipsError) {
-        console.error('Error fetching dealerships:', dealershipsError);
+        logError('Error fetching dealerships:', dealershipsError);
       }
       if (profilesError) {
-        console.error('Error fetching user profiles:', profilesError);
+        logError('Error fetching user profiles:', profilesError);
       }
       if (groupsError) {
-        console.error('Error fetching dealer groups:', groupsError);
+        logError('Error fetching dealer groups:', groupsError);
       }
 
       // Create lookup maps for better performance
@@ -520,7 +618,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Force polling query to update
       await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
     } catch (error) {
-      console.error('Error in refreshData:', error);
+      logError('Error in refreshData:', error);
     } finally {
       setLoading(false);
     }
@@ -536,7 +634,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     setLoading(true);
 
     try {
-      console.log('Creating order with data:', orderData);
+      dev('Creating order with data:', orderData);
 
       // Determine order type from data or default to sales
       const orderType = (orderData.order_type || 'sales') as OrderType;
@@ -548,56 +646,46 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       let createdByGroupId: string | null = null;
 
       if (enhancedUser) {
-        console.log('📌 [createOrder] enhancedUser DEBUG:', {
-          has_is_system_admin: 'is_system_admin' in enhancedUser,
-          has_custom_roles: 'custom_roles' in enhancedUser,
-          has_groups: 'groups' in enhancedUser,
-          has_role: 'role' in enhancedUser,
-          is_system_admin: ('is_system_admin' in enhancedUser) ? (enhancedUser as any).is_system_admin : undefined,
-          custom_roles_count: ('custom_roles' in enhancedUser) ? (enhancedUser as any).custom_roles?.length : 0,
-          groups_count: ('groups' in enhancedUser) ? (enhancedUser as any).groups?.length : 0,
-          // Show first role/group details if exists
-          first_custom_role: ('custom_roles' in enhancedUser && (enhancedUser as any).custom_roles?.length > 0)
-            ? (enhancedUser as any).custom_roles[0]
-            : null,
-          first_group: ('groups' in enhancedUser && (enhancedUser as any).groups?.length > 0)
-            ? (enhancedUser as any).groups[0]
-            : null,
-        });
-        console.log('📌 [createOrder] Full enhancedUser object:', JSON.stringify(enhancedUser, null, 2));
+        // Type-safe enhanced user debugging and group assignment
+        if (isEnhancedUserV2(enhancedUser)) {
+          // Custom Roles System (V2)
+          dev('📌 [createOrder] Using EnhancedUserV2', {
+            is_system_admin: enhancedUser.is_system_admin,
+            custom_roles_count: enhancedUser.custom_roles?.length || 0,
+            first_role: enhancedUser.custom_roles?.[0] || null
+          });
 
-        // Custom Roles System (EnhancedUserV2)
-        if ('is_system_admin' in enhancedUser && 'custom_roles' in enhancedUser) {
-          // System admins don't need a group assignment
-          if ((enhancedUser as any).is_system_admin) {
-            console.log('✅ System admin - created_by_group_id will be null (admin access)');
-            // createdByGroupId remains null for system admins
-          }
-          // Use first active custom role if available
-          else if (enhancedUser.custom_roles && enhancedUser.custom_roles.length > 0) {
+          if (enhancedUser.is_system_admin) {
+            dev('✅ System admin - created_by_group_id will be null');
+            createdByGroupId = null;
+          } else if (enhancedUser.custom_roles && enhancedUser.custom_roles.length > 0) {
             createdByGroupId = enhancedUser.custom_roles[0].id;
-            console.log('📌 Using Custom Role system - created_by_group_id:', createdByGroupId);
+            dev('📌 Using Custom Role system - created_by_group_id:', createdByGroupId);
           } else {
-            console.log('⚠️ Custom Roles system active but user has no roles assigned');
+            dev('⚠️ Custom Roles system active but user has no roles assigned');
           }
-        }
-        // Legacy System (EnhancedUser)
-        else if ('groups' in enhancedUser && 'role' in enhancedUser) {
-          // System admins don't need a group assignment
-          if ((enhancedUser as any).role === 'system_admin') {
-            console.log('✅ System admin (legacy) - created_by_group_id will be null (admin access)');
-            // createdByGroupId remains null for system admins
-          }
-          // Use first active group if available
-          else if (enhancedUser.groups && enhancedUser.groups.length > 0) {
+        } else if (isEnhancedUserV1(enhancedUser)) {
+          // Legacy System (V1)
+          dev('📌 [createOrder] Using EnhancedUserV1', {
+            role: enhancedUser.role,
+            groups_count: enhancedUser.groups?.length || 0,
+            first_group: enhancedUser.groups?.[0] || null
+          });
+
+          if (enhancedUser.role === 'system_admin') {
+            dev('✅ System admin (legacy) - created_by_group_id will be null');
+            createdByGroupId = null;
+          } else if (enhancedUser.groups && enhancedUser.groups.length > 0) {
             createdByGroupId = enhancedUser.groups[0].id;
-            console.log('📌 Using Legacy system - created_by_group_id:', createdByGroupId);
+            dev('📌 Using Legacy system - created_by_group_id:', createdByGroupId);
           } else {
-            console.log('⚠️ Legacy system active but user has no groups assigned');
+            dev('⚠️ Legacy system active but user has no groups assigned');
           }
+        } else {
+          warn('⚠️ Unknown enhancedUser format', { enhancedUser });
         }
       } else {
-        console.log('⚠️ No enhancedUser available for created_by_group_id assignment');
+        dev('⚠️ No enhancedUser available for created_by_group_id assignment');
       }
 
       // orderData is already in snake_case format from transformToDbFormat in the modal
@@ -611,7 +699,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         created_by_group_id: createdByGroupId, // Track which GROUP the user belonged to when creating
       };
 
-      console.log('Inserting order to DB:', newOrder);
+      dev('Inserting order to DB:', newOrder);
 
       const { data, error } = await supabase
         .from('orders')
@@ -620,11 +708,11 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         .single();
 
       if (error) {
-        console.error('Error creating order:', error);
+        logError('Error creating order:', error);
         throw error;
       }
 
-      console.log('Order created successfully:', data);
+      dev('Order created successfully:', data);
 
       // Enrich the new order with dealer info
       const enrichedNewOrder = await enrichOrderData(data);
@@ -637,22 +725,22 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Auto-generate QR code and shortlink in background (non-blocking)
       generateQR(data.id, data.order_number, data.dealer_id)
         .then(() => {
-          console.log('QR code and shortlink generated for order:', data.order_number);
+          dev('QR code and shortlink generated for order:', data.order_number);
         })
         .catch((qrError) => {
-          console.error('Failed to generate QR code:', qrError);
+          logError('Failed to generate QR code:', qrError);
           // QR generation failure doesn't affect order creation
         });
 
       // Invalidate to ensure data consistency in background
       queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
-      console.error('Error in createOrder:', error);
+      logError('Error in createOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user, generateQR, queryClient]);
+  }, [user, enhancedUser, generateQR, queryClient, enrichOrderData]);
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<OrderFormData>) => {
     if (!user) return;
@@ -755,11 +843,11 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         .single();
 
       if (error) {
-        console.error('Error updating order:', error);
+        logError('Error updating order:', error);
         throw error;
       }
 
-      console.log('Order updated successfully:', data);
+      dev('Order updated successfully:', data);
 
       // Enrich updated order
       const enrichedUpdatedOrder = await enrichOrderData(data);
@@ -774,12 +862,12 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Invalidate to ensure data consistency in background
       queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
-      console.error('Error in updateOrder:', error);
+      logError('Error in updateOrder:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [user, queryClient]);
+  }, [user, queryClient, enrichOrderData]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
@@ -793,11 +881,11 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         .eq('id', orderId);
 
       if (error) {
-        console.error('Error deleting order:', error);
+        logError('Error deleting order:', error);
         throw error;
       }
 
-      console.log('Order deleted successfully');
+      dev('Order deleted successfully');
 
       // Optimistic update: Remove order from cache immediately
       queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
@@ -807,7 +895,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Invalidate to ensure data consistency in background
       queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
-      console.error('Error in deleteOrder:', error);
+      logError('Error in deleteOrder:', error);
       throw error;
     } finally {
       setLoading(false);
@@ -831,7 +919,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     async () => {
       if (!user || !enhancedUser) return [];
 
-      console.log('🔄 Smart polling: Fetching orders...');
+      dev('🔄 Smart polling: Fetching orders...');
 
       // Apply same dealer filtering logic as refreshData
       let ordersQuery = supabase
@@ -846,7 +934,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
         : 'all';
       const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
-      console.log(`🔍 Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
+      dev(`🔍 Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
       if (enhancedUser.dealership_id === null) {
@@ -859,26 +947,29 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             .eq('user_id', user.id)
             .eq('is_active', true);
 
-          if (dealershipError || !userDealerships || userDealerships.length === 0) {
-            console.warn('⚠️ Polling - No dealer memberships found - showing all dealerships');
-            const { data: allDealerships } = await supabase.from('dealerships').select('id');
-            const allDealerIds = allDealerships?.map(d => d.id) || [];
-            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+          if (dealershipError) {
+            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
+            logError('❌ Polling - Failed to fetch dealer memberships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+          } else if (!userDealerships || userDealerships.length === 0) {
+            // 🔒 SECURITY: No memberships = no data access (fail-secure, not fail-open)
+            warn('⚠️ Polling - Multi-dealer user has NO dealer memberships - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            console.log(`🏢 Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            dev(`🏢 Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            console.log(`🎯 Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+            dev(`🎯 Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
-            console.warn(`⚠️ Polling - Invalid dealerFilter: ${dealerFilter}, falling back to all dealers`);
-            const { data: allDealerships } = await supabase.from('dealerships').select('id');
-            const allDealerIds = allDealerships?.map(d => d.id) || [];
-            ordersQuery = ordersQuery.in('dealer_id', allDealerIds);
+            // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
+            logError(`❌ Polling - Invalid dealerFilter value: ${dealerFilter} (type: ${typeof dealerFilter})`);
+            warn('⚠️ Polling - Invalid dealer filter - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           }
         }
       } else {
@@ -936,7 +1027,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
   // Listen for dealer filter changes
   useEffect(() => {
     const handleDealerFilterChange = () => {
-      console.log('🎯 Dealer filter changed - refreshing data');
+      dev('🎯 Dealer filter changed - refreshing data');
       refreshData();
     };
 
@@ -956,26 +1047,26 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
   // Always update lastRefresh when polling executes (every 60s), regardless of data changes
   useEffect(() => {
     if (ordersPollingQuery.isFetching) {
-      console.log('🔄 Orders polling started - updating lastRefresh timestamp');
+      dev('🔄 Orders polling started - updating lastRefresh timestamp');
     }
 
     // Update timestamp when fetch completes (success or error)
     if (!ordersPollingQuery.isFetching && ordersPollingQuery.dataUpdatedAt) {
       setLastRefresh(new Date(ordersPollingQuery.dataUpdatedAt));
-      console.log('⏰ LastRefresh updated:', new Date(ordersPollingQuery.dataUpdatedAt).toLocaleTimeString());
+      dev('⏰ LastRefresh updated:', new Date(ordersPollingQuery.dataUpdatedAt).toLocaleTimeString());
     }
   }, [ordersPollingQuery.isFetching, ordersPollingQuery.dataUpdatedAt]);
 
   // Listen for status updates to trigger immediate refresh
-  useEffect(() => {
-    const handleStatusUpdate = () => {
-      console.log('🔄 Status update detected, triggering immediate polling refresh');
-      ordersPollingQuery.refetch();
-    };
+  const handleStatusUpdate = useCallback(() => {
+    dev('🔄 Status update detected, triggering immediate polling refresh');
+    ordersPollingQuery.refetch();
+  }, [ordersPollingQuery]);
 
+  useEffect(() => {
     window.addEventListener('orderStatusUpdated', handleStatusUpdate);
     return () => window.removeEventListener('orderStatusUpdated', handleStatusUpdate);
-  }, [ordersPollingQuery.refetch]);
+  }, [handleStatusUpdate]);
 
   // Critical order status subscription (only for important state changes)
   useEffect(() => {
@@ -996,7 +1087,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           const newStatus = (payload.new as SupabaseOrderRow)?.status;
 
           if (oldStatus !== newStatus) {
-            console.log(`🎯 Status change: ${oldStatus} → ${newStatus} for order ${newStatus?.id}`);
+            dev(`🎯 Status change: ${oldStatus} → ${newStatus} for order ${newStatus?.id}`);
 
             try {
               if (payload.eventType === 'UPDATE') {
@@ -1013,7 +1104,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
                 );
               }
             } catch (error) {
-              console.error('Error handling status update:', error);
+              logError('Error handling status update:', error);
             }
           }
         }),
@@ -1025,41 +1116,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         removeSubscription('critical-order-status');
       }
     };
-  }, [user, createSubscription, removeSubscription]);
-
-  // Helper function to enrich order data with related information
-  const enrichOrderData = useCallback(async (order: SupabaseOrderRow): Promise<Order> => {
-    try {
-      // Fetch related data in parallel
-      const [dealershipsResult, userProfilesResult, dealerGroupsResult] = await Promise.all([
-        supabase.from('dealerships').select('id, name').eq('id', order.dealer_id).single(),
-        supabase.from('profiles').select('id, first_name, last_name, email'),
-        supabase.from('dealer_groups').select('id, name')
-      ]);
-
-      // Create lookup maps
-      const dealershipName = dealershipsResult.data?.name || 'Unknown Dealer';
-      const userMap = new Map(userProfilesResult.data?.map((u) => [
-        u.id,
-        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
-      ]) || []);
-      const groupMap = new Map(dealerGroupsResult.data?.map((g) => [g.id, g.name]) || []);
-
-      // Transform and enrich the order
-      const transformedOrder = transformOrder(order);
-      transformedOrder.dealershipName = dealershipName;
-      transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
-      transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-      transformedOrder.assignedTo = order.assigned_group_id ?
-        userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
-
-      return transformedOrder;
-    } catch (error) {
-      console.error('Error enriching order data:', error);
-      // Fallback to basic transformation
-      return transformOrder(order);
-    }
-  }, []);
+  }, [user, createSubscription, removeSubscription, enrichOrderData, queryClient]);
 
   // Recalculate tab counts whenever allOrders changes
   useEffect(() => {

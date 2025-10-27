@@ -1,4 +1,5 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,10 +15,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import type { ServiceOrder, ServiceOrderData } from '@/hooks/useServiceOrderManagement';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
+import { dev, warn, error as logError } from '@/utils/logger';
 import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -62,13 +65,13 @@ interface OrderFormData {
 }
 
 interface ServiceOrderModalProps {
-  order?: any;
+  order?: ServiceOrder;
   open: boolean;
   onClose: () => void;
-  onSave: (orderData: any) => void;
+  onSave: (orderData: ServiceOrderData) => void;
 }
 
-const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onClose, onSave }) => {
+const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order, open, onClose, onSave }) => {
   const { t } = useTranslation();
   const { roles } = usePermissionContext();
   const { enhancedUser } = usePermissions();
@@ -109,6 +112,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
 
@@ -130,16 +134,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         setSelectedAssignedTo('');
 
         // Debug logging - investigate dealer fields (similar to Sales modal)
-        console.log('🔍 Service Order Edit Mode - Investigating dealer fields:');
-        console.log('🔍 All order fields:', Object.keys(order));
-        console.log('🔍 Dealership fields:', {
+        dev('🔍 Service Order Edit Mode - Investigating dealer fields:');
+        dev('🔍 All order fields:', Object.keys(order));
+        dev('🔍 Dealership fields:', {
           dealer_id: order.dealer_id,
           dealerId: order.dealerId,
           dealership_id: order.dealership_id,
           dealer: order.dealer,
           dealershipId: order.dealershipId
         });
-        console.log('🔍 Assignment fields:', {
+        dev('🔍 Assignment fields:', {
           assigned_to: order.assigned_to,
           assignedTo: order.assignedTo,
           assigned_group_id: order.assigned_group_id,
@@ -221,20 +225,20 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       const assignedId = order.assigned_group_id || order.assignedGroupId;
       if (assignedId) {
         matchingUser = assignedUsers.find(user => user.id === assignedId);
-        console.log('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
+        dev('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
       }
 
       // Fallback to name search
       if (!matchingUser && order.assignedTo && order.assignedTo !== 'Unassigned') {
         matchingUser = assignedUsers.find(user => user.name === order.assignedTo);
-        console.log('🔧 Searching by name:', order.assignedTo, 'found:', matchingUser?.name);
+        dev('🔧 Searching by name:', order.assignedTo, 'found:', matchingUser?.name);
       }
 
       if (matchingUser) {
-        console.log('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
+        dev('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
         setSelectedAssignedTo(matchingUser.id);
       } else {
-        console.warn('⚠️ Could not find assigned user:', {
+        warn('⚠️ Could not find assigned user:', {
           assignedTo: order.assignedTo,
           assigned_group_id: order.assigned_group_id,
           assignedGroupId: order.assignedGroupId
@@ -246,7 +250,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
   // Set dealership from global filter for new orders
   useEffect(() => {
     if (!order && isGlobalFilterActive && dealerships.length > 0 && !selectedDealership) {
-      console.log('🎯 Service Orders: Setting dealership from global filter:', globalDealerFilter);
+      dev('🎯 Service Orders: Setting dealership from global filter:', globalDealerFilter);
       handleDealershipChange(globalDealerFilter);
     }
   }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
@@ -261,22 +265,22 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         const dealerExists = dealerships.some((d: any) => d.id.toString() === dealerIdStr);
 
         if (dealerExists) {
-          console.log('🔧 [FLAG PATTERN] Service Order Edit: Auto-setting dealership:', dealerIdStr);
+          dev('🔧 [FLAG PATTERN] Service Order Edit: Auto-setting dealership:', dealerIdStr);
           setSelectedDealership(dealerIdStr);
 
           // Immediately fetch dealer data (users and services)
-          console.log('🔧 [FLAG PATTERN] Service Order Edit: Auto-loading dealer data');
+          dev('🔧 [FLAG PATTERN] Service Order Edit: Auto-loading dealer data');
           fetchDealerData(dealerIdStr);
 
           // Reset flag to prevent re-execution
           setNeedsAutopopulate(false);
-          console.log('✅ [FLAG PATTERN] Auto-population completed, flag reset');
+          dev('✅ [FLAG PATTERN] Auto-population completed, flag reset');
         } else {
-          console.warn('⚠️ Dealer not found in accessible dealerships:', dealerIdStr);
+          warn('⚠️ Dealer not found in accessible dealerships:', dealerIdStr);
           setNeedsAutopopulate(false);
         }
       } else {
-        console.warn('⚠️ No dealerId found in order');
+        warn('⚠️ No dealerId found in order');
         setNeedsAutopopulate(false);
       }
     }
@@ -294,12 +298,24 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       if (error) throw error;
       setDealerships(data || []);
     } catch (error) {
-      console.error('Error fetching dealerships:', error);
+      logError('Error fetching dealerships:', error);
     }
   };
 
   const fetchDealerData = async (dealershipId: string) => {
     if (!dealershipId) return;
+
+    // Validate dealership ID before using
+    const dealerId = Number(dealershipId);
+    if (!Number.isInteger(dealerId) || dealerId <= 0) {
+      logError('Invalid dealer ID:', dealershipId);
+      toast({
+        title: t('common.error'),
+        description: t('errors.invalid_dealer') || 'Invalid dealership selected',
+        variant: 'destructive'
+      });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -314,21 +330,21 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
               email
             )
           `)
-          .eq('dealer_id', parseInt(dealershipId))
+          .eq('dealer_id', dealerId)
           .eq('is_active', true),
         supabase
           .rpc('get_dealer_services_by_department', {
-            p_dealer_id: parseInt(dealershipId),
+            p_dealer_id: dealerId,
             p_department_name: 'Service Dept'
           })
       ]);
 
       if (usersResult.error) {
-        console.error('Error fetching users:', usersResult.error);
+        logError('Error fetching users:', usersResult.error);
       }
 
       if (servicesResult.error) {
-        console.error('Error fetching services:', servicesResult.error);
+        logError('Error fetching services:', servicesResult.error);
         toast({
           title: t('common.error'),
           description: t('orders.services_fetch_error') || 'Error loading services',
@@ -354,7 +370,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
         setServices([]);
       }
     } catch (error) {
-      console.error('Error fetching dealer data:', error);
+      logError('Error fetching dealer data:', error);
       toast({
         title: t('common.error'),
         description: t('common.unexpected_error') || 'An unexpected error occurred',
@@ -447,8 +463,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null); // Reset any previous errors
 
     // Send camelCase data directly - hook will handle transformation
     const orderData = {
@@ -471,10 +488,24 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       }, 0),
       notes: formData.notes || undefined,
       dueDate: formData.dueDate || undefined,
-      dealerId: selectedDealership ? parseInt(selectedDealership) : undefined
+      dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined
     };
 
-    onSave(orderData);
+    try {
+      await onSave(orderData);
+      // Only close modal on successful save
+      onClose();
+    } catch (error: any) {
+      // Keep modal open and show error
+      logError('Error saving service order:', error);
+      const errorMessage = error?.message || t('orders.save_error') || 'Failed to save order';
+      setSubmitError(errorMessage);
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive'
+      });
+    }
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
@@ -496,6 +527,14 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
 
         <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
+            {/* Error Alert */}
+            {submitError && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{submitError}</AlertDescription>
+              </Alert>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
 
               {/* Dealership & Customer Information */}
@@ -888,6 +927,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({ order, open, onCl
       </DialogContent>
     </Dialog>
   );
-};
+});
+
+ServiceOrderModal.displayName = 'ServiceOrderModal';
 
 export default ServiceOrderModal;
