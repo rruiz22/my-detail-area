@@ -18,6 +18,8 @@ interface Dealership {
   website: string;
   status: string;
   subscription_plan: string;
+  logo_url?: string | null;
+  thumbnail_logo_url?: string | null;
 }
 
 type AppModule = 'dashboard' | 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'stock' | 'chat' | 'reports' | 'management' | 'settings' | 'users' | 'dealerships' | 'productivity';
@@ -186,6 +188,25 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
     // Trigger a refetch of the query
     // Note: This will use cache if data is still fresh (staleTime)
   }, []);
+
+  // ========================================================================
+  // SYNC: Update currentDealership when dealerships data refreshes
+  // ========================================================================
+  // This fixes the issue where the sidebar shows old logo after upload
+  // When React Query refetches dealerships (e.g., after logo upload),
+  // we need to update currentDealership with the fresh data
+  useEffect(() => {
+    if (currentDealership && dealerships.length > 0) {
+      const updatedDealership = dealerships.find(d => d.id === currentDealership.id);
+      if (updatedDealership) {
+        // Only update if the data actually changed (prevent unnecessary re-renders)
+        if (JSON.stringify(updatedDealership) !== JSON.stringify(currentDealership)) {
+          console.log('🔄 [Sync] Updating currentDealership with fresh data from query');
+          setCurrentDealership(updatedDealership);
+        }
+      }
+    }
+  }, [dealerships]); // Re-run when dealerships array changes (after refetch)
 
   // Listen for dealership filter changes from DealershipFilter component
   useEffect(() => {

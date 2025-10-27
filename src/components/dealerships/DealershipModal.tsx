@@ -29,12 +29,22 @@ interface DealershipModalProps {
   onClose: () => void;
   onSuccess: () => void;
   dealership?: Dealership | null;
+  onRefresh?: () => void; // Optional: Refresh without closing modal
 }
 
-export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: DealershipModalProps) {
+export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefresh }: DealershipModalProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const isEditing = !!dealership;
+
+  // Handler for logo upload that refreshes data without closing modal
+  const handleLogoUploadSuccess = () => {
+    if (onRefresh) {
+      onRefresh(); // Use custom refresh if provided
+    } else {
+      onSuccess(); // Fallback to onSuccess (which closes modal)
+    }
+  };
 
   const [formData, setFormData] = useState<DealershipFormData>({
     name: '',
@@ -366,6 +376,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership }: Deal
                         dealershipId={dealership.id}
                         currentLogoUrl={dealership.logo_url}
                         size="md"
+                        onUploadSuccess={handleLogoUploadSuccess}
                       />
                     ) : (
                       <p className="text-sm text-muted-foreground py-4 px-3 border border-dashed rounded-lg text-center">

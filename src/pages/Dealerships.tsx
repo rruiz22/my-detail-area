@@ -182,6 +182,24 @@ export function Dealerships() {
     handleModalClose();
   };
 
+  const handleModalRefresh = async () => {
+    // Refresh data without closing modal (for logo uploads)
+    await fetchDealerships();
+
+    // Update editingDealership with fresh data
+    if (editingDealership) {
+      const { data: freshDealership, error } = await supabase
+        .from('dealerships')
+        .select('*')
+        .eq('id', editingDealership.id)
+        .single();
+
+      if (!error && freshDealership) {
+        setEditingDealership(freshDealership);
+      }
+    }
+  };
+
   const handleViewDealer = (dealership: Dealership) => {
     navigate(`/dealers/${dealership.id}`);
   };
@@ -437,6 +455,7 @@ export function Dealerships() {
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onSuccess={handleModalSuccess}
+        onRefresh={handleModalRefresh}
         dealership={editingDealership}
       />
 
