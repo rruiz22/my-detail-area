@@ -96,7 +96,7 @@ export function useUploadDealershipLogo() {
         .from('dealership-logos')
         .upload(fileName, fileToUpload, {
           cacheControl: '3600', // Cache for 1 hour
-          upsert: false,
+          upsert: true, // ✅ CHANGED: Allow overwriting files (replaces old logos automatically)
         });
 
       if (uploadError) {
@@ -116,6 +116,9 @@ export function useUploadDealershipLogo() {
       // ========================================================================
       // DATABASE UPDATE: Update dealership record with logo URL
       // ========================================================================
+      console.log('💾 Updating database with logo_url:', urlData.publicUrl);
+      console.log('💾 Dealership ID:', dealershipId);
+
       const { data, error } = await supabase
         .from('dealerships')
         .update({ logo_url: urlData.publicUrl })
@@ -126,6 +129,14 @@ export function useUploadDealershipLogo() {
       if (error) {
         console.error('❌ DB update error:', error);
         throw error;
+      }
+
+      if (!data) {
+        console.warn('⚠️ DB update returned no data - possible RLS policy issue');
+        console.warn('⚠️ Logo uploaded to storage but NOT saved to database');
+        console.warn('⚠️ Check RLS policies on dealerships table for UPDATE permission');
+      } else {
+        console.log('✅ DB update successful:', data);
       }
 
       console.log('✅ [Step 1] Upload complete, logo_url updated');
@@ -161,19 +172,13 @@ export function useUploadDealershipLogo() {
     onSuccess: (data) => {
       // Invalidate all queries that might display dealership data
       queryClient.invalidateQueries({ queryKey: ['accessible_dealerships'] });
-      queryClient.invalidateQueries({ queryKey: ['dealership', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['dealership', data?.id] });
 
-      toast({
-        title: t('dealerships.logo_updated_successfully'),
-      });
+      // Toast is now shown in LogoUploader component for better UX control
     },
     onError: (error: any) => {
       console.error('Logo upload error:', error);
-      toast({
-        title: t('dealerships.logo_upload_failed'),
-        description: error.message,
-        variant: 'destructive'
-      });
+      // Error toast is now shown in LogoUploader component for better error context
     },
   });
 }
