@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Progress } from '@/components/ui/progress';
@@ -12,7 +13,6 @@ import { VehicleImageWithLoader } from '@/components/get-ready/VehicleImageWithL
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
-import { useSweetAlert } from '@/hooks/useSweetAlert';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { useGetReadyViewMode } from '@/hooks/useGetReadyPersistence';
 import { cn } from '@/lib/utils';
@@ -66,11 +66,14 @@ export function GetReadyVehicleList({
   const { steps } = useGetReady();
   const { setSelectedVehicleId, selectedVehicleId } = useGetReadyStore();
   const [viewMode, setViewMode] = useGetReadyViewMode(); // WITH LOCALSTORAGE PERSISTENCE
-  const { confirmDelete } = useSweetAlert();
 
   // Lightbox state for Stock images
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; info: string } | null>(null);
+
+  // Delete confirmation state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [vehicleToDelete, setVehicleToDelete] = useState<string | null>(null);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,13 +108,16 @@ export function GetReadyVehicleList({
     }
   };
 
-  const handleDeleteVehicle = async (vehicleId: string) => {
-    // Ask for confirmation before deleting
-    const confirmed = await confirmDelete();
+  const handleDeleteVehicle = (vehicleId: string) => {
+    setVehicleToDelete(vehicleId);
+    setDeleteDialogOpen(true);
+  };
 
-    if (confirmed && onDeleteVehicle) {
-      await onDeleteVehicle(vehicleId);
-    }
+  const confirmDeleteVehicle = async () => {
+    if (!vehicleToDelete || !onDeleteVehicle) return;
+
+    await onDeleteVehicle(vehicleToDelete);
+    setVehicleToDelete(null);
   };
 
   const handleMoveToStep = (vehicleId: string, currentStepId: string, newStepId: string) => {
@@ -982,6 +988,18 @@ export function GetReadyVehicleList({
           onOpenChange={setLightboxOpen}
         />
       )}
+
+      {/* Delete Confirmation Dialog - Team Chat Style */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}
+        description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}
+        confirmText={t('common.delete', 'Delete')}
+        cancelText={t('common.cancel', 'Cancel')}
+        onConfirm={confirmDeleteVehicle}
+        variant="destructive"
+      />
     </div>
   );
 }

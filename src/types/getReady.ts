@@ -96,6 +96,34 @@ export interface GetReadyKPIs {
   roiImprovement: number;      // vs baseline
 }
 
+// KPIs with Historical Trends and Comparisons
+export interface GetReadyKPIsWithTrends extends GetReadyKPIs {
+  // Trend indicators (period-over-period)
+  trends: {
+    t2l: TrendIndicator;
+    throughput: TrendIndicator;
+    slaCompliance: TrendIndicator;
+    holdingCost: TrendIndicator;
+    utilizationRate: TrendIndicator;
+  };
+
+  // Time series data for sparklines (last 7-30 days)
+  timeSeries?: {
+    t2l: Array<{ date: string; value: number }>;
+    throughput: Array<{ date: string; value: number }>;
+    slaCompliance: Array<{ date: string; value: number }>;
+  };
+}
+
+// Trend Indicator
+export interface TrendIndicator {
+  direction: 'up' | 'down' | 'stable';
+  percentChange: number;
+  isImprovement: boolean; // Context-aware (e.g., down is good for T2L/costs)
+  previousValue: number;
+  currentValue: number;
+}
+
 export interface BottleneckAlert {
   step_id: string;
   step_name: string;
@@ -525,7 +553,7 @@ export interface VehicleDatabaseResponse {
 /**
  * Valid sort fields for vehicle queries
  */
-export type VehicleSortField = 
+export type VehicleSortField =
   | 'stock_number'
   | 'intake_date'
   | 'days_in_step'
@@ -533,4 +561,3 @@ export type VehicleSortField =
   | 'sla_status'
   | 'updated_at'
   | 'created_at';
-

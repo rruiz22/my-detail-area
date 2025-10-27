@@ -6,11 +6,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useToast } from '@/hooks/use-toast';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
+import { useVehicleActivityLog } from '@/hooks/useVehicleActivityLog';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
 import { useVehicleNotes } from '@/hooks/useVehicleNotes';
 import { useCurrentStepVisit, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
-import { useVehicleActivityLog } from '@/hooks/useVehicleActivityLog';
 import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
@@ -18,7 +18,6 @@ import {
     Circle,
     Clock,
     DollarSign,
-    Download,
     Edit,
     FileSpreadsheet,
     FileText,
@@ -65,6 +64,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
   const counts = React.useMemo(() => {
     const workItemsWithVendors = workItems.filter(wi => wi.assigned_vendor_id);
+    const totalCost = workItems.reduce((sum, item) => sum + (item.estimated_cost || 0), 0);
 
     return {
       workItems: workItems.length,
@@ -72,7 +72,8 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       notes: notes.length,
       vendors: workItemsWithVendors.length,
       timeline: activityCount,
-      appraisal: 0 // Appraisal feature not yet implemented in database
+      appraisal: 0, // Appraisal feature not yet implemented in database
+      totalCost: totalCost
     };
   }, [workItems, mediaFiles, notes, activityCount]);
 
@@ -81,6 +82,31 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const handleClose = () => {
     setSelectedVehicleId(null);
   };
+
+  // ✨ NEW: Keyboard shortcuts for better UX
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Close panel with Escape
+      if (e.key === 'Escape' && selectedVehicleId) {
+        handleClose();
+        return;
+      }
+
+      // Switch tabs with Ctrl/Cmd + Number (1-5)
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+        const tabs = ['work-items', 'media', 'notes', 'vendors', 'timeline'];
+        const keyNum = parseInt(e.key);
+
+        if (keyNum >= 1 && keyNum <= 5 && selectedVehicleId) {
+          e.preventDefault();
+          setActiveTab(tabs[keyNum - 1]);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selectedVehicleId]); // Only re-attach when vehicle selection changes
 
   const handlePrint = () => {
     window.print();
@@ -174,7 +200,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       className={cn("flex flex-col bg-background border rounded-lg shadow-lg animate-in slide-in-from-bottom duration-300", className)}
     >
       {/* Vehicle Header - Enhanced with Time Tracking */}
-      <div className="border-b bg-gradient-to-br from-card/50 to-muted/30 relative">
+      <div className="border-b bg-muted/30 dark:bg-muted/20 relative">
         {/* Action Buttons */}
         <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
           {/* Actions Dropdown */}
@@ -196,18 +222,21 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                 <Printer className="h-4 w-4 mr-2" />
                 {t('get_ready.detail_panel.print_report')}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportPDF}>
+              <DropdownMenuItem disabled className="opacity-50 cursor-not-allowed">
                 <FileText className="h-4 w-4 mr-2" />
                 {t('get_ready.detail_panel.export_pdf')}
+                <Badge variant="secondary" className="ml-auto text-[10px] px-1.5 py-0.5">Soon</Badge>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportExcel}>
+              <DropdownMenuItem disabled className="opacity-50 cursor-not-allowed">
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
                 {t('common.action_buttons.export_excel')}
+                <Badge variant="secondary" className="ml-auto text-[10px] px-1.5 py-0.5">Soon</Badge>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleEdit}>
+              <DropdownMenuItem disabled className="opacity-50 cursor-not-allowed">
                 <Edit className="h-4 w-4 mr-2" />
                 {t('get_ready.detail_panel.edit_vehicle')}
+                <Badge variant="secondary" className="ml-auto text-[10px] px-1.5 py-0.5">Soon</Badge>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -235,10 +264,31 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                   <span className="text-xs sm:text-sm font-normal text-muted-foreground">({vehicle.vehicle_trim})</span>
                 )}
               </h2>
-              <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-muted-foreground mt-1">
-                <span className="font-medium">Stock: {vehicle.stock_number}</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="truncate">VIN: {vehicle.vin}</span>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1 flex-wrap">
+                <span className="font-medium">ST: {vehicle.stock_number}</span>
+                <span>•</span>
+                <span className="font-mono">VIN: {vehicle.vin?.slice(-8) || 'N/A'}</span>
+
+                {/* Media/Notes Badges - Match table format */}
+                {(counts.media > 0 || counts.notes > 0) && (
+                  <>
+                    <span>•</span>
+                    <div className="flex items-center gap-1">
+                      {counts.media > 0 && (
+                        <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-purple-100 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300 gap-0.5">
+                          <Image className="h-2.5 w-2.5" />
+                          {counts.media}
+                        </Badge>
+                      )}
+                      {counts.notes > 0 && (
+                        <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 gap-0.5">
+                          <FileText className="h-2.5 w-2.5" />
+                          {counts.notes}
+                        </Badge>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -293,6 +343,17 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                 </div>
               </div>
 
+              {/* Total Cost (NEW - Compact) */}
+              <div className="flex items-center gap-1.5 bg-green-50 dark:bg-green-950/30 px-2 py-1.5 rounded-lg border border-green-200 dark:border-green-800">
+                <DollarSign className="h-4 w-4 text-green-600 flex-shrink-0" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground hidden sm:block">Cost</span>
+                  <span className="font-bold text-green-900 dark:text-green-100 whitespace-nowrap text-xs sm:text-sm">
+                    ${counts.totalCost.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
               {/* Step Badge (Compact) */}
               <Badge
                 variant="outline"
@@ -313,58 +374,93 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       {/* Tabs Content */}
       <div className="flex-1">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col">
-          <TabsList className="grid w-full grid-cols-6 mt-4">
-            <TabsTrigger value="work-items" className="flex items-center gap-1.5">
-              <Wrench className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('get_ready.tabs.work_items')}</span>
+          <TabsList className="grid w-full grid-cols-5 mt-4">
+            {/* Work Items Tab */}
+            <TabsTrigger value="work-items" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+              <div className="relative">
+                <Wrench className="h-4 w-4" />
+                {counts.workItems > 0 && (
+                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                    {counts.workItems}
+                  </Badge>
+                )}
+              </div>
+              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.work_items')}</span>
               {counts.workItems > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 min-w-[20px] px-1.5 text-xs">
+                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
                   {counts.workItems}
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="media" className="flex items-center gap-1.5">
-              <Image className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('get_ready.tabs.media')}</span>
+
+            {/* Media Tab */}
+            <TabsTrigger value="media" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+              <div className="relative">
+                <Image className="h-4 w-4" />
+                {counts.media > 0 && (
+                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                    {counts.media}
+                  </Badge>
+                )}
+              </div>
+              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.media')}</span>
               {counts.media > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 min-w-[20px] px-1.5 text-xs">
+                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
                   {counts.media}
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="notes" className="flex items-center gap-1.5">
-              <MessageSquare className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('get_ready.tabs.notes')}</span>
+
+            {/* Notes Tab */}
+            <TabsTrigger value="notes" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+              <div className="relative">
+                <MessageSquare className="h-4 w-4" />
+                {counts.notes > 0 && (
+                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                    {counts.notes}
+                  </Badge>
+                )}
+              </div>
+              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.notes')}</span>
               {counts.notes > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 min-w-[20px] px-1.5 text-xs">
+                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
                   {counts.notes}
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="vendors" className="flex items-center gap-1.5">
-              <Users className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('get_ready.tabs.vendors')}</span>
+
+            {/* Vendors Tab */}
+            <TabsTrigger value="vendors" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+              <div className="relative">
+                <Users className="h-4 w-4" />
+                {counts.vendors > 0 && (
+                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                    {counts.vendors}
+                  </Badge>
+                )}
+              </div>
+              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.vendors')}</span>
               {counts.vendors > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 min-w-[20px] px-1.5 text-xs">
+                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
                   {counts.vendors}
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="timeline" className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('get_ready.tabs.timeline')}</span>
+
+            {/* Timeline Tab */}
+            <TabsTrigger value="timeline" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+              <div className="relative">
+                <Clock className="h-4 w-4" />
+                {counts.timeline > 0 && (
+                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                    {counts.timeline}
+                  </Badge>
+                )}
+              </div>
+              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.timeline')}</span>
               {counts.timeline > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 min-w-[20px] px-1.5 text-xs">
+                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
                   {counts.timeline}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="appraisal" className="flex items-center gap-1.5">
-              <DollarSign className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('get_ready.tabs.appraisal')}</span>
-              {counts.appraisal > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 min-w-[20px] px-1.5 text-xs">
-                  {counts.appraisal}
                 </Badge>
               )}
             </TabsTrigger>
@@ -393,13 +489,6 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
             {selectedVehicleId && (
               <VehicleActivityLog vehicleId={selectedVehicleId} />
             )}
-          </TabsContent>
-
-          <TabsContent value="appraisal" className="flex-1 px-4 pt-4 pb-6">
-            <div className="text-center py-8 text-muted-foreground">
-              <DollarSign className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <div className="text-sm">{t('get_ready.appraisal.coming_soon')}</div>
-            </div>
           </TabsContent>
         </Tabs>
       </div>

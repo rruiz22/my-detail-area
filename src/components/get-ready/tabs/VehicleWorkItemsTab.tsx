@@ -3,45 +3,46 @@ import { QuickAddWorkItemModal } from '@/components/get-ready/QuickAddWorkItemMo
 import { WorkItemsGroupedTable } from '@/components/get-ready/WorkItemsGroupedTable';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import {
-    CreateWorkItemInput,
-    useApproveWorkItem,
-    useCompleteWorkItem,
-    useCreateWorkItem,
-    useDeclineWorkItem,
-    useDeleteWorkItem,
-    useStartWorkItem,
-    useUpdateWorkItem,
-    useWorkItems,
-    WorkItemType,
-    // ✨ NEW: Import new hooks for enhanced status system
-    usePauseWorkItem,
-    useResumeWorkItem,
-    useBlockWorkItem,
-    useUnblockWorkItem,
-    useCancelWorkItem,
-} from '@/hooks/useVehicleWorkItems';
-import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import {
-    AlertTriangle,
-    CheckCircle,
-    Circle,
-    Loader2,
-    Pause,
-    Plus
+  CreateWorkItemInput,
+  useApproveWorkItem,
+  useBlockWorkItem,
+  useCancelWorkItem,
+  useCompleteWorkItem,
+  useCreateWorkItem,
+  useDeclineWorkItem,
+  useDeleteWorkItem,
+  // ✨ NEW: Import new hooks for enhanced status system
+  usePauseWorkItem,
+  useResumeWorkItem,
+  useStartWorkItem,
+  useUnblockWorkItem,
+  useUpdateWorkItem,
+  useWorkItems,
+  WorkItemType,
+} from '@/hooks/useVehicleWorkItems';
+import { cn } from '@/lib/utils';
+import {
+  AlertTriangle,
+  CheckCircle,
+  Circle,
+  Loader2,
+  Pause,
+  Plus
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -81,6 +82,8 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   const [pauseModalOpen, setPauseModalOpen] = useState(false);
   const [blockModalOpen, setBlockModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [workItemToDelete, setWorkItemToDelete] = useState<string | null>(null);
   const [selectedWorkItem, setSelectedWorkItem] = useState<any>(null);
 
   // Form states
@@ -99,7 +102,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   const [blockReason, setBlockReason] = useState('');
   const [cancelReason, setCancelReason] = useState('');
 
-  // ✨ Calculate counters with simplified workflow (no 'approved')
+  // ✨ Calculate counters with simplified workflow (no 'ready' or 'queued')
   const counters = workItems.reduce(
     (acc, item) => {
       // Need Attention: awaiting_approval + rejected + blocked
@@ -172,10 +175,15 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
     setSelectedWorkItem(null);
   };
 
-  const handleDelete = async (workItemId: string) => {
-    if (confirm(t('get_ready.work_items.confirm_delete'))) {
-      await deleteWorkItem.mutateAsync({ id: workItemId, vehicleId });
-    }
+  const handleDelete = (workItemId: string) => {
+    setWorkItemToDelete(workItemId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteWorkItem = async () => {
+    if (!workItemToDelete) return;
+    await deleteWorkItem.mutateAsync({ id: workItemToDelete, vehicleId });
+    setWorkItemToDelete(null);
   };
 
   // NEW: Navigate to media/notes tabs
@@ -196,14 +204,19 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   // ✨ NEW: Handlers for enhanced status system
   const handlePause = async () => {
     if (!selectedWorkItem) return;
-    await pauseWorkItem.mutateAsync({
-      id: selectedWorkItem.id,
-      vehicleId,
-      reason: pauseReason || undefined,
-    });
-    setPauseModalOpen(false);
-    setPauseReason('');
-    setSelectedWorkItem(null);
+    try {
+      await pauseWorkItem.mutateAsync({
+        id: selectedWorkItem.id,
+        vehicleId,
+        reason: pauseReason || undefined,
+      });
+      setPauseModalOpen(false);
+      setPauseReason('');
+      setSelectedWorkItem(null);
+    } catch (error) {
+      console.error('Error pausing work item:', error);
+      // Modal stays open so user can see the error
+    }
   };
 
   const handleResume = async (workItemId: string) => {
@@ -212,14 +225,19 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
 
   const handleBlock = async () => {
     if (!selectedWorkItem || !blockReason) return;
-    await blockWorkItem.mutateAsync({
-      id: selectedWorkItem.id,
-      vehicleId,
-      reason: blockReason,
-    });
-    setBlockModalOpen(false);
-    setBlockReason('');
-    setSelectedWorkItem(null);
+    try {
+      await blockWorkItem.mutateAsync({
+        id: selectedWorkItem.id,
+        vehicleId,
+        reason: blockReason,
+      });
+      setBlockModalOpen(false);
+      setBlockReason('');
+      setSelectedWorkItem(null);
+    } catch (error) {
+      console.error('Error blocking work item:', error);
+      // Modal stays open so user can see the error
+    }
   };
 
   const handleUnblock = async (workItemId: string) => {
@@ -228,14 +246,19 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
 
   const handleCancel = async () => {
     if (!selectedWorkItem || !cancelReason) return;
-    await cancelWorkItem.mutateAsync({
-      id: selectedWorkItem.id,
-      vehicleId,
-      reason: cancelReason,
-    });
-    setCancelModalOpen(false);
-    setCancelReason('');
-    setSelectedWorkItem(null);
+    try {
+      await cancelWorkItem.mutateAsync({
+        id: selectedWorkItem.id,
+        vehicleId,
+        reason: cancelReason,
+      });
+      setCancelModalOpen(false);
+      setCancelReason('');
+      setSelectedWorkItem(null);
+    } catch (error) {
+      console.error('Error cancelling work item:', error);
+      // Modal stays open so user can see the error
+    }
   };
 
   if (isLoading) {
@@ -461,7 +484,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button onClick={handleCreateWorkItem} disabled={createWorkItem.isPending}>
               {createWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -490,7 +513,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeclineModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button onClick={handleDecline} disabled={declineWorkItem.isPending || !declineReason} variant="destructive">
               {declineWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -540,7 +563,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCompleteModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button onClick={handleComplete} disabled={completeWorkItem.isPending}>
               {completeWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -663,7 +686,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button
               onClick={async () => {
@@ -711,7 +734,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setPauseModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button onClick={handlePause} disabled={pauseWorkItem.isPending}>
               {pauseWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -741,7 +764,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setBlockModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button onClick={handleBlock} disabled={blockWorkItem.isPending || !blockReason} variant="destructive">
               {blockWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -771,7 +794,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelModalOpen(false)}>
-              {t('common.actions.cancel')}
+              {t('common.action_buttons.cancel')}
             </Button>
             <Button onClick={handleCancel} disabled={cancelWorkItem.isPending || !cancelReason} variant="destructive">
               {cancelWorkItem.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -794,6 +817,18 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
         vehicleId={vehicleId}
         open={templatesModalOpen}
         onOpenChange={setTemplatesModalOpen}
+      />
+
+      {/* ✨ Delete Confirmation Dialog - Team Chat style */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('get_ready.work_items.delete_title')}
+        description={t('get_ready.work_items.confirm_delete')}
+        confirmText={t('common.action_buttons.delete')}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmDeleteWorkItem}
+        variant="destructive"
       />
     </div>
   );

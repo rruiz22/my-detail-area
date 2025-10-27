@@ -1,21 +1,20 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 // Types based on database schema
-// ✨ SIMPLIFIED WORKFLOW - Direct path from approval to queue
-// Pre-Work: awaiting_approval → queued → ready → scheduled
+// ✨ SIMPLIFIED WORKFLOW - Direct path from approval to pending
+// Pre-Work: awaiting_approval → pending → scheduled
 // During Work: in_progress ⇄ on_hold / blocked
 // Post-Work: completed | cancelled
 export type WorkItemStatus =
   // Pre-Work Phase
+  | 'pending'            // Initial state for work items ready to start
   | 'awaiting_approval'  // Waiting for approval (when approval_required=true)
   | 'rejected'           // Rejected by approver (needs correction)
-  | 'queued'             // Approved or no approval needed, queued to start (shows Start button)
-  | 'ready'              // Ready to begin work immediately
   | 'scheduled'          // Scheduled for future date
 
   // Execution Phase
@@ -169,6 +168,7 @@ export function useWorkItems(vehicleId: string | null) {
         throw error;
       }
 
+
       // Fetch vendor data separately if there are assigned vendors
       const workItemsWithVendors = data || [];
       const vendorIds = [...new Set(workItemsWithVendors
@@ -249,6 +249,7 @@ export function useCreateWorkItem() {
   const { user } = useAuth();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (input: CreateWorkItemInput) => {
@@ -256,15 +257,34 @@ export function useCreateWorkItem() {
         throw new Error('No dealership selected');
       }
 
+      // ✨ NEW: Check for duplicate work items
+      const { data: existingWorkItems, error: checkError } = await supabase
+        .from('get_ready_work_items')
+        .select('id, title')
+        .eq('vehicle_id', input.vehicle_id)
+        .eq('dealer_id', currentDealership.id)
+        .eq('title', input.title.trim())
+        .neq('status', 'cancelled'); // Don't consider cancelled items as duplicates
+
+      if (checkError) {
+        console.error('Error checking for duplicates:', checkError);
+        throw new Error('Failed to check for duplicate work items');
+      }
+
+      if (existingWorkItems && existingWorkItems.length > 0) {
+        throw new Error(t('get_ready.work_items.duplicate_error', { title: input.title }));
+      }
+
       // ✨ NEW: Determine initial status based on approval requirement
       const initialStatus: WorkItemStatus = input.approval_required
         ? 'awaiting_approval'  // Needs approval first
-        : 'queued';            // Queued to start immediately
+        : 'pending';           // Ready to start immediately
 
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .insert({
           ...input,
+          title: input.title.trim(), // Trim whitespace
           dealer_id: currentDealership.id,
           created_by: user?.id,
           status: initialStatus,
@@ -295,11 +315,28 @@ export function useCreateWorkItem() {
       // This ensures Approvals tab shows the vehicle immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
 
-      toast.success(t('get_ready.work_items.created_successfully'));
+      toast({
+        title: t('common.success'),
+        description: t('get_ready.work_items.created_successfully'),
+      });
     },
     onError: (error) => {
       console.error('Create work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_creating'));
+
+      // Show specific error message if it's a duplicate error
+      if (error.message && error.message.includes('already exists')) {
+        toast({
+          title: t('common.error'),
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: t('common.error'),
+          description: t('get_ready.work_items.error_creating'),
+          variant: 'destructive',
+        });
+      }
     },
   });
 }
@@ -370,14 +407,14 @@ export function useApproveWorkItem() {
         throw new Error('User not authenticated');
       }
 
-      // ✨ SIMPLIFIED: After approval, work item goes directly to 'queued' (ready to Start)
+      // ✨ SIMPLIFIED: After approval, work item goes directly to 'pending' (ready to Start)
       const { data, error } = await supabase
         .from('get_ready_work_items')
         .update({
           approval_status: 'approved',
           approved_by: user.id,
           approved_at: new Date().toISOString(),
-          status: 'queued', // Goes directly to queued - shows Start button
+          status: 'pending', // Goes directly to pending - shows Start button
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
@@ -606,11 +643,13 @@ export function useDeleteWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicleId] });
-      toast.success(t('get_ready.work_items.deleted_successfully'));
+      // ✅ Toast handled by component (ConfirmDialog)
+      // toast.success(t('get_ready.work_items.deleted_successfully'));
     },
     onError: (error) => {
       console.error('Delete work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_deleting'));
+      // ✅ Toast handled by component (ConfirmDialog)
+      // toast.error(t('get_ready.work_items.error_deleting'));
     },
   });
 }
@@ -646,11 +685,13 @@ export function usePauseWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.paused_successfully'));
+      // ✅ Toast handled by component (VehicleWorkItemsTab)
+      // toast.success(t('get_ready.work_items.paused_successfully'));
     },
     onError: (error) => {
       console.error('Pause work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_pausing'));
+      // ✅ Toast handled by component (VehicleWorkItemsTab)
+      // toast.error(t('get_ready.work_items.error_pausing'));
     },
   });
 }
@@ -686,11 +727,13 @@ export function useBlockWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.blocked_successfully'));
+      // ✅ Toast handled by component (VehicleWorkItemsTab)
+      // toast.success(t('get_ready.work_items.blocked_successfully'));
     },
     onError: (error) => {
       console.error('Block work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_blocking'));
+      // ✅ Toast handled by component (VehicleWorkItemsTab)
+      // toast.error(t('get_ready.work_items.error_blocking'));
     },
   });
 }
@@ -813,11 +856,13 @@ export function useCancelWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.cancelled_successfully'));
+      // ✅ Toast handled by component (VehicleWorkItemsTab)
+      // toast.success(t('get_ready.work_items.cancelled_successfully'));
     },
     onError: (error) => {
       console.error('Cancel work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_cancelling'));
+      // ✅ Toast handled by component (VehicleWorkItemsTab)
+      // toast.error(t('get_ready.work_items.error_cancelling'));
     },
   });
 }
