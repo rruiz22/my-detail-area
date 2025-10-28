@@ -1,12 +1,15 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
+import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
@@ -20,7 +23,7 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
-import { AlertCircle, Loader2, Zap } from 'lucide-react';
+import { AlertCircle, Check, ChevronsUpDown, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -69,6 +72,10 @@ interface AssignedUser {
   id: string;
   name: string;
   email: string;
+  role_name?: string;
+  first_name?: string;
+  last_name?: string;
+  isSystemAdmin?: boolean;
 }
 
 interface DealerService {
@@ -173,6 +180,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const [selectedDealership, setSelectedDealership] = useState('');
   const [selectedAssignedTo, setSelectedAssignedTo] = useState('');
+  const [assignedToPopoverOpen, setAssignedToPopoverOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleSearchResult | null>(null);
 
   const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
@@ -391,11 +399,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
       if (usersResult.data) {
         // ✅ FIX: RPC function already filtered by module permissions
-        // No need for manual filtering - just map to UI format
+        // No need for manual filtering - just map to UI format with role_name for grouping
         const users = usersResult.data.map((user: any) => ({
           id: user.user_id,
           name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
           email: user.email,
+          role_name: user.role_name || 'No Role',
+          first_name: user.first_name,
+          last_name: user.last_name,
           isSystemAdmin: user.is_system_admin
         }));
 
@@ -880,28 +891,121 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   <div>
                     <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
-                    <Select
-                      value={selectedAssignedTo || ""}
-                      onValueChange={handleAssignedToChange}
-                      disabled={loading || !selectedDealership}
-                    >
-                      <SelectTrigger className="border-input bg-background">
-                        <SelectValue placeholder={
-                          !selectedDealership
-                            ? t('sales_orders.select_dealership_first')
-                            : loading
-                              ? t('common.loading')
-                              : t('sales_orders.select_assignee')
-                        } />
-                      </SelectTrigger>
-                       <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
-                         {assignedUsers.map((user: { id: string; name: string; email: string }) => (
-                           <SelectItem key={user.id} value={user.id}>
-                             {user.name} - {user.email}
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
-                    </Select>
+                    <Popover open={assignedToPopoverOpen} onOpenChange={setAssignedToPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={assignedToPopoverOpen}
+                          disabled={loading || !selectedDealership}
+                          className="w-full justify-between border-input bg-background h-10 px-3 font-normal"
+                        >
+                          {selectedAssignedTo ? (
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              {(() => {
+                                const selectedUser = assignedUsers.find(u => u.id === selectedAssignedTo);
+                                if (!selectedUser) return <span className="text-muted-foreground">{t('sales_orders.select_assignee')}</span>;
+
+                                return (
+                                  <>
+                                    <AvatarSystem
+                                      name={selectedUser.email}
+                                      firstName={selectedUser.first_name}
+                                      lastName={selectedUser.last_name}
+                                      email={selectedUser.email}
+                                      size={24}
+                                    />
+                                    <span className="truncate">{selectedUser.name}</span>
+                                    {selectedUser.role_name && (
+                                      <Badge variant="secondary" className="text-xs shrink-0">
+                                        {selectedUser.role_name}
+                                      </Badge>
+                                    )}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">
+                              {!selectedDealership
+                                ? t('sales_orders.select_dealership_first')
+                                : loading
+                                  ? t('common.loading')
+                                  : t('sales_orders.select_assignee')}
+                            </span>
+                          )}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                        <Command>
+                          <CommandInput
+                            placeholder={t('common.search_users', 'Search users...')}
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>
+
+                            {/* Group users by role_name */}
+                            {(() => {
+                              // Group users by role
+                              const usersByRole = assignedUsers.reduce((acc, user) => {
+                                const role = user.role_name || 'No Role';
+                                if (!acc[role]) acc[role] = [];
+                                acc[role].push(user);
+                                return acc;
+                              }, {} as Record<string, AssignedUser[]>);
+
+                              // Sort roles: system_admin first, then alphabetically
+                              const sortedRoles = Object.keys(usersByRole).sort((a, b) => {
+                                if (a.toLowerCase().includes('admin')) return -1;
+                                if (b.toLowerCase().includes('admin')) return 1;
+                                return a.localeCompare(b);
+                              });
+
+                              // Render groups
+                              return sortedRoles.map((roleName) => (
+                                <CommandGroup key={roleName} heading={roleName}>
+                                  {usersByRole[roleName].map((user) => (
+                                    <CommandItem
+                                      key={user.id}
+                                      value={`${user.name} ${user.email}`}
+                                      onSelect={() => {
+                                        handleAssignedToChange(user.id);
+                                        setAssignedToPopoverOpen(false);
+                                      }}
+                                      className="flex items-center gap-2 cursor-pointer"
+                                    >
+                                      <AvatarSystem
+                                        name={user.email}
+                                        firstName={user.first_name}
+                                        lastName={user.last_name}
+                                        email={user.email}
+                                        size={32}
+                                      />
+
+                                      <div className="flex-1 min-w-0">
+                                        <div className="font-medium text-sm truncate">
+                                          {user.name}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground truncate">
+                                          {user.email}
+                                        </div>
+                                      </div>
+
+                                      {selectedAssignedTo === user.id && (
+                                        <Check className="h-4 w-4 text-primary shrink-0" />
+                                      )}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              ));
+                            })()}
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
 
                   <Separator className="my-3" />

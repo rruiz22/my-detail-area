@@ -126,6 +126,8 @@
     "assigned": "Assigned",
     "not_assigned": "Not Assigned",
     "user": "User",
+    "search_users": "Search users...",
+    "no_users_found": "No users found",
     "email": "Email",
     "all": "All",
     "active": "Active",

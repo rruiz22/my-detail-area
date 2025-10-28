@@ -115,6 +115,8 @@
     "assigned": "Atribuído",
     "not_assigned": "Não Atribuído",
     "user": "Usuário",
+    "search_users": "Buscar usuários...",
+    "no_users_found": "Nenhum usuário encontrado",
     "email": "E-mail",
     "all": "Todos",
     "active": "Ativo",
