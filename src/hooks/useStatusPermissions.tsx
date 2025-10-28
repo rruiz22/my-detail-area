@@ -39,11 +39,8 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         return false;
       }
 
-      // Cannot change status on completed or cancelled orders
-      if (['completed', 'cancelled'].includes(currentStatus)) {
-        console.warn('⚠️ Cannot change status of completed/cancelled orders');
-        return false;
-      }
+      // NOTE: Removed validation that prevented changing status on completed/cancelled orders
+      // Users with proper permissions should be able to reopen completed/cancelled orders
 
       // Determine which module to check based on order type
       let module: AppModule = 'sales_orders'; // default

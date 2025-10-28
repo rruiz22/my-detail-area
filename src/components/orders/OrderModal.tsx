@@ -1,4 +1,5 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,7 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
-import { AlertCircle, Check, ChevronsUpDown, Loader2, Zap } from 'lucide-react';
+import { AlertCircle, Check, ChevronsUpDown, Loader2, Search, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -848,6 +849,34 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           </div>
         </DialogHeader>
 
+        {/* Quick Search Banner - Only for new orders */}
+        {!order && (
+          <Alert className="mx-4 sm:mx-6 mt-3 bg-blue-50 border-blue-200">
+            <Search className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="ml-2">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-blue-900">
+                  {t('stock.autopop.quickSearch', 'Quick Search')} <span className="text-xs text-blue-600 font-normal">({t('common.optional', 'Optional')})</span>
+                </p>
+                <VehicleAutoPopulationField
+                  dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
+                  onVehicleSelect={handleVehicleSelect}
+                  onVehicleClear={handleVehicleClear}
+                  selectedVehicle={selectedVehicle}
+                  label=""
+                  placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
+                />
+                {selectedVehicle && (
+                  <p className="text-xs text-blue-700 flex items-center gap-1">
+                    <Zap className="w-3 h-3" />
+                    {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
+                  </p>
+                )}
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Single Responsive Container */}
@@ -1102,22 +1131,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         </Badge>}
                       </div>
                     </div>
-
-                  {/* Vehicle Search & Auto-Population */}
-                  {!order && (
-                    <>
-                      <VehicleAutoPopulationField
-                        dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
-                        onVehicleSelect={handleVehicleSelect}
-                        onVehicleClear={handleVehicleClear}
-                        selectedVehicle={selectedVehicle}
-                        label={t('stock.autopop.searchVehicle')}
-                        placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
-                      />
-
-                      {selectedVehicle && <Separator className="my-3" />}
-                    </>
-                  )}
 
                   <div>
                     <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>

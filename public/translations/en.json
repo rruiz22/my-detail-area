@@ -4495,6 +4495,7 @@
       }
     },
     "autopop": {
+      "quickSearch": "Quick Search",
       "searchVehicle": "Search vehicle by stock, VIN, make or model",
       "localInventory": "Local Inventory",
       "vinDecoded": "VIN Decoded",
