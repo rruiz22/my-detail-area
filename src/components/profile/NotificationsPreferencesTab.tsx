@@ -45,7 +45,13 @@ export function NotificationsPreferencesTab() {
   };
 
   const handleSave = async () => {
-    await updatePreferences(formData);
+    // ✅ FIX: Convert empty strings to null for TIME fields
+    const sanitizedData = {
+      ...formData,
+      quiet_hours_start: formData.quiet_hours_start || null,
+      quiet_hours_end: formData.quiet_hours_end || null,
+    };
+    await updatePreferences(sanitizedData);
   };
 
   const timezones = [
