@@ -204,6 +204,11 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
       return false;
     }
 
+    // Prevent editing if order is completed or cancelled
+    if (orderData.status === 'completed' || orderData.status === 'cancelled') {
+      return false;
+    }
+
     const permissionModuleMap = {
       sales: 'sales_orders',
       service: 'service_orders',
@@ -213,7 +218,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
     const targetModule = permissionModuleMap[orderType];
     return hasPermission(targetModule, 'edit');
-  }, [onEdit, hasPermission, orderType]);
+  }, [onEdit, hasPermission, orderType, orderData.status]);
 
   // Check if user can delete orders
   const canDeleteOrder = useMemo(() => {

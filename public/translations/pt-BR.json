@@ -3998,6 +3998,7 @@
       }
     },
     "autopop": {
+      "quickSearch": "Busca Rápida",
       "searchVehicle": "Buscar veículo por stock, VIN, marca ou modelo",
       "localInventory": "Inventário Local",
       "vinDecoded": "VIN Decodificado",
