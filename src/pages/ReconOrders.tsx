@@ -69,7 +69,7 @@ export default function ReconOrders() {
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Check if user can create recon orders
-  const canCreate = hasModulePermission('recon_orders', 'create');
+  const canCreate = hasModulePermission('recon_orders', 'create_orders');
 
   // Reset week offset when changing to a different filter
   useEffect(() => {

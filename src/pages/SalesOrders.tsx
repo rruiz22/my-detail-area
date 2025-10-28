@@ -83,7 +83,7 @@ export default function SalesOrders() {
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Check if user can create sales orders
-  const canCreate = hasModulePermission('sales_orders', 'create');
+  const canCreate = hasModulePermission('sales_orders', 'create_orders');
 
   // Real-time updates handle most data changes automatically
   // Only manual refresh needed for initial load and special cases
