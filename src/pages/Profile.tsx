@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense, useMemo, useCallback } from 'react';
+import { useState, lazy, Suspense, useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -20,6 +20,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Lazy load tab components for better performance
 const PersonalInformationTab = lazy(() => import('@/components/profile/PersonalInformationTab').then(module => ({ default: module.PersonalInformationTab })));
@@ -49,6 +50,7 @@ function TabLoadingFallback() {
 
 export default function Profile() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   // Tab persistence with localStorage - persists across page refreshes
   const [activeTab, setActiveTab] = useTabPersistence('profile');
@@ -58,6 +60,43 @@ export default function Profile() {
   const { currentDealership } = useAccessibleDealerships();
   const { seed, setSeed } = useAvatarPreferences();
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+
+  // ✅ PERFORMANCE FIX: Prefetch tab data in background for instant tab switching
+  useEffect(() => {
+    if (user?.id) {
+      // Prefetch all tab data in parallel (non-blocking)
+      Promise.all([
+        // Personal Information tab data
+        queryClient.prefetchQuery({
+          queryKey: ['user_preferences', user.id],
+          queryFn: async () => {
+            const { data } = await import('@/integrations/supabase/client').then(m => m.supabase
+              .from('user_preferences')
+              .select('*')
+              .eq('user_id', user.id)
+              .maybeSingle()
+            );
+            return data;
+          },
+          staleTime: 1000 * 60 * 5,
+        }),
+        // Account Security tab data
+        queryClient.prefetchQuery({
+          queryKey: ['user_sessions', user.id],
+          queryFn: async () => {
+            const { data } = await import('@/integrations/supabase/client').then(m => m.supabase
+              .from('user_sessions')
+              .select('*')
+              .eq('user_id', user.id)
+              .order('last_activity', { ascending: false })
+            );
+            return data || [];
+          },
+          staleTime: 1000 * 60 * 5,
+        }),
+      ]).catch(err => console.log('Prefetch failed (non-critical):', err));
+    }
+  }, [user?.id, queryClient]);
 
   // Memoized full name computation
   const fullName = useMemo(() => {
