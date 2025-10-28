@@ -78,6 +78,31 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const slug = slugData;
       console.log(`Generated slug: ${slug}`);
 
+      // Fetch order type from database to determine correct route
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .select('order_type')
+        .eq('id', orderId)
+        .single();
+
+      if (orderError || !orderData) {
+        console.error("Error fetching order type:", orderError);
+        throw new Error("Failed to fetch order type");
+      }
+
+      const orderType = orderData.order_type;
+      console.log(`Order type: ${orderType}`);
+
+      // Map order type to correct route
+      const routeMap: Record<string, string> = {
+        'sales': '/sales',
+        'service': '/service',
+        'recon': '/recon',
+        'carwash': '/carwash'
+      };
+
+      const route = routeMap[orderType] || '/sales'; // Default to sales if unknown
+
       // Create the deep link to our redirect endpoint
       // Use BASE_URL from environment variables (configured in Supabase Dashboard)
       let appUrl = Deno.env.get("BASE_URL") || "https://dds.mydetailarea.com";
@@ -87,10 +112,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         appUrl = appUrl.slice(0, -1);
       }
 
-      const redirectUrl = `${appUrl}/sales?order=${orderId}`;
+      const redirectUrl = `${appUrl}${route}?order=${orderId}`;
       const deepLink = redirectUrl; // Same as redirect URL - direct redirect
 
       console.log(`Using app URL: ${appUrl}`);
+      console.log(`Order type: ${orderType} → Route: ${route}`);
       console.log(`Redirect URL will be: ${redirectUrl}`);
 
       // Generate short link using mda.to API

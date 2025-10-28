@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslationsReady } from '@/hooks/useTranslationsReady';
 import {
   Card,
   CardContent,
@@ -42,6 +43,7 @@ export function InvitationAccept() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const translationsReady = useTranslationsReady();
 
   const [invitation, setInvitation] = useState<InvitationDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,13 +52,18 @@ export function InvitationAccept() {
   const [showAuthOptions, setShowAuthOptions] = useState(false);
 
   useEffect(() => {
+    // Wait for translations to be ready before fetching invitation details
+    if (!translationsReady) {
+      return;
+    }
+
     if (token) {
       fetchInvitationDetails();
     } else {
       setError(t('invitations.accept.invalid_invitation'));
       setLoading(false);
     }
-  }, [token]);
+  }, [token, translationsReady]);
 
   const fetchInvitationDetails = useCallback(async () => {
     if (!token) {
@@ -96,7 +103,20 @@ export function InvitationAccept() {
 
         // Check for specific error from the RPC function
         if (invitationData && invitationData.error) {
-          throw new Error(invitationData.message || t('invitations.accept.not_found'));
+          console.error('🔴 Invitation error type:', invitationData.error);
+          console.error('🔴 Error message:', invitationData.message);
+
+          // Map error types to user-friendly translated messages
+          switch (invitationData.error) {
+            case 'not_found':
+              throw new Error(t('invitations.accept.not_found_description'));
+            case 'already_accepted':
+              throw new Error(t('invitations.accept.already_accepted_description'));
+            case 'expired':
+              throw new Error(t('invitations.accept.expired'));
+            default:
+              throw new Error(invitationData.message || t('invitations.accept.not_found_description'));
+          }
         }
 
         throw new Error(t('invitations.accept.not_found'));
@@ -249,6 +269,22 @@ export function InvitationAccept() {
     }
     return t('invitations.accept.expires_in_days', { days: Math.ceil(diffInHours / 24) });
   };
+
+  // Show loading while translations are being loaded
+  if (!translationsReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Loading...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

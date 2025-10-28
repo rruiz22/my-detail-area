@@ -380,8 +380,9 @@ export const useReconOrderManagement = () => {
         variant: 'default'
       });
 
-      // Optimistic update already done - polling will refresh within 60s
-      // Removed refetchQueries for instant modal close
+      // Invalidate queries to trigger immediate table refresh
+      await queryClient.invalidateQueries({ queryKey: ['orders', 'recon'] });
+      console.log('✅ Recon order cache invalidated - table will refresh immediately');
 
       return newOrder;
     } catch (error) {

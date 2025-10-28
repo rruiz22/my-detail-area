@@ -500,8 +500,9 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           // QR generation failure doesn't affect order creation
         });
 
-      // Optimistic update already done - polling will refresh within 60s
-      // Removed refetchQueries for instant modal close
+      // Invalidate queries to trigger immediate table refresh
+      await queryClient.invalidateQueries({ queryKey: ['orders', 'service'] });
+      dev('✅ Service order cache invalidated - table will refresh immediately');
     } catch (error) {
       logError('Error in createOrder:', error);
       throw error;

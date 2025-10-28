@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 721,
-  "totalStrings": 6867,
-  "hardcodedStrings": 1510,
-  "translatedStrings": 5357,
+  "scannedFiles": 728,
+  "totalStrings": 6895,
+  "hardcodedStrings": 1513,
+  "translatedStrings": 5382,
   "issues": {
     "critical": [
       {
@@ -8359,252 +8359,252 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 292,
-            "context": "291: <div className=\"p-2 rounded\">\n292: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n293: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
+            "line": 300,
+            "context": "299: <div className=\"p-2 rounded\">\n300: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n301: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
           },
           {
             "text": "Previous",
-            "line": 435,
-            "context": "434: disabled={currentPage === 1}\n435: >\n436: Previous"
+            "line": 443,
+            "context": "442: disabled={currentPage === 1}\n443: >\n444: Previous"
           },
           {
             "text": "Next",
-            "line": 446,
-            "context": "445: disabled={currentPage >= totalPages}\n446: >\n447: Next"
+            "line": 454,
+            "context": "453: disabled={currentPage >= totalPages}\n454: >\n455: Next"
           },
           {
             "text": "Order ID",
-            "line": 467,
-            "context": "466: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n467: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n468: <TableHead className=\"font-medium text-foreground text-center\">"
+            "line": 475,
+            "context": "474: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n475: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n476: <TableHead className=\"font-medium text-foreground text-center\">"
           },
           {
             "text": "Vehicle",
-            "line": 471,
-            "context": "470: </TableHead>\n471: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n472: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+            "line": 479,
+            "context": "478: </TableHead>\n479: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n480: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
           },
           {
             "text": "Status",
-            "line": 474,
-            "context": "473: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n474: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n475: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+            "line": 482,
+            "context": "481: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n482: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n483: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 475,
-            "context": "474: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n475: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n476: </TableRow>"
+            "line": 483,
+            "context": "482: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n483: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n484: </TableRow>"
           },
           {
             "text": "Previous",
-            "line": 774,
-            "context": "773: disabled={currentPage === 1}\n774: >\n775: Previous"
+            "line": 782,
+            "context": "781: disabled={currentPage === 1}\n782: >\n783: Previous"
           },
           {
             "text": "Next",
-            "line": 785,
-            "context": "784: disabled={currentPage >= totalPages}\n785: >\n786: Next"
+            "line": 793,
+            "context": "792: disabled={currentPage >= totalPages}\n793: >\n794: Next"
           }
         ],
         "translationCalls": [
           {
             "key": "errors.no_permission_status_change",
-            "line": 128,
+            "line": 129,
             "exists": false
           },
           {
             "key": "success.status_updated",
-            "line": 135,
+            "line": 136,
             "exists": false
           },
           {
             "key": "errors.status_update_failed",
-            "line": 149,
+            "line": 157,
             "exists": false
           },
           {
             "key": "data_table.days_overdue",
-            "line": 175,
+            "line": 183,
             "exists": false
           },
           {
             "key": "data_table.due_today",
-            "line": 177,
+            "line": 185,
             "exists": true
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 179,
+            "line": 187,
             "exists": false
           },
           {
             "key": "data_table.due_in_days",
-            "line": 181,
+            "line": 189,
             "exists": false
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 266,
+            "line": 274,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 315,
+            "line": 323,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 339,
+            "line": 347,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 354,
+            "line": 362,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 368,
+            "line": 376,
             "exists": true
           },
           {
             "key": "data_table.view",
-            "line": 388,
+            "line": 396,
             "exists": true
           },
           {
             "key": "data_table.edit",
-            "line": 400,
+            "line": 408,
             "exists": true
           },
           {
             "key": "data_table.delete",
-            "line": 413,
+            "line": 421,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 427,
+            "line": 435,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 439,
+            "line": 447,
             "exists": true
           },
           {
             "key": "data_table.orders_count",
-            "line": 458,
+            "line": 466,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 472,
+            "line": 480,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 473,
+            "line": 481,
             "exists": true
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 528,
+            "line": 536,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 551,
+            "line": 559,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 589,
+            "line": 597,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 628,
+            "line": 636,
             "exists": true
           },
           {
             "key": "data_table.no_time_set",
-            "line": 647,
+            "line": 655,
             "exists": true
           },
           {
             "key": "data_table.view_details",
-            "line": 676,
+            "line": 684,
             "exists": true
           },
           {
             "key": "data_table.edit_order",
-            "line": 688,
+            "line": 696,
             "exists": true
           },
           {
             "key": "data_table.print_order",
-            "line": 699,
+            "line": 707,
             "exists": true
           },
           {
             "key": "data_table.delete_order",
-            "line": 711,
+            "line": 719,
             "exists": true
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 727,
+            "line": 735,
             "exists": true
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 728,
+            "line": 736,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 743,
+            "line": 751,
             "exists": true
           },
           {
             "key": "data_table.items_per_page",
-            "line": 746,
+            "line": 754,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 778,
+            "line": 786,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission_status_change",
-            "line": 128,
-            "context": "127: if (!allowed) {\n128: toast.error(t('errors.no_permission_status_change', 'You do not have permission to change order status'));\n129: return;"
+            "line": 129,
+            "context": "128: if (!allowed) {\n129: toast.error(t('errors.no_permission_status_change', 'You do not have permission to change order status'));\n130: return;"
           },
           {
             "key": "success.status_updated",
-            "line": 135,
-            "context": "134: dev(`Status updated for order ${orderId} to ${newStatus}`);\n135: toast.success(t('success.status_updated', 'Order status updated successfully'));\n136: "
+            "line": 136,
+            "context": "135: dev(`Status updated for order ${orderId} to ${newStatus}`);\n136: toast.success(t('success.status_updated', 'Order status updated successfully'));\n137: "
           },
           {
             "key": "errors.status_update_failed",
-            "line": 149,
-            "context": "148: logError('Failed to update status:', error);\n149: toast.error(t('errors.status_update_failed', 'Failed to update order status'));\n150: }"
+            "line": 157,
+            "context": "156: logError('Failed to update status:', error);\n157: toast.error(t('errors.status_update_failed', 'Failed to update order status'));\n158: }"
           },
           {
             "key": "data_table.days_overdue",
-            "line": 175,
-            "context": "174: if (diffDays < 0) {\n175: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n176: } else if (diffDays === 0) {"
+            "line": 183,
+            "context": "182: if (diffDays < 0) {\n183: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n184: } else if (diffDays === 0) {"
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 179,
-            "context": "178: } else if (diffDays === 1) {\n179: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n180: } else {"
+            "line": 187,
+            "context": "186: } else if (diffDays === 1) {\n187: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n188: } else {"
           },
           {
             "key": "data_table.due_in_days",
-            "line": 181,
-            "context": "180: } else {\n181: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n182: }"
+            "line": 189,
+            "context": "188: } else {\n189: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n190: }"
           }
         ],
         "coverage": 79,
@@ -10140,6 +10140,20 @@
           }
         ],
         "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\utils\\permissionSerialization.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n    return null;\r\n  }\r\n}\r\n\r\n/**\r\n * Save permissions to localStorage cache\r\n *\r\n * @param user - Enhanced user with permissions to cache\r\n */\r\nexport function cachePermissions(user: EnhancedUserGranular): void {\r\n  try {\r\n    const serialized = serializePermissions(user);\r\n    localStorage.setItem(CACHE_KEY, JSON.stringify(serialized));\r\n    console.log(`✅ Permissions cached for user ${user.email}`);\r\n  } catch (error) {\r\n    // Don",
+            "line": 94,
+            "context": "93: } catch (error) {\n94: console.error('❌ Permission deserialization error:', error);\n95: return null;"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -11760,317 +11774,332 @@
         "hardcodedStrings": [
           {
             "text": ", invitationError);\r\n        throw new Error(t(",
-            "line": 84,
-            "context": "83: if (invitationError) {\n84: console.error('❌ Supabase RPC error:', invitationError);\n85: throw new Error(t('invitations.accept.database_error'));"
+            "line": 91,
+            "context": "90: if (invitationError) {\n91: console.error('❌ Supabase RPC error:', invitationError);\n92: throw new Error(t('invitations.accept.database_error'));"
           },
           {
             "text": ", error);\r\n            throw new Error(error.message || ",
-            "line": 183,
-            "context": "182: if (error) {\n183: console.error('Supabase RPC error:', error);\n184: throw new Error(error.message || 'Error accepting invitation');"
+            "line": 203,
+            "context": "202: if (error) {\n203: console.error('Supabase RPC error:', error);\n204: throw new Error(error.message || 'Error accepting invitation');"
           }
         ],
         "translationCalls": [
           {
             "key": "invitations.accept.invalid_invitation",
-            "line": 56,
+            "line": 63,
             "exists": true
           },
           {
             "key": "invitations.accept.invalid_invitation",
-            "line": 64,
+            "line": 71,
             "exists": true
           },
           {
             "key": "invitations.accept.database_error",
-            "line": 85,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.not_found",
-            "line": 99,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.not_found",
-            "line": 102,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.expired",
-            "line": 112,
-            "exists": true
-          },
-          {
-            "key": "dealerships.title",
-            "line": 121,
-            "exists": true
-          },
-          {
-            "key": "users.admin",
-            "line": 122,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.auth_required",
-            "line": 135,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.auth_required_desc",
-            "line": 136,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 145,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.invalid_invitation",
-            "line": 146,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.email_not_match",
-            "line": 155,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.email_not_match_desc",
-            "line": 156,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 188,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.success_message",
-            "line": 189,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.account_created",
-            "line": 207,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.invitation_accept_error",
-            "line": 208,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.check_email_to_continue",
-            "line": 208,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 214,
-            "exists": true
-          },
-          {
-            "key": "messages.error",
-            "line": 215,
-            "exists": true
-          },
-          {
-            "key": "roles.system_admin",
-            "line": 225,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_admin",
-            "line": 226,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_manager",
-            "line": 227,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_salesperson",
-            "line": 228,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_service_advisor",
-            "line": 229,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_sales_manager",
-            "line": 230,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_service_manager",
-            "line": 231,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_user",
-            "line": 232,
-            "exists": true
-          },
-          {
-            "key": "roles.detail_super_manager",
-            "line": 233,
-            "exists": true
-          },
-          {
-            "key": "roles.detail_admin",
-            "line": 234,
-            "exists": true
-          },
-          {
-            "key": "roles.${roleName}",
-            "line": 237,
-            "exists": false
-          },
-          {
-            "key": "invitations.accept.expires_in_hours",
-            "line": 248,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.expires_in_days",
-            "line": 250,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.verifying",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.invalid_title",
-            "line": 274,
+            "line": 92,
             "exists": true
           },
           {
             "key": "invitations.accept.not_found_description",
-            "line": 276,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.go_to_start",
-            "line": 284,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.already_accepted_title",
-            "line": 298,
+            "line": 112,
             "exists": true
           },
           {
             "key": "invitations.accept.already_accepted_description",
-            "line": 300,
+            "line": 114,
             "exists": true
           },
           {
-            "key": "invitations.accept.go_to_dashboard",
-            "line": 308,
+            "key": "invitations.accept.expired",
+            "line": 116,
             "exists": true
           },
           {
-            "key": "invitations.accept.title",
-            "line": 321,
+            "key": "invitations.accept.not_found_description",
+            "line": 118,
             "exists": true
           },
           {
-            "key": "invitations.accept.subtitle",
-            "line": 323,
+            "key": "invitations.accept.not_found",
+            "line": 122,
             "exists": true
           },
           {
-            "key": "invitations.accept.dealership_label",
+            "key": "invitations.accept.expired",
+            "line": 132,
+            "exists": true
+          },
+          {
+            "key": "dealerships.title",
+            "line": 141,
+            "exists": true
+          },
+          {
+            "key": "users.admin",
+            "line": 142,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.auth_required",
+            "line": 155,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.auth_required_desc",
+            "line": 156,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 165,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.invalid_invitation",
+            "line": 166,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.email_not_match",
+            "line": 175,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.email_not_match_desc",
+            "line": 176,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 208,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.success_message",
+            "line": 209,
+            "exists": true
+          },
+          {
+            "key": "auth.signup.account_created",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "auth.signup.invitation_accept_error",
+            "line": 228,
+            "exists": true
+          },
+          {
+            "key": "auth.signup.check_email_to_continue",
+            "line": 228,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 234,
+            "exists": true
+          },
+          {
+            "key": "messages.error",
+            "line": 235,
+            "exists": true
+          },
+          {
+            "key": "roles.system_admin",
+            "line": 245,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_admin",
+            "line": 246,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_manager",
+            "line": 247,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_salesperson",
+            "line": 248,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_service_advisor",
+            "line": 249,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_sales_manager",
+            "line": 250,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_service_manager",
+            "line": 251,
+            "exists": true
+          },
+          {
+            "key": "roles.dealer_user",
+            "line": 252,
+            "exists": true
+          },
+          {
+            "key": "roles.detail_super_manager",
+            "line": 253,
+            "exists": true
+          },
+          {
+            "key": "roles.detail_admin",
+            "line": 254,
+            "exists": true
+          },
+          {
+            "key": "roles.${roleName}",
+            "line": 257,
+            "exists": false
+          },
+          {
+            "key": "invitations.accept.expires_in_hours",
+            "line": 268,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.expires_in_days",
+            "line": 270,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.verifying",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.invalid_title",
+            "line": 310,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.not_found_description",
+            "line": 312,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.go_to_start",
+            "line": 320,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.already_accepted_title",
             "line": 334,
             "exists": true
           },
           {
+            "key": "invitations.accept.already_accepted_description",
+            "line": 336,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.go_to_dashboard",
+            "line": 344,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.title",
+            "line": 357,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.subtitle",
+            "line": 359,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.dealership_label",
+            "line": 370,
+            "exists": true
+          },
+          {
             "key": "invitations.accept.role_label",
-            "line": 342,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.invited_by",
-            "line": 351,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.expires_prefix",
-            "line": 360,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.expiration_warning",
-            "line": 363,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.auth_instructions",
-            "line": 374,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.step_1",
-            "line": 377,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.step_2",
             "line": 378,
             "exists": true
           },
           {
-            "key": "invitations.accept.create_account",
+            "key": "invitations.accept.invited_by",
             "line": 387,
             "exists": true
           },
           {
-            "key": "invitations.accept.sign_in",
-            "line": 394,
+            "key": "invitations.accept.expires_prefix",
+            "line": 396,
             "exists": true
           },
           {
-            "key": "invitations.accept.email_mismatch_detail",
-            "line": 402,
+            "key": "invitations.accept.expiration_warning",
+            "line": 399,
             "exists": true
           },
           {
-            "key": "invitations.accept.but_logged_as",
-            "line": 402,
-            "exists": true
-          },
-          {
-            "key": "invitations.accept.switch_account",
+            "key": "invitations.accept.auth_instructions",
             "line": 410,
             "exists": true
           },
           {
-            "key": "invitations.accept.accepting",
+            "key": "invitations.accept.step_1",
+            "line": 413,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.step_2",
+            "line": 414,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.create_account",
             "line": 423,
             "exists": true
           },
           {
+            "key": "invitations.accept.sign_in",
+            "line": 430,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.email_mismatch_detail",
+            "line": 438,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.but_logged_as",
+            "line": 438,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.switch_account",
+            "line": 446,
+            "exists": true
+          },
+          {
+            "key": "invitations.accept.accepting",
+            "line": 459,
+            "exists": true
+          },
+          {
             "key": "invitations.accept.accept_button",
-            "line": 428,
+            "line": 464,
             "exists": true
           },
           {
             "key": "invitations.accept.decline",
-            "line": 439,
+            "line": 475,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "roles.${roleName}",
-            "line": 237,
-            "context": "236: // Use translation if available, otherwise format the role name automatically\n237: return roleMap[roleName] || t(`roles.${roleName}`, formatRoleName(roleName));\n238: };"
+            "line": 257,
+            "context": "256: // Use translation if available, otherwise format the role name automatically\n257: return roleMap[roleName] || t(`roles.${roleName}`, formatRoleName(roleName));\n258: };"
           }
         ],
         "coverage": 97,
@@ -16621,18 +16650,18 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 23,
-            "context": "22: loading: boolean;\n23: signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<{ error: Error | null }>;\n24: signIn: (email: string, password: string) => Promise<{ error: Error | null }>;"
-          },
-          {
-            "text": "Promise",
-            "line": 24,
-            "context": "23: signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<{ error: Error | null }>;\n24: signIn: (email: string, password: string) => Promise<{ error: Error | null }>;\n25: signOut: () => Promise<void>;"
-          },
-          {
-            "text": "Promise",
             "line": 25,
-            "context": "24: signIn: (email: string, password: string) => Promise<{ error: Error | null }>;\n25: signOut: () => Promise<void>;\n26: }"
+            "context": "24: loading: boolean;\n25: signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<{ error: Error | null }>;\n26: signIn: (email: string, password: string) => Promise<{ error: Error | null }>;"
+          },
+          {
+            "text": "Promise",
+            "line": 26,
+            "context": "25: signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<{ error: Error | null }>;\n26: signIn: (email: string, password: string) => Promise<{ error: Error | null }>;\n27: signOut: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 27,
+            "context": "26: signIn: (email: string, password: string) => Promise<{ error: Error | null }>;\n27: signOut: () => Promise<void>;\n28: }"
           }
         ],
         "translationCalls": [],
@@ -16766,61 +16795,66 @@
         "hardcodedStrings": [],
         "translationCalls": [
           {
+            "key": "search.global_placeholder",
+            "line": 113,
+            "exists": true
+          },
+          {
             "key": "layout.mobile_menu",
-            "line": 112,
+            "line": 127,
             "exists": true
           },
           {
             "key": "layout.tools",
-            "line": 117,
+            "line": 132,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 123,
+            "line": 138,
             "exists": true
           },
           {
             "key": "layout.preferences",
-            "line": 131,
+            "line": 146,
             "exists": true
           },
           {
             "key": "common.notifications",
-            "line": 143,
+            "line": 158,
             "exists": false
           },
           {
             "key": "layout.footer.copyright",
-            "line": 177,
+            "line": 192,
             "exists": true
           },
           {
             "key": "layout.footer.version",
-            "line": 179,
+            "line": 194,
             "exists": true
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 189,
+            "line": 204,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 197,
+            "line": 212,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 205,
+            "line": 220,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.notifications",
-            "line": 143,
-            "context": "142: <label className=\"text-sm font-medium text-muted-foreground\">\n143: {t('common.notifications')}\n144: </label>"
+            "line": 158,
+            "context": "157: <label className=\"text-sm font-medium text-muted-foreground\">\n158: {t('common.notifications')}\n159: </label>"
           }
         ],
         "coverage": 100,
@@ -30484,140 +30518,260 @@
         "translationCalls": [
           {
             "key": "profile.notification_types",
-            "line": 83,
+            "line": 114,
             "exists": true
           },
           {
             "key": "profile.email_notifications",
-            "line": 91,
+            "line": 122,
             "exists": true
           },
           {
             "key": "profile.email_notifications_desc",
-            "line": 94,
+            "line": 125,
             "exists": true
           },
           {
             "key": "profile.sms_notifications",
-            "line": 109,
+            "line": 140,
             "exists": true
           },
           {
             "key": "profile.sms_notifications_desc",
-            "line": 112,
+            "line": 143,
             "exists": true
           },
           {
             "key": "profile.push_notifications",
-            "line": 127,
+            "line": 158,
             "exists": true
           },
           {
             "key": "profile.push_notifications_desc",
-            "line": 130,
+            "line": 161,
             "exists": true
           },
           {
             "key": "profile.in_app_notifications",
-            "line": 145,
+            "line": 176,
             "exists": true
           },
           {
             "key": "profile.in_app_notifications_desc",
-            "line": 148,
-            "exists": true
-          },
-          {
-            "key": "profile.notification_settings",
-            "line": 164,
-            "exists": true
-          },
-          {
-            "key": "profile.notification_frequency",
-            "line": 169,
-            "exists": true
-          },
-          {
-            "key": "profile.immediate",
-            "line": 178,
-            "exists": true
-          },
-          {
-            "key": "profile.hourly",
             "line": 179,
             "exists": true
           },
           {
-            "key": "profile.daily",
-            "line": 180,
+            "key": "profile.notification_settings",
+            "line": 195,
             "exists": true
           },
           {
-            "key": "profile.weekly",
-            "line": 181,
+            "key": "profile.notification_frequency",
+            "line": 200,
             "exists": true
           },
           {
-            "key": "profile.quiet_hours_start",
-            "line": 188,
+            "key": "profile.immediate",
+            "line": 209,
             "exists": true
           },
           {
-            "key": "profile.select_time",
-            "line": 194,
-            "exists": true
-          },
-          {
-            "key": "profile.quiet_hours_end",
+            "key": "profile.hourly",
             "line": 210,
             "exists": true
           },
           {
+            "key": "profile.daily",
+            "line": 211,
+            "exists": true
+          },
+          {
+            "key": "profile.weekly",
+            "line": 212,
+            "exists": true
+          },
+          {
+            "key": "profile.quiet_hours_start",
+            "line": 219,
+            "exists": true
+          },
+          {
             "key": "profile.select_time",
-            "line": 216,
+            "line": 225,
+            "exists": true
+          },
+          {
+            "key": "profile.quiet_hours_end",
+            "line": 241,
+            "exists": true
+          },
+          {
+            "key": "profile.select_time",
+            "line": 247,
             "exists": true
           },
           {
             "key": "profile.localization",
-            "line": 239,
+            "line": 270,
             "exists": true
           },
           {
             "key": "profile.language",
-            "line": 245,
+            "line": 276,
             "exists": true
           },
           {
             "key": "profile.timezone",
-            "line": 264,
+            "line": 295,
             "exists": true
           },
           {
             "key": "profile.date_format",
-            "line": 285,
+            "line": 316,
             "exists": true
           },
           {
             "key": "profile.time_format",
-            "line": 304,
+            "line": 335,
+            "exists": true
+          },
+          {
+            "key": "notifications.granular_settings",
+            "line": 362,
+            "exists": true
+          },
+          {
+            "key": "notifications.all_categories",
+            "line": 370,
+            "exists": true
+          },
+          {
+            "key": "notifications.categories.orders",
+            "line": 371,
+            "exists": true
+          },
+          {
+            "key": "notifications.categories.team",
+            "line": 372,
+            "exists": true
+          },
+          {
+            "key": "notifications.categories.deadlines",
+            "line": 373,
+            "exists": true
+          },
+          {
+            "key": "notifications.categories.financial",
+            "line": 374,
+            "exists": true
+          },
+          {
+            "key": "notifications.categories.system",
+            "line": 375,
+            "exists": true
+          },
+          {
+            "key": "notifications.modules.sales",
+            "line": 384,
+            "exists": true
+          },
+          {
+            "key": "notifications.modules.service",
+            "line": 385,
+            "exists": true
+          },
+          {
+            "key": "notifications.modules.recon",
+            "line": 386,
+            "exists": true
+          },
+          {
+            "key": "notifications.modules.car_wash",
+            "line": 387,
+            "exists": true
+          },
+          {
+            "key": "notifications.modules.get_ready",
+            "line": 388,
             "exists": true
           },
           {
             "key": "common.saving",
-            "line": 329,
+            "line": 438,
             "exists": true
           },
           {
             "key": "common.save_changes",
-            "line": 329,
+            "line": 438,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.save_changes",
-            "line": 329,
-            "context": "328: <Save className=\"h-4 w-4 mr-2\" />\n329: {loading ? t('common.saving') : t('common.save_changes')}\n330: </Button>"
+            "line": 438,
+            "context": "437: <Save className=\"h-4 w-4 mr-2\" />\n438: {loading ? t('common.saving') : t('common.save_changes')}\n439: </Button>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\profile\\NotificationEventsTable.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.event",
+            "line": 65,
+            "exists": true
+          },
+          {
+            "key": "notifications.category",
+            "line": 66,
+            "exists": true
+          },
+          {
+            "key": "notifications.in_app",
+            "line": 70,
+            "exists": true
+          },
+          {
+            "key": "notifications.email",
+            "line": 76,
+            "exists": true
+          },
+          {
+            "key": "notifications.sms",
+            "line": 82,
+            "exists": true
+          },
+          {
+            "key": "notifications.push",
+            "line": 88,
+            "exists": true
+          },
+          {
+            "key": "common.actions",
+            "line": 91,
+            "exists": true
+          },
+          {
+            "key": "notifications.no_events",
+            "line": 98,
+            "exists": true
+          },
+          {
+            "key": "notifications.categories.${event.category}",
+            "line": 112,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.categories.${event.category}",
+            "line": 112,
+            "context": "111: <Badge variant=\"outline\" className={`capitalize text-xs ${getCategoryColor(event.category)}`}>\n112: {t(`notifications.categories.${event.category}`)}\n113: </Badge>"
           }
         ],
         "coverage": 100,
@@ -30629,135 +30783,135 @@
         "translationCalls": [
           {
             "key": "profile.activity_filters",
-            "line": 181,
+            "line": 173,
             "exists": true
           },
           {
             "key": "profile.search_activities",
-            "line": 187,
+            "line": 179,
             "exists": true
           },
           {
             "key": "profile.search_placeholder",
-            "line": 191,
+            "line": 183,
             "exists": true
           },
           {
             "key": "profile.activity_type",
-            "line": 200,
+            "line": 192,
             "exists": false
           },
           {
             "key": "profile.all_activities",
-            "line": 206,
+            "line": 198,
             "exists": true
           },
           {
             "key": "profile.profile_updates",
-            "line": 207,
+            "line": 199,
             "exists": true
           },
           {
             "key": "profile.password_changes",
-            "line": 208,
+            "line": 200,
             "exists": true
           },
           {
             "key": "profile.preference_changes",
-            "line": 209,
+            "line": 201,
             "exists": true
           },
           {
             "key": "profile.session_changes",
-            "line": 210,
+            "line": 202,
             "exists": true
           },
           {
             "key": "profile.date_range",
-            "line": 216,
+            "line": 208,
             "exists": false
           },
           {
             "key": "profile.last_24_hours",
-            "line": 222,
+            "line": 214,
             "exists": true
           },
           {
             "key": "profile.last_7_days",
-            "line": 223,
+            "line": 215,
             "exists": true
           },
           {
             "key": "profile.last_30_days",
-            "line": 224,
+            "line": 216,
             "exists": true
           },
           {
             "key": "profile.last_90_days",
-            "line": 225,
+            "line": 217,
             "exists": true
           },
           {
             "key": "profile.export_data",
-            "line": 231,
+            "line": 223,
             "exists": true
           },
           {
             "key": "profile.export_csv",
-            "line": 234,
+            "line": 226,
             "exists": true
           },
           {
             "key": "profile.total_activities",
-            "line": 242,
+            "line": 234,
             "exists": true
           },
           {
             "key": "profile.filtered_results",
-            "line": 246,
+            "line": 238,
             "exists": true
           },
           {
             "key": "profile.date_range_label",
-            "line": 250,
+            "line": 242,
             "exists": true
           },
           {
             "key": "profile.showing",
-            "line": 254,
+            "line": 246,
             "exists": true
           },
           {
             "key": "profile.recent_activity",
-            "line": 266,
+            "line": 258,
             "exists": true
           },
           {
             "key": "profile.view_details",
-            "line": 314,
+            "line": 306,
             "exists": true
           },
           {
             "key": "profile.no_activities_found",
-            "line": 333,
+            "line": 325,
             "exists": true
           },
           {
             "key": "profile.no_activities_yet",
-            "line": 334,
+            "line": 326,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "profile.activity_type",
-            "line": 200,
-            "context": "199: <div className=\"space-y-2\">\n200: <label className=\"text-sm font-medium\">{t('profile.activity_type')}</label>\n201: <Select value={filterType} onValueChange={setFilterType}>"
+            "line": 192,
+            "context": "191: <div className=\"space-y-2\">\n192: <label className=\"text-sm font-medium\">{t('profile.activity_type')}</label>\n193: <Select value={filterType} onValueChange={setFilterType}>"
           },
           {
             "key": "profile.date_range",
-            "line": 216,
-            "context": "215: <div className=\"space-y-2\">\n216: <label className=\"text-sm font-medium\">{t('profile.date_range', 'Date Range')}</label>\n217: <Select value={dateRange} onValueChange={setDateRange}>"
+            "line": 208,
+            "context": "207: <div className=\"space-y-2\">\n208: <label className=\"text-sm font-medium\">{t('profile.date_range', 'Date Range')}</label>\n209: <Select value={dateRange} onValueChange={setDateRange}>"
           }
         ],
         "coverage": 100,
@@ -40909,6 +41063,25 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\loading\\SplashScreen.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "My Detail Area",
+            "line": 91,
+            "context": "90: {/* Subtle branding/hint */}\n91: <p className=\"text-xs text-muted-foreground/60 mt-8\">\n92: My Detail Area"
+          },
+          {
+            "text": "Loading application",
+            "line": 61,
+            "context": "60: aria-live=\"polite\"\n61: aria-label=\"Loading application\"\n62: >"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\get-ready\\WorkItemTemplatesManager.tsx",
         "hardcodedStrings": [
           {
@@ -49725,7 +49898,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "342 Component components need translation",
+      "description": "345 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -49879,6 +50052,7 @@
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
+        "src\\components\\loading\\SplashScreen.tsx",
         "src\\components\\get-ready\\WorkItemsGroupedTable.tsx",
         "src\\components\\get-ready\\StockImageLightbox.tsx",
         "src\\components\\get-ready\\StepsList.tsx",
@@ -49889,6 +50063,7 @@
         "src\\components\\attachments\\FileUpload.tsx",
         "src\\workers\\vinOcrWorker.ts",
         "src\\utils\\telemetry.ts",
+        "src\\utils\\permissionSerialization.ts",
         "src\\utils\\lazyImports.ts",
         "src\\utils\\imageCompression.ts",
         "src\\utils\\dealerValidation.ts",
@@ -50012,6 +50187,7 @@
         "src\\components\\recon\\ReconApprovalWorkflow.tsx",
         "src\\components\\profile\\PersonalInformationTab.tsx",
         "src\\components\\profile\\NotificationsPreferencesTab.tsx",
+        "src\\components\\profile\\NotificationEventsTable.tsx",
         "src\\components\\profile\\ActivityAuditTab.tsx",
         "src\\components\\profile\\AccountSecurityTab.tsx",
         "src\\components\\productivity\\ProductivityCalendar.tsx",
@@ -50070,12 +50246,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "171 hours"
+      "estimatedEffort": "173 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2295 translation keys are referenced but missing",
+      "description": "2296 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "115 hours"
     }

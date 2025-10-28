@@ -20,6 +20,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { useDuplicateDetection } from '@/hooks/useDuplicateDetection';
+import { orderEvents } from '@/utils/eventBus';
 import { cn } from '@/lib/utils';
 import '@/styles/order-animations.css';
 import { safeParseDate } from '@/utils/dateUtils';
@@ -139,10 +140,17 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
           onStatusChange(orderId, newStatus);
         }
 
-        // Dispatch custom event for real-time updates
+        // Dispatch custom event for real-time updates (for Sales Orders)
         window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
           detail: { orderId, newStatus, timestamp: Date.now() }
         }));
+
+        // Emit to eventBus for Service/Recon/CarWash orders
+        orderEvents.emit('orderStatusUpdated', {
+          orderId,
+          newStatus,
+          timestamp: Date.now()
+        });
       }
     } catch (error) {
       logError('Failed to update status:', error);
