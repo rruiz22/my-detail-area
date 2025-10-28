@@ -361,7 +361,7 @@
   },
   "dashboard": {
     "hero": {
-      "welcome": "Bienvenido a MyDetailArea",
+      "welcome": "Bienvenido a My Detail Area",
       "subtitle": "Optimice las operaciones de su concesionario con herramientas e insights poderosos",
       "new_order": "Nueva Orden",
       "view_pending": "Ver Pendientes ({{count}})",

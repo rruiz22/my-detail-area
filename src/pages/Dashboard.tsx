@@ -28,13 +28,17 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
         {/* Hero Section */}
-        <div className="relative overflow-hidden rounded-xl bg-gradient-primary p-8 text-primary-foreground">
-          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{
+        <div className="relative overflow-hidden rounded-xl bg-gray-900 dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
+          {/* Background Image */}
+          <div className="absolute inset-0 bg-cover bg-center" style={{
             backgroundImage: `url(${dealershipHero})`
           }} />
+          {/* Dark Overlay for better text contrast */}
+          <div className="absolute inset-0 bg-black/60 dark:bg-black/70" />
+
           <div className="relative z-10">
-            <h1 className="text-3xl font-bold mb-2">{t('dashboard.hero.welcome')}</h1>
-            <p className="text-xl opacity-90">{t('dashboard.hero.subtitle')}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">{t('dashboard.hero.welcome')}</h1>
+            <p className="text-lg sm:text-xl text-white/90">{t('dashboard.hero.subtitle')}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               {/* New Order - Always show if user has any order type permission */}
               {(hasPermission('sales_orders', 'edit') ||
@@ -44,7 +48,7 @@ export default function Dashboard() {
                 <Button
                   variant="secondary"
                   onClick={() => handleQuickAction('create_order', '/vin-scanner')}
-                  className="button-enhanced"
+                  className="button-enhanced bg-white text-gray-900 hover:bg-white/90"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   {t('dashboard.hero.new_order')}
@@ -55,7 +59,7 @@ export default function Dashboard() {
               {pendingCount > 0 && (
                 <Button
                   variant="outline"
-                  className="border-white/20 text-primary-foreground hover:bg-white/10"
+                  className="border-white/30 dark:border-white/20 text-white hover:bg-white/10"
                   onClick={() => {
                     // Navigate to first available order type with pending filter
                     if (hasPermission('sales_orders', 'view')) navigate('/sales?filter=pending');
@@ -73,7 +77,7 @@ export default function Dashboard() {
               {hasPermission('productivity', 'view') && (
                 <Button
                   variant="outline"
-                  className="border-white/20 text-primary-foreground hover:bg-white/10"
+                  className="border-white/30 dark:border-white/20 text-white hover:bg-white/10"
                   onClick={() => handleQuickAction('get_ready', '/get-ready')}
                 >
                   <Zap className="h-4 w-4 mr-2" />
@@ -85,7 +89,7 @@ export default function Dashboard() {
               {hasPermission('chat', 'view') && (
                 <Button
                   variant="outline"
-                  className="border-white/20 text-primary-foreground hover:bg-white/10"
+                  className="border-white/30 dark:border-white/20 text-white hover:bg-white/10"
                   onClick={() => handleQuickAction('team_chat', '/chat')}
                 >
                   <MessageCircle className="h-4 w-4 mr-2" />
