@@ -457,6 +457,11 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
   const handleServiceToggle = (serviceId: string, checked: boolean) => {
     if (checked) {
+      // ✅ LIMIT: Maximum 2 services per order
+      if (selectedServices.length >= 2) {
+        toast.warning(t('orders.max_services_reached', 'Maximum 2 services per order'));
+        return;
+      }
       setSelectedServices(prev => [...prev, serviceId]);
     } else {
       setSelectedServices(prev => prev.filter(id => id !== serviceId));
@@ -799,14 +804,26 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <Label className="text-sm font-medium">
-                      {t('orders.services')} <span className="text-red-500">*</span>
-                      {selectedDealership && services.length > 0 && (
-                        <span className="text-muted-foreground ml-1">
-                          ({services.length} {t('orders.available')})
-                        </span>
-                      )}
-                    </Label>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label className="text-sm font-medium">
+                        {t('orders.services')} <span className="text-red-500">*</span>
+                        {selectedDealership && services.length > 0 && (
+                          <span className="text-muted-foreground ml-1">
+                            ({services.length} {t('orders.available')})
+                          </span>
+                        )}
+                      </Label>
+                      <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs">
+                        {selectedServices.length}/2 {t('orders.selected')}
+                      </Badge>
+                    </div>
+
+                    {/* Service limit info message */}
+                    {selectedServices.length >= 2 && (
+                      <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 mb-2">
+                        {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}
+                      </div>
+                    )}
 
                     {!selectedDealership ? (
                       <div className="text-sm text-muted-foreground mt-2 p-3 bg-muted rounded-md">
@@ -819,45 +836,54 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     ) : (
                       <ScrollArea className="h-[300px] mt-2 p-3 border border-border rounded-md">
                         <div className="space-y-2">
-                          {services.map((service: any) => (
-                            <div key={service.id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-accent">
-                              <Checkbox
-                                id={service.id}
-                                checked={selectedServices.includes(service.id)}
-                                onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                              />
-                              <div className="flex-1 min-w-0">
-                                <Label htmlFor={service.id} className="text-sm font-medium cursor-pointer">
-                                  {service.name}
-                                </Label>
-                                {service.description && (
-                                  <div className="text-xs text-muted-foreground mt-1">
-                                    {service.description}
-                                  </div>
-                                )}
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="outline" className="text-xs">
-                                    {service.category_name}
-                                  </Badge>
-                                  {canViewPrices && service.price && (
-                                    <span className="text-xs font-medium text-primary">
-                                      ${service.price}
-                                    </span>
+                          {services.map((service: any) => {
+                            const isSelected = selectedServices.includes(service.id);
+                            const isDisabled = !isSelected && selectedServices.length >= 2;
+
+                            return (
+                              <div key={service.id} className={`flex items-center space-x-3 p-2 rounded-md transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
+                                <Checkbox
+                                  id={service.id}
+                                  checked={isSelected}
+                                  onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                  disabled={isDisabled}
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <Label htmlFor={service.id} className="text-sm font-medium cursor-pointer">
+                                    {service.name}
+                                  </Label>
+                                  {service.description && (
+                                    <div className="text-xs text-muted-foreground mt-1">
+                                      {service.description}
+                                    </div>
                                   )}
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <Badge variant="outline" className="text-xs">
+                                      {service.category_name}
+                                    </Badge>
+                                    {canViewPrices && service.price && (
+                                      <span className="text-xs font-medium text-emerald-600">
+                                        ${service.price}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </ScrollArea>
                     )}
                   </div>
 
                   {canViewPrices && selectedServices.length > 0 && (
-                    <div className="p-3 bg-accent rounded-md">
+                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">{t('orders.totalPrice')}</span>
-                        <span className="text-lg font-bold text-primary">${totalPrice.toFixed(2)}</span>
+                        <span className="text-sm font-medium text-emerald-900">{t('orders.totalPrice')}</span>
+                        <span className="text-lg font-bold text-emerald-600">${totalPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="text-xs text-emerald-700 mt-1">
+                        {selectedServices.length} {t('orders.servicesSelected')}
                       </div>
                     </div>
                   )}

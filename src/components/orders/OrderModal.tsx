@@ -602,6 +602,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const handleServiceToggle = (serviceId: string, checked: boolean) => {
     if (checked) {
+      // ✅ LIMIT: Maximum 2 services per order
+      if (selectedServices.length >= 2) {
+        toast.warning(t('orders.max_services_reached', 'Maximum 2 services per order'));
+        return;
+      }
       setSelectedServices(prev => [...prev, serviceId]);
     } else {
       setSelectedServices(prev => prev.filter(id => id !== serviceId));
@@ -1087,14 +1092,26 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       <h3 className="text-sm font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
                     </div>
                   <div>
-                    <Label className="text-sm font-medium">
-                      {t('orders.services')}
-                      {selectedDealership && assignedUsers.length > 0 && (
-                        <span className="text-muted-foreground ml-1">
-                          ({services.length} {t('orders.available')})
-                        </span>
-                      )}
-                    </Label>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label className="text-sm font-medium">
+                        {t('orders.services')}
+                        {selectedDealership && assignedUsers.length > 0 && (
+                          <span className="text-muted-foreground ml-1">
+                            ({services.length} {t('orders.available')})
+                          </span>
+                        )}
+                      </Label>
+                      <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs">
+                        {selectedServices.length}/2 {t('orders.selected')}
+                      </Badge>
+                    </div>
+
+                    {/* Service limit info message */}
+                    {selectedServices.length >= 2 && (
+                      <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+                        {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}
+                      </div>
+                    )}
 
                     {!selectedDealership ? (
                       <div className="p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground">
@@ -1113,43 +1130,49 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                               {t('orders.noServicesAvailable')}
                             </div>
                           ) : (
-                            services.map((service: { id: string; name: string; price?: number; description?: string; category?: string }) => (
-                              <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
-                                <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
-                                  <Checkbox
-                                    id={service.id}
-                                    checked={selectedServices.includes(service.id)}
-                                    onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                                    className="mt-1 w-5 h-5"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <Label
-                                      htmlFor={service.id}
-                                      className="font-medium text-sm cursor-pointer block leading-relaxed"
-                                    >
-                                      {service.name}
-                                    </Label>
-                                    {service.duration && (
-                                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                                        <span>{service.duration} {t('services.minutes')}</span>
-                                      </div>
-                                    )}
-                                    {service.description && (
-                                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                        {service.description}
-                                      </p>
-                                    )}
+                            services.map((service: { id: string; name: string; price?: number; description?: string; category?: string }) => {
+                              const isSelected = selectedServices.includes(service.id);
+                              const isDisabled = !isSelected && selectedServices.length >= 2;
+
+                              return (
+                                <div key={service.id} className={`flex items-start justify-between p-3 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
+                                  <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
+                                    <Checkbox
+                                      id={service.id}
+                                      checked={isSelected}
+                                      onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                      className="mt-1 w-5 h-5"
+                                      disabled={isDisabled}
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <Label
+                                        htmlFor={service.id}
+                                        className="font-medium text-sm cursor-pointer block leading-relaxed"
+                                      >
+                                        {service.name}
+                                      </Label>
+                                      {service.duration && (
+                                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                                          <span>{service.duration} {t('services.minutes')}</span>
+                                        </div>
+                                      )}
+                                      {service.description && (
+                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                          {service.description}
+                                        </p>
+                                      )}
+                                    </div>
                                   </div>
+                                  {canViewPrices && service.price && (
+                                    <div className="text-right shrink-0 ml-3">
+                                      <span className="font-semibold text-sm">
+                                        ${service.price.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
-                                {canViewPrices && service.price && (
-                                  <div className="text-right shrink-0 ml-3">
-                                    <span className="font-semibold text-sm">
-                                      ${service.price.toFixed(2)}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                            ))
+                            );
+                            })
                           )}
                         </div>
                       </ScrollArea>
@@ -1157,14 +1180,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   {canViewPrices && selectedServices.length > 0 && (
-                    <div className="mt-4 p-4 bg-muted/50 border border-border rounded-lg">
+                    <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold text-sm">{t('orders.total')}</span>
-                        <span className="font-bold text-lg text-primary">
+                        <span className="font-semibold text-sm text-emerald-900">{t('orders.total')}</span>
+                        <span className="font-bold text-lg text-emerald-600">
                           ${totalPrice.toFixed(2)}
                         </span>
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
+                      <div className="text-xs text-emerald-700 mt-1">
                         {selectedServices.length} {t('orders.servicesSelected')}
                       </div>
                     </div>

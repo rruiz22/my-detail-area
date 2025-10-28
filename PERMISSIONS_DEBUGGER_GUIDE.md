@@ -319,3 +319,4 @@ Si el debugger muestra datos que no entiendes:
 **Última actualización:** 2025-10-27
 **Versión del debugger:** 1.0.0
 
+

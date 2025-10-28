@@ -362,3 +362,4 @@ Con los fixes de Fase 1, el sistema será:
 **Confianza:** 🟢 Alta (con fixes aplicados)  
 **Próxima Revisión:** Después de implementar Fase 1
 
+
