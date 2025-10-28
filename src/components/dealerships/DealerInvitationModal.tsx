@@ -156,9 +156,25 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       if (error) throw error;
 
       console.log('🎯 [INVITE RPC] Response from create_dealer_invitation:', invitationResponse);
+      console.log('🎯 [INVITE RPC] Response type:', typeof invitationResponse);
 
-      // Parse the JSON response from the RPC function
-      const invitationData = invitationResponse;
+      // ✅ FIX: Parse the JSON response from the RPC function
+      // The RPC returns a JSON object as a string, so we need to parse it
+      // If it's already an object (Supabase may auto-parse), use it directly
+      const invitationData = typeof invitationResponse === 'string'
+        ? JSON.parse(invitationResponse)
+        : invitationResponse;
+
+      console.log('📋 [INVITE DATA] Parsed invitation data:', {
+        id: invitationData.id,
+        token: invitationData.token,
+        email: invitationData.email,
+        role_name: invitationData.role_name,
+        expires_at: invitationData.expires_at,
+        hasId: !!invitationData.id,
+        hasToken: !!invitationData.token,
+        tokenLength: invitationData.token?.length
+      });
 
       // Get dealership and inviter information for email
       const { data: dealershipData } = await supabase
@@ -200,19 +216,35 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
       });
 
       // Send invitation email via Edge Function
+      console.log('📤 [EMAIL] Invoking send-invitation-email function...');
       const { data: emailResult, error: emailError} = await supabase.functions.invoke('send-invitation-email', {
         body: emailData
       });
 
+      console.log('📬 [EMAIL] Edge function response:', {
+        hasError: !!emailError,
+        errorMessage: emailError?.message,
+        emailResultSuccess: emailResult?.success,
+        emailId: emailResult?.emailId
+      });
+
       if (emailError) {
-        console.error('Error sending invitation email:', emailError);
+        console.error('❌ [EMAIL] Error sending invitation email:', emailError);
         // Still show success for invitation creation, but warn about email
         toast({
-          title: t('common.success'),
-          description: t('invitations.invitation_created_email_failed'),
+          title: t('invitations.invitation_created'),
+          description: t('invitations.invitation_created_email_failed') + ': ' + (emailError.message || 'Unknown error'),
+          variant: 'default',
+        });
+      } else if (!emailResult?.success) {
+        console.error('❌ [EMAIL] Email function returned non-success:', emailResult);
+        toast({
+          title: t('invitations.invitation_created'),
+          description: t('invitations.invitation_created_email_failed') + ': ' + (emailResult?.error || 'Unknown error'),
           variant: 'default',
         });
       } else {
+        console.log('✅ [EMAIL] Invitation email sent successfully!');
         toast({
           title: t('common.success'),
           description: t('invitations.invitation_sent'),
