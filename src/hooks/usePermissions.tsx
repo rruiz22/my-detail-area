@@ -15,6 +15,12 @@ import { EventCategory, measureAsync, telemetry } from '@/utils/telemetry';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
 import { useUserProfileForPermissions } from './useUserProfile';
+// ✅ PHASE 2.2: Import permission cache utilities
+import {
+  cachePermissions,
+  getCachedPermissions,
+  clearPermissionsCache
+} from '@/utils/permissionSerialization';
 
 /**
  * Application Modules
@@ -578,49 +584,18 @@ export const usePermissions = () => {
       if (userData) {
         logger.dev('✅ Granular user permissions loaded successfully');
 
-        // ✅ PERF FIX: Save to localStorage for instant next load
-        // ⚠️ TEMPORARILY DISABLED: Map/Set don't serialize correctly to JSON
-        // TODO: Implement custom serialization (convert Map/Set to arrays) before saving
-        // try {
-        //   localStorage.setItem('permissions-cache', JSON.stringify({
-        //     data: userData,
-        //     timestamp: Date.now(),
-        //     userId: user.id
-        //   }));
-        // } catch (error) {
-        //   // Ignore quota errors
-        //   logger.dev('Failed to cache permissions in localStorage:', error);
-        // }
+        // ✅ PHASE 2.2: Save to localStorage with proper serialization
+        cachePermissions(userData);
       }
 
       return userData;
     },
     enabled: !!user && !!profileData && !isLoadingProfile,
-    // ✅ PERF FIX: Load from localStorage for instant initial render
-    // ⚠️ TEMPORARILY DISABLED: Cache format changed (Map/Set not serializable)
-    // TODO: Re-enable after implementing proper serialization/deserialization
-    // initialData: () => {
-    //   if (!user?.id) return undefined;
-
-    //   try {
-    //     const cached = localStorage.getItem('permissions-cache');
-    //     if (cached) {
-    //       const { data, timestamp, userId } = JSON.parse(cached);
-    //       // Use cache if less than 5 minutes old AND same user
-    //       if (
-    //         userId === user.id &&
-    //         Date.now() - timestamp < 5 * 60 * 1000
-    //       ) {
-    //         logger.dev('⚡ Using cached permissions from localStorage');
-    //         return data;
-    //       }
-    //     }
-    //   } catch (error) {
-    //     // Ignore parse errors
-    //     logger.dev('Failed to parse permissions cache:', error);
-    //   }
-    //   return undefined;
-    // },
+    // ✅ PHASE 2.2: Load from localStorage cache for instant initial render
+    initialData: () => {
+      if (!user?.id) return undefined;
+      return getCachedPermissions(user.id) || undefined;
+    },
     // ✅ PERF FIX: Keep previous data while refetching
     placeholderData: (previousData) => previousData,
     staleTime: 1000 * 60 * 5, // 5 minutes - data stays fresh
