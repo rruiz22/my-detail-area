@@ -27,6 +27,7 @@ import { DealerInvitationModal } from '@/components/dealerships/DealerInvitation
 import { InvitationTemplateModal } from './InvitationTemplateModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatRoleName } from '@/utils/roleUtils';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 interface Invitation {
   id: string;
@@ -67,6 +68,12 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [selectedDealership, setSelectedDealership] = useState<number | null>(null);
+
+  // ✅ PHASE 3: ConfirmDialog states (Team Chat style)
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [invitationToCancel, setInvitationToCancel] = useState<Invitation | null>(null);
+  const [invitationToDelete, setInvitationToDelete] = useState<Invitation | null>(null);
 
   // Data fetching
   const fetchInvitations = useCallback(async () => {
@@ -285,8 +292,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
 
   // Cancel invitation (removes the invitation)
   const handleCancelInvitation = useCallback(async (invitation: Invitation) => {
-    if (!confirm(t('invitations.confirm_cancel'))) return;
-
+    // ✅ PHASE 3: Removed browser confirm(), now using ConfirmDialog
     try {
       const { error } = await supabase
         .from('dealer_invitations')
@@ -312,8 +318,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
 
   // Delete invitation permanently (hard delete)
   const handleDeleteInvitation = useCallback(async (invitation: Invitation) => {
-    if (!confirm(t('invitations.confirm_delete'))) return;
-
+    // ✅ PHASE 3: Removed browser confirm(), now using ConfirmDialog
     try {
       const { error } = await supabase
         .from('dealer_invitations')
@@ -425,7 +430,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.total')}</p>
                   <p className="text-2xl font-bold">{stats.total}</p>
                 </div>
                 <Mail className="h-8 w-8 text-blue-500" />
@@ -437,7 +442,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.pending')}</p>
                   <p className="text-2xl font-bold">{stats.pending}</p>
                 </div>
                 <Clock className="h-8 w-8 text-yellow-500" />
@@ -449,7 +454,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Accepted</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.accepted')}</p>
                   <p className="text-2xl font-bold">{stats.accepted}</p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-green-500" />
@@ -461,7 +466,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Expired</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.expired')}</p>
                   <p className="text-2xl font-bold">{stats.expired}</p>
                 </div>
                 <XCircle className="h-8 w-8 text-red-500" />
@@ -485,14 +490,14 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Invitee</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Dealership</TableHead>
-                      <TableHead>Inviter</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Sent</TableHead>
-                      <TableHead>Expires</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{t('invitations.table.invitee')}</TableHead>
+                      <TableHead>{t('invitations.table.role')}</TableHead>
+                      <TableHead>{t('invitations.table.dealership')}</TableHead>
+                      <TableHead>{t('invitations.table.inviter')}</TableHead>
+                      <TableHead>{t('invitations.table.status')}</TableHead>
+                      <TableHead>{t('invitations.table.sent')}</TableHead>
+                      <TableHead>{t('invitations.table.expires')}</TableHead>
+                      <TableHead className="text-right">{t('invitations.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -501,7 +506,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                         <TableCell colSpan={8} className="text-center py-8">
                           <div className="flex flex-col items-center gap-2">
                             <Mail className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-muted-foreground">No invitations found</p>
+                            <p className="text-muted-foreground">{t('invitations.table.no_invitations')}</p>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -592,7 +597,10 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    onClick={() => handleCancelInvitation(invitation)}
+                                    onClick={() => {
+                                      setInvitationToCancel(invitation);
+                                      setCancelDialogOpen(true);
+                                    }}
                                     className="h-8 w-8 p-0 text-orange-600 hover:text-orange-700"
                                     title={t('invitations.cancel_invitation')}
                                   >
@@ -603,7 +611,10 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    onClick={() => handleDeleteInvitation(invitation)}
+                                    onClick={() => {
+                                      setInvitationToDelete(invitation);
+                                      setDeleteDialogOpen(true);
+                                    }}
                                     className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                                     title={t('invitations.delete_invitation')}
                                   >
@@ -637,6 +648,37 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
         <InvitationTemplateModal
           isOpen={isTemplateModalOpen}
           onClose={() => setIsTemplateModalOpen(false)}
+        />
+
+        {/* ✅ PHASE 3: ConfirmDialog components (Team Chat style) */}
+        <ConfirmDialog
+          open={cancelDialogOpen}
+          onOpenChange={setCancelDialogOpen}
+          title={t('invitations.confirm_cancel')}
+          description={t('invitations.confirm_cancel_desc')}
+          confirmText={t('common.yes')}
+          cancelText={t('common.no')}
+          onConfirm={() => {
+            if (invitationToCancel) {
+              handleCancelInvitation(invitationToCancel);
+            }
+          }}
+          variant="destructive"
+        />
+
+        <ConfirmDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          title={t('invitations.confirm_delete')}
+          description={t('invitations.confirm_delete_desc')}
+          confirmText={t('common.yes')}
+          cancelText={t('common.no')}
+          onConfirm={() => {
+            if (invitationToDelete) {
+              handleDeleteInvitation(invitationToDelete);
+            }
+          }}
+          variant="destructive"
         />
       </div>
     </PermissionGuard>

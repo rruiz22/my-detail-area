@@ -2963,11 +2963,45 @@
     "can_change_order_status_desc": "Can modify order status (pending, in progress, complete, etc.)"
   },
   "invitations": {
+    "title": "Team Invitations",
+    "description": "Manage user invitations for this dealership",
     "all_invitations": "All Invitations",
     "dealer_invitations": "Dealer Invitations",
     "manage_invitations_desc": "Manage user invitations and track their status",
     "manage_dealer_invitations_desc": "Manage invitations for this specific dealership",
+    "templates": "Templates",
     "send_invitation": "Send Invitation",
+    "stats": {
+      "total": "Total",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired"
+    },
+    "table": {
+      "invitee": "Invitee",
+      "role": "Role",
+      "dealership": "Dealership",
+      "inviter": "Inviter",
+      "status": "Status",
+      "sent": "Sent",
+      "expires": "Expires",
+      "actions": "Actions",
+      "no_invitations": "No invitations found"
+    },
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired"
+    },
+    "actions": {
+      "resend": "Resend",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "confirm_cancel_desc": "The user will no longer be able to accept this invitation.",
+    "confirm_delete_desc": "This action cannot be undone.",
+    "invitation_created": "Invitation Created",
     "email": "Email",
     "email_placeholder": "Enter email address",
     "role": "Role",

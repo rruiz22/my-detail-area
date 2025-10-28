@@ -2820,11 +2820,45 @@
     "delete_messages_desc": "Eliminar mensajes del chat"
   },
   "invitations": {
+    "title": "Invitaciones del Equipo",
+    "description": "Gestionar invitaciones de usuarios para este concesionario",
     "all_invitations": "Todas las Invitaciones",
     "dealer_invitations": "Invitaciones del Concesionario",
     "manage_invitations_desc": "Gestiona invitaciones de usuarios y rastrea su estado",
     "manage_dealer_invitations_desc": "Gestiona invitaciones para este concesionario específico",
+    "templates": "Plantillas",
     "send_invitation": "Enviar Invitación",
+    "stats": {
+      "total": "Total",
+      "pending": "Pendientes",
+      "accepted": "Aceptadas",
+      "expired": "Expiradas"
+    },
+    "table": {
+      "invitee": "Invitado",
+      "role": "Rol",
+      "dealership": "Concesionario",
+      "inviter": "Remitente",
+      "status": "Estado",
+      "sent": "Enviado",
+      "expires": "Expira",
+      "actions": "Acciones",
+      "no_invitations": "No se encontraron invitaciones"
+    },
+    "tabs": {
+      "all": "Todos",
+      "pending": "Pendientes",
+      "accepted": "Aceptadas",
+      "expired": "Expiradas"
+    },
+    "actions": {
+      "resend": "Reenviar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
+    },
+    "confirm_cancel_desc": "El usuario ya no podrá aceptar esta invitación.",
+    "confirm_delete_desc": "Esta acción no se puede deshacer.",
+    "invitation_created": "Invitación Creada",
     "email": "Correo Electrónico",
     "email_placeholder": "Ingresa dirección de correo",
     "role": "Rol",
