@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 export interface ProfileUpdateData {
   first_name?: string;
   last_name?: string;
+  phone_number?: string;  // ✅ For SMS notifications system
 }
 
 export interface PreferencesUpdateData {
@@ -262,6 +263,7 @@ export function useProfileMutations() {
    * Update both profile and preferences in a single operation
    * Shows only ONE toast notification
    * Use this for PersonalInformationTab to avoid double toasts
+   * ✅ Also syncs phone to profiles.phone_number for SMS notifications
    */
   const updateProfileAndPreferences = async (
     profileUpdates: ProfileUpdateData,
@@ -277,10 +279,16 @@ export function useProfileMutations() {
     try {
       setLoading(true);
 
+      // ✅ FIX: Sync phone to profiles.phone_number for SMS notifications
+      const enhancedProfileUpdates = { ...profileUpdates };
+      if (preferencesUpdates.phone) {
+        enhancedProfileUpdates.phone_number = preferencesUpdates.phone;
+      }
+
       // Optimistically update both caches
       queryClient.setQueryData(['user_profile', user.id], (old: any) => {
         if (!old) return old;
-        return { ...old, ...profileUpdates };
+        return { ...old, ...enhancedProfileUpdates };
       });
 
       queryClient.setQueryData(['user_preferences', user.id], (old: any) => {
@@ -293,7 +301,7 @@ export function useProfileMutations() {
 
       // Execute BOTH updates in parallel
       const [profileResult, preferencesResult] = await Promise.all([
-        supabase.from('profiles').update(profileUpdates).eq('id', user.id),
+        supabase.from('profiles').update(enhancedProfileUpdates).eq('id', user.id),
         supabase.from('user_preferences').upsert(
           {
             user_id: user.id,
