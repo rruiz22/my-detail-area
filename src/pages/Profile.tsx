@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,31 +22,12 @@ import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { useQueryClient } from '@tanstack/react-query';
 
-// Lazy load tab components for better performance
-const PersonalInformationTab = lazy(() => import('@/components/profile/PersonalInformationTab').then(module => ({ default: module.PersonalInformationTab })));
-const AccountSecurityTab = lazy(() => import('@/components/profile/AccountSecurityTab').then(module => ({ default: module.AccountSecurityTab })));
-const NotificationsPreferencesTab = lazy(() => import('@/components/profile/NotificationsPreferencesTab').then(module => ({ default: module.NotificationsPreferencesTab })));
-const ActivityAuditTab = lazy(() => import('@/components/profile/ActivityAuditTab').then(module => ({ default: module.ActivityAuditTab })));
-const DataPrivacyTab = lazy(() => import('@/components/profile/DataPrivacyTab').then(module => ({ default: module.DataPrivacyTab })));
-
-// Tab loading fallback component
-function TabLoadingFallback() {
-  return (
-    <div className="space-y-4">
-      <Card>
-        <CardContent className="pt-6">
-          <div className="space-y-4">
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-4 w-full max-w-md" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+// Direct imports - no lazy loading for instant tab display
+import { PersonalInformationTab } from '@/components/profile/PersonalInformationTab';
+import { AccountSecurityTab } from '@/components/profile/AccountSecurityTab';
+import { NotificationsPreferencesTab } from '@/components/profile/NotificationsPreferencesTab';
+import { ActivityAuditTab } from '@/components/profile/ActivityAuditTab';
+import { DataPrivacyTab } from '@/components/profile/DataPrivacyTab';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -225,33 +206,23 @@ export default function Profile() {
 
 
           <TabsContent value="personal">
-            <Suspense fallback={<TabLoadingFallback />}>
-              <PersonalInformationTab />
-            </Suspense>
+            <PersonalInformationTab />
           </TabsContent>
 
           <TabsContent value="security">
-            <Suspense fallback={<TabLoadingFallback />}>
-              <AccountSecurityTab />
-            </Suspense>
+            <AccountSecurityTab />
           </TabsContent>
 
           <TabsContent value="notifications">
-            <Suspense fallback={<TabLoadingFallback />}>
-              <NotificationsPreferencesTab />
-            </Suspense>
+            <NotificationsPreferencesTab />
           </TabsContent>
 
           <TabsContent value="activity">
-            <Suspense fallback={<TabLoadingFallback />}>
-              <ActivityAuditTab />
-            </Suspense>
+            <ActivityAuditTab />
           </TabsContent>
 
           <TabsContent value="privacy">
-            <Suspense fallback={<TabLoadingFallback />}>
-              <DataPrivacyTab />
-            </Suspense>
+            <DataPrivacyTab />
           </TabsContent>
         </Tabs>
 
