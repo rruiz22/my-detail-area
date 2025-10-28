@@ -200,11 +200,11 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
           : user?.email?.split('@')[0] || 'Team Member',
         inviterEmail: user?.email || '',
         invitationToken: invitationData.token,
-        expiresAt: invitationData.expires_at
+        // ✅ FIX: Ensure expiresAt is in ISO 8601 format for Zod validation
+        expiresAt: new Date(invitationData.expires_at).toISOString()
       };
 
       console.log('📧 [INVITE EMAIL] Sending invitation data:', {
-        ...emailData,
         invitationId: emailData.invitationId,
         to: emailData.to,
         dealershipName: emailData.dealershipName,
@@ -212,7 +212,9 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
         inviterName: emailData.inviterName,
         inviterEmail: emailData.inviterEmail,
         hasToken: !!emailData.invitationToken,
-        expiresAt: emailData.expiresAt
+        tokenLength: emailData.invitationToken?.length,
+        expiresAt: emailData.expiresAt,
+        expiresAtFormat: 'ISO 8601'
       });
 
       // Send invitation email via Edge Function
