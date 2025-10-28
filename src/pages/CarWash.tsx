@@ -17,6 +17,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 // Always-loaded components (small, critical)
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
 import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
 
@@ -45,6 +55,8 @@ export default function CarWash() {
   const [showFilters, setShowFilters] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
 
   // Accessibility: Live region for screen reader announcements
   const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
@@ -208,13 +220,30 @@ export default function CarWash() {
     setPreviewOrder(order);
   }, []);
 
-  const handleDeleteOrder = useCallback(async (orderId: string) => {
-    if (confirm(t('messages.confirm_delete_order'))) {
-      await deleteOrder(orderId);
+  const handleDeleteOrder = useCallback((orderId: string) => {
+    setOrderToDelete(orderId);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const confirmDeleteOrder = useCallback(async () => {
+    if (!orderToDelete) return;
+
+    try {
+      await deleteOrder(orderToDelete);
+      setOrderToDelete(null);
       // Accessibility: Announce deletion to screen readers
       setLiveRegionMessage(t('accessibility.car_wash_orders.order_deleted'));
+      toast({
+        title: t('orders.deleted_success', 'Order deleted successfully')
+      });
+    } catch (error) {
+      logger.error('[CarWash] Delete failed:', error);
+      toast({
+        variant: 'destructive',
+        title: t('orders.delete_error', 'Failed to delete order')
+      });
     }
-  }, [deleteOrder, t]);
+  }, [orderToDelete, deleteOrder, t, toast, setLiveRegionMessage]);
 
   const handleSaveOrder = useCallback(async (orderData: CarWashOrderData) => {
     logger.dev('[CarWash] handleSaveOrder called with:', {
@@ -397,6 +426,27 @@ export default function CarWash() {
             onUpdate={handleUpdate}
           />
         )}
+
+        {/* Delete Confirmation Dialog - Team Chat Style */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDeleteOrder}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                {t('common.delete', 'Delete')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </>
   );
