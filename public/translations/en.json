@@ -372,7 +372,7 @@
   },
   "dashboard": {
     "hero": {
-      "welcome": "Welcome to MyDetailArea",
+      "welcome": "Welcome to My Detail Area",
       "subtitle": "Streamline your dealership operations with powerful tools and insights",
       "new_order": "New Order",
       "view_pending": "View Pending ({{count}})",
