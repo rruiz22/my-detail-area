@@ -263,8 +263,9 @@ const App = () => (
                     }}
                   >
                     <AppRoutes />
-                    {/* Permissions Debugger - Solo en desarrollo */}
+                    {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
                     {import.meta.env.DEV && <PermissionsDebugger />}
+                    */}
                   </BrowserRouter>
                 </NotificationProvider>
               </GlobalChatWrapper>

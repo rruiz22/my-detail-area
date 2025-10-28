@@ -22,7 +22,8 @@ import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBounda
 
 // Code-split heavy view components (40-60KB initial bundle reduction)
 const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(module => ({ default: module.OrderDataTable })));
-const CarWashOrderModal = lazy(() => import('@/components/orders/CarWashOrderModal'));
+// ⚡ PERF: Modal imported directly (not lazy) for instant open - enterprise UX over bundle size
+import CarWashOrderModal from '@/components/orders/CarWashOrderModal';
 
 export default function CarWash() {
   const { t } = useTranslation();
@@ -64,10 +65,7 @@ export default function CarWash() {
   // Check if user can create car wash orders
   const canCreate = hasModulePermission('car_wash', 'create_orders');
 
-  // ⚡ PERF: Preload modal on hover to reduce perceived latency
-  const preloadModal = useCallback(() => {
-    import('@/components/orders/CarWashOrderModal');
-  }, []);
+  // ⚡ PERF: Modal is now imported directly (not lazy) - no preload needed
 
   // Real-time updates are handled by useCarWashOrderManagement hook
 
@@ -330,7 +328,6 @@ export default function CarWash() {
             <Button
               size="sm"
               onClick={handleCreateOrder}
-              onMouseEnter={preloadModal}
               disabled={!canCreate}
               title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
               aria-label={t('accessibility.car_wash_orders.create_button')}
@@ -371,16 +368,14 @@ export default function CarWash() {
           </OrderViewErrorBoundary>
         </main>
 
-        {/* Modals - Code Split */}
+        {/* Modals - Direct Import for Instant Open */}
         {showModal && (
-          <Suspense fallback={<OrderViewLoadingFallback viewType="modal" />}>
-            <CarWashOrderModal
-              order={selectedOrder}
-              open={showModal}
-              onClose={() => setShowModal(false)}
-              onSave={handleSaveOrder}
-            />
-          </Suspense>
+          <CarWashOrderModal
+            order={selectedOrder}
+            open={showModal}
+            onClose={() => setShowModal(false)}
+            onSave={handleSaveOrder}
+          />
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}

@@ -130,7 +130,8 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   assigned_group_id: supabaseOrder.assigned_group_id || undefined, // User ID for modal edit
   notes: supabaseOrder.notes || undefined,
   customOrderNumber: supabaseOrder.custom_order_number || undefined,
-  dealerId: supabaseOrder.dealer_id, // Map dealer_id for modal auto-population
+  dealerId: supabaseOrder.dealer_id, // Map dealer_id for modal auto-population (camelCase)
+  dealer_id: supabaseOrder.dealer_id, // CRITICAL: Also include snake_case for multi-tenant security
   // Enhanced fields from manual JOINs (will be set in refreshData)
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
@@ -177,11 +178,22 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
       // Check global dealer filter
       const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
-      const dealerFilter = savedDealerFilter === 'all' ? 'all' : (savedDealerFilter ? parseInt(savedDealerFilter) : 'all');
+      const parsedFilter = savedDealerFilter && savedDealerFilter !== 'null' && savedDealerFilter !== 'undefined'
+        ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
+        : 'all';
+      const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
+      dev(`🔍 Service Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
-      if (enhancedUser.dealership_id === null) {
-        // User is multi-dealer - respect global filter
+      // ✅ FIX: System admins should ALWAYS respect global filter, even if they have dealership_id assigned
+      const isSystemAdminPolling = enhancedUser && 'is_system_admin' in enhancedUser
+        ? enhancedUser.is_system_admin
+        : enhancedUser && 'role' in enhancedUser && enhancedUser.role === 'system_admin';
+
+      const shouldUseGlobalFilterPolling = enhancedUser.dealership_id === null || isSystemAdminPolling;
+
+      if (shouldUseGlobalFilterPolling) {
+        // Multi-dealer users and system admins - respect global filter
         if (dealerFilter === 'all') {
           // Show all dealers user has access to
           const { data: userDealerships, error: dealershipError } = await supabase
@@ -192,24 +204,32 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
           if (dealershipError) {
             // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
-            logError('❌ Service - Failed to fetch dealer memberships:', dealershipError);
+            logError('❌ Service Polling - Failed to fetch dealer memberships:', dealershipError);
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else if (!userDealerships || userDealerships.length === 0) {
             // 🔒 SECURITY: No memberships = no data access (fail-secure)
-            warn('⚠️ Service - Multi-dealer user has NO dealer memberships - returning empty dataset');
+            warn('⚠️ Service Polling - Multi-dealer user has NO dealer memberships - returning empty dataset');
             ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            dev(`🏢 Service Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            dev(`🏢 Service Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
-          // Filter by specific dealer selected in dropdown
-          dev(`🎯 Service Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
-          ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+          // Filter by specific dealer selected in dropdown - validate it's a number
+          if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
+            dev(`🎯 Service Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
+            ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
+          } else {
+            // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
+            logError(`❌ Service Polling - Invalid dealerFilter value: ${dealerFilter} (type: ${typeof dealerFilter})`);
+            warn('⚠️ Service Polling - Invalid dealer filter - returning empty dataset');
+            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+          }
         }
       } else {
-        // User has single assigned dealership - ignore global filter
+        // Single-dealer regular users - use their assigned dealership (ignore global filter)
+        dev(`🏢 Service Polling - Single-dealer user - using assigned dealership: ${enhancedUser.dealership_id}`);
         ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
       }
 

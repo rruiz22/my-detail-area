@@ -13,21 +13,19 @@ import { orderEvents } from '@/utils/eventBus';
 import logger from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// Always-loaded components (small, critical)
+// Direct imports - no lazy loading for maximum speed
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
 import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
-
-// Code-split heavy view components (40-60KB initial bundle reduction)
-const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(module => ({ default: module.OrderDataTable })));
-const OrderKanbanBoard = lazy(() => import('@/components/sales/OrderKanbanBoard').then(module => ({ default: module.OrderKanbanBoard })));
-const OrderCalendarView = lazy(() => import('@/components/orders/OrderCalendarView').then(module => ({ default: module.OrderCalendarView })));
-const ReconOrderModal = lazy(() => import('@/components/orders/ReconOrderModal').then(module => ({ default: module.ReconOrderModal })));
+import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
+import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
 
 export default function ReconOrders() {
   const { t } = useTranslation();
@@ -456,62 +454,54 @@ export default function ReconOrders() {
           onWeekChange={setWeekOffset}
         />
 
-        {/* Main Content - Code Split with Suspense and Error Boundaries */}
+        {/* Main Content - Direct rendering for maximum speed */}
         <main aria-label={t('accessibility.recon_orders.main_content')} className="space-y-6">
           {effectiveViewMode === 'kanban' ? (
             <OrderViewErrorBoundary viewType="kanban">
-              <Suspense fallback={<OrderViewLoadingFallback viewType="kanban" />}>
-                <OrderKanbanBoard
-                  orders={filteredOrders}
-                  onEdit={handleEditOrder}
-                  onView={handleViewOrder}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                />
-              </Suspense>
+              <OrderKanbanBoard
+                orders={filteredOrders}
+                onEdit={handleEditOrder}
+                onView={handleViewOrder}
+                onDelete={handleDeleteOrder}
+                onStatusChange={handleStatusChange}
+              />
             </OrderViewErrorBoundary>
           ) : effectiveViewMode === 'calendar' ? (
             <OrderViewErrorBoundary viewType="calendar">
-              <Suspense fallback={<OrderViewLoadingFallback viewType="calendar" />}>
-                <OrderCalendarView
-                  orders={filteredOrders}
-                  loading={loading}
-                  onEdit={handleEditOrder}
-                  onView={handleViewOrder}
-                  onDelete={handleDeleteOrder}
-                  onStatusChange={handleStatusChange}
-                  onCreateOrder={handleCreateOrderWithDate}
-                />
-              </Suspense>
+              <OrderCalendarView
+                orders={filteredOrders}
+                loading={loading}
+                onEdit={handleEditOrder}
+                onView={handleViewOrder}
+                onDelete={handleDeleteOrder}
+                onStatusChange={handleStatusChange}
+                onCreateOrder={handleCreateOrderWithDate}
+              />
             </OrderViewErrorBoundary>
           ) : (
             <OrderViewErrorBoundary viewType="table">
-              <Suspense fallback={<OrderViewLoadingFallback viewType="table" />}>
-                <OrderDataTable
-                  orders={filteredOrders}
-                  loading={loading}
-                  onEdit={handleEditOrder}
-                  onDelete={handleDeleteOrder}
-                  onView={handleViewOrder}
-                  onStatusChange={handleStatusChange}
-                  tabType="recon"
-                />
-              </Suspense>
+              <OrderDataTable
+                orders={filteredOrders}
+                loading={loading}
+                onEdit={handleEditOrder}
+                onDelete={handleDeleteOrder}
+                onView={handleViewOrder}
+                onStatusChange={handleStatusChange}
+                tabType="recon"
+              />
             </OrderViewErrorBoundary>
           )}
         </main>
 
-        {/* Modals - Code Split */}
+        {/* Modals - Direct import for instant open */}
         {showModal && (
-          <Suspense fallback={<OrderViewLoadingFallback viewType="modal" />}>
-            <ReconOrderModal
-              open={showModal}
-              onClose={() => setShowModal(false)}
-              onSave={handleSaveOrder}
-              order={selectedOrder}
-              mode={selectedOrder ? 'edit' : 'create'}
-            />
-          </Suspense>
+          <ReconOrderModal
+            open={showModal}
+            onClose={() => setShowModal(false)}
+            onSave={handleSaveOrder}
+            order={selectedOrder}
+            mode={selectedOrder ? 'edit' : 'create'}
+          />
         )}
 
         {/* Detail Modal - Enhanced Full Screen */}

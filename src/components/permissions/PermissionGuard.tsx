@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { useDealershipModules } from '@/hooks/useDealershipModules';
 import { AppModule, PermissionLevel, usePermissions } from '@/hooks/usePermissions';
 import type { ModulePermissionKey, SystemPermissionKey } from '@/types/permissions';
@@ -47,11 +48,13 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
 }) => {
   const { hasPermission, hasModulePermission, hasSystemPermission, canEditOrder, canDeleteOrder, loading, enhancedUser } = usePermissions();
   const { t } = useTranslation();
+  const { selectedDealerId } = useDealerFilter();
 
-  // Get dealership modules - ALWAYS call hook regardless of checkDealerModule
-  const userDealershipId = (enhancedUser as any)?.dealership_id || 0;
+  // Get dealership modules - Use global filter instead of user's dealership_id
+  // This allows system admins and multi-dealer users to check modules for the currently selected dealer
+  const activeDealerId = typeof selectedDealerId === 'number' ? selectedDealerId : (enhancedUser as any)?.dealership_id || 0;
   const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(userDealershipId);
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId);
 
   // Debug logging (only in dev)
   if (import.meta.env.DEV) {

@@ -15,9 +15,12 @@ export const DealershipFilter = () => {
   // Handle dealer change (Context handles localStorage persistence)
   const handleDealerChange = (value: string) => {
     const newValue = value === 'all' ? 'all' : parseInt(value);
+    console.log('🎯 [DealershipFilter] Changing dealer:', { from: selectedDealerId, to: newValue });
+
     setSelectedDealerId(newValue);
 
     // Trigger custom event for legacy components that still listen to it
+    console.log('📢 [DealershipFilter] Dispatching dealerFilterChanged event:', { dealerId: newValue });
     window.dispatchEvent(new CustomEvent('dealerFilterChanged', {
       detail: { dealerId: newValue }
     }));

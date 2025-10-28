@@ -12,21 +12,19 @@ import { useSearchPersistence, useTabPersistence, useViewModePersistence } from 
 import { dev, warn, error as logError } from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
-import { useEffect, useState, useCallback, useMemo, lazy, Suspense } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// Always-loaded components (small, critical)
+// Direct imports - no lazy loading for maximum speed
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
 import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
-
-// Code-split heavy view components (40-60KB initial bundle reduction)
-const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(module => ({ default: module.OrderDataTable })));
-const OrderKanbanBoard = lazy(() => import('@/components/sales/OrderKanbanBoard').then(module => ({ default: module.OrderKanbanBoard })));
-const SmartDashboard = lazy(() => import('@/components/sales/SmartDashboard').then(module => ({ default: module.SmartDashboard })));
-const OrderCalendarView = lazy(() => import('@/components/orders/OrderCalendarView').then(module => ({ default: module.OrderCalendarView })));
+import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { SmartDashboard } from '@/components/sales/SmartDashboard';
+import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 // Removed TABS - now using QuickFilterBar instead
 
@@ -380,13 +378,11 @@ export default function SalesOrders() {
         <div className="space-y-6">
           {activeFilter === 'dashboard' ? (
             <OrderViewErrorBoundary viewType="dashboard">
-              <Suspense fallback={<OrderViewLoadingFallback viewType="dashboard" />}>
-                <SmartDashboard
-                  allOrders={allOrders}
-                  tabCounts={tabCounts}
-                  onCardClick={handleCardClick}
-                />
-              </Suspense>
+              <SmartDashboard
+                allOrders={allOrders}
+                tabCounts={tabCounts}
+                onCardClick={handleCardClick}
+              />
             </OrderViewErrorBoundary>
           ) : (
             <div className="space-y-4">
@@ -415,43 +411,37 @@ export default function SalesOrders() {
               {/* Table/Kanban/Calendar Content - Mobile forces table */}
               {effectiveViewMode === 'kanban' ? (
                 <OrderViewErrorBoundary viewType="kanban">
-                  <Suspense fallback={<OrderViewLoadingFallback viewType="kanban" />}>
-                    <OrderKanbanBoard
-                      orders={filteredOrders}
-                      onEdit={handleEditOrder}
-                      onView={handleViewOrder}
-                      onDelete={handleDeleteOrder}
-                      onStatusChange={handleStatusChange}
-                    />
-                  </Suspense>
+                  <OrderKanbanBoard
+                    orders={filteredOrders}
+                    onEdit={handleEditOrder}
+                    onView={handleViewOrder}
+                    onDelete={handleDeleteOrder}
+                    onStatusChange={handleStatusChange}
+                  />
                 </OrderViewErrorBoundary>
               ) : effectiveViewMode === 'calendar' ? (
                 <OrderViewErrorBoundary viewType="calendar">
-                  <Suspense fallback={<OrderViewLoadingFallback viewType="calendar" />}>
-                    <OrderCalendarView
-                      orders={filteredOrders}
-                      loading={false}
-                      onEdit={handleEditOrder}
-                      onView={handleViewOrder}
-                      onDelete={handleDeleteOrder}
-                      onStatusChange={handleStatusChange}
-                      onCreateOrder={handleCreateOrderWithDate}
-                    />
-                  </Suspense>
+                  <OrderCalendarView
+                    orders={filteredOrders}
+                    loading={false}
+                    onEdit={handleEditOrder}
+                    onView={handleViewOrder}
+                    onDelete={handleDeleteOrder}
+                    onStatusChange={handleStatusChange}
+                    onCreateOrder={handleCreateOrderWithDate}
+                  />
                 </OrderViewErrorBoundary>
               ) : (
                 <OrderViewErrorBoundary viewType="table">
-                  <Suspense fallback={<OrderViewLoadingFallback viewType="table" />}>
-                    <OrderDataTable
-                      orders={filteredOrders}
-                      loading={false}
-                      onEdit={handleEditOrder}
-                      onDelete={handleDeleteOrder}
-                      onView={handleViewOrder}
-                      onStatusChange={handleStatusChange}
-                      tabType="sales"
-                    />
-                  </Suspense>
+                  <OrderDataTable
+                    orders={filteredOrders}
+                    loading={false}
+                    onEdit={handleEditOrder}
+                    onDelete={handleDeleteOrder}
+                    onView={handleViewOrder}
+                    onStatusChange={handleStatusChange}
+                    tabType="sales"
+                  />
                 </OrderViewErrorBoundary>
               )}
             </div>
