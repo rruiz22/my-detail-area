@@ -359,8 +359,9 @@ export const useCarWashOrderManagement = () => {
         variant: 'default'
       });
 
-      // Optimistic update already done above - polling will refresh within 60s
-      // Removed refetchQueries for instant modal close
+      // Invalidate queries to trigger immediate table refresh
+      await queryClient.invalidateQueries({ queryKey: ['orders', 'car_wash'] });
+      console.log('✅ Car wash order cache invalidated - table will refresh immediately');
 
       return newOrder;
     } catch (error) {
