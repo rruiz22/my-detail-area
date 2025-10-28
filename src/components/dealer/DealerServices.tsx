@@ -9,12 +9,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { canViewPricing } from '@/utils/permissions';
-import { Clock, DollarSign, Edit, Plus, Settings, Tag, Trash2 } from 'lucide-react';
+import { Clock, DollarSign, Edit, Plus, Settings, Tag, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -68,6 +69,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState<string | null>(null);
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
 
   // Form state
   const [formData, setFormData] = useState({
@@ -310,6 +312,37 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     return matchesSearch && matchesCategory;
   });
 
+  // Group services by category
+  const groupedServices = filteredServices.reduce((acc, service) => {
+    const categoryName = service.category_name;
+    if (!acc[categoryName]) {
+      acc[categoryName] = {
+        color: service.category_color,
+        services: []
+      };
+    }
+    acc[categoryName].services.push(service);
+    return acc;
+  }, {} as Record<string, { color: string; services: DealerService[] }>);
+
+  // Initialize all categories as open on first load
+  useEffect(() => {
+    if (Object.keys(groupedServices).length > 0 && Object.keys(openCategories).length === 0) {
+      const initialState: Record<string, boolean> = {};
+      Object.keys(groupedServices).forEach(categoryName => {
+        initialState[categoryName] = true;
+      });
+      setOpenCategories(initialState);
+    }
+  }, [groupedServices, openCategories]);
+
+  const toggleCategory = (categoryName: string) => {
+    setOpenCategories(prev => ({
+      ...prev,
+      [categoryName]: !prev[categoryName]
+    }));
+  };
+
   const getCategoryBadgeStyle = (color: string) => {
     return {
       backgroundColor: color + '20', // Add transparency
@@ -543,79 +576,120 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         </Select>
       </div>
 
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredServices.map(service => (
-          <Card key={service.id} className={!service.is_active ? 'opacity-60' : ''}>
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">{service.name}</CardTitle>
-                {canManageServices && (
-                  <div className="flex space-x-1">
-                    <Button size="sm" variant="ghost" onClick={() => openEditModal(service)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDelete(service.id)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+      {/* Services List Grouped by Category */}
+      <div className="space-y-4">
+        {Object.entries(groupedServices).map(([categoryName, { color, services }]) => (
+          <Card key={categoryName} className="card-enhanced">
+            <Collapsible
+              open={openCategories[categoryName] ?? true}
+              onOpenChange={() => toggleCategory(categoryName)}
+            >
+              <CollapsibleTrigger className="w-full">
+                <CardHeader className="hover:bg-gray-50 transition-colors cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {openCategories[categoryName] ? (
+                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                      ) : (
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      )}
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      <CardTitle className="text-xl">{categoryName}</CardTitle>
+                      <Badge variant="secondary" className="ml-2">
+                        {services.length} {services.length === 1 ? t('services.service') : t('services.services')}
+                      </Badge>
+                    </div>
                   </div>
-                )}
-              </div>
+                </CardHeader>
+              </CollapsibleTrigger>
 
-              <Badge style={getCategoryBadgeStyle(service.category_color)}>
-                {service.category_name}
-              </Badge>
-            </CardHeader>
+              <CollapsibleContent>
+                <CardContent className="pt-0">
+                  <div className="space-y-2">
+                    {services.map(service => (
+                      <div
+                        key={service.id}
+                        className={`flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-gray-50 transition-colors ${
+                          !service.is_active ? 'opacity-60' : ''
+                        }`}
+                      >
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center gap-3">
+                            <h4 className="font-semibold text-base">{service.name}</h4>
+                            {!service.is_active && (
+                              <Badge variant="secondary" className="text-xs">
+                                {t('services.inactive')}
+                              </Badge>
+                            )}
+                          </div>
 
-            <CardContent className="space-y-3">
-              {service.description && (
-                <p className="text-sm text-muted-foreground">{service.description}</p>
-              )}
+                          {service.description && (
+                            <p className="text-sm text-muted-foreground">
+                              {service.description}
+                            </p>
+                          )}
 
-              <div className="flex justify-between text-sm">
-                {service.price && (
-                  <div className="flex items-center space-x-1">
-                    <DollarSign className="h-4 w-4" />
-                    <span>${service.price.toFixed(2)}</span>
+                          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                            {service.price && canViewPrices && (
+                              <div className="flex items-center gap-1">
+                                <DollarSign className="h-4 w-4" />
+                                <span className="font-medium">${service.price.toFixed(2)}</span>
+                              </div>
+                            )}
+
+                            {service.duration && (
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-4 w-4" />
+                                <span>{service.duration} {t('services.minutes')}</span>
+                              </div>
+                            )}
+
+                            {service.assigned_groups.length > 0 && (
+                              <div className="flex items-center gap-2">
+                                <Settings className="h-4 w-4" />
+                                <div className="flex flex-wrap gap-1">
+                                  {service.assigned_groups.map(groupId => {
+                                    const group = groups.find(g => g.id === groupId);
+                                    return group ? (
+                                      <Badge key={groupId} variant="outline" className="text-xs">
+                                        {group.name}
+                                      </Badge>
+                                    ) : null;
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {canManageServices && (
+                          <div className="flex items-center gap-2 ml-4">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEditModal(service)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleDelete(service.id)}
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                )}
-
-                {service.duration && (
-                  <div className="flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
-                    <span>{service.duration} {t('services.minutes')}</span>
-                  </div>
-                )}
-              </div>
-
-              {service.assigned_groups.length > 0 && (
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                    <Settings className="h-3 w-3" />
-                    <span>{t('services.assignedTo')}:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {service.assigned_groups.map(groupId => {
-                      const group = groups.find(g => g.id === groupId);
-                      return group ? (
-                        <Badge key={groupId} variant="outline" className="text-xs">
-                          {group.name}
-                        </Badge>
-                      ) : null;
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {!service.is_active && (
-                <Badge variant="secondary">{t('services.inactive')}</Badge>
-              )}
-            </CardContent>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
           </Card>
         ))}
       </div>

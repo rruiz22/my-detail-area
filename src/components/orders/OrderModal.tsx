@@ -368,7 +368,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
     setLoading(true);
     try {
-      // Get users from dealer memberships with their profiles
+      // Get users from dealer memberships with their profiles AND permissions for sales_orders module
       const [usersResult, servicesResult] = await Promise.all([
         supabase
           .from('dealer_memberships')
@@ -378,6 +378,17 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               first_name,
               last_name,
               email
+            ),
+            custom_role_id,
+            dealer_custom_roles!left (
+              id,
+              role_name,
+              role_module_permissions_new!left (
+                module_permissions!inner (
+                  module,
+                  permission_key
+                )
+              )
             )
           `)
           .eq('dealer_id', parseInt(dealershipId))
@@ -399,7 +410,25 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
 
       if (usersResult.data) {
-        const users = usersResult.data.map((membership: DealerMembership) => ({
+        // Filter users who have access to sales_orders module
+        const usersWithAccess = usersResult.data.filter((membership: any) => {
+          // Check if user has a custom role with sales_orders permissions
+          // Note: System admins are checked separately via enhancedUser.is_system_admin in the UI
+          if (membership.dealer_custom_roles) {
+            const rolePermissions = membership.dealer_custom_roles.role_module_permissions_new || [];
+            const hasAccess = rolePermissions.some((rmp: any) => {
+              return rmp.module_permissions?.module === 'sales_orders';
+            });
+            if (hasAccess) return true;
+          }
+
+          // If no custom role or no sales_orders permissions, exclude
+          // System admins will be shown regardless (handled in a future iteration)
+          // For now, only show users with explicit sales_orders permissions
+          return false;
+        });
+
+        const users = usersWithAccess.map((membership: any) => ({
           id: membership.profiles.id,
           name: `${membership.profiles.first_name || ''} ${membership.profiles.last_name || ''}`.trim() || membership.profiles.email,
           email: membership.profiles.email

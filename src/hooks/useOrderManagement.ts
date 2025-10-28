@@ -468,6 +468,16 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       filtered = filtered.filter(order => new Date(order.createdAt) <= toDate);
     }
 
+    // Apply sorting based on active tab
+    if (tab === 'today' || tab === 'tomorrow') {
+      // Sort by due_date ascending (earliest first) for today and tomorrow tabs
+      filtered = filtered.sort((a, b) => {
+        const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+        const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+        return dateA - dateB;
+      });
+    }
+
     return filtered;
   }, [getSystemTimezoneDates, weekOffset]);
 
