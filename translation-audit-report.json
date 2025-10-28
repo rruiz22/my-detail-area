@@ -44685,30 +44685,30 @@
         "translationCalls": [
           {
             "key": "dealerships.all_selected",
-            "line": 34,
+            "line": 37,
             "exists": true
           },
           {
             "key": "dealerships.none_selected",
-            "line": 37,
+            "line": 40,
             "exists": false
           },
           {
             "key": "dealerships.dealership",
-            "line": 64,
+            "line": 67,
             "exists": true
           },
           {
             "key": "dealerships.all_dealerships",
-            "line": 71,
+            "line": 74,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.none_selected",
-            "line": 37,
-            "context": "36: const currentDealer = dealerships.find(d => d.id === selectedDealerId);\n37: return currentDealer?.name || t('dealerships.none_selected');\n38: };"
+            "line": 40,
+            "context": "39: const currentDealer = dealerships.find(d => d.id === selectedDealerId);\n40: return currentDealer?.name || t('dealerships.none_selected');\n41: };"
           }
         ],
         "coverage": 100,

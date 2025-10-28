@@ -38,9 +38,9 @@ const VehicleDetailsPage: React.FC = () => {
   const [showReconModal, setShowReconModal] = useState(false);
 
   // Permission checks
-  const canView = hasModulePermission('stock', 'view');
-  const canEdit = hasModulePermission('stock', 'edit');
-  const canDelete = hasModulePermission('stock', 'delete');
+  const canView = hasModulePermission('stock', 'view_inventory');
+  const canEdit = hasModulePermission('stock', 'edit_vehicles');
+  const canDelete = hasModulePermission('stock', 'delete_vehicles');
 
   // Fetch vehicle data
   useEffect(() => {

@@ -46,7 +46,7 @@ export const StockCSVUploader: React.FC<StockCSVUploaderProps> = ({ dealerId }) 
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [showPreview, setShowPreview] = useState(false);
 
-  const canUpload = hasModulePermission('stock', 'create');
+  const canUpload = hasModulePermission('stock', 'add_vehicles');
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles: UploadFile[] = acceptedFiles.map(file => ({

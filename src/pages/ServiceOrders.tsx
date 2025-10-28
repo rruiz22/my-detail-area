@@ -74,7 +74,7 @@ export default function ServiceOrders() {
   const { handleRefresh, isRefreshing } = useManualRefresh(refreshData);
 
   // Check if user can create service orders
-  const canCreate = hasModulePermission('service_orders', 'create');
+  const canCreate = hasModulePermission('service_orders', 'create_orders');
 
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {

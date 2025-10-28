@@ -60,7 +60,7 @@ export const StockSyncHistory: React.FC<StockSyncHistoryProps> = ({ dealerId }) 
   const [syncHistory, setSyncHistory] = useState<SyncHistoryRecord[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
 
-  const canViewHistory = hasModulePermission('stock', 'view');
+  const canViewHistory = hasModulePermission('stock', 'view_inventory');
 
   // Fetch sync history from Supabase
   useEffect(() => {

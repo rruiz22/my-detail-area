@@ -95,9 +95,9 @@ export const VehicleQuickActions: React.FC<VehicleQuickActionsProps> = ({
   return (
     <div className="flex flex-wrap gap-3">
       {/* Create Order Dropdown */}
-      {(hasModulePermission('sales_orders', 'create') ||
-        hasModulePermission('service_orders', 'create') ||
-        hasModulePermission('recon_orders', 'create')) && (
+      {(hasModulePermission('sales_orders', 'create_orders') ||
+        hasModulePermission('service_orders', 'create_orders') ||
+        hasModulePermission('recon_orders', 'create_orders')) && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button>
@@ -108,17 +108,17 @@ export const VehicleQuickActions: React.FC<VehicleQuickActionsProps> = ({
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>{t('stock.vehicleDetails.actions.selectOrderType', 'Select Order Type')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {hasModulePermission('sales_orders', 'create') && (
+            {hasModulePermission('sales_orders', 'create_orders') && (
               <DropdownMenuItem onClick={() => handleCreateOrder('sales')}>
                 {t('stock.vehicleDetails.actions.createSalesOrder')}
               </DropdownMenuItem>
             )}
-            {hasModulePermission('service_orders', 'create') && (
+            {hasModulePermission('service_orders', 'create_orders') && (
               <DropdownMenuItem onClick={() => handleCreateOrder('service')}>
                 {t('stock.vehicleDetails.actions.createServiceOrder')}
               </DropdownMenuItem>
             )}
-            {hasModulePermission('recon_orders', 'create') && (
+            {hasModulePermission('recon_orders', 'create_orders') && (
               <DropdownMenuItem onClick={() => handleCreateOrder('recon')}>
                 {t('stock.vehicleDetails.actions.createReconOrder')}
               </DropdownMenuItem>
@@ -128,7 +128,7 @@ export const VehicleQuickActions: React.FC<VehicleQuickActionsProps> = ({
       )}
 
       {/* Get Ready Button */}
-      {hasModulePermission('get_ready', 'view') && (
+      {hasModulePermission('get_ready', 'view_vehicles') && (
         <Button
           variant="outline"
           onClick={handleGetReadyAction}

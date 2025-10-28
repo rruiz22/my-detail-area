@@ -51,7 +51,7 @@ const Stock = () => {
   const { hasModulePermission } = usePermissions();
 
   // Check if user has permission to view stock module
-  if (!hasModulePermission('stock', 'view')) {
+  if (!hasModulePermission('stock', 'view_inventory')) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-4">
