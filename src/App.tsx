@@ -14,6 +14,8 @@ import { PermissionProvider } from "@/contexts/PermissionContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
+// ✅ PHASE 3.3: Import AppLoadingBoundary for global loading state
+import { AppLoadingBoundary } from "@/components/loading/AppLoadingBoundary";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 import { TooltipTester } from "./components/debug/TooltipTester";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -254,21 +256,25 @@ const App = () => (
         <DealerFilterProvider>
           <PermissionProvider>
             <ServicesProvider>
-              <GlobalChatWrapper>
-                <NotificationProvider>
-                  <BrowserRouter
-                    future={{
-                      v7_startTransition: false,
-                      v7_relativeSplatPath: true
-                    }}
-                  >
-                    <AppRoutes />
-                    {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
-                    {import.meta.env.DEV && <PermissionsDebugger />}
-                    */}
-                  </BrowserRouter>
-                </NotificationProvider>
-              </GlobalChatWrapper>
+              {/* ✅ PHASE 3.3: Wrap entire app in AppLoadingBoundary */}
+              {/* This eliminates "Access Denied" flash by waiting for all critical systems */}
+              <AppLoadingBoundary>
+                <GlobalChatWrapper>
+                  <NotificationProvider>
+                    <BrowserRouter
+                      future={{
+                        v7_startTransition: false,
+                        v7_relativeSplatPath: true
+                      }}
+                    >
+                      <AppRoutes />
+                      {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
+                      {import.meta.env.DEV && <PermissionsDebugger />}
+                      */}
+                    </BrowserRouter>
+                  </NotificationProvider>
+                </GlobalChatWrapper>
+              </AppLoadingBoundary>
             </ServicesProvider>
           </PermissionProvider>
         </DealerFilterProvider>
