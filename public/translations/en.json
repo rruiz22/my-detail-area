@@ -750,6 +750,7 @@
     "max_services_info": "Maximum 2 services reached. Uncheck a service to select another.",
     "notes": "Notes",
     "notesPlaceholder": "Add any special instructions or details about this order...",
+    "notes_instruction": "To add notes or instructions, use the Comments section in the order details view",
     "customerNamePlaceholder": "Enter customer full name (required)",
     "creating_order": "Creating order...",
     "creation_failed": "Failed to create order",
@@ -2253,7 +2254,8 @@
     "view_details": "View Details",
     "edit_order": "Edit Order",
     "delete_order": "Delete Order",
-    "print_order": "Print Order"
+    "print_order": "Print Order",
+    "items_per_page": "Items per page:"
   },
   "vehicle_info": {
     "vehicle_information": "Vehicle Information",
@@ -2284,7 +2286,9 @@
     "service_performer": "Service Performer",
     "service_type": "Service Type",
     "waiter": "Waiter",
-    "standard_wash": "Standard Wash"
+    "standard_wash": "Standard Wash",
+    "max_one_service": "Car wash orders can only have one service",
+    "one_service_limit": "Car wash orders can only have one service. Uncheck to select another."
   },
   "completion_date": {
     "select_date": "Select date"

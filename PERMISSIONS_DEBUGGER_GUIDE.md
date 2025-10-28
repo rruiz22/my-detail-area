@@ -79,7 +79,7 @@ sales_orders
   ✅ view_orders
   ✅ create_orders
   ✅ edit_orders
-  
+
 service_orders
   ✅ view_orders
   ✅ approve_orders
@@ -272,19 +272,19 @@ Overview:
 
 **Verificar en base de datos:**
 ```sql
-SELECT 
-  id, 
-  email, 
-  role, 
-  is_system_admin 
-FROM auth.users 
+SELECT
+  id,
+  email,
+  role,
+  is_system_admin
+FROM auth.users
 WHERE email = 'tu@email.com';
 ```
 
 **Si `is_system_admin = false` pero debería ser admin:**
 ```sql
-UPDATE auth.users 
-SET is_system_admin = true 
+UPDATE auth.users
+SET is_system_admin = true
 WHERE email = 'tu@email.com';
 ```
 
@@ -318,5 +318,3 @@ Si el debugger muestra datos que no entiendes:
 
 **Última actualización:** 2025-10-27
 **Versión del debugger:** 1.0.0
-
-

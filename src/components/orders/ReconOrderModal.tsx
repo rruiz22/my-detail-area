@@ -644,9 +644,9 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                         id="vehicleVin"
                         name="vehicleVin"
                         value={formData.vehicleVin}
-                        onChange={(e) => handleVinChange(e.target.value)}
-                        onVinScanned={handleVinChange}
-                        className={selectedVehicle ? "border-input bg-muted/30 font-mono" : "border-input bg-background font-mono"}
+                        onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
+                        onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
+                        className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
                         stickerMode={true}
                         disabled={!!selectedVehicle}
                       />
@@ -816,8 +816,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={4}
-                      className="border-input bg-background resize-none"
-                      placeholder={t('orders.notesPlaceholder')}
+                      className="border-input bg-muted/50 resize-none cursor-not-allowed"
+                      placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
+                      readOnly
+                      disabled
                     />
                   </div>
                   </div>

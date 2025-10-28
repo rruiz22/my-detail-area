@@ -768,6 +768,7 @@
     "max_services_info": "Máximo de 2 serviços atingido. Desmarque um serviço para selecionar outro.",
     "notes": "Notas",
     "notesPlaceholder": "Adicione instruções especiais ou detalhes sobre este pedido...",
+    "notes_instruction": "Para adicionar notas ou instruções, use a seção de Comentários na visualização de detalhes do pedido",
     "customerNamePlaceholder": "Digite o nome completo do cliente (obrigatório)",
     "creating_order": "Criando pedido...",
     "creation_failed": "Falha ao criar pedido",
@@ -1850,7 +1851,8 @@
     "view_details": "Ver Detalhes",
     "edit_order": "Editar Pedido",
     "delete_order": "Excluir Pedido",
-    "print_order": "Imprimir Pedido"
+    "print_order": "Imprimir Pedido",
+    "items_per_page": "Itens por página:"
   },
   "vehicle_info": {
     "vehicle_information": "Informações do Veículo",
@@ -1881,7 +1883,9 @@
     "service_performer": "Responsável pelo Serviço",
     "service_type": "Tipo de Serviço",
     "waiter": "Espera",
-    "standard_wash": "Lavagem Padrão"
+    "standard_wash": "Lavagem Padrão",
+    "max_one_service": "Pedidos de lavagem só podem ter um serviço",
+    "one_service_limit": "Pedidos de lavagem só podem ter um serviço. Desmarque para selecionar outro."
   },
   "completion_date": {
     "select_date": "Selecionar data"

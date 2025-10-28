@@ -648,58 +648,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                      />
                    </div>
 
-                   {/* Service Order Specific Fields */}
-                   <Separator />
-
-                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                     <div>
-                       <Label htmlFor="po">
-                         {t('service_orders.po_number')} <span className="text-red-500">*</span>
-                       </Label>
-                       <Input
-                         id="po"
-                         value={formData.po}
-                         onChange={(e) => handleInputChange('po', e.target.value)}
-                         className="border-input bg-background"
-                         inputMode="numeric"
-                         pattern="[0-9]*"
-                         placeholder="001"
-                         required
-                       />
-                     </div>
-
-                     <div>
-                       <Label htmlFor="ro">
-                         {t('service_orders.ro_number')} <span className="text-red-500">*</span>
-                       </Label>
-                       <Input
-                         id="ro"
-                         value={formData.ro}
-                         onChange={(e) => handleInputChange('ro', e.target.value)}
-                         className="border-input bg-background"
-                         inputMode="numeric"
-                         pattern="[0-9]*"
-                         placeholder="001"
-                         required
-                       />
-                     </div>
-
-                     <div>
-                       <Label htmlFor="tag">
-                         {t('service_orders.tag_number')} <span className="text-red-500">*</span>
-                       </Label>
-                       <Input
-                         id="tag"
-                         value={formData.tag}
-                         onChange={(e) => handleInputChange('tag', e.target.value)}
-                         className="border-input bg-background"
-                         inputMode="numeric"
-                         pattern="[0-9]*"
-                         placeholder="001"
-                         required
-                       />
-                     </div>
-                   </div>
                 </CardContent>
               </Card>
 
@@ -715,20 +663,52 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {/* Vehicle Search & Auto-Population */}
-                  {!order && (
-                    <>
-                      <VehicleAutoPopulationField
-                        dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
-                        onVehicleSelect={handleVehicleSelect}
-                        selectedVehicle={selectedVehicle}
-                        label={t('stock.autopop.searchVehicle')}
-                        placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
+                  {/* Service Order Specific Fields - PO, RO, TAG */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="po">
+                        {t('service_orders.po_number')} <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="po"
+                        value={formData.po}
+                        onChange={(e) => handleInputChange('po', e.target.value.toUpperCase())}
+                        className="border-input bg-background uppercase"
+                        placeholder="001"
+                        required
                       />
+                    </div>
 
-                      {selectedVehicle && <Separator className="my-3" />}
-                    </>
-                  )}
+                    <div>
+                      <Label htmlFor="ro">
+                        {t('service_orders.ro_number')} <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="ro"
+                        value={formData.ro}
+                        onChange={(e) => handleInputChange('ro', e.target.value.toUpperCase())}
+                        className="border-input bg-background uppercase"
+                        placeholder="001"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="tag">
+                        {t('service_orders.tag_number')} <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="tag"
+                        value={formData.tag}
+                        onChange={(e) => handleInputChange('tag', e.target.value.toUpperCase())}
+                        className="border-input bg-background uppercase"
+                        placeholder="001"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
 
                   <div>
                     <Label htmlFor="vehicleVin" className="flex items-center gap-2">
@@ -739,9 +719,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                       id="vehicleVin"
                       name="vehicleVin"
                       value={formData.vehicleVin}
-                      onChange={(e) => handleVinChange(e.target.value)}
-                      onVinScanned={handleVinChange}
-                      className={selectedVehicle ? "border-input bg-muted/30 font-mono" : "border-input bg-background font-mono"}
+                      onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
+                      onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
+                      className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
                       disabled={!!selectedVehicle}
                     />
                     {vinError && (
@@ -894,9 +874,11 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                       id="notes"
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
-                      className="border-input bg-background"
+                      className="border-input bg-muted/50 resize-none cursor-not-allowed"
                       rows={4}
-                      placeholder={t('orders.notesPlaceholder')}
+                      placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
+                      readOnly
+                      disabled
                     />
                   </div>
                 </CardContent>

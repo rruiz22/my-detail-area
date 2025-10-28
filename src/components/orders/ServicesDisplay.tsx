@@ -88,7 +88,7 @@ export function ServicesDisplay({
 }: ServicesDisplayProps) {
   const { t } = useTranslation();
   const { hasPermission } = usePermissionContext();
-  const { getServices, loading: servicesLoading } = useServices();
+  const { getService, getServices, loading: servicesLoading } = useServices();
 
   // Process services using global cache (instant lookup)
   const processedServices = useMemo(() => {
@@ -96,14 +96,33 @@ export function ServicesDisplay({
       return [];
     }
 
-    // If already enriched objects
+    // If already enriched objects with type or id field
     if (services.length > 0 && typeof services[0] === 'object' && 'name' in services[0]) {
-      return services as OrderService[];
+      // Enrich with category_color from cache if not present
+      return (services as any[]).map((service: any) => {
+        // If service already has category_color, use it
+        if (service.category_color) {
+          return service as OrderService;
+        }
+
+        // Otherwise, lookup in cache using type (CarWash) or id (Sales/Service/Recon)
+        const serviceId = service.type || service.id;
+        const cachedService = serviceId ? getService(serviceId) : undefined;
+
+        // Merge cached data (category_color, category_name) with existing data
+        return {
+          ...service,
+          id: serviceId,
+          category_color: cachedService?.category_color || service.category_color,
+          category_name: cachedService?.category_name || service.category_name,
+          color: cachedService?.color || service.color,
+        } as OrderService;
+      });
     }
 
-    // Lookup from global cache (O(1) per service)
+    // Lookup from global cache (O(1) per service) - for array of UUIDs
     return getServices(services as string[]);
-  }, [services, getServices]);
+  }, [services, getServices, getService]);
 
   // Check if user can view pricing
   const canViewPrices = showPrices ?? hasPermission('orders', 'view_pricing');
@@ -128,9 +147,9 @@ export function ServicesDisplay({
 
     return (
       <div className={`space-y-1.5 flex flex-col items-center ${className}`}>
-        {displayServices.map((service) => (
+        {displayServices.map((service, index) => (
           <ServiceBadge
-            key={service.id}
+            key={(service as any).type || (service as any).id || service.name || `service-${index}`}
             serviceName={service.name}
             color={(service as any).color || (service as any).category_color}
             size="sm"
@@ -164,7 +183,7 @@ export function ServicesDisplay({
         </CardHeader>
         <CardContent className="space-y-3">
           {processedServices.map((service, index) => (
-            <div key={service.id}>
+            <div key={(service as any).type || (service as any).id || service.name || `service-${index}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 flex-1">
                   <ServiceBadge
@@ -216,9 +235,9 @@ export function ServicesDisplay({
 
     return (
       <div className={`flex flex-wrap gap-2 ${className}`}>
-        {processedServices.map((service) => (
+        {processedServices.map((service, index) => (
           <ServiceBadge
-            key={service.id}
+            key={(service as any).type || (service as any).id || service.name || `service-${index}`}
             serviceName={service.name}
             color={(service as any).color || (service as any).category_color}
             size="sm"
