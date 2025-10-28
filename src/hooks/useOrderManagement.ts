@@ -9,6 +9,7 @@ import type { Database } from '@/integrations/supabase/types';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
+import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { OrderStatus } from '@/constants/orderStatus';
@@ -229,6 +230,9 @@ const transformOrder = (supabaseOrder: SupabaseOrderWithComments): Order => {
 
     // Assignment - will be populated by refreshData with proper names
     assignedTo: 'Unassigned', // Will be overwritten in refreshData
+
+    // Dealership (CRITICAL for multi-tenant security)
+    dealer_id: getFieldValue(supabaseOrder.dealer_id),
 
     // Notes
     notes: getFieldValue(supabaseOrder.notes),
@@ -503,8 +507,15 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       dev(`🔍 Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
-      if (enhancedUser.dealership_id === null) {
-        // User is multi-dealer - respect global filter
+      // ✅ FIX: System admins should ALWAYS respect global filter, even if they have dealership_id assigned
+      const isSystemAdmin = isEnhancedUserV2(enhancedUser)
+        ? enhancedUser.is_system_admin
+        : isEnhancedUserV1(enhancedUser) && enhancedUser.role === 'system_admin';
+
+      const shouldUseGlobalFilter = enhancedUser.dealership_id === null || isSystemAdmin;
+
+      if (shouldUseGlobalFilter) {
+        // Multi-dealer users and system admins - respect global filter
         if (dealerFilter === 'all') {
           // Show all dealers user has access to
           const { data: userDealerships, error: dealershipError } = await supabase
@@ -523,13 +534,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            dev(`🏢 Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            dev(`🏢 ${isSystemAdmin ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            dev(`🎯 Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+            dev(`🎯 ${isSystemAdmin ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
             // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
@@ -539,7 +550,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           }
         }
       } else {
-        // User has single assigned dealership - ignore global filter
+        // Single-dealer regular users - use their assigned dealership (ignore global filter)
+        dev(`🏢 Single-dealer user - using assigned dealership: ${enhancedUser.dealership_id}`);
         ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
       }
 
@@ -859,6 +871,25 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           : [enrichedUpdatedOrder]
       );
 
+      // Send push notification if status changed (fire-and-forget, non-blocking)
+      if (orderData.order_status !== undefined && data.order_number) {
+        const userName = enhancedUser?.first_name
+          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+          : user.email || 'Someone';
+
+        pushNotificationHelper
+          .notifyOrderStatusChange(
+            parseInt(orderId),
+            data.order_number,
+            orderData.order_status,
+            userName
+          )
+          .catch((notifError) => {
+            logError('❌ Push notification failed (non-critical):', notifError);
+            // Don't fail the order update if notification fails
+          });
+      }
+
       // Invalidate to ensure data consistency in background
       queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
     } catch (error) {
@@ -937,8 +968,15 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       dev(`🔍 Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
-      if (enhancedUser.dealership_id === null) {
-        // User is multi-dealer - respect global filter
+      // ✅ FIX: System admins should ALWAYS respect global filter, even if they have dealership_id assigned
+      const isSystemAdminPolling = isEnhancedUserV2(enhancedUser)
+        ? enhancedUser.is_system_admin
+        : isEnhancedUserV1(enhancedUser) && enhancedUser.role === 'system_admin';
+
+      const shouldUseGlobalFilterPolling = enhancedUser.dealership_id === null || isSystemAdminPolling;
+
+      if (shouldUseGlobalFilterPolling) {
+        // Multi-dealer users and system admins - respect global filter
         if (dealerFilter === 'all') {
           // Show all dealers user has access to
           const { data: userDealerships, error: dealershipError } = await supabase
@@ -957,13 +995,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            dev(`🏢 Polling - Multi-dealer user - showing all dealers: [${dealerIds.join(', ')}]`);
+            dev(`🏢 Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            dev(`🎯 Polling - Multi-dealer user - filtering by selected dealer: ${dealerFilter}`);
+            dev(`🎯 Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
             // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
@@ -973,7 +1011,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           }
         }
       } else {
-        // User has single assigned dealership - ignore global filter
+        // Single-dealer regular users - use their assigned dealership (ignore global filter)
+        dev(`🏢 Polling - Single-dealer user - using assigned dealership: ${enhancedUser.dealership_id}`);
         ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
       }
 

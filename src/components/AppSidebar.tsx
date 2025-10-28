@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LiveClock } from "@/components/ui/live-clock";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useDealershipModules } from "@/hooks/useDealershipModules";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -15,12 +16,26 @@ export function AppSidebar() {
   const { enhancedUser, getAllowedOrderTypes, hasPermission } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
+  const { selectedDealerId } = useDealerFilter();
 
   // Get current dealership for logo display
   const { currentDealership } = useAccessibleDealerships();
 
-  // Get user's dealership_id to check enabled modules
-  const userDealershipId = enhancedUser?.dealership_id;
+  // Debug logging for currentDealership changes
+  React.useEffect(() => {
+    console.log('🏢 [AppSidebar] currentDealership changed:', {
+      name: currentDealership?.name || 'null',
+      id: currentDealership?.id || 'null',
+      hasLogo: !!currentDealership?.logo_url,
+      hasThumbnail: !!currentDealership?.thumbnail_logo_url,
+      logoUrl: currentDealership?.logo_url || 'null',
+      thumbnailUrl: currentDealership?.thumbnail_logo_url || 'null'
+    });
+  }, [currentDealership]);
+
+  // Use global filter instead of user's dealership_id for module checking
+  // This allows multi-dealer users to see correct sidebar items based on selected dealer
+  const activeDealerId = typeof selectedDealerId === 'number' ? selectedDealerId : enhancedUser?.dealership_id || 0;
 
   // Check if user is system admin (works for both EnhancedUser and EnhancedUserV2)
   const isAdmin = enhancedUser
@@ -29,8 +44,8 @@ export function AppSidebar() {
         : enhancedUser.role === 'system_admin')
     : false;
 
-  // Load dealership modules (only if user has a dealership)
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(userDealershipId || 0);
+  // Load dealership modules for the currently selected dealer
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId);
 
   // Core Operations - Filtered by user's allowed order types
   const coreNavItems = React.useMemo(() => {

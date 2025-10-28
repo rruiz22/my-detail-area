@@ -15,7 +15,7 @@ import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
 import { PlatformBrandingSettings } from '@/components/settings/platform/PlatformBrandingSettings';
 import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
 import { SecurityAuditLogViewer } from '@/components/settings/security/SecurityAuditLogViewer';
-import { NotificationTemplatesManager } from '@/components/settings/notifications/NotificationTemplatesManager';
+import { NotificationTemplatesManager, PushNotificationSettings } from '@/components/settings/notifications';
 import { StorageDevTools } from "@/components/dev/StorageDevTools";
 import { developmentConfig } from "@/config/development";
 import { Save, Database, Mail, MessageSquare, User, Building2, Palette, Bell, Shield, Settings as SettingsIcon } from "lucide-react";
@@ -342,7 +342,11 @@ export default function Settings() {
               )}
             </TabsList>
 
-            <TabsContent value="preferences">
+            <TabsContent value="preferences" className="space-y-6">
+              {/* Push Notifications (FCM) */}
+              <PushNotificationSettings />
+
+              {/* Email/SMS/In-App Preferences */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">

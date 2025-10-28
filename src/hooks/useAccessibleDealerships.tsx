@@ -216,19 +216,29 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
     const handleDealerFilterChange = (event: CustomEvent) => {
       const { dealerId } = event.detail;
 
+      console.log('🔔 [useAccessibleDealerships] dealerFilterChanged event received:', { dealerId, prevId: prevDealerIdRef.current });
+
       // Prevent redundant updates
       if (dealerId === prevDealerIdRef.current) {
+        console.log('⏭️ [useAccessibleDealerships] Skipping redundant update');
         return;
       }
 
       prevDealerIdRef.current = dealerId;
 
       if (dealerId === 'all') {
+        console.log('🔄 [useAccessibleDealerships] Setting currentDealership to null (all dealers)');
         setCurrentDealership(null);
       } else {
         const selectedDealership = dealerships.find(d => d.id === dealerId);
         if (selectedDealership) {
+          console.log('✅ [useAccessibleDealerships] Setting currentDealership:', selectedDealership.name, {
+            hasLogo: !!selectedDealership.logo_url,
+            hasThumbnail: !!selectedDealership.thumbnail_logo_url
+          });
           setCurrentDealership(selectedDealership);
+        } else {
+          console.warn('⚠️ [useAccessibleDealerships] Dealer not found in list:', dealerId);
         }
       }
     };

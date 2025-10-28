@@ -46,6 +46,12 @@ export const PermissionsDebugger: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // 🔒 GUARD: Don't render if no user is authenticated
+  // This prevents module loading errors on login page
+  if (!user || !enhancedUser) {
+    return null;
+  }
+
   // Get user's custom role
   useEffect(() => {
     const fetchUserRole = async () => {

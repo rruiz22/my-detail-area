@@ -11,23 +11,22 @@ import { useSearchPersistence, useTabPersistence, useViewModePersistence } from 
 import { orderEvents } from '@/utils/eventBus';
 import { dev, warn } from '@/utils/logger';
 import { Plus, RefreshCw } from 'lucide-react';
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
-// Code-split heavy components for better performance
+// Direct imports - no lazy loading for maximum speed
+import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
 import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
-
-const OrderDataTable = lazy(() => import('@/components/orders/OrderDataTable').then(m => ({ default: m.OrderDataTable })));
-const OrderKanbanBoard = lazy(() => import('@/components/sales/OrderKanbanBoard').then(m => ({ default: m.OrderKanbanBoard })));
-const SmartDashboard = lazy(() => import('@/components/sales/SmartDashboard').then(m => ({ default: m.SmartDashboard })));
-const OrderCalendarView = lazy(() => import('@/components/orders/OrderCalendarView').then(m => ({ default: m.OrderCalendarView })));
-const ServiceOrderModal = lazy(() => import('@/components/orders/ServiceOrderModal'));
-const UnifiedOrderDetailModal = lazy(() => import('@/components/orders/UnifiedOrderDetailModal').then(m => ({ default: m.UnifiedOrderDetailModal })));
-const QuickFilterBar = lazy(() => import('@/components/sales/QuickFilterBar').then(m => ({ default: m.QuickFilterBar })));
-const ConfirmDialog = lazy(() => import('@/components/ui/confirm-dialog').then(m => ({ default: m.ConfirmDialog })));
+import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { SmartDashboard } from '@/components/sales/SmartDashboard';
+import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 export default function ServiceOrders() {
   dev('🔵 ServiceOrders component is RENDERING');
@@ -291,21 +290,19 @@ export default function ServiceOrders() {
 
         {/* Quick Filter Bar */}
         <OrderViewErrorBoundary>
-          <Suspense fallback={<OrderViewLoadingFallback />}>
-            <QuickFilterBar
-              activeFilter={activeFilter}
-              tabCounts={tabCounts}
-              onFilterChange={setActiveFilter}
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              viewMode={viewMode}
-              onViewModeChange={setViewMode}
-              showFilters={showFilters}
-              onToggleFilters={() => setShowFilters(!showFilters)}
-              weekOffset={weekOffset}
-              onWeekChange={setWeekOffset}
-            />
-          </Suspense>
+          <QuickFilterBar
+            activeFilter={activeFilter}
+            tabCounts={tabCounts}
+            onFilterChange={setActiveFilter}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            showFilters={showFilters}
+            onToggleFilters={() => setShowFilters(!showFilters)}
+            weekOffset={weekOffset}
+            onWeekChange={setWeekOffset}
+          />
         </OrderViewErrorBoundary>
 
         {/* Filters */}
@@ -317,105 +314,97 @@ export default function ServiceOrders() {
           />
         )}
 
-        {/* Main Content Area */}
+        {/* Main Content Area - Direct rendering for maximum speed */}
         <main className="space-y-6" aria-label={t('accessibility.service_orders.main_content', 'Service orders main content')}>
           <OrderViewErrorBoundary>
-            <Suspense fallback={<OrderViewLoadingFallback />}>
-              {activeFilter === 'dashboard' ? (
-                <SmartDashboard
-                  allOrders={orders}
-                  tabCounts={tabCounts}
-                  onCardClick={handleCardClick}
-                />
-              ) : (
-                <>
-                  {/* Table/Kanban/Calendar Content - Mobile forces table */}
-                  {effectiveViewMode === 'kanban' ? (
-                    <OrderKanbanBoard
-                      orders={orders}
-                      onEdit={handleEditOrder}
-                      onView={handleViewOrder}
-                      onDelete={handleDeleteOrder}
-                      onStatusChange={handleStatusChange}
-                    />
-                  ) : effectiveViewMode === 'calendar' ? (
-                    <OrderCalendarView
-                      orders={orders}
-                      loading={loading}
-                      onEdit={handleEditOrder}
-                      onView={handleViewOrder}
-                      onDelete={handleDeleteOrder}
-                      onStatusChange={handleStatusChange}
-                      onCreateOrder={handleCreateOrderWithDate}
-                    />
-                  ) : (
-                    <OrderDataTable
-                      orders={orders}
-                      loading={loading}
-                      onEdit={handleEditOrder}
-                      onDelete={handleDeleteOrder}
-                      onView={handleViewOrder}
-                      tabType="service"
-                    />
-                  )}
-                </>
-              )}
-            </Suspense>
+            {activeFilter === 'dashboard' ? (
+              <SmartDashboard
+                allOrders={orders}
+                tabCounts={tabCounts}
+                onCardClick={handleCardClick}
+              />
+            ) : (
+              <>
+                {/* Table/Kanban/Calendar Content - Mobile forces table */}
+                {effectiveViewMode === 'kanban' ? (
+                  <OrderKanbanBoard
+                    orders={orders}
+                    onEdit={handleEditOrder}
+                    onView={handleViewOrder}
+                    onDelete={handleDeleteOrder}
+                    onStatusChange={handleStatusChange}
+                  />
+                ) : effectiveViewMode === 'calendar' ? (
+                  <OrderCalendarView
+                    orders={orders}
+                    loading={loading}
+                    onEdit={handleEditOrder}
+                    onView={handleViewOrder}
+                    onDelete={handleDeleteOrder}
+                    onStatusChange={handleStatusChange}
+                    onCreateOrder={handleCreateOrderWithDate}
+                  />
+                ) : (
+                  <OrderDataTable
+                    orders={orders}
+                    loading={loading}
+                    onEdit={handleEditOrder}
+                    onDelete={handleDeleteOrder}
+                    onView={handleViewOrder}
+                    tabType="service"
+                  />
+                )}
+              </>
+            )}
           </OrderViewErrorBoundary>
         </main>
 
-        {/* Modals */}
+        {/* Modals - Direct import for instant open (no lazy loading delay) */}
         {showModal && (
           <OrderViewErrorBoundary>
-            <Suspense fallback={<OrderViewLoadingFallback />}>
-              <ServiceOrderModal
-                order={selectedOrder}
-                open={showModal}
-                onClose={() => setShowModal(false)}
-                onSave={handleSaveOrder}
-              />
-            </Suspense>
+            <ServiceOrderModal
+              order={selectedOrder}
+              open={showModal}
+              onClose={() => setShowModal(false)}
+              onSave={handleSaveOrder}
+            />
           </OrderViewErrorBoundary>
         )}
 
-        {/* Detail Modal - Unified Full Screen */}
+        {/* Detail Modal - Unified Full Screen (instant open) */}
         {previewOrder && (
           <OrderViewErrorBoundary>
-            <Suspense fallback={<OrderViewLoadingFallback />}>
-              <UnifiedOrderDetailModal
-                orderType="service"
-                order={previewOrder}
-                open={true}
-                onClose={() => {
-                  setPreviewOrder(null);
-                  // If we came from URL parameter, redirect to clean /service to avoid loop
-                  if (orderIdFromUrl) {
-                    navigate('/service', { replace: true });
-                  }
-                }}
-                onEdit={handleEditOrder}
-                onDelete={handleDeleteOrder}
-                onStatusChange={handleStatusChange}
-                onUpdate={handleUpdate}
-              />
-            </Suspense>
+            <UnifiedOrderDetailModal
+              orderType="service"
+              order={previewOrder}
+              open={true}
+              onClose={() => {
+                setPreviewOrder(null);
+                // If we came from URL parameter, redirect to clean /service to avoid loop
+                if (orderIdFromUrl) {
+                  navigate('/service', { replace: true });
+                }
+              }}
+              onEdit={handleEditOrder}
+              onDelete={handleDeleteOrder}
+              onStatusChange={handleStatusChange}
+              onUpdate={handleUpdate}
+            />
           </OrderViewErrorBoundary>
         )}
 
-        {/* Delete Confirmation Dialog - Team Chat Style */}
+        {/* Delete Confirmation Dialog (instant open) */}
         <OrderViewErrorBoundary>
-          <Suspense fallback={null}>
-            <ConfirmDialog
-              open={deleteDialogOpen}
-              onOpenChange={setDeleteDialogOpen}
-              title={t('orders.confirm_delete_title', 'Delete Order?')}
-              description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
-              confirmText={t('common.delete', 'Delete')}
-              cancelText={t('common.cancel', 'Cancel')}
-              onConfirm={confirmDeleteOrder}
-              variant="destructive"
-            />
-          </Suspense>
+          <ConfirmDialog
+            open={deleteDialogOpen}
+            onOpenChange={setDeleteDialogOpen}
+            title={t('orders.confirm_delete_title', 'Delete Order?')}
+            description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
+            confirmText={t('common.delete', 'Delete')}
+            cancelText={t('common.cancel', 'Cancel')}
+            onConfirm={confirmDeleteOrder}
+            variant="destructive"
+          />
         </OrderViewErrorBoundary>
     </div>
   );

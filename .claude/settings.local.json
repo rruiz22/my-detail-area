@@ -36,7 +36,9 @@
       "Bash(else echo \"Folder does not exist\")",
       "Bash(fi)",
       "Bash(timeout:*)",
-      "Bash(env)"
+      "Bash(env)",
+      "Bash(git restore:*)",
+      "Bash(del execute-migration.js verify-dealership-config.js fix-missing-modules.js final-verification.js)"
     ],
     "deny": [],
     "ask": []

@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
+import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { useCallback, useEffect, useState } from 'react';
 
 export interface OrderComment {
@@ -256,6 +257,20 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
 
       // Refresh comments to get the new one with profile data
       await fetchComments();
+
+      // Send push notification to order followers (fire-and-forget, non-blocking)
+      if (type === 'public') {
+        const userName = enhancedUser?.first_name
+          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+          : user.email || 'Someone';
+
+        pushNotificationHelper
+          .notifyNewComment(parseInt(orderId), userName, text.trim())
+          .catch((notifError) => {
+            console.error('❌ Push notification failed (non-critical):', notifError);
+            // Don't fail the comment operation if notification fails
+          });
+      }
 
       // Dispatch custom event to notify other components (like RecentActivityBlock)
       window.dispatchEvent(new CustomEvent('orderCommentAdded', {

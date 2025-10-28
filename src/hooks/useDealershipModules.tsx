@@ -52,12 +52,18 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
       setLoading(true);
       setError(null);
 
+      console.log(`🔍 [useDealershipModules] Fetching modules for dealership ID: ${dealerId}`);
+
       const { data, error: fetchError } = await supabase.rpc('get_dealership_modules', {
         p_dealer_id: dealerId
       });
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        console.error(`❌ [useDealershipModules] RPC error for dealer ${dealerId}:`, fetchError);
+        throw fetchError;
+      }
 
+      console.log(`✅ [useDealershipModules] Received ${data?.length || 0} modules for dealer ${dealerId}:`, data);
       setModules(data || []);
     } catch (err) {
       console.error('Error fetching dealership modules:', err);

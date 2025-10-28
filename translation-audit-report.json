@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 713,
-  "totalStrings": 6768,
-  "hardcodedStrings": 1496,
-  "translatedStrings": 5272,
+  "scannedFiles": 720,
+  "totalStrings": 6832,
+  "hardcodedStrings": 1510,
+  "translatedStrings": 5322,
   "issues": {
     "critical": [
       {
@@ -5829,73 +5829,73 @@
         "hardcodedStrings": [
           {
             "text": "Permissions Debugger",
-            "line": 152,
-            "context": "151: <Button variant=\"outline\" className=\"shadow-lg\">\n152: <Shield className=\"h-4 w-4 mr-2\" />\n153: Permissions Debugger"
+            "line": 158,
+            "context": "157: <Button variant=\"outline\" className=\"shadow-lg\">\n158: <Shield className=\"h-4 w-4 mr-2\" />\n159: Permissions Debugger"
           },
           {
             "text": "Permissions Debugger",
-            "line": 164,
-            "context": "163: <CardTitle className=\"flex items-center gap-2\">\n164: <Shield className=\"h-5 w-5\" />\n165: Permissions Debugger"
+            "line": 170,
+            "context": "169: <CardTitle className=\"flex items-center gap-2\">\n170: <Shield className=\"h-5 w-5\" />\n171: Permissions Debugger"
           },
           {
             "text": "Overview",
-            "line": 193,
-            "context": "192: <TabsList className=\"grid w-full grid-cols-4\">\n193: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n194: <TabsTrigger value=\"modules\">Modules</TabsTrigger>"
+            "line": 199,
+            "context": "198: <TabsList className=\"grid w-full grid-cols-4\">\n199: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n200: <TabsTrigger value=\"modules\">Modules</TabsTrigger>"
           },
           {
             "text": "Modules",
-            "line": 194,
-            "context": "193: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n194: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n195: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>"
+            "line": 200,
+            "context": "199: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n200: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n201: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>"
           },
           {
             "text": "Permissions",
-            "line": 195,
-            "context": "194: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n195: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>\n196: <TabsTrigger value=\"raw\">Raw</TabsTrigger>"
+            "line": 201,
+            "context": "200: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n201: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>\n202: <TabsTrigger value=\"raw\">Raw</TabsTrigger>"
           },
           {
             "text": "Ready",
-            "line": 227,
-            "context": "226: ) : (\n227: <Badge variant=\"default\">Ready</Badge>\n228: )}"
+            "line": 233,
+            "context": "232: ) : (\n233: <Badge variant=\"default\">Ready</Badge>\n234: )}"
           },
           {
             "text": "Quick Stats",
-            "line": 233,
-            "context": "232: <div className=\"border-t pt-3\">\n233: <h4 className=\"text-sm font-semibold mb-2\">Quick Stats</h4>\n234: <div className=\"grid grid-cols-2 gap-2 text-sm\">"
+            "line": 239,
+            "context": "238: <div className=\"border-t pt-3\">\n239: <h4 className=\"text-sm font-semibold mb-2\">Quick Stats</h4>\n240: <div className=\"grid grid-cols-2 gap-2 text-sm\">"
           },
           {
             "text": "System Permissions",
-            "line": 305,
-            "context": "304: <div>\n305: <h4 className=\"text-sm font-semibold mb-2\">System Permissions</h4>\n306: <div className=\"space-y-1\">"
+            "line": 311,
+            "context": "310: <div>\n311: <h4 className=\"text-sm font-semibold mb-2\">System Permissions</h4>\n312: <div className=\"space-y-1\">"
           },
           {
             "text": "No system permissions",
-            "line": 309,
-            "context": "308: const sysPerms = enhancedUser?.system_permissions;\n309: if (!sysPerms) return <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n310: "
+            "line": 315,
+            "context": "314: const sysPerms = enhancedUser?.system_permissions;\n315: if (!sysPerms) return <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n316: "
           },
           {
             "text": "No system permissions",
-            "line": 319,
-            "context": "318: </div>\n319: )) : <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n320: })()}"
+            "line": 325,
+            "context": "324: </div>\n325: )) : <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n326: })()}"
           },
           {
             "text": "Module Permissions",
-            "line": 326,
-            "context": "325: <div>\n326: <h4 className=\"text-sm font-semibold mb-2\">Module Permissions</h4>\n327: {(() => {"
+            "line": 332,
+            "context": "331: <div>\n332: <h4 className=\"text-sm font-semibold mb-2\">Module Permissions</h4>\n333: {(() => {"
           },
           {
             "text": "No module permissions",
-            "line": 329,
-            "context": "328: const modPerms = enhancedUser?.module_permissions;\n329: if (!modPerms) return <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n330: "
+            "line": 335,
+            "context": "334: const modPerms = enhancedUser?.module_permissions;\n335: if (!modPerms) return <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n336: "
           },
           {
             "text": "No module permissions",
-            "line": 355,
-            "context": "354: );\n355: }) : <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n356: })()}"
+            "line": 361,
+            "context": "360: );\n361: }) : <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n362: })()}"
           },
           {
             "text": "Debug info copied to clipboard!",
-            "line": 115,
-            "context": "114: navigator.clipboard.writeText(JSON.stringify(debugInfo, null, 2));\n115: alert('Debug info copied to clipboard!');\n116: };"
+            "line": 121,
+            "context": "120: navigator.clipboard.writeText(JSON.stringify(debugInfo, null, 2));\n121: alert('Debug info copied to clipboard!');\n122: };"
           }
         ],
         "translationCalls": [],
@@ -5977,282 +5977,282 @@
         "hardcodedStrings": [
           {
             "text": "United States",
-            "line": 343,
-            "context": "342: <SelectContent>\n343: <SelectItem value=\"US\">United States</SelectItem>\n344: <SelectItem value=\"CA\">Canada</SelectItem>"
+            "line": 353,
+            "context": "352: <SelectContent>\n353: <SelectItem value=\"US\">United States</SelectItem>\n354: <SelectItem value=\"CA\">Canada</SelectItem>"
           },
           {
             "text": "Canada",
-            "line": 344,
-            "context": "343: <SelectItem value=\"US\">United States</SelectItem>\n344: <SelectItem value=\"CA\">Canada</SelectItem>\n345: <SelectItem value=\"MX\">Mexico</SelectItem>"
+            "line": 354,
+            "context": "353: <SelectItem value=\"US\">United States</SelectItem>\n354: <SelectItem value=\"CA\">Canada</SelectItem>\n355: <SelectItem value=\"MX\">Mexico</SelectItem>"
           },
           {
             "text": "Mexico",
-            "line": 345,
-            "context": "344: <SelectItem value=\"CA\">Canada</SelectItem>\n345: <SelectItem value=\"MX\">Mexico</SelectItem>\n346: <SelectItem value=\"BR\">Brazil</SelectItem>"
+            "line": 355,
+            "context": "354: <SelectItem value=\"CA\">Canada</SelectItem>\n355: <SelectItem value=\"MX\">Mexico</SelectItem>\n356: <SelectItem value=\"BR\">Brazil</SelectItem>"
           },
           {
             "text": "Brazil",
-            "line": 346,
-            "context": "345: <SelectItem value=\"MX\">Mexico</SelectItem>\n346: <SelectItem value=\"BR\">Brazil</SelectItem>\n347: <SelectItem value=\"ES\">Spain</SelectItem>"
+            "line": 356,
+            "context": "355: <SelectItem value=\"MX\">Mexico</SelectItem>\n356: <SelectItem value=\"BR\">Brazil</SelectItem>\n357: <SelectItem value=\"ES\">Spain</SelectItem>"
           },
           {
             "text": "Spain",
-            "line": 347,
-            "context": "346: <SelectItem value=\"BR\">Brazil</SelectItem>\n347: <SelectItem value=\"ES\">Spain</SelectItem>\n348: </SelectContent>"
+            "line": 357,
+            "context": "356: <SelectItem value=\"BR\">Brazil</SelectItem>\n357: <SelectItem value=\"ES\">Spain</SelectItem>\n358: </SelectContent>"
           },
           {
             "text": "Enter dealership name",
-            "line": 181,
-            "context": "180: onChange={(e) => handleInputChange('name', e.target.value)}\n181: placeholder=\"Enter dealership name\"\n182: required"
+            "line": 191,
+            "context": "190: onChange={(e) => handleInputChange('name', e.target.value)}\n191: placeholder=\"Enter dealership name\"\n192: required"
           },
           {
             "text": "Enter tax number",
-            "line": 192,
-            "context": "191: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n192: placeholder=\"Enter tax number\"\n193: />"
+            "line": 202,
+            "context": "201: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n202: placeholder=\"Enter tax number\"\n203: />"
           },
           {
             "text": "Enter email address",
-            "line": 221,
-            "context": "220: onChange={(e) => handleInputChange('email', e.target.value)}\n221: placeholder=\"Enter email address\"\n222: type=\"email\""
+            "line": 231,
+            "context": "230: onChange={(e) => handleInputChange('email', e.target.value)}\n231: placeholder=\"Enter email address\"\n232: type=\"email\""
           },
           {
             "text": "Enter phone number",
-            "line": 233,
-            "context": "232: onChange={(e) => handleInputChange('phone', e.target.value)}\n233: placeholder=\"Enter phone number\"\n234: />"
+            "line": 243,
+            "context": "242: onChange={(e) => handleInputChange('phone', e.target.value)}\n243: placeholder=\"Enter phone number\"\n244: />"
           },
           {
             "text": "Enter street address",
-            "line": 299,
-            "context": "298: onChange={(e) => handleInputChange('address', e.target.value)}\n299: placeholder=\"Enter street address\"\n300: />"
+            "line": 309,
+            "context": "308: onChange={(e) => handleInputChange('address', e.target.value)}\n309: placeholder=\"Enter street address\"\n310: />"
           },
           {
             "text": "Enter city",
-            "line": 310,
-            "context": "309: onChange={(e) => handleInputChange('city', e.target.value)}\n310: placeholder=\"Enter city\"\n311: />"
+            "line": 320,
+            "context": "319: onChange={(e) => handleInputChange('city', e.target.value)}\n320: placeholder=\"Enter city\"\n321: />"
           },
           {
             "text": "Enter state",
-            "line": 320,
-            "context": "319: onChange={(e) => handleInputChange('state', e.target.value)}\n320: placeholder=\"Enter state\"\n321: />"
+            "line": 330,
+            "context": "329: onChange={(e) => handleInputChange('state', e.target.value)}\n330: placeholder=\"Enter state\"\n331: />"
           },
           {
             "text": "Enter ZIP code",
-            "line": 332,
-            "context": "331: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n332: placeholder=\"Enter ZIP code\"\n333: />"
+            "line": 342,
+            "context": "341: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n342: placeholder=\"Enter ZIP code\"\n343: />"
           },
           {
             "text": "Enter internal notes or comments",
-            "line": 410,
-            "context": "409: onChange={(e) => handleInputChange('notes', e.target.value)}\n410: placeholder=\"Enter internal notes or comments\"\n411: className=\"min-h-[100px]\""
+            "line": 421,
+            "context": "420: onChange={(e) => handleInputChange('notes', e.target.value)}\n421: placeholder=\"Enter internal notes or comments\"\n422: className=\"min-h-[100px]\""
           }
         ],
         "translationCalls": [
           {
             "key": "messages.required_field",
-            "line": 109,
+            "line": 119,
             "exists": false
           },
           {
             "key": "messages.saved",
-            "line": 123,
+            "line": 133,
             "exists": false
           },
           {
             "key": "messages.saved",
-            "line": 130,
+            "line": 140,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 136,
+            "line": 146,
             "exists": true
           },
           {
             "key": "dealerships.edit",
-            "line": 162,
+            "line": 172,
             "exists": true
           },
           {
             "key": "dealerships.add_new",
-            "line": 162,
+            "line": 172,
             "exists": true
           },
           {
             "key": "dealerships.business_info",
-            "line": 173,
+            "line": 183,
             "exists": true
           },
           {
             "key": "dealerships.name",
-            "line": 176,
+            "line": 186,
             "exists": true
           },
           {
             "key": "dealerships.tax_number",
-            "line": 187,
-            "exists": true
-          },
-          {
-            "key": "dealerships.website",
             "line": 197,
             "exists": true
           },
           {
+            "key": "dealerships.website",
+            "line": 207,
+            "exists": true
+          },
+          {
             "key": "dealerships.contact_info",
-            "line": 213,
+            "line": 223,
             "exists": true
           },
           {
             "key": "dealerships.email",
-            "line": 216,
+            "line": 226,
             "exists": true
           },
           {
             "key": "dealerships.phone",
-            "line": 228,
+            "line": 238,
             "exists": true
           },
           {
             "key": "dealerships.subscription_settings",
-            "line": 243,
-            "exists": true
-          },
-          {
-            "key": "dealerships.subscription_plan",
-            "line": 246,
-            "exists": true
-          },
-          {
-            "key": "dealerships.basic_plan",
-            "line": 252,
-            "exists": true
-          },
-          {
-            "key": "dealerships.premium_plan",
             "line": 253,
             "exists": true
           },
           {
+            "key": "dealerships.subscription_plan",
+            "line": 256,
+            "exists": true
+          },
+          {
+            "key": "dealerships.basic_plan",
+            "line": 262,
+            "exists": true
+          },
+          {
+            "key": "dealerships.premium_plan",
+            "line": 263,
+            "exists": true
+          },
+          {
             "key": "dealerships.enterprise_plan",
-            "line": 254,
+            "line": 264,
             "exists": true
           },
           {
             "key": "dealerships.max_users",
-            "line": 260,
+            "line": 270,
             "exists": true
           },
           {
             "key": "dealerships.status",
-            "line": 271,
+            "line": 281,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 277,
+            "line": 287,
             "exists": true
           },
           {
             "key": "dealerships.inactive",
-            "line": 278,
+            "line": 288,
             "exists": true
           },
           {
             "key": "dealerships.suspended",
-            "line": 279,
+            "line": 289,
             "exists": true
           },
           {
             "key": "dealerships.address_info",
-            "line": 291,
+            "line": 301,
             "exists": true
           },
           {
             "key": "dealerships.address",
-            "line": 294,
+            "line": 304,
             "exists": true
           },
           {
             "key": "dealerships.city",
-            "line": 305,
-            "exists": true
-          },
-          {
-            "key": "dealerships.state",
             "line": 315,
             "exists": true
           },
           {
-            "key": "dealerships.zip",
-            "line": 327,
+            "key": "dealerships.state",
+            "line": 325,
             "exists": true
           },
           {
-            "key": "dealerships.country",
+            "key": "dealerships.zip",
             "line": 337,
             "exists": true
           },
           {
+            "key": "dealerships.country",
+            "line": 347,
+            "exists": true
+          },
+          {
             "key": "dealerships.branding",
-            "line": 359,
+            "line": 369,
             "exists": true
           },
           {
             "key": "dealerships.logo",
-            "line": 363,
+            "line": 373,
             "exists": true
           },
           {
             "key": "dealerships.logo_upload_after_creation",
-            "line": 372,
+            "line": 383,
             "exists": true
           },
           {
             "key": "dealerships.primary_color",
-            "line": 381,
+            "line": 392,
             "exists": true
           },
           {
             "key": "dealerships.notes",
-            "line": 405,
+            "line": 416,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 419,
+            "line": 430,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 422,
+            "line": 433,
             "exists": true
           },
           {
             "key": "common.save",
-            "line": 422,
+            "line": 433,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "messages.required_field",
-            "line": 109,
-            "context": "108: if (!formData.name.trim() || !formData.email.trim()) {\n109: toast.error(t('messages.required_field'));\n110: return;"
+            "line": 119,
+            "context": "118: if (!formData.name.trim() || !formData.email.trim()) {\n119: toast.error(t('messages.required_field'));\n120: return;"
           },
           {
             "key": "messages.saved",
-            "line": 123,
-            "context": "122: if (error) throw error;\n123: toast.success(t('messages.saved'));\n124: } else {"
+            "line": 133,
+            "context": "132: if (error) throw error;\n133: toast.success(t('messages.saved'));\n134: } else {"
           },
           {
             "key": "messages.saved",
-            "line": 130,
-            "context": "129: if (error) throw error;\n130: toast.success(t('messages.saved'));\n131: }"
+            "line": 140,
+            "context": "139: if (error) throw error;\n140: toast.success(t('messages.saved'));\n141: }"
           },
           {
             "key": "common.save",
-            "line": 422,
-            "context": "421: <Button type=\"submit\" disabled={loading}>\n422: {loading ? t('common.loading') : t('common.save')}\n423: </Button>"
+            "line": 433,
+            "context": "432: <Button type=\"submit\" disabled={loading}>\n433: {loading ? t('common.loading') : t('common.save')}\n434: </Button>"
           }
         ],
         "coverage": 73,
@@ -7039,7 +7039,7 @@
           {
             "key": "notifications.error",
             "line": 80,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.loadError",
@@ -7059,7 +7059,7 @@
           {
             "key": "notifications.error",
             "line": 144,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.sendError",
@@ -7079,7 +7079,7 @@
           {
             "key": "notifications.error",
             "line": 180,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.batchSendError",
@@ -7099,7 +7099,7 @@
           {
             "key": "notifications.error",
             "line": 216,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.preferencesUpdateError",
@@ -7108,11 +7108,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "notifications.error",
-            "line": 80,
-            "context": "79: toast({\n80: title: t('notifications.error'),\n81: description: t('notifications.loadError'),"
-          },
           {
             "key": "notifications.loadError",
             "line": 81,
@@ -7127,11 +7122,6 @@
             "key": "notifications.sentSuccessfully",
             "line": 133,
             "context": "132: title: t('notifications.sent'),\n133: description: t('notifications.sentSuccessfully')\n134: });"
-          },
-          {
-            "key": "notifications.error",
-            "line": 144,
-            "context": "143: toast({\n144: title: t('notifications.error'),\n145: description: t('notifications.sendError'),"
           },
           {
             "key": "notifications.sendError",
@@ -7149,11 +7139,6 @@
             "context": "171: title: t('notifications.batchSent'),\n172: description: t('notifications.batchSentMessage', { successful, failed })\n173: });"
           },
           {
-            "key": "notifications.error",
-            "line": 180,
-            "context": "179: toast({\n180: title: t('notifications.error'),\n181: description: t('notifications.batchSendError'),"
-          },
-          {
             "key": "notifications.batchSendError",
             "line": 181,
             "context": "180: title: t('notifications.error'),\n181: description: t('notifications.batchSendError'),\n182: variant: 'destructive'"
@@ -7167,11 +7152,6 @@
             "key": "notifications.preferencesUpdatedMessage",
             "line": 207,
             "context": "206: title: t('notifications.preferencesUpdated'),\n207: description: t('notifications.preferencesUpdatedMessage')\n208: });"
-          },
-          {
-            "key": "notifications.error",
-            "line": 216,
-            "context": "215: toast({\n216: title: t('notifications.error'),\n217: description: t('notifications.preferencesUpdateError'),"
           },
           {
             "key": "notifications.preferencesUpdateError",
@@ -10402,6 +10382,78 @@
         "severity": "low"
       },
       {
+        "file": "src\\services\\PUSH_NOTIFICATION_INTEGRATION_EXAMPLES.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Push Notification Tester",
+            "line": 519,
+            "context": "518: <div className=\"p-4 space-y-4\">\n519: <h2 className=\"text-lg font-semibold\">Push Notification Tester</h2>\n520: <button"
+          },
+          {
+            "text": "Send Test Notification",
+            "line": 523,
+            "context": "522: className=\"px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600\"\n523: >\n524: Send Test Notification"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\services\\PUSH_NOTIFICATION_HOOK_EXAMPLE.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 60,
+            "context": "59: // Order actions\n60: updateOrderStatus: (orderId: string, newStatus: string) => Promise<boolean>;\n61: assignUserToOrder: (orderId: string, userId: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 61,
+            "context": "60: updateOrderStatus: (orderId: string, newStatus: string) => Promise<boolean>;\n61: assignUserToOrder: (orderId: string, userId: string) => Promise<boolean>;\n62: "
+          },
+          {
+            "text": "Promise",
+            "line": 64,
+            "context": "63: // Communication actions\n64: addComment: (orderId: string, content: string) => Promise<OrderComment | null>;\n65: uploadAttachment: (orderId: string, file: File) => Promise<OrderAttachment | null>;"
+          },
+          {
+            "text": "Promise",
+            "line": 65,
+            "context": "64: addComment: (orderId: string, content: string) => Promise<OrderComment | null>;\n65: uploadAttachment: (orderId: string, file: File) => Promise<OrderAttachment | null>;\n66: "
+          },
+          {
+            "text": "Promise",
+            "line": 73,
+            "context": "72: url?: string\n73: ) => Promise<void>;\n74: }"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\services\\pushNotificationHelper.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n        return this.createErrorResponse(error.message);\r\n      }\r\n\r\n      if (!data) {\r\n        console.error(",
+            "line": 118,
+            "context": "117: if (error) {\n118: console.error('[PushNotificationHelper] Edge Function error:', error);\n119: return this.createErrorResponse(error.message);"
+          },
+          {
+            "text": ", error);\r\n      return this.createErrorResponse(\r\n        error instanceof Error ? error.message : ",
+            "line": 135,
+            "context": "134: } catch (error) {\n135: console.error('[PushNotificationHelper] Unexpected error:', error);\n136: return this.createErrorResponse("
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\pages\\VinScanner.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -10671,8 +10723,8 @@
         "hardcodedStrings": [
           {
             "text": "Dev Only",
-            "line": 491,
-            "context": "490: 🛠️ Storage Development Tools\n491: <Badge variant=\"outline\" className=\"text-xs\">Dev Only</Badge>\n492: </summary>"
+            "line": 495,
+            "context": "494: 🛠️ Storage Development Tools\n495: <Badge variant=\"outline\" className=\"text-xs\">Dev Only</Badge>\n496: </summary>"
           }
         ],
         "translationCalls": [
@@ -10793,112 +10845,112 @@
           },
           {
             "key": "settings.notification_preferences",
-            "line": 350,
+            "line": 354,
             "exists": true
           },
           {
             "key": "settings.notification_description",
-            "line": 353,
+            "line": 357,
             "exists": true
           },
           {
             "key": "settings.email_notifications",
-            "line": 359,
+            "line": 363,
             "exists": true
           },
           {
             "key": "settings.email_alerts_description",
-            "line": 361,
+            "line": 365,
             "exists": true
           },
           {
             "key": "settings.sms_notifications",
-            "line": 372,
+            "line": 376,
             "exists": true
           },
           {
             "key": "settings.sms_alerts_description",
-            "line": 374,
+            "line": 378,
             "exists": true
           },
           {
             "key": "settings.in_app_alerts",
-            "line": 385,
+            "line": 389,
             "exists": true
           },
           {
             "key": "settings.toast_description",
-            "line": 387,
+            "line": 391,
             "exists": true
           },
           {
             "key": "settings.save_preferences",
-            "line": 399,
+            "line": 403,
             "exists": true
           },
           {
             "key": "settings.dealership_information",
-            "line": 420,
+            "line": 424,
             "exists": true
           },
           {
             "key": "settings.dealership_info_description",
-            "line": 423,
+            "line": 427,
             "exists": true
           },
           {
             "key": "settings.dealership_name",
-            "line": 429,
+            "line": 433,
             "exists": true
           },
           {
             "key": "settings.no_dealership",
-            "line": 431,
-            "exists": true
-          },
-          {
-            "key": "settings.location",
             "line": 435,
             "exists": true
           },
           {
+            "key": "settings.location",
+            "line": 439,
+            "exists": true
+          },
+          {
             "key": "settings.no_location",
-            "line": 437,
+            "line": 441,
             "exists": true
           },
           {
             "key": "settings.contact_info",
-            "line": 443,
-            "exists": true
-          },
-          {
-            "key": "settings.email",
-            "line": 446,
-            "exists": true
-          },
-          {
-            "key": "settings.no_email",
             "line": 447,
             "exists": true
           },
           {
-            "key": "settings.phone",
+            "key": "settings.email",
             "line": 450,
             "exists": true
           },
           {
-            "key": "settings.no_phone",
+            "key": "settings.no_email",
             "line": 451,
             "exists": true
           },
           {
+            "key": "settings.phone",
+            "line": 454,
+            "exists": true
+          },
+          {
+            "key": "settings.no_phone",
+            "line": 455,
+            "exists": true
+          },
+          {
             "key": "settings.dealership_edit_note",
-            "line": 459,
+            "line": 463,
             "exists": true
           },
           {
             "key": "settings.edit_dealership",
-            "line": 462,
+            "line": 466,
             "exists": true
           }
         ],
@@ -10933,165 +10985,165 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 95,
+            "line": 94,
             "exists": false
           },
           {
             "key": "errors.no_permission",
+            "line": 106,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
             "line": 107,
             "exists": false
           },
           {
-            "key": "errors.no_permission_create_order",
-            "line": 108,
+            "key": "errors.no_permission",
+            "line": 122,
             "exists": false
           },
           {
-            "key": "errors.no_permission",
+            "key": "errors.no_permission_create_order",
             "line": 123,
             "exists": false
           },
           {
-            "key": "errors.no_permission_create_order",
-            "line": 124,
-            "exists": false
-          },
-          {
             "key": "orders.deleted_success",
-            "line": 158,
+            "line": 157,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 164,
+            "line": 163,
             "exists": false
           },
           {
             "key": "orders.updated_successfully",
-            "line": 173,
+            "line": 172,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 181,
+            "line": 180,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 191,
+            "line": 190,
             "exists": true
           },
           {
             "key": "pages.service_orders",
-            "line": 260,
+            "line": 259,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.refresh_button",
-            "line": 273,
+            "line": 272,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 277,
+            "line": 276,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 283,
+            "line": 282,
             "exists": false
           },
           {
             "key": "accessibility.service_orders.create_button",
-            "line": 284,
+            "line": 283,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 287,
+            "line": 286,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.main_content",
-            "line": 321,
+            "line": 318,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 411,
+            "line": 401,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 412,
+            "line": 402,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 413,
+            "line": 403,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 414,
+            "line": 404,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 95,
-            "context": "94: toast({\n95: description: t('orders.order_not_found'),\n96: variant: 'destructive'"
+            "line": 94,
+            "context": "93: toast({\n94: description: t('orders.order_not_found'),\n95: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
+            "line": 106,
+            "context": "105: toast({\n106: title: t('errors.no_permission', 'No Permission'),\n107: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
             "line": 107,
-            "context": "106: toast({\n107: title: t('errors.no_permission', 'No Permission'),\n108: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
-          },
-          {
-            "key": "errors.no_permission_create_order",
-            "line": 108,
-            "context": "107: title: t('errors.no_permission', 'No Permission'),\n108: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n109: variant: 'destructive'"
+            "context": "106: title: t('errors.no_permission', 'No Permission'),\n107: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n108: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 123,
-            "context": "122: toast({\n123: title: t('errors.no_permission', 'No Permission'),\n124: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 122,
+            "context": "121: toast({\n122: title: t('errors.no_permission', 'No Permission'),\n123: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 124,
-            "context": "123: title: t('errors.no_permission', 'No Permission'),\n124: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n125: variant: 'destructive'"
+            "line": 123,
+            "context": "122: title: t('errors.no_permission', 'No Permission'),\n123: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n124: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 158,
-            "context": "157: toast({\n158: title: t('orders.deleted_success', 'Order deleted successfully')\n159: });"
+            "line": 157,
+            "context": "156: toast({\n157: title: t('orders.deleted_success', 'Order deleted successfully')\n158: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 164,
-            "context": "163: variant: 'destructive',\n164: title: t('orders.delete_error', 'Failed to delete order')\n165: });"
+            "line": 163,
+            "context": "162: variant: 'destructive',\n163: title: t('orders.delete_error', 'Failed to delete order')\n164: });"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 283,
-            "context": "282: disabled={!canCreate}\n283: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n284: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
+            "line": 282,
+            "context": "281: disabled={!canCreate}\n282: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n283: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 411,
-            "context": "410: onOpenChange={setDeleteDialogOpen}\n411: title={t('orders.confirm_delete_title', 'Delete Order?')}\n412: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}"
+            "line": 401,
+            "context": "400: onOpenChange={setDeleteDialogOpen}\n401: title={t('orders.confirm_delete_title', 'Delete Order?')}\n402: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 412,
-            "context": "411: title={t('orders.confirm_delete_title', 'Delete Order?')}\n412: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n413: confirmText={t('common.delete', 'Delete')}"
+            "line": 402,
+            "context": "401: title={t('orders.confirm_delete_title', 'Delete Order?')}\n402: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n403: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 413,
-            "context": "412: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n413: confirmText={t('common.delete', 'Delete')}\n414: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 403,
+            "context": "402: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n403: confirmText={t('common.delete', 'Delete')}\n404: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 100,
@@ -11103,155 +11155,155 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 115,
+            "line": 113,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 127,
+            "line": 125,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 128,
+            "line": 126,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 143,
+            "line": 141,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 144,
+            "line": 142,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 177,
+            "line": 175,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 186,
+            "line": 184,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 194,
+            "line": 192,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 210,
+            "line": 208,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 233,
+            "line": 231,
             "exists": true
           },
           {
             "key": "orders.status_change_failed",
-            "line": 241,
+            "line": 239,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 280,
+            "line": 278,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 281,
+            "line": 279,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 282,
+            "line": 280,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 283,
+            "line": 281,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 284,
+            "line": 282,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 285,
+            "line": 283,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 286,
+            "line": 284,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.services",
-            "line": 287,
+            "line": 285,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 288,
+            "line": 286,
             "exists": true
           },
           {
             "key": "pages.sales_orders",
-            "line": 326,
+            "line": 324,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 341,
+            "line": 339,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 347,
+            "line": 345,
             "exists": false
           },
           {
             "key": "common.new_order",
-            "line": 350,
+            "line": 348,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 115,
-            "context": "114: toast({\n115: description: t('orders.order_not_found'),\n116: variant: 'destructive'"
+            "line": 113,
+            "context": "112: toast({\n113: description: t('orders.order_not_found'),\n114: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 127,
-            "context": "126: toast({\n127: title: t('errors.no_permission', 'No Permission'),\n128: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 125,
+            "context": "124: toast({\n125: title: t('errors.no_permission', 'No Permission'),\n126: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 128,
-            "context": "127: title: t('errors.no_permission', 'No Permission'),\n128: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n129: variant: 'destructive'"
+            "line": 126,
+            "context": "125: title: t('errors.no_permission', 'No Permission'),\n126: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n127: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 143,
-            "context": "142: toast({\n143: title: t('errors.no_permission', 'No Permission'),\n144: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 141,
+            "context": "140: toast({\n141: title: t('errors.no_permission', 'No Permission'),\n142: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 144,
-            "context": "143: title: t('errors.no_permission', 'No Permission'),\n144: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n145: variant: 'destructive'"
+            "line": 142,
+            "context": "141: title: t('errors.no_permission', 'No Permission'),\n142: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n143: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 347,
-            "context": "346: disabled={!canCreate}\n347: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n348: >"
+            "line": 345,
+            "context": "344: disabled={!canCreate}\n345: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n346: >"
           }
         ],
         "coverage": 100,
@@ -11263,205 +11315,205 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 98,
+            "line": 96,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 193,
+            "line": 191,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 194,
+            "line": 192,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 209,
+            "line": 207,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 210,
+            "line": 208,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.order_deleted",
-            "line": 244,
+            "line": 242,
             "exists": true
           },
           {
             "key": "orders.deleted_success",
-            "line": 246,
+            "line": 244,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 252,
+            "line": 250,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.order_updated",
-            "line": 277,
+            "line": 275,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.order_created",
-            "line": 285,
+            "line": 283,
             "exists": true
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 338,
+            "line": 336,
             "exists": true
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 339,
+            "line": 337,
             "exists": true
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 381,
+            "line": 379,
             "exists": true
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 382,
+            "line": 380,
             "exists": true
           },
           {
             "key": "common.general",
-            "line": 382,
+            "line": 380,
             "exists": false
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 384,
+            "line": 382,
             "exists": true
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 385,
+            "line": 383,
             "exists": true
           },
           {
             "key": "pages.recon_orders",
-            "line": 412,
+            "line": 410,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 425,
+            "line": 423,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 429,
+            "line": 427,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 435,
+            "line": 433,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.create_button",
-            "line": 436,
+            "line": 434,
             "exists": true
           },
           {
             "key": "recon.new_recon_order",
-            "line": 439,
+            "line": 437,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 460,
+            "line": 458,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 541,
+            "line": 531,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 542,
+            "line": 532,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 543,
+            "line": 533,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 544,
+            "line": 534,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 98,
-            "context": "97: toast({\n98: description: t('orders.order_not_found'),\n99: variant: 'destructive'"
+            "line": 96,
+            "context": "95: toast({\n96: description: t('orders.order_not_found'),\n97: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 193,
-            "context": "192: toast({\n193: title: t('errors.no_permission', 'No Permission'),\n194: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 191,
+            "context": "190: toast({\n191: title: t('errors.no_permission', 'No Permission'),\n192: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 194,
-            "context": "193: title: t('errors.no_permission', 'No Permission'),\n194: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n195: variant: 'destructive'"
+            "line": 192,
+            "context": "191: title: t('errors.no_permission', 'No Permission'),\n192: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n193: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 209,
-            "context": "208: toast({\n209: title: t('errors.no_permission', 'No Permission'),\n210: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 207,
+            "context": "206: toast({\n207: title: t('errors.no_permission', 'No Permission'),\n208: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 210,
-            "context": "209: title: t('errors.no_permission', 'No Permission'),\n210: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n211: variant: 'destructive'"
+            "line": 208,
+            "context": "207: title: t('errors.no_permission', 'No Permission'),\n208: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n209: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 246,
-            "context": "245: toast({\n246: title: t('orders.deleted_success', 'Order deleted successfully')\n247: });"
+            "line": 244,
+            "context": "243: toast({\n244: title: t('orders.deleted_success', 'Order deleted successfully')\n245: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 252,
-            "context": "251: variant: 'destructive',\n252: title: t('orders.delete_error', 'Failed to delete order')\n253: });"
+            "line": 250,
+            "context": "249: variant: 'destructive',\n250: title: t('orders.delete_error', 'Failed to delete order')\n251: });"
           },
           {
             "key": "common.general",
-            "line": 382,
-            "context": "381: service: t('recon_defaults.default_service'),\n382: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n383: price: order.reconCost || 0,"
+            "line": 380,
+            "context": "379: service: t('recon_defaults.default_service'),\n380: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n381: price: order.reconCost || 0,"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 435,
-            "context": "434: disabled={!canCreate}\n435: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n436: aria-label={t('accessibility.recon_orders.create_button')}"
+            "line": 433,
+            "context": "432: disabled={!canCreate}\n433: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n434: aria-label={t('accessibility.recon_orders.create_button')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 541,
-            "context": "540: onOpenChange={setDeleteDialogOpen}\n541: title={t('orders.confirm_delete_title', 'Delete Order?')}\n542: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}"
+            "line": 531,
+            "context": "530: onOpenChange={setDeleteDialogOpen}\n531: title={t('orders.confirm_delete_title', 'Delete Order?')}\n532: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 542,
-            "context": "541: title={t('orders.confirm_delete_title', 'Delete Order?')}\n542: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n543: confirmText={t('common.delete', 'Delete')}"
+            "line": 532,
+            "context": "531: title={t('orders.confirm_delete_title', 'Delete Order?')}\n532: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n533: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 543,
-            "context": "542: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n543: confirmText={t('common.delete', 'Delete')}\n544: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 533,
+            "context": "532: description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n533: confirmText={t('common.delete', 'Delete')}\n534: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 100,
@@ -12916,157 +12968,157 @@
           },
           {
             "key": "dealerships.title",
-            "line": 214,
+            "line": 232,
             "exists": true
           },
           {
             "key": "dealerships.manage_description",
-            "line": 216,
+            "line": 234,
             "exists": true
           },
           {
             "key": "dealerships.hide_stats",
-            "line": 228,
+            "line": 246,
             "exists": true
           },
           {
             "key": "dealerships.show_stats",
-            "line": 228,
+            "line": 246,
             "exists": true
           },
           {
             "key": "dealerships.add_new",
-            "line": 236,
+            "line": 254,
             "exists": true
           },
           {
             "key": "common.filter",
-            "line": 262,
+            "line": 280,
             "exists": false
           },
           {
             "key": "common.search",
-            "line": 270,
+            "line": 288,
             "exists": false
           },
           {
             "key": "dealerships.status",
-            "line": 278,
+            "line": 296,
             "exists": true
           },
           {
             "key": "dealerships.all_statuses",
-            "line": 281,
+            "line": 299,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 282,
+            "line": 300,
             "exists": true
           },
           {
             "key": "dealerships.inactive",
-            "line": 283,
+            "line": 301,
             "exists": true
           },
           {
             "key": "dealerships.suspended",
-            "line": 284,
+            "line": 302,
             "exists": true
           },
           {
             "key": "dealerships.subscription_plan",
-            "line": 289,
+            "line": 307,
             "exists": true
           },
           {
             "key": "dealerships.all_plans",
-            "line": 292,
-            "exists": true
-          },
-          {
-            "key": "dealerships.basic_plan",
-            "line": 293,
-            "exists": true
-          },
-          {
-            "key": "dealerships.premium_plan",
-            "line": 294,
-            "exists": true
-          },
-          {
-            "key": "dealerships.enterprise_plan",
-            "line": 295,
-            "exists": true
-          },
-          {
-            "key": "dealerships.name",
             "line": 310,
             "exists": true
           },
           {
-            "key": "dealerships.location",
+            "key": "dealerships.basic_plan",
             "line": 311,
             "exists": true
           },
           {
-            "key": "dealerships.contacts_count",
+            "key": "dealerships.premium_plan",
             "line": 312,
             "exists": true
           },
           {
-            "key": "dealerships.users_count",
+            "key": "dealerships.enterprise_plan",
             "line": 313,
             "exists": true
           },
           {
+            "key": "dealerships.name",
+            "line": 328,
+            "exists": true
+          },
+          {
+            "key": "dealerships.location",
+            "line": 329,
+            "exists": true
+          },
+          {
+            "key": "dealerships.contacts_count",
+            "line": 330,
+            "exists": true
+          },
+          {
+            "key": "dealerships.users_count",
+            "line": 331,
+            "exists": true
+          },
+          {
             "key": "dealerships.subscription_plan",
-            "line": 314,
+            "line": 332,
             "exists": true
           },
           {
             "key": "dealerships.status",
-            "line": 315,
+            "line": 333,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 323,
+            "line": 341,
             "exists": true
           },
           {
             "key": "common.no_data",
-            "line": 329,
+            "line": 347,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.subscription_plan}_plan",
-            "line": 375,
+            "line": 393,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 380,
+            "line": 398,
             "exists": false
           },
           {
             "key": "common.view",
-            "line": 400,
+            "line": 418,
             "exists": false
           },
           {
             "key": "dealerships.invite_user",
-            "line": 407,
+            "line": 425,
             "exists": true
           },
           {
             "key": "common.edit",
-            "line": 414,
+            "line": 432,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 421,
+            "line": 439,
             "exists": false
           }
         ],
@@ -13083,43 +13135,43 @@
           },
           {
             "key": "common.filter",
-            "line": 262,
-            "context": "261: <Filter className=\"h-5 w-5\" />\n262: {t('common.filter')}\n263: </CardTitle>"
+            "line": 280,
+            "context": "279: <Filter className=\"h-5 w-5\" />\n280: {t('common.filter')}\n281: </CardTitle>"
           },
           {
             "key": "common.search",
-            "line": 270,
-            "context": "269: <Input\n270: placeholder={t('common.search')}\n271: value={search}"
+            "line": 288,
+            "context": "287: <Input\n288: placeholder={t('common.search')}\n289: value={search}"
           },
           {
             "key": "common.no_data",
-            "line": 329,
-            "context": "328: <TableCell colSpan={8} className=\"h-24 text-center\">\n329: {t('common.no_data')}\n330: </TableCell>"
+            "line": 347,
+            "context": "346: <TableCell colSpan={8} className=\"h-24 text-center\">\n347: {t('common.no_data')}\n348: </TableCell>"
           },
           {
             "key": "dealerships.${dealership.subscription_plan}_plan",
-            "line": 375,
-            "context": "374: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n375: {t(`dealerships.${dealership.subscription_plan}_plan`)}\n376: </Badge>"
+            "line": 393,
+            "context": "392: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n393: {t(`dealerships.${dealership.subscription_plan}_plan`)}\n394: </Badge>"
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 380,
-            "context": "379: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n380: {t(`dealerships.${dealership.status}`)}\n381: </Badge>"
+            "line": 398,
+            "context": "397: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n398: {t(`dealerships.${dealership.status}`)}\n399: </Badge>"
           },
           {
             "key": "common.view",
-            "line": 400,
-            "context": "399: <Eye className=\"mr-2 h-4 w-4\" />\n400: {t('common.view')}\n401: </DropdownMenuItem>"
+            "line": 418,
+            "context": "417: <Eye className=\"mr-2 h-4 w-4\" />\n418: {t('common.view')}\n419: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 414,
-            "context": "413: <Edit className=\"mr-2 h-4 w-4\" />\n414: {t('common.edit')}\n415: </DropdownMenuItem>"
+            "line": 432,
+            "context": "431: <Edit className=\"mr-2 h-4 w-4\" />\n432: {t('common.edit')}\n433: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 421,
-            "context": "420: <Trash2 className=\"mr-2 h-4 w-4\" />\n421: {t('common.delete')}\n422: </DropdownMenuItem>"
+            "line": 439,
+            "context": "438: <Trash2 className=\"mr-2 h-4 w-4\" />\n439: {t('common.delete')}\n440: </DropdownMenuItem>"
           }
         ],
         "coverage": 100,
@@ -13516,100 +13568,100 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 96,
+            "line": 94,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 191,
+            "line": 189,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 192,
+            "line": 190,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 214,
+            "line": 212,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_deleted",
-            "line": 217,
+            "line": 215,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_updated",
-            "line": 238,
+            "line": 236,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_created",
-            "line": 244,
+            "line": 242,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 262,
+            "line": 260,
             "exists": true
           },
           {
             "key": "pages.car_wash",
-            "line": 311,
+            "line": 309,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 324,
+            "line": 322,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 328,
+            "line": 326,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 335,
+            "line": 332,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.create_button",
-            "line": 336,
+            "line": 333,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 339,
+            "line": 336,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 358,
+            "line": 355,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 96,
-            "context": "95: toast({\n96: description: t('orders.order_not_found'),\n97: variant: 'destructive'"
+            "line": 94,
+            "context": "93: toast({\n94: description: t('orders.order_not_found'),\n95: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 191,
-            "context": "190: toast({\n191: title: t('errors.no_permission', 'No Permission'),\n192: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 189,
+            "context": "188: toast({\n189: title: t('errors.no_permission', 'No Permission'),\n190: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 192,
-            "context": "191: title: t('errors.no_permission', 'No Permission'),\n192: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n193: variant: 'destructive'"
+            "line": 190,
+            "context": "189: title: t('errors.no_permission', 'No Permission'),\n190: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n191: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 335,
-            "context": "334: disabled={!canCreate}\n335: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n336: aria-label={t('accessibility.car_wash_orders.create_button')}"
+            "line": 332,
+            "context": "331: disabled={!canCreate}\n332: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n333: aria-label={t('accessibility.car_wash_orders.create_button')}"
           }
         ],
         "coverage": 100,
@@ -14157,6 +14209,20 @@
             "text": ", error);\r\n      return { hasData: false, cloudSynced: false };\r\n    }\r\n  }\r\n\r\n  // Private helper methods\r\n\r\n  private extractTabStates(): Record<string, string> {\r\n    const tabStates: Record<string, string> = {};\r\n    const keys = storage.getKeys();\r\n    \r\n    keys.forEach(key => {\r\n      if (key.includes(",
             "line": 219,
             "context": "218: } catch (error) {\n219: console.warn('⚠️ Failed to get session info:', error);\n220: return { hasData: false, cloudSynced: false };"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\lib\\firebase.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n}\r\n\r\n/**\r\n * Request notification permission and get FCM token\r\n * @returns FCM registration token or null if permission denied\r\n */\r\nexport async function requestNotificationPermission(): Promise<string | null> {\r\n  if (!messaging) {\r\n    console.warn(",
+            "line": 30,
+            "context": "29: } catch (error) {\n30: console.error('Firebase initialization error:', error);\n31: }"
           }
         ],
         "translationCalls": [],
@@ -15489,13 +15555,13 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 32,
-            "context": "31: error: string | null;\n32: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n33: refreshComments: () => Promise<void>;"
+            "line": 33,
+            "context": "32: error: string | null;\n33: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n34: refreshComments: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 33,
-            "context": "32: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n33: refreshComments: () => Promise<void>;\n34: commentsCount: number;"
+            "line": 34,
+            "context": "33: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n34: refreshComments: () => Promise<void>;\n35: commentsCount: number;"
           }
         ],
         "translationCalls": [],
@@ -15928,6 +15994,92 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useFirebaseMessaging.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 22,
+            "context": "21: interface UseFirebaseMessagingReturn extends FirebaseMessagingState {\n22: requestPermission: () => Promise<void>;\n23: clearToken: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 23,
+            "context": "22: requestPermission: () => Promise<void>;\n23: clearToken: () => Promise<void>;\n24: refreshToken: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 24,
+            "context": "23: clearToken: () => Promise<void>;\n24: refreshToken: () => Promise<void>;\n25: }"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "notifications.enabled",
+            "line": 41,
+            "exists": true
+          },
+          {
+            "key": "notifications.enable",
+            "line": 41,
+            "exists": true
+          },
+          {
+            "key": "notifications.not_supported",
+            "line": 142,
+            "exists": true
+          },
+          {
+            "key": "notifications.permission_denied",
+            "line": 156,
+            "exists": true
+          },
+          {
+            "key": "notifications.permission_denied",
+            "line": 158,
+            "exists": true
+          },
+          {
+            "key": "notifications.enabled",
+            "line": 173,
+            "exists": true
+          },
+          {
+            "key": "notifications.error",
+            "line": 181,
+            "exists": true
+          },
+          {
+            "key": "notifications.disabled",
+            "line": 208,
+            "exists": true
+          },
+          {
+            "key": "notifications.error",
+            "line": 212,
+            "exists": true
+          },
+          {
+            "key": "notifications.new_message",
+            "line": 236,
+            "exists": true
+          },
+          {
+            "key": "common.view",
+            "line": 243,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.view",
+            "line": 243,
+            "context": "242: ? {\n243: label: t('common.view'),\n244: onClick: () => {"
+          }
+        ],
+        "coverage": 79,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useFCMNotifications.tsx",
         "hardcodedStrings": [
           {
@@ -16013,24 +16165,24 @@
             "context": "102: if (uploadError) {\n103: console.error('❌ Upload error:', uploadError);\n104: throw uploadError;"
           },
           {
+            "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      if (!data) {\r\n        console.warn(",
+            "line": 130,
+            "context": "129: if (error) {\n130: console.error('❌ DB update error:', error);\n131: throw error;"
+          },
+          {
+            "text": ", error);\r\n      // Error toast is now shown in LogoUploader component for better error context\r\n    },\r\n  });\r\n}\r\n\r\n/**\r\n * Hook: useDeleteDealershipLogo\r\n *\r\n * Deletes dealership logo and thumbnail from storage and database\r\n *\r\n * CLEANUP:\r\n * - Removes all files from storage (logo + thumbnail)\r\n * - Clears both logo_url and thumbnail_logo_url in database\r\n */\r\nexport function useDeleteDealershipLogo() {\r\n  const { t } = useTranslation();\r\n  const queryClient = useQueryClient();\r\n\r\n  return useMutation({\r\n    mutationFn: async (dealershipId: number) => {\r\n      // ========================================================================\r\n      // DELETE FROM STORAGE: Remove all files in dealership folder\r\n      // ========================================================================\r\n      const { data: existingFiles } = await supabase.storage\r\n        .from(",
+            "line": 180,
+            "context": "179: onError: (error: any) => {\n180: console.error('Logo upload error:', error);\n181: // Error toast is now shown in LogoUploader component for better error context"
+          },
+          {
             "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      console.log(",
-            "line": 127,
-            "context": "126: if (error) {\n127: console.error('❌ DB update error:', error);\n128: throw error;"
+            "line": 231,
+            "context": "230: if (error) {\n231: console.error('❌ DB update error:', error);\n232: throw error;"
           },
           {
             "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 171,
-            "context": "170: onError: (error: any) => {\n171: console.error('Logo upload error:', error);\n172: toast({"
-          },
-          {
-            "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      console.log(",
-            "line": 226,
-            "context": "225: if (error) {\n226: console.error('❌ DB update error:', error);\n227: throw error;"
-          },
-          {
-            "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 240,
-            "context": "239: onError: (error: any) => {\n240: console.error('Logo deletion error:', error);\n241: toast({"
+            "line": 245,
+            "context": "244: onError: (error: any) => {\n245: console.error('Logo deletion error:', error);\n246: toast({"
           }
         ],
         "translationCalls": [
@@ -16040,28 +16192,18 @@
             "exists": true
           },
           {
-            "key": "dealerships.logo_updated_successfully",
-            "line": 167,
-            "exists": true
-          },
-          {
-            "key": "dealerships.logo_upload_failed",
-            "line": 173,
-            "exists": true
-          },
-          {
             "key": "dealerships.logo_removed_successfully",
-            "line": 236,
+            "line": 241,
             "exists": true
           },
           {
             "key": "dealerships.logo_upload_failed",
-            "line": 242,
+            "line": 247,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 50,
+        "coverage": 38,
         "severity": "low"
       },
       {
@@ -16320,22 +16462,22 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 31,
-            "context": "30: refreshDealerships: () => void;\n31: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n32: }"
+            "line": 33,
+            "context": "32: refreshDealerships: () => void;\n33: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n34: }"
           }
         ],
         "translationCalls": [
           {
             "key": "dealerships.error_fetching_dealerships",
-            "line": 105,
+            "line": 107,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.error_fetching_dealerships",
-            "line": 105,
-            "context": "104: \n105: const error = queryError ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships') : null;\n106: "
+            "line": 107,
+            "context": "106: \n107: const error = queryError ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships') : null;\n108: "
           }
         ],
         "coverage": 50,
@@ -22525,6 +22667,151 @@
           }
         ],
         "coverage": 90,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\settings\\notifications\\PushNotificationSettings.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.title",
+            "line": 34,
+            "exists": true
+          },
+          {
+            "key": "notifications.settings.description",
+            "line": 37,
+            "exists": true
+          },
+          {
+            "key": "notifications.not_supported",
+            "line": 44,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 55,
+            "exists": true
+          },
+          {
+            "key": "notifications.enabled",
+            "line": 63,
+            "exists": true
+          },
+          {
+            "key": "notifications.permission_denied",
+            "line": 70,
+            "exists": true
+          },
+          {
+            "key": "common.status.disabled",
+            "line": 77,
+            "exists": true
+          },
+          {
+            "key": "notifications.settings.title",
+            "line": 90,
+            "exists": true
+          },
+          {
+            "key": "notifications.settings.description",
+            "line": 93,
+            "exists": true
+          },
+          {
+            "key": "notifications.status",
+            "line": 103,
+            "exists": true
+          },
+          {
+            "key": "common.unknown",
+            "line": 106,
+            "exists": false
+          },
+          {
+            "key": "notifications.settings.enable_push",
+            "line": 110,
+            "exists": true
+          },
+          {
+            "key": "notifications.permission_denied",
+            "line": 112,
+            "exists": true
+          },
+          {
+            "key": "common.status.disabled",
+            "line": 113,
+            "exists": true
+          },
+          {
+            "key": "common.user",
+            "line": 119,
+            "exists": true
+          },
+          {
+            "key": "common.status.connected",
+            "line": 123,
+            "exists": true
+          },
+          {
+            "key": "common.status.disconnected",
+            "line": 123,
+            "exists": true
+          },
+          {
+            "key": "notifications.settings.enable_push",
+            "line": 136,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 145,
+            "exists": true
+          },
+          {
+            "key": "notifications.enable",
+            "line": 145,
+            "exists": true
+          },
+          {
+            "key": "notifications.permission_denied",
+            "line": 151,
+            "exists": true
+          },
+          {
+            "key": "notifications.enabled",
+            "line": 165,
+            "exists": true
+          },
+          {
+            "key": "notifications.disable",
+            "line": 176,
+            "exists": true
+          },
+          {
+            "key": "common.refresh",
+            "line": 184,
+            "exists": true
+          },
+          {
+            "key": "common.about",
+            "line": 194,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.unknown",
+            "line": 106,
+            "context": "105: <p className=\"font-medium capitalize\">\n106: {permission || t('common.unknown')}\n107: </p>"
+          },
+          {
+            "key": "common.about",
+            "line": 194,
+            "context": "193: <h4 className=\"text-sm font-medium mb-2\">\n194: {t('common.about')} Push Notifications\n195: </h4>"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -31448,75 +31735,75 @@
         "translationCalls": [
           {
             "key": "errors.permission_system_error",
-            "line": 40,
+            "line": 39,
             "exists": false
           },
           {
             "key": "errors.permission_system_error_description",
-            "line": 43,
+            "line": 42,
             "exists": false
           },
           {
             "key": "errors.what_you_can_do",
-            "line": 50,
+            "line": 49,
             "exists": false
           },
           {
             "key": "errors.try_refresh",
-            "line": 53,
+            "line": 52,
             "exists": false
           },
           {
             "key": "errors.clear_cache",
-            "line": 54,
+            "line": 53,
             "exists": false
           },
           {
             "key": "errors.contact_admin",
-            "line": 55,
+            "line": 54,
             "exists": false
           },
           {
             "key": "common.try_again",
-            "line": 66,
+            "line": 65,
             "exists": true
           },
           {
             "key": "common.back_to_dashboard",
-            "line": 72,
+            "line": 74,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "errors.permission_system_error",
-            "line": 40,
-            "context": "39: <h2 className=\"text-2xl font-bold text-destructive\">\n40: {t('errors.permission_system_error') || 'Permission System Error'}\n41: </h2>"
+            "line": 39,
+            "context": "38: <h2 className=\"text-2xl font-bold text-destructive\">\n39: {t('errors.permission_system_error') || 'Permission System Error'}\n40: </h2>"
           },
           {
             "key": "errors.permission_system_error_description",
-            "line": 43,
-            "context": "42: <p className=\"text-muted-foreground\">\n43: {t('errors.permission_system_error_description') ||\n44: 'There was an error loading your permissions. This might be temporary.'}"
+            "line": 42,
+            "context": "41: <p className=\"text-muted-foreground\">\n42: {t('errors.permission_system_error_description') ||\n43: 'There was an error loading your permissions. This might be temporary.'}"
           },
           {
             "key": "errors.what_you_can_do",
-            "line": 50,
-            "context": "49: <p className=\"font-semibold mb-2\">\n50: {t('errors.what_you_can_do') || 'What you can do:'}\n51: </p>"
+            "line": 49,
+            "context": "48: <p className=\"font-semibold mb-2\">\n49: {t('errors.what_you_can_do') || 'What you can do:'}\n50: </p>"
           },
           {
             "key": "errors.try_refresh",
-            "line": 53,
-            "context": "52: <ul className=\"list-disc list-inside space-y-1 text-muted-foreground\">\n53: <li>{t('errors.try_refresh') || 'Try refreshing the page'}</li>\n54: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>"
+            "line": 52,
+            "context": "51: <ul className=\"list-disc list-inside space-y-1 text-muted-foreground\">\n52: <li>{t('errors.try_refresh') || 'Try refreshing the page'}</li>\n53: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>"
           },
           {
             "key": "errors.clear_cache",
-            "line": 54,
-            "context": "53: <li>{t('errors.try_refresh') || 'Try refreshing the page'}</li>\n54: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>\n55: <li>{t('errors.contact_admin') || 'Contact your system administrator if the problem persists'}</li>"
+            "line": 53,
+            "context": "52: <li>{t('errors.try_refresh') || 'Try refreshing the page'}</li>\n53: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>\n54: <li>{t('errors.contact_admin') || 'Contact your system administrator if the problem persists'}</li>"
           },
           {
             "key": "errors.contact_admin",
-            "line": 55,
-            "context": "54: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>\n55: <li>{t('errors.contact_admin') || 'Contact your system administrator if the problem persists'}</li>\n56: </ul>"
+            "line": 54,
+            "context": "53: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>\n54: <li>{t('errors.contact_admin') || 'Contact your system administrator if the problem persists'}</li>\n55: </ul>"
           }
         ],
         "coverage": 100,
@@ -35496,7 +35783,7 @@
           {
             "key": "notifications.error",
             "line": 65,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.must_be_logged_in",
@@ -35506,7 +35793,7 @@
           {
             "key": "notifications.enabled",
             "line": 88,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.enabled_description",
@@ -35516,7 +35803,7 @@
           {
             "key": "notifications.permission_denied",
             "line": 94,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.permission_denied_description",
@@ -35526,7 +35813,7 @@
           {
             "key": "notifications.error",
             "line": 102,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.enable_failed",
@@ -35536,7 +35823,7 @@
           {
             "key": "notifications.disabled",
             "line": 124,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.disabled_description",
@@ -35546,7 +35833,7 @@
           {
             "key": "notifications.error",
             "line": 131,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.disable_failed",
@@ -35576,7 +35863,7 @@
           {
             "key": "notifications.error",
             "line": 169,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.test_failed",
@@ -35586,7 +35873,7 @@
           {
             "key": "notifications.not_supported",
             "line": 183,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.not_supported_description",
@@ -35646,19 +35933,9 @@
         ],
         "missingKeys": [
           {
-            "key": "notifications.error",
-            "line": 65,
-            "context": "64: toast({\n65: title: t('notifications.error'),\n66: description: t('notifications.must_be_logged_in'),"
-          },
-          {
             "key": "notifications.must_be_logged_in",
             "line": 66,
             "context": "65: title: t('notifications.error'),\n66: description: t('notifications.must_be_logged_in'),\n67: variant: 'destructive',"
-          },
-          {
-            "key": "notifications.enabled",
-            "line": 88,
-            "context": "87: toast({\n88: title: t('notifications.enabled'),\n89: description: t('notifications.enabled_description'),"
           },
           {
             "key": "notifications.enabled_description",
@@ -35666,19 +35943,9 @@
             "context": "88: title: t('notifications.enabled'),\n89: description: t('notifications.enabled_description'),\n90: });"
           },
           {
-            "key": "notifications.permission_denied",
-            "line": 94,
-            "context": "93: toast({\n94: title: t('notifications.permission_denied'),\n95: description: t('notifications.permission_denied_description'),"
-          },
-          {
             "key": "notifications.permission_denied_description",
             "line": 95,
             "context": "94: title: t('notifications.permission_denied'),\n95: description: t('notifications.permission_denied_description'),\n96: variant: 'destructive',"
-          },
-          {
-            "key": "notifications.error",
-            "line": 102,
-            "context": "101: toast({\n102: title: t('notifications.error'),\n103: description: t('notifications.enable_failed'),"
           },
           {
             "key": "notifications.enable_failed",
@@ -35686,19 +35953,9 @@
             "context": "102: title: t('notifications.error'),\n103: description: t('notifications.enable_failed'),\n104: variant: 'destructive',"
           },
           {
-            "key": "notifications.disabled",
-            "line": 124,
-            "context": "123: toast({\n124: title: t('notifications.disabled'),\n125: description: t('notifications.disabled_description'),"
-          },
-          {
             "key": "notifications.disabled_description",
             "line": 125,
             "context": "124: title: t('notifications.disabled'),\n125: description: t('notifications.disabled_description'),\n126: });"
-          },
-          {
-            "key": "notifications.error",
-            "line": 131,
-            "context": "130: toast({\n131: title: t('notifications.error'),\n132: description: t('notifications.disable_failed'),"
           },
           {
             "key": "notifications.disable_failed",
@@ -35726,19 +35983,9 @@
             "context": "161: title: t('notifications.test_failed'),\n162: description: t('notifications.test_failed_description'),\n163: variant: 'destructive',"
           },
           {
-            "key": "notifications.error",
-            "line": 169,
-            "context": "168: toast({\n169: title: t('notifications.error'),\n170: description: t('notifications.test_failed'),"
-          },
-          {
             "key": "notifications.test_failed",
             "line": 170,
             "context": "169: title: t('notifications.error'),\n170: description: t('notifications.test_failed'),\n171: variant: 'destructive',"
-          },
-          {
-            "key": "notifications.not_supported",
-            "line": 183,
-            "context": "182: <BellOff className=\"h-5 w-5 text-gray-500\" />\n183: {t('notifications.not_supported')}\n184: </CardTitle>"
           },
           {
             "key": "notifications.not_supported_description",
@@ -35817,7 +36064,7 @@
           {
             "key": "notifications.error",
             "line": 207,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.pushPermissionError",
@@ -35837,7 +36084,7 @@
           {
             "key": "notifications.error",
             "line": 223,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.testFailedMessage",
@@ -35857,7 +36104,7 @@
           {
             "key": "notifications.error",
             "line": 245,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.saveError",
@@ -36042,11 +36289,6 @@
             "context": "200: title: t('notifications.pushEnabled'),\n201: description: t('notifications.pushEnabledMessage')\n202: });"
           },
           {
-            "key": "notifications.error",
-            "line": 207,
-            "context": "206: toast({\n207: title: t('notifications.error'),\n208: description: t('notifications.pushPermissionError'),"
-          },
-          {
             "key": "notifications.pushPermissionError",
             "line": 208,
             "context": "207: title: t('notifications.error'),\n208: description: t('notifications.pushPermissionError'),\n209: variant: 'destructive'"
@@ -36062,11 +36304,6 @@
             "context": "218: title: t('notifications.testSent'),\n219: description: t('notifications.testSentMessage')\n220: });"
           },
           {
-            "key": "notifications.error",
-            "line": 223,
-            "context": "222: toast({\n223: title: t('notifications.error'),\n224: description: t('notifications.testFailedMessage'),"
-          },
-          {
             "key": "notifications.testFailedMessage",
             "line": 224,
             "context": "223: title: t('notifications.error'),\n224: description: t('notifications.testFailedMessage'),\n225: variant: 'destructive'"
@@ -36080,11 +36317,6 @@
             "key": "notifications.savedMessage",
             "line": 239,
             "context": "238: title: t('notifications.saved'),\n239: description: t('notifications.savedMessage')\n240: });"
-          },
-          {
-            "key": "notifications.error",
-            "line": 245,
-            "context": "244: toast({\n245: title: t('notifications.error'),\n246: description: t('notifications.saveError'),"
           },
           {
             "key": "notifications.saveError",
@@ -44527,6 +44759,101 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\dealerships\\LogoUploader.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", error);\r\n      toast({\r\n        title: t(",
+            "line": 153,
+            "context": "152: // Detailed error feedback\n153: console.error('Logo upload error:', error);\n154: toast({"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "dealerships.logo_invalid_format",
+            "line": 85,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_allowed_formats",
+            "line": 86,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_too_large",
+            "line": 98,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_size_limit",
+            "line": 99,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_replace_confirm",
+            "line": 109,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_replacing",
+            "line": 120,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_replacing_description",
+            "line": 121,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_replaced_successfully",
+            "line": 142,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_uploaded_successfully",
+            "line": 142,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_upload_success_description",
+            "line": 143,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_upload_failed",
+            "line": 155,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo_upload_error_description",
+            "line": 156,
+            "exists": true
+          },
+          {
+            "key": "dealerships.logo",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "dealerships.change_logo",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "dealerships.upload_logo",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "dealerships.remove_logo",
+            "line": 240,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 94,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -48909,165 +49236,165 @@
           },
           {
             "key": "common.success",
-            "line": 178,
+            "line": 196,
             "exists": true
           },
           {
             "key": "dealerships.invitation_sent",
-            "line": 179,
+            "line": 197,
             "exists": true
           },
           {
             "key": "dealerships.add_dealership",
-            "line": 222,
-            "exists": true
-          },
-          {
-            "key": "dealerships.filters",
-            "line": 231,
-            "exists": true
-          },
-          {
-            "key": "dealerships.search_placeholder",
             "line": 240,
             "exists": true
           },
           {
+            "key": "dealerships.filters",
+            "line": 249,
+            "exists": true
+          },
+          {
+            "key": "dealerships.search_placeholder",
+            "line": 258,
+            "exists": true
+          },
+          {
             "key": "dealerships.status_filter",
-            "line": 250,
+            "line": 268,
             "exists": false
           },
           {
             "key": "dealerships.all_statuses",
-            "line": 253,
+            "line": 271,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 254,
+            "line": 272,
             "exists": true
           },
           {
             "key": "dealerships.inactive",
-            "line": 255,
+            "line": 273,
             "exists": true
           },
           {
             "key": "dealerships.suspended",
-            "line": 256,
+            "line": 274,
             "exists": true
           },
           {
             "key": "dealerships.dealership_list",
-            "line": 268,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
-            "line": 275,
-            "exists": true
-          },
-          {
-            "key": "dealerships.dealership",
-            "line": 281,
-            "exists": true
-          },
-          {
-            "key": "dealerships.location",
-            "line": 282,
-            "exists": true
-          },
-          {
-            "key": "dealerships.status",
-            "line": 283,
-            "exists": true
-          },
-          {
-            "key": "dealerships.plan",
-            "line": 284,
-            "exists": true
-          },
-          {
-            "key": "dealerships.stats",
-            "line": 285,
-            "exists": true
-          },
-          {
-            "key": "common.actions",
             "line": 286,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 293,
+            "exists": true
+          },
+          {
+            "key": "dealerships.dealership",
+            "line": 299,
+            "exists": true
+          },
+          {
+            "key": "dealerships.location",
+            "line": 300,
+            "exists": true
+          },
+          {
+            "key": "dealerships.status",
+            "line": 301,
+            "exists": true
+          },
+          {
+            "key": "dealerships.plan",
+            "line": 302,
+            "exists": true
+          },
+          {
+            "key": "dealerships.stats",
+            "line": 303,
+            "exists": true
+          },
+          {
+            "key": "common.actions",
+            "line": 304,
+            "exists": true
+          },
+          {
             "key": "dealerships.no_location",
-            "line": 316,
+            "line": 334,
             "exists": true
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 322,
+            "line": 340,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 327,
+            "line": 345,
             "exists": false
           },
           {
             "key": "dealerships.view_details",
-            "line": 352,
+            "line": 370,
             "exists": true
           },
           {
             "key": "common.edit",
-            "line": 356,
+            "line": 374,
             "exists": false
           },
           {
             "key": "dealerships.invite_user",
-            "line": 360,
+            "line": 378,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 367,
+            "line": 385,
             "exists": false
           },
           {
             "key": "dealerships.no_results",
-            "line": 382,
+            "line": 400,
             "exists": true
           },
           {
             "key": "dealerships.no_dealerships",
-            "line": 382,
+            "line": 400,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.status_filter",
-            "line": 250,
-            "context": "249: <SelectTrigger className=\"w-40\">\n250: <SelectValue placeholder={t('dealerships.status_filter')} />\n251: </SelectTrigger>"
+            "line": 268,
+            "context": "267: <SelectTrigger className=\"w-40\">\n268: <SelectValue placeholder={t('dealerships.status_filter')} />\n269: </SelectTrigger>"
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 322,
-            "context": "321: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n322: {t(`dealerships.${dealership.status}`)}\n323: </Badge>"
+            "line": 340,
+            "context": "339: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n340: {t(`dealerships.${dealership.status}`)}\n341: </Badge>"
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 327,
-            "context": "326: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n327: {t(`dealerships.${dealership.subscription_plan}`)}\n328: </Badge>"
+            "line": 345,
+            "context": "344: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n345: {t(`dealerships.${dealership.subscription_plan}`)}\n346: </Badge>"
           },
           {
             "key": "common.edit",
-            "line": 356,
-            "context": "355: <Edit className=\"mr-2 h-4 w-4\" />\n356: {t('common.edit')}\n357: </DropdownMenuItem>"
+            "line": 374,
+            "context": "373: <Edit className=\"mr-2 h-4 w-4\" />\n374: {t('common.edit')}\n375: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 367,
-            "context": "366: <Trash2 className=\"mr-2 h-4 w-4\" />\n367: {t('common.delete')}\n368: </DropdownMenuItem>"
+            "line": 385,
+            "context": "384: <Trash2 className=\"mr-2 h-4 w-4\" />\n385: {t('common.delete')}\n386: </DropdownMenuItem>"
           }
         ],
         "coverage": 100,
@@ -49178,7 +49505,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "335 Component components need translation",
+      "description": "342 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -49246,6 +49573,7 @@
         "src\\components\\get-ready\\GetReadyExample.tsx",
         "src\\components\\get-ready\\notifications\\NotificationPanel.tsx",
         "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
+        "src\\services\\PUSH_NOTIFICATION_HOOK_EXAMPLE.ts",
         "src\\pages\\NFCTracking.tsx",
         "src\\hooks\\useVehicleManagement.ts",
         "src\\hooks\\useUserPresence.tsx",
@@ -49288,6 +49616,7 @@
         "src\\hooks\\useProductivityTodos.tsx",
         "src\\hooks\\useOrderActions.tsx",
         "src\\hooks\\useNotificationTemplates.ts",
+        "src\\hooks\\useFirebaseMessaging.ts",
         "src\\contexts\\AuthContext.tsx",
         "src\\components\\ui\\comments-tooltip.tsx",
         "src\\components\\settings\\platform\\PlatformBrandingSettings.tsx",
@@ -49305,6 +49634,8 @@
         "src\\utils\\modalDataCache.ts",
         "src\\utils\\errorHandling.ts",
         "src\\test\\integration\\orderProductivityIntegration.test.tsx",
+        "src\\services\\PUSH_NOTIFICATION_INTEGRATION_EXAMPLES.tsx",
+        "src\\services\\pushNotificationHelper.ts",
         "src\\pages\\InvitationAccept.tsx",
         "src\\pages\\DealerView.tsx",
         "src\\hooks\\useVinScanner.tsx",
@@ -49348,6 +49679,7 @@
         "src\\pages\\QRRedirect.tsx",
         "src\\pages\\Auth.tsx",
         "src\\lib\\sessionRecovery.ts",
+        "src\\lib\\firebase.ts",
         "src\\hooks\\useSweetAlert.tsx",
         "src\\hooks\\useServerExport.tsx",
         "src\\hooks\\usePerformanceMonitor.ts",
@@ -49392,6 +49724,7 @@
         "src\\components\\get-ready\\approvals\\ApprovalHeader.tsx",
         "src\\components\\get-ready\\analytics\\BottleneckAnalysis.tsx",
         "src\\components\\debug\\SimpleSalesOrders.tsx",
+        "src\\components\\dealerships\\LogoUploader.tsx",
         "src\\components\\common\\LazyComponentWrapper.tsx",
         "src\\components\\chat\\EnhancedChatInterface.tsx",
         "src\\components\\chat\\ConversationList.tsx",
@@ -49432,6 +49765,7 @@
         "src\\components\\stock\\vehicle-details\\VehicleInfoTab.tsx",
         "src\\components\\stock\\vehicle-details\\VehicleActivityTab.tsx",
         "src\\components\\settings\\security\\SecurityAuditLogViewer.tsx",
+        "src\\components\\settings\\notifications\\PushNotificationSettings.tsx",
         "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
         "src\\components\\search\\GlobalSearch.tsx",
         "src\\components\\scanner\\VinScannerHub.tsx",
@@ -49516,12 +49850,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "168 hours"
+      "estimatedEffort": "171 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2298 translation keys are referenced but missing",
+      "description": "2286 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "115 hours"
     }
