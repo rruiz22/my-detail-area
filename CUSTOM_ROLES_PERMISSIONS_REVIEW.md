@@ -520,3 +520,4 @@ console.log('Role has dealerships:', hasRoleModuleAccess('dealerships'));
 - La solución es simple: asegurar que `enhancedUser` esté cargado antes de verificar
 - Considerar agregar un `usePermissionsReady()` hook que devuelva un booleano
 
+
