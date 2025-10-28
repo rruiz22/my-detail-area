@@ -6,7 +6,7 @@ import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sid
 import { APP_VERSION } from "@/config/version";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -86,9 +86,10 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
           {/* Sticky Header */}
           <header className="sticky top-0 z-40 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 flex items-center justify-between px-4 md:px-6" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
             {/* Left Section */}
-            <div className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none min-w-0">
+            <div className="flex items-center gap-2 md:gap-4">
               <SidebarTrigger className="flex-shrink-0" />
-              <div className="flex-1 md:flex-none min-w-0">
+              {/* Desktop: Full search bar */}
+              <div className="hidden md:block md:w-80 lg:w-96">
                 <GlobalSearch />
               </div>
             </div>
@@ -104,6 +105,20 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
 
             {/* Right Section - Mobile */}
             <div className="flex md:hidden items-center gap-2">
+              {/* Mobile: Compact search button */}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Search className="h-5 w-5" />
+                    <span className="sr-only">{t('search.global_placeholder')}</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="top" className="h-[85vh] p-0">
+                  <div className="p-4">
+                    <GlobalSearch />
+                  </div>
+                </SheetContent>
+              </Sheet>
               <UserDropdown />
               <Sheet>
                 <SheetTrigger asChild>
