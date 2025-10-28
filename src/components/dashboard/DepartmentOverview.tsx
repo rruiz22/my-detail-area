@@ -176,9 +176,6 @@ export function DepartmentOverview() {
                   </div>
                   <div>
                     <CardTitle className="text-base">{dept.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {formatCurrency(dept.revenue)} {t('dashboard.department_overview.revenue')}
-                    </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
