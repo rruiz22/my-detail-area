@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow, format, subDays } from 'date-fns';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 
 interface ActivityRecord {
   id: string;
@@ -36,20 +38,17 @@ interface ActivityRecord {
 
 export function ActivityAuditTab() {
   const { t } = useTranslation();
-  const [activities, setActivities] = useState<ActivityRecord[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [dateRange, setDateRange] = useState<string>('7'); // days
 
-  const fetchActivities = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+  // ✅ PERFORMANCE FIX: Use React Query for automatic caching and optimization
+  const { data: activities = [], isLoading: loading } = useQuery({
+    queryKey: ['user_activity_log', user?.id, filterType, dateRange],
+    queryFn: async () => {
+      if (!user) return [];
 
-      if (!user) return;
-
-      // Calculate date filter
       const daysAgo = parseInt(dateRange);
       const fromDate = subDays(new Date(), daysAgo).toISOString();
 
@@ -69,19 +68,16 @@ export function ActivityAuditTab() {
 
       if (error) throw error;
 
-      setActivities(data || []);
-
-    } catch (error: any) {
-      console.error('Error fetching activities:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [filterType, dateRange]);
+      return data || [];
+    },
+    enabled: !!user,
+    staleTime: 1000 * 60 * 2, // 2 minutes - recent activity
+    gcTime: 1000 * 60 * 10, // 10 minutes garbage collection
+    placeholderData: (previousData) => previousData, // Keep previous data while refetching
+  });
 
   const exportActivities = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) return;
 
       const { data, error } = await supabase

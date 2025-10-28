@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface UserSession {
   id: string;
@@ -19,15 +20,14 @@ export interface UserSession {
 export const useUserSessions = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const [sessions, setSessions] = useState<UserSession[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  const fetchSessions = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) throw new Error('No authenticated user');
+  // ✅ PERFORMANCE FIX: Use React Query for automatic caching
+  const { data: sessions = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['user_sessions', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
 
       const { data, error } = await supabase
         .from('user_sessions')
@@ -37,25 +37,15 @@ export const useUserSessions = () => {
 
       if (error) throw error;
 
-      setSessions(data || []);
-
-    } catch (error: any) {
-      console.error('Error fetching sessions:', error);
-      toast({
-        title: t('common.error'),
-        description: error.message || 'Error loading sessions',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [t, toast]);
+      return data || [];
+    },
+    enabled: !!user,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 15, // 15 minutes cache
+  });
 
   const terminateSession = async (sessionId: string) => {
     try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) throw new Error('No authenticated user');
 
       const { error } = await supabase
@@ -66,17 +56,20 @@ export const useUserSessions = () => {
 
       if (error) throw error;
 
-      setSessions(prev => prev.filter(session => session.id !== sessionId));
+      // ✅ Invalidate cache to refetch sessions
+      queryClient.invalidateQueries({ queryKey: ['user_sessions', user.id] });
 
-      // Log activity
-      await supabase
+      // Log activity (non-blocking)
+      supabase
         .from('user_activity_log')
         .insert({
           user_id: user.id,
           action_type: 'session_terminated',
           action_description: 'Session terminated manually',
           details: { session_id: sessionId }
-        });
+        })
+        .then(() => {})
+        .catch(err => console.error('Failed to log activity:', err));
 
       toast({
         title: t('common.success'),
@@ -90,16 +83,11 @@ export const useUserSessions = () => {
         description: error.message || 'Error terminating session',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   const terminateAllOtherSessions = async () => {
     try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) throw new Error('No authenticated user');
 
       const { error } = await supabase
@@ -110,16 +98,19 @@ export const useUserSessions = () => {
 
       if (error) throw error;
 
-      setSessions(prev => prev.filter(session => session.is_current));
+      // ✅ Invalidate cache to refetch sessions
+      queryClient.invalidateQueries({ queryKey: ['user_sessions', user.id] });
 
-      // Log activity
-      await supabase
+      // Log activity (non-blocking)
+      supabase
         .from('user_activity_log')
         .insert({
           user_id: user.id,
           action_type: 'all_sessions_terminated',
           action_description: 'All other sessions terminated'
-        });
+        })
+        .then(() => {})
+        .catch(err => console.error('Failed to log activity:', err));
 
       toast({
         title: t('common.success'),
@@ -133,20 +124,14 @@ export const useUserSessions = () => {
         description: error.message || 'Error terminating sessions',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchSessions();
-  }, [fetchSessions]);
 
   return {
     sessions,
     loading,
     terminateSession,
     terminateAllOtherSessions,
-    refetch: fetchSessions
+    refetch
   };
 };
