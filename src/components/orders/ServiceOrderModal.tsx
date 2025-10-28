@@ -609,6 +609,15 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                                  const selectedUser = assignedUsers.find(u => u.id === selectedAssignedTo);
                                  if (!selectedUser) return <span className="text-muted-foreground">{t('sales_orders.select_assignee')}</span>;
 
+                                 // Format role name for display
+                                 const formatRoleName = (roleName: string | undefined): string => {
+                                   if (!roleName || roleName === 'No Role') return 'No Role';
+                                   return roleName
+                                     .split('_')
+                                     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                     .join(' ');
+                                 };
+
                                  return (
                                    <>
                                      <AvatarSystem
@@ -621,7 +630,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                                      <span className="truncate">{selectedUser.name}</span>
                                      {selectedUser.role_name && (
                                        <Badge variant="secondary" className="text-xs shrink-0">
-                                         {selectedUser.role_name}
+                                         {formatRoleName(selectedUser.role_name)}
                                        </Badge>
                                      )}
                                    </>
@@ -647,14 +656,24 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                              placeholder={t('common.search_users', 'Search users...')}
                              className="h-9"
                            />
-                           <CommandList>
+                           <CommandList className="max-h-[300px] overflow-y-auto">
                              <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>
 
                              {/* Group users by role_name */}
                              {(() => {
+                               // Helper function to format role names
+                               const formatRoleName = (roleName: string | undefined): string => {
+                                 if (!roleName || roleName === 'No Role') return 'No Role';
+                                 // Convert snake_case to Title Case (detail_manager → Detail Manager)
+                                 return roleName
+                                   .split('_')
+                                   .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                   .join(' ');
+                               };
+
                                // Group users by role
                                const usersByRole = assignedUsers.reduce((acc, user) => {
-                                 const role = user.role_name || 'No Role';
+                                 const role = formatRoleName(user.role_name);
                                  if (!acc[role]) acc[role] = [];
                                  acc[role].push(user);
                                  return acc;
@@ -678,7 +697,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                                          handleAssignedToChange(user.id);
                                          setAssignedToPopoverOpen(false);
                                        }}
-                                       className="flex items-center gap-2 cursor-pointer"
+                                       className="flex items-center gap-2 cursor-pointer hover:bg-emerald-50 data-[selected=true]:bg-emerald-50"
                                      >
                                        <AvatarSystem
                                          name={user.email}
