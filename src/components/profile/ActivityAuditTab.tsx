@@ -163,10 +163,6 @@ export function ActivityAuditTab() {
     activity.action_type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  useEffect(() => {
-    fetchActivities();
-  }, [filterType, fetchActivities]);
-
   return (
     <div className="space-y-6">
       {/* Filters and Search */}
