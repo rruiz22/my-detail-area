@@ -651,12 +651,12 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                        </PopoverTrigger>
 
                        <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                         <Command>
+                         <Command className="overflow-visible">
                            <CommandInput
                              placeholder={t('common.search_users', 'Search users...')}
                              className="h-9"
                            />
-                           <CommandList className="max-h-[300px]">
+                           <CommandList className="max-h-[300px] overflow-y-auto">
                              <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>
 
                              {/* Group users by role_name */}
