@@ -19,6 +19,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 // Direct imports - no lazy loading for maximum speed
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
 import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
@@ -64,6 +74,8 @@ export default function SalesOrders() {
   const [preSelectedDate, setPreSelectedDate] = useState<Date | null>(null);
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
 
   const {
     orders,
@@ -171,11 +183,28 @@ export default function SalesOrders() {
     setPreviewOrder(order);
   }, []);
 
-  const handleDeleteOrder = useCallback(async (orderId: string) => {
-    if (confirm(t('messages.confirm_delete_order'))) {
-      await deleteOrder(orderId);
+  const handleDeleteOrder = useCallback((orderId: string) => {
+    setOrderToDelete(orderId);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const confirmDeleteOrder = useCallback(async () => {
+    if (!orderToDelete) return;
+
+    try {
+      await deleteOrder(orderToDelete);
+      setOrderToDelete(null);
+      toast({
+        title: t('orders.deleted_success', 'Order deleted successfully')
+      });
+    } catch (error) {
+      console.error('❌ Delete failed:', error);
+      toast({
+        variant: 'destructive',
+        title: t('orders.delete_error', 'Failed to delete order')
+      });
     }
-  }, [t, deleteOrder]);
+  }, [orderToDelete, deleteOrder, t, toast]);
 
   const handleSaveOrder = useCallback(async (orderData: Partial<Order>) => {
     try {
@@ -481,6 +510,27 @@ export default function SalesOrders() {
             onUpdate={handleUpdate}
           />
         )}
+
+        {/* Delete Confirmation Dialog - Team Chat Style */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDeleteOrder}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                {t('common.delete', 'Delete')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
     </div>
   );
 }

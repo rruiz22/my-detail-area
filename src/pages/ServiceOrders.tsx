@@ -20,7 +20,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
 import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
 import { OrderDataTable } from '@/components/orders/OrderDataTable';
@@ -393,19 +402,26 @@ export default function ServiceOrders() {
           </OrderViewErrorBoundary>
         )}
 
-        {/* Delete Confirmation Dialog (instant open) */}
-        <OrderViewErrorBoundary>
-          <ConfirmDialog
-            open={deleteDialogOpen}
-            onOpenChange={setDeleteDialogOpen}
-            title={t('orders.confirm_delete_title', 'Delete Order?')}
-            description={t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
-            confirmText={t('common.delete', 'Delete')}
-            cancelText={t('common.cancel', 'Cancel')}
-            onConfirm={confirmDeleteOrder}
-            variant="destructive"
-          />
-        </OrderViewErrorBoundary>
+        {/* Delete Confirmation Dialog - Team Chat Style */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDeleteOrder}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                {t('common.delete', 'Delete')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
     </div>
   );
 }
