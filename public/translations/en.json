@@ -355,6 +355,7 @@
     "vinRequired": "VIN is required for vehicle identification",
     "stockNumberRequired": "Stock number is required for tracking",
     "assignedToRequired": "Please assign this order to a team member",
+    "customerNameRequired": "Customer name is required",
     "invalid_status": "Invalid status value",
     "status_not_recognized": "The provided status is not recognized",
     "terminal_status": "Cannot change status",

@@ -344,6 +344,7 @@
     "vinRequired": "O VIN é obrigatório para identificação do veículo",
     "stockNumberRequired": "O número do estoque é obrigatório para rastreamento",
     "assignedToRequired": "Por favor atribua este pedido a um membro da equipe",
+    "customerNameRequired": "O nome do cliente é obrigatório",
     "invalid_status": "Status inválido",
     "status_not_recognized": "O status fornecido não é reconhecido",
     "terminal_status": "Não é possível alterar o status",
