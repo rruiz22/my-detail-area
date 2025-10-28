@@ -4828,6 +4828,29 @@
     "not_supported": "Notifications are not supported in this browser",
     "error": "Error managing notifications",
     "new_message": "New notification",
+    "granular_settings": "Event-Based Notifications",
+    "event": "Event",
+    "category": "Category",
+    "in_app": "In-App",
+    "email": "Email",
+    "sms": "SMS",
+    "push": "Push",
+    "no_events": "No events to display",
+    "all_categories": "All Categories",
+    "categories": {
+      "orders": "Orders",
+      "team": "Team",
+      "deadlines": "Deadlines",
+      "financial": "Financial",
+      "system": "System"
+    },
+    "modules": {
+      "sales": "Sales",
+      "service": "Service",
+      "recon": "Recon",
+      "car_wash": "Car Wash",
+      "get_ready": "Get Ready"
+    },
     "settings": {
       "title": "Notification Settings",
       "description": "Manage your notification preferences",
