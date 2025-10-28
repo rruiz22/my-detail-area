@@ -70,7 +70,7 @@ export const VehicleAutoPopulationField: React.FC<VehicleAutoPopulationFieldProp
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <Label>{label || t('stock.autopop.searchVehicle')}</Label>
+      {label !== '' && <Label>{label || t('stock.autopop.searchVehicle')}</Label>}
 
       <VehicleSearchInput
         key={resetKey}

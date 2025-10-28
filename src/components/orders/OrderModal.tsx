@@ -854,13 +854,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             {/* Quick Search - Only for new orders */}
             {!order && (
               <div className="w-full sm:w-auto sm:min-w-[320px] lg:min-w-[400px]">
-                <Alert className="bg-blue-50 border-blue-200 p-3">
+                <Alert className="bg-blue-50 border-blue-200 p-2.5">
                   <div className="flex items-start gap-2">
-                    <Search className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 space-y-2">
-                      <p className="text-xs font-medium text-blue-900">
-                        {t('stock.autopop.quickSearch', 'Quick Search')} <span className="text-[10px] text-blue-600 font-normal">({t('common.optional', 'Optional')})</span>
-                      </p>
+                    <Search className="h-4 w-4 text-blue-600 mt-2 flex-shrink-0" />
+                    <div className="flex-1 space-y-1.5">
                       <VehicleAutoPopulationField
                         dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
                         onVehicleSelect={handleVehicleSelect}
@@ -1200,7 +1197,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       readOnly={!!selectedVehicle}
                     />
                     {!formData.vehicleInfo && !selectedVehicle && (
-                      <div className="text-sm text-muted-foreground mt-1">
+                      <div className="text-xs text-muted-foreground mt-1">
                         {t('sales_orders.manual_vehicle_entry')}
                       </div>
                     )}
