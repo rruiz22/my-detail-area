@@ -656,7 +656,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                              placeholder={t('common.search_users', 'Search users...')}
                              className="h-9"
                            />
-                           <CommandList className="max-h-[300px] overflow-y-auto">
+                           <CommandList className="max-h-[300px]">
                              <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>
 
                              {/* Group users by role_name */}
@@ -697,7 +697,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                                          handleAssignedToChange(user.id);
                                          setAssignedToPopoverOpen(false);
                                        }}
-                                       className="flex items-center gap-2 cursor-pointer hover:bg-emerald-50 data-[selected=true]:bg-emerald-50"
+                                       className="flex items-center gap-2 cursor-pointer hover:bg-emerald-50 hover:text-foreground data-[selected=true]:bg-emerald-50 data-[selected=true]:text-foreground"
                                      >
                                        <AvatarSystem
                                          name={user.email}

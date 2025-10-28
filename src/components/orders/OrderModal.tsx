@@ -841,41 +841,47 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         aria-describedby="order-modal-description"
       >
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
-          <DialogTitle className="text-base sm:text-lg font-semibold">
-            {order ? t('orders.edit') : t('orders.create')}
-          </DialogTitle>
-          <div id="order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
-            {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div className="flex-1">
+              <DialogTitle className="text-base sm:text-lg font-semibold">
+                {order ? t('orders.edit') : t('orders.create')}
+              </DialogTitle>
+              <div id="order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
+                {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
+              </div>
+            </div>
+
+            {/* Quick Search - Only for new orders */}
+            {!order && (
+              <div className="w-full sm:w-auto sm:min-w-[320px] lg:min-w-[400px]">
+                <Alert className="bg-blue-50 border-blue-200 p-3">
+                  <div className="flex items-start gap-2">
+                    <Search className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <p className="text-xs font-medium text-blue-900">
+                        {t('stock.autopop.quickSearch', 'Quick Search')} <span className="text-[10px] text-blue-600 font-normal">({t('common.optional', 'Optional')})</span>
+                      </p>
+                      <VehicleAutoPopulationField
+                        dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
+                        onVehicleSelect={handleVehicleSelect}
+                        onVehicleClear={handleVehicleClear}
+                        selectedVehicle={selectedVehicle}
+                        label=""
+                        placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
+                      />
+                      {selectedVehicle && (
+                        <p className="text-[10px] text-blue-700 flex items-center gap-1">
+                          <Zap className="w-3 h-3" />
+                          {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Alert>
+              </div>
+            )}
           </div>
         </DialogHeader>
-
-        {/* Quick Search Banner - Only for new orders */}
-        {!order && (
-          <Alert className="mx-4 sm:mx-6 mt-3 bg-blue-50 border-blue-200">
-            <Search className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="ml-2">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-blue-900">
-                  {t('stock.autopop.quickSearch', 'Quick Search')} <span className="text-xs text-blue-600 font-normal">({t('common.optional', 'Optional')})</span>
-                </p>
-                <VehicleAutoPopulationField
-                  dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
-                  onVehicleSelect={handleVehicleSelect}
-                  onVehicleClear={handleVehicleClear}
-                  selectedVehicle={selectedVehicle}
-                  label=""
-                  placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
-                />
-                {selectedVehicle && (
-                  <p className="text-xs text-blue-700 flex items-center gap-1">
-                    <Zap className="w-3 h-3" />
-                    {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
-                  </p>
-                )}
-              </div>
-            </AlertDescription>
-          </Alert>
-        )}
 
         <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
@@ -982,7 +988,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                             placeholder={t('common.search_users', 'Search users...')}
                             className="h-9"
                           />
-                          <CommandList className="max-h-[300px] overflow-y-auto">
+                          <CommandList className="max-h-[300px]">
                             <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>
 
                             {/* Group users by role_name */}
@@ -1023,7 +1029,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                                         handleAssignedToChange(user.id);
                                         setAssignedToPopoverOpen(false);
                                       }}
-                                      className="flex items-center gap-2 cursor-pointer hover:bg-emerald-50 data-[selected=true]:bg-emerald-50"
+                                      className="flex items-center gap-2 cursor-pointer hover:bg-emerald-50 hover:text-foreground data-[selected=true]:bg-emerald-50 data-[selected=true]:text-foreground"
                                     >
                                       <AvatarSystem
                                         name={user.email}
