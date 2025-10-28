@@ -93,19 +93,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role: extendedUser.role
       });
 
-      // ✅ PERF FIX: Pre-load permissions in background to populate React Query cache
-      // This runs in parallel and doesn't block the user profile return
+      // ✅ PHASE 4.2: Enhanced parallel permission prefetch
+      // Start loading permissions IMMEDIATELY in background (fire-and-forget)
+      // This populates React Query cache for instant access when needed
       if (profile.dealership_id || extendedUser.user_type === 'system_admin') {
-        auth('🚀 Pre-loading permissions for instant page access...');
+        auth('🚀 [Phase 4] Prefetching permissions in parallel...');
 
-        // Prefetch permissions (fire-and-forget)
+        // Fire-and-forget: Don't await, don't block
         queryClient.prefetchQuery({
           queryKey: ['user-permissions', authUser.id],
-          // Don't need queryFn - usePermissions hook will handle it
+          // React Query will use the queryFn from usePermissions hook
+          staleTime: 5 * 60 * 1000, // 5 minutes
         }).catch((error) => {
           // Silently fail - permissions will load normally when needed
-          logError('Background permission pre-load failed (non-critical):', error);
+          logError('Background permission prefetch failed (non-critical):', error);
         });
+
+        auth('✅ Permission prefetch started (non-blocking)');
       }
 
       return extendedUser;
