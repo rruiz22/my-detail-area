@@ -95,8 +95,14 @@ const loadLanguage = async (language: string) => {
   }
 };
 
-// Load initial language and track the promise
-initialLanguageLoading = loadLanguage(i18n.language);
+// ✅ PHASE 4.1: Preload user's preferred language IMMEDIATELY
+// This starts loading BEFORE React mounts, reducing perceived load time
+const userLanguage = localStorage.getItem('language') || navigator.language.split('-')[0] || 'en';
+
+// Start loading immediately (before init even completes)
+initialLanguageLoading = loadLanguage(userLanguage).then(() => {
+  console.log('⚡ Initial translations preloaded before React mount');
+});
 
 // Export function to wait for initial translations
 export const waitForInitialTranslations = () => initialLanguageLoading;
