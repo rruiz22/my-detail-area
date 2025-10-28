@@ -1,0 +1,142 @@
+ANÁLISIS DEL HERO SECTION - DASHBOARD MYDETAILAREA
+===================================================
+
+CÓDIGO ACTUAL EXACTO (src/pages/Dashboard.tsx líneas 30-97):
+
+Container principal:
+  <div className="relative overflow-hidden rounded-xl bg-gradient-primary p-8 text-primary-foreground">
+
+Overlay:
+  <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{backgroundImage: url(...)}} />
+
+Contenido:
+  <h1 className="text-3xl font-bold mb-2">{t('dashboard.hero.welcome')}</h1>
+  <p className="text-xl opacity-90">{t('dashboard.hero.subtitle')}</p>
+  
+Botones:
+  - New Order (variant="secondary", button-enhanced)
+  - View Pending (variant="outline", border-white/20, text-primary-foreground, hover:bg-white/10)
+  - Get Ready (variant="outline", border-white/20, text-primary-foreground, hover:bg-white/10)
+  - Team Chat (variant="outline", border-white/20, text-primary-foreground, hover:bg-white/10)
+
+TRADUCCIONES (public/translations/en.json):
+========================================
+dashboard.hero.welcome: "Welcome to MyDetailArea"
+dashboard.hero.subtitle: "Streamline your dealership operations with powerful tools and insights"
+dashboard.hero.new_order: "New Order"
+dashboard.hero.view_pending: "View Pending ({{count}})"
+dashboard.hero.get_ready: "Get Ready"
+dashboard.hero.team_chat: "Team Chat"
+
+Status: Todas existen en EN, ES, PT-BR
+
+PROBLEMAS IDENTIFICADOS:
+========================
+
+1. CRÍTICO - bg-gradient-primary no existe
+   Problema: Clase CSS referenciada pero NO DEFINIDA
+   Ubicación: tailwind.config.ts intenta usar var(--gradient-primary) que nunca se define en index.css
+   Impacto: Hero no tiene color de fondo correcto
+   Solución: Cambiar a bg-gray-900 (color sólido) O definir --gradient-primary
+
+2. CRÍTICO - Viola requisito Notion (NO GRADIENTES)
+   Problema: bg-gradient-primary implica usar linear-gradient
+   Documento: CLAUDE.md prohibe gradientes
+   Impacto: No es enterprise-grade Notion style
+   Solución: Usar color sólido como Gray-900
+
+3. ALTA - Overlay insuficiente (opacity-20)
+   Problema: Muy bajo, imagen demasiado visible
+   Impacto: Texto con bajo contraste, no cumple WCAG AA
+   Solución: Cambiar a opacity-40 o agregar overlay adicional bg-black/40
+
+4. ALTA - Dark mode completamente quebrado
+   Problema: text-primary-foreground en dark mode es gris oscuro
+   - Light: --primary-foreground es 0 0% 98% (blanco) ✓
+   - Dark: --primary-foreground es 0 0% 9% (gris oscuro) ✗
+   Impacto: Texto ilegible en dark mode
+   Solución: Usar overlay oscuro dinámico que responda a dark mode
+
+5. MEDIA - Botones outline hardcoded white
+   Problema: border-white/20 y hover:bg-white/10 no responden a dark mode
+   Solución: Usar border-current/30 o dark:border-white/20
+
+6. MEDIA - Padding no responsive
+   Problema: p-8 es demasiado en móvil
+   Solución: p-4 sm:p-6 lg:p-8
+
+DESIGN SYSTEM DISPONIBLE:
+=========================
+
+Light Mode Variables:
+  --background: 0 0% 100% (Blanco)
+  --foreground: 0 0% 9% (Gris oscuro)
+  --primary: 0 0% 9% (Gris oscuro)
+  --primary-foreground: 0 0% 98% (Casi blanco)
+  --secondary: 0 0% 96% (Gris claro)
+  --accent: 239 84% 67% (Indigo muted)
+
+Dark Mode Variables:
+  --background: 0 0% 9% (Gris oscuro)
+  --foreground: 0 0% 98% (Casi blanco)
+  --primary: 0 0% 98% (Casi blanco)
+  --primary-foreground: 0 0% 9% (Gris oscuro)
+  --secondary: 0 0% 14% (Gris casi negro)
+  --accent: 239 84% 67% (Indigo muted)
+
+PROPUESTA MEJORADA:
+===================
+
+Reemplazar Hero Section con:
+
+<div className="relative overflow-hidden rounded-xl bg-gray-900 p-4 sm:p-6 lg:p-8 text-white">
+  {/* Imagen de fondo con overlay mejorado */}
+  <div className="absolute inset-0 bg-cover bg-center" style={{
+    backgroundImage: `url(${dealershipHero})`
+  }} />
+  
+  {/* Overlay oscuro dinámico */}
+  <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
+  
+  {/* Contenido con z-index */}
+  <div className="relative z-10">
+    <h1 className="text-3xl font-bold mb-2">{t('dashboard.hero.welcome')}</h1>
+    <p className="text-xl opacity-90">{t('dashboard.hero.subtitle')}</p>
+    <div className="mt-6 flex flex-wrap gap-3">
+      {/* Botones con estilos mejorados */}
+      [Botones igual pero con text-white en lugar de text-primary-foreground]
+    </div>
+  </div>
+</div>
+
+BENEFICIOS:
+- bg-gray-900: Color sólido, Notion-compliant (SIN GRADIENTES)
+- Overlay bg-black/40: Mejor contraste en light mode
+- dark:bg-black/50: Dark mode support dinámico
+- text-white: Siempre legible en ambos modos
+- p-4 sm:p-6 lg:p-8: Responsive padding
+
+ARCHIVOS A MODIFICAR:
+=====================
+1. src/pages/Dashboard.tsx - Reemplazar Hero Section (líneas 30-97)
+
+ARCHIVOS A NO TOCAR:
+====================
+- public/translations/en.json (traducciones completas)
+- public/translations/es.json (traducciones completas)
+- public/translations/pt-BR.json (traducciones completas)
+
+TESTING REQUERIDO:
+==================
+- Light mode: Verificar contraste de texto
+- Dark mode: Verificar legibilidad completa
+- Mobile: Verificar padding en <640px
+- Botones: Verificar hover states en ambos modos
+- Accesibilidad: Verificar contrast ratio >= 4.5:1 (WCAG AA)
+
+IMPACTO ESTIMADO:
+=================
+Tiempo: ~30 minutos
+Breaking changes: NINGUNO
+Traducciones: NINGÚN CAMBIO REQUERIDO
+Testing: ~15 minutos
