@@ -319,36 +319,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
     setLoading(true);
     try {
-      // Get users from dealer memberships with their profiles AND permissions for service_orders module
+      // ✅ FIX: Use RPC function to bypass RLS and get ALL users with service_orders permissions
       const [usersResult, servicesResult] = await Promise.all([
-        supabase
-          .from('dealer_memberships')
-          .select(`
-            profiles!inner (
-              id,
-              first_name,
-              last_name,
-              email
-            ),
-            custom_role_id,
-            dealer_custom_roles!left (
-              id,
-              role_name,
-              role_module_permissions_new!left (
-                module_permissions!inner (
-                  module,
-                  permission_key
-                )
-              )
-            )
-          `)
-          .eq('dealer_id', dealerId)
-          .eq('is_active', true),
-        supabase
-          .rpc('get_dealer_services_by_department', {
-            p_dealer_id: dealerId,
-            p_department_name: 'Service Dept'
-          })
+        supabase.rpc('get_users_with_module_access', {
+          p_dealer_id: dealerId,
+          p_module: 'service_orders'
+        }),
+        supabase.rpc('get_dealer_services_by_department', {
+          p_dealer_id: dealerId,
+          p_department_name: 'Service Dept'
+        })
       ]);
 
       if (usersResult.error) {
@@ -365,30 +345,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       }
 
       if (usersResult.data) {
-        // Filter users who have access to service_orders module
-        const usersWithAccess = usersResult.data.filter((membership: any) => {
-          // Check if user has a custom role with service_orders permissions
-          // Note: System admins are checked separately via enhancedUser.is_system_admin in the UI
-          if (membership.dealer_custom_roles) {
-            const rolePermissions = membership.dealer_custom_roles.role_module_permissions_new || [];
-            const hasAccess = rolePermissions.some((rmp: any) => {
-              return rmp.module_permissions?.module === 'service_orders';
-            });
-            if (hasAccess) return true;
-          }
-
-          // If no custom role or no service_orders permissions, exclude
-          // System admins will be shown regardless (handled in a future iteration)
-          // For now, only show users with explicit service_orders permissions
-          return false;
-        });
-
-        const mappedUsers = usersWithAccess.map((membership: any) => ({
-          id: membership.profiles.id,
-          name: `${membership.profiles.first_name} ${membership.profiles.last_name}`.trim(),
-          email: membership.profiles.email
+        // ✅ FIX: RPC function already filtered by module permissions
+        // No need for manual filtering - just map to UI format
+        const mappedUsers = usersResult.data.map((user: any) => ({
+          id: user.user_id,
+          name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
+          email: user.email,
+          isSystemAdmin: user.is_system_admin
         }));
 
+        dev(`✅ Loaded ${mappedUsers.length} users with service_orders access for dealership ${dealerId}`);
         setAssignedUsers(mappedUsers);
       } else {
         setAssignedUsers([]);
