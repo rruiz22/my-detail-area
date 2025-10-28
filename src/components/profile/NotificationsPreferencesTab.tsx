@@ -65,11 +65,12 @@ export function NotificationsPreferencesTab() {
 
   const handleSave = async () => {
     // ✅ FIX: Convert empty strings to null for TIME fields
+    // ⚠️ NOTE: event_preferences saved separately (not in user_preferences table)
     const sanitizedData = {
       ...formData,
       quiet_hours_start: formData.quiet_hours_start || null,
       quiet_hours_end: formData.quiet_hours_end || null,
-      event_preferences: eventPreferences, // ✅ Include granular event preferences
+      // TODO: Save eventPreferences to user_sms_notification_preferences per module
     };
     await updatePreferences(sanitizedData);
   };

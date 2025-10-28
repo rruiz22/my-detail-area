@@ -4511,6 +4511,29 @@
     "not_supported": "Notificações não são suportadas neste navegador",
     "error": "Erro ao gerenciar notificações",
     "new_message": "Nova notificação",
+    "granular_settings": "Notificações por Evento",
+    "event": "Evento",
+    "category": "Categoria",
+    "in_app": "No App",
+    "email": "E-mail",
+    "sms": "SMS",
+    "push": "Push",
+    "no_events": "Nenhum evento para exibir",
+    "all_categories": "Todas as Categorias",
+    "categories": {
+      "orders": "Pedidos",
+      "team": "Equipe",
+      "deadlines": "Prazos",
+      "financial": "Financeiro",
+      "system": "Sistema"
+    },
+    "modules": {
+      "sales": "Vendas",
+      "service": "Serviço",
+      "recon": "Recon",
+      "car_wash": "Car Wash",
+      "get_ready": "Get Ready"
+    },
     "settings": {
       "title": "Configurações de Notificações",
       "description": "Gerencie suas preferências de notificação",
