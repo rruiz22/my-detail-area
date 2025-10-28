@@ -57,6 +57,7 @@ export type ModulePermissionKey =
   | 'assign_orders'
   | 'view_customer_info'
   | 'edit_customer_info'
+  | 'receive_sms_notifications'
 
   // Stock/Inventory
   | 'view_inventory'
