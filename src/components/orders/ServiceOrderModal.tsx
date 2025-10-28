@@ -319,6 +319,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
     setLoading(true);
     try {
+      // Get users from dealer memberships with their profiles AND permissions for service_orders module
       const [usersResult, servicesResult] = await Promise.all([
         supabase
           .from('dealer_memberships')
@@ -328,6 +329,17 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
               first_name,
               last_name,
               email
+            ),
+            custom_role_id,
+            dealer_custom_roles!left (
+              id,
+              role_name,
+              role_module_permissions_new!left (
+                module_permissions!inner (
+                  module,
+                  permission_key
+                )
+              )
             )
           `)
           .eq('dealer_id', dealerId)
@@ -353,7 +365,25 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       }
 
       if (usersResult.data) {
-        const mappedUsers = usersResult.data.map((membership: any) => ({
+        // Filter users who have access to service_orders module
+        const usersWithAccess = usersResult.data.filter((membership: any) => {
+          // Check if user has a custom role with service_orders permissions
+          // Note: System admins are checked separately via enhancedUser.is_system_admin in the UI
+          if (membership.dealer_custom_roles) {
+            const rolePermissions = membership.dealer_custom_roles.role_module_permissions_new || [];
+            const hasAccess = rolePermissions.some((rmp: any) => {
+              return rmp.module_permissions?.module === 'service_orders';
+            });
+            if (hasAccess) return true;
+          }
+
+          // If no custom role or no service_orders permissions, exclude
+          // System admins will be shown regardless (handled in a future iteration)
+          // For now, only show users with explicit service_orders permissions
+          return false;
+        });
+
+        const mappedUsers = usersWithAccess.map((membership: any) => ({
           id: membership.profiles.id,
           name: `${membership.profiles.first_name} ${membership.profiles.last_name}`.trim(),
           email: membership.profiles.email

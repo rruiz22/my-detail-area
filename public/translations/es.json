@@ -840,7 +840,10 @@
       "recon_dept": "Depto. Recon",
       "carwash_dept": "Depto. Lavado"
     },
-    "minutes": "minutos"
+    "minutes": "minutos",
+    "service": "servicio",
+    "services": "servicios",
+    "confirm_delete_title": "¿Eliminar Servicio?"
   },
   "vin_scanner_errors": {
     "vin_input_placeholder": "Ingresa VIN de 17 caracteres o escanea con cámara"

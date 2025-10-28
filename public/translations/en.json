@@ -829,7 +829,10 @@
       "recon_dept": "Recon Dept",
       "carwash_dept": "CarWash Dept"
     },
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "service": "service",
+    "services": "services",
+    "confirm_delete_title": "Delete Service?"
   },
   "vin_scanner_errors": {
     "vin_input_placeholder": "Enter 17-character VIN or scan with camera"

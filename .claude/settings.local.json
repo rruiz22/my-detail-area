@@ -38,7 +38,10 @@
       "Bash(timeout:*)",
       "Bash(env)",
       "Bash(git restore:*)",
-      "Bash(del execute-migration.js verify-dealership-config.js fix-missing-modules.js final-verification.js)"
+      "Bash(del execute-migration.js verify-dealership-config.js fix-missing-modules.js final-verification.js)",
+      "Bash(if [ -f \".env\" ])",
+      "Bash(then echo \"File exists\")",
+      "Bash(else echo \"No .env file\")"
     ],
     "deny": [],
     "ask": []

@@ -119,23 +119,18 @@ export function DueDateTimePicker({
     loadAvailableSlots(date);
 
     if (value) {
-      // Keep existing time if available
-      const safeExistingDate = safeParseDate(value.toISOString());
-      if (safeExistingDate) {
-        const newDate = new Date(date);
-        newDate.setHours(safeExistingDate.getHours());
-        newDate.setMinutes(safeExistingDate.getMinutes());
-        onChange(newDate);
-      } else {
-        onChange(setMinutes(setHours(date, 8), 0));
-      }
+      // Keep existing time if available - value is already a Date object, no need to parse
+      const newDate = new Date(date);
+      newDate.setHours(value.getHours());
+      newDate.setMinutes(value.getMinutes());
+      onChange(newDate);
     } else {
       // Set default time to 8 AM, or next available slot if today
       const now = new Date();
-      const defaultHour = isToday(date) && now.getHours() >= 8 
-        ? Math.max(8, now.getHours() + 1) 
+      const defaultHour = isToday(date) && now.getHours() >= 8
+        ? Math.max(8, now.getHours() + 1)
         : 8;
-      
+
       if (defaultHour >= 18) {
         // If no slots available today, move to tomorrow 8 AM
         const tomorrow = addDays(date, 1);
@@ -144,19 +139,17 @@ export function DueDateTimePicker({
         onChange(setMinutes(setHours(date, defaultHour), 0));
       }
     }
-    
+
     // Close the calendar after selecting a date
     setIsCalendarOpen(false);
   };
 
   const handleTimeChange = (hourString: string) => {
     if (!value || !hourString) return;
-    
+
     const hour = parseInt(hourString);
-    const safeDate = safeParseDate(value.toISOString());
-    if (!safeDate) return;
-    
-    const newDate = setMinutes(setHours(safeDate, hour), 0);
+    // value is already a Date object, no need to parse again
+    const newDate = setMinutes(setHours(value, hour), 0);
     onChange(newDate);
   };
 
