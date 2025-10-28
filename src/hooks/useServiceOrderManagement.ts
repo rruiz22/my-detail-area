@@ -490,17 +490,18 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
       dev('Service order created successfully:', data);
 
-      // Auto-generate QR code and shortlink
-      try {
-        await generateQR(data.id, data.order_number, data.dealer_id);
-        dev('QR code and shortlink generated for service order:', data.order_number);
-      } catch (qrError) {
-        logError('Failed to generate QR code:', qrError);
-        // Don't fail the order creation if QR generation fails
-      }
+      // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
+      generateQR(data.id, data.order_number, data.dealer_id)
+        .then(() => {
+          dev('✅ QR code and shortlink generated for service order:', data.order_number);
+        })
+        .catch((qrError) => {
+          logError('❌ Failed to generate QR code:', qrError);
+          // QR generation failure doesn't affect order creation
+        });
 
-      // Force immediate refetch to refresh order list
-      await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
+      // Optimistic update already done - polling will refresh within 60s
+      // Removed refetchQueries for instant modal close
     } catch (error) {
       logError('Error in createOrder:', error);
       throw error;

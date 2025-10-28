@@ -242,9 +242,9 @@ export function ServiceBadgesGroup({
 
   return (
     <div className={cn('flex flex-wrap gap-1.5', className)}>
-      {visibleServices.map((service, index) => (
+      {visibleServices.map((service) => (
         <ServiceBadge
-          key={index}
+          key={service.name}
           serviceName={service.name}
           color={service.category_color}
           size={size}

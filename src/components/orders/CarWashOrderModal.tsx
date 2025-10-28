@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
@@ -126,10 +125,11 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     'CarWash Dept'
   );
 
-  const [selectedService, setSelectedService] = useState<string>('');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [serviceRequiredError, setServiceRequiredError] = useState(false);
+  const [isManuallyEditingVehicleInfo, setIsManuallyEditingVehicleInfo] = useState(false);
 
   // Combine loading states
   const loading = dealershipsLoading || servicesLoading;
@@ -142,33 +142,36 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   // Declare handleDealershipChange
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealership(dealershipId);
-    setSelectedService('');
+    setSelectedServices([]);
     setServiceRequiredError(false);
     handleInputChange('service', '');
     // Services are now loaded automatically via React Query hook when selectedDealership changes
   };
 
   // Auto-generate vehicle display when VIN is decoded or fields change
+  // Only auto-update if user is NOT manually editing the field
   useEffect(() => {
-    const vehicleDisplay = formatVehicleDisplay(
-      formData.vehicleYear,
-      formData.vehicleMake,
-      formData.vehicleModel
-    );
-    if (vehicleDisplay !== formData.vehicleInfo) {
-      setFormData(prev => ({ ...prev, vehicleInfo: vehicleDisplay }));
+    if (!isManuallyEditingVehicleInfo) {
+      const vehicleDisplay = formatVehicleDisplay(
+        formData.vehicleYear,
+        formData.vehicleMake,
+        formData.vehicleModel
+      );
+      if (vehicleDisplay !== formData.vehicleInfo && vehicleDisplay) {
+        setFormData(prev => ({ ...prev, vehicleInfo: vehicleDisplay }));
+      }
     }
-  }, [formData.vehicleYear, formData.vehicleMake, formData.vehicleModel, formData.vehicleInfo]);
+  }, [formData.vehicleYear, formData.vehicleMake, formData.vehicleModel, isManuallyEditingVehicleInfo]);
 
   useEffect(() => {
     if (open) {
       // Dealerships are now loaded via React Query hook - no need to fetch manually
 
       if (order) {
-        const primaryServiceId =
-          Array.isArray(order.services) && order.services.length > 0
-            ? normalizeServiceId(order.services[0])
-            : normalizeServiceId(order.service);
+        // Extract all services from order (support for multiple services)
+        const orderServices = Array.isArray(order.services) && order.services.length > 0
+          ? order.services.map((s: any) => normalizeServiceId(s)).filter(Boolean)
+          : order.service ? [normalizeServiceId(order.service)] : [];
 
         setFormData({
           orderNumber: order.orderNumber || order.order_number || '',
@@ -184,7 +187,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           vehicleInfo: order.vehicleInfo || order.vehicle_info || '',
           stockNumber: order.stockNumber || order.stock_number || '',
           tag: order.tag || '',
-          service: primaryServiceId,
+          service: orderServices[0] || '',  // Keep for backwards compatibility
           isWaiter: order.isWaiter || false,
           assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
           assignedContactId: order.assignedContactId || order.assigned_contact_id || '',
@@ -198,7 +201,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           scheduledDate: order.scheduledDate ? safeParseDate(order.scheduledDate) || undefined : undefined,
           scheduledTime: order.scheduledTime || ''
         });
-        setSelectedService(primaryServiceId);
+        setSelectedServices(orderServices);
         setServiceRequiredError(false);
         // Dealership will be set by separate useEffect after dealerships load
       } else {
@@ -231,10 +234,11 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           scheduledDate: undefined,
           scheduledTime: ''
         });
-        setSelectedService('');
+        setSelectedServices([]);
         setServiceRequiredError(false);
         setSelectedDealership('');
         setVinDecoded(false);
+        setIsManuallyEditingVehicleInfo(false);
       }
     }
   }, [order, open]);
@@ -286,26 +290,39 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleServiceSelect = (serviceId: string) => {
-    setSelectedService(serviceId);
-    handleInputChange('service', serviceId);
+  const handleServiceToggle = (serviceId: string, checked: boolean) => {
+    if (checked) {
+      // ✅ LIMIT: Maximum 1 service per car wash order
+      if (selectedServices.length >= 1) {
+        toast.warning(t('car_wash_orders.max_one_service', 'Car wash orders can only have one service'));
+        return;
+      }
+      setSelectedServices(prev => [...prev, serviceId]);
+    } else {
+      setSelectedServices(prev => prev.filter(id => id !== serviceId));
+    }
     setServiceRequiredError(false);
   };
 
   const transformToDbFormat = (formData: OrderFormData) => {
-    const matchedService = selectedService
-      ? (services as any[]).find((service: any) => normalizeServiceId(service) === selectedService)
-      : null;
-
-    const servicePayload = selectedService
-      ? matchedService
-        ? [{
-            type: normalizeServiceId(matchedService),
-            name: matchedService.name,
-            price: matchedService.price ?? undefined,
-            description: matchedService.description ?? undefined,
-          }]
-        : [selectedService]
+    // Build service payload from selected services array
+    const servicePayload = selectedServices.length > 0
+      ? selectedServices.map(serviceId => {
+          const matchedService = (services as any[]).find((service: any) => normalizeServiceId(service) === serviceId);
+          return matchedService
+            ? {
+                type: normalizeServiceId(matchedService),
+                name: matchedService.name,
+                price: matchedService.price ?? undefined,
+                description: matchedService.description ?? undefined,
+              }
+            : {
+                type: serviceId,
+                name: 'Unknown Service',
+                price: undefined,
+                description: undefined,
+              };
+        })
       : [];
 
     return {
@@ -320,7 +337,10 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
       tag: formData.tag || undefined,
       isWaiter: formData.isWaiter,
       services: servicePayload,
-      totalAmount: 0,
+      totalAmount: selectedServices.reduce((total, serviceId) => {
+        const service = (services as any[]).find((s: any) => normalizeServiceId(s) === serviceId);
+        return total + (service?.price || 0);
+      }, 0),
       notes: formData.notes || undefined,
       completedAt: formData.completedAt || undefined,
       dealerId: selectedDealership && Number.isInteger(Number(selectedDealership))
@@ -334,7 +354,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     setSubmitError(null); // Reset any previous errors
     setServiceRequiredError(false);
 
-    if (!selectedService) {
+    if (selectedServices.length === 0) {
       setServiceRequiredError(true);
       toast.error(t('validation.option_required'));
       return;
@@ -371,7 +391,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-4xl sm:h-auto sm:max-h-[98vh] sm:w-[95vw] md:w-[90vw] lg:max-w-5xl lg:w-[85vw] xl:max-w-6xl sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
           <DialogTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
             {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
@@ -400,10 +420,10 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="p-3 sm:p-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
 
-                  {/* Left Column - Dealership & Vehicle Info */}
-                  <div className="space-y-3">
+                  {/* Column 1 - Dealership & Vehicle Info */}
+                  <div className="space-y-3 order-1">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="dealership">{t('car_wash_orders.dealership')}</Label>
@@ -493,7 +513,16 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   <Input
                     id="vehicleInfo"
                     value={formData.vehicleInfo}
-                    onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
+                    onChange={(e) => {
+                      setIsManuallyEditingVehicleInfo(true);
+                      handleInputChange('vehicleInfo', e.target.value);
+                    }}
+                    onBlur={() => {
+                      // Reset manual editing flag after user leaves the field
+                      if (!formData.vehicleInfo) {
+                        setIsManuallyEditingVehicleInfo(false);
+                      }
+                    }}
                     className="border-input bg-background font-medium"
                     placeholder="2025 BMW X6 (xDrive40i)"
                   />
@@ -520,8 +549,8 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                 </div>
                   </div>
 
-              {/* Right Column - Services & Notes */}
-              <div className="space-y-3 col-span-1 lg:col-span-2 xl:col-span-1">
+              {/* Column 2 - Services & Notes */}
+              <div className="space-y-3 order-2">
                 <div className="border-b border-border pb-2 mb-3">
                   <h3 className="text-sm sm:text-base font-medium text-foreground">
                     {t('orders.servicesAndNotes')}
@@ -564,15 +593,27 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
                 {/* Available Services */}
                 <div>
-                  <Label className="text-sm font-medium flex items-center gap-1">
-                    <span>{t('orders.services')}</span>
-                    <span className="text-destructive" aria-hidden="true">*</span>
-                    {selectedDealership && services.length > 0 && (
-                      <span className="text-muted-foreground ml-auto">
-                        ({services.length} {t('orders.available')})
-                      </span>
-                    )}
-                  </Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label className="text-sm font-medium flex items-center gap-1">
+                      <span>{t('orders.services')}</span>
+                      <span className="text-destructive" aria-hidden="true">*</span>
+                      {selectedDealership && services.length > 0 && (
+                        <span className="text-muted-foreground ml-1">
+                          ({services.length} {t('orders.available')})
+                        </span>
+                      )}
+                    </Label>
+                    <Badge variant={selectedServices.length >= 1 ? "default" : "secondary"} className="text-xs">
+                      {selectedServices.length}/1 {t('orders.selected')}
+                    </Badge>
+                  </div>
+
+                  {/* Service limit info message */}
+                  {selectedServices.length >= 1 && (
+                    <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 mb-2">
+                      {t('car_wash_orders.one_service_limit', 'Car wash orders can only have one service. Uncheck to select another.')}
+                    </div>
+                  )}
 
                   {!selectedDealership ? (
                     <div className="p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground">
@@ -585,56 +626,58 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     </div>
                   ) : (
                     <>
-                      <ScrollArea
-                        className={`${
-                          services.length <= 2
-                            ? 'h-auto max-h-32'
-                            : services.length <= 4
-                              ? 'h-48'
-                              : 'h-64'
-                        } border border-border rounded-lg p-3 bg-background`}
-                      >
-                        {services.length === 0 ? (
-                          <div className="text-center text-muted-foreground py-8">
-                            {t('orders.noServicesAvailable')}
-                          </div>
-                        ) : (
-                          <RadioGroup
-                            value={selectedService}
-                            onValueChange={handleServiceSelect}
-                            className="space-y-3"
-                          >
-                            {services.map((service: any) => (
-                              <div key={service.id} className="flex items-start justify-between p-3 border border-border rounded-lg hover:bg-accent/10 transition-colors">
-                                <div className="flex items-start space-x-3 flex-1">
-                                  <RadioGroupItem
-                                    id={`service-${service.id}`}
-                                    value={service.id}
-                                    className="mt-1"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <Label
-                                      htmlFor={`service-${service.id}`}
-                                      className="font-medium text-sm cursor-pointer"
-                                    >
-                                      {service.name}
-                                    </Label>
-                                    {service.duration && (
-                                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                                        <span>{service.duration} {t('services.minutes')}</span>
-                                      </div>
-                                    )}
-                                    {service.description && (
-                                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                        {service.description}
-                                      </p>
-                                    )}
+                      <ScrollArea className="h-48 sm:h-64 border border-border rounded-lg p-3 bg-background">
+                        <div className="space-y-3">
+                          {services.length === 0 ? (
+                            <div className="text-center text-muted-foreground py-8">
+                              {t('orders.noServicesAvailable')}
+                            </div>
+                          ) : (
+                            services.map((service: any) => {
+                              const isSelected = selectedServices.includes(service.id);
+                              const isDisabled = !isSelected && selectedServices.length >= 1;
+
+                              return (
+                                <div key={service.id} className={`flex items-start justify-between p-3 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
+                                  <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
+                                    <Checkbox
+                                      id={service.id}
+                                      checked={isSelected}
+                                      onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                      className="mt-1 w-5 h-5"
+                                      disabled={isDisabled}
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <Label
+                                        htmlFor={service.id}
+                                        className="font-medium text-sm cursor-pointer block leading-relaxed"
+                                      >
+                                        {service.name}
+                                      </Label>
+                                      {service.duration && (
+                                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                                          <span>{service.duration} {t('services.minutes')}</span>
+                                        </div>
+                                      )}
+                                      {service.description && (
+                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                          {service.description}
+                                        </p>
+                                      )}
+                                    </div>
                                   </div>
+                                  {service.price && (
+                                    <div className="text-right shrink-0 ml-3">
+                                      <span className="font-semibold text-sm">
+                                        ${service.price.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        )}
+                              );
+                            })
+                          )}
+                        </div>
                       </ScrollArea>
                       {serviceRequiredError && services.length > 0 && (
                         <p className="text-xs text-destructive mt-2">
@@ -645,6 +688,24 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   )}
                 </div>
 
+                {/* Total Price Section */}
+                {selectedServices.length > 0 && (
+                  <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-sm text-emerald-900">{t('orders.total')}</span>
+                      <span className="font-bold text-lg text-emerald-600">
+                        ${selectedServices.reduce((total, serviceId) => {
+                          const service = (services as any[]).find((s: any) => s.id === serviceId);
+                          return total + (service?.price || 0);
+                        }, 0).toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="text-xs text-emerald-700 mt-1">
+                      {selectedServices.length} {t('orders.servicesSelected')}
+                    </div>
+                  </div>
+                )}
+
                 <Separator />
 
                 <div>
@@ -654,8 +715,10 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     value={formData.notes}
                     onChange={(e) => handleInputChange('notes', e.target.value)}
                     rows={3}
-                    className="border-input bg-background resize-none"
-                    placeholder={t('car_wash_orders.notes_placeholder')}
+                    className="border-input bg-muted/50 resize-none cursor-not-allowed"
+                    placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
+                    readOnly
+                    disabled
                   />
                 </div>
                   </div>
@@ -727,7 +790,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
               </Button>
               <Button
                 type="submit"
-                disabled={loading || !selectedDealership || !formData.vehicleVin || !selectedService}
+                disabled={loading || !selectedDealership || !formData.vehicleVin || selectedServices.length === 0}
                 className="order-1 sm:order-2 w-full sm:w-auto min-h-[44px]"
               >
                 {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

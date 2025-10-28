@@ -364,22 +364,24 @@ export const useReconOrderManagement = () => {
 
       const newOrder = transformReconOrder(data);
 
-      // Auto-generate QR code and shortlink
-      try {
-        await generateQR(data.id, data.order_number, data.dealer_id);
-        console.log('QR code and shortlink generated for recon order:', data.order_number);
-      } catch (qrError) {
-        console.error('Failed to generate QR code:', qrError);
-        // Don't fail the order creation if QR generation fails
-      }
+      // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
+      generateQR(data.id, data.order_number, data.dealer_id)
+        .then(() => {
+          console.log('✅ QR code and shortlink generated for recon order:', data.order_number);
+        })
+        .catch((qrError) => {
+          console.error('❌ Failed to generate QR code:', qrError);
+          // QR generation failure doesn't affect order creation
+        });
 
+      // Show success immediately (don't wait for QR)
       toast({
         description: t('recon.order_created_successfully'),
         variant: 'default'
       });
 
-      // Invalidate React Query cache to refresh order list
-      await queryClient.refetchQueries({ queryKey: ['orders', 'recon'] });
+      // Optimistic update already done - polling will refresh within 60s
+      // Removed refetchQueries for instant modal close
 
       return newOrder;
     } catch (error) {

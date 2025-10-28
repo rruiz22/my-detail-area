@@ -768,6 +768,7 @@
     "max_services_info": "Máximo de 2 servicios alcanzado. Desmarca un servicio para seleccionar otro.",
     "notes": "Notas",
     "notesPlaceholder": "Agrega instrucciones especiales o detalles sobre esta orden...",
+    "notes_instruction": "Para agregar notas o instrucciones, usa la sección de Comentarios en la vista de detalles de la orden",
     "customerNamePlaceholder": "Ingresa el nombre completo del cliente (obligatorio)",
     "creating_order": "Creando orden...",
     "creation_failed": "Error al crear la orden",
@@ -1992,7 +1993,8 @@
     "view_details": "Ver Detalles",
     "edit_order": "Editar Orden",
     "delete_order": "Eliminar Orden",
-    "print_order": "Imprimir Orden"
+    "print_order": "Imprimir Orden",
+    "items_per_page": "Elementos por página:"
   },
   "vehicle_info": {
     "vehicle_information": "Información del Vehículo",
@@ -2023,7 +2025,9 @@
     "service_performer": "Responsable del Servicio",
     "service_type": "Tipo de Servicio",
     "waiter": "Espera",
-    "standard_wash": "Lavado Estándar"
+    "standard_wash": "Lavado Estándar",
+    "max_one_service": "Las órdenes de lavado solo pueden tener un servicio",
+    "one_service_limit": "Las órdenes de lavado solo pueden tener un servicio. Desmarca para seleccionar otro."
   },
   "completion_date": {
     "select_date": "Seleccionar fecha"

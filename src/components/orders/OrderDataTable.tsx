@@ -13,6 +13,7 @@ import {
     TableHeader,
     TableRow
 } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Order } from '@/hooks/useOrderManagement';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -49,7 +50,7 @@ import { ServicesDisplay } from './ServicesDisplay';
 import { SkeletonLoader } from './SkeletonLoader';
 
 // Constants for magic numbers
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 25;
 
 interface StatusInfo {
   text: string;
@@ -90,7 +91,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
   const { printOrder, previewPrint } = usePrintOrder();
   const { canEditOrder, canDeleteOrder } = usePermissions();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = DEFAULT_PAGE_SIZE;
+  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_PAGE_SIZE);
   const isMobile = useIsMobile();
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
@@ -329,7 +330,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                           debug={import.meta.env.DEV}
                         >
                           <span className="inline-flex items-baseline gap-2 text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
-                            {order.stockNumber || `T:${order.tag}`}
+                            {order.stockNumber || order.tag || 'N/A'}
                             <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
                           </span>
                         </DuplicateTooltip>
@@ -381,7 +382,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                       variant="ghost"
                       size="sm"
                       onClick={() => onView(order)}
-                      className="flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition-all hover:scale-105"
+                      className="flex items-center gap-2 text-foreground dark:text-gray-200 hover:bg-muted/50 dark:hover:bg-muted/30 transition-all hover:scale-105"
                     >
                       <Eye className="h-4 w-4" />
                       {t('data_table.view')}
@@ -464,7 +465,9 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="w-16 font-medium text-foreground text-center">#</TableHead>
                 <TableHead className="w-[140px] font-medium text-foreground text-center">Order ID</TableHead>
-                <TableHead className="font-medium text-foreground text-center">{tabType === 'service' ? 'Tag' : 'Stock'}</TableHead>
+                <TableHead className="font-medium text-foreground text-center">
+                  {tabType === 'service' ? 'Tag' : tabType === 'carwash' ? 'Tag/Stock' : 'Stock'}
+                </TableHead>
                 <TableHead className="max-w-[200px] font-medium text-foreground text-center">Vehicle</TableHead>
                 <TableHead className="font-medium text-foreground text-center">{t('orders.services')}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>
@@ -539,7 +542,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                             debug={import.meta.env.DEV}
                           >
                             <span className="inline-flex items-baseline gap-2 text-base font-bold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
-                              {order.stockNumber || `T:${order.tag}`}
+                              {order.stockNumber || order.tag || 'N/A'}
                               <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
                             </span>
                           </DuplicateTooltip>
@@ -732,32 +735,58 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
         </CardContent>
 
         {/* Desktop Pagination */}
-        {totalPages > 1 && (
-          <div className="flex flex-col items-center gap-2 py-4 border-t">
-            <div className="text-sm text-muted-foreground font-medium">
-              {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}
+        {orders.length > 0 && (
+          <div className="flex flex-col items-center gap-3 py-4 border-t">
+            {/* Info Row with Items Per Page Selector */}
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-muted-foreground font-medium">
+                {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">{t('data_table.items_per_page', 'Items per page:')}</span>
+                <Select
+                  value={itemsPerPage.toString()}
+                  onValueChange={(value) => {
+                    setItemsPerPage(Number(value));
+                    setCurrentPage(1);
+                  }}
+                >
+                  <SelectTrigger className="w-20 h-8 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="flex justify-center items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Button>
-              <span className="flex items-center px-3 text-sm text-muted-foreground">
-                {t('data_table.page_of', { current: currentPage, total: totalPages })}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                disabled={currentPage >= totalPages}
-              >
-                Next
-              </Button>
-            </div>
+            {/* Pagination Buttons */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="flex items-center px-3 text-sm text-muted-foreground">
+                  {t('data_table.page_of', { current: currentPage, total: totalPages })}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage >= totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </Card>

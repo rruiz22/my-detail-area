@@ -197,27 +197,34 @@ export const useCarWashOrderManagement = () => {
       const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
-      // Fetch dealerships data separately
-      const { data: dealerships, error: dealershipsError } = await supabase
-        .from('dealerships')
-        .select('id, name');
+      // Fetch related data in parallel for better performance
+      const [
+        { data: dealerships, error: dealershipsError },
+        { data: dealerGroups, error: groupsError },
+        { data: userProfiles, error: profilesError }
+      ] = await Promise.all([
+        supabase.from('dealerships').select('id, name'),
+        supabase.from('dealer_groups').select('id, name'),
+        supabase.from('profiles').select('id, first_name, last_name, email')
+      ]);
 
       if (dealershipsError) {
         console.error('Error fetching dealerships:', dealershipsError);
       }
-
-      // Fetch dealer groups data separately
-      const { data: dealerGroups, error: groupsError } = await supabase
-        .from('dealer_groups')
-        .select('id, name');
-
       if (groupsError) {
         console.error('Error fetching dealer groups:', groupsError);
+      }
+      if (profilesError) {
+        console.error('Error fetching user profiles:', profilesError);
       }
 
       // Create lookup maps for better performance
       const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
       const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
+      const userMap = new Map(userProfiles?.map(u => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
 
       // Transform orders with joined data
       const transformedOrders = (orders || []).map(order => {
@@ -226,7 +233,16 @@ export const useCarWashOrderManagement = () => {
         transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
         transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
         transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
+
+        // Set assignedTo - if not assigned, show creator
+        if (order.assigned_group_id) {
+          transformedOrder.assignedTo = groupMap.get(order.assigned_group_id) || userMap.get(order.assigned_group_id) || 'Unknown';
+        } else if (order.created_by) {
+          transformedOrder.assignedTo = `Created by: ${userMap.get(order.created_by) || 'Unknown'}`;
+        } else {
+          transformedOrder.assignedTo = 'Unassigned';
+        }
+
         return transformedOrder;
       });
 
@@ -293,6 +309,7 @@ export const useCarWashOrderManagement = () => {
         dealer_id: orderData.dealerId && Number.isInteger(Number(orderData.dealerId))
           ? parseInt(orderData.dealerId.toString())
           : null,
+        created_by: user.id, // ✅ Track which USER created the order
       };
 
       console.log('💾 [CarWash Hook] Sending INSERT to Supabase:', {
@@ -326,22 +343,24 @@ export const useCarWashOrderManagement = () => {
         oldData ? [newOrder, ...oldData] : [newOrder]
       );
 
-      // Auto-generate QR code and shortlink
-      try {
-        await generateQR(data.id, data.order_number, data.dealer_id);
-        console.log('QR code and shortlink generated for car wash order:', data.order_number);
-      } catch (qrError) {
-        console.error('Failed to generate QR code:', qrError);
-        // Don't fail the order creation if QR generation fails
-      }
+      // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
+      generateQR(data.id, data.order_number, data.dealer_id)
+        .then(() => {
+          console.log('✅ QR code and shortlink generated for car wash order:', data.order_number);
+        })
+        .catch((qrError) => {
+          console.error('❌ Failed to generate QR code:', qrError);
+          // QR generation failure doesn't affect order creation
+        });
 
+      // Show success immediately (don't wait for QR)
       toast({
         description: t('car_wash.order_created_successfully') || 'Car wash order created successfully',
         variant: 'default'
       });
 
-      // Invalidate React Query cache to refresh order list
-      await queryClient.refetchQueries({ queryKey: ['orders', 'car_wash'] });
+      // Optimistic update already done above - polling will refresh within 60s
+      // Removed refetchQueries for instant modal close
 
       return newOrder;
     } catch (error) {

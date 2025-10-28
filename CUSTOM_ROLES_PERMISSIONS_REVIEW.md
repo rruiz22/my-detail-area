@@ -51,11 +51,11 @@ El sistema tiene **3 niveles de permisos** que funcionan en cascada:
 graph TD
     A[Admin navega a /admin/:id] --> B[Vista DealerView]
     B --> C{Selecciona Tab}
-    
+
     C -->|Modules| D[DealerModules Component]
     D --> D1[Toggle módulos ON/OFF para el dealer]
     D1 --> D2[Tabla: dealership_modules]
-    
+
     C -->|Roles| E[DealerRoles Component]
     E --> E1[Create Custom Role]
     E1 --> E2[Tabla: dealer_custom_roles]
@@ -73,18 +73,18 @@ graph TD
 graph TD
     A[Usuario accede a ruta] --> B[PermissionGuard Component]
     B --> C{¿checkDealerModule = true?}
-    
+
     C -->|SÍ| D[useDealershipModules Hook]
     D --> E{¿Dealer tiene módulo?}
     E -->|NO| F[🚫 Access Denied]
     E -->|SÍ| G[useRoleModuleAccess Hook]
-    
+
     C -->|NO| G
-    
+
     G --> H{¿Rol tiene módulo enabled?}
     H -->|NO| I[⚠️ Permisos existen pero no activos]
     H -->|SÍ| J[usePermissions Hook]
-    
+
     J --> K{¿Usuario tiene permiso específico?}
     K -->|NO| F
     K -->|SÍ| L[✅ Acceso concedido - Render children]
@@ -200,14 +200,14 @@ function checkAccess() {
   if (checkDealerModule && !isSystemAdmin) {
     // 1. Verificar módulo del dealer
     if (!hasModuleAccess(module)) return false;
-    
+
     // 2. Verificar que usuario tenga ALGÚN permiso en el módulo
     if (!userHasAnyModulePermission) return false;
-    
+
     // 3. Verificar permiso específico
     return hasModulePermission(module, permission);
   }
-  
+
   // Standard check (sin validación de dealer module)
   return hasModulePermission(module, permission);
 }
@@ -234,7 +234,7 @@ Según tus logs, el error ocurre aquí:
 const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
 ```
 
-**Problema:** 
+**Problema:**
 - `enhancedUser` se carga asíncronamente
 - PermissionGuard verifica permisos ANTES de que `is_system_admin` esté disponible
 - Resultado: System admins ven "Access Denied" temporalmente
@@ -254,7 +254,7 @@ if (!enhancedUser) {
 }
 
 // Opción 2: Bypass para system_admin
-const isSystemAdmin = enhancedUser?.is_system_admin || 
+const isSystemAdmin = enhancedUser?.is_system_admin ||
                       enhancedUser?.role === 'system_admin';
 
 if (isSystemAdmin) {
@@ -296,12 +296,12 @@ const hasModuleAccess = useCallback((module: AppModule): boolean => {
   if (userIsSystemAdmin) {
     return true;
   }
-  
+
   if (modules.length === 0) {
     console.warn(`[hasModuleAccess] ⚠️ No modules configured`);
     return false;
   }
-  
+
   const moduleData = modules.find(m => m.module === module);
   return moduleData?.is_enabled || false;
 }, [modules, userIsSystemAdmin]);
@@ -340,9 +340,9 @@ const hasModuleAccess = useCallback((module: AppModule): boolean => {
 1. **Arreglar Race Condition de System Admin**
    ```typescript
    // PermissionGuard.tsx
-   const isSystemAdmin = enhancedUser?.is_system_admin || 
+   const isSystemAdmin = enhancedUser?.is_system_admin ||
                          enhancedUser?.role === 'system_admin';
-   
+
    // Bypass temprano para system_admin
    if (isSystemAdmin) {
      return <>{children}</>;
@@ -380,7 +380,7 @@ const hasModuleAccess = useCallback((module: AppModule): boolean => {
    const toggleModulePermission = async (module, permKey) => {
      // Asignar permiso
      await assignPermission();
-     
+
      // Auto-enable módulo si está disabled
      if (!roleHasModuleAccess(module)) {
        await toggleModuleAccess(module, true);
@@ -519,5 +519,3 @@ console.log('Role has dealerships:', hasRoleModuleAccess('dealerships'));
 - Los problemas son de **timing** y **race conditions**, no de lógica
 - La solución es simple: asegurar que `enhancedUser` esté cargado antes de verificar
 - Considerar agregar un `usePermissionsReady()` hook que devuelva un booleano
-
-

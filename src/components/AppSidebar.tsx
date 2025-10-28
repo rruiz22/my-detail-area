@@ -259,10 +259,10 @@ export function AppSidebar() {
   return (
     <TooltipProvider delayDuration={300}>
       <Sidebar collapsible="icon" className="border-r z-50" style={{boxShadow: '0 1px 3px 0 hsl(0 0% 0% / 0.06)'}}>
-        <SidebarHeader className="sticky top-0 z-10 bg-sidebar p-4 space-y-3 border-b border-border/40">
+        <SidebarHeader className="sticky top-0 z-10 bg-sidebar px-4 pt-3 pb-2 space-y-0.5 border-b border-border/40">
         {/* 1️⃣ Dealership Logo (First Row) */}
         {currentDealership && (
-          <div className="flex flex-col items-center gap-2 py-2 border-y border-border/40">
+          <div className="flex flex-col items-center gap-1 py-2 border-y border-border/40">
             {/* Dealership Avatar */}
             <Avatar className={collapsed ? "h-10 w-10" : "h-16 w-16"}>
               <AvatarImage
@@ -278,7 +278,7 @@ export function AppSidebar() {
             {/* Dealership Name (only when expanded) */}
             {!collapsed && (
               <div className="text-center px-2 max-w-full">
-                <p className="text-xs font-medium truncate" title={currentDealership.name}>
+                <p className="text-sm font-bold truncate" title={currentDealership.name}>
                   {currentDealership.name}
                 </p>
               </div>
