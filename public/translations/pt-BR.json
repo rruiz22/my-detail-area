@@ -2675,11 +2675,45 @@
     "can_change_order_status_desc": "Pode modificar o status do pedido (pendente, em andamento, concluído, etc.)"
   },
   "invitations": {
+    "title": "Convites da Equipe",
+    "description": "Gerenciar convites de usuários para esta concessionária",
     "all_invitations": "Todos os Convites",
     "dealer_invitations": "Convites da Concessionária",
     "manage_invitations_desc": "Gerencie convites de usuários e acompanhe seu status",
     "manage_dealer_invitations_desc": "Gerencie convites para esta concessionária específica",
+    "templates": "Modelos",
     "send_invitation": "Enviar Convite",
+    "stats": {
+      "total": "Total",
+      "pending": "Pendentes",
+      "accepted": "Aceitos",
+      "expired": "Expirados"
+    },
+    "table": {
+      "invitee": "Convidado",
+      "role": "Função",
+      "dealership": "Concessionária",
+      "inviter": "Remetente",
+      "status": "Status",
+      "sent": "Enviado",
+      "expires": "Expira",
+      "actions": "Ações",
+      "no_invitations": "Nenhum convite encontrado"
+    },
+    "tabs": {
+      "all": "Todos",
+      "pending": "Pendentes",
+      "accepted": "Aceitos",
+      "expired": "Expirados"
+    },
+    "actions": {
+      "resend": "Reenviar",
+      "cancel": "Cancelar",
+      "delete": "Excluir"
+    },
+    "confirm_cancel_desc": "O usuário não poderá mais aceitar este convite.",
+    "confirm_delete_desc": "Esta ação não pode ser desfeita.",
+    "invitation_created": "Convite Criado",
     "email": "E-mail",
     "email_placeholder": "Digite o endereço de e-mail",
     "role": "Função",

@@ -181,7 +181,20 @@ const DealerView = () => {
           </TabsContent>
 
           <TabsContent value="invitations" className="space-y-6">
-            <InvitationManagement dealerId={parseInt(id)} />
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Mail className="h-5 w-5" />
+                  <span>{t('invitations.title')}</span>
+                </CardTitle>
+                <CardDescription>
+                  {t('invitations.description')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <InvitationManagement dealerId={parseInt(id)} />
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="services" className="space-y-6">
