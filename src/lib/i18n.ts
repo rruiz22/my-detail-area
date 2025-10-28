@@ -5,6 +5,9 @@ import { initReactI18next } from 'react-i18next';
 // This forces browsers to reload translation files
 const TRANSLATION_VERSION = `1.5.0-${Date.now()}`; // v1.5.0: Added getReady.analytics translations (58 keys)
 
+// ✅ PHASE 1.3: SessionStorage cache key for translations
+const TRANSLATION_CACHE_KEY = 'i18n_translations_cache_v1';
+
 // Language resources will be loaded dynamically
 const resources = {};
 
@@ -19,26 +22,48 @@ i18n
     },
   });
 
-// Dynamically load translation files
+// Track if initial language is being loaded
+let initialLanguageLoading: Promise<any> | null = null;
+
+// ✅ PHASE 1.3: Load translation with sessionStorage cache for instant subsequent loads
 const loadLanguage = async (language: string) => {
   try {
+    const cacheKey = `${TRANSLATION_CACHE_KEY}_${language}`;
+
+    // Try sessionStorage first (persists during browser session)
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const translations = JSON.parse(cached);
+        if (!i18n.hasResourceBundle(language, 'translation')) {
+          i18n.addResourceBundle(language, 'translation', translations);
+        }
+        console.log(`⚡ Translations loaded from cache for ${language}`);
+        return translations;
+      } catch (cacheError) {
+        console.warn('Cache parse error, fetching fresh:', cacheError);
+        sessionStorage.removeItem(cacheKey); // Clear corrupted cache
+      }
+    }
+
+    // Fetch from network
     // Use version parameter to bust cache when translations are updated
     const response = await fetch(`/translations/${language}.json?v=${TRANSLATION_VERSION}` as string, {
       cache: 'no-store',
       headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
     });
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     const text = await response.text();
-    
+
     // Validate JSON before parsing
     if (!text.trim()) {
       throw new Error('Empty response received');
     }
-    
+
     // Try to parse JSON with better error handling
     let translations;
     try {
@@ -50,11 +75,19 @@ const loadLanguage = async (language: string) => {
       console.error('Last 100 chars:', text.substring(text.length - 100));
       throw new Error(`Invalid JSON in ${language}.json: ${parseError.message}`);
     }
-    
+
     if (!i18n.hasResourceBundle(language, 'translation')) {
       i18n.addResourceBundle(language, 'translation', translations);
     }
-    
+
+    // ✅ Cache in sessionStorage for instant subsequent loads
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify(translations));
+    } catch (storageError) {
+      console.warn('Failed to cache translations (storage full?):', storageError);
+    }
+
+    console.log(`✅ Translations loaded for ${language}`);
     return translations;
   } catch (error) {
     console.error(`Failed to load language ${language}:`, error);
@@ -62,8 +95,11 @@ const loadLanguage = async (language: string) => {
   }
 };
 
-// Load initial language
-loadLanguage(i18n.language);
+// Load initial language and track the promise
+initialLanguageLoading = loadLanguage(i18n.language);
+
+// Export function to wait for initial translations
+export const waitForInitialTranslations = () => initialLanguageLoading;
 
 export const changeLanguage = async (language: string) => {
   await loadLanguage(language);

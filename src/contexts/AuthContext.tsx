@@ -4,6 +4,8 @@ import { auth, error as logError, warn } from '@/utils/logger';
 import { Session, User } from '@supabase/supabase-js';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+// ✅ PHASE 2.2: Import clearPermissionsCache for logout
+import { clearPermissionsCache } from '@/utils/permissionSerialization';
 
 // Extended user interface with profile data
 interface ExtendedUser extends User {
@@ -189,8 +191,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await loadUserWithCache(session.user);
         } else {
           setUser(null);
-          // Clear cache on logout
+          // Clear caches on logout
           userProfileCache.clearCache();
+          // ✅ PHASE 2.2: Clear permissions cache on logout
+          clearPermissionsCache();
         }
 
         // IMMEDIATE loading completion

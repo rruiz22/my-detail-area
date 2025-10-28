@@ -69,29 +69,13 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
   }
 
   // ✅ ALWAYS call all hooks in the same order
-  // Loading state check - REMOVED useMemo to prevent hook order issues
-  // ⚡ PERF FIX: Always wait for modules to load if we're going to check them
-  // This prevents false "No modules configured" warnings during initial load
-  const isLoading = loading || modulesLoading;
+  // ✅ PHASE 1.2: Consolidated loading check to prevent "Access Denied" flash
+  // Wait for all critical systems: auth, permissions, and modules
+  const isInitializing = loading || modulesLoading || (!enhancedUser && !loading);
 
   // Early return after all hooks are called
-  // ✅ PERF FIX: Show full-page skeleton instead of small bar
-  if (isLoading) {
-    return (
-      <div className="container mx-auto py-8 space-y-6 animate-pulse">
-        <div className="h-8 bg-muted rounded w-1/3"></div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="h-32 bg-muted rounded"></div>
-          <div className="h-32 bg-muted rounded"></div>
-          <div className="h-32 bg-muted rounded"></div>
-        </div>
-        <div className="h-64 bg-muted rounded"></div>
-      </div>
-    );
-  }
-
-  // ✅ PERF FIX: Prevent "Access Denied" flash when permissions aren't loaded yet
-  if (!enhancedUser && loading) {
+  // Show full-page skeleton during initialization
+  if (isInitializing) {
     return (
       <div className="container mx-auto py-8 space-y-6 animate-pulse">
         <div className="h-8 bg-muted rounded w-1/3"></div>
