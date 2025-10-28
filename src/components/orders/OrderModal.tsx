@@ -896,7 +896,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </div>
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                      <Label htmlFor="dealership">
+                        {t('sales_orders.dealership')} <span className="text-destructive">*</span>
+                      </Label>
                       {isDealerFieldReadOnly && (
                         <Badge variant="secondary" className="text-xs">
                           {t('dealerships.auto_selected')}
@@ -922,7 +924,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   <div>
-                    <Label htmlFor="assignedTo">{t('sales_orders.assigned_to')}</Label>
+                    <Label htmlFor="assignedTo">
+                      {t('sales_orders.assigned_to')} <span className="text-destructive">*</span>
+                    </Label>
                     <Popover open={assignedToPopoverOpen} onOpenChange={setAssignedToPopoverOpen}>
                       <PopoverTrigger asChild>
                         <Button
@@ -1066,7 +1070,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     <Label className="text-sm font-medium text-foreground">{t('orders.customer_information')}</Label>
 
                     <div>
-                      <Label htmlFor="customerName">{t('orders.customerName')}</Label>
+                      <Label htmlFor="customerName">
+                        {t('orders.customerName')} <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         id="customerName"
                         value={formData.customerName}
@@ -1136,7 +1142,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </div>
 
                   <div>
-                    <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>
+                    <Label htmlFor="stockNumber">
+                      {t('sales_orders.stock_number')} <span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="stockNumber"
                       value={formData.stockNumber}
@@ -1154,7 +1162,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   <div>
                     <Label htmlFor="vehicleVin" className="flex items-center gap-2">
-                      {t('orders.vin')}
+                      {t('orders.vin')} <span className="text-destructive">*</span>
                       {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                     </Label>
                     <VinInputWithScanner
@@ -1187,7 +1195,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   {/* Consolidated Vehicle Info */}
                   <div>
-                    <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
+                    <Label htmlFor="vehicleInfo">
+                      {t('sales_orders.vehicle')} <span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="vehicleInfo"
                       value={formData.vehicleInfo}
@@ -1207,7 +1217,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                    {/* Due Date & Time Section */}
                    <div className="space-y-3">
-                     <Label className="text-sm font-medium">{t('due_date.title')}</Label>
+                     <Label className="text-sm font-medium">
+                       {t('due_date.title')} {!isEditing && requiresDueDate && <span className="text-destructive">*</span>}
+                     </Label>
                      <div>
                        <DueDateTimePicker
                          value={formData.dueDate}
