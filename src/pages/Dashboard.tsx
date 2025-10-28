@@ -40,57 +40,51 @@ export default function Dashboard() {
             <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">{t('dashboard.hero.welcome')}</h1>
             <p className="text-lg sm:text-xl text-white/90">{t('dashboard.hero.subtitle')}</p>
             <div className="mt-6 flex flex-wrap gap-3">
-              {/* New Order - Always show if user has any order type permission */}
+              {/* New Order - Disabled/Informational only */}
               {(hasPermission('sales_orders', 'edit') ||
                 hasPermission('service_orders', 'edit') ||
                 hasPermission('recon_orders', 'edit') ||
                 hasPermission('car_wash', 'edit')) && (
                 <Button
                   variant="secondary"
-                  onClick={() => handleQuickAction('create_order', '/vin-scanner')}
-                  className="button-enhanced bg-white text-gray-900 hover:bg-white/90"
+                  disabled
+                  className="bg-white/90 text-gray-900 cursor-not-allowed opacity-75"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   {t('dashboard.hero.new_order')}
                 </Button>
               )}
 
-              {/* View Pending Orders - Show count from real data */}
+              {/* View Pending Orders - Disabled/Informational only */}
               {pendingCount > 0 && (
                 <Button
                   variant="outline"
-                  className="border-white/30 dark:border-white/20 text-white hover:bg-white/10"
-                  onClick={() => {
-                    // Navigate to first available order type with pending filter
-                    if (hasPermission('sales_orders', 'view')) navigate('/sales?filter=pending');
-                    else if (hasPermission('service_orders', 'view')) navigate('/service?filter=pending');
-                    else if (hasPermission('recon_orders', 'view')) navigate('/recon?filter=pending');
-                    else navigate('/carwash?filter=pending');
-                  }}
+                  disabled
+                  className="border-white/30 dark:border-white/20 text-white cursor-not-allowed opacity-75"
                 >
                   <AlertTriangle className="h-4 w-4 mr-2" />
                   {t('dashboard.hero.view_pending', { count: pendingCount })}
                 </Button>
               )}
 
-              {/* Get Ready - Workflow Management */}
+              {/* Get Ready - Disabled/Informational only */}
               {hasPermission('productivity', 'view') && (
                 <Button
                   variant="outline"
-                  className="border-white/30 dark:border-white/20 text-white hover:bg-white/10"
-                  onClick={() => handleQuickAction('get_ready', '/get-ready')}
+                  disabled
+                  className="border-white/30 dark:border-white/20 text-white cursor-not-allowed opacity-75"
                 >
                   <Zap className="h-4 w-4 mr-2" />
                   {t('dashboard.hero.get_ready')}
                 </Button>
               )}
 
-              {/* Team Chat */}
+              {/* Team Chat - Disabled/Informational only */}
               {hasPermission('chat', 'view') && (
                 <Button
                   variant="outline"
-                  className="border-white/30 dark:border-white/20 text-white hover:bg-white/10"
-                  onClick={() => handleQuickAction('team_chat', '/chat')}
+                  disabled
+                  className="border-white/30 dark:border-white/20 text-white cursor-not-allowed opacity-75"
                 >
                   <MessageCircle className="h-4 w-4 mr-2" />
                   {t('dashboard.hero.team_chat')}
