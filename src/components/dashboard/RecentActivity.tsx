@@ -45,7 +45,8 @@ export function RecentActivity() {
       'sales': 'Sales',
       'service': 'Service',
       'recon': 'Recon',
-      'car_wash': 'Car Wash'
+      'car_wash': 'Car Wash',
+      'carwash': 'Car Wash'  // ✅ FIX: DB stores as 'carwash' not 'car_wash'
     };
     return typeMap[orderType] || 'Sales';
   };
