@@ -368,36 +368,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
     setLoading(true);
     try {
-      // Get users from dealer memberships with their profiles AND permissions for sales_orders module
+      // ✅ FIX: Use RPC function to bypass RLS and get ALL users with sales_orders permissions
       const [usersResult, servicesResult] = await Promise.all([
-        supabase
-          .from('dealer_memberships')
-          .select(`
-            profiles!inner (
-              id,
-              first_name,
-              last_name,
-              email
-            ),
-            custom_role_id,
-            dealer_custom_roles!left (
-              id,
-              role_name,
-              role_module_permissions_new!left (
-                module_permissions!inner (
-                  module,
-                  permission_key
-                )
-              )
-            )
-          `)
-          .eq('dealer_id', parseInt(dealershipId))
-          .eq('is_active', true),
-        supabase
-          .rpc('get_dealer_services_by_department', {
-            p_dealer_id: parseInt(dealershipId),
-            p_department_name: 'Sales Dept'
-          })
+        supabase.rpc('get_users_with_module_access', {
+          p_dealer_id: parseInt(dealershipId),
+          p_module: 'sales_orders'
+        }),
+        supabase.rpc('get_dealer_services_by_department', {
+          p_dealer_id: parseInt(dealershipId),
+          p_department_name: 'Sales Dept'
+        })
       ]);
 
       if (usersResult.error) {
@@ -410,30 +390,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
 
       if (usersResult.data) {
-        // Filter users who have access to sales_orders module
-        const usersWithAccess = usersResult.data.filter((membership: any) => {
-          // Check if user has a custom role with sales_orders permissions
-          // Note: System admins are checked separately via enhancedUser.is_system_admin in the UI
-          if (membership.dealer_custom_roles) {
-            const rolePermissions = membership.dealer_custom_roles.role_module_permissions_new || [];
-            const hasAccess = rolePermissions.some((rmp: any) => {
-              return rmp.module_permissions?.module === 'sales_orders';
-            });
-            if (hasAccess) return true;
-          }
-
-          // If no custom role or no sales_orders permissions, exclude
-          // System admins will be shown regardless (handled in a future iteration)
-          // For now, only show users with explicit sales_orders permissions
-          return false;
-        });
-
-        const users = usersWithAccess.map((membership: any) => ({
-          id: membership.profiles.id,
-          name: `${membership.profiles.first_name || ''} ${membership.profiles.last_name || ''}`.trim() || membership.profiles.email,
-          email: membership.profiles.email
+        // ✅ FIX: RPC function already filtered by module permissions
+        // No need for manual filtering - just map to UI format
+        const users = usersResult.data.map((user: any) => ({
+          id: user.user_id,
+          name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
+          email: user.email,
+          isSystemAdmin: user.is_system_admin
         }));
 
+        console.log(`✅ Loaded ${users.length} users with sales_orders access for dealership ${dealershipId}`);
         setAssignedUsers(users);
       } else {
         setAssignedUsers([]);
