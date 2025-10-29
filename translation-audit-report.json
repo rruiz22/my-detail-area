@@ -1,7 +1,7 @@
 {
   "scannedFiles": 728,
-  "totalStrings": 6915,
-  "hardcodedStrings": 1505,
+  "totalStrings": 6913,
+  "hardcodedStrings": 1503,
   "translatedStrings": 5410,
   "issues": {
     "critical": [
@@ -41697,16 +41697,6 @@
             "context": "308: }\n309: placeholder=\"STK001\"\n310: className={errors.stock_number ? \"border-red-500\" : \"\"}"
           },
           {
-            "text": "Honda",
-            "line": 382,
-            "context": "381: onChange={(e) => updateFormData(\"make\", e.target.value)}\n382: placeholder=\"Honda\"\n383: className={errors.make ? \"border-red-500\" : \"\"}"
-          },
-          {
-            "text": "Civic",
-            "line": 399,
-            "context": "398: onChange={(e) => updateFormData(\"model\", e.target.value)}\n399: placeholder=\"Civic\"\n400: className={errors.model ? \"border-red-500\" : \"\"}"
-          },
-          {
             "text": "John Doe",
             "line": 519,
             "context": "518: }\n519: placeholder=\"John Doe\"\n520: />"
@@ -41905,7 +41895,7 @@
           }
         ],
         "missingKeys": [],
-        "coverage": 90,
+        "coverage": 95,
         "severity": "low"
       },
       {
@@ -49960,11 +49950,11 @@
         "src\\components\\dealer\\EditRoleModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
-        "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\components\\dealer\\EditUserRoleModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
+        "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
         "src\\components\\profile\\UnsavedChangesModal.tsx",
         "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
