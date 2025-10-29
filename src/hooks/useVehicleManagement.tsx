@@ -61,7 +61,24 @@ export function useVehicleManagement() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // Enhanced error handling with specific messages
+        if (error.code === '23505') {
+          // Unique constraint violation
+          if (error.message.includes('stock_number')) {
+            throw new Error(`Stock number "${input.stock_number}" already exists in this dealership`);
+          } else if (error.message.includes('vin')) {
+            throw new Error(`VIN "${input.vin}" already exists in this dealership`);
+          } else {
+            throw new Error('This vehicle already exists in the system');
+          }
+        } else if (error.code === '23503') {
+          // Foreign key constraint violation
+          throw new Error('Invalid step or dealership selected');
+        } else {
+          throw new Error(error.message || 'Failed to create vehicle');
+        }
+      }
 
       // 2. Auto-create work items from templates
       try {
@@ -118,7 +135,7 @@ export function useVehicleManagement() {
       console.error('Failed to create vehicle:', error);
       toast({
         title: t('common.error'),
-        description: t('get_ready.vehicle_form.errors.save_failed'),
+        description: error.message || t('get_ready.vehicle_form.errors.save_failed'),
         variant: 'destructive',
       });
     },
@@ -153,7 +170,24 @@ export function useVehicleManagement() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // Enhanced error handling with specific messages
+        if (error.code === '23505') {
+          // Unique constraint violation
+          if (error.message.includes('stock_number')) {
+            throw new Error(`Stock number "${updateData.stock_number}" already exists in this dealership`);
+          } else if (error.message.includes('vin')) {
+            throw new Error(`VIN "${updateData.vin}" already exists in this dealership`);
+          } else {
+            throw new Error('This vehicle data already exists in the system');
+          }
+        } else if (error.code === '23503') {
+          // Foreign key constraint violation
+          throw new Error('Invalid step or dealership selected');
+        } else {
+          throw new Error(error.message || 'Failed to update vehicle');
+        }
+      }
       return data;
     },
     onSuccess: (updatedVehicle, variables) => {
@@ -177,7 +211,7 @@ export function useVehicleManagement() {
       console.error('Failed to update vehicle:', error);
       toast({
         title: t('common.error'),
-        description: t('get_ready.vehicle_form.errors.save_failed'),
+        description: error.message || t('get_ready.vehicle_form.errors.save_failed'),
         variant: 'destructive',
       });
     },
