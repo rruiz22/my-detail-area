@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
+import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useAppointmentCapacity } from '@/hooks/useAppointmentCapacity';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -148,6 +149,7 @@ interface OrderModalProps {
 
 export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, onSave, preSelectedDate }) => {
   const { t } = useTranslation();
+  const { user: authUser } = useAuth();
   const { roles } = usePermissionContext();
   const { enhancedUser } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
@@ -481,6 +483,21 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
     }
   }, [assignedUsers.length, order, selectedAssignedTo]);
+
+  // Auto-select current authenticated user for new orders
+  useEffect(() => {
+    if (!order && assignedUsers.length > 0 && !selectedAssignedTo && authUser) {
+      const currentUser = assignedUsers.find(u => u.id === authUser.id);
+      if (currentUser) {
+        console.log('🎯 Auto-selecting current user for Assigned To:', currentUser.name);
+        setSelectedAssignedTo(currentUser.id);
+        setFormData(prev => ({
+          ...prev,
+          assignedGroupId: currentUser.id
+        }));
+      }
+    }
+  }, [assignedUsers.length, order, selectedAssignedTo, authUser?.id]);
 
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealershipWithLog(dealershipId);
