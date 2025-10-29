@@ -19,6 +19,7 @@ interface SLAConfigurationPanelProps {
 }
 
 export function SLAConfigurationPanel({ className }: SLAConfigurationPanelProps) {
+  console.log('📊 [SLAConfigurationPanel] Component RENDERED');
   const { t } = useTranslation();
   const { currentDealership, isLoading: isLoadingDealership } = useAccessibleDealerships();
   const dealerId = currentDealership?.id;

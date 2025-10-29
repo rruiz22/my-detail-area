@@ -55,6 +55,7 @@ const WORK_TYPES: { value: WorkItemType; label: string }[] = [
 ];
 
 export function WorkItemTemplatesManager() {
+  console.log('📋 [WorkItemTemplatesManager] Component RENDERED');
   const { t } = useTranslation();
   const { data: templates = [], isLoading } = useWorkItemTemplates(true);
   const [showForm, setShowForm] = useState(false);

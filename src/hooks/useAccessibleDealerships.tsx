@@ -1,28 +1,14 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useDealershipContext } from '@/contexts/DealershipContext';
 
-interface Dealership {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip_code: string;
-  country: string;
-  website: string;
-  status: string;
-  subscription_plan: string;
-  logo_url?: string | null;
-  thumbnail_logo_url?: string | null;
-}
+// ============================================================================
+// RE-EXPORT TYPES FROM CONTEXT
+// ============================================================================
 
-type AppModule = 'dashboard' | 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'stock' | 'chat' | 'reports' | 'management' | 'settings' | 'users' | 'dealerships' | 'productivity';
+export type { Dealership, AppModule } from '@/contexts/DealershipContext';
+
+// ============================================================================
+// INTERFACE (UNCHANGED FOR BACKWARD COMPATIBILITY)
+// ============================================================================
 
 interface UseAccessibleDealershipsReturn {
   dealerships: Dealership[];
@@ -33,229 +19,60 @@ interface UseAccessibleDealershipsReturn {
   filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;
 }
 
+// ============================================================================
+// SIMPLIFIED HOOK - NOW JUST A PROXY TO CONTEXT
+// ============================================================================
+
+/**
+ * useAccessibleDealerships - Simplified hook that proxies to DealershipContext
+ *
+ * MIGRATION NOTES:
+ * - This hook maintains EXACT same API as before
+ * - All 30+ components using this hook require ZERO changes
+ * - Internally, it now consumes centralized DealershipContext
+ * - This eliminates 30+ duplicate fetches and 30+ duplicate states
+ *
+ * BEFORE (Problem):
+ * - Each component calling this hook created its own TanStack Query instance
+ * - 30 components = 30 fetches + 30 states + 30 effect loops
+ * - Massive performance issue and potential race conditions
+ *
+ * AFTER (Solution):
+ * - Single DealershipContext manages ONE fetch + ONE state
+ * - All components share same data through context
+ * - Zero redundant fetches, zero loops, optimal performance
+ *
+ * USAGE (No changes required in consuming components):
+ * ```tsx
+ * const { dealerships, currentDealership, loading } = useAccessibleDealerships();
+ * ```
+ */
 export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
-  const [currentDealership, setCurrentDealership] = useState<Dealership | null>(null);
-  const { toast } = useToast();
-  const { t } = useTranslation();
-  const { user } = useAuth();
-  const hasInitialized = useRef(false);
-  const prevDealerIdRef = useRef<string | number | null>(null); // Track last processed dealer ID
+  // Simply return the context value - that's it!
+  // All the complex logic now lives in DealershipProvider
+  const context = useDealershipContext();
 
-  // ✅ OPTIMIZATION: Use TanStack Query for shared cache with localStorage
-  const { data: dealerships = [], isLoading: loading, error: queryError } = useQuery({
-    queryKey: ['accessible_dealerships', user?.id],
-    queryFn: async () => {
-      if (!user?.id) {
-        return [];
-      }
-
-      const { data, error: fetchError } = await supabase.rpc('get_user_accessible_dealers', {
-        user_uuid: user.id
-      });
-
-      if (fetchError) {
-        console.error('Error fetching accessible dealerships:', fetchError);
-        throw fetchError;
-      }
-
-      const dealershipsData = (data || []) as Dealership[];
-
-      // ✅ PERF FIX: Cache dealerships in localStorage
-      try {
-        localStorage.setItem('dealerships-cache', JSON.stringify({
-          data: dealershipsData,
-          timestamp: Date.now(),
-          userId: user.id
-        }));
-      } catch (error) {
-        // Ignore quota errors
-        console.warn('Failed to cache dealerships in localStorage:', error);
-      }
-
-      return dealershipsData;
-    },
-    enabled: !!user?.id,
-    // ✅ PERF FIX: Load from localStorage for instant initial render
-    initialData: () => {
-      if (!user?.id) return undefined;
-
-      try {
-        const cached = localStorage.getItem('dealerships-cache');
-        if (cached) {
-          const { data, timestamp, userId } = JSON.parse(cached);
-          // Use cache if less than 15 minutes old AND same user
-          if (
-            userId === user.id &&
-            Date.now() - timestamp < 15 * 60 * 1000
-          ) {
-            console.log('⚡ Using cached dealerships from localStorage');
-            return data as Dealership[];
-          }
-        }
-      } catch (error) {
-        // Ignore parse errors
-        console.warn('Failed to parse dealerships cache:', error);
-      }
-      return undefined;
-    },
-    staleTime: 900000, // 15 minutes - dealerships rarely change
-    gcTime: 1800000, // 30 minutes
-    retry: 1,
-    refetchOnWindowFocus: false,
-  });
-
-  const error = queryError ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships') : null;
-
-  // Initialize dealership ONLY when dealerships load (not when currentDealership changes)
-  useEffect(() => {
-    if (dealerships.length > 0 && !hasInitialized.current) {
-      hasInitialized.current = true;
-
-      const savedFilter = localStorage.getItem('selectedDealerFilter');
-
-      if (!savedFilter || savedFilter === 'all') {
-        // IMPROVED: Auto-select for single-dealer users (except system_admin)
-        if (dealerships.length === 1 && user?.role !== 'system_admin') {
-          const singleDealer = dealerships[0];
-          setCurrentDealership(singleDealer);
-          prevDealerIdRef.current = singleDealer.id;
-
-          // Update localStorage to persist selection
-          localStorage.setItem('selectedDealerFilter', singleDealer.id.toString());
-
-          // Sync with DealerFilterContext
-          window.dispatchEvent(new CustomEvent('dealerFilterChanged', {
-            detail: { dealerId: singleDealer.id }
-          }));
-
-          console.log('🎯 [Auto-Select] Single dealership auto-selected:', singleDealer.name);
-        } else {
-          // Multi-dealer or system_admin: Keep 'all' (no auto-selection)
-          setCurrentDealership(null);
-          prevDealerIdRef.current = 'all';
-          console.log('📋 [Auto-Select] Multi-dealer user or system_admin: defaulting to "all"');
-        }
-      } else {
-        // Restore specific dealer with improved validation
-        const savedId = parseInt(savedFilter);
-        const savedDealership = dealerships.find((d: Dealership) => d.id === savedId);
-
-        if (savedDealership) {
-          setCurrentDealership(savedDealership);
-          prevDealerIdRef.current = savedId;
-          console.log('✅ [Auto-Select] Restored saved dealership:', savedDealership.name);
-        } else {
-          // Saved dealer not found - clean up and use first dealer
-          console.warn('⚠️ [Auto-Select] Saved dealer not found in accessible list, selecting first available');
-          const firstDealer = dealerships[0];
-          setCurrentDealership(firstDealer || null);
-          prevDealerIdRef.current = firstDealer?.id || null;
-
-          if (firstDealer) {
-            localStorage.setItem('selectedDealerFilter', firstDealer.id.toString());
-            window.dispatchEvent(new CustomEvent('dealerFilterChanged', {
-              detail: { dealerId: firstDealer.id }
-            }));
-          }
-        }
-      }
-    }
-  }, [dealerships, user]); // Added 'user' dependency for role checking
-
-  const filterByModule = async (moduleName: AppModule): Promise<Dealership[]> => {
-    const filteredDealerships: Dealership[] = [];
-
-    for (const dealership of dealerships) {
-      try {
-        const { data: hasAccess } = await supabase.rpc('dealership_has_module_access', {
-          p_dealer_id: dealership.id,
-          p_module: moduleName
-        });
-
-        if (hasAccess) {
-          filteredDealerships.push(dealership);
-        }
-      } catch (error) {
-        console.error(`Error checking module access for dealership ${dealership.id}:`, error);
-      }
-    }
-
-    return filteredDealerships;
-  };
-
-  // ✅ OPTIMIZATION: Use refetch from TanStack Query
-  const refreshDealerships = useCallback(() => {
-    // Trigger a refetch of the query
-    // Note: This will use cache if data is still fresh (staleTime)
-  }, []);
-
-  // ========================================================================
-  // SYNC: Update currentDealership when dealerships data refreshes
-  // ========================================================================
-  // This fixes the issue where the sidebar shows old logo after upload
-  // When React Query refetches dealerships (e.g., after logo upload),
-  // we need to update currentDealership with the fresh data
-  useEffect(() => {
-    if (currentDealership && dealerships.length > 0) {
-      const updatedDealership = dealerships.find(d => d.id === currentDealership.id);
-      if (updatedDealership) {
-        // Only update if logo_url or thumbnail_logo_url changed (specific comparison)
-        if (
-          updatedDealership.logo_url !== currentDealership.logo_url ||
-          updatedDealership.thumbnail_logo_url !== currentDealership.thumbnail_logo_url
-        ) {
-          console.log('🔄 [Sync] Logo changed - updating currentDealership');
-          setCurrentDealership(updatedDealership);
-        }
-      }
-    }
-  }, [dealerships, currentDealership]); // Include currentDealership to prevent stale closure
-
-  // Listen for dealership filter changes from DealershipFilter component
-  useEffect(() => {
-    const handleDealerFilterChange = (event: CustomEvent) => {
-      const { dealerId } = event.detail;
-
-      console.log('🔔 [useAccessibleDealerships] dealerFilterChanged event received:', { dealerId, prevId: prevDealerIdRef.current });
-
-      // Prevent redundant updates
-      if (dealerId === prevDealerIdRef.current) {
-        console.log('⏭️ [useAccessibleDealerships] Skipping redundant update');
-        return;
-      }
-
-      prevDealerIdRef.current = dealerId;
-
-      if (dealerId === 'all') {
-        console.log('🔄 [useAccessibleDealerships] Setting currentDealership to null (all dealers)');
-        setCurrentDealership(null);
-      } else {
-        const selectedDealership = dealerships.find(d => d.id === dealerId);
-        if (selectedDealership) {
-          console.log('✅ [useAccessibleDealerships] Setting currentDealership:', selectedDealership.name, {
-            hasLogo: !!selectedDealership.logo_url,
-            hasThumbnail: !!selectedDealership.thumbnail_logo_url
-          });
-          setCurrentDealership(selectedDealership);
-        } else {
-          console.warn('⚠️ [useAccessibleDealerships] Dealer not found in list:', dealerId);
-        }
-      }
-    };
-
-    window.addEventListener('dealerFilterChanged', handleDealerFilterChange as EventListener);
-
-    return () => {
-      window.removeEventListener('dealerFilterChanged', handleDealerFilterChange as EventListener);
-    };
-  }, [dealerships]);
+  console.log('🔗 [useAccessibleDealerships] Hook called, proxying to context');
 
   return {
-    dealerships,
-    currentDealership,
-    loading,
-    error,
-    refreshDealerships,
-    filterByModule
+    dealerships: context.dealerships,
+    currentDealership: context.currentDealership,
+    loading: context.loading,
+    error: context.error,
+    refreshDealerships: context.refreshDealerships,
+    filterByModule: context.filterByModule
   };
 }
+
+/**
+ * IMPORTANT: For components that need to SET the current dealership,
+ * they should use useDealershipContext() directly to access setCurrentDealership()
+ *
+ * Example:
+ * ```tsx
+ * import { useDealershipContext } from '@/contexts/DealershipContext';
+ *
+ * const { setCurrentDealership } = useDealershipContext();
+ * setCurrentDealership(someDealer);
+ * ```
+ */

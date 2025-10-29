@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { DealerFilterProvider } from "@/contexts/DealerFilterContext";
+import { DealershipProvider } from "@/contexts/DealershipContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -253,31 +254,34 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <DealerFilterProvider>
-          <PermissionProvider>
-            <ServicesProvider>
-              {/* ✅ PHASE 3.3: Wrap entire app in AppLoadingBoundary */}
-              {/* This eliminates "Access Denied" flash by waiting for all critical systems */}
-              <AppLoadingBoundary>
-                <GlobalChatWrapper>
-                  <NotificationProvider>
-                    <BrowserRouter
-                      future={{
-                        v7_startTransition: false,
-                        v7_relativeSplatPath: true
-                      }}
-                    >
-                      <AppRoutes />
-                      {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
-                      {import.meta.env.DEV && <PermissionsDebugger />}
-                      */}
-                    </BrowserRouter>
-                  </NotificationProvider>
-                </GlobalChatWrapper>
-              </AppLoadingBoundary>
-            </ServicesProvider>
-          </PermissionProvider>
-        </DealerFilterProvider>
+        {/* ✅ DealershipProvider MUST come after AuthProvider (needs user.id) */}
+        <DealershipProvider>
+          <DealerFilterProvider>
+            <PermissionProvider>
+              <ServicesProvider>
+                {/* ✅ PHASE 3.3: Wrap entire app in AppLoadingBoundary */}
+                {/* This eliminates "Access Denied" flash by waiting for all critical systems */}
+                <AppLoadingBoundary>
+                  <GlobalChatWrapper>
+                    <NotificationProvider>
+                      <BrowserRouter
+                        future={{
+                          v7_startTransition: false,
+                          v7_relativeSplatPath: true
+                        }}
+                      >
+                        <AppRoutes />
+                        {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
+                        {import.meta.env.DEV && <PermissionsDebugger />}
+                        */}
+                      </BrowserRouter>
+                    </NotificationProvider>
+                  </GlobalChatWrapper>
+                </AppLoadingBoundary>
+              </ServicesProvider>
+            </PermissionProvider>
+          </DealerFilterProvider>
+        </DealershipProvider>
       </AuthProvider>
     </TooltipProvider>
     {/* Sistema de toast shadcn/ui - Sistema unificado */}

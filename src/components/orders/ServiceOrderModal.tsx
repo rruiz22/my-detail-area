@@ -1,4 +1,3 @@
-import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +23,7 @@ import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
-import { dev, warn, error as logError } from '@/utils/logger';
+import { dev, error as logError, warn } from '@/utils/logger';
 import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Check, ChevronsUpDown, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -1018,11 +1017,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                       id="notes"
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
-                      className="border-input bg-muted/50 resize-none cursor-not-allowed"
+                      className="border-input bg-background resize-none"
                       rows={4}
-                      placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
-                      readOnly
-                      disabled
+                      placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this service order...')}
                     />
                   </div>
                 </CardContent>

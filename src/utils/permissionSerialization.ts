@@ -30,7 +30,7 @@ interface SerializedPermissions {
 
 const CACHE_VERSION = 1;
 const CACHE_KEY = 'permissions_cache_v1';
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 15 * 60 * 1000; // 15 minutes (increased from 5 to reduce re-fetches)
 
 /**
  * Serialize permissions from Map/Set to arrays for JSON storage
