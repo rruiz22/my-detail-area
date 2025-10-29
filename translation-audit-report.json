@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 728,
-  "totalStrings": 6913,
-  "hardcodedStrings": 1503,
-  "translatedStrings": 5410,
+  "scannedFiles": 730,
+  "totalStrings": 6906,
+  "hardcodedStrings": 1504,
+  "translatedStrings": 5402,
   "issues": {
     "critical": [
       {
@@ -2833,229 +2833,229 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n\r\n      // Show specific error message if it",
-            "line": 324,
-            "context": "323: onError: (error) => {\n324: console.error('Create work item mutation error:', error);\n325: "
+            "line": 328,
+            "context": "327: onError: (error) => {\n328: console.error('Create work item mutation error:', error);\n329: "
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 390,
-            "context": "389: onError: (error) => {\n390: console.error('Update work item mutation error:', error);\n391: toast.error(t('get_ready.work_items.error_updating'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 398,
+            "context": "397: onError: (error) => {\n398: console.error('Update work item mutation error:', error);\n399: toast({"
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 445,
-            "context": "444: onError: (error) => {\n445: console.error('Approve work item mutation error:', error);\n446: toast.error(t('get_ready.work_items.error_approving'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 460,
+            "context": "459: onError: (error) => {\n460: console.error('Approve work item mutation error:', error);\n461: toast({"
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 501,
-            "context": "500: onError: (error) => {\n501: console.error('Decline work item mutation error:', error);\n502: toast.error(t('get_ready.work_items.error_declining'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 523,
+            "context": "522: onError: (error) => {\n523: console.error('Decline work item mutation error:', error);\n524: toast({"
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 541,
-            "context": "540: onError: (error) => {\n541: console.error('Start work item mutation error:', error);\n542: toast.error(t('get_ready.work_items.error_starting'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 570,
+            "context": "569: onError: (error) => {\n570: console.error('Start work item mutation error:', error);\n571: toast({"
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 615,
-            "context": "614: onError: (error) => {\n615: console.error('Complete work item mutation error:', error);\n616: toast.error(t('get_ready.work_items.error_completing'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 651,
+            "context": "650: onError: (error) => {\n651: console.error('Complete work item mutation error:', error);\n652: toast({"
           },
           {
             "text": ", error);\r\n      // ✅ Toast handled by component (ConfirmDialog)\r\n      // toast.error(t(",
-            "line": 650,
-            "context": "649: onError: (error) => {\n650: console.error('Delete work item mutation error:', error);\n651: // ✅ Toast handled by component (ConfirmDialog)"
+            "line": 689,
+            "context": "688: onError: (error) => {\n689: console.error('Delete work item mutation error:', error);\n690: // ✅ Toast handled by component (ConfirmDialog)"
           },
           {
             "text": ", error);\r\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\r\n      // toast.error(t(",
-            "line": 692,
-            "context": "691: onError: (error) => {\n692: console.error('Pause work item mutation error:', error);\n693: // ✅ Toast handled by component (VehicleWorkItemsTab)"
+            "line": 731,
+            "context": "730: onError: (error) => {\n731: console.error('Pause work item mutation error:', error);\n732: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
             "text": ", error);\r\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\r\n      // toast.error(t(",
-            "line": 734,
-            "context": "733: onError: (error) => {\n734: console.error('Block work item mutation error:', error);\n735: // ✅ Toast handled by component (VehicleWorkItemsTab)"
+            "line": 773,
+            "context": "772: onError: (error) => {\n773: console.error('Block work item mutation error:', error);\n774: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 775,
-            "context": "774: onError: (error) => {\n775: console.error('Resume work item mutation error:', error);\n776: toast.error(t('get_ready.work_items.error_resuming'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 818,
+            "context": "817: onError: (error) => {\n818: console.error('Resume work item mutation error:', error);\n819: toast({"
           },
           {
-            "text": ", error);\r\n      toast.error(t(",
-            "line": 815,
-            "context": "814: onError: (error) => {\n815: console.error('Unblock work item mutation error:', error);\n816: toast.error(t('get_ready.work_items.error_unblocking'));"
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 865,
+            "context": "864: onError: (error) => {\n865: console.error('Unblock work item mutation error:', error);\n866: toast({"
           },
           {
             "text": ", error);\r\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\r\n      // toast.error(t(",
-            "line": 863,
-            "context": "862: onError: (error) => {\n863: console.error('Cancel work item mutation error:', error);\n864: // ✅ Toast handled by component (VehicleWorkItemsTab)"
-          },
-          {
-            "text": ", error);\r\n      toast.error(t(",
             "line": 916,
-            "context": "915: onError: (error) => {\n916: console.error('Assign vendor mutation error:', error);\n917: toast.error(t('get_ready.vendors.error_assigning_vendor'));"
+            "context": "915: onError: (error) => {\n916: console.error('Cancel work item mutation error:', error);\n917: // ✅ Toast handled by component (VehicleWorkItemsTab)"
+          },
+          {
+            "text": ", error);\r\n      toast({\r\n        description: t(",
+            "line": 971,
+            "context": "970: onError: (error) => {\n971: console.error('Assign vendor mutation error:', error);\n972: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.work_items.error_loading",
-            "line": 167,
+            "line": 169,
             "exists": true
           },
           {
             "key": "get_ready.work_items.duplicate_error",
-            "line": 275,
+            "line": 279,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 319,
+            "line": 323,
             "exists": true
           },
           {
             "key": "get_ready.work_items.created_successfully",
-            "line": 320,
+            "line": 324,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 329,
+            "line": 333,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 335,
+            "line": 339,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_creating",
-            "line": 336,
+            "line": 340,
             "exists": true
           },
           {
             "key": "get_ready.work_items.updated_successfully",
-            "line": 387,
+            "line": 393,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_updating",
-            "line": 391,
+            "line": 400,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approved_successfully",
-            "line": 442,
+            "line": 455,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_approving",
-            "line": 446,
+            "line": 462,
             "exists": true
           },
           {
             "key": "get_ready.work_items.declined_successfully",
-            "line": 498,
+            "line": 518,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_declining",
-            "line": 502,
+            "line": 525,
             "exists": true
           },
           {
             "key": "get_ready.work_items.started_successfully",
-            "line": 538,
+            "line": 565,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_starting",
-            "line": 542,
+            "line": 572,
             "exists": true
           },
           {
             "key": "get_ready.work_items.completed_successfully",
-            "line": 612,
+            "line": 646,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_completing",
-            "line": 616,
+            "line": 653,
             "exists": true
           },
           {
             "key": "get_ready.work_items.deleted_successfully",
-            "line": 647,
+            "line": 686,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_deleting",
-            "line": 652,
+            "line": 691,
             "exists": true
           },
           {
             "key": "get_ready.work_items.paused_successfully",
-            "line": 689,
+            "line": 728,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_pausing",
-            "line": 694,
+            "line": 733,
             "exists": true
           },
           {
             "key": "get_ready.work_items.blocked_successfully",
-            "line": 731,
+            "line": 770,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_blocking",
-            "line": 736,
+            "line": 775,
             "exists": true
           },
           {
             "key": "get_ready.work_items.resumed_successfully",
-            "line": 772,
+            "line": 813,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_resuming",
-            "line": 776,
+            "line": 820,
             "exists": true
           },
           {
             "key": "get_ready.work_items.unblocked_successfully",
-            "line": 812,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.error_unblocking",
-            "line": 816,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.cancelled_successfully",
             "line": 860,
             "exists": true
           },
           {
+            "key": "get_ready.work_items.error_unblocking",
+            "line": 867,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.cancelled_successfully",
+            "line": 913,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.error_cancelling",
-            "line": 865,
+            "line": 918,
             "exists": true
           },
           {
             "key": "get_ready.vendors.vendor_assigned_successfully",
-            "line": 911,
+            "line": 965,
             "exists": true
           },
           {
             "key": "get_ready.vendors.vendor_unassigned_successfully",
-            "line": 912,
+            "line": 966,
             "exists": true
           },
           {
             "key": "get_ready.vendors.error_assigning_vendor",
-            "line": 917,
+            "line": 973,
             "exists": true
           }
         ],
@@ -4984,307 +4984,307 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 51,
-            "context": "50: onEditVehicle?: (vehicleId: string) => void;\n51: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n52: }"
+            "line": 52,
+            "context": "51: onEditVehicle?: (vehicleId: string) => void;\n52: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n53: }"
           },
           {
             "text": "Table",
-            "line": 291,
-            "context": "290: onClick={() => setViewMode('table')}\n291: >\n292: Table"
+            "line": 292,
+            "context": "291: onClick={() => setViewMode('table')}\n292: >\n293: Table"
           },
           {
             "text": "Grid",
-            "line": 298,
-            "context": "297: onClick={() => setViewMode('grid')}\n298: >\n299: Grid"
+            "line": 299,
+            "context": "298: onClick={() => setViewMode('grid')}\n299: >\n300: Grid"
           },
           {
             "text": "Table",
-            "line": 524,
-            "context": "523: onClick={() => setViewMode('table')}\n524: >\n525: Table"
+            "line": 529,
+            "context": "528: onClick={() => setViewMode('table')}\n529: >\n530: Table"
           },
           {
             "text": "Grid",
-            "line": 531,
-            "context": "530: onClick={() => setViewMode('grid')}\n531: >\n532: Grid"
+            "line": 536,
+            "context": "535: onClick={() => setViewMode('grid')}\n536: >\n537: Grid"
           },
           {
             "text": "Workflow",
-            "line": 549,
-            "context": "548: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n549: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n550: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
+            "line": 554,
+            "context": "553: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n554: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n555: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
           },
           {
             "text": "Actions",
-            "line": 574,
-            "context": "573: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress_time')}</TableHead>\n574: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n575: </TableRow>"
+            "line": 579,
+            "context": "578: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress')}</TableHead>\n579: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n580: </TableRow>"
           },
           {
             "text": "Urgent",
-            "line": 929,
-            "context": "928: <div className=\"flex items-center gap-2 w-full\">\n929: <span className=\"flex-1 capitalize\">Urgent</span>\n930: {vehicle.priority === 'urgent' && ("
+            "line": 934,
+            "context": "933: <div className=\"flex items-center gap-2 w-full\">\n934: <span className=\"flex-1 capitalize\">Urgent</span>\n935: {vehicle.priority === 'urgent' && ("
           },
           {
             "text": "High",
-            "line": 943,
-            "context": "942: <div className=\"flex items-center gap-2 w-full\">\n943: <span className=\"flex-1 capitalize\">High</span>\n944: {vehicle.priority === 'high' && ("
+            "line": 948,
+            "context": "947: <div className=\"flex items-center gap-2 w-full\">\n948: <span className=\"flex-1 capitalize\">High</span>\n949: {vehicle.priority === 'high' && ("
           },
           {
             "text": "Medium",
-            "line": 957,
-            "context": "956: <div className=\"flex items-center gap-2 w-full\">\n957: <span className=\"flex-1 capitalize\">Medium</span>\n958: {vehicle.priority === 'medium' && ("
+            "line": 962,
+            "context": "961: <div className=\"flex items-center gap-2 w-full\">\n962: <span className=\"flex-1 capitalize\">Medium</span>\n963: {vehicle.priority === 'medium' && ("
           },
           {
             "text": "Normal",
-            "line": 971,
-            "context": "970: <div className=\"flex items-center gap-2 w-full\">\n971: <span className=\"flex-1 capitalize\">Normal</span>\n972: {vehicle.priority === 'normal' && ("
+            "line": 976,
+            "context": "975: <div className=\"flex items-center gap-2 w-full\">\n976: <span className=\"flex-1 capitalize\">Normal</span>\n977: {vehicle.priority === 'normal' && ("
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 272,
+            "line": 273,
             "exists": true
           },
           {
             "key": "get_ready.actions.actions",
-            "line": 356,
+            "line": 357,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 359,
+            "line": 360,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 363,
+            "line": 364,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 371,
+            "line": 372,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 381,
+            "line": 382,
             "exists": false
           },
           {
             "key": "get_ready.actions.change_step",
-            "line": 416,
+            "line": 421,
             "exists": true
           },
           {
             "key": "get_ready.actions.advance_step",
-            "line": 456,
+            "line": 461,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l",
-            "line": 463,
+            "line": 468,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 474,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.days_in_step",
             "line": 479,
             "exists": true
           },
           {
+            "key": "get_ready.vehicle_list.days_in_step",
+            "line": 484,
+            "exists": true
+          },
+          {
             "key": "get_ready.steps.dis_tooltip",
-            "line": 480,
+            "line": 485,
             "exists": true
           },
           {
             "key": "get_ready.table.click_to_view",
-            "line": 516,
+            "line": 521,
             "exists": true
           },
           {
             "key": "get_ready.table.image",
-            "line": 545,
+            "line": 550,
             "exists": true
           },
           {
             "key": "get_ready.table.stock",
-            "line": 546,
+            "line": 551,
             "exists": true
           },
           {
             "key": "get_ready.table.vehicle",
-            "line": 547,
+            "line": 552,
             "exists": true
           },
           {
             "key": "get_ready.table.step",
-            "line": 548,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.t2l_short",
             "line": 553,
             "exists": true
           },
           {
+            "key": "get_ready.vehicle_list.t2l_short",
+            "line": 558,
+            "exists": true
+          },
+          {
             "key": "get_ready.vehicle_list.t2l_full",
-            "line": 556,
+            "line": 561,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_description",
-            "line": 557,
+            "line": 562,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 564,
+            "line": 569,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.days_in_step",
-            "line": 567,
-            "exists": true
-          },
-          {
-            "key": "get_ready.steps.dis_tooltip",
-            "line": 568,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.priority",
             "line": 572,
             "exists": true
           },
           {
-            "key": "get_ready.table.progress_time",
+            "key": "get_ready.steps.dis_tooltip",
             "line": 573,
             "exists": true
           },
           {
+            "key": "get_ready.table.priority",
+            "line": 577,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.progress",
+            "line": 578,
+            "exists": true
+          },
+          {
             "key": "get_ready.no_vehicles.title",
-            "line": 584,
+            "line": 589,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 587,
+            "line": 592,
             "exists": true
           },
           {
             "key": "get_ready.actions.change_step",
-            "line": 776,
+            "line": 781,
             "exists": true
           },
           {
             "key": "get_ready.actions.advance_step",
-            "line": 816,
+            "line": 821,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 834,
+            "line": 839,
             "exists": false
           },
           {
             "key": "get_ready.workflow.change_workflow",
-            "line": 838,
+            "line": 843,
             "exists": true
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 848,
+            "line": 853,
             "exists": true
           },
           {
             "key": "get_ready.workflow.express",
-            "line": 862,
+            "line": 867,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 876,
+            "line": 881,
             "exists": true
           },
           {
             "key": "get_ready.priority.change_priority",
-            "line": 919,
+            "line": 924,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 1024,
+            "line": 1033,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 1036,
+            "line": 1045,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 1048,
+            "line": 1057,
             "exists": true
           },
           {
             "key": "common.showing",
-            "line": 1074,
+            "line": 1083,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 1074,
+            "line": 1083,
             "exists": true
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 1141,
+            "line": 1150,
             "exists": false
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 1142,
+            "line": 1151,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 1143,
+            "line": 1152,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 1144,
+            "line": 1153,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 381,
-            "context": "380: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n381: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n382: </Badge>"
+            "line": 382,
+            "context": "381: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n382: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n383: </Badge>"
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 834,
-            "context": "833: >\n834: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n835: </Button>"
+            "line": 839,
+            "context": "838: >\n839: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n840: </Button>"
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 1141,
-            "context": "1140: onOpenChange={setDeleteDialogOpen}\n1141: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1142: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
+            "line": 1150,
+            "context": "1149: onOpenChange={setDeleteDialogOpen}\n1150: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1151: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 1142,
-            "context": "1141: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1142: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1143: confirmText={t('common.delete', 'Delete')}"
+            "line": 1151,
+            "context": "1150: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1151: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1152: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 1143,
-            "context": "1142: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1143: confirmText={t('common.delete', 'Delete')}\n1144: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 1152,
+            "context": "1151: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1152: confirmText={t('common.delete', 'Delete')}\n1153: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 80,
@@ -16425,25 +16425,13 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 33,
-            "context": "32: refreshDealerships: () => void;\n33: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n34: }"
+            "line": 19,
+            "context": "18: refreshDealerships: () => void;\n19: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n20: }"
           }
         ],
-        "translationCalls": [
-          {
-            "key": "dealerships.error_fetching_dealerships",
-            "line": 107,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "dealerships.error_fetching_dealerships",
-            "line": 107,
-            "context": "106: \n107: const error = queryError ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships') : null;\n108: "
-          }
-        ],
-        "coverage": 50,
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -16472,6 +16460,32 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\contexts\\DealershipContext.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 54,
+            "context": "53: refreshDealerships: () => void;\n54: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n55: }"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "dealerships.error_fetching_dealerships",
+            "line": 207,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "dealerships.error_fetching_dealerships",
+            "line": 207,
+            "context": "206: const error = queryError\n207: ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships')\n208: : null;"
+          }
+        ],
+        "coverage": 50,
         "severity": "low"
       },
       {
@@ -19739,8 +19753,8 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 279,
-            "context": "278: src={expandedImage}\n279: alt=\"Vehicle\"\n280: className=\"w-full h-auto max-h-[80vh] object-contain\""
+            "line": 292,
+            "context": "291: src={expandedImage}\n292: alt=\"Vehicle\"\n293: className=\"w-full h-auto max-h-[80vh] object-contain\""
           }
         ],
         "translationCalls": [
@@ -19751,35 +19765,35 @@
           },
           {
             "key": "stock.autopop.confidence.${result.confidence}",
-            "line": 220,
+            "line": 210,
             "exists": false
           },
           {
             "key": "stock.autopop.useVehicle",
-            "line": 243,
-            "exists": true
-          },
-          {
-            "key": "stock.autopop.noResults",
             "line": 256,
             "exists": true
           },
           {
+            "key": "stock.autopop.noResults",
+            "line": 269,
+            "exists": true
+          },
+          {
             "key": "stock.vehicle_image",
-            "line": 266,
+            "line": 279,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "stock.autopop.confidence.${result.confidence}",
-            "line": 220,
-            "context": "219: >\n220: {t(`stock.autopop.confidence.${result.confidence}`)}\n221: </Badge>"
+            "line": 210,
+            "context": "209: >\n210: {t(`stock.autopop.confidence.${result.confidence}`)}\n211: </Badge>"
           },
           {
             "key": "stock.vehicle_image",
-            "line": 266,
-            "context": "265: <span id=\"vehicle-image-description\" className=\"sr-only\">\n266: {t('stock.vehicle_image', 'Vehicle image preview')}\n267: </span>"
+            "line": 279,
+            "context": "278: <span id=\"vehicle-image-description\" className=\"sr-only\">\n279: {t('stock.vehicle_image', 'Vehicle image preview')}\n280: </span>"
           }
         ],
         "coverage": 83,
@@ -32360,370 +32374,375 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 344,
+            "line": 343,
             "exists": true
           },
           {
             "key": "errors.invalid_dealer",
-            "line": 345,
+            "line": 344,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 372,
+            "line": 371,
             "exists": true
           },
           {
             "key": "orders.services_fetch_error",
-            "line": 373,
+            "line": 372,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 405,
+            "line": 404,
             "exists": true
           },
           {
             "key": "common.unexpected_error",
-            "line": 406,
+            "line": 405,
             "exists": false
           },
           {
             "key": "stock.days",
-            "line": 452,
+            "line": 451,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 456,
+            "line": 455,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 460,
+            "line": 459,
             "exists": true
           },
           {
             "key": "orders.max_services_reached",
-            "line": 492,
+            "line": 491,
             "exists": true
           },
           {
             "key": "orders.save_error",
-            "line": 536,
+            "line": 535,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 539,
+            "line": 538,
             "exists": true
           },
           {
             "key": "orders.edit_service_order",
-            "line": 558,
+            "line": 557,
             "exists": true
           },
           {
             "key": "orders.create_service_order",
-            "line": 558,
+            "line": 557,
             "exists": true
           },
           {
             "key": "orders.edit_service_order",
-            "line": 561,
+            "line": 560,
             "exists": true
           },
           {
             "key": "orders.create_service_order",
-            "line": 561,
+            "line": 560,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 580,
+            "line": 579,
             "exists": true
           },
           {
             "key": "orders.clientInfo",
-            "line": 580,
+            "line": 579,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 586,
+            "line": 585,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 590,
+            "line": 589,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 600,
+            "line": 599,
             "exists": true
           },
           {
             "key": "orders.selectClient",
-            "line": 600,
+            "line": 599,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 614,
+            "line": 613,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 629,
+            "line": 628,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 662,
+            "line": 661,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 664,
+            "line": 663,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 665,
+            "line": 664,
             "exists": true
           },
           {
             "key": "common.search_users",
-            "line": 675,
+            "line": 674,
             "exists": true
           },
           {
             "key": "common.no_users_found",
-            "line": 679,
+            "line": 678,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 756,
+            "line": 755,
             "exists": true
           },
           {
             "key": "forms.labels.phone",
-            "line": 769,
+            "line": 768,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 769,
+            "line": 768,
             "exists": true
           },
           {
             "key": "forms.labels.email",
-            "line": 783,
+            "line": 782,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 783,
+            "line": 782,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 802,
+            "line": 801,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 805,
+            "line": 804,
             "exists": true
           },
           {
             "key": "service_orders.po_number",
-            "line": 814,
+            "line": 813,
             "exists": true
           },
           {
             "key": "service_orders.ro_number",
-            "line": 828,
+            "line": 827,
             "exists": true
           },
           {
             "key": "service_orders.tag_number",
-            "line": 842,
+            "line": 841,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 859,
+            "line": 858,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 879,
+            "line": 878,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 879,
+            "line": 878,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 879,
+            "line": 878,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 886,
+            "line": 885,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 897,
+            "line": 896,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 897,
+            "line": 896,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 897,
+            "line": 896,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 907,
+            "line": 906,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 913,
+            "line": 912,
             "exists": true
           },
           {
             "key": "due_date.validation.business_hours_only",
-            "line": 918,
+            "line": 917,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 927,
+            "line": 926,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 933,
+            "line": 932,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 936,
+            "line": 935,
             "exists": true
           },
           {
             "key": "orders.selected",
-            "line": 941,
+            "line": 940,
             "exists": true
           },
           {
             "key": "orders.max_services_info",
-            "line": 948,
+            "line": 947,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 954,
+            "line": 953,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 958,
+            "line": 957,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 958,
+            "line": 957,
             "exists": true
           },
           {
             "key": "orders.totalPrice",
-            "line": 1006,
+            "line": 1005,
             "exists": false
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1010,
+            "line": 1009,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 1016,
+            "line": 1015,
             "exists": true
           },
           {
-            "key": "orders.notes_instruction",
-            "line": 1023,
-            "exists": true
+            "key": "orders.notes_placeholder",
+            "line": 1022,
+            "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1049,
+            "line": 1046,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1070,
+            "line": 1067,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1070,
+            "line": 1067,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1073,
+            "line": 1070,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1073,
+            "line": 1070,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "errors.invalid_dealer",
-            "line": 345,
-            "context": "344: title: t('common.error'),\n345: description: t('errors.invalid_dealer') || 'Invalid dealership selected',\n346: variant: 'destructive'"
+            "line": 344,
+            "context": "343: title: t('common.error'),\n344: description: t('errors.invalid_dealer') || 'Invalid dealership selected',\n345: variant: 'destructive'"
           },
           {
             "key": "orders.services_fetch_error",
-            "line": 373,
-            "context": "372: title: t('common.error'),\n373: description: t('orders.services_fetch_error') || 'Error loading services',\n374: variant: 'destructive'"
+            "line": 372,
+            "context": "371: title: t('common.error'),\n372: description: t('orders.services_fetch_error') || 'Error loading services',\n373: variant: 'destructive'"
           },
           {
             "key": "common.unexpected_error",
-            "line": 406,
-            "context": "405: title: t('common.error'),\n406: description: t('common.unexpected_error') || 'An unexpected error occurred',\n407: variant: 'destructive'"
+            "line": 405,
+            "context": "404: title: t('common.error'),\n405: description: t('common.unexpected_error') || 'An unexpected error occurred',\n406: variant: 'destructive'"
           },
           {
             "key": "stock.days",
-            "line": 452,
-            "context": "451: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n452: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n453: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 451,
+            "context": "450: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n451: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n452: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           },
           {
             "key": "orders.save_error",
-            "line": 536,
-            "context": "535: logError('Error saving service order:', error);\n536: const errorMessage = error?.message || t('orders.save_error') || 'Failed to save order';\n537: setSubmitError(errorMessage);"
+            "line": 535,
+            "context": "534: logError('Error saving service order:', error);\n535: const errorMessage = error?.message || t('orders.save_error') || 'Failed to save order';\n536: setSubmitError(errorMessage);"
           },
           {
             "key": "orders.totalPrice",
-            "line": 1006,
-            "context": "1005: <div className=\"flex justify-between items-center\">\n1006: <span className=\"text-sm font-medium text-emerald-900\">{t('orders.totalPrice')}</span>\n1007: <span className=\"text-lg font-bold text-emerald-600\">${totalPrice.toFixed(2)}</span>"
+            "line": 1005,
+            "context": "1004: <div className=\"flex justify-between items-center\">\n1005: <span className=\"text-sm font-medium text-emerald-900\">{t('orders.totalPrice')}</span>\n1006: <span className=\"text-lg font-bold text-emerald-600\">${totalPrice.toFixed(2)}</span>"
+          },
+          {
+            "key": "orders.notes_placeholder",
+            "line": 1022,
+            "context": "1021: rows={4}\n1022: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this service order...')}\n1023: />"
           }
         ],
         "coverage": 100,
@@ -33553,456 +33572,471 @@
         "file": "src\\components\\orders\\OrderModal.tsx",
         "hardcodedStrings": [
           {
+            "text": "Vehicle",
+            "line": 879,
+            "context": "878: src={selectedVehicle.data.imageUrl}\n879: alt=\"Vehicle\"\n880: className=\"w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300\""
+          },
+          {
             "text": "ST-001",
-            "line": 1171,
-            "context": "1170: className={selectedVehicle ? \"border-input bg-muted/30 uppercase\" : \"border-input bg-background uppercase\"}\n1171: placeholder=\"ST-001\"\n1172: readOnly={!!selectedVehicle}"
+            "line": 1187,
+            "context": "1186: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1187: placeholder=\"ST-001\"\n1188: readOnly={!!selectedVehicle}"
           },
           {
             "text": ", error);\r\n      toast.error(t(",
-            "line": 842,
-            "context": "841: } catch (error) {\n842: console.error('Submit error:', error);\n843: toast.error(t('orders.creation_failed'));"
+            "line": 841,
+            "context": "840: } catch (error) {\n841: console.error('Submit error:', error);\n842: toast.error(t('orders.creation_failed'));"
           }
         ],
         "translationCalls": [
           {
             "key": "stock.days",
-            "line": 544,
+            "line": 543,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 548,
+            "line": 547,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 552,
+            "line": 551,
             "exists": true
           },
           {
             "key": "stock.autopop.cleared",
-            "line": 571,
+            "line": 570,
             "exists": true
           },
           {
             "key": "orders.max_services_reached",
-            "line": 631,
+            "line": 630,
             "exists": true
           },
           {
             "key": "validation.customerNameRequired",
-            "line": 712,
+            "line": 711,
             "exists": true
           },
           {
             "key": "validation.vinRequired",
-            "line": 718,
+            "line": 717,
             "exists": true
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 722,
+            "line": 721,
             "exists": true
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 728,
+            "line": 727,
             "exists": true
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 734,
+            "line": 733,
             "exists": true
           },
           {
             "key": "validation.assignedToRequired",
-            "line": 740,
+            "line": 739,
             "exists": true
           },
           {
             "key": "validation.dueDateRequired",
-            "line": 751,
+            "line": 750,
             "exists": true
           },
           {
             "key": "validation.dueDateTooFar",
-            "line": 760,
+            "line": 759,
             "exists": true
           },
           {
             "key": "validation.dueDateTooSoon",
-            "line": 769,
+            "line": 768,
             "exists": true
           },
           {
             "key": "validation.slotNotAvailable",
-            "line": 784,
+            "line": 783,
             "exists": true
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 791,
+            "line": 790,
             "exists": true
           },
           {
             "key": "validation.failedToReserveSlot",
-            "line": 823,
+            "line": 822,
             "exists": true
           },
           {
             "key": "validation.slotReservationWarning",
-            "line": 828,
+            "line": 827,
             "exists": true
           },
           {
             "key": "orders.creating_order",
-            "line": 837,
+            "line": 836,
             "exists": true
           },
           {
             "key": "orders.creation_failed",
-            "line": 843,
+            "line": 842,
             "exists": true
           },
           {
             "key": "orders.edit",
-            "line": 865,
+            "line": 864,
             "exists": true
           },
           {
             "key": "orders.create",
-            "line": 865,
+            "line": 864,
             "exists": true
           },
           {
             "key": "orders.edit_order_description",
-            "line": 868,
+            "line": 867,
             "exists": false
           },
           {
             "key": "orders.create_order_description",
-            "line": 868,
+            "line": 867,
+            "exists": false
+          },
+          {
+            "key": "stock.autopop.fromInventory",
+            "line": 887,
+            "exists": false
+          },
+          {
+            "key": "stock.autopop.vinDecoded",
+            "line": 887,
+            "exists": true
+          },
+          {
+            "key": "common.clear",
+            "line": 895,
             "exists": false
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 885,
-            "exists": true
-          },
-          {
-            "key": "stock.autopop.autoPopulated",
-            "line": 890,
-            "exists": true
-          },
-          {
-            "key": "stock.autopop.localInventory",
-            "line": 890,
-            "exists": true
-          },
-          {
-            "key": "stock.autopop.vinDecoded",
-            "line": 890,
+            "line": 908,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 912,
+            "line": 928,
             "exists": true
           },
           {
             "key": "sales_orders.assignment",
-            "line": 912,
+            "line": 928,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 918,
+            "line": 934,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 922,
+            "line": 938,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 932,
+            "line": 948,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 932,
+            "line": 948,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 946,
+            "line": 962,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 961,
+            "line": 977,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 994,
+            "line": 1010,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 996,
+            "line": 1012,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 997,
+            "line": 1013,
             "exists": true
           },
           {
             "key": "common.search_users",
-            "line": 1007,
+            "line": 1023,
             "exists": true
           },
           {
             "key": "common.no_users_found",
-            "line": 1011,
+            "line": 1027,
             "exists": true
           },
           {
             "key": "orders.customer_information",
-            "line": 1088,
+            "line": 1104,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 1092,
+            "line": 1108,
             "exists": true
           },
           {
             "key": "orders.customerNamePlaceholder",
-            "line": 1099,
+            "line": 1115,
             "exists": true
           },
           {
             "key": "forms.labels.phone",
-            "line": 1105,
+            "line": 1121,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 1105,
+            "line": 1121,
             "exists": true
           },
           {
             "key": "forms.labels.email",
-            "line": 1119,
+            "line": 1135,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 1119,
+            "line": 1135,
             "exists": true
           },
           {
             "key": "orders.priority",
-            "line": 1132,
+            "line": 1148,
             "exists": true
           },
           {
             "key": "orders.priority_normal",
-            "line": 1141,
-            "exists": true
-          },
-          {
-            "key": "orders.priority_high",
-            "line": 1142,
-            "exists": true
-          },
-          {
-            "key": "orders.priority_urgent",
-            "line": 1143,
-            "exists": true
-          },
-          {
-            "key": "orders.vehicleInfo",
-            "line": 1154,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.vin_decoded_successfully",
             "line": 1157,
             "exists": true
           },
           {
+            "key": "orders.priority_high",
+            "line": 1158,
+            "exists": true
+          },
+          {
+            "key": "orders.priority_urgent",
+            "line": 1159,
+            "exists": true
+          },
+          {
+            "key": "orders.vehicleInfo",
+            "line": 1170,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.vin_decoded_successfully",
+            "line": 1173,
+            "exists": true
+          },
+          {
             "key": "sales_orders.stock_number",
-            "line": 1164,
+            "line": 1180,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1176,
+            "line": 1192,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1176,
+            "line": 1192,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1176,
+            "line": 1192,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 1183,
+            "line": 1199,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1209,
+            "line": 1225,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1209,
+            "line": 1225,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1209,
+            "line": 1225,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1217,
+            "line": 1233,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 1229,
-            "exists": true
-          },
-          {
-            "key": "due_date.title",
-            "line": 1239,
-            "exists": true
-          },
-          {
-            "key": "due_date.date_placeholder",
             "line": 1245,
             "exists": true
           },
           {
-            "key": "orders.servicesAndNotes",
-            "line": 1256,
+            "key": "due_date.title",
+            "line": 1255,
             "exists": true
           },
           {
-            "key": "orders.services",
+            "key": "due_date.date_placeholder",
             "line": 1261,
             "exists": true
           },
           {
-            "key": "orders.available",
-            "line": 1264,
+            "key": "orders.servicesAndNotes",
+            "line": 1272,
             "exists": true
           },
           {
-            "key": "orders.selected",
-            "line": 1269,
+            "key": "orders.services",
+            "line": 1277,
+            "exists": true
+          },
+          {
+            "key": "orders.available",
+            "line": 1280,
             "exists": true
           },
           {
             "key": "orders.max_services_info",
-            "line": 1276,
+            "line": 1292,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 1282,
+            "line": 1298,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1287,
+            "line": 1303,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1294,
+            "line": 1310,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 1320,
+            "line": 1336,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 1349,
+            "line": 1365,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1355,
+            "line": 1371,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 1363,
+            "line": 1379,
             "exists": true
           },
           {
-            "key": "orders.notes_instruction",
-            "line": 1370,
-            "exists": true
+            "key": "orders.notes_placeholder",
+            "line": 1386,
+            "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1422,
+            "line": 1436,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1441,
+            "line": 1455,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1441,
+            "line": 1455,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1444,
+            "line": 1458,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1444,
+            "line": 1458,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "stock.days",
-            "line": 544,
-            "context": "543: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n544: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n545: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 543,
+            "context": "542: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n543: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n544: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           },
           {
             "key": "orders.edit_order_description",
-            "line": 868,
-            "context": "867: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n868: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n869: </div>"
+            "line": 867,
+            "context": "866: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n867: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n868: </div>"
           },
           {
             "key": "orders.create_order_description",
-            "line": 868,
-            "context": "867: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground\">\n868: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n869: </div>"
+            "line": 867,
+            "context": "866: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n867: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n868: </div>"
+          },
+          {
+            "key": "stock.autopop.fromInventory",
+            "line": 887,
+            "context": "886: <span className=\"truncate\">\n887: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n888: </span>"
+          },
+          {
+            "key": "common.clear",
+            "line": 895,
+            "context": "894: className=\"absolute right-1 top-1/2 -translate-y-1/2 p-1 hover:bg-blue-200 rounded-full transition-colors\"\n895: aria-label={t('common.clear', 'Clear')}\n896: >"
+          },
+          {
+            "key": "orders.notes_placeholder",
+            "line": 1386,
+            "context": "1385: className=\"border-input bg-background resize-none w-full\"\n1386: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1387: />"
           }
         ],
-        "coverage": 98,
+        "coverage": 97,
         "severity": "low"
       },
       {
@@ -34841,86 +34875,6 @@
           }
         ],
         "coverage": 80,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\orders\\ModifiedVehicleInfoBlock.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Photos Coming Soon",
-            "line": 228,
-            "context": "227: src=\"/images/vehicle-placeholder.png\"\n228: alt=\"Photos Coming Soon\"\n229: className=\"w-full h-auto max-h-32 object-cover rounded-md opacity-60\""
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "vehicle_info.vehicle_information",
-            "line": 90,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.decoded_from_vin",
-            "line": 92,
-            "exists": true
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 97,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 104,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.decoded",
-            "line": 121,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.auto_populated",
-            "line": 122,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.manual_entry",
-            "line": 127,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.manually_entered",
-            "line": 128,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.no_image_available",
-            "line": 140,
-            "exists": true
-          },
-          {
-            "key": "orders.vehicle_information",
-            "line": 150,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.vehicle_image",
-            "line": 189,
-            "exists": true
-          },
-          {
-            "key": "vehicle_info.vehicle_image_alt",
-            "line": 205,
-            "exists": true
-          },
-          {
-            "key": "stock.image_from_inventory",
-            "line": 221,
-            "exists": true
-          }
-        ],
-        "missingKeys": [],
-        "coverage": 93,
         "severity": "low"
       },
       {
@@ -41186,197 +41140,197 @@
         "hardcodedStrings": [
           {
             "text": "Auto",
-            "line": 225,
-            "context": "224: {template.auto_assign && (\n225: <Badge variant=\"secondary\" className=\"text-xs\">\n226: Auto"
+            "line": 226,
+            "context": "225: {template.auto_assign && (\n226: <Badge variant=\"secondary\" className=\"text-xs\">\n227: Auto"
           },
           {
             "text": "Active",
-            "line": 259,
-            "context": "258: <div className=\"flex items-center gap-2\">\n259: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n260: Active"
+            "line": 260,
+            "context": "259: <div className=\"flex items-center gap-2\">\n260: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n261: Active"
           },
           {
             "text": "Normal",
-            "line": 413,
-            "context": "412: <SelectItem value=\"1\">Low</SelectItem>\n413: <SelectItem value=\"2\">Normal</SelectItem>\n414: <SelectItem value=\"3\">High</SelectItem>"
+            "line": 414,
+            "context": "413: <SelectItem value=\"1\">Low</SelectItem>\n414: <SelectItem value=\"2\">Normal</SelectItem>\n415: <SelectItem value=\"3\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 414,
-            "context": "413: <SelectItem value=\"2\">Normal</SelectItem>\n414: <SelectItem value=\"3\">High</SelectItem>\n415: </SelectContent>"
+            "line": 415,
+            "context": "414: <SelectItem value=\"2\">Normal</SelectItem>\n415: <SelectItem value=\"3\">High</SelectItem>\n416: </SelectContent>"
           },
           {
             "text": "Active\r\n          ",
-            "line": 259,
-            "context": "258: <div className=\"flex items-center gap-2\">\n259: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n260: Active"
+            "line": 260,
+            "context": "259: <div className=\"flex items-center gap-2\">\n260: <Label htmlFor={`active-${template.id}`} className=\"text-xs cursor-pointer\">\n261: Active"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.templates.title",
-            "line": 99,
+            "line": 100,
             "exists": true
           },
           {
             "key": "get_ready.templates.subtitle",
-            "line": 102,
+            "line": 103,
             "exists": true
           },
           {
             "key": "get_ready.templates.add_template",
-            "line": 107,
+            "line": 108,
             "exists": true
           },
           {
             "key": "get_ready.templates.preview",
-            "line": 116,
+            "line": 117,
             "exists": true
           },
           {
             "key": "get_ready.templates.preview_desc",
-            "line": 119,
+            "line": 120,
             "exists": true
           },
           {
             "key": "get_ready.templates.active_templates",
-            "line": 129,
+            "line": 130,
             "exists": true
           },
           {
             "key": "get_ready.templates.no_templates",
-            "line": 135,
-            "exists": true
-          },
-          {
-            "key": "get_ready.templates.create_first",
             "line": 136,
             "exists": true
           },
           {
+            "key": "get_ready.templates.create_first",
+            "line": 137,
+            "exists": true
+          },
+          {
             "key": "get_ready.templates.inactive_templates",
-            "line": 157,
+            "line": 158,
             "exists": true
           },
           {
             "key": "get_ready.templates.confirm_delete",
-            "line": 209,
+            "line": 210,
             "exists": true
           },
           {
             "key": "get_ready.templates.auto_assign",
-            "line": 248,
+            "line": 249,
             "exists": true
           },
           {
             "key": "get_ready.templates.edit_template",
-            "line": 331,
+            "line": 332,
             "exists": true
           },
           {
             "key": "get_ready.templates.add_template",
-            "line": 331,
+            "line": 332,
             "exists": true
           },
           {
             "key": "get_ready.templates.template_form_description",
-            "line": 334,
+            "line": 335,
             "exists": true
           },
           {
             "key": "get_ready.work_items.title",
-            "line": 340,
+            "line": 341,
             "exists": true
           },
           {
             "key": "get_ready.work_items.title_placeholder",
-            "line": 345,
+            "line": 346,
             "exists": true
           },
           {
             "key": "get_ready.work_items.work_type",
-            "line": 352,
+            "line": 353,
             "exists": true
           },
           {
             "key": "get_ready.templates.associated_step",
-            "line": 368,
+            "line": 369,
             "exists": true
           },
           {
             "key": "get_ready.templates.select_step",
-            "line": 374,
+            "line": 375,
             "exists": true
           },
           {
             "key": "get_ready.templates.global_template",
-            "line": 378,
+            "line": 379,
             "exists": true
           },
           {
             "key": "get_ready.templates.step_association_help",
-            "line": 388,
+            "line": 389,
             "exists": true
           },
           {
             "key": "get_ready.work_items.description",
-            "line": 394,
+            "line": 395,
             "exists": true
           },
           {
             "key": "get_ready.work_items.description_placeholder",
-            "line": 399,
+            "line": 400,
             "exists": true
           },
           {
             "key": "get_ready.work_items.priority",
-            "line": 406,
+            "line": 407,
             "exists": true
           },
           {
             "key": "get_ready.work_items.estimated_hours",
-            "line": 420,
+            "line": 421,
             "exists": true
           },
           {
             "key": "get_ready.work_items.estimated_cost",
-            "line": 432,
+            "line": 433,
             "exists": true
           },
           {
             "key": "get_ready.templates.auto_assign",
-            "line": 452,
+            "line": 453,
             "exists": true
           },
           {
             "key": "get_ready.templates.auto_assign_desc",
-            "line": 454,
+            "line": 455,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approval_required",
-            "line": 466,
+            "line": 467,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 474,
+            "line": 475,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 477,
+            "line": 478,
             "exists": true
           },
           {
             "key": "common.actions.save",
-            "line": 477,
+            "line": 478,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.actions.save",
-            "line": 477,
-            "context": "476: <Button type=\"submit\" disabled={createTemplate.isPending || updateTemplate.isPending}>\n477: {createTemplate.isPending || updateTemplate.isPending ? t('common.loading') : t('common.actions.save')}\n478: </Button>"
+            "line": 478,
+            "context": "477: <Button type=\"submit\" disabled={createTemplate.isPending || updateTemplate.isPending}>\n478: {createTemplate.isPending || updateTemplate.isPending ? t('common.loading') : t('common.actions.save')}\n479: </Button>"
           }
         ],
         "coverage": 86,
@@ -41407,185 +41361,200 @@
         "hardcodedStrings": [
           {
             "text": "Work Item",
-            "line": 576,
-            "context": "575: <TableRow className=\"bg-muted/50\">\n576: <TableHead className=\"w-[200px]\">Work Item</TableHead>\n577: <TableHead className=\"hidden sm:table-cell w-[140px]\">Type & Priority</TableHead>"
+            "line": 653,
+            "context": "652: <TableRow className=\"bg-muted/50\">\n653: <TableHead className=\"w-[200px]\">Work Item</TableHead>\n654: <TableHead className=\"hidden sm:table-cell w-[140px]\">Type & Priority</TableHead>"
           },
           {
             "text": "Assigned",
-            "line": 579,
-            "context": "578: <TableHead className=\"hidden md:table-cell w-[100px]\">Cost & Hours</TableHead>\n579: <TableHead className=\"hidden lg:table-cell w-[120px]\">Assigned</TableHead>\n580: {/* ❌ REMOVED: Timer column (now inline with title) */}"
+            "line": 656,
+            "context": "655: <TableHead className=\"hidden md:table-cell w-[100px]\">Cost & Hours</TableHead>\n656: <TableHead className=\"hidden lg:table-cell w-[120px]\">Assigned</TableHead>\n657: {/* ❌ REMOVED: Timer column (now inline with title) */}"
           }
         ],
         "translationCalls": [
           {
             "key": "common.priority.low",
-            "line": 133,
+            "line": 154,
             "exists": true
           },
           {
             "key": "common.priority.normal",
-            "line": 135,
+            "line": 156,
             "exists": true
           },
           {
             "key": "common.priority.high",
-            "line": 137,
+            "line": 158,
             "exists": true
           },
           {
             "key": "common.priority.normal",
-            "line": 139,
+            "line": 160,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.blocked",
-            "line": 168,
+            "line": 189,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.on_hold",
-            "line": 173,
+            "line": 194,
             "exists": true
           },
           {
             "key": "get_ready.work_items.view_media",
-            "line": 242,
+            "line": 263,
             "exists": true
           },
           {
             "key": "get_ready.work_items.view_notes",
-            "line": 256,
+            "line": 277,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.${item.work_type}",
-            "line": 272,
+            "line": 293,
             "exists": false
           },
           {
+            "key": "get_ready.table.unassigned",
+            "line": 334,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.assign_technician",
+            "line": 339,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.clear_assignment",
+            "line": 367,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.approve",
-            "line": 327,
+            "line": 404,
             "exists": true
           },
           {
             "key": "get_ready.work_items.decline",
-            "line": 337,
+            "line": 414,
             "exists": true
           },
           {
             "key": "get_ready.work_items.start",
-            "line": 358,
+            "line": 435,
             "exists": true
           },
           {
             "key": "get_ready.work_items.pause",
-            "line": 385,
+            "line": 462,
             "exists": true
           },
           {
             "key": "get_ready.work_items.block",
-            "line": 409,
+            "line": 486,
             "exists": true
           },
           {
             "key": "get_ready.work_items.complete",
-            "line": 432,
+            "line": 509,
             "exists": true
           },
           {
             "key": "get_ready.work_items.resume",
-            "line": 457,
+            "line": 534,
             "exists": true
           },
           {
             "key": "get_ready.work_items.unblock",
-            "line": 481,
+            "line": 558,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit",
-            "line": 503,
+            "line": 580,
             "exists": true
           },
           {
             "key": "get_ready.work_items.cancel",
-            "line": 522,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.delete",
-            "line": 543,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.delete_description",
-            "line": 544,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.actions",
-            "line": 581,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.status.awaiting_approval",
-            "line": 598,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.status.pending",
             "line": 599,
             "exists": true
           },
           {
+            "key": "get_ready.work_items.delete",
+            "line": 620,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.delete_description",
+            "line": 621,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.actions",
+            "line": 658,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.status.awaiting_approval",
+            "line": 675,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.status.pending",
+            "line": 676,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.status.rejected",
-            "line": 600,
+            "line": 677,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.scheduled",
-            "line": 601,
+            "line": 678,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.in_progress",
-            "line": 604,
+            "line": 681,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.on_hold",
-            "line": 605,
+            "line": 682,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.blocked",
-            "line": 606,
+            "line": 683,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.completed",
-            "line": 609,
+            "line": 686,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.cancelled",
-            "line": 610,
+            "line": 687,
             "exists": true
           },
           {
             "key": "get_ready.work_items.no_items",
-            "line": 616,
+            "line": 693,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.work_items.type.${item.work_type}",
-            "line": 272,
-            "context": "271: <Badge variant=\"outline\" className=\"text-xs capitalize w-fit\">\n272: {t(`get_ready.work_items.type.${item.work_type}`)}\n273: </Badge>"
+            "line": 293,
+            "context": "292: <Badge variant=\"outline\" className=\"text-xs capitalize w-fit\">\n293: {t(`get_ready.work_items.type.${item.work_type}`)}\n294: </Badge>"
           }
         ],
-        "coverage": 94,
+        "coverage": 95,
         "severity": "low"
       },
       {
@@ -41640,7 +41609,7 @@
           {
             "key": "get_ready.table.progress_time",
             "line": 127,
-            "exists": true
+            "exists": false
           },
           {
             "key": "get_ready.table.priority",
@@ -41678,6 +41647,11 @@
             "key": "common.print",
             "line": 115,
             "context": "114: <Printer className=\"h-4 w-4 mr-2\" />\n115: {t('common.print', 'Print')}\n116: </Button>"
+          },
+          {
+            "key": "get_ready.table.progress_time",
+            "line": 127,
+            "context": "126: <TableHead className=\"w-32 py-2 bg-background\">{t('get_ready.table.step_workflow')}</TableHead>\n127: <TableHead className=\"w-40 py-2 bg-background\">{t('get_ready.table.progress_time')}</TableHead>\n128: <TableHead className=\"w-24 py-2 bg-background\">{t('get_ready.table.priority')}</TableHead>"
           },
           {
             "key": "common.priority.${vehicle.priority}",
@@ -42004,67 +41978,67 @@
         "hardcodedStrings": [
           {
             "text": "Default",
-            "line": 287,
-            "context": "286: {step.is_default && (\n287: <Badge variant=\"outline\" className=\"bg-gray-50 text-gray-700 border-gray-200\">\n288: Default"
+            "line": 288,
+            "context": "287: {step.is_default && (\n288: <Badge variant=\"outline\" className=\"bg-gray-50 text-gray-700 border-gray-200\">\n289: Default"
           },
           {
             "text": "Vehicles",
-            "line": 344,
-            "context": "343: <div>\n344: <p className=\"text-xs text-gray-500\">Vehicles</p>\n345: <p className=\"text-sm font-semibold text-gray-900\">"
+            "line": 345,
+            "context": "344: <div>\n345: <p className=\"text-xs text-gray-500\">Vehicles</p>\n346: <p className=\"text-sm font-semibold text-gray-900\">"
           }
         ],
         "translationCalls": [
           {
             "key": "messages.error.generic",
-            "line": 127,
+            "line": 128,
             "exists": false
           },
           {
             "key": "get_ready.setup.no_steps_title",
-            "line": 141,
+            "line": 142,
             "exists": true
           },
           {
             "key": "get_ready.setup.no_steps_description",
-            "line": 144,
+            "line": 145,
             "exists": true
           },
           {
             "key": "get_ready.setup.add_step",
-            "line": 157,
+            "line": 158,
             "exists": true
           },
           {
             "key": "get_ready.setup.delete_confirm_title",
-            "line": 196,
+            "line": 197,
             "exists": true
           },
           {
             "key": "get_ready.setup.delete_confirm_message",
-            "line": 198,
+            "line": 199,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 203,
+            "line": 204,
             "exists": true
           },
           {
             "key": "common.status.loading",
-            "line": 210,
+            "line": 211,
             "exists": true
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 210,
+            "line": 211,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "messages.error.generic",
-            "line": 127,
-            "context": "126: <p className=\"text-sm font-medium\">\n127: {t('messages.error.generic')}\n128: </p>"
+            "line": 128,
+            "context": "127: <p className=\"text-sm font-medium\">\n128: {t('messages.error.generic')}\n129: </p>"
           }
         ],
         "coverage": 82,
@@ -43317,470 +43291,485 @@
         "translationCalls": [
           {
             "key": "get_ready.work_items.navigating_to_media",
-            "line": 193,
+            "line": 195,
             "exists": true
           },
           {
             "key": "get_ready.work_items.navigating_to_notes",
-            "line": 200,
+            "line": 202,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.assigned_successfully",
+            "line": 276,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.unassigned_successfully",
+            "line": 277,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.error_assigning",
+            "line": 283,
             "exists": true
           },
           {
             "key": "get_ready.work_items.need_attention",
-            "line": 281,
+            "line": 306,
             "exists": true
           },
           {
             "key": "get_ready.work_items.in_progress",
-            "line": 290,
+            "line": 315,
             "exists": true
           },
           {
             "key": "get_ready.work_items.status.on_hold",
-            "line": 299,
+            "line": 324,
             "exists": true
           },
           {
             "key": "get_ready.work_items.completed",
-            "line": 308,
+            "line": 333,
             "exists": true
           },
           {
             "key": "get_ready.work_items.add_work_item",
-            "line": 318,
+            "line": 343,
             "exists": true
           },
           {
             "key": "get_ready.work_items.add_work_item",
-            "line": 378,
+            "line": 405,
             "exists": true
           },
           {
             "key": "get_ready.work_items.add_description",
-            "line": 379,
+            "line": 406,
             "exists": true
           },
           {
             "key": "get_ready.work_items.title",
-            "line": 383,
+            "line": 410,
             "exists": true
           },
           {
             "key": "get_ready.work_items.title_placeholder",
-            "line": 388,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.description",
-            "line": 392,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.description_placeholder",
-            "line": 397,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.work_type",
-            "line": 403,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.type.mechanical",
-            "line": 412,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.type.body_repair",
-            "line": 413,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.type.detailing",
-            "line": 414,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.type.safety_inspection",
             "line": 415,
             "exists": true
           },
           {
-            "key": "get_ready.work_items.type.reconditioning",
-            "line": 416,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.type.parts_ordering",
-            "line": 417,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.type.other",
-            "line": 418,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.priority",
-            "line": 423,
-            "exists": true
-          },
-          {
-            "key": "common.priority.low",
-            "line": 432,
-            "exists": true
-          },
-          {
-            "key": "common.priority.normal",
-            "line": 433,
-            "exists": true
-          },
-          {
-            "key": "common.priority.high",
-            "line": 434,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.estimated_cost",
-            "line": 441,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.estimated_hours",
-            "line": 452,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.assigned_to",
-            "line": 464,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.assigned_to_placeholder",
-            "line": 469,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.approval_required",
-            "line": 481,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.cancel",
-            "line": 487,
-            "exists": true
-          },
-          {
-            "key": "common.actions.create",
-            "line": 491,
-            "exists": false
-          },
-          {
-            "key": "get_ready.work_items.decline_title",
-            "line": 501,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.decline_description",
-            "line": 502,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.decline_reason",
-            "line": 505,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.decline_reason_placeholder",
-            "line": 510,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.cancel",
-            "line": 516,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.decline",
-            "line": 520,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.complete_title",
-            "line": 530,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.complete_description",
-            "line": 531,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.actual_cost",
-            "line": 535,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.actual_hours",
-            "line": 547,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.auto_calculated",
-            "line": 550,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.cancel",
-            "line": 566,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.complete",
-            "line": 570,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.edit_title",
-            "line": 580,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.edit_description",
-            "line": 581,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.title",
-            "line": 585,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.title_placeholder",
-            "line": 590,
-            "exists": true
-          },
-          {
             "key": "get_ready.work_items.description",
-            "line": 594,
+            "line": 419,
             "exists": true
           },
           {
             "key": "get_ready.work_items.description_placeholder",
-            "line": 599,
+            "line": 424,
             "exists": true
           },
           {
             "key": "get_ready.work_items.work_type",
-            "line": 605,
+            "line": 430,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.mechanical",
-            "line": 614,
+            "line": 439,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.body_repair",
-            "line": 615,
+            "line": 440,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.detailing",
-            "line": 616,
+            "line": 441,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.safety_inspection",
-            "line": 617,
+            "line": 442,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.reconditioning",
-            "line": 618,
+            "line": 443,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.parts_ordering",
-            "line": 619,
+            "line": 444,
             "exists": true
           },
           {
             "key": "get_ready.work_items.type.other",
-            "line": 620,
+            "line": 445,
             "exists": true
           },
           {
             "key": "get_ready.work_items.priority",
-            "line": 625,
+            "line": 450,
             "exists": true
           },
           {
             "key": "common.priority.low",
-            "line": 634,
+            "line": 459,
             "exists": true
           },
           {
             "key": "common.priority.normal",
-            "line": 635,
+            "line": 460,
             "exists": true
           },
           {
             "key": "common.priority.high",
-            "line": 636,
+            "line": 461,
             "exists": true
           },
           {
             "key": "get_ready.work_items.estimated_cost",
-            "line": 643,
+            "line": 468,
             "exists": true
           },
           {
             "key": "get_ready.work_items.estimated_hours",
-            "line": 654,
+            "line": 479,
             "exists": true
           },
           {
             "key": "get_ready.work_items.assigned_to",
-            "line": 666,
+            "line": 491,
             "exists": true
           },
           {
             "key": "get_ready.work_items.assigned_to_placeholder",
-            "line": 671,
+            "line": 496,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approval_required",
-            "line": 683,
+            "line": 508,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 689,
+            "line": 514,
+            "exists": true
+          },
+          {
+            "key": "common.actions.create",
+            "line": 518,
+            "exists": false
+          },
+          {
+            "key": "get_ready.work_items.decline_title",
+            "line": 528,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.decline_description",
+            "line": 529,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.decline_reason",
+            "line": 532,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.decline_reason_placeholder",
+            "line": 537,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 543,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.decline",
+            "line": 547,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.complete_title",
+            "line": 557,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.complete_description",
+            "line": 558,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.actual_cost",
+            "line": 562,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.actual_hours",
+            "line": 574,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.auto_calculated",
+            "line": 577,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 593,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.complete",
+            "line": 597,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.edit_title",
+            "line": 607,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.edit_description",
+            "line": 608,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.title",
+            "line": 612,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.title_placeholder",
+            "line": 617,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.description",
+            "line": 621,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.description_placeholder",
+            "line": 626,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.work_type",
+            "line": 632,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.mechanical",
+            "line": 641,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.body_repair",
+            "line": 642,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.detailing",
+            "line": 643,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.safety_inspection",
+            "line": 644,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.reconditioning",
+            "line": 645,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.parts_ordering",
+            "line": 646,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.type.other",
+            "line": 647,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.priority",
+            "line": 652,
+            "exists": true
+          },
+          {
+            "key": "common.priority.low",
+            "line": 661,
+            "exists": true
+          },
+          {
+            "key": "common.priority.normal",
+            "line": 662,
+            "exists": true
+          },
+          {
+            "key": "common.priority.high",
+            "line": 663,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.estimated_cost",
+            "line": 670,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.estimated_hours",
+            "line": 681,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.assigned_to",
+            "line": 693,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.assigned_to_placeholder",
+            "line": 698,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.approval_required",
+            "line": 710,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 716,
             "exists": true
           },
           {
             "key": "common.action_buttons.save",
-            "line": 712,
+            "line": 739,
             "exists": true
           },
           {
             "key": "get_ready.work_items.pause_title",
-            "line": 722,
+            "line": 749,
             "exists": true
           },
           {
             "key": "get_ready.work_items.pause_description",
-            "line": 723,
+            "line": 750,
             "exists": true
           },
           {
             "key": "get_ready.work_items.pause_reason",
-            "line": 726,
+            "line": 753,
             "exists": true
           },
           {
             "key": "get_ready.work_items.pause_reason_placeholder",
-            "line": 731,
+            "line": 758,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 737,
+            "line": 764,
             "exists": true
           },
           {
             "key": "get_ready.work_items.pause",
-            "line": 741,
+            "line": 768,
             "exists": true
           },
           {
             "key": "get_ready.work_items.block_title",
-            "line": 751,
+            "line": 778,
             "exists": true
           },
           {
             "key": "get_ready.work_items.block_description",
-            "line": 752,
+            "line": 779,
             "exists": true
           },
           {
             "key": "get_ready.work_items.block_reason",
-            "line": 755,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.block_reason_placeholder",
-            "line": 760,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.cancel",
-            "line": 767,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.block",
-            "line": 771,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.cancel_title",
-            "line": 781,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.cancel_description",
             "line": 782,
             "exists": true
           },
           {
+            "key": "get_ready.work_items.block_reason_placeholder",
+            "line": 787,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 794,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.block",
+            "line": 798,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.cancel_title",
+            "line": 808,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.cancel_description",
+            "line": 809,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.cancel_reason",
-            "line": 785,
+            "line": 812,
             "exists": true
           },
           {
             "key": "get_ready.work_items.cancel_reason_placeholder",
-            "line": 790,
+            "line": 817,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 797,
+            "line": 824,
             "exists": true
           },
           {
             "key": "get_ready.work_items.cancel",
-            "line": 801,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.delete_title",
-            "line": 826,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.confirm_delete",
-            "line": 827,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.delete",
             "line": 828,
             "exists": true
           },
           {
+            "key": "get_ready.work_items.delete_title",
+            "line": 853,
+            "exists": true
+          },
+          {
+            "key": "get_ready.work_items.confirm_delete",
+            "line": 854,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.delete",
+            "line": 855,
+            "exists": true
+          },
+          {
             "key": "common.action_buttons.cancel",
-            "line": 829,
+            "line": 856,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.actions.create",
-            "line": 491,
-            "context": "490: {createWorkItem.isPending && <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />}\n491: {t('common.actions.create')}\n492: </Button>"
+            "line": 518,
+            "context": "517: {createWorkItem.isPending && <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />}\n518: {t('common.actions.create')}\n519: </Button>"
           }
         ],
         "coverage": 100,
@@ -49950,10 +49939,10 @@
         "src\\components\\dealer\\EditRoleModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
+        "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\components\\dealer\\EditUserRoleModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
-        "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
         "src\\components\\profile\\UnsavedChangesModal.tsx",
@@ -50191,6 +50180,7 @@
         "src\\hooks\\useAccessibleDealerships.tsx",
         "src\\contexts\\ServicesContext.tsx",
         "src\\contexts\\GlobalChatProvider.tsx",
+        "src\\contexts\\DealershipContext.tsx",
         "src\\components\\UserProfilePopover.tsx",
         "src\\components\\StatusBadgeInteractive.tsx",
         "src\\components\\LandingHeader.tsx",
@@ -50217,7 +50207,6 @@
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
         "src\\components\\orders\\QRCodeDisplay.tsx",
-        "src\\components\\orders\\ModifiedVehicleInfoBlock.tsx",
         "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\nfc\\NFCPhysicalWriter.tsx",
         "src\\components\\navigation\\Breadcrumbs.tsx",
@@ -50357,9 +50346,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2299 translation keys are referenced but missing",
+      "description": "2304 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "115 hours"
+      "estimatedEffort": "116 hours"
     }
   ],
   "coverage": 78

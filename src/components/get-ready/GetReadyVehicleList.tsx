@@ -17,6 +17,7 @@ import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { useGetReadyViewMode } from '@/hooks/useGetReadyPersistence';
 import { cn } from '@/lib/utils';
 import { formatTimeForTable } from '@/utils/timeFormatUtils';
+import { getProgressColor } from '@/utils/progressCalculation';
 import {
     AlertTriangle,
     Car,
@@ -388,7 +389,11 @@ export function GetReadyVehicleList({
                   </div>
                 </div>
 
-                <Progress value={vehicle.progress} className="h-1.5" />
+                <Progress
+                  value={vehicle.progress}
+                  className="h-1.5"
+                  indicatorClassName={getProgressColor(vehicle.progress)}
+                />
 
                 {/* Key Metrics */}
                 <div className="grid grid-cols-2 gap-1.5 text-xs">
@@ -570,7 +575,7 @@ export function GetReadyVehicleList({
                     </Tooltip>
                   </TableHead>
                   <TableHead className="w-[100px] text-center py-2 bg-background">{t('get_ready.table.priority')}</TableHead>
-                  <TableHead className="w-[150px] text-center py-2 bg-background">{t('get_ready.table.progress_time')}</TableHead>
+                  <TableHead className="w-[150px] text-center py-2 bg-background">{t('get_ready.table.progress')}</TableHead>
                   <TableHead className="w-[100px] text-center py-2 bg-background">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -998,7 +1003,11 @@ export function GetReadyVehicleList({
                   <div className="space-y-1">
                     {/* Progress bar with percentage */}
                     <div className="flex items-center gap-2">
-                      <Progress value={vehicle.progress} className="h-1.5 flex-1" />
+                      <Progress
+                        value={vehicle.progress}
+                        className="h-1.5 flex-1"
+                        indicatorClassName={getProgressColor(vehicle.progress)}
+                      />
                       <span className="text-xs text-muted-foreground w-8">
                         {vehicle.progress}%
                       </span>

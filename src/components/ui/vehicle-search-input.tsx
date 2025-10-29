@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Search, Loader2, Car, Zap, Image as ImageIcon, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { useVehicleAutoPopulation, VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
+import { Car, Image as ImageIcon, Loader2, Search, X, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface VehicleSearchInputProps {
   dealerId?: number;
@@ -82,7 +82,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev < results.length - 1 ? prev + 1 : prev
         );
         break;
@@ -104,14 +104,14 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
   };
 
   const handleResultSelect = (result: VehicleSearchResult) => {
-    const displayText = result.data.stockNumber 
+    const displayText = result.data.stockNumber
       ? `${result.data.stockNumber} - ${result.preview?.title}`
       : result.preview?.title || '';
-    
+
     setQuery(displayText);
     setIsOpen(false);
     setSelectedIndex(-1);
-    
+
     if (onVehicleSelect) {
       onVehicleSelect(result);
     }
@@ -152,22 +152,22 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
       </div>
 
       {isOpen && results.length > 0 && (
-        <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg border border-border">
+        <Card className="absolute top-full left-0 w-full sm:w-[500px] md:w-[600px] lg:w-[700px] z-50 mt-1 shadow-lg border border-border">
           <CardContent className="p-0">
-            <div className="max-h-60 overflow-y-auto">
+            <div className="max-h-[400px] overflow-y-auto">
               {results.map((result, index) => (
                 <div
                   key={`${result.source}-${result.data.vin || result.data.stockNumber || index}`}
-                  className={`p-3 cursor-pointer hover:bg-accent/50 border-b border-border/50 last:border-b-0 ${
+                  className={`p-3 sm:p-4 cursor-pointer hover:bg-accent/50 border-b border-border/50 last:border-b-0 transition-colors ${
                     index === selectedIndex ? 'bg-accent' : ''
                   }`}
                   onClick={() => handleResultSelect(result)}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-3 sm:gap-4">
                     {/* Vehicle Thumbnail */}
                     {result.data.imageUrl ? (
                       <div
-                        className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-border bg-background cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                        className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-md overflow-hidden border-2 border-border bg-background cursor-pointer hover:ring-2 hover:ring-primary transition-all"
                         onClick={(e) => {
                           e.stopPropagation();
                           setExpandedImage(result.data.imageUrl!);
@@ -192,55 +192,68 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                         />
                       </div>
                     ) : (
-                      <div className="flex-shrink-0 w-16 h-16 rounded-md border border-border bg-muted flex items-center justify-center">
-                        <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                      <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-md border-2 border-border bg-muted flex items-center justify-center">
+                        <ImageIcon className="w-8 h-8 text-muted-foreground" />
                       </div>
                     )}
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         {getSourceIcon(result.source)}
-                        <span className="font-medium text-foreground truncate">
+                        <span className="font-semibold text-foreground text-sm sm:text-base">
                           {result.preview?.title}
                         </span>
+                        <Badge
+                          variant={getConfidenceBadgeVariant(result.confidence)}
+                          className="text-[10px] sm:text-xs"
+                        >
+                          {t(`stock.autopop.confidence.${result.confidence}`)}
+                        </Badge>
                       </div>
 
                       {result.preview?.subtitle && (
-                        <p className="text-sm text-muted-foreground truncate">
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-2">
                           {result.preview.subtitle}
                         </p>
                       )}
-                    </div>
-                    
-                    <div className="flex flex-col items-end gap-1">
-                      <Badge 
-                        variant={getConfidenceBadgeVariant(result.confidence)}
-                        className="text-xs"
-                      >
-                        {t(`stock.autopop.confidence.${result.confidence}`)}
-                      </Badge>
-                      
+
+                      {/* Stock Number and VIN - More prominent */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-xs sm:text-sm">
+                        {result.data.stockNumber && (
+                          <div className="bg-muted/50 rounded px-2 py-1">
+                            <span className="text-muted-foreground">Stock:</span>{' '}
+                            <span className="font-mono font-semibold text-foreground">{result.data.stockNumber}</span>
+                          </div>
+                        )}
+                        {result.data.vin && (
+                          <div className="bg-muted/50 rounded px-2 py-1 sm:col-span-1">
+                            <span className="text-muted-foreground">VIN:</span>{' '}
+                            <span className="font-mono font-medium text-foreground text-[10px] sm:text-xs truncate block">{result.data.vin}</span>
+                          </div>
+                        )}
+                      </div>
+
                       {result.preview?.badge && (
-                        <Badge 
+                        <Badge
                           variant={result.preview.badgeVariant || 'secondary'}
-                          className="text-xs"
+                          className="text-xs mt-2"
                         >
                           {result.preview.badge}
                         </Badge>
                       )}
                     </div>
                   </div>
-                  
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
-                    className="w-full mt-2 h-7 text-xs"
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="w-full mt-3 h-8 text-xs sm:text-sm hover:bg-primary/10"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleResultSelect(result);
                     }}
                   >
-                    {t('stock.autopop.useVehicle')}
+                    {t('stock.autopop.useVehicle', 'Use this vehicle')}
                   </Button>
                 </div>
               ))}
