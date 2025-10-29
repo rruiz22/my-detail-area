@@ -8,6 +8,7 @@ import { useGetReadyStore, type ReconVehicle } from './useGetReadyStore';
 import type { GetReadyWorkItemSummary, VehicleDatabaseResponse, VehicleSortField } from '@/types/getReady';
 import { sanitizeAndLowercase } from '@/utils/searchSanitization';
 import { validateDealershipObject } from '@/utils/dealerValidation';
+import { calculateVehicleProgress } from '@/utils/progressCalculation';
 
 // Type definition for vehicle detail
 export interface VehicleDetail {
@@ -407,7 +408,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           holding_cost: 0, // TODO: Calculate holding cost
           assigned_to: vehicle.assigned_to || 'Unassigned',
           notes: vehicle.notes || '',
-          progress: Math.min(100, Math.round((stepOrder / 8) * 100)), // Calculate progress based on step
+          progress: calculateVehicleProgress(workItems), // Calculate progress based on work items completion
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
           images: stockImagesMap.has(vehicle.vin) ? [stockImagesMap.get(vehicle.vin)!] : [],
@@ -630,7 +631,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           holding_cost: 0,
           assigned_to: vehicle.assigned_to || 'Unassigned',
           notes: vehicle.notes || '',
-          progress: Math.min(100, Math.round((stepOrder / 8) * 100)), // Calculate progress based on step
+          progress: calculateVehicleProgress(workItems), // Calculate progress based on work items completion
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
           images: stockImagesMap.has(vehicle.vin) ? [stockImagesMap.get(vehicle.vin)!] : [],

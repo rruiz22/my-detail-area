@@ -3229,7 +3229,7 @@
       "click_to_view": "Click on a row to view vehicle details",
       "vehicle_stock": "Vehicle & Stock",
       "step_workflow": "Step & Workflow",
-      "progress_time": "Progress & Time",
+      "progress": "Progress",
       "unassigned": "Unassigned",
       "no_work_items": "No work items"
     },
@@ -3383,7 +3383,12 @@
       "error_resuming": "Failed to resume work item",
       "error_blocking": "Failed to block work item",
       "error_unblocking": "Failed to unblock work item",
-      "error_cancelling": "Failed to cancel work item"
+      "error_cancelling": "Failed to cancel work item",
+      "assign_technician": "Assign Technician",
+      "clear_assignment": "Clear Assignment",
+      "assigned_successfully": "Technician assigned successfully",
+      "unassigned_successfully": "Assignment cleared successfully",
+      "error_assigning": "Failed to assign technician"
     },
     "media": {
       "photos": "Photos",

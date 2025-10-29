@@ -4,6 +4,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
     Table,
     TableBody,
     TableCell,
@@ -17,6 +25,7 @@ import { cn } from '@/lib/utils';
 import {
     AlertTriangle,
     Ban,
+    Check,
     CheckCheck,
     CheckCircle,
     Clock,
@@ -61,6 +70,12 @@ interface WorkItem {
   cancel_reason?: string;
 }
 
+interface DealershipUser {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
+
 interface WorkItemsGroupedTableProps {
   workItems: WorkItem[];
   onApprove: (id: string) => void;
@@ -77,6 +92,9 @@ interface WorkItemsGroupedTableProps {
   onBlock?: (item: WorkItem) => void;
   onUnblock?: (id: string) => void;
   onCancel?: (item: WorkItem) => void;
+  // ✨ NEW: Assign technician handler and users list
+  onAssignTechnician?: (workItemId: string, technicianId: string | null) => void;
+  users?: DealershipUser[];
   isLoading?: boolean;
 }
 
@@ -96,6 +114,9 @@ export function WorkItemsGroupedTable({
   onBlock,
   onUnblock,
   onCancel,
+  // ✨ NEW: Assign technician props
+  onAssignTechnician,
+  users = [],
   isLoading,
 }: WorkItemsGroupedTableProps) {
   const { t } = useTranslation();
@@ -295,15 +316,71 @@ export function WorkItemsGroupedTable({
         </div>
       </TableCell>
 
-      {/* Assigned */}
-      <TableCell className="hidden lg:table-cell">
-        {item.assigned_technician_profile && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <User className="h-3 w-3" />
-            <span className="truncate max-w-[120px]">
-              {`${item.assigned_technician_profile.first_name} ${item.assigned_technician_profile.last_name}`}
-            </span>
+      {/* Assigned - Editable with Dropdown */}
+      <TableCell className="hidden lg:table-cell" onClick={(e) => e.stopPropagation()}>
+        {onAssignTechnician && users.length > 0 ? (
+          <div className="flex justify-start">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 py-0.5 px-2 hover:bg-accent text-xs justify-start"
+                >
+                  <User className="h-3 w-3 mr-1" />
+                  <span className="truncate max-w-[100px]">
+                    {item.assigned_technician_profile
+                      ? `${item.assigned_technician_profile.first_name} ${item.assigned_technician_profile.last_name}`
+                      : t('get_ready.table.unassigned')}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuLabel>{t('get_ready.work_items.assign_technician')}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {users.map((user) => (
+                  <DropdownMenuItem
+                    key={user.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAssignTechnician(item.id, user.id);
+                    }}
+                    disabled={item.assigned_technician === user.id}
+                  >
+                    <div className="flex items-center gap-2 w-full">
+                      <span className="flex-1">{`${user.first_name} ${user.last_name}`}</span>
+                      {item.assigned_technician === user.id && (
+                        <Check className="h-4 w-4 text-primary" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+                {item.assigned_technician && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onAssignTechnician(item.id, null);
+                      }}
+                    >
+                      {t('get_ready.work_items.clear_assignment')}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
+        ) : (
+          // Fallback to static display if no handler or users
+          item.assigned_technician_profile && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <User className="h-3 w-3" />
+              <span className="truncate max-w-[120px]">
+                {`${item.assigned_technician_profile.first_name} ${item.assigned_technician_profile.last_name}`}
+              </span>
+            </div>
+          )
         )}
       </TableCell>
 

@@ -3119,7 +3119,7 @@
       "click_to_view": "Haz clic en una fila para ver detalles del vehículo",
       "vehicle_stock": "Vehículo y Stock",
       "step_workflow": "Paso y Flujo",
-      "progress_time": "Progreso y Tiempo",
+      "progress": "Progreso",
       "unassigned": "Sin asignar",
       "no_work_items": "Sin elementos de trabajo"
     },
@@ -3273,7 +3273,12 @@
       "error_resuming": "Error al reanudar el trabajo",
       "error_blocking": "Error al bloquear el trabajo",
       "error_unblocking": "Error al desbloquear el trabajo",
-      "error_cancelling": "Error al cancelar el trabajo"
+      "error_cancelling": "Error al cancelar el trabajo",
+      "assign_technician": "Asignar Técnico",
+      "clear_assignment": "Limpiar Asignación",
+      "assigned_successfully": "Técnico asignado exitosamente",
+      "unassigned_successfully": "Asignación eliminada exitosamente",
+      "error_assigning": "Error al asignar técnico"
     },
     "media": {
       "photos": "Fotos",

@@ -2974,7 +2974,7 @@
       "click_to_view": "Clique em uma linha para ver detalhes do veículo",
       "vehicle_stock": "Veículo e Estoque",
       "step_workflow": "Etapa e Fluxo",
-      "progress_time": "Progresso e Tempo",
+      "progress": "Progresso",
       "unassigned": "Não atribuído",
       "no_work_items": "Sem itens de trabalho"
     },
@@ -3128,7 +3128,12 @@
       "error_resuming": "Erro ao retomar o trabalho",
       "error_blocking": "Erro ao bloquear o trabalho",
       "error_unblocking": "Erro ao desbloquear o trabalho",
-      "error_cancelling": "Erro ao cancelar o trabalho"
+      "error_cancelling": "Erro ao cancelar o trabalho",
+      "assign_technician": "Atribuir Técnico",
+      "clear_assignment": "Limpar Atribuição",
+      "assigned_successfully": "Técnico atribuído com sucesso",
+      "unassigned_successfully": "Atribuição removida com sucesso",
+      "error_assigning": "Falha ao atribuir técnico"
     },
     "media": {
       "photos": "Fotos",

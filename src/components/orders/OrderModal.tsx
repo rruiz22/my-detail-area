@@ -1,5 +1,4 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
-import { Alert } from '@/components/ui/alert';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,7 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
-import { AlertCircle, Check, ChevronsUpDown, Loader2, Search, Zap } from 'lucide-react';
+import { AlertCircle, Check, ChevronsUpDown, Loader2, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -859,7 +858,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         aria-describedby="order-modal-description"
       >
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-3 sm:px-6 py-2 sm:py-3 border-b border-border">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-base sm:text-lg font-semibold truncate">
                 {order ? t('orders.edit') : t('orders.create')}
@@ -869,28 +868,37 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               </div>
             </div>
 
-            {/* Show selected vehicle badge in header */}
-            {!order && selectedVehicle && (
-              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200 flex-shrink-0">
-                <Zap className="w-3 h-3 mr-1" />
-                <span className="hidden sm:inline">{selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}</span>
-                <span className="sm:hidden">{selectedVehicle.source === 'inventory' ? t('stock.autopop.inventory', 'Inventory') : t('stock.autopop.decoded', 'Decoded')}</span>
-              </Badge>
-            )}
-          </div>
-        </DialogHeader>
-
-        <ScrollArea className="flex-1 px-3 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
-          <form onSubmit={handleSubmit} className="py-2 sm:py-3 space-y-2 sm:space-y-3">
-            {/* Quick Search - Only for new orders and when no vehicle is selected */}
-            {!order && !selectedVehicle && (
-              <Alert className="bg-blue-50 border-blue-200 p-2 sm:p-3 mb-2 sm:mb-3">
-                <div className="flex items-start gap-2">
-                  <Search className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-blue-900 mb-2">
-                      {t('stock.quickSearch', 'Quick Search')}
-                    </p>
+            {/* Quick Search / Selected Vehicle - Compact in header */}
+            {!order && (
+              <div className="flex-shrink-0 w-[180px] sm:w-[280px]">
+                {selectedVehicle ? (
+                  <div className="relative flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-md px-2 py-1.5 pr-8">
+                    {selectedVehicle.data.imageUrl && (
+                      <img
+                        src={selectedVehicle.data.imageUrl}
+                        alt="Vehicle"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <Badge variant="outline" className="text-[10px] sm:text-xs bg-blue-100 text-blue-700 border-blue-300 w-full justify-center">
+                        <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" />
+                        <span className="truncate">
+                          {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}
+                        </span>
+                      </Badge>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleVehicleClear}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 p-1 hover:bg-blue-200 rounded-full transition-colors"
+                      aria-label={t('common.clear', 'Clear')}
+                    >
+                      <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-700" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-full">
                     <VehicleAutoPopulationField
                       dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
                       onVehicleSelect={handleVehicleSelect}
@@ -899,32 +907,34 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       label=""
                       placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
                     />
-                    <p className="text-xs text-blue-700 mt-1.5">
-                      {t('stock.quickSearchHint', 'Search to auto-fill vehicle information from inventory or VIN decoder')}
-                    </p>
                   </div>
-                </div>
-              </Alert>
+                )}
+              </div>
             )}
+          </div>
+        </DialogHeader>
+
+        <ScrollArea className="flex-1 px-3 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-2 sm:py-3 space-y-2 sm:space-y-3">
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="p-2 sm:p-4">
                 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4">
 
                   {/* Column 1: Dealership & Assignment Information */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 min-w-0">
                     <div className="border-b border-border pb-1.5 mb-2">
                       <h3 className="text-sm font-medium text-foreground">
                         {t('sales_orders.dealership')} & {t('sales_orders.assignment')}
                       </h3>
                     </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label htmlFor="dealership">
+                  <div className="min-w-0">
+                    <div className="flex items-center justify-between mb-2 gap-2">
+                      <Label htmlFor="dealership" className="text-sm flex-shrink-0">
                         {t('sales_orders.dealership')} <span className="text-destructive">*</span>
                       </Label>
                       {isDealerFieldReadOnly && (
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs flex-shrink-0">
                           {t('dealerships.auto_selected')}
                         </Badge>
                       )}
@@ -934,7 +944,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       onValueChange={handleDealershipChange}
                       disabled={loading || isDealerFieldReadOnly}
                     >
-                      <SelectTrigger className="border-input bg-background">
+                      <SelectTrigger className="border-input bg-background w-full">
                         <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />
                       </SelectTrigger>
                        <SelectContent className="z-50 bg-popover border-border max-h-[200px]">
@@ -947,8 +957,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </Select>
                   </div>
 
-                  <div>
-                    <Label htmlFor="assignedTo">
+                  <div className="min-w-0">
+                    <Label htmlFor="assignedTo" className="text-sm">
                       {t('sales_orders.assigned_to')} <span className="text-destructive">*</span>
                     </Label>
                     <Popover open={assignedToPopoverOpen} onOpenChange={setAssignedToPopoverOpen}>
@@ -958,7 +968,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                           role="combobox"
                           aria-expanded={assignedToPopoverOpen}
                           disabled={loading || !selectedDealership}
-                          className="w-full justify-between border-input bg-background h-10 px-3 font-normal"
+                          className="w-full justify-between border-input bg-background h-10 px-3 font-normal min-w-0"
                         >
                           {selectedAssignedTo ? (
                             <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -1093,21 +1103,21 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   <div className="space-y-3">
                     <Label className="text-sm font-medium text-foreground">{t('orders.customer_information')}</Label>
 
-                    <div>
-                      <Label htmlFor="customerName">
+                    <div className="min-w-0">
+                      <Label htmlFor="customerName" className="text-sm">
                         {t('orders.customerName')} <span className="text-destructive">*</span>
                       </Label>
                       <Input
                         id="customerName"
                         value={formData.customerName}
                         onChange={(e) => handleInputChange('customerName', e.target.value)}
-                        className="border-input bg-background"
+                        className="border-input bg-background w-full"
                         placeholder={t('orders.customerNamePlaceholder')}
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="customerPhone">
+                    <div className="min-w-0">
+                      <Label htmlFor="customerPhone" className="text-sm">
                         {t('forms.labels.phone')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
                       </Label>
                       <Input
@@ -1115,13 +1125,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         type="tel"
                         value={formData.customerPhone || ''}
                         onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-                        className="border-input bg-background"
+                        className="border-input bg-background w-full"
                         placeholder="(555) 123-4567"
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="customerEmail">
+                    <div className="min-w-0">
+                      <Label htmlFor="customerEmail" className="text-sm">
                         {t('forms.labels.email')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
                       </Label>
                       <Input
@@ -1129,7 +1139,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         type="email"
                         value={formData.customerEmail || ''}
                         onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                        className="border-input bg-background"
+                        className="border-input bg-background w-full"
                         placeholder="customer@example.com"
                       />
                     </div>
@@ -1184,8 +1194,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     )}
                   </div>
 
-                  <div>
-                    <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                  <div className="min-w-0">
+                    <Label htmlFor="vehicleVin" className="flex items-center gap-2 text-sm">
                       {t('orders.vin')} <span className="text-destructive">*</span>
                       {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                     </Label>
@@ -1195,43 +1205,43 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       value={formData.vehicleVin}
                       onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
                       onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
-                      className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
+                      className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase w-full" : "border-input bg-background font-mono uppercase w-full"}
                       stickerMode={true}
                       disabled={!!selectedVehicle}
                     />
                     {vinError && (
                       <div className="flex items-center gap-1 text-sm text-destructive mt-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {vinError}
+                        <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                        <span className="break-words">{vinError}</span>
                       </div>
                     )}
                     {formData.vehicleVin.length > 0 && formData.vehicleVin.length < 17 && !selectedVehicle && (
-                      <div className="text-sm text-muted-foreground mt-1">
+                      <div className="text-xs text-muted-foreground mt-1">
                         {17 - formData.vehicleVin.length} characters remaining
                       </div>
                     )}
                     {selectedVehicle && (
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-muted-foreground mt-1 truncate">
                         {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
                       </p>
                     )}
                   </div>
 
                   {/* Consolidated Vehicle Info */}
-                  <div>
-                    <Label htmlFor="vehicleInfo">
+                  <div className="min-w-0">
+                    <Label htmlFor="vehicleInfo" className="text-sm">
                       {t('sales_orders.vehicle')} <span className="text-destructive">*</span>
                     </Label>
                     <Input
                       id="vehicleInfo"
                       value={formData.vehicleInfo}
                       onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
-                      className={selectedVehicle ? "border-input bg-muted/30" : "border-input bg-background"}
+                      className={selectedVehicle ? "border-input bg-muted/30 w-full" : "border-input bg-background w-full"}
                       placeholder="2025 BMW X6 (xDrive40i)"
                       readOnly={!!selectedVehicle}
                     />
                     {!formData.vehicleInfo && !selectedVehicle && (
-                      <div className="text-xs text-muted-foreground mt-1">
+                      <div className="text-xs text-muted-foreground mt-1 truncate">
                         {t('sales_orders.manual_vehicle_entry')}
                       </div>
                     )}
@@ -1257,22 +1267,22 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   {/* Column 3: Services & Notes */}
-                  <div className="space-y-3 col-span-1 lg:col-span-2 xl:col-span-1">
+                  <div className="space-y-3 col-span-1 lg:col-span-2 xl:col-span-1 min-w-0">
                     <div className="border-b border-border pb-1.5 mb-2">
                       <h3 className="text-sm font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
                     </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label className="text-sm font-medium">
-                        {t('orders.services')}
+                  <div className="min-w-0">
+                    <div className="flex items-center justify-between mb-2 gap-2">
+                      <Label className="text-sm font-medium flex-1 min-w-0">
+                        <span className="truncate">{t('orders.services')}</span>
                         {selectedDealership && assignedUsers.length > 0 && (
-                          <span className="text-muted-foreground ml-1">
+                          <span className="text-muted-foreground ml-1 text-xs">
                             ({services.length} {t('orders.available')})
                           </span>
                         )}
                       </Label>
-                      <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs">
-                        {selectedServices.length}/2 {t('orders.selected')}
+                      <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs flex-shrink-0">
+                        {selectedServices.length}/2
                       </Badge>
                     </div>
 
@@ -1365,14 +1375,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                   <Separator className="my-3" />
 
-                  <div>
+                  <div className="min-w-0">
                     <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
                     <Textarea
                       id="notes"
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={3}
-                      className="border-input bg-background resize-none"
+                      className="border-input bg-background resize-none w-full"
                       placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}
                     />
                   </div>
@@ -1416,7 +1426,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             </div>
 
             {/* Action Buttons - Sticky on mobile for better accessibility */}
-            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-3 px-3 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
               <Button
                 type="button"
                 variant="outline"

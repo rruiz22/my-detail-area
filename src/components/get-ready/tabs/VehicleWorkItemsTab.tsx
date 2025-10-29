@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useDealershipUsers } from '@/hooks/useDealershipUsers';
 import {
   CreateWorkItemInput,
   useApproveWorkItem,
@@ -57,6 +58,7 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
   const { t } = useTranslation();
   const { toast } = useToast();
   const { data: workItems = [], isLoading } = useWorkItems(vehicleId);
+  const { users } = useDealershipUsers();
   const createWorkItem = useCreateWorkItem();
   const updateWorkItem = useUpdateWorkItem();
   const approveWorkItem = useApproveWorkItem();
@@ -261,6 +263,29 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
     }
   };
 
+  // ✨ NEW: Handler for assigning technician
+  const handleAssignTechnician = async (workItemId: string, technicianId: string | null) => {
+    try {
+      await updateWorkItem.mutateAsync({
+        id: workItemId,
+        assigned_technician: technicianId,
+      });
+
+      toast({
+        description: technicianId
+          ? t('get_ready.work_items.assigned_successfully')
+          : t('get_ready.work_items.unassigned_successfully'),
+        variant: 'default',
+      });
+    } catch (error) {
+      console.error('Error assigning technician:', error);
+      toast({
+        description: t('get_ready.work_items.error_assigning'),
+        variant: 'destructive',
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
@@ -367,6 +392,8 @@ export function VehicleWorkItemsTab({ vehicleId, onSwitchTab, className }: Vehic
             setSelectedWorkItem(item);
             setCancelModalOpen(true);
           }}
+          onAssignTechnician={handleAssignTechnician}
+          users={users}
           isLoading={isLoading}
         />
       </div>
