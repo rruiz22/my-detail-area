@@ -55,6 +55,11 @@ export const TAB_CONFIGS = {
     defaultTab: 'overview',
     validTabs: ['overview', 'details', 'approvals', 'vendors', 'reports', 'setup']
   },
+  get_ready_setup: {
+    key: 'get_ready_setup',
+    defaultTab: 'steps',
+    validTabs: ['steps', 'templates', 'sla']
+  },
   profile: {
     key: 'profile',
     defaultTab: 'personal',

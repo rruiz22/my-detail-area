@@ -38,6 +38,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 export function StepsList() {
+  console.log('🎯 [StepsList] Component RENDERED');
   const { t } = useTranslation();
   const { data: steps, isLoading, error } = useGetReadySteps();
   const { deleteStep, reorderSteps, isDeleting } = useStepManagement();

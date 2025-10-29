@@ -186,7 +186,10 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
 
   // Load active conversations on mount
   useEffect(() => {
-    if (!conversations.length) return;
+    if (!conversations.length) {
+      setLoading(false);
+      return;
+    }
 
     const recentConversations = conversations
       .slice(0, 5)
@@ -197,9 +200,15 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
         lastMessage: conv.other_participant?.name || ''
       }));
 
-    setActiveChats(recentConversations);
+    // Only update if actually different to prevent infinite loop
+    setActiveChats(prev => {
+      const isDifferent = JSON.stringify(prev.map(c => c.conversationId)) !==
+                          JSON.stringify(recentConversations.map(c => c.conversationId));
+      return isDifferent ? recentConversations : prev;
+    });
     setLoading(false);
-  }, [conversations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversations.length, conversations[0]?.id]);
 
   // Keyboard shortcut for opening chat
   useEffect(() => {

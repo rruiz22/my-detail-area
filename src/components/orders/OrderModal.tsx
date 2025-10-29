@@ -1,5 +1,5 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert } from '@/components/ui/alert';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -858,51 +858,57 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="order-modal-description"
       >
-        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-            <div className="flex-1">
-              <DialogTitle className="text-base sm:text-lg font-semibold">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-3 sm:px-6 py-2 sm:py-3 border-b border-border">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+            <div className="flex-1 min-w-0">
+              <DialogTitle className="text-base sm:text-lg font-semibold truncate">
                 {order ? t('orders.edit') : t('orders.create')}
               </DialogTitle>
-              <div id="order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
+              <div id="order-modal-description" className="text-xs sm:text-sm text-muted-foreground truncate">
                 {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
               </div>
             </div>
 
-            {/* Quick Search - Only for new orders */}
-            {!order && (
-              <div className="w-full sm:w-auto sm:min-w-[320px] lg:min-w-[400px]">
-                <Alert className="bg-blue-50 border-blue-200 p-2.5">
-                  <div className="flex items-start gap-2">
-                    <Search className="h-4 w-4 text-blue-600 mt-2 flex-shrink-0" />
-                    <div className="flex-1 space-y-1.5">
-                      <VehicleAutoPopulationField
-                        dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
-                        onVehicleSelect={handleVehicleSelect}
-                        onVehicleClear={handleVehicleClear}
-                        selectedVehicle={selectedVehicle}
-                        label=""
-                        placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
-                      />
-                      {selectedVehicle && (
-                        <p className="text-[10px] text-blue-700 flex items-center gap-1">
-                          <Zap className="w-3 h-3" />
-                          {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </Alert>
-              </div>
+            {/* Show selected vehicle badge in header */}
+            {!order && selectedVehicle && (
+              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200 flex-shrink-0">
+                <Zap className="w-3 h-3 mr-1" />
+                <span className="hidden sm:inline">{selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}</span>
+                <span className="sm:hidden">{selectedVehicle.source === 'inventory' ? t('stock.autopop.inventory', 'Inventory') : t('stock.autopop.decoded', 'Decoded')}</span>
+              </Badge>
             )}
           </div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
-          <form onSubmit={handleSubmit} className="py-3 space-y-3">
+        <ScrollArea className="flex-1 px-3 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+          <form onSubmit={handleSubmit} className="py-2 sm:py-3 space-y-2 sm:space-y-3">
+            {/* Quick Search - Only for new orders and when no vehicle is selected */}
+            {!order && !selectedVehicle && (
+              <Alert className="bg-blue-50 border-blue-200 p-2 sm:p-3 mb-2 sm:mb-3">
+                <div className="flex items-start gap-2">
+                  <Search className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-blue-900 mb-2">
+                      {t('stock.quickSearch', 'Quick Search')}
+                    </p>
+                    <VehicleAutoPopulationField
+                      dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
+                      onVehicleSelect={handleVehicleSelect}
+                      onVehicleClear={handleVehicleClear}
+                      selectedVehicle={selectedVehicle}
+                      label=""
+                      placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
+                    />
+                    <p className="text-xs text-blue-700 mt-1.5">
+                      {t('stock.quickSearchHint', 'Search to auto-fill vehicle information from inventory or VIN decoder')}
+                    </p>
+                  </div>
+                </div>
+              </Alert>
+            )}
             {/* Single Responsive Container */}
             <Card className="border-border">
-              <CardContent className="p-3 sm:p-4">
+              <CardContent className="p-2 sm:p-4">
                 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4">
 
                   {/* Column 1: Dealership & Assignment Information */}
@@ -1128,7 +1134,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       />
                     </div>
 
-                    <div>
+                    <div className="hidden">
                       <Label htmlFor="priority">{t('orders.priority')}</Label>
                       <Select
                         value={formData.priority || 'normal'}
@@ -1148,31 +1154,31 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                   </div>
 
                   {/* Column 2: Vehicle Information */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 min-w-0">
                     <div className="border-b border-border pb-1.5 mb-2">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                         <h3 className="text-sm font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
-                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto">
+                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto text-xs">
                           <Zap className="w-3 h-3 mr-1" />
-                          {t('sales_orders.vin_decoded_successfully')}
+                          <span className="truncate">{t('sales_orders.vin_decoded_successfully')}</span>
                         </Badge>}
                       </div>
                     </div>
 
-                  <div>
-                    <Label htmlFor="stockNumber">
+                  <div className="min-w-0">
+                    <Label htmlFor="stockNumber" className="text-sm">
                       {t('sales_orders.stock_number')} <span className="text-destructive">*</span>
                     </Label>
                     <Input
                       id="stockNumber"
                       value={formData.stockNumber}
                       onChange={(e) => handleInputChange('stockNumber', e.target.value.toUpperCase())}
-                      className={selectedVehicle ? "border-input bg-muted/30 uppercase" : "border-input bg-background uppercase"}
+                      className={selectedVehicle ? "border-input bg-muted/30 uppercase w-full" : "border-input bg-background uppercase w-full"}
                       placeholder="ST-001"
                       readOnly={!!selectedVehicle}
                     />
                     {selectedVehicle && (
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-muted-foreground mt-1 truncate">
                         {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
                       </p>
                     )}
@@ -1366,10 +1372,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={3}
-                      className="border-input bg-muted/50 resize-none cursor-not-allowed"
-                      placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
-                      readOnly
-                      disabled
+                      className="border-input bg-background resize-none"
+                      placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}
                     />
                   </div>
                   </div>

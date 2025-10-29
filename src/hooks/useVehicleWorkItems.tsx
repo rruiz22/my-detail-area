@@ -139,6 +139,7 @@ export interface UpdateWorkItemInput {
  */
 export function useWorkItems(vehicleId: string | null) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
 
   return useQuery({
@@ -164,7 +165,10 @@ export function useWorkItems(vehicleId: string | null) {
 
       if (error) {
         console.error('Error fetching work items:', error);
-        toast.error(t('get_ready.work_items.error_loading'));
+        toast({
+          description: t('get_ready.work_items.error_loading'),
+          variant: 'destructive',
+        });
         throw error;
       }
 
@@ -346,6 +350,7 @@ export function useCreateWorkItem() {
  */
 export function useUpdateWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -384,11 +389,17 @@ export function useUpdateWorkItem() {
       // Changing approval_required might affect vehicle approval status via trigger
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
 
-      toast.success(t('get_ready.work_items.updated_successfully'));
+      toast({
+        description: t('get_ready.work_items.updated_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Update work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_updating'));
+      toast({
+        description: t('get_ready.work_items.error_updating'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -398,6 +409,7 @@ export function useUpdateWorkItem() {
  */
 export function useApproveWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -439,11 +451,17 @@ export function useApproveWorkItem() {
       // ✅ Invalidate approval count to update badge immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
 
-      toast.success(t('get_ready.work_items.approved_successfully'));
+      toast({
+        description: t('get_ready.work_items.approved_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Approve work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_approving'));
+      toast({
+        description: t('get_ready.work_items.error_approving'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -453,6 +471,7 @@ export function useApproveWorkItem() {
  */
 export function useDeclineWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -495,11 +514,17 @@ export function useDeclineWorkItem() {
       // ✅ Invalidate approval count to update badge immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
 
-      toast.success(t('get_ready.work_items.declined_successfully'));
+      toast({
+        description: t('get_ready.work_items.declined_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Decline work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_declining'));
+      toast({
+        description: t('get_ready.work_items.error_declining'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -509,6 +534,7 @@ export function useDeclineWorkItem() {
  */
 export function useStartWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -535,11 +561,17 @@ export function useStartWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.started_successfully'));
+      toast({
+        description: t('get_ready.work_items.started_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Start work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_starting'));
+      toast({
+        description: t('get_ready.work_items.error_starting'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -550,6 +582,7 @@ export function useStartWorkItem() {
  */
 export function useCompleteWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -609,11 +642,17 @@ export function useCompleteWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.completed_successfully'));
+      toast({
+        description: t('get_ready.work_items.completed_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Complete work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_completing'));
+      toast({
+        description: t('get_ready.work_items.error_completing'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -743,6 +782,7 @@ export function useBlockWorkItem() {
  */
 export function useResumeWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -769,11 +809,17 @@ export function useResumeWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.resumed_successfully'));
+      toast({
+        description: t('get_ready.work_items.resumed_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Resume work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_resuming'));
+      toast({
+        description: t('get_ready.work_items.error_resuming'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -783,6 +829,7 @@ export function useResumeWorkItem() {
  */
 export function useUnblockWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -809,11 +856,17 @@ export function useUnblockWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
-      toast.success(t('get_ready.work_items.unblocked_successfully'));
+      toast({
+        description: t('get_ready.work_items.unblocked_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Unblock work item mutation error:', error);
-      toast.error(t('get_ready.work_items.error_unblocking'));
+      toast({
+        description: t('get_ready.work_items.error_unblocking'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -872,6 +925,7 @@ export function useCancelWorkItem() {
  */
 export function useAssignVendorToWorkItem() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -906,15 +960,19 @@ export function useAssignVendorToWorkItem() {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['work-items', variables.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
-      toast.success(
-        variables.vendorId
+      toast({
+        description: variables.vendorId
           ? t('get_ready.vendors.vendor_assigned_successfully')
-          : t('get_ready.vendors.vendor_unassigned_successfully')
-      );
+          : t('get_ready.vendors.vendor_unassigned_successfully'),
+        variant: 'default',
+      });
     },
     onError: (error) => {
       console.error('Assign vendor mutation error:', error);
-      toast.error(t('get_ready.vendors.error_assigning_vendor'));
+      toast({
+        description: t('get_ready.vendors.error_assigning_vendor'),
+        variant: 'destructive',
+      });
     },
   });
 }
