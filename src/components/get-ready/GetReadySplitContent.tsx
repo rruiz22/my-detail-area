@@ -26,6 +26,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     useGetReadyPriorityFilter,
     useGetReadySearchQuery,
@@ -70,6 +71,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const navigate = useNavigate();
   const { vehicleId } = useParams<{ vehicleId?: string }>();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const {
     splitLayout,
     selectedStepId,
