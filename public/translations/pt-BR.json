@@ -3391,7 +3391,11 @@
     "workflow": {
       "standard": "Padrão",
       "express": "Expresso",
-      "priority": "Prioridade"
+      "priority": "Prioridade",
+      "change_workflow": "Alterar Fluxo de Trabalho"
+    },
+    "priority": {
+      "change_priority": "Alterar Prioridade"
     },
     "metrics": {
       "sla_hours": "Horas SLA",
