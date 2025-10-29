@@ -540,6 +540,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
+        preventOutsideClick={true}
         className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="recon-order-modal-description"
       >

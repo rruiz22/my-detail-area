@@ -391,7 +391,9 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-4xl sm:h-auto sm:max-h-[98vh] sm:w-[95vw] md:w-[90vw] lg:max-w-5xl lg:w-[85vw] xl:max-w-6xl sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
+      <DialogContent
+        preventOutsideClick={true}
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-4xl sm:h-auto sm:max-h-[98vh] sm:w-[95vw] md:w-[90vw] lg:max-w-5xl lg:w-[85vw] xl:max-w-6xl sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
           <DialogTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
             {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
