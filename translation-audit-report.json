@@ -1,8 +1,8 @@
 {
   "scannedFiles": 728,
-  "totalStrings": 6895,
-  "hardcodedStrings": 1513,
-  "translatedStrings": 5382,
+  "totalStrings": 6906,
+  "hardcodedStrings": 1501,
+  "translatedStrings": 5405,
   "issues": {
     "critical": [
       {
@@ -4868,232 +4868,6 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
-        "severity": "high"
-      },
-      {
-        "file": "src\\components\\invitations\\InvitationManagement.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Templates",
-            "line": 409,
-            "context": "408: >\n409: <Mail className=\"h-4 w-4\" />\n410: Templates"
-          },
-          {
-            "text": "Send Invitation",
-            "line": 416,
-            "context": "415: >\n416: <Send className=\"h-4 w-4\" />\n417: Send Invitation"
-          },
-          {
-            "text": "Total",
-            "line": 428,
-            "context": "427: <div>\n428: <p className=\"text-sm font-medium text-muted-foreground\">Total</p>\n429: <p className=\"text-2xl font-bold\">{stats.total}</p>"
-          },
-          {
-            "text": "Pending",
-            "line": 440,
-            "context": "439: <div>\n440: <p className=\"text-sm font-medium text-muted-foreground\">Pending</p>\n441: <p className=\"text-2xl font-bold\">{stats.pending}</p>"
-          },
-          {
-            "text": "Accepted",
-            "line": 452,
-            "context": "451: <div>\n452: <p className=\"text-sm font-medium text-muted-foreground\">Accepted</p>\n453: <p className=\"text-2xl font-bold\">{stats.accepted}</p>"
-          },
-          {
-            "text": "Expired",
-            "line": 464,
-            "context": "463: <div>\n464: <p className=\"text-sm font-medium text-muted-foreground\">Expired</p>\n465: <p className=\"text-2xl font-bold\">{stats.expired}</p>"
-          },
-          {
-            "text": "Invitee",
-            "line": 488,
-            "context": "487: <TableRow>\n488: <TableHead>Invitee</TableHead>\n489: <TableHead>Role</TableHead>"
-          },
-          {
-            "text": "Role",
-            "line": 489,
-            "context": "488: <TableHead>Invitee</TableHead>\n489: <TableHead>Role</TableHead>\n490: <TableHead>Dealership</TableHead>"
-          },
-          {
-            "text": "Dealership",
-            "line": 490,
-            "context": "489: <TableHead>Role</TableHead>\n490: <TableHead>Dealership</TableHead>\n491: <TableHead>Inviter</TableHead>"
-          },
-          {
-            "text": "Inviter",
-            "line": 491,
-            "context": "490: <TableHead>Dealership</TableHead>\n491: <TableHead>Inviter</TableHead>\n492: <TableHead>Status</TableHead>"
-          },
-          {
-            "text": "Status",
-            "line": 492,
-            "context": "491: <TableHead>Inviter</TableHead>\n492: <TableHead>Status</TableHead>\n493: <TableHead>Sent</TableHead>"
-          },
-          {
-            "text": "Sent",
-            "line": 493,
-            "context": "492: <TableHead>Status</TableHead>\n493: <TableHead>Sent</TableHead>\n494: <TableHead>Expires</TableHead>"
-          },
-          {
-            "text": "Expires",
-            "line": 494,
-            "context": "493: <TableHead>Sent</TableHead>\n494: <TableHead>Expires</TableHead>\n495: <TableHead className=\"text-right\">Actions</TableHead>"
-          },
-          {
-            "text": "Actions",
-            "line": 495,
-            "context": "494: <TableHead>Expires</TableHead>\n495: <TableHead className=\"text-right\">Actions</TableHead>\n496: </TableRow>"
-          },
-          {
-            "text": "No invitations found",
-            "line": 504,
-            "context": "503: <Mail className=\"h-8 w-8 text-muted-foreground\" />\n504: <p className=\"text-muted-foreground\">No invitations found</p>\n505: </div>"
-          },
-          {
-            "text": "Expired",
-            "line": 561,
-            "context": "560: <div className=\"flex items-center gap-1 text-red-600\">\n561: <AlertCircle className=\"h-4 w-4\" />\n562: Expired"
-          },
-          {
-            "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      setInvitations(data || []);\r\n\r\n      console.log(",
-            "line": 119,
-            "context": "118: if (error) {\n119: console.error('❌ [INVITATIONS] Database error:', error);\n120: throw error;"
-          },
-          {
-            "text": ", updateError);\r\n        throw updateError;\r\n      }\r\n\r\n      console.log(",
-            "line": 229,
-            "context": "228: if (updateError) {\n229: console.error('❌ [RESEND INVITATION] Database update error:', updateError);\n230: throw updateError;"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "common.error",
-            "line": 133,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 265,
-            "exists": true
-          },
-          {
-            "key": "invitations.invitation_updated_email_failed",
-            "line": 266,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 271,
-            "exists": true
-          },
-          {
-            "key": "invitations.invitation_resent",
-            "line": 272,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 279,
-            "exists": true
-          },
-          {
-            "key": "invitations.error_resending",
-            "line": 280,
-            "exists": true
-          },
-          {
-            "key": "invitations.confirm_cancel",
-            "line": 288,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 299,
-            "exists": true
-          },
-          {
-            "key": "invitations.cancelled_successfully",
-            "line": 300,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 306,
-            "exists": true
-          },
-          {
-            "key": "invitations.error_cancelling",
-            "line": 307,
-            "exists": true
-          },
-          {
-            "key": "invitations.confirm_delete",
-            "line": 315,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 326,
-            "exists": true
-          },
-          {
-            "key": "invitations.deleted_successfully",
-            "line": 327,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 333,
-            "exists": true
-          },
-          {
-            "key": "invitations.error_deleting",
-            "line": 334,
-            "exists": true
-          },
-          {
-            "key": "invitations.dealer_invitations",
-            "line": 395,
-            "exists": true
-          },
-          {
-            "key": "invitations.all_invitations",
-            "line": 395,
-            "exists": true
-          },
-          {
-            "key": "invitations.manage_dealer_invitations_desc",
-            "line": 399,
-            "exists": true
-          },
-          {
-            "key": "invitations.manage_invitations_desc",
-            "line": 400,
-            "exists": true
-          },
-          {
-            "key": "roles.${invitation.role_name}",
-            "line": 527,
-            "exists": false
-          },
-          {
-            "key": "invitations.cancel_invitation",
-            "line": 597,
-            "exists": true
-          },
-          {
-            "key": "invitations.delete_invitation",
-            "line": 608,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "roles.${invitation.role_name}",
-            "line": 527,
-            "context": "526: <TableCell>\n527: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>\n528: </TableCell>"
-          }
-        ],
-        "coverage": 57,
         "severity": "high"
       },
       {
@@ -13001,13 +12775,23 @@
             "exists": true
           },
           {
+            "key": "invitations.title",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "invitations.description",
+            "line": 191,
+            "exists": true
+          },
+          {
             "key": "services.title",
-            "line": 192,
+            "line": 205,
             "exists": true
           },
           {
             "key": "services.subtitle",
-            "line": 195,
+            "line": 208,
             "exists": true
           }
         ],
@@ -13023,7 +12807,7 @@
             "context": "152: <CardDescription>\n153: {t('dealer.view.overview.description')}\n154: </CardDescription>"
           }
         ],
-        "coverage": 92,
+        "coverage": 93,
         "severity": "low"
       },
       {
@@ -40654,7 +40438,7 @@
           {
             "key": "invitations.title",
             "line": 143,
-            "exists": false
+            "exists": true
           },
           {
             "key": "users.title",
@@ -40707,11 +40491,6 @@
             "key": "common.new",
             "line": 141,
             "context": "140: case 'dealership_created':\n141: return { label: t('common.new'), variant: 'secondary' as const };\n142: case 'invitation_sent':"
-          },
-          {
-            "key": "invitations.title",
-            "line": 143,
-            "context": "142: case 'invitation_sent':\n143: return { label: t('invitations.title'), variant: 'outline' as const };\n144: case 'user_joined':"
           },
           {
             "key": "users.title",
@@ -41079,6 +40858,282 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\invitations\\InvitationManagement.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Templates",
+            "line": 414,
+            "context": "413: >\n414: <Mail className=\"h-4 w-4\" />\n415: Templates"
+          },
+          {
+            "text": "Send Invitation",
+            "line": 421,
+            "context": "420: >\n421: <Send className=\"h-4 w-4\" />\n422: Send Invitation"
+          },
+          {
+            "text": "Expired",
+            "line": 566,
+            "context": "565: <div className=\"flex items-center gap-1 text-red-600\">\n566: <AlertCircle className=\"h-4 w-4\" />\n567: Expired"
+          },
+          {
+            "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      setInvitations(data || []);\r\n\r\n      console.log(",
+            "line": 126,
+            "context": "125: if (error) {\n126: console.error('❌ [INVITATIONS] Database error:', error);\n127: throw error;"
+          },
+          {
+            "text": ", updateError);\r\n        throw updateError;\r\n      }\r\n\r\n      console.log(",
+            "line": 236,
+            "context": "235: if (updateError) {\n236: console.error('❌ [RESEND INVITATION] Database update error:', updateError);\n237: throw updateError;"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.error",
+            "line": 140,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 272,
+            "exists": true
+          },
+          {
+            "key": "invitations.invitation_updated_email_failed",
+            "line": 273,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 278,
+            "exists": true
+          },
+          {
+            "key": "invitations.invitation_resent",
+            "line": 279,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 286,
+            "exists": true
+          },
+          {
+            "key": "invitations.error_resending",
+            "line": 287,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 305,
+            "exists": true
+          },
+          {
+            "key": "invitations.cancelled_successfully",
+            "line": 306,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 312,
+            "exists": true
+          },
+          {
+            "key": "invitations.error_cancelling",
+            "line": 313,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 331,
+            "exists": true
+          },
+          {
+            "key": "invitations.deleted_successfully",
+            "line": 332,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 338,
+            "exists": true
+          },
+          {
+            "key": "invitations.error_deleting",
+            "line": 339,
+            "exists": true
+          },
+          {
+            "key": "invitations.dealer_invitations",
+            "line": 400,
+            "exists": true
+          },
+          {
+            "key": "invitations.all_invitations",
+            "line": 400,
+            "exists": true
+          },
+          {
+            "key": "invitations.manage_dealer_invitations_desc",
+            "line": 404,
+            "exists": true
+          },
+          {
+            "key": "invitations.manage_invitations_desc",
+            "line": 405,
+            "exists": true
+          },
+          {
+            "key": "invitations.stats.total",
+            "line": 433,
+            "exists": true
+          },
+          {
+            "key": "invitations.stats.pending",
+            "line": 445,
+            "exists": true
+          },
+          {
+            "key": "invitations.stats.accepted",
+            "line": 457,
+            "exists": true
+          },
+          {
+            "key": "invitations.stats.expired",
+            "line": 469,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.invitee",
+            "line": 493,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.role",
+            "line": 494,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.dealership",
+            "line": 495,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.inviter",
+            "line": 496,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.status",
+            "line": 497,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.sent",
+            "line": 498,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.expires",
+            "line": 499,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.actions",
+            "line": 500,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.no_invitations",
+            "line": 509,
+            "exists": true
+          },
+          {
+            "key": "roles.${invitation.role_name}",
+            "line": 532,
+            "exists": false
+          },
+          {
+            "key": "invitations.cancel_invitation",
+            "line": 605,
+            "exists": true
+          },
+          {
+            "key": "invitations.delete_invitation",
+            "line": 619,
+            "exists": true
+          },
+          {
+            "key": "invitations.confirm_cancel",
+            "line": 657,
+            "exists": true
+          },
+          {
+            "key": "invitations.confirm_cancel_desc",
+            "line": 658,
+            "exists": true
+          },
+          {
+            "key": "common.yes",
+            "line": 659,
+            "exists": false
+          },
+          {
+            "key": "common.no",
+            "line": 660,
+            "exists": false
+          },
+          {
+            "key": "invitations.confirm_delete",
+            "line": 672,
+            "exists": true
+          },
+          {
+            "key": "invitations.confirm_delete_desc",
+            "line": 673,
+            "exists": true
+          },
+          {
+            "key": "common.yes",
+            "line": 674,
+            "exists": false
+          },
+          {
+            "key": "common.no",
+            "line": 675,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "roles.${invitation.role_name}",
+            "line": 532,
+            "context": "531: <TableCell>\n532: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>\n533: </TableCell>"
+          },
+          {
+            "key": "common.yes",
+            "line": 659,
+            "context": "658: description={t('invitations.confirm_cancel_desc')}\n659: confirmText={t('common.yes')}\n660: cancelText={t('common.no')}"
+          },
+          {
+            "key": "common.no",
+            "line": 660,
+            "context": "659: confirmText={t('common.yes')}\n660: cancelText={t('common.no')}\n661: onConfirm={() => {"
+          },
+          {
+            "key": "common.yes",
+            "line": 674,
+            "context": "673: description={t('invitations.confirm_delete_desc')}\n674: confirmText={t('common.yes')}\n675: cancelText={t('common.no')}"
+          },
+          {
+            "key": "common.no",
+            "line": 675,
+            "context": "674: confirmText={t('common.yes')}\n675: cancelText={t('common.no')}\n676: onConfirm={() => {"
+          }
+        ],
+        "coverage": 90,
         "severity": "low"
       },
       {
@@ -45358,7 +45413,13 @@
       },
       {
         "file": "src\\components\\dealerships\\DealerInvitationModal.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": ", emailResult);\r\n        toast({\r\n          title: t(",
+            "line": 242,
+            "context": "241: } else if (!emailResult?.success) {\n242: console.error('❌ [EMAIL] Email function returned non-success:', emailResult);\n243: toast({"
+          }
+        ],
         "translationCalls": [
           {
             "key": "common.error",
@@ -45381,103 +45442,113 @@
             "exists": true
           },
           {
-            "key": "common.success",
-            "line": 211,
+            "key": "invitations.invitation_created",
+            "line": 237,
             "exists": true
           },
           {
             "key": "invitations.invitation_created_email_failed",
-            "line": 212,
+            "line": 238,
+            "exists": true
+          },
+          {
+            "key": "invitations.invitation_created",
+            "line": 244,
+            "exists": true
+          },
+          {
+            "key": "invitations.invitation_created_email_failed",
+            "line": 245,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 217,
+            "line": 251,
             "exists": true
           },
           {
             "key": "invitations.invitation_sent",
-            "line": 218,
+            "line": 252,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 231,
+            "line": 265,
             "exists": true
           },
           {
             "key": "messages.error",
-            "line": 232,
+            "line": 266,
             "exists": true
           },
           {
             "key": "invitations.send_invitation",
-            "line": 264,
+            "line": 298,
             "exists": true
           },
           {
             "key": "invitations.invite_user_to",
-            "line": 268,
+            "line": 302,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 278,
+            "line": 312,
             "exists": true
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 286,
+            "line": 320,
             "exists": true
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 293,
-            "exists": true
-          },
-          {
-            "key": "invitations.email",
-            "line": 307,
-            "exists": true
-          },
-          {
-            "key": "invitations.email_placeholder",
-            "line": 313,
-            "exists": true
-          },
-          {
-            "key": "invitations.role",
             "line": 327,
             "exists": true
           },
           {
+            "key": "invitations.email",
+            "line": 341,
+            "exists": true
+          },
+          {
+            "key": "invitations.email_placeholder",
+            "line": 347,
+            "exists": true
+          },
+          {
+            "key": "invitations.role",
+            "line": 361,
+            "exists": true
+          },
+          {
             "key": "common.loading",
-            "line": 336,
+            "line": 370,
             "exists": true
           },
           {
             "key": "invitations.select_role",
-            "line": 339,
+            "line": 373,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 346,
+            "line": 380,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 385,
+            "line": 419,
             "exists": true
           },
           {
             "key": "invitations.sending",
-            "line": 391,
+            "line": 425,
             "exists": true
           },
           {
             "key": "invitations.send",
-            "line": 396,
+            "line": 430,
             "exists": true
           }
         ],
@@ -45488,7 +45559,7 @@
             "context": "129: title: t('common.error'),\n130: description: t('messages.required_field'),\n131: variant: 'destructive',"
           }
         ],
-        "coverage": 100,
+        "coverage": 96,
         "severity": "low"
       },
       {
@@ -49857,14 +49928,14 @@
         "src\\components\\orders\\OptimizedEnhancedOrderDetailModal.tsx",
         "src\\components\\notifications\\NotificationPreferencesModal.tsx",
         "src\\components\\followers\\AddFollowerModal.tsx",
+        "src\\components\\dealerships\\DealerInvitationModal.tsx",
         "src\\components\\contacts\\ContactModal.tsx",
         "src\\components\\attachments\\ImagePreviewModal.tsx",
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "src\\components\\get-ready\\QuickAddWorkItemModal.tsx",
         "src\\components\\get-ready\\AddFromTemplatesModal.tsx",
-        "src\\components\\get-ready\\vendors\\VendorFormModal.tsx",
-        "src\\components\\dealerships\\DealerInvitationModal.tsx"
+        "src\\components\\get-ready\\vendors\\VendorFormModal.tsx"
       ],
       "estimatedEffort": "16 hours"
     },
@@ -49914,7 +49985,6 @@
         "src\\components\\detail-hub\\ReportsCenter.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
-        "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\components\\settings\\IntegrationSettings.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
@@ -49979,6 +50049,7 @@
         "src\\components\\ui\\pagination.tsx",
         "src\\components\\productivity\\ProductivityMetrics.tsx",
         "src\\components\\orders\\ScheduleViewBlock.tsx",
+        "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\get-ready\\GetReadyAlerts.tsx",
         "src\\components\\chat\\FloatingChatBubble.tsx",
         "src\\utils\\__examples__\\statusTransitions.example.ts",
@@ -50251,7 +50322,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2296 translation keys are referenced but missing",
+      "description": "2299 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "115 hours"
     }
