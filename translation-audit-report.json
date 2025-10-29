@@ -1,8 +1,8 @@
 {
   "scannedFiles": 728,
-  "totalStrings": 6906,
-  "hardcodedStrings": 1501,
-  "translatedStrings": 5405,
+  "totalStrings": 6915,
+  "hardcodedStrings": 1505,
+  "translatedStrings": 5410,
   "issues": {
     "critical": [
       {
@@ -4980,6 +4980,317 @@
         "severity": "high"
       },
       {
+        "file": "src\\components\\get-ready\\GetReadyVehicleList.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 51,
+            "context": "50: onEditVehicle?: (vehicleId: string) => void;\n51: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n52: }"
+          },
+          {
+            "text": "Table",
+            "line": 291,
+            "context": "290: onClick={() => setViewMode('table')}\n291: >\n292: Table"
+          },
+          {
+            "text": "Grid",
+            "line": 298,
+            "context": "297: onClick={() => setViewMode('grid')}\n298: >\n299: Grid"
+          },
+          {
+            "text": "Table",
+            "line": 524,
+            "context": "523: onClick={() => setViewMode('table')}\n524: >\n525: Table"
+          },
+          {
+            "text": "Grid",
+            "line": 531,
+            "context": "530: onClick={() => setViewMode('grid')}\n531: >\n532: Grid"
+          },
+          {
+            "text": "Workflow",
+            "line": 549,
+            "context": "548: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n549: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n550: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
+          },
+          {
+            "text": "Actions",
+            "line": 574,
+            "context": "573: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress_time')}</TableHead>\n574: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n575: </TableRow>"
+          },
+          {
+            "text": "Urgent",
+            "line": 929,
+            "context": "928: <div className=\"flex items-center gap-2 w-full\">\n929: <span className=\"flex-1 capitalize\">Urgent</span>\n930: {vehicle.priority === 'urgent' && ("
+          },
+          {
+            "text": "High",
+            "line": 943,
+            "context": "942: <div className=\"flex items-center gap-2 w-full\">\n943: <span className=\"flex-1 capitalize\">High</span>\n944: {vehicle.priority === 'high' && ("
+          },
+          {
+            "text": "Medium",
+            "line": 957,
+            "context": "956: <div className=\"flex items-center gap-2 w-full\">\n957: <span className=\"flex-1 capitalize\">Medium</span>\n958: {vehicle.priority === 'medium' && ("
+          },
+          {
+            "text": "Normal",
+            "line": 971,
+            "context": "970: <div className=\"flex items-center gap-2 w-full\">\n971: <span className=\"flex-1 capitalize\">Normal</span>\n972: {vehicle.priority === 'normal' && ("
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.loading",
+            "line": 272,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.actions",
+            "line": 356,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.view_details",
+            "line": 359,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.edit_vehicle",
+            "line": 363,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.delete_vehicle",
+            "line": 371,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 381,
+            "exists": false
+          },
+          {
+            "key": "get_ready.actions.change_step",
+            "line": 416,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.advance_step",
+            "line": 456,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_list.t2l",
+            "line": 463,
+            "exists": true
+          },
+          {
+            "key": "get_ready.steps.dis",
+            "line": 474,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_list.days_in_step",
+            "line": 479,
+            "exists": true
+          },
+          {
+            "key": "get_ready.steps.dis_tooltip",
+            "line": 480,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.click_to_view",
+            "line": 516,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.image",
+            "line": 545,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.stock",
+            "line": 546,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.vehicle",
+            "line": 547,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.step",
+            "line": 548,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_list.t2l_short",
+            "line": 553,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_list.t2l_full",
+            "line": 556,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_list.t2l_description",
+            "line": 557,
+            "exists": true
+          },
+          {
+            "key": "get_ready.steps.dis",
+            "line": 564,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_list.days_in_step",
+            "line": 567,
+            "exists": true
+          },
+          {
+            "key": "get_ready.steps.dis_tooltip",
+            "line": 568,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.priority",
+            "line": 572,
+            "exists": true
+          },
+          {
+            "key": "get_ready.table.progress_time",
+            "line": 573,
+            "exists": true
+          },
+          {
+            "key": "get_ready.no_vehicles.title",
+            "line": 584,
+            "exists": true
+          },
+          {
+            "key": "get_ready.no_vehicles.description",
+            "line": 587,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.change_step",
+            "line": 776,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.advance_step",
+            "line": 816,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 834,
+            "exists": false
+          },
+          {
+            "key": "get_ready.workflow.change_workflow",
+            "line": 838,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.standard",
+            "line": 848,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.express",
+            "line": 862,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.priority",
+            "line": 876,
+            "exists": true
+          },
+          {
+            "key": "get_ready.priority.change_priority",
+            "line": 919,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.view_details",
+            "line": 1024,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.edit_vehicle",
+            "line": 1036,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.delete_vehicle",
+            "line": 1048,
+            "exists": true
+          },
+          {
+            "key": "common.showing",
+            "line": 1074,
+            "exists": true
+          },
+          {
+            "key": "common.of",
+            "line": 1074,
+            "exists": true
+          },
+          {
+            "key": "get_ready.confirm_delete_title",
+            "line": 1141,
+            "exists": false
+          },
+          {
+            "key": "get_ready.confirm_delete",
+            "line": 1142,
+            "exists": false
+          },
+          {
+            "key": "common.delete",
+            "line": 1143,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 1144,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 381,
+            "context": "380: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n381: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n382: </Badge>"
+          },
+          {
+            "key": "get_ready.workflow.${vehicle.workflow_type}",
+            "line": 834,
+            "context": "833: >\n834: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n835: </Button>"
+          },
+          {
+            "key": "get_ready.confirm_delete_title",
+            "line": 1141,
+            "context": "1140: onOpenChange={setDeleteDialogOpen}\n1141: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1142: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
+          },
+          {
+            "key": "get_ready.confirm_delete",
+            "line": 1142,
+            "context": "1141: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1142: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1143: confirmText={t('common.delete', 'Delete')}"
+          },
+          {
+            "key": "common.delete",
+            "line": 1143,
+            "context": "1142: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1143: confirmText={t('common.delete', 'Delete')}\n1144: cancelText={t('common.cancel', 'Cancel')}"
+          }
+        ],
+        "coverage": 80,
+        "severity": "high"
+      },
+      {
         "file": "src\\components\\get-ready\\approvals\\ApprovalHistoryTable.tsx",
         "hardcodedStrings": [
           {
@@ -8992,272 +9303,6 @@
         ],
         "missingKeys": [],
         "coverage": 58,
-        "severity": "medium"
-      },
-      {
-        "file": "src\\components\\get-ready\\GetReadyVehicleList.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Promise",
-            "line": 51,
-            "context": "50: onEditVehicle?: (vehicleId: string) => void;\n51: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n52: }"
-          },
-          {
-            "text": "Table",
-            "line": 284,
-            "context": "283: onClick={() => setViewMode('table')}\n284: >\n285: Table"
-          },
-          {
-            "text": "Grid",
-            "line": 291,
-            "context": "290: onClick={() => setViewMode('grid')}\n291: >\n292: Grid"
-          },
-          {
-            "text": "Table",
-            "line": 517,
-            "context": "516: onClick={() => setViewMode('table')}\n517: >\n518: Table"
-          },
-          {
-            "text": "Grid",
-            "line": 524,
-            "context": "523: onClick={() => setViewMode('grid')}\n524: >\n525: Grid"
-          },
-          {
-            "text": "Workflow",
-            "line": 542,
-            "context": "541: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n542: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n543: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
-          },
-          {
-            "text": "Actions",
-            "line": 567,
-            "context": "566: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress_time')}</TableHead>\n567: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n568: </TableRow>"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "common.loading",
-            "line": 265,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.actions",
-            "line": 349,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.view_details",
-            "line": 352,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.edit_vehicle",
-            "line": 356,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.delete_vehicle",
-            "line": 364,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 374,
-            "exists": false
-          },
-          {
-            "key": "get_ready.actions.change_step",
-            "line": 409,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.advance_step",
-            "line": 449,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.t2l",
-            "line": 456,
-            "exists": true
-          },
-          {
-            "key": "get_ready.steps.dis",
-            "line": 467,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.days_in_step",
-            "line": 472,
-            "exists": true
-          },
-          {
-            "key": "get_ready.steps.dis_tooltip",
-            "line": 473,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.click_to_view",
-            "line": 509,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.image",
-            "line": 538,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.stock",
-            "line": 539,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.vehicle",
-            "line": 540,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.step",
-            "line": 541,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.t2l_short",
-            "line": 546,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.t2l_full",
-            "line": 549,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.t2l_description",
-            "line": 550,
-            "exists": true
-          },
-          {
-            "key": "get_ready.steps.dis",
-            "line": 557,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_list.days_in_step",
-            "line": 560,
-            "exists": true
-          },
-          {
-            "key": "get_ready.steps.dis_tooltip",
-            "line": 561,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.priority",
-            "line": 565,
-            "exists": true
-          },
-          {
-            "key": "get_ready.table.progress_time",
-            "line": 566,
-            "exists": true
-          },
-          {
-            "key": "get_ready.no_vehicles.title",
-            "line": 577,
-            "exists": true
-          },
-          {
-            "key": "get_ready.no_vehicles.description",
-            "line": 580,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.change_step",
-            "line": 769,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.advance_step",
-            "line": 809,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 820,
-            "exists": false
-          },
-          {
-            "key": "get_ready.actions.view_details",
-            "line": 879,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.edit_vehicle",
-            "line": 891,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.delete_vehicle",
-            "line": 903,
-            "exists": true
-          },
-          {
-            "key": "common.showing",
-            "line": 929,
-            "exists": true
-          },
-          {
-            "key": "common.of",
-            "line": 929,
-            "exists": true
-          },
-          {
-            "key": "get_ready.confirm_delete_title",
-            "line": 996,
-            "exists": false
-          },
-          {
-            "key": "get_ready.confirm_delete",
-            "line": 997,
-            "exists": false
-          },
-          {
-            "key": "common.delete",
-            "line": 998,
-            "exists": false
-          },
-          {
-            "key": "common.cancel",
-            "line": 999,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 374,
-            "context": "373: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n374: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n375: </Badge>"
-          },
-          {
-            "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 820,
-            "context": "819: <Badge variant=\"outline\" className={cn(\"text-xs h-5\", getWorkflowColor(vehicle.workflow_type))}>\n820: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n821: </Badge>"
-          },
-          {
-            "key": "get_ready.confirm_delete_title",
-            "line": 996,
-            "context": "995: onOpenChange={setDeleteDialogOpen}\n996: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n997: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
-          },
-          {
-            "key": "get_ready.confirm_delete",
-            "line": 997,
-            "context": "996: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n997: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n998: confirmText={t('common.delete', 'Delete')}"
-          },
-          {
-            "key": "common.delete",
-            "line": 998,
-            "context": "997: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n998: confirmText={t('common.delete', 'Delete')}\n999: cancelText={t('common.cancel', 'Cancel')}"
-          }
-        ],
-        "coverage": 85,
         "severity": "medium"
       },
       {
@@ -50003,6 +50048,7 @@
         "src\\components\\orders\\OrderPrintView.tsx",
         "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\debug\\DuplicateTooltipTester.tsx",
+        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHistoryTable.tsx",
         "src\\components\\followers\\UniversalFollowButton.tsx",
         "src\\components\\users\\UserDashboard.tsx",
@@ -50025,7 +50071,6 @@
         "src\\components\\orders\\InteractiveTimeline.tsx",
         "src\\components\\orders\\AttachmentUploader.tsx",
         "src\\components\\get-ready\\VehicleDetailPanel.tsx",
-        "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\test\\components\\PermissionGuard.test.tsx",
         "src\\lib\\cloudSync.ts",
         "src\\hooks\\useVehiclePhotos.ts",
