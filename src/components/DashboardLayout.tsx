@@ -107,7 +107,7 @@ function DashboardLayoutInner({ children, title }: DashboardLayoutProps) {
       </div>
 
       {/* Floating Chat Bubble */}
-      {currentDealership?.id ? <FloatingChatBubble /> : null}
+      {/* {currentDealership?.id ? <FloatingChatBubble /> : null} */}
 
       {/* Legal Modals */}
       <PrivacyPolicyModal open={privacyModalOpen} onOpenChange={setPrivacyModalOpen} />

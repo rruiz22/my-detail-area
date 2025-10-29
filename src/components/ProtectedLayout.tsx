@@ -225,7 +225,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
         </div>
 
       {/* Floating Chat Bubble */}
-      {currentDealership?.id && <FloatingChatBubble />}
+      {/* {currentDealership?.id && <FloatingChatBubble />} */}
 
       {/* Legal Modals */}
       <PrivacyPolicyModal open={privacyModalOpen} onOpenChange={setPrivacyModalOpen} />
