@@ -80,7 +80,7 @@ export function GetReadyVehicleList({
   const itemsPerPage = 10;
 
   // Get vehicle management functions
-  const { moveVehicle, isMoving } = useVehicleManagement();
+  const { moveVehicle, isMoving, updateVehicle, isUpdating } = useVehicleManagement();
 
   // Handle image click
   const handleImageClick = (e: React.MouseEvent, vehicle: any) => {
@@ -149,6 +149,13 @@ export function GetReadyVehicleList({
     // Get next step
     const nextStep = availableSteps[currentStepIndex + 1];
     handleMoveToStep(vehicleId, currentStepId, nextStep.id);
+  };
+
+  const handleUpdateVehicle = (vehicleId: string, updates: { workflow_type?: 'standard' | 'express' | 'priority'; priority?: 'low' | 'normal' | 'medium' | 'high' | 'urgent' }) => {
+    updateVehicle({
+      id: vehicleId,
+      ...updates
+    });
   };
 
   // Fetch real vehicles from Supabase with infinite scroll
@@ -813,12 +820,67 @@ export function GetReadyVehicleList({
                   </div>
                 </TableCell>
 
-                {/* Workflow */}
-                <TableCell className="w-[110px] py-1 text-center">
+                {/* Workflow - Editable */}
+                <TableCell className="w-[110px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-center">
-                    <Badge variant="outline" className={cn("text-xs h-5", getWorkflowColor(vehicle.workflow_type))}>
-                      {t(`get_ready.workflow.${vehicle.workflow_type}`)}
-                    </Badge>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={cn("h-6 py-0.5 px-2 hover:bg-accent text-xs", getWorkflowColor(vehicle.workflow_type))}
+                          disabled={isMoving || isUpdating}
+                        >
+                          {t(`get_ready.workflow.${vehicle.workflow_type}`)}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="center">
+                        <DropdownMenuLabel>{t('get_ready.workflow.change_workflow')}</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { workflow_type: 'standard' });
+                          }}
+                          disabled={vehicle.workflow_type === 'standard'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1">{t('get_ready.workflow.standard')}</span>
+                            {vehicle.workflow_type === 'standard' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { workflow_type: 'express' });
+                          }}
+                          disabled={vehicle.workflow_type === 'express'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1">{t('get_ready.workflow.express')}</span>
+                            {vehicle.workflow_type === 'express' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { workflow_type: 'priority' });
+                          }}
+                          disabled={vehicle.workflow_type === 'priority'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1">{t('get_ready.workflow.priority')}</span>
+                            {vehicle.workflow_type === 'priority' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </TableCell>
 
@@ -839,12 +901,95 @@ export function GetReadyVehicleList({
                   </span>
                 </TableCell>
 
-                {/* Priority */}
-                <TableCell className="w-[100px] py-1 text-center">
+                {/* Priority - Editable */}
+                <TableCell className="w-[100px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-center">
-                    <Badge className={cn("text-xs h-5 capitalize", getPriorityColor(vehicle.priority))}>
-                      {vehicle.priority}
-                    </Badge>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={cn("h-6 py-0.5 px-2 hover:bg-accent text-xs capitalize", getPriorityColor(vehicle.priority))}
+                          disabled={isMoving || isUpdating}
+                        >
+                          {vehicle.priority}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="center">
+                        <DropdownMenuLabel>{t('get_ready.priority.change_priority')}</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { priority: 'urgent' });
+                          }}
+                          disabled={vehicle.priority === 'urgent'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1 capitalize">Urgent</span>
+                            {vehicle.priority === 'urgent' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { priority: 'high' });
+                          }}
+                          disabled={vehicle.priority === 'high'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1 capitalize">High</span>
+                            {vehicle.priority === 'high' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { priority: 'medium' });
+                          }}
+                          disabled={vehicle.priority === 'medium'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1 capitalize">Medium</span>
+                            {vehicle.priority === 'medium' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { priority: 'normal' });
+                          }}
+                          disabled={vehicle.priority === 'normal'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1 capitalize">Normal</span>
+                            {vehicle.priority === 'normal' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateVehicle(vehicle.id, { priority: 'low' });
+                          }}
+                          disabled={vehicle.priority === 'low'}
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <span className="flex-1 capitalize">Low</span>
+                            {vehicle.priority === 'low' && (
+                              <Check className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </TableCell>
 
