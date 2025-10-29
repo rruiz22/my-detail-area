@@ -194,12 +194,12 @@ export function VehicleFormModal({
 
     try {
       const vehicleData = {
-        stock_number: formData.stock_number.trim(),
+        stock_number: formData.stock_number.trim().toUpperCase(),
         vin: formData.vin.trim().toUpperCase(),
         vehicle_year: parseInt(formData.year),
-        vehicle_make: formData.make.trim(),
-        vehicle_model: formData.model.trim(),
-        vehicle_trim: formData.trim.trim() || undefined,
+        vehicle_make: formData.make.trim().toUpperCase(),
+        vehicle_model: formData.model.trim().toUpperCase(),
+        vehicle_trim: formData.trim.trim().toUpperCase() || undefined,
         step_id: formData.step_id,
         workflow_type: formData.workflow_type,
         priority: formData.priority,
@@ -304,7 +304,7 @@ export function VehicleFormModal({
                     id="stock_number"
                     value={formData.stock_number}
                     onChange={(e) =>
-                      updateFormData("stock_number", e.target.value)
+                      updateFormData("stock_number", e.target.value.toUpperCase())
                     }
                     placeholder="STK001"
                     className={errors.stock_number ? "border-red-500" : ""}
@@ -378,8 +378,8 @@ export function VehicleFormModal({
                   <Input
                     id="make"
                     value={formData.make}
-                    onChange={(e) => updateFormData("make", e.target.value)}
-                    placeholder="Honda"
+                    onChange={(e) => updateFormData("make", e.target.value.toUpperCase())}
+                    placeholder="HONDA"
                     className={errors.make ? "border-red-500" : ""}
                   />
                   {errors.make && (
@@ -395,8 +395,8 @@ export function VehicleFormModal({
                   <Input
                     id="model"
                     value={formData.model}
-                    onChange={(e) => updateFormData("model", e.target.value)}
-                    placeholder="Civic"
+                    onChange={(e) => updateFormData("model", e.target.value.toUpperCase())}
+                    placeholder="CIVIC"
                     className={errors.model ? "border-red-500" : ""}
                   />
                   {errors.model && (
@@ -413,7 +413,7 @@ export function VehicleFormModal({
                 <Input
                   id="trim"
                   value={formData.trim}
-                  onChange={(e) => updateFormData("trim", e.target.value)}
+                  onChange={(e) => updateFormData("trim", e.target.value.toUpperCase())}
                   placeholder="LX"
                 />
               </div>
