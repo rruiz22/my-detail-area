@@ -22,10 +22,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 13%;
 
-    /* Cyan/Turquoise - fresh, tech-forward, and modern */
-    --primary: 189 94% 43%;  /* Vibrant Cyan */
+    /* Teal/Turquoise Green - perfect balance of fresh and professional */
+    --primary: 173 80% 40%;  /* Teal/Turquoise Green */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 189 94% 53%;
+    --primary-glow: 173 80% 50%;
 
     /* Subtle gray backgrounds - Apple style */
     --secondary: 240 5% 96%;
@@ -34,8 +34,8 @@ All colors MUST be HSL.
     --muted: 240 5% 96%;
     --muted-foreground: 0 0% 45%;
 
-    /* Accent color - matches primary cyan */
-    --accent: 189 94% 43%;
+    /* Accent color - matches primary teal */
+    --accent: 173 80% 40%;
     --accent-foreground: 0 0% 100%;
 
     /* Status colors - Apple Human Interface Guidelines */
@@ -54,15 +54,15 @@ All colors MUST be HSL.
     /* Borders and inputs - Apple's subtle approach */
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 189 94% 43%;
+    --ring: 173 80% 40%;
 
     /* Apple-style shadows - softer and more natural */
     --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.04);
     --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.08);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -2px hsl(0 0% 0% / 0.08);
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08), 0 4px 6px -4px hsl(0 0% 0% / 0.08);
-    --shadow-elegant: 0 10px 30px -10px hsl(189 94% 43% / 0.15);
-    --shadow-glow: 0 0 40px hsl(189 94% 43% / 0.25);
+    --shadow-elegant: 0 10px 30px -10px hsl(173 80% 40% / 0.15);
+    --shadow-glow: 0 0 40px hsl(173 80% 40% / 0.25);
     --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.06);
     --shadow-header: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
     --shadow-modal: 0 8px 24px 0 hsl(0 0% 0% / 0.1);
@@ -72,15 +72,15 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;  /* Apple uses slightly larger radius */
 
-    /* Sidebar - Cyan theme */
+    /* Sidebar - Teal theme */
     --sidebar-background: 240 5% 98%;
     --sidebar-foreground: 0 0% 13%;
-    --sidebar-primary: 189 94% 43%;
+    --sidebar-primary: 173 80% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 5% 94%;
     --sidebar-accent-foreground: 0 0% 13%;
     --sidebar-border: 240 6% 92%;
-    --sidebar-ring: 189 94% 43%;
+    --sidebar-ring: 173 80% 40%;
   }
 
   /* ============================================
@@ -149,10 +149,10 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
-    /* Cyan/Turquoise - bright and energetic in dark mode */
-    --primary: 189 94% 50%;
+    /* Teal/Turquoise Green - vibrant and balanced in dark mode */
+    --primary: 173 80% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 189 94% 60%;
+    --primary-glow: 173 80% 55%;
 
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -160,7 +160,7 @@ All colors MUST be HSL.
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 70%;
 
-    --accent: 189 94% 50%;
+    --accent: 173 80% 45%;
     --accent-foreground: 0 0% 100%;
 
     /* Status colors - brighter in dark mode */
@@ -178,17 +178,17 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 189 94% 50%;
+    --ring: 173 80% 45%;
 
     /* Sidebar dark mode */
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 189 94% 50%;
+    --sidebar-primary: 173 80% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 189 94% 50%;
+    --sidebar-ring: 173 80% 45%;
   }
 
   /* ============================================
