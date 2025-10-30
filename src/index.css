@@ -8,7 +8,85 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Notion Light Theme */
+    /* ============================================
+       APPLE DESIGN SYSTEM - DEFAULT THEME
+       ============================================ */
+
+    /* Apple's clean white background with subtle warmth */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 13%;  /* Slightly softer than pure black */
+
+    --card: 0 0% 99%;
+    --card-foreground: 0 0% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 13%;
+
+    /* Cyan/Turquoise - fresh, tech-forward, and modern */
+    --primary: 189 94% 43%;  /* Vibrant Cyan */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 189 94% 53%;
+
+    /* Subtle gray backgrounds - Apple style */
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 0 0% 13%;
+
+    --muted: 240 5% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    /* Accent color - matches primary cyan */
+    --accent: 189 94% 43%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status colors - Apple Human Interface Guidelines */
+    --destructive: 0 100% 45%;  /* Apple Red */
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 36%;  /* Apple Green */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 35 91% 49%;  /* Apple Orange */
+    --warning-foreground: 0 0% 100%;
+
+    --pending: 211 100% 50%;  /* Blue for pending status */
+    --pending-foreground: 0 0% 100%;
+
+    /* Borders and inputs - Apple's subtle approach */
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 189 94% 43%;
+
+    /* Apple-style shadows - softer and more natural */
+    --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.04);
+    --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.08);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -2px hsl(0 0% 0% / 0.08);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08), 0 4px 6px -4px hsl(0 0% 0% / 0.08);
+    --shadow-elegant: 0 10px 30px -10px hsl(189 94% 43% / 0.15);
+    --shadow-glow: 0 0 40px hsl(189 94% 43% / 0.25);
+    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.06);
+    --shadow-header: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
+    --shadow-modal: 0 8px 24px 0 hsl(0 0% 0% / 0.1);
+
+    /* Apple's smooth animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.75rem;  /* Apple uses slightly larger radius */
+
+    /* Sidebar - Cyan theme */
+    --sidebar-background: 240 5% 98%;
+    --sidebar-foreground: 0 0% 13%;
+    --sidebar-primary: 189 94% 43%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 94%;
+    --sidebar-accent-foreground: 0 0% 13%;
+    --sidebar-border: 240 6% 92%;
+    --sidebar-ring: 189 94% 43%;
+  }
+
+  /* ============================================
+     NOTION THEME - ALTERNATIVE (Add .theme-notion to body)
+     ============================================ */
+  .theme-notion {
     --background: 0 0% 100%;
     --foreground: 0 0% 9%;
 
@@ -18,7 +96,6 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
 
-    /* Notion's subtle gray primary */
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
     --primary-glow: 0 0% 20%;
@@ -29,14 +106,12 @@ All colors MUST be HSL.
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    /* Clean accent - Muted indigo (Notion compliant) */
     --accent: 239 84% 67%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Status colors - Notion style */
     --success: 120 60% 45%;
     --success-foreground: 0 0% 98%;
     --warning: 38 92% 50%;
@@ -48,41 +123,78 @@ All colors MUST be HSL.
     --input: 0 0% 90%;
     --ring: 239 84% 67%;
 
-    /* Enhanced Shadow System */
-    --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
-    --shadow-elegant: 0 10px 30px -10px hsl(214 88% 35% / 0.15);
-    --shadow-glow: 0 0 40px hsl(214 88% 45% / 0.3);
-    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.08);
-    --shadow-header: 0 1px 3px 0 hsl(0 0% 0% / 0.12);
-    --shadow-modal: 0 8px 24px 0 hsl(0 0% 0% / 0.12);
-
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* ============================================
+     APPLE DARK MODE - DEFAULT
+     ============================================ */
   .dark {
-    /* Notion Dark Theme */
+    /* Apple's sophisticated dark background */
+    --background: 0 0% 7%;  /* True black with slight warmth */
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Cyan/Turquoise - bright and energetic in dark mode */
+    --primary: 189 94% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 189 94% 60%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 189 94% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status colors - brighter in dark mode */
+    --destructive: 0 100% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 35 91% 55%;
+    --warning-foreground: 0 0% 100%;
+
+    --pending: 211 100% 55%;
+    --pending-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 189 94% 50%;
+
+    /* Sidebar dark mode */
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 189 94% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 189 94% 50%;
+  }
+
+  /* ============================================
+     NOTION DARK THEME - ALTERNATIVE
+     ============================================ */
+  .dark.theme-notion {
     --background: 0 0% 9%;
     --foreground: 0 0% 98%;
 
@@ -663,7 +775,7 @@ All colors MUST be HSL.
   .vehicle-carousel-container {
     perspective: 800px;
   }
-  
+
   .vehicle-carousel-item {
     width: 280px;
     height: 280px;
