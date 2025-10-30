@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Heart,
-  ThumbsUp,
-  Smile,
-  Frown,
-  Plus
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import {
+    Frown,
+    Heart,
+    Plus,
+    Smile,
+    ThumbsUp
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface Reaction {
@@ -90,6 +89,15 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
     try {
       const existingReaction = reactions.find(r => r.type === reactionType && r.userReacted);
 
+      // First, get the comment to find the order_id for activity logging
+      const { data: commentData } = await supabase
+        .from('order_comments')
+        .select('order_id, comment_type')
+        .eq('id', commentId)
+        .single();
+
+      const orderId = commentData?.order_id;
+
       if (existingReaction) {
         // Remove reaction
         const { error } = await supabase
@@ -100,6 +108,22 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
           .eq('reaction_type', reactionType);
 
         if (error) throw error;
+
+        // Log reaction removal in order_activities
+        if (orderId) {
+          await supabase.from('order_activities').insert({
+            order_id: orderId,
+            user_id: user.id,
+            action: 'reaction_removed',
+            description: `Removed ${reactionType} reaction`,
+            action_type: 'reaction',
+            metadata: {
+              comment_id: commentId,
+              reaction_type: reactionType,
+              comment_type: commentData?.comment_type
+            }
+          });
+        }
 
         toast.success('Reaction removed');
       } else {
@@ -113,6 +137,27 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
           });
 
         if (error) throw error;
+
+        // Log reaction addition in order_activities
+        if (orderId) {
+          await supabase.from('order_activities').insert({
+            order_id: orderId,
+            user_id: user.id,
+            action: 'reaction_added',
+            description: `Added ${reactionType} reaction`,
+            action_type: 'reaction',
+            metadata: {
+              comment_id: commentId,
+              reaction_type: reactionType,
+              comment_type: commentData?.comment_type
+            }
+          });
+
+          // Dispatch event to refresh recent activity
+          window.dispatchEvent(new CustomEvent('reactionAdded', {
+            detail: { orderId, commentId, reactionType }
+          }));
+        }
 
         toast.success('Reaction added');
       }

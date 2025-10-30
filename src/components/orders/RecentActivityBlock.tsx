@@ -15,6 +15,7 @@ import {
     Code,
     Edit,
     FileText,
+    Heart,
     MessageSquare,
     Paperclip,
     QrCode,
@@ -522,8 +523,10 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
     window.addEventListener('orderStatusUpdated', handleActivityUpdate);
     window.addEventListener('orderCommentAdded', handleActivityUpdate);
+    window.addEventListener('orderCommentDeleted', handleActivityUpdate);
     window.addEventListener('orderAttachmentAdded', handleActivityUpdate);
     window.addEventListener('orderNotesUpdated', handleActivityUpdate);
+    window.addEventListener('reactionAdded', handleActivityUpdate);
 
     return () => {
       console.log('🧹 [Cleanup] Unsubscribing from realtime and window events');
@@ -532,8 +535,10 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       }
       window.removeEventListener('orderStatusUpdated', handleActivityUpdate);
       window.removeEventListener('orderCommentAdded', handleActivityUpdate);
+      window.removeEventListener('orderCommentDeleted', handleActivityUpdate);
       window.removeEventListener('orderAttachmentAdded', handleActivityUpdate);
       window.removeEventListener('orderNotesUpdated', handleActivityUpdate);
+      window.removeEventListener('reactionAdded', handleActivityUpdate);
     };
   }, [orderId, fetchRecentActivity]);
 
@@ -544,7 +549,10 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       case 'comment':
         return <MessageSquare className="h-4 w-4 text-gray-700" />;
       case 'note':
+      case 'internal_note':
         return <FileText className="h-4 w-4 text-amber-500" />;
+      case 'reaction':
+        return <Heart className="h-4 w-4 text-pink-500" />;
       case 'edit':
         return <Edit className="h-4 w-4 text-gray-600" />;
       case 'file_upload':
@@ -567,7 +575,10 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
       case 'comment':
         return 'border-l-indigo-500 bg-indigo-50/30';
       case 'note':
+      case 'internal_note':
         return 'border-l-amber-500 bg-amber-50/30';
+      case 'reaction':
+        return 'border-l-pink-500 bg-pink-50/30';
       case 'edit':
         return 'border-l-gray-400 bg-gray-50/30';
       case 'file_upload':

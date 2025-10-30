@@ -1,9 +1,12 @@
 import { CompletedDateInline } from '@/components/CompletedDateInline';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
+import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
+import { VehicleImageWithLoader } from '@/components/get-ready/VehicleImageWithLoader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useServices } from '@/contexts/ServicesContext';
+import { useStockPhotosForVehicle } from '@/hooks/useStockPhotosForVehicle';
 import {
     Calendar,
     Car,
@@ -14,7 +17,7 @@ import {
     User,
     Wrench
 } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface Order {
@@ -68,6 +71,9 @@ export function UnifiedOrderHeaderV2({
   const { t } = useTranslation();
   const { getServices } = useServices();
 
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
   const orderNumber = useMemo(() =>
     order.orderNumber || order.order_number || t('orders.new_order'),
     [order.orderNumber, order.order_number, t]
@@ -80,10 +86,19 @@ export function UnifiedOrderHeaderV2({
   }, [order.vehicleYear, order.vehicleMake, order.vehicleModel, order.vehicleTrim]);
 
   const stockNumber = order.stockNumber || order.stock_number || 'N/A';
+  const vehicleVin = order.vehicleVin || order.vehicle_vin || '';
   const assignedTo = order.assignedTo || order.assigned_to || 'Unassigned';
   const customerName = order.customerName || order.customer_name || '';
   const customerEmail = order.customerEmail || order.customer_email;
   const customerPhone = order.customerPhone || order.customer_phone;
+
+  // Get vehicle image from stock photos
+  const { data: stockPhotosData } = useStockPhotosForVehicle({
+    vin: vehicleVin,
+    dealerId: parseInt(effectiveDealerId)
+  });
+
+  const primaryPhoto = stockPhotosData?.photos?.[0]?.photo_url || stockPhotosData?.vehicleImageUrl;
 
   // For recon and carwash orders, use completed_at instead of due_date
   const usesCompleteDate = orderType === 'recon' || orderType === 'carwash';
@@ -144,7 +159,25 @@ export function UnifiedOrderHeaderV2({
 
             {/* Vehicle */}
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <Car className="w-5 h-5 text-primary flex-shrink-0" />
+              <div
+                className="cursor-pointer group relative"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxOpen(true);
+                }}
+              >
+                <VehicleImageWithLoader
+                  src={primaryPhoto}
+                  alt={vehicleDisplay}
+                  className="w-12 h-12 rounded-lg flex-shrink-0 border border-border"
+                />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
+                  <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-medium">
+                    View
+                  </span>
+                </div>
+              </div>
               <div className="min-w-0">
                 <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</div>
                 <div className="font-bold text-base text-foreground truncate">{vehicleDisplay}</div>
@@ -261,6 +294,17 @@ export function UnifiedOrderHeaderV2({
           </div>
         </CardContent>
       </Card>
+
+      {/* Stock Image Lightbox */}
+      {vehicleVin && (
+        <StockImageLightbox
+          vehicleVin={vehicleVin}
+          vehicleInfo={`${vehicleDisplay} - ${stockNumber}`}
+          dealerId={parseInt(effectiveDealerId)}
+          open={lightboxOpen}
+          onOpenChange={setLightboxOpen}
+        />
+      )}
     </div>
   );
 }

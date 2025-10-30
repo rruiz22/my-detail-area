@@ -1,7 +1,7 @@
 {
   "scannedFiles": 732,
-  "totalStrings": 6931,
-  "hardcodedStrings": 1510,
+  "totalStrings": 6932,
+  "hardcodedStrings": 1511,
   "translatedStrings": 5421,
   "issues": {
     "critical": [
@@ -15639,12 +15639,17 @@
           {
             "text": "Promise",
             "line": 33,
-            "context": "32: error: string | null;\n33: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n34: refreshComments: () => Promise<void>;"
+            "context": "32: error: string | null;\n33: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n34: deleteComment: (commentId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
             "line": 34,
-            "context": "33: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n34: refreshComments: () => Promise<void>;\n35: commentsCount: number;"
+            "context": "33: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n34: deleteComment: (commentId: string) => Promise<void>;\n35: refreshComments: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 35,
+            "context": "34: deleteComment: (commentId: string) => Promise<void>;\n35: refreshComments: () => Promise<void>;\n36: commentsCount: number;"
           }
         ],
         "translationCalls": [],
@@ -50253,6 +50258,7 @@
         "src\\hooks\\useVehicleAutoPopulation.tsx",
         "src\\hooks\\useRoleModuleAccess.tsx",
         "src\\hooks\\useProductivityTodos.tsx",
+        "src\\hooks\\useOrderComments.ts",
         "src\\hooks\\useOrderActions.tsx",
         "src\\hooks\\useNotificationTemplates.ts",
         "src\\hooks\\useFirebaseMessaging.ts",
@@ -50283,7 +50289,6 @@
         "src\\hooks\\useStatusPermissions.tsx",
         "src\\hooks\\useRealtimeOrderData.ts",
         "src\\hooks\\usePushNotifications.tsx",
-        "src\\hooks\\useOrderComments.ts",
         "src\\hooks\\useOptimizedVinScanner.tsx",
         "src\\hooks\\useDealershipModules.tsx",
         "src\\hooks\\useAdvancedVinScanner.tsx",
