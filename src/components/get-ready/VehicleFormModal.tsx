@@ -213,7 +213,7 @@ export function VehicleFormModal({
 
       if (isEditMode && vehicleId) {
         // Use async version to properly handle errors
-        await updateVehicleAsync({ id: vehicleId, data: vehicleData });
+        await updateVehicleAsync({ id: vehicleId, ...vehicleData });
       } else {
         // Use async version to properly handle errors
         await createVehicleAsync(vehicleData);
@@ -275,8 +275,8 @@ export function VehicleFormModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-2xl sm:h-auto sm:max-h-[98vh] sm:rounded-lg sm:border sm:mx-4">
-        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 overflow-hidden sm:max-w-2xl sm:h-auto sm:max-h-[98vh] sm:rounded-lg sm:border sm:mx-4">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-6 sm:px-8 py-3 sm:py-4 border-b border-border sm:rounded-t-lg">
           <DialogTitle className="text-base sm:text-lg font-semibold">
             {isEditMode
               ? t("get_ready.vehicle_form.title.edit")
@@ -287,7 +287,7 @@ export function VehicleFormModal({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+        <ScrollArea className="flex-1 px-8 sm:px-10 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
           {loadingVehicle ? (
             <div className="flex items-center justify-center py-12">
               <div className="flex flex-col items-center gap-4">
@@ -298,9 +298,9 @@ export function VehicleFormModal({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="py-3 space-y-3">
+            <form onSubmit={handleSubmit} className="py-6 space-y-6">
               {/* Stock Number & VIN */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-1.5">
                   <Label htmlFor="stock_number">
                     {t("get_ready.vehicle_form.fields.stock_number")}
@@ -436,7 +436,7 @@ export function VehicleFormModal({
               </div>
 
               {/* Step & Workflow Type */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-1.5">
                   <Label htmlFor="step_id">
                     {t("get_ready.vehicle_form.fields.step")}
@@ -489,7 +489,7 @@ export function VehicleFormModal({
               </div>
 
               {/* Priority & Assigned To */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-1.5">
                   <Label htmlFor="priority">
                     {t("get_ready.vehicle_form.fields.priority")}

@@ -433,26 +433,23 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
 
                     {/* Vehicle Breakdown by Days */}
                     {step.vehicle_count > 0 && (step.vehicles_1_day > 0 || step.vehicles_2_3_days > 0 || step.vehicles_4_plus_days > 0) && (
-                      <div className={cn(
-                        "grid grid-cols-3 gap-1.5 text-xs",
-                        isActive && "opacity-90"
-                      )}>
+                      <div className="grid grid-cols-3 gap-1.5 text-xs">
                         {/* 1 Day - Fresh */}
                         <div className={cn(
                           "flex flex-col items-center py-1.5 px-1 rounded border",
                           isActive
-                            ? "bg-white/10 border-white/20"
+                            ? "bg-emerald-600 dark:bg-emerald-700 border-white/30 shadow-sm"
                             : "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200/50 dark:border-emerald-800/50"
                         )}>
                           <span className={cn(
                             "font-bold text-sm",
-                            isActive ? "text-primary-foreground" : "text-emerald-700 dark:text-emerald-400"
+                            isActive ? "text-white" : "text-emerald-700 dark:text-emerald-400"
                           )}>
                             {step.vehicles_1_day || 0}
                           </span>
                           <span className={cn(
                             "text-[10px] leading-tight text-center",
-                            isActive ? "text-primary-foreground/70" : "text-emerald-600 dark:text-emerald-500"
+                            isActive ? "text-white/90" : "text-emerald-600 dark:text-emerald-500"
                           )}>
                             {t('get_ready.sidebar.fresh')}
                           </span>
@@ -462,18 +459,18 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                         <div className={cn(
                           "flex flex-col items-center py-1.5 px-1 rounded border",
                           isActive
-                            ? "bg-white/10 border-white/20"
+                            ? "bg-amber-600 dark:bg-amber-700 border-white/30 shadow-sm"
                             : "bg-amber-50 dark:bg-amber-950/30 border-amber-200/50 dark:border-amber-800/50"
                         )}>
                           <span className={cn(
                             "font-bold text-sm",
-                            isActive ? "text-primary-foreground" : "text-amber-700 dark:text-amber-400"
+                            isActive ? "text-white" : "text-amber-700 dark:text-amber-400"
                           )}>
                             {step.vehicles_2_3_days || 0}
                           </span>
                           <span className={cn(
                             "text-[10px] leading-tight text-center",
-                            isActive ? "text-primary-foreground/70" : "text-amber-600 dark:text-amber-500"
+                            isActive ? "text-white/90" : "text-amber-600 dark:text-amber-500"
                           )}>
                             {t('get_ready.sidebar.normal')}
                           </span>
@@ -483,18 +480,18 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                         <div className={cn(
                           "flex flex-col items-center py-1.5 px-1 rounded border",
                           isActive
-                            ? "bg-white/10 border-white/20"
+                            ? "bg-red-600 dark:bg-red-700 border-white/30 shadow-sm"
                             : "bg-red-50 dark:bg-red-950/30 border-red-200/50 dark:border-red-800/50"
                         )}>
                           <span className={cn(
                             "font-bold text-sm",
-                            isActive ? "text-primary-foreground" : "text-red-700 dark:text-red-400"
+                            isActive ? "text-white" : "text-red-700 dark:text-red-400"
                           )}>
                             {step.vehicles_4_plus_days || 0}
                           </span>
                           <span className={cn(
                             "text-[10px] leading-tight text-center",
-                            isActive ? "text-primary-foreground/70" : "text-red-600 dark:text-red-500"
+                            isActive ? "text-white/90" : "text-red-600 dark:text-red-500"
                           )}>
                             {t('get_ready.sidebar.critical')}
                           </span>
