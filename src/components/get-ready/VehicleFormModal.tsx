@@ -1,27 +1,27 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { VinInputWithScanner } from "@/components/ui/vin-input-with-scanner";
 import { useToast } from "@/hooks/use-toast";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
-import { useVehicleManagement } from "@/hooks/useVehicleManagement";
+import { useVehicleManagement } from "@/hooks/useVehicleManagement.tsx";
 import { useVinDecoding } from "@/hooks/useVinDecoding";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Zap } from "lucide-react";
@@ -73,7 +73,7 @@ export function VehicleFormModal({
   const { toast } = useToast();
   const { steps } = useGetReady();
   const { currentDealership } = useAccessibleDealerships();
-  const { createVehicle, updateVehicle, isCreating, isUpdating } =
+  const { createVehicleAsync, updateVehicleAsync, isCreating, isUpdating } =
     useVehicleManagement();
   const [formData, setFormData] = useState<VehicleFormData>(initialFormData);
   const [errors, setErrors] = useState<
@@ -150,9 +150,9 @@ export function VehicleFormModal({
 
     if (!formData.vin.trim()) {
       newErrors.vin = t("get_ready.vehicle_form.errors.vin_required");
-    } else if (formData.vin.length !== 17) {
-      newErrors.vin = t("get_ready.vehicle_form.errors.vin_invalid");
     }
+    // Removed length validation - allow any VIN format
+    // Duplicate VIN will be caught by database constraint
 
     const yearNum = parseInt(formData.year);
     if (!formData.year.trim()) {
@@ -193,9 +193,13 @@ export function VehicleFormModal({
     }
 
     try {
+      // Clean and normalize input data
+      const cleanStockNumber = formData.stock_number.trim().toUpperCase().replace(/\s+/g, '');
+      const cleanVin = formData.vin.trim().toUpperCase().replace(/\s+/g, '');
+
       const vehicleData = {
-        stock_number: formData.stock_number.trim().toUpperCase(),
-        vin: formData.vin.trim().toUpperCase(),
+        stock_number: cleanStockNumber,
+        vin: cleanVin,
         vehicle_year: parseInt(formData.year),
         vehicle_make: formData.make.trim().toUpperCase(),
         vehicle_model: formData.model.trim().toUpperCase(),
@@ -208,11 +212,11 @@ export function VehicleFormModal({
       };
 
       if (isEditMode && vehicleId) {
-        // Fix: Pass data correctly and await the mutation
-        await updateVehicle({ id: vehicleId, data: vehicleData });
+        // Use async version to properly handle errors
+        await updateVehicleAsync({ id: vehicleId, data: vehicleData });
       } else {
-        // Fix: Await the mutation
-        await createVehicle(vehicleData);
+        // Use async version to properly handle errors
+        await createVehicleAsync(vehicleData);
       }
 
       // Only close modal and trigger success callback after mutation completes
@@ -221,6 +225,8 @@ export function VehicleFormModal({
     } catch (error) {
       console.error("Error saving vehicle:", error);
       // Error toast is handled by mutation's onError callback
+      // Don't show additional toast here - let the mutation handle it
+      // The mutation's onError will show the detailed error message
     }
   };
 
@@ -306,9 +312,14 @@ export function VehicleFormModal({
                     onChange={(e) =>
                       updateFormData("stock_number", e.target.value.toUpperCase())
                     }
-                    placeholder="STK001"
+                    placeholder="B35678A"
                     className={errors.stock_number ? "border-red-500" : ""}
                   />
+                  {formData.stock_number && formData.stock_number.trim() && (
+                    <p className="text-xs text-muted-foreground">
+                      Will be saved as: <span className="font-mono font-semibold">{formData.stock_number.trim().toUpperCase().replace(/\s+/g, '')}</span>
+                    </p>
+                  )}
                   {errors.stock_number && (
                     <p className="text-xs text-red-500">
                       {errors.stock_number}
@@ -334,10 +345,16 @@ export function VehicleFormModal({
                     value={formData.vin}
                     onChange={(e) => handleVinChange(e.target.value)}
                     onVinScanned={handleVinChange}
-                    placeholder="1HGBH41JXMN109186"
+                    placeholder="Enter VIN (any length accepted)"
                     className={errors.vin ? "border-red-500" : ""}
                     disabled={vinLoading}
                   />
+                  {formData.vin && formData.vin.trim() && (
+                    <p className="text-xs text-muted-foreground">
+                      Will be saved as: <span className="font-mono font-semibold">{formData.vin.trim().toUpperCase().replace(/\s+/g, '')}</span>
+                      {formData.vin.length === 17 && ' (Auto-decode available)'}
+                    </p>
+                  )}
                   {errors.vin && (
                     <p className="text-xs text-red-500">{errors.vin}</p>
                   )}

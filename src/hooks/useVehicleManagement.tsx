@@ -63,18 +63,31 @@ export function useVehicleManagement() {
 
       if (error) {
         // Enhanced error handling with specific messages
+        console.error('Database error details:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+
         if (error.code === '23505') {
           // Unique constraint violation
-          if (error.message.includes('stock_number')) {
-            throw new Error(`Stock number "${input.stock_number}" already exists in this dealership`);
-          } else if (error.message.includes('vin')) {
-            throw new Error(`VIN "${input.vin}" already exists in this dealership`);
+          const errorDetails = error.details || error.message || '';
+          const errorMessage = error.message || '';
+          const errorHint = error.hint || '';
+
+          // Check both message and details for better detection
+          if (errorDetails.includes('stock_number') || errorMessage.includes('stock_number')) {
+            throw new Error(`❌ DUPLICATE STOCK NUMBER\n\nStock number "${input.stock_number}" is already registered in this dealership.\n\n💡 Solution: Use a different stock number or check if this vehicle already exists in the system.`);
+          } else if (errorDetails.includes('vin') || errorMessage.includes('vin')) {
+            throw new Error(`❌ DUPLICATE VIN\n\nVIN "${input.vin}" is already registered in this dealership.\n\n💡 Solution: Verify the VIN is correct or check if this vehicle is already in the system.`);
           } else {
-            throw new Error('This vehicle already exists in the system');
+            // Show full error for debugging
+            throw new Error(`❌ DUPLICATE ENTRY\n\n${errorMessage}\n\n${errorHint || 'Please check your input values.'}`);
           }
         } else if (error.code === '23503') {
           // Foreign key constraint violation
-          throw new Error('Invalid step or dealership selected');
+          throw new Error('❌ INVALID CONFIGURATION\n\nThe selected step or dealership is not valid.\n\n💡 Solution: Please refresh the page and try again.');
         } else {
           throw new Error(error.message || 'Failed to create vehicle');
         }
@@ -134,10 +147,22 @@ export function useVehicleManagement() {
     },
     onError: (error: Error) => {
       console.error('Failed to create vehicle:', error);
+
+      // Determine title based on error type
+      let title = t('common.error');
+      if (error.message.includes('Stock number') || error.message.includes('stock_number')) {
+        title = 'Duplicate Stock Number';
+      } else if (error.message.includes('VIN') || error.message.includes('vin')) {
+        title = 'Duplicate VIN';
+      } else if (error.message.includes('Invalid step')) {
+        title = 'Invalid Configuration';
+      }
+
       toast({
-        title: t('common.error'),
+        title: title,
         description: error.message || t('get_ready.vehicle_form.errors.save_failed'),
         variant: 'destructive',
+        duration: 6000, // Show longer for error messages
       });
     },
   });
@@ -210,10 +235,22 @@ export function useVehicleManagement() {
     },
     onError: (error: Error) => {
       console.error('Failed to update vehicle:', error);
+
+      // Determine title based on error type
+      let title = t('common.error');
+      if (error.message.includes('Stock number') || error.message.includes('stock_number')) {
+        title = 'Duplicate Stock Number';
+      } else if (error.message.includes('VIN') || error.message.includes('vin')) {
+        title = 'Duplicate VIN';
+      } else if (error.message.includes('Invalid step')) {
+        title = 'Invalid Configuration';
+      }
+
       toast({
-        title: t('common.error'),
+        title: title,
         description: error.message || t('get_ready.vehicle_form.errors.save_failed'),
         variant: 'destructive',
+        duration: 6000, // Show longer for error messages
       });
     },
   });
