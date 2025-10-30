@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
+import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
 import { useVehicleActivityLog } from '@/hooks/useVehicleActivityLog';
@@ -11,8 +12,10 @@ import { useVehicleMedia } from '@/hooks/useVehicleMedia';
 import { useVehicleNotes } from '@/hooks/useVehicleNotes';
 import { useCurrentStepVisit, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
+import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
+import { StepDropdown } from './StepDropdown';
 import {
     AlertTriangle,
     Circle,
@@ -44,8 +47,10 @@ interface VehicleDetailPanelProps {
 export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { steps } = useGetReady();
   const { selectedVehicleId, setSelectedVehicleId } = useGetReadyStore();
   const { data: vehicleDetail, isLoading } = useVehicleDetail(selectedVehicleId);
+  const { moveVehicle, isMoving } = useVehicleManagement();
 
   // Fetch counts for each tab
   const { data: workItems = [] } = useWorkItems(selectedVehicleId);
@@ -135,6 +140,28 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       description: t('get_ready.detail_panel.coming_soon'),
     });
     // TODO: Implement edit vehicle modal
+  };
+
+  // ✨ NEW: Step change handler
+  const handleMoveToStep = (newStepId: string) => {
+    if (!vehicleDetail || vehicleDetail.step_id === newStepId) {
+      return;
+    }
+    moveVehicle({ vehicleId: selectedVehicleId!, stepId: newStepId });
+  };
+
+  const handleAdvanceStep = () => {
+    if (!vehicleDetail) return;
+
+    const availableSteps = steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index);
+    const currentStepIndex = availableSteps.findIndex(s => s.id === vehicleDetail.step_id);
+
+    if (currentStepIndex === -1 || currentStepIndex >= availableSteps.length - 1) {
+      return;
+    }
+
+    const nextStep = availableSteps[currentStepIndex + 1];
+    handleMoveToStep(nextStep.id);
   };
 
   if (!selectedVehicleId) {
@@ -354,18 +381,19 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                 </div>
               </div>
 
-              {/* Step Badge (Compact) */}
-              <Badge
-                variant="outline"
-                className="text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 font-semibold col-span-3 sm:col-span-1"
-                style={{
-                  borderColor: vehicle.step_color || '#6B7280',
-                  color: vehicle.step_color || '#6B7280',
-                  borderWidth: '2px'
-                }}
-              >
-                {vehicle.step_name || vehicle.current_step?.name || t('get_ready.detail_panel.no_step')}
-              </Badge>
+              {/* Step Dropdown - Editable (Reuses table component) */}
+              <div className="col-span-3 sm:col-span-1">
+                <StepDropdown
+                  currentStepId={vehicle.step_id}
+                  currentStepName={vehicle.step_name || vehicle.current_step?.name || t('get_ready.detail_panel.no_step')}
+                  steps={steps}
+                  isMoving={isMoving}
+                  onStepChange={handleMoveToStep}
+                  onAdvanceStep={handleAdvanceStep}
+                  variant="badge"
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
         </div>
