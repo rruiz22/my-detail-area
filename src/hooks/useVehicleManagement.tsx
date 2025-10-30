@@ -117,15 +117,16 @@ export function useVehicleManagement() {
       return vehicle;
     },
     onSuccess: (newVehicle) => {
-      // Optimistic update: Add new vehicle to cache immediately
-      queryClient.setQueryData(
-        ['get-ready-vehicles', 'list', currentDealership?.id],
-        (oldData: any[] | undefined) => oldData ? [newVehicle, ...oldData] : [newVehicle]
-      );
-
-      // Invalidate both vehicles and steps queries to update counts
+      // Invalidate all vehicle-related queries to refresh the list
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+
+      // Force refetch to ensure fresh data
+      queryClient.refetchQueries({
+        queryKey: ['get-ready-vehicles', 'infinite'],
+        type: 'active'
+      });
+
       toast({
         title: t('common.success'),
         description: t('get_ready.vehicle_form.success.created'),
