@@ -124,6 +124,10 @@ export function useVehicleManagement() {
       id: string;
       data: Partial<VehicleData>;
     }) => {
+      if (!currentDealership?.id) {
+        throw new Error('No dealership selected');
+      }
+
       const { data, error } = await supabase
         .from('get_ready_vehicles')
         .update({
@@ -131,12 +135,17 @@ export function useVehicleManagement() {
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
+        .eq('dealer_id', currentDealership.id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error updating vehicle:', error);
         throw error;
+      }
+
+      if (!data) {
+        throw new Error('Vehicle not found or no permission to update');
       }
 
       return data;
