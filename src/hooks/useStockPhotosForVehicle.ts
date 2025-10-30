@@ -7,6 +7,11 @@ interface UseStockPhotosForVehicleProps {
   dealerId: number;
 }
 
+interface StockPhotosResult {
+  photos: VehiclePhoto[];
+  vehicleImageUrl?: string | null;
+}
+
 // Raw photo data from database
 interface RawPhotoData {
   id: string;
@@ -37,47 +42,47 @@ interface RawPhotoData {
 export const useStockPhotosForVehicle = ({ vin, dealerId }: UseStockPhotosForVehicleProps) => {
   return useQuery({
     queryKey: ['stock-photos-by-vin', vin, dealerId],
-    queryFn: async (): Promise<VehiclePhoto[]> => {
-      // Return empty array if no VIN provided
+    queryFn: async (): Promise<StockPhotosResult> => {
+      // Return empty result if no VIN provided
       if (!vin || !dealerId) {
         console.log('[useStockPhotosForVehicle] No VIN or dealerId provided');
-        return [];
+        return { photos: [], vehicleImageUrl: null };
       }
 
       console.log('[useStockPhotosForVehicle] Fetching photos for VIN:', vin);
 
-      // Step 1: Find vehicle in Stock inventory by VIN
+      // Step 1: Find vehicle in Stock inventory by VIN (include key_photo_url)
       const { data: stockVehicle, error: stockError } = await supabase
         .from('dealer_vehicle_inventory')
-        .select('id')
+        .select('id, key_photo_url')
         .eq('dealer_id', dealerId)
         .eq('vin', vin)
         .maybeSingle();
 
       if (stockError) {
         console.error('[useStockPhotosForVehicle] Error finding vehicle:', stockError);
-        return [];
+        return { photos: [], vehicleImageUrl: null };
       }
 
       if (!stockVehicle) {
         console.log('[useStockPhotosForVehicle] Vehicle not found in Stock inventory for VIN:', vin);
-        return [];
+        return { photos: [], vehicleImageUrl: null };
       }
 
       console.log('[useStockPhotosForVehicle] Found stock vehicle ID:', stockVehicle.id);
 
-      // Step 2: Get all photos for this vehicle, ordered by display_order
+      // Step 2: Get all photos for this vehicle, ordered by photo_url (name) ascending
       // Using type assertion because dealer_vehicle_photos may not be in generated types yet
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error: photosError } = await (supabase as any)
         .from('dealer_vehicle_photos')
         .select('*')
         .eq('vehicle_id', stockVehicle.id)
-        .order('display_order', { ascending: true });
+        .order('photo_url', { ascending: true });
 
       if (photosError) {
         console.error('[useStockPhotosForVehicle] Error fetching photos:', photosError);
-        return [];
+        return { photos: [], vehicleImageUrl: stockVehicle.key_photo_url };
       }
 
       console.log(`[useStockPhotosForVehicle] Found ${data?.length || 0} photos`);
@@ -98,7 +103,10 @@ export const useStockPhotosForVehicle = ({ vin, dealerId }: UseStockPhotosForVeh
         updated_at: photo.updated_at,
       }));
 
-      return photos;
+      return {
+        photos,
+        vehicleImageUrl: stockVehicle.key_photo_url
+      };
     },
     enabled: !!vin && !!dealerId,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes

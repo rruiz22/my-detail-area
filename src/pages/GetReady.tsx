@@ -1,14 +1,16 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
 import { GetReadyContent } from '@/components/get-ready/GetReadyContent';
 import { VendorManagement } from '@/components/get-ready/VendorManagement';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { GetReadySetup } from './GetReadySetup';
 
 export default function GetReady() {
   return (
     <Routes>
-      {/* Default overview route */}
-      <Route index element={<GetReadyContent />} />
+      {/* Default route redirects to Details View */}
+      <Route index element={<Navigate to="details" replace />} />
+
+      {/* Overview route */}
+      <Route path="overview" element={<GetReadyContent />} />
 
       {/* Details view */}
       <Route path="details" element={<GetReadyContent />} />

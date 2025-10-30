@@ -1,26 +1,23 @@
-import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { usePermissions } from '@/hooks/usePermissions';
-import { useGetReadyApprovalCount } from '@/hooks/useGetReadyApprovalCount';
-import { NotificationBell } from '@/components/get-ready/notifications/NotificationBell';
 import { DeletedVehiclesDialog } from '@/components/get-ready/DeletedVehiclesDialog';
-import {
-  Search,
-  Settings,
-  Grid3X3,
-  Eye,
-  UserCheck,
-  Users,
-  BarChart3,
-  Wrench,
-  Trash2
-} from 'lucide-react';
+import { NotificationBell } from '@/components/get-ready/notifications/NotificationBell';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useGetReadyApprovalCount } from '@/hooks/useGetReadyApprovalCount';
+import { usePermissions } from '@/hooks/usePermissions';
 import { cn } from '@/lib/utils';
+import {
+    BarChart3,
+    Eye,
+    Grid3X3,
+    Settings,
+    Trash2,
+    UserCheck,
+    Users,
+    Wrench
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { NavLink, useLocation } from 'react-router-dom';
 
 interface TabConfig {
   key: string;
@@ -29,7 +26,7 @@ interface TabConfig {
 }
 
 const TABS: TabConfig[] = [
-  { key: 'overview', icon: Grid3X3, path: '/get-ready' },
+  { key: 'overview', icon: Grid3X3, path: '/get-ready/overview' },
   { key: 'details_view', icon: Eye, path: '/get-ready/details' },
   { key: 'approvals', icon: UserCheck, path: '/get-ready/approvals' },
   { key: 'vendors', icon: Users, path: '/get-ready/vendors' },
@@ -63,9 +60,9 @@ export function GetReadyTopbar() {
         <div className="flex items-center space-x-1 overflow-x-auto w-full sm:w-auto">
           {visibleTabs.map((tab) => {
             const Icon = tab.icon;
-            const isActive = location.pathname === tab.path || 
+            const isActive = location.pathname === tab.path ||
               (tab.path === '/get-ready' && location.pathname === '/get-ready');
-            
+
             return (
               <NavLink
                 key={tab.key}

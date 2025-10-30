@@ -29,15 +29,18 @@ export function StockImageLightbox({
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   // Fetch photos from Stock by VIN
-  const { data: photos = [], isLoading } = useStockPhotosForVehicle({
+  const { data, isLoading } = useStockPhotosForVehicle({
     vin: vehicleVin,
     dealerId
   });
 
-  // Determine current image (photo or placeholder)
+  const photos = data?.photos || [];
+  const vehicleImageUrl = data?.vehicleImageUrl;
+
+  // Determine current image (photos → vehicle image_url → placeholder)
   const currentImage = photos.length > 0
     ? photos[currentPhotoIndex].photo_url
-    : '/images/vehicle-placeholder.png';
+    : vehicleImageUrl || '/images/vehicle-placeholder.png';
 
   const hasMultiplePhotos = photos.length > 1;
 
