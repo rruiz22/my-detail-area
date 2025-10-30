@@ -20,33 +20,16 @@ export interface TimeStatusInfo {
  * Calculate the time status for an order based on its due date and order status
  */
 export function calculateTimeStatus(dueDate: string | null, orderStatus?: string): TimeStatusInfo {
-  // Handle completed orders
+  // Handle completed orders - Only show "Completed" without on-time/late distinction
   if (orderStatus === 'completed') {
-    if (!dueDate) {
-      return {
-        status: 'no-due-date',
-        timeRemaining: 0,
-        formattedTime: '',
-        attentionLevel: 'none',
-        badge: 'Completed',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50'
-      };
-    }
-
-    // Check if completed on time or late
-    const now = new Date();
-    const due = new Date(dueDate);
-    const wasOnTime = now <= due; // If completed before due date
-
     return {
-      status: wasOnTime ? 'on-time' : 'delayed',
+      status: 'on-time',
       timeRemaining: 0,
       formattedTime: '',
       attentionLevel: 'none',
-      badge: wasOnTime ? 'Completed On-Time' : 'Completed Late',
-      color: wasOnTime ? 'text-green-600' : 'text-orange-600',
-      bgColor: wasOnTime ? 'bg-green-50' : 'bg-orange-50'
+      badge: 'Completed',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50'
     };
   }
 
@@ -145,26 +128,26 @@ export function calculateTimeStatus(dueDate: string | null, orderStatus?: string
  */
 export function isSameDayOrder(orderDate: string | null, dueDate: string | null): boolean {
   if (!orderDate && !dueDate) return false;
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  
+
   // Check if created today or due today
   if (orderDate) {
     const created = new Date(orderDate);
     created.setHours(0, 0, 0, 0);
     if (created.getTime() === today.getTime()) return true;
   }
-  
+
   if (dueDate) {
     const due = new Date(dueDate);
     due.setHours(0, 0, 0, 0);
     if (due.getTime() === today.getTime()) return true;
   }
-  
+
   return false;
 }
 

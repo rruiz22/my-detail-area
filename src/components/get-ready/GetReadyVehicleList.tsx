@@ -1,4 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { StepDropdown } from '@/components/get-ready/StepDropdown';
+import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
+import { VehicleImageWithLoader } from '@/components/get-ready/VehicleImageWithLoader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,16 +10,16 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
-import { VehicleImageWithLoader } from '@/components/get-ready/VehicleImageWithLoader';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useGetReady } from '@/hooks/useGetReady';
+import { useGetReadyViewMode } from '@/hooks/useGetReadyPersistence';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
-import { useGetReadyViewMode } from '@/hooks/useGetReadyPersistence';
 import { cn } from '@/lib/utils';
-import { formatTimeForTable } from '@/utils/timeFormatUtils';
+import type { GetReadyVehicle } from '@/types/getReady';
 import { getProgressColor } from '@/utils/progressCalculation';
+import { formatTimeForTable } from '@/utils/timeFormatUtils';
 import {
     AlertTriangle,
     Car,
@@ -25,7 +27,6 @@ import {
     CheckCircle,
     ChevronLeft,
     ChevronRight,
-    ClipboardList,
     Clock,
     Edit,
     Eye,
@@ -37,7 +38,7 @@ import {
     User,
     XCircle
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface GetReadyVehicleListProps {
@@ -67,10 +68,11 @@ export function GetReadyVehicleList({
   const { steps } = useGetReady();
   const { setSelectedVehicleId, selectedVehicleId } = useGetReadyStore();
   const [viewMode, setViewMode] = useGetReadyViewMode(); // WITH LOCALSTORAGE PERSISTENCE
+  const { currentDealership } = useAccessibleDealerships();
 
   // Lightbox state for Stock images
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxImage, setLightboxImage] = useState<{ url: string; info: string } | null>(null);
+  const [lightboxVehicle, setLightboxVehicle] = useState<{ vin: string; info: string } | null>(null);
 
   // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -83,16 +85,15 @@ export function GetReadyVehicleList({
   // Get vehicle management functions
   const { moveVehicle, isMoving, updateVehicle, isUpdating } = useVehicleManagement();
 
-  // Handle image click
-  const handleImageClick = (e: React.MouseEvent, vehicle: any) => {
+  // Handle image click - ALWAYS open lightbox (even without image)
+  const handleImageClick = (e: React.MouseEvent, vehicle: GetReadyVehicle) => {
     e.stopPropagation(); // Prevent row click
-    if (vehicle.images && vehicle.images[0]) {
-      setLightboxImage({
-        url: vehicle.images[0],
-        info: `${vehicle.year} ${vehicle.make} ${vehicle.model} - ${vehicle.stock_number}`
-      });
-      setLightboxOpen(true);
-    }
+    // Always open lightbox with VIN
+    setLightboxVehicle({
+      vin: vehicle.vin,
+      info: `${vehicle.vehicle_year} ${vehicle.vehicle_make} ${vehicle.vehicle_model} - ${vehicle.stock_number}`
+    });
+    setLightboxOpen(true);
   };
 
   // Action handlers
@@ -195,7 +196,7 @@ export function GetReadyVehicleList({
     if (hasNextPage && !isFetchingNextPage && allVehicles.length < totalVehicles + itemsPerPage) {
       fetchNextPage();
     }
-  }, [currentPage, hasNextPage, isFetchingNextPage, allVehicles.length]);
+  }, [currentPage, hasNextPage, isFetchingNextPage, allVehicles.length, fetchNextPage, totalVehicles]);
 
   const getSLAStatusIcon = (status: string) => {
     switch (status) {
@@ -399,70 +400,15 @@ export function GetReadyVehicleList({
                 <div className="grid grid-cols-2 gap-1.5 text-xs">
                   <div className="col-span-2" onClick={(e) => e.stopPropagation()}>
                     <span className="text-muted-foreground">Step:</span>
-                    <div className="flex items-center gap-1">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-auto py-0.5 px-1 text-xs hover:bg-accent justify-start flex-1"
-                            disabled={isMoving}
-                          >
-                            <div className="flex items-center gap-1.5">
-                              <div
-                                className="w-2 h-2 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: steps.find(s => s.id === vehicle.step_id)?.color }}
-                              />
-                              <span className="font-medium truncate">{vehicle.step_name}</span>
-                            </div>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start">
-                          <DropdownMenuLabel>{t('get_ready.actions.change_step')}</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          {steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index).map((step) => (
-                            <DropdownMenuItem
-                              key={step.id}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleMoveToStep(vehicle.id, vehicle.step_id, step.id);
-                              }}
-                              disabled={step.id === vehicle.step_id}
-                            >
-                              <div className="flex items-center gap-2 w-full">
-                                <div
-                                  className="w-3 h-3 rounded-full flex-shrink-0"
-                                  style={{ backgroundColor: step.color }}
-                                />
-                                <span className="flex-1">{step.name}</span>
-                                {step.id === vehicle.step_id && (
-                                  <Check className="h-4 w-4 text-primary" />
-                                )}
-                              </div>
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-
-                      {/* Quick advance to next step button */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-5 w-5 p-0 flex-shrink-0"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAdvanceStep(vehicle.id, vehicle.step_id);
-                        }}
-                        disabled={isMoving || (() => {
-                          const availableSteps = steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index);
-                          const currentStepIndex = availableSteps.findIndex(s => s.id === vehicle.step_id);
-                          return currentStepIndex >= availableSteps.length - 1;
-                        })()}
-                        title={t('get_ready.actions.advance_step')}
-                      >
-                        <ChevronRight className="h-3 w-3" />
-                      </Button>
-                    </div>
+                    <StepDropdown
+                      currentStepId={vehicle.step_id}
+                      currentStepName={vehicle.step_name}
+                      steps={steps}
+                      isMoving={isMoving}
+                      onStepChange={(newStepId) => handleMoveToStep(vehicle.id, vehicle.step_id, newStepId)}
+                      onAdvanceStep={() => handleAdvanceStep(vehicle.id, vehicle.step_id)}
+                      variant="table"
+                    />
                   </div>
                   <div>
                     <span className="text-muted-foreground text-xs">{t('get_ready.vehicle_list.t2l')}:</span>
@@ -760,68 +706,15 @@ export function GetReadyVehicleList({
                 {/* Step */}
                 <TableCell className="w-[140px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-center gap-1">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 py-0.5 px-2 hover:bg-accent text-xs"
-                          disabled={isMoving}
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <div
-                              className="w-2 h-2 rounded-full flex-shrink-0"
-                              style={{ backgroundColor: steps.find(s => s.id === vehicle.step_id)?.color }}
-                            />
-                            <span>{vehicle.step_name}</span>
-                          </div>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        <DropdownMenuLabel>{t('get_ready.actions.change_step')}</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index).map((step) => (
-                          <DropdownMenuItem
-                            key={step.id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleMoveToStep(vehicle.id, vehicle.step_id, step.id);
-                            }}
-                            disabled={step.id === vehicle.step_id}
-                          >
-                            <div className="flex items-center gap-2 w-full">
-                              <div
-                                className="w-3 h-3 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: step.color }}
-                              />
-                              <span className="flex-1">{step.name}</span>
-                              {step.id === vehicle.step_id && (
-                                <Check className="h-4 w-4 text-primary" />
-                              )}
-                            </div>
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    {/* Quick advance to next step button */}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAdvanceStep(vehicle.id, vehicle.step_id);
-                      }}
-                      disabled={isMoving || (() => {
-                        const availableSteps = steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index);
-                        const currentStepIndex = availableSteps.findIndex(s => s.id === vehicle.step_id);
-                        return currentStepIndex >= availableSteps.length - 1;
-                      })()}
-                      title={t('get_ready.actions.advance_step')}
-                    >
-                      <ChevronRight className="h-3.5 w-3.5" />
-                    </Button>
+                    <StepDropdown
+                      currentStepId={vehicle.step_id}
+                      currentStepName={vehicle.step_name}
+                      steps={steps}
+                      isMoving={isMoving}
+                      onStepChange={(newStepId) => handleMoveToStep(vehicle.id, vehicle.step_id, newStepId)}
+                      onAdvanceStep={() => handleAdvanceStep(vehicle.id, vehicle.step_id)}
+                      variant="table"
+                    />
                   </div>
                 </TableCell>
 
@@ -1134,10 +1027,11 @@ export function GetReadyVehicleList({
       </Card>
 
       {/* Stock Image Lightbox */}
-      {lightboxImage && (
+      {lightboxVehicle && (
         <StockImageLightbox
-          imageUrl={lightboxImage.url}
-          vehicleInfo={lightboxImage.info}
+          vehicleVin={lightboxVehicle.vin}
+          vehicleInfo={lightboxVehicle.info}
+          dealerId={currentDealership?.id || 0}
           open={lightboxOpen}
           onOpenChange={setLightboxOpen}
         />

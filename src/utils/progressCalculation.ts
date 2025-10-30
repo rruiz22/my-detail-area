@@ -91,5 +91,5 @@ export function getProgressColor(progress: number): string {
   if (progress === 100) return 'bg-emerald-500';  // Green for complete
   if (progress >= 76) return 'bg-blue-500';        // Blue for near complete
   if (progress >= 26) return 'bg-amber-500';       // Yellow/Amber for in progress
-  return 'bg-red-500';                             // Red for just started
+  return 'bg-gray-400';                            // Gray for just started (0-25%)
 }

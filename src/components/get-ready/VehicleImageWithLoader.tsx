@@ -1,6 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { Car } from 'lucide-react';
 import { useState } from 'react';
 
 interface VehicleImageWithLoaderProps {
@@ -46,31 +44,35 @@ export function VehicleImageWithLoader({
     setIsLoading(false);
   };
 
+  // Use placeholder image from Stock module
+  const displaySrc = src || '/images/vehicle-placeholder.png';
+
   return (
-    <Avatar className={cn("relative", className)} onClick={onClick}>
+    <div className={cn("relative overflow-hidden bg-muted", className)} onClick={onClick}>
       {/* Skeleton Loader - Shows while loading */}
       {isLoading && src && !hasError && (
-        <div className="absolute inset-0 bg-muted/50 animate-pulse rounded-[inherit]" />
+        <div className="absolute inset-0 bg-muted/50 animate-pulse rounded-[inherit] z-10" />
       )}
 
-      {/* Actual Image */}
-      {src && !hasError && (
-        <AvatarImage
-          src={src}
-          alt={alt}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={cn(
-            "transition-opacity duration-300 object-cover",
-            isLoading ? "opacity-0" : "opacity-100"
-          )}
-        />
-      )}
-
-      {/* Fallback - No image or error */}
-      <AvatarFallback className={cn("rounded-[inherit]", fallbackClassName)}>
-        <Car className="h-4 w-4 text-muted-foreground" />
-      </AvatarFallback>
-    </Avatar>
+      {/* Image (actual or placeholder) */}
+      <img
+        src={displaySrc}
+        alt={alt}
+        onLoad={handleLoad}
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          // If the actual image fails, try placeholder
+          if (src && target.src !== window.location.origin + '/images/vehicle-placeholder.png') {
+            target.src = '/images/vehicle-placeholder.png';
+            setHasError(true);
+          }
+          setIsLoading(false);
+        }}
+        className={cn(
+          "w-full h-full object-cover transition-opacity duration-300",
+          isLoading && src ? "opacity-0" : "opacity-100"
+        )}
+      />
+    </div>
   );
 }

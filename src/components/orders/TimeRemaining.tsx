@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Clock, AlertTriangle, Calendar, CheckCircle, XCircle } from 'lucide-react';
+import { AlertTriangle, Calendar, CheckCircle, Clock, XCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface TimeRemainingProps {
   order: any;
@@ -21,20 +21,14 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
 
   useEffect(() => {
     const calculateTimeInfo = () => {
-      // Handle completed orders
+      // Handle completed orders - Only show "Completed" without on-time/late distinction
       if (order?.status === 'completed') {
-        const wasOnTime = order.completed_at && order.due_date
-          ? new Date(order.completed_at) <= new Date(order.due_date)
-          : true;
-
         setTimeInfo({
-          text: wasOnTime ? 'Completed On-Time' : 'Completed Late',
-          color: wasOnTime ? 'text-green-600' : 'text-orange-600',
+          text: 'Completed',
+          color: 'text-green-600',
           icon: <CheckCircle className="h-4 w-4" />,
-          badge: wasOnTime ? 'COMPLETED ON TIME' : 'COMPLETED LATE',
-          badgeColor: wasOnTime
-            ? 'bg-green-100 text-green-700 border-green-300'
-            : 'bg-orange-100 text-orange-700 border-orange-300'
+          badge: 'COMPLETED',
+          badgeColor: 'bg-green-100 text-green-700 border-green-300'
         });
         return;
       }
@@ -73,7 +67,7 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
         // Time remaining
         const hours = Math.floor(diffMinutes / 60);
         const minutes = Math.floor(diffMinutes % 60);
-        
+
         if (diffHours > 24) {
           const days = Math.floor(diffHours / 24);
           const remainingHours = Math.floor(diffHours % 24);
@@ -113,7 +107,7 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
         // Overdue
         const hours = Math.floor(diffMinutes / 60);
         const minutes = Math.floor(diffMinutes % 60);
-        
+
         if (Math.abs(diffHours) < 24) {
           setTimeInfo({
             text: `Overdue by ${hours}h ${minutes}m`,
@@ -160,7 +154,7 @@ export function TimeRemaining({ order, showIcon = true, size = 'md' }: TimeRemai
           <span className={showIcon ? 'ml-1' : ''}>{timeInfo.badge}</span>
         </Badge>
       </div>
-      
+
       {/* Precise Time Information */}
       <div className={`flex items-center gap-2 ${timeInfo.color} ${textSize} font-medium`}>
         {showIcon && <Clock className={iconSize} />}
