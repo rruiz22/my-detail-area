@@ -1,8 +1,8 @@
 {
   "scannedFiles": 732,
-  "totalStrings": 6932,
-  "hardcodedStrings": 1511,
-  "translatedStrings": 5421,
+  "totalStrings": 6941,
+  "hardcodedStrings": 1512,
+  "translatedStrings": 5429,
   "issues": {
     "critical": [
       {
@@ -8098,60 +8098,65 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 54,
-            "context": "53: onStatusChange?: (orderId: string, newStatus: string) => void;\n54: onCompletedDateChange?: (orderId: string, newDate: Date | null) => Promise<void>;\n55: canEditOrder?: boolean;"
+            "line": 57,
+            "context": "56: onStatusChange?: (orderId: string, newStatus: string) => void;\n57: onCompletedDateChange?: (orderId: string, newDate: Date | null) => Promise<void>;\n58: canEditOrder?: boolean;"
           },
           {
             "text": "Order",
-            "line": 138,
-            "context": "137: <div>\n138: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Order</div>\n139: <div className=\"font-bold text-xl text-foreground\">{orderNumber}</div>"
+            "line": 153,
+            "context": "152: <div>\n153: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Order</div>\n154: <div className=\"font-bold text-xl text-foreground\">{orderNumber}</div>"
+          },
+          {
+            "text": "View",
+            "line": 176,
+            "context": "175: <div className=\"absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center\">\n176: <span className=\"text-white opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-medium\">\n177: View"
           },
           {
             "text": "Vehicle",
-            "line": 149,
-            "context": "148: <div className=\"min-w-0\">\n149: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</div>\n150: <div className=\"font-bold text-base text-foreground truncate\">{vehicleDisplay}</div>"
+            "line": 182,
+            "context": "181: <div className=\"min-w-0\">\n182: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</div>\n183: <div className=\"font-bold text-base text-foreground truncate\">{vehicleDisplay}</div>"
           },
           {
             "text": "Services",
-            "line": 163,
-            "context": "162: <div>\n163: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Services</div>\n164: {servicesCount > 0 ? ("
+            "line": 196,
+            "context": "195: <div>\n196: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Services</div>\n197: {servicesCount > 0 ? ("
           },
           {
             "text": "No services",
-            "line": 174,
-            "context": "173: ) : (\n174: <div className=\"text-base text-muted-foreground\">No services</div>\n175: )}"
+            "line": 207,
+            "context": "206: ) : (\n207: <div className=\"text-base text-muted-foreground\">No services</div>\n208: )}"
           },
           {
             "text": "Assigned",
-            "line": 187,
-            "context": "186: <div>\n187: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Assigned</div>\n188: <div className=\"font-bold text-base text-foreground truncate max-w-[140px]\">{assignedTo}</div>"
+            "line": 220,
+            "context": "219: <div>\n220: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Assigned</div>\n221: <div className=\"font-bold text-base text-foreground truncate max-w-[140px]\">{assignedTo}</div>"
           },
           {
             "text": "Not set",
-            "line": 227,
-            "context": "226: ) : (\n227: <div className=\"text-base text-muted-foreground\">Not set</div>\n228: )}"
+            "line": 260,
+            "context": "259: ) : (\n260: <div className=\"text-base text-muted-foreground\">Not set</div>\n261: )}"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.new_order",
-            "line": 72,
+            "line": 78,
             "exists": true
           },
           {
             "key": "common.status.${order.status}",
-            "line": 246,
+            "line": 279,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.status.${order.status}",
-            "line": 246,
-            "context": "245: <Badge className=\"px-3 py-1 text-sm font-semibold\">\n246: {t(`common.status.${order.status}`)}\n247: </Badge>"
+            "line": 279,
+            "context": "278: <Badge className=\"px-3 py-1 text-sm font-semibold\">\n279: {t(`common.status.${order.status}`)}\n280: </Badge>"
           }
         ],
-        "coverage": 22,
+        "coverage": 20,
         "severity": "medium"
       },
       {
@@ -30287,13 +30292,13 @@
         "hardcodedStrings": [
           {
             "text": "Like",
-            "line": 147,
-            "context": "146: >\n147: <ThumbsUp className=\"h-3 w-3 mr-1\" />\n148: Like"
+            "line": 192,
+            "context": "191: >\n192: <ThumbsUp className=\"h-3 w-3 mr-1\" />\n193: Like"
           },
           {
             "text": "Love",
-            "line": 157,
-            "context": "156: >\n157: <Heart className=\"h-3 w-3 mr-1\" />\n158: Love"
+            "line": 202,
+            "context": "201: >\n202: <Heart className=\"h-3 w-3 mr-1\" />\n203: Love"
           }
         ],
         "translationCalls": [],
@@ -32179,7 +32184,7 @@
           },
           {
             "key": "common.action_buttons.close",
-            "line": 621,
+            "line": 619,
             "exists": true
           }
         ],
@@ -32223,164 +32228,210 @@
         "hardcodedStrings": [
           {
             "text": "Reply",
-            "line": 244,
-            "context": "243: >\n244: <Reply className=\"h-3.5 w-3.5 mr-1\" />\n245: Reply"
+            "line": 283,
+            "context": "282: >\n283: <Reply className=\"h-3.5 w-3.5 mr-1\" />\n284: Reply"
           },
           {
             "text": "Cancel",
-            "line": 294,
-            "context": "293: className=\"h-8 text-xs\"\n294: >\n295: Cancel"
+            "line": 346,
+            "context": "345: className=\"h-8 text-xs\"\n346: >\n347: Cancel"
           },
           {
             "text": "Reply",
-            "line": 314,
-            "context": "313: <div className=\"flex items-center gap-1.5 mb-1\">\n314: <Badge variant=\"secondary\" className=\"text-xs leading-none py-0.5 px-1.5 font-medium\">\n315: Reply"
+            "line": 366,
+            "context": "365: <div className=\"flex items-center gap-1.5 mb-1\">\n366: <Badge variant=\"secondary\" className=\"text-xs leading-none py-0.5 px-1.5 font-medium\">\n367: Reply"
           }
         ],
         "translationCalls": [
           {
             "key": "order_comments.comment_added",
-            "line": 103,
+            "line": 116,
             "exists": true
           },
           {
             "key": "order_comments.note_added",
-            "line": 104,
+            "line": 117,
             "exists": true
           },
           {
             "key": "order_comments.comment_failed",
-            "line": 110,
+            "line": 123,
             "exists": true
           },
           {
             "key": "order_comments.note_failed",
-            "line": 111,
+            "line": 124,
             "exists": true
           },
           {
             "key": "order_comments.reply_added",
-            "line": 131,
+            "line": 144,
             "exists": true
           },
           {
             "key": "order_comments.reply_failed",
-            "line": 133,
+            "line": 146,
             "exists": true
           },
           {
-            "key": "order_comments.no_comments",
-            "line": 169,
+            "key": "order_comments.comment_deleted",
+            "line": 172,
             "exists": true
           },
           {
-            "key": "order_comments.start_conversation",
-            "line": 170,
+            "key": "order_comments.note_deleted",
+            "line": 173,
             "exists": true
           },
           {
-            "key": "order_comments.no_internal_notes",
+            "key": "order_comments.delete_failed",
             "line": 177,
             "exists": true
           },
           {
+            "key": "order_comments.no_comments",
+            "line": 208,
+            "exists": true
+          },
+          {
+            "key": "order_comments.start_conversation",
+            "line": 209,
+            "exists": true
+          },
+          {
+            "key": "order_comments.no_internal_notes",
+            "line": 216,
+            "exists": true
+          },
+          {
             "key": "order_comments.add_private_notes",
-            "line": 178,
+            "line": 217,
             "exists": true
           },
           {
             "key": "order_comments.detail_team",
-            "line": 212,
+            "line": 251,
+            "exists": true
+          },
+          {
+            "key": "order_comments.delete",
+            "line": 305,
             "exists": true
           },
           {
             "key": "order_comments.reply_placeholder",
-            "line": 277,
+            "line": 329,
             "exists": true
           },
           {
             "key": "order_comments.title",
-            "line": 363,
+            "line": 415,
             "exists": true
           },
           {
             "key": "order_comments.comments",
-            "line": 372,
+            "line": 424,
             "exists": true
           },
           {
             "key": "order_comments.internal_notes",
-            "line": 382,
+            "line": 434,
             "exists": true
           },
           {
             "key": "order_comments.add_comment_placeholder",
-            "line": 403,
+            "line": 455,
             "exists": true
           },
           {
             "key": "order_comments.mention",
-            "line": 429,
+            "line": 481,
             "exists": true
           },
           {
             "key": "order_comments.loading_comments",
-            "line": 449,
+            "line": 501,
             "exists": true
           },
           {
             "key": "order_comments.comments_count",
-            "line": 461,
+            "line": 513,
             "exists": true
           },
           {
             "key": "order_comments.team_discussion",
-            "line": 465,
+            "line": 517,
             "exists": true
           },
           {
             "key": "order_comments.add_internal_placeholder",
-            "line": 483,
+            "line": 535,
             "exists": true
           },
           {
             "key": "order_comments.mention_team",
-            "line": 511,
-            "exists": true
-          },
-          {
-            "key": "order_comments.loading_notes",
-            "line": 531,
-            "exists": true
-          },
-          {
-            "key": "order_comments.internal_count",
-            "line": 543,
-            "exists": true
-          },
-          {
-            "key": "order_comments.confidential",
-            "line": 547,
-            "exists": true
-          },
-          {
-            "key": "order_comments.access_denied",
-            "line": 561,
-            "exists": true
-          },
-          {
-            "key": "order_comments.detail_access_required",
             "line": 563,
             "exists": true
           },
           {
+            "key": "order_comments.loading_notes",
+            "line": 583,
+            "exists": true
+          },
+          {
+            "key": "order_comments.internal_count",
+            "line": 595,
+            "exists": true
+          },
+          {
+            "key": "order_comments.confidential",
+            "line": 599,
+            "exists": true
+          },
+          {
+            "key": "order_comments.access_denied",
+            "line": 613,
+            "exists": true
+          },
+          {
+            "key": "order_comments.detail_access_required",
+            "line": 615,
+            "exists": true
+          },
+          {
             "key": "order_comments.restricted_access",
-            "line": 567,
+            "line": 619,
+            "exists": true
+          },
+          {
+            "key": "order_comments.confirm_delete_title",
+            "line": 629,
+            "exists": true
+          },
+          {
+            "key": "order_comments.confirm_delete_description",
+            "line": 630,
+            "exists": true
+          },
+          {
+            "key": "order_comments.delete_confirm",
+            "line": 631,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 632,
             "exists": true
           }
         ],
-        "missingKeys": [],
-        "coverage": 90,
+        "missingKeys": [
+          {
+            "key": "order_comments.delete_confirm",
+            "line": 631,
+            "context": "630: description={t('order_comments.confirm_delete_description', 'Are you sure you want to delete this comment? This action cannot be undone.')}\n631: confirmText={t('order_comments.delete_confirm', 'Delete')}\n632: cancelText={t('common.cancel', 'Cancel')}"
+          }
+        ],
+        "coverage": 92,
         "severity": "low"
       },
       {
@@ -33219,169 +33270,169 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n      setError(",
-            "line": 452,
-            "context": "451: } catch (error) {\n452: console.error('💥 [RecentActivity] Critical error:', error);\n453: setError('Failed to load activity. Please try again.');"
+            "line": 453,
+            "context": "452: } catch (error) {\n453: console.error('💥 [RecentActivity] Critical error:', error);\n454: setError('Failed to load activity. Please try again.');"
           }
         ],
         "translationCalls": [
           {
             "key": "recent_activity.user.system",
-            "line": 310,
+            "line": 311,
             "exists": true
           },
           {
             "key": "recent_activity.user.team_member",
-            "line": 312,
+            "line": 313,
             "exists": true
           },
           {
             "key": "recent_activity.user.team_member",
-            "line": 315,
+            "line": 316,
             "exists": true
           },
           {
             "key": "recent_activity.actions.replied_to_internal_note",
-            "line": 329,
-            "exists": true
-          },
-          {
-            "key": "recent_activity.actions.added_internal_note",
             "line": 330,
             "exists": true
           },
           {
-            "key": "recent_activity.actions.replied_to_comment",
-            "line": 333,
+            "key": "recent_activity.actions.added_internal_note",
+            "line": 331,
             "exists": true
           },
           {
-            "key": "recent_activity.actions.added_comment",
+            "key": "recent_activity.actions.replied_to_comment",
             "line": 334,
             "exists": true
           },
           {
-            "key": "recent_activity.actions.uploaded_file",
-            "line": 356,
+            "key": "recent_activity.actions.added_comment",
+            "line": 335,
             "exists": true
           },
           {
-            "key": "recent_activity.files.attached",
+            "key": "recent_activity.actions.uploaded_file",
             "line": 357,
             "exists": true
           },
           {
-            "key": "recent_activity.actions.order_created",
-            "line": 425,
+            "key": "recent_activity.files.attached",
+            "line": 358,
             "exists": true
           },
           {
-            "key": "recent_activity.actions.initial_creation",
+            "key": "recent_activity.actions.order_created",
             "line": 426,
             "exists": true
           },
           {
-            "key": "recent_activity.user.system",
+            "key": "recent_activity.actions.initial_creation",
             "line": 427,
             "exists": true
           },
           {
+            "key": "recent_activity.user.system",
+            "line": 428,
+            "exists": true
+          },
+          {
             "key": "recent_activity.time.just_now",
-            "line": 591,
+            "line": 602,
             "exists": true
           },
           {
             "key": "recent_activity.time.minutes_ago",
-            "line": 592,
+            "line": 603,
             "exists": true
           },
           {
             "key": "recent_activity.time.hours_ago",
-            "line": 593,
-            "exists": true
-          },
-          {
-            "key": "recent_activity.time.days_ago",
-            "line": 594,
-            "exists": true
-          },
-          {
-            "key": "recent_activity.title",
             "line": 604,
             "exists": true
           },
           {
+            "key": "recent_activity.time.days_ago",
+            "line": 605,
+            "exists": true
+          },
+          {
+            "key": "recent_activity.title",
+            "line": 615,
+            "exists": true
+          },
+          {
             "key": "recent_activity.hide_debug",
-            "line": 616,
-            "exists": true
-          },
-          {
-            "key": "recent_activity.show_debug",
-            "line": 616,
-            "exists": true
-          },
-          {
-            "key": "recent_activity.debug_mode",
-            "line": 626,
-            "exists": true
-          },
-          {
-            "key": "recent_activity.sources.comments",
             "line": 627,
             "exists": true
           },
           {
+            "key": "recent_activity.show_debug",
+            "line": 627,
+            "exists": true
+          },
+          {
+            "key": "recent_activity.debug_mode",
+            "line": 637,
+            "exists": true
+          },
+          {
+            "key": "recent_activity.sources.comments",
+            "line": 638,
+            "exists": true
+          },
+          {
             "key": "recent_activity.sources.attachments",
-            "line": 628,
+            "line": 639,
             "exists": true
           },
           {
             "key": "recent_activity.sources.activity_log",
-            "line": 629,
+            "line": 640,
             "exists": true
           },
           {
             "key": "recent_activity.sources.order_data",
-            "line": 630,
+            "line": 641,
             "exists": true
           },
           {
             "key": "recent_activity.loading",
-            "line": 647,
+            "line": 658,
             "exists": true
           },
           {
             "key": "recent_activity.error_loading",
-            "line": 654,
+            "line": 665,
             "exists": true
           },
           {
             "key": "recent_activity.retry",
-            "line": 659,
+            "line": 670,
             "exists": true
           },
           {
             "key": "recent_activity.no_activity",
-            "line": 667,
+            "line": 678,
             "exists": true
           },
           {
             "key": "recent_activity.no_activity_description",
-            "line": 668,
+            "line": 679,
             "exists": true
           },
           {
             "key": "recent_activity.user.by",
-            "line": 724,
+            "line": 735,
             "exists": true
           },
           {
             "key": "recent_activity.last_activity",
-            "line": 738,
+            "line": 749,
             "exists": true
           },
           {
             "key": "recent_activity.none",
-            "line": 738,
+            "line": 749,
             "exists": true
           }
         ],
@@ -50196,12 +50247,12 @@
         "src\\components\\sales\\SmartDashboard.tsx",
         "src\\components\\sales\\OrderPreviewPanel.tsx",
         "src\\components\\productivity\\AssignUserDialog.tsx",
+        "src\\components\\orders\\UnifiedOrderHeaderV2.tsx",
         "src\\components\\get-ready\\ImageAnnotator.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalFilters.tsx",
         "src\\pages\\Management.tsx",
         "src\\hooks\\useChatNotifications.tsx",
         "src\\components\\ErrorBoundary.tsx",
-        "src\\components\\orders\\UnifiedOrderHeaderV2.tsx",
         "src\\components\\orders\\InteractiveTimeline.tsx",
         "src\\components\\orders\\AttachmentUploader.tsx",
         "src\\components\\get-ready\\VehicleDetailPanel.tsx",
@@ -50502,7 +50553,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2307 translation keys are referenced but missing",
+      "description": "2308 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "116 hours"
     }
