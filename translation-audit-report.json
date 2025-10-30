@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 730,
-  "totalStrings": 6906,
+  "scannedFiles": 732,
+  "totalStrings": 6905,
   "hardcodedStrings": 1504,
-  "translatedStrings": 5402,
+  "translatedStrings": 5401,
   "issues": {
     "critical": [
       {
@@ -4984,310 +4984,290 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 52,
-            "context": "51: onEditVehicle?: (vehicleId: string) => void;\n52: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n53: }"
+            "line": 53,
+            "context": "52: onEditVehicle?: (vehicleId: string) => void;\n53: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n54: }"
           },
           {
             "text": "Table",
-            "line": 292,
-            "context": "291: onClick={() => setViewMode('table')}\n292: >\n293: Table"
+            "line": 293,
+            "context": "292: onClick={() => setViewMode('table')}\n293: >\n294: Table"
           },
           {
             "text": "Grid",
-            "line": 299,
-            "context": "298: onClick={() => setViewMode('grid')}\n299: >\n300: Grid"
+            "line": 300,
+            "context": "299: onClick={() => setViewMode('grid')}\n300: >\n301: Grid"
           },
           {
             "text": "Table",
-            "line": 529,
-            "context": "528: onClick={() => setViewMode('table')}\n529: >\n530: Table"
+            "line": 475,
+            "context": "474: onClick={() => setViewMode('table')}\n475: >\n476: Table"
           },
           {
             "text": "Grid",
-            "line": 536,
-            "context": "535: onClick={() => setViewMode('grid')}\n536: >\n537: Grid"
+            "line": 482,
+            "context": "481: onClick={() => setViewMode('grid')}\n482: >\n483: Grid"
           },
           {
             "text": "Workflow",
-            "line": 554,
-            "context": "553: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n554: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n555: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
+            "line": 500,
+            "context": "499: <TableHead className=\"w-[140px] text-center py-2 bg-background\">{t('get_ready.table.step')}</TableHead>\n500: <TableHead className=\"w-[110px] text-center py-2 bg-background\">Workflow</TableHead>\n501: <TableHead className=\"w-[80px] text-center py-2 bg-background\">"
           },
           {
             "text": "Actions",
-            "line": 579,
-            "context": "578: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress')}</TableHead>\n579: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n580: </TableRow>"
+            "line": 525,
+            "context": "524: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress')}</TableHead>\n525: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n526: </TableRow>"
           },
           {
             "text": "Urgent",
-            "line": 934,
-            "context": "933: <div className=\"flex items-center gap-2 w-full\">\n934: <span className=\"flex-1 capitalize\">Urgent</span>\n935: {vehicle.priority === 'urgent' && ("
+            "line": 827,
+            "context": "826: <div className=\"flex items-center gap-2 w-full\">\n827: <span className=\"flex-1 capitalize\">Urgent</span>\n828: {vehicle.priority === 'urgent' && ("
           },
           {
             "text": "High",
-            "line": 948,
-            "context": "947: <div className=\"flex items-center gap-2 w-full\">\n948: <span className=\"flex-1 capitalize\">High</span>\n949: {vehicle.priority === 'high' && ("
+            "line": 841,
+            "context": "840: <div className=\"flex items-center gap-2 w-full\">\n841: <span className=\"flex-1 capitalize\">High</span>\n842: {vehicle.priority === 'high' && ("
           },
           {
             "text": "Medium",
-            "line": 962,
-            "context": "961: <div className=\"flex items-center gap-2 w-full\">\n962: <span className=\"flex-1 capitalize\">Medium</span>\n963: {vehicle.priority === 'medium' && ("
+            "line": 855,
+            "context": "854: <div className=\"flex items-center gap-2 w-full\">\n855: <span className=\"flex-1 capitalize\">Medium</span>\n856: {vehicle.priority === 'medium' && ("
           },
           {
             "text": "Normal",
-            "line": 976,
-            "context": "975: <div className=\"flex items-center gap-2 w-full\">\n976: <span className=\"flex-1 capitalize\">Normal</span>\n977: {vehicle.priority === 'normal' && ("
+            "line": 869,
+            "context": "868: <div className=\"flex items-center gap-2 w-full\">\n869: <span className=\"flex-1 capitalize\">Normal</span>\n870: {vehicle.priority === 'normal' && ("
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 273,
+            "line": 274,
             "exists": true
           },
           {
             "key": "get_ready.actions.actions",
-            "line": 357,
+            "line": 358,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 360,
+            "line": 361,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 364,
+            "line": 365,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 372,
+            "line": 373,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 382,
+            "line": 383,
             "exists": false
           },
           {
-            "key": "get_ready.actions.change_step",
-            "line": 421,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.advance_step",
-            "line": 461,
-            "exists": true
-          },
-          {
             "key": "get_ready.vehicle_list.t2l",
-            "line": 468,
+            "line": 414,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 479,
+            "line": 425,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.days_in_step",
-            "line": 484,
+            "line": 430,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis_tooltip",
-            "line": 485,
+            "line": 431,
             "exists": true
           },
           {
             "key": "get_ready.table.click_to_view",
-            "line": 521,
+            "line": 467,
             "exists": true
           },
           {
             "key": "get_ready.table.image",
-            "line": 550,
+            "line": 496,
             "exists": true
           },
           {
             "key": "get_ready.table.stock",
-            "line": 551,
+            "line": 497,
             "exists": true
           },
           {
             "key": "get_ready.table.vehicle",
-            "line": 552,
+            "line": 498,
             "exists": true
           },
           {
             "key": "get_ready.table.step",
-            "line": 553,
+            "line": 499,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_short",
-            "line": 558,
+            "line": 504,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_full",
-            "line": 561,
+            "line": 507,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_description",
-            "line": 562,
+            "line": 508,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 569,
+            "line": 515,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.days_in_step",
-            "line": 572,
+            "line": 518,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis_tooltip",
-            "line": 573,
+            "line": 519,
             "exists": true
           },
           {
             "key": "get_ready.table.priority",
-            "line": 577,
+            "line": 523,
             "exists": true
           },
           {
             "key": "get_ready.table.progress",
-            "line": 578,
+            "line": 524,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.title",
-            "line": 589,
+            "line": 535,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 592,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.change_step",
-            "line": 781,
-            "exists": true
-          },
-          {
-            "key": "get_ready.actions.advance_step",
-            "line": 821,
+            "line": 538,
             "exists": true
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 839,
+            "line": 732,
             "exists": false
           },
           {
             "key": "get_ready.workflow.change_workflow",
-            "line": 843,
+            "line": 736,
             "exists": true
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 853,
+            "line": 746,
             "exists": true
           },
           {
             "key": "get_ready.workflow.express",
-            "line": 867,
+            "line": 760,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 881,
+            "line": 774,
             "exists": true
           },
           {
             "key": "get_ready.priority.change_priority",
-            "line": 924,
+            "line": 817,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 1033,
+            "line": 926,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 1045,
+            "line": 938,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 1057,
+            "line": 950,
             "exists": true
           },
           {
             "key": "common.showing",
-            "line": 1083,
+            "line": 976,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 1083,
+            "line": 976,
             "exists": true
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 1150,
+            "line": 1044,
             "exists": false
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 1151,
+            "line": 1045,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 1152,
+            "line": 1046,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 1153,
+            "line": 1047,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 382,
-            "context": "381: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n382: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n383: </Badge>"
+            "line": 383,
+            "context": "382: <Badge variant=\"outline\" className={cn(\"text-xs\", getWorkflowColor(vehicle.workflow_type))}>\n383: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n384: </Badge>"
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 839,
-            "context": "838: >\n839: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n840: </Button>"
+            "line": 732,
+            "context": "731: >\n732: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n733: </Button>"
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 1150,
-            "context": "1149: onOpenChange={setDeleteDialogOpen}\n1150: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1151: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
+            "line": 1044,
+            "context": "1043: onOpenChange={setDeleteDialogOpen}\n1044: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1045: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 1151,
-            "context": "1150: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1151: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1152: confirmText={t('common.delete', 'Delete')}"
+            "line": 1045,
+            "context": "1044: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1045: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1046: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 1152,
-            "context": "1151: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1152: confirmText={t('common.delete', 'Delete')}\n1153: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 1046,
+            "context": "1045: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1046: confirmText={t('common.delete', 'Delete')}\n1047: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
-        "coverage": 80,
+        "coverage": 78,
         "severity": "high"
       },
       {
@@ -9035,164 +9015,164 @@
         "hardcodedStrings": [
           {
             "text": "Soon",
-            "line": 228,
-            "context": "227: {t('get_ready.detail_panel.export_pdf')}\n228: <Badge variant=\"secondary\" className=\"ml-auto text-[10px] px-1.5 py-0.5\">Soon</Badge>\n229: </DropdownMenuItem>"
+            "line": 255,
+            "context": "254: {t('get_ready.detail_panel.export_pdf')}\n255: <Badge variant=\"secondary\" className=\"ml-auto text-[10px] px-1.5 py-0.5\">Soon</Badge>\n256: </DropdownMenuItem>"
           },
           {
             "text": "Soon",
-            "line": 233,
-            "context": "232: {t('common.action_buttons.export_excel')}\n233: <Badge variant=\"secondary\" className=\"ml-auto text-[10px] px-1.5 py-0.5\">Soon</Badge>\n234: </DropdownMenuItem>"
+            "line": 260,
+            "context": "259: {t('common.action_buttons.export_excel')}\n260: <Badge variant=\"secondary\" className=\"ml-auto text-[10px] px-1.5 py-0.5\">Soon</Badge>\n261: </DropdownMenuItem>"
           },
           {
             "text": "Soon",
-            "line": 239,
-            "context": "238: {t('get_ready.detail_panel.edit_vehicle')}\n239: <Badge variant=\"secondary\" className=\"ml-auto text-[10px] px-1.5 py-0.5\">Soon</Badge>\n240: </DropdownMenuItem>"
+            "line": 266,
+            "context": "265: {t('get_ready.detail_panel.edit_vehicle')}\n266: <Badge variant=\"secondary\" className=\"ml-auto text-[10px] px-1.5 py-0.5\">Soon</Badge>\n267: </DropdownMenuItem>"
           },
           {
             "text": "Work",
-            "line": 324,
-            "context": "323: <div className=\"flex flex-col\">\n324: <span className=\"text-[10px] text-muted-foreground hidden sm:block\">Work</span>\n325: <span className=\"font-bold text-purple-900 dark:text-purple-100 text-xs sm:text-sm\">"
+            "line": 351,
+            "context": "350: <div className=\"flex flex-col\">\n351: <span className=\"text-[10px] text-muted-foreground hidden sm:block\">Work</span>\n352: <span className=\"font-bold text-purple-900 dark:text-purple-100 text-xs sm:text-sm\">"
           },
           {
             "text": "Step",
-            "line": 335,
-            "context": "334: <div className=\"flex flex-col\">\n335: <span className=\"text-[10px] text-muted-foreground hidden sm:block\">Step</span>\n336: "
+            "line": 362,
+            "context": "361: <div className=\"flex flex-col\">\n362: <span className=\"text-[10px] text-muted-foreground hidden sm:block\">Step</span>\n363: "
           },
           {
             "text": "Cost",
-            "line": 350,
-            "context": "349: <div className=\"flex flex-col\">\n350: <span className=\"text-[10px] text-muted-foreground hidden sm:block\">Cost</span>\n351: <span className=\"font-bold text-green-900 dark:text-green-100 whitespace-nowrap text-xs sm:text-sm\">"
+            "line": 377,
+            "context": "376: <div className=\"flex flex-col\">\n377: <span className=\"text-[10px] text-muted-foreground hidden sm:block\">Cost</span>\n378: <span className=\"font-bold text-green-900 dark:text-green-100 whitespace-nowrap text-xs sm:text-sm\">"
           },
           {
             "text": "Vehicle actions",
-            "line": 213,
-            "context": "212: className=\"h-8 w-8\"\n213: aria-label=\"Vehicle actions\"\n214: >"
+            "line": 240,
+            "context": "239: className=\"h-8 w-8\"\n240: aria-label=\"Vehicle actions\"\n241: >"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.detail_panel.export_pdf",
-            "line": 118,
+            "line": 123,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.coming_soon",
-            "line": 119,
+            "line": 124,
             "exists": true
           },
           {
             "key": "common.action_buttons.export_excel",
-            "line": 126,
+            "line": 131,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.coming_soon",
-            "line": 127,
+            "line": 132,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.edit_vehicle",
-            "line": 134,
+            "line": 139,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.coming_soon",
-            "line": 135,
+            "line": 140,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.no_selection.title",
-            "line": 148,
+            "line": 175,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.no_selection.description",
-            "line": 151,
+            "line": 178,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.error.title",
-            "line": 182,
+            "line": 209,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.error.description",
-            "line": 185,
+            "line": 212,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.close",
-            "line": 188,
+            "line": 215,
             "exists": true
           },
           {
             "key": "common.actions",
-            "line": 219,
+            "line": 246,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.print_report",
-            "line": 223,
-            "exists": true
-          },
-          {
-            "key": "get_ready.detail_panel.export_pdf",
-            "line": 227,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.export_excel",
-            "line": 232,
-            "exists": true
-          },
-          {
-            "key": "get_ready.detail_panel.edit_vehicle",
-            "line": 238,
-            "exists": true
-          },
-          {
-            "key": "get_ready.detail_panel.close",
             "line": 250,
             "exists": true
           },
           {
+            "key": "get_ready.detail_panel.export_pdf",
+            "line": 254,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export_excel",
+            "line": 259,
+            "exists": true
+          },
+          {
+            "key": "get_ready.detail_panel.edit_vehicle",
+            "line": 265,
+            "exists": true
+          },
+          {
+            "key": "get_ready.detail_panel.close",
+            "line": 277,
+            "exists": true
+          },
+          {
             "key": "get_ready.vehicle_list.t2l_full",
-            "line": 312,
+            "line": 339,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_description",
-            "line": 314,
+            "line": 341,
             "exists": true
           },
           {
             "key": "get_ready.detail_panel.no_step",
-            "line": 367,
-            "exists": true
-          },
-          {
-            "key": "get_ready.tabs.work_items",
             "line": 388,
             "exists": true
           },
           {
+            "key": "get_ready.tabs.work_items",
+            "line": 416,
+            "exists": true
+          },
+          {
             "key": "get_ready.tabs.media",
-            "line": 406,
+            "line": 434,
             "exists": true
           },
           {
             "key": "get_ready.tabs.notes",
-            "line": 424,
+            "line": 452,
             "exists": true
           },
           {
             "key": "get_ready.tabs.vendors",
-            "line": 442,
+            "line": 470,
             "exists": true
           },
           {
             "key": "get_ready.tabs.timeline",
-            "line": 460,
+            "line": 488,
             "exists": true
           }
         ],
@@ -41942,35 +41922,65 @@
         "hardcodedStrings": [
           {
             "text": "Fullscreen (F)",
-            "line": 141,
-            "context": "140: className=\"text-white hover:bg-white/20\"\n141: title=\"Fullscreen (F)\"\n142: >"
+            "line": 191,
+            "context": "190: className=\"text-white hover:bg-white/20\"\n191: title=\"Fullscreen (F)\"\n192: >"
           },
           {
             "text": "Close (ESC)",
-            "line": 152,
-            "context": "151: className=\"text-white hover:bg-white/20\"\n152: title=\"Close (ESC)\"\n153: >"
+            "line": 202,
+            "context": "201: className=\"text-white hover:bg-white/20\"\n202: title=\"Close (ESC)\"\n203: >"
           }
         ],
         "translationCalls": [
           {
             "key": "stock.image_from_inventory",
-            "line": 99,
+            "line": 148,
             "exists": true
           },
           {
+            "key": "stock.no_photos_available",
+            "line": 148,
+            "exists": false
+          },
+          {
             "key": "common.download",
-            "line": 130,
+            "line": 180,
+            "exists": false
+          },
+          {
+            "key": "common.previous",
+            "line": 218,
+            "exists": false
+          },
+          {
+            "key": "common.next",
+            "line": 227,
             "exists": false
           }
         ],
         "missingKeys": [
           {
+            "key": "stock.no_photos_available",
+            "line": 148,
+            "context": "147: <p className=\"text-xs text-gray-300\">\n148: {photos.length > 0 ? t('stock.image_from_inventory') : t('stock.no_photos_available', 'No photos available')}\n149: </p>"
+          },
+          {
             "key": "common.download",
-            "line": 130,
-            "context": "129: className=\"text-white hover:bg-white/20\"\n130: title={t('common.download')}\n131: >"
+            "line": 180,
+            "context": "179: className=\"text-white hover:bg-white/20\"\n180: title={t('common.download')}\n181: >"
+          },
+          {
+            "key": "common.previous",
+            "line": 218,
+            "context": "217: className=\"absolute left-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 h-12 w-12\"\n218: title={t('common.previous', 'Previous')}\n219: >"
+          },
+          {
+            "key": "common.next",
+            "line": 227,
+            "context": "226: className=\"absolute right-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 h-12 w-12\"\n227: title={t('common.next', 'Next')}\n228: >"
           }
         ],
-        "coverage": 50,
+        "coverage": 71,
         "severity": "low"
       },
       {
@@ -50346,7 +50356,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2304 translation keys are referenced but missing",
+      "description": "2307 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "116 hours"
     }
