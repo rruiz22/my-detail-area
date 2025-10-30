@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { AvatarSystem } from '@/components/ui/avatar-system';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import {
-  Search,
-  UserPlus,
-  X,
-  Bell,
-  BellOff,
-  Users
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { AvatarSystem } from '@/components/ui/avatar-system';
+import { supabase } from '@/integrations/supabase/client';
+import {
+    Bell,
+    BellOff,
+    Search,
+    UserPlus,
+    Users
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TeamMember {
   id: string;
@@ -203,16 +201,19 @@ export function AddFollowerModal({
                   <div className="flex items-center gap-2">
                     <AvatarSystem
                       name={`${member.firstName} ${member.lastName}`}
-                      src={member.avatarUrl}
-                      size="sm"
+                      seed={member.avatarUrl as any}
+                      size={32}
+                      firstName={member.firstName}
+                      lastName={member.lastName}
+                      email={member.email}
                     />
-                    <div>
-                      <div className="text-sm font-medium">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium truncate">
                         {member.firstName} {member.lastName}
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-muted-foreground">{member.email}</span>
-                        <Badge variant="outline" className={`text-xs ${getUserTypeBadgeColor(member.userType)}`}>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-xs text-muted-foreground truncate">{member.email}</span>
+                        <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${getUserTypeBadgeColor(member.userType)} flex-shrink-0`}>
                           {member.userType}
                         </Badge>
                       </div>

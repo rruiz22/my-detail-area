@@ -1,23 +1,22 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import {
-  Users,
-  UserPlus,
-  Crown,
-  Shield,
-  Mail,
-  Phone,
-  UserMinus,
-  Bell,
-  BellOff
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useFollowers } from '@/hooks/useFollowers';
-import { AvatarSystem } from '@/components/ui/avatar-system';
 import { AddFollowerModal } from '@/components/followers/AddFollowerModal';
+import { AvatarSystem } from '@/components/ui/avatar-system';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useFollowers } from '@/hooks/useFollowers';
+import {
+    Bell,
+    BellOff,
+    Crown,
+    Mail,
+    Phone,
+    Shield,
+    UserMinus,
+    UserPlus,
+    Users
+} from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface FollowersBlockProps {
@@ -102,42 +101,49 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-gray-700" />
-            {t('order_detail.followers', 'Followers')}
+    <Card className="shadow-sm border-border/60">
+      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+        <CardTitle className="flex items-center justify-between text-base">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Users className="h-5 w-5 text-primary" />
+            </div>
+            <span className="font-bold">{t('order_detail.followers', 'Followers')}</span>
           </div>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="secondary" className="text-xs font-bold px-2.5 py-1">
             {followersCount}
           </Badge>
         </CardTitle>
       </CardHeader>
-      
-      <CardContent className="space-y-3">
+
+      <CardContent className="space-y-3 pt-4">
         {error && (
-          <div className="text-center py-4 text-red-600">
-            <p className="text-xs">{error}</p>
+          <div className="text-center py-4 px-3 rounded-xl bg-red-50 border-2 border-red-200">
+            <div className="p-2 rounded-lg bg-red-100 inline-block mb-2">
+              <Users className="h-6 w-6 text-red-600" />
+            </div>
+            <p className="text-sm font-medium text-red-700">{error}</p>
           </div>
         )}
 
         {loading ? (
-          <div className="text-center py-4">
-            <div className="animate-spin w-6 h-6 border-2 border-gray-700 border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-xs text-muted-foreground mt-2">{t('followers.loading', 'Loading team...')}</p>
+          <div className="text-center py-6 px-3 rounded-xl bg-muted/40 border border-border/50">
+            <div className="animate-spin w-8 h-8 border-3 border-primary border-t-transparent rounded-full mx-auto mb-3"></div>
+            <p className="text-sm font-medium text-foreground">{t('followers.loading', 'Loading team...')}</p>
           </div>
         ) : followers.length === 0 ? (
-          <div className="text-center py-6 text-muted-foreground">
-            <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">{t('followers.no_followers', 'No followers')}</p>
+          <div className="text-center py-6 px-4 rounded-xl bg-muted/40 border-2 border-dashed border-border">
+            <div className="p-3 rounded-lg bg-muted/60 inline-block mb-3">
+              <Users className="h-10 w-10 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-bold text-foreground mb-3">{t('followers.no_followers', 'No followers')}</p>
             <Button
               variant="outline"
               size="sm"
-              className="mt-2"
+              className="w-full sm:w-auto font-medium shadow-sm hover:shadow-md transition-shadow"
               onClick={() => setShowAddModal(true)}
             >
-              <UserPlus className="h-3 w-3 mr-1" />
+              <UserPlus className="h-4 w-4 mr-2" />
               {t('followers.add_team_member', 'Add Team Member')}
             </Button>
           </div>
@@ -145,31 +151,41 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
           <>
             <div className="space-y-2">
               {followers.slice(0, 4).map((follower) => (
-                <div key={follower.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/30">
-                  <div className="flex items-center gap-2">
-                    <AvatarSystem
-                      name={`${follower.firstName} ${follower.lastName}`}
-                      firstName={follower.firstName}
-                      lastName={follower.lastName}
-                      email={follower.email}
-                      seed={follower.avatarUrl as any} // avatarUrl now contains avatar_seed
-                      size={32}
-                    />
+                <div
+                  key={follower.id}
+                  className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-all hover:border-primary/20"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="ring-2 ring-primary/10 rounded-full">
+                      <AvatarSystem
+                        name={`${follower.firstName} ${follower.lastName}`}
+                        firstName={follower.firstName}
+                        lastName={follower.lastName}
+                        email={follower.email}
+                        seed={follower.avatarUrl as any} // avatarUrl now contains avatar_seed
+                        size={36}
+                      />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium truncate">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span className="text-sm font-bold text-foreground truncate">
                           {follower.firstName} {follower.lastName}
                         </span>
                         {follower.isPrimary && (
-                          <Crown className="h-3 w-3 text-yellow-600 flex-shrink-0" />
+                          <div className="p-1 rounded bg-yellow-100">
+                            <Crown className="h-3 w-3 text-yellow-600 flex-shrink-0" />
+                          </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Badge variant="outline" className={`text-xs ${getFollowTypeBadgeColor(follower.followType)}`}>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Badge variant="secondary" className={`text-xs font-medium px-2 py-0.5 ${getFollowTypeBadgeColor(follower.followType)}`}>
                           {getFollowTypeIcon(follower.followType)}
                           <span className="ml-1 capitalize">{follower.followType}</span>
                         </Badge>
-                        <div className="cursor-pointer" title={`Notifications: ${follower.notificationLevel}`}>
+                        <div
+                          className="cursor-pointer p-1 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                          title={`Notifications: ${follower.notificationLevel}`}
+                        >
                           {getNotificationIcon(follower.notificationLevel)}
                         </div>
                       </div>
@@ -177,38 +193,38 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
                   </div>
 
                   {/* Quick Actions */}
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 ml-2">
                     {follower.email && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0"
+                        className="h-8 w-8 p-0 hover:bg-blue-100"
                         onClick={() => window.open(`mailto:${follower.email}`, '_blank')}
                         title={`Email ${follower.firstName}`}
                       >
-                        <Mail className="h-3 w-3 text-gray-700" />
+                        <Mail className="h-4 w-4 text-blue-600" />
                       </Button>
                     )}
                     {follower.phone && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0"
+                        className="h-8 w-8 p-0 hover:bg-green-100"
                         onClick={() => window.open(`tel:${follower.phone}`, '_blank')}
                         title={`Call ${follower.firstName}`}
                       >
-                        <Phone className="h-3 w-3 text-green-600" />
+                        <Phone className="h-4 w-4 text-green-600" />
                       </Button>
                     )}
                     {follower.followType === 'manual' && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0"
+                        className="h-8 w-8 p-0 hover:bg-red-100"
                         onClick={() => handleRemoveFollower(follower.userId)}
                         title={`Remove ${follower.firstName}`}
                       >
-                        <UserMinus className="h-3 w-3 text-red-600" />
+                        <UserMinus className="h-4 w-4 text-red-600" />
                       </Button>
                     )}
                   </div>
@@ -216,19 +232,23 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
               ))}
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 pt-2">
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1"
+                className="flex-1 font-medium shadow-sm hover:shadow-md transition-shadow"
                 onClick={() => setShowAddModal(true)}
               >
-                <UserPlus className="h-3 w-3 mr-1" />
+                <UserPlus className="h-4 w-4 mr-2" />
                 {t('followers.add_follower', 'Add Follower')}
               </Button>
 
               {followers.length > 4 && (
-                <Button variant="outline" size="sm" className="text-xs">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs font-medium px-3 shadow-sm hover:shadow-md transition-shadow"
+                >
                   {t('followers.view_all', 'View All')} ({followersCount})
                 </Button>
               )}

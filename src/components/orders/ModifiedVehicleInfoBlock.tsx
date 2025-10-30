@@ -76,15 +76,56 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
   }, [order.vin_decoded, t]);
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Car className="h-5 w-5 text-gray-700" />
-          {t('orders.vehicle_information')}
+    <Card className="h-full shadow-sm border-border/60">
+      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+        <CardTitle className="flex items-center gap-2.5 text-base">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Car className="h-5 w-5 text-primary" />
+          </div>
+          <span className="font-bold">{t('orders.vehicle_information')}</span>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 pt-4">
+        {/* VIN Decode Status Badge */}
+        {order.vin_decoded !== undefined && (
+          <div className={`p-3 rounded-xl border-2 ${
+            decodeStatus.status === 'success'
+              ? 'bg-green-50 border-green-200'
+              : 'bg-blue-50 border-blue-200'
+          }`}>
+            <div className="flex items-center gap-2">
+              <div className={`p-1.5 rounded-lg ${
+                decodeStatus.status === 'success'
+                  ? 'bg-green-100'
+                  : 'bg-blue-100'
+              }`}>
+                <Hash className={`h-4 w-4 ${
+                  decodeStatus.status === 'success'
+                    ? 'text-green-600'
+                    : 'text-blue-600'
+                }`} />
+              </div>
+              <div className="flex-1">
+                <span className={`text-sm font-bold block ${
+                  decodeStatus.status === 'success'
+                    ? 'text-green-700'
+                    : 'text-blue-700'
+                }`}>
+                  {decodeStatus.text}
+                </span>
+                <span className={`text-xs ${
+                  decodeStatus.status === 'success'
+                    ? 'text-green-600'
+                    : 'text-blue-600'
+                }`}>
+                  {decodeStatus.desc}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Simplified Vehicle Details Grid */}
         <div className="space-y-3">
           {vehicleInfo.map((info, index) => {
@@ -92,20 +133,22 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
             return (
               <div
                 key={index}
-                className={`flex items-start gap-3 p-3 rounded-lg bg-muted/30 ${
+                className={`flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow ${
                   info.fullWidth ? 'col-span-full' : ''
                 }`}
               >
-                <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                     {info.label}
                   </p>
-                  <p className={`text-sm font-medium break-words ${info.mono ? 'font-mono' : ''}`}>
+                  <p className={`text-sm font-bold text-foreground break-words ${info.mono ? 'font-mono' : ''}`}>
                     {info.value}
                   </p>
                   {info.description && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-1.5 font-medium">
                       {info.description}
                     </p>
                   )}

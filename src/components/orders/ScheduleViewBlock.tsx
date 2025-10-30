@@ -1,28 +1,28 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import {
-  Calendar,
-  Clock,
-  TrendingUp,
-  CheckCircle,
-  AlertTriangle,
-  Timer,
-  Target,
-  Wifi,
-  WifiOff,
-  Play,
-  Pause,
-  XCircle
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useRealtimeSchedule } from '@/hooks/useRealtimeSchedule';
+import type { OrderData } from '@/types/order';
 import { createScheduleItems, getOrderDateSummary } from '@/utils/orderDateUtils';
 import { getEnhancedDueDateStatus } from '@/utils/overdueCalculations';
-import type { OrderData } from '@/types/order';
-import { useRealtimeSchedule } from '@/hooks/useRealtimeSchedule';
+import { motion } from 'framer-motion';
+import {
+    AlertTriangle,
+    Calendar,
+    CheckCircle,
+    Clock,
+    Pause,
+    Play,
+    Target,
+    Timer,
+    TrendingUp,
+    Wifi,
+    WifiOff,
+    XCircle
+} from 'lucide-react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ScheduleViewBlockProps {
   order: OrderData;
@@ -240,54 +240,63 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
   }, [currentOrder, t, orderAge, orderType]);
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between text-lg">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" />
-            {t('schedule_view.schedule_timeline')}
+    <Card className="h-full shadow-sm border-border/60">
+      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+        <CardTitle className="flex items-center justify-between text-base">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Calendar className="h-5 w-5 text-primary" />
+            </div>
+            <span className="font-bold">{t('schedule_view.schedule_timeline')}</span>
           </div>
           <div className="flex items-center gap-2">
             {isConnected ? (
-              <Wifi className="h-4 w-4 text-green-500" title="Real-time updates active" />
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 border border-green-200">
+                <Wifi className="h-3.5 w-3.5 text-green-600" title="Real-time updates active" />
+                <span className="text-xs font-medium text-green-700">Live</span>
+              </div>
             ) : (
-              <WifiOff className="h-4 w-4 text-red-500" title={connectionError || "Real-time updates disabled"} />
-            )}
-            {lastUpdate && (
-              <Badge variant="outline" className="text-xs">
-                Live
-              </Badge>
+              <WifiOff className="h-4 w-4 text-red-400" title={connectionError || "Real-time updates disabled"} />
             )}
           </div>
         </CardTitle>
       </CardHeader>
-      
-      <CardContent className="space-y-4">
+
+      <CardContent className="space-y-5 pt-4">
         {/* Due Date Status Banner */}
         {dueDateStatus && (
-          <div className={`p-3 rounded-lg ${dueDateStatus.bgColor} border border-border/50`}>
-            <div className="flex items-center gap-2">
-              <dueDateStatus.icon className={`h-4 w-4 ${dueDateStatus.color}`} />
-              <span className={`text-sm font-medium ${dueDateStatus.color}`}>
-                {dueDateStatus.text}
-              </span>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`p-4 rounded-xl ${dueDateStatus.bgColor} border-2 ${dueDateStatus.color.replace('text-', 'border-')}/30 shadow-sm`}
+          >
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${dueDateStatus.color.replace('text-', 'bg-')}/10`}>
+                <dueDateStatus.icon className={`h-5 w-5 ${dueDateStatus.color}`} />
+              </div>
+              <div className="flex-1">
+                <span className={`text-sm font-bold ${dueDateStatus.color} block`}>
+                  {dueDateStatus.text}
+                </span>
+              </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Enhanced Order Progress with Animations */}
-        <div className="space-y-3">
+        <div className="space-y-3 bg-muted/30 p-4 rounded-xl border border-border/50">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{t('schedule_view.order_progress')}</span>
+            <span className="text-sm font-bold text-foreground">{t('schedule_view.order_progress')}</span>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">{progress}%</span>
+              <span className="text-base font-bold text-foreground">{progress}%</span>
               {progress === 100 && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.3, duration: 0.5, ease: "backOut" }}
                 >
-                  <CheckCircle className="h-4 w-4 text-emerald-500" />
+                  <CheckCircle className="h-5 w-5 text-emerald-500" />
                 </motion.div>
               )}
             </div>
@@ -301,7 +310,7 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
 
           {/* Status Indicator with Subtle Animation */}
           <motion.div
-            className="flex items-center gap-2"
+            className="flex items-center gap-3 mt-2"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.3 }}
@@ -311,8 +320,9 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.6, duration: 0.5, ease: "backOut" }}
+                className="p-1.5 rounded-lg bg-emerald-100"
               >
-                <CheckCircle className="h-4 w-4 text-emerald-500" />
+                <CheckCircle className="h-4 w-4 text-emerald-600" />
               </motion.div>
             ) : (
               <motion.div
@@ -325,11 +335,12 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
+                className="p-1.5 rounded-lg bg-primary/10"
               >
                 <TrendingUp className="h-4 w-4 text-primary" />
               </motion.div>
             )}
-            <span className="text-xs text-muted-foreground">
+            <span className="text-sm font-medium text-foreground">
               {currentOrder.status === 'completed' ? t('schedule_view.order_completed') :
                currentOrder.status === 'pending' ? t('common.status.pending') :
                currentOrder.status === 'in_progress' ? t('common.status.in_progress') :
@@ -340,9 +351,11 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
 
         {/* Enhanced Timeline - Standard with Real-time Updates */}
         {(
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium flex items-center gap-2">
-              <Clock className="h-4 w-4" />
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold flex items-center gap-2.5 text-foreground">
+              <div className="p-1.5 rounded-lg bg-primary/10">
+                <Clock className="h-4 w-4 text-primary" />
+              </div>
               {t('schedule_view.timeline')}
             </h4>
 
@@ -350,22 +363,30 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
               {scheduleItems.map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <div key={index} className="flex items-start gap-3 p-2 rounded-lg bg-muted/20">
-                    <Icon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                    className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
+                      <Icon className="h-4 w-4 text-primary" />
+                    </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                           {item.label}
                         </p>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="secondary" className="text-xs font-medium">
                           {item.subtitle}
                         </Badge>
                       </div>
-                      <p className="text-sm font-medium mt-1">
+                      <p className="text-sm font-bold text-foreground">
                         {item.value}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
