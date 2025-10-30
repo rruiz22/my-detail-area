@@ -5,6 +5,7 @@ import { CommentsTooltip } from '@/components/ui/comments-tooltip';
 import { DueDateIndicator } from '@/components/ui/due-date-indicator';
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
     Table,
     TableBody,
@@ -13,14 +14,12 @@ import {
     TableHeader,
     TableRow
 } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Order } from '@/hooks/useOrderManagement';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useDuplicateDetection } from '@/hooks/useDuplicateDetection';
+import { Order } from '@/hooks/useOrderManagement';
 import { usePermissions } from '@/hooks/usePermissions';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
-import { useDuplicateDetection } from '@/hooks/useDuplicateDetection';
-import { orderEvents } from '@/utils/eventBus';
 import { cn } from '@/lib/utils';
 import '@/styles/order-animations.css';
 import { safeParseDate } from '@/utils/dateUtils';
@@ -30,6 +29,7 @@ import {
     isSameDayOrder,
     isTimeBasedOrder
 } from '@/utils/dueDateUtils';
+import { orderEvents } from '@/utils/eventBus';
 import { dev, error as logError } from '@/utils/logger';
 import { getOrderAnimationClass } from '@/utils/orderAnimationUtils';
 import { formatOrderNumber } from '@/utils/orderUtils';
@@ -44,7 +44,7 @@ import {
     Printer,
     Trash2
 } from 'lucide-react';
-import { useEffect, useMemo, useState, memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { ServicesDisplay } from './ServicesDisplay';
@@ -506,13 +506,13 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     onDoubleClick={() => onView(order)}
                   >
                     {/* Row Number */}
-                    <TableCell className="py-2 text-center text-sm font-medium text-muted-foreground">
+                    <TableCell className="py-1 text-center text-sm font-medium text-muted-foreground">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </TableCell>
 
                     {/* Column 1: Order ID & Dealer */}
-                    <TableCell className="py-2 text-center w-[140px]">
-                      <div className="space-y-1">
+                    <TableCell className="py-1 text-center w-[140px]">
+                      <div className="space-y-0.5">
                         <div className="flex items-center justify-center gap-2">
                           <span className="text-base font-bold text-foreground">
                             {formatOrderNumber(order)}
@@ -539,8 +539,8 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     </TableCell>
 
                     {/* Column 2: Stock */}
-                    <TableCell className="py-2 text-center">
-                      <div className="space-y-1">
+                    <TableCell className="py-1 text-center">
+                      <div className="space-y-0.5">
                         {order.stockNumber || order.tag ? (
                           <DuplicateTooltip
                             orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
@@ -561,15 +561,15 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                         )}
                         {/* Assigned To */}
                         {order.assignedTo && (
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-sm text-muted-foreground font-semibold whitespace-nowrap">
                             {order.assignedTo}
                           </div>
                         )}
                       </div>
                     </TableCell>
 
-                    {/* Column 3: Vehicle & VIN */}
-                    <TableCell className="py-2 text-center max-w-[200px]">
+                    {/* Column 3: Vehicle */}
+                    <TableCell className="py-1 text-center max-w-[200px]">
                       <div className="space-y-0">
                         <div className="text-base font-bold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
                           {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
@@ -602,7 +602,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     </TableCell>
 
                     {/* Column 4: Services */}
-                    <TableCell className="py-2 text-left">
+                    <TableCell className="py-1 text-left">
                       <ServicesDisplay
                         services={order.services}
                         totalAmount={order.totalAmount || order.total_amount}
@@ -614,7 +614,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     </TableCell>
 
                     {/* Column 6: Due Date/Time or Completed Date - Dynamic based on order type */}
-                    <TableCell className="py-2 text-center">
+                    <TableCell className="py-1 text-center">
                       <div className="flex flex-col items-center justify-center h-full">
                         {(tabType === 'recon' || tabType === 'carwash') ? (
                           // For recon and carwash orders, show completed_at instead of due date
@@ -661,7 +661,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     </TableCell>
 
                     {/* Column 6: Interactive Status */}
-                    <TableCell className="py-2 text-center">
+                    <TableCell className="py-1 text-center">
                       <div className="flex flex-col items-center gap-2">
                         <StatusBadgeInteractive
                           status={order.status}
@@ -674,7 +674,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     </TableCell>
 
                     {/* Column 7: Action Buttons (Simplified) */}
-                    <TableCell className="py-2 text-center">
+                    <TableCell className="py-1 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Button
                           variant="ghost"

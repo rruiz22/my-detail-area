@@ -1,8 +1,8 @@
 {
   "scannedFiles": 732,
-  "totalStrings": 6905,
-  "hardcodedStrings": 1504,
-  "translatedStrings": 5401,
+  "totalStrings": 6932,
+  "hardcodedStrings": 1511,
+  "translatedStrings": 5421,
   "issues": {
     "critical": [
       {
@@ -6853,6 +6853,151 @@
           }
         ],
         "coverage": 60,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\hooks\\useVehicleManagement.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Duplicate Stock Number",
+            "line": 154,
+            "context": "153: if (error.message.includes('Stock number') || error.message.includes('stock_number')) {\n154: title = 'Duplicate Stock Number';\n155: } else if (error.message.includes('VIN') || error.message.includes('vin')) {"
+          },
+          {
+            "text": "Duplicate VIN",
+            "line": 156,
+            "context": "155: } else if (error.message.includes('VIN') || error.message.includes('vin')) {\n156: title = 'Duplicate VIN';\n157: } else if (error.message.includes('Invalid step')) {"
+          },
+          {
+            "text": "Invalid Configuration",
+            "line": 158,
+            "context": "157: } else if (error.message.includes('Invalid step')) {\n158: title = 'Invalid Configuration';\n159: }"
+          },
+          {
+            "text": "Duplicate Stock Number",
+            "line": 242,
+            "context": "241: if (error.message.includes('Stock number') || error.message.includes('stock_number')) {\n242: title = 'Duplicate Stock Number';\n243: } else if (error.message.includes('VIN') || error.message.includes('vin')) {"
+          },
+          {
+            "text": "Duplicate VIN",
+            "line": 244,
+            "context": "243: } else if (error.message.includes('VIN') || error.message.includes('vin')) {\n244: title = 'Duplicate VIN';\n245: } else if (error.message.includes('Invalid step')) {"
+          },
+          {
+            "text": "Invalid Configuration",
+            "line": 246,
+            "context": "245: } else if (error.message.includes('Invalid step')) {\n246: title = 'Invalid Configuration';\n247: }"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.success",
+            "line": 144,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.success.created",
+            "line": 145,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 152,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.save_failed",
+            "line": 163,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 232,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.success.updated",
+            "line": 233,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 240,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.save_failed",
+            "line": 251,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.success.deleted",
+            "line": 290,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.delete_failed",
+            "line": 294,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 374,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.success.moved",
+            "line": 375,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 384,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 390,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.move_failed",
+            "line": 391,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.success.approved",
+            "line": 418,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.errors.approve_failed",
+            "line": 422,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.success.rejected",
+            "line": 451,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.errors.reject_failed",
+            "line": 455,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.success.requested",
+            "line": 479,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.errors.request_failed",
+            "line": 483,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 78,
         "severity": "medium"
       },
       {
@@ -41646,14 +41791,19 @@
         "file": "src\\components\\get-ready\\VehicleFormModal.tsx",
         "hardcodedStrings": [
           {
-            "text": "STK001",
-            "line": 309,
-            "context": "308: }\n309: placeholder=\"STK001\"\n310: className={errors.stock_number ? \"border-red-500\" : \"\"}"
+            "text": "B35678A",
+            "line": 315,
+            "context": "314: }\n315: placeholder=\"B35678A\"\n316: className={errors.stock_number ? \"border-red-500\" : \"\"}"
+          },
+          {
+            "text": "Enter VIN (any length accepted)",
+            "line": 348,
+            "context": "347: onVinScanned={handleVinChange}\n348: placeholder=\"Enter VIN (any length accepted)\"\n349: className={errors.vin ? \"border-red-500\" : \"\"}"
           },
           {
             "text": "John Doe",
-            "line": 519,
-            "context": "518: }\n519: placeholder=\"John Doe\"\n520: />"
+            "line": 536,
+            "context": "535: }\n536: placeholder=\"John Doe\"\n537: />"
           }
         ],
         "translationCalls": [
@@ -41670,11 +41820,6 @@
           {
             "key": "get_ready.vehicle_form.errors.vin_required",
             "line": 152,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.vin_invalid",
-            "line": 154,
             "exists": true
           },
           {
@@ -41699,157 +41844,157 @@
           },
           {
             "key": "get_ready.vehicle_form.vin_decoded",
-            "line": 259,
+            "line": 265,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.title.edit",
-            "line": 276,
+            "line": 282,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.title.add",
-            "line": 277,
+            "line": 283,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.description",
-            "line": 280,
+            "line": 286,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 290,
+            "line": 296,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.stock_number",
-            "line": 300,
+            "line": 306,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.vin",
-            "line": 322,
+            "line": 333,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.vin_decoded",
-            "line": 328,
+            "line": 339,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.decoding_vin",
-            "line": 347,
+            "line": 364,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.year",
-            "line": 357,
+            "line": 374,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.make",
-            "line": 375,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.model",
             "line": 392,
             "exists": true
           },
           {
+            "key": "get_ready.vehicle_form.fields.model",
+            "line": 409,
+            "exists": true
+          },
+          {
             "key": "get_ready.vehicle_form.fields.trim",
-            "line": 411,
+            "line": 428,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.step",
-            "line": 425,
+            "line": 442,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.workflow",
-            "line": 448,
+            "line": 465,
             "exists": true
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 461,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.express",
-            "line": 464,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.priority",
-            "line": 467,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.priority",
             "line": 478,
             "exists": true
           },
           {
+            "key": "get_ready.workflow.express",
+            "line": 481,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.priority",
+            "line": 484,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.priority",
+            "line": 495,
+            "exists": true
+          },
+          {
             "key": "common.priority.low",
-            "line": 491,
+            "line": 508,
             "exists": true
           },
           {
             "key": "common.priority.normal",
-            "line": 494,
-            "exists": true
-          },
-          {
-            "key": "common.priority.medium",
-            "line": 497,
-            "exists": true
-          },
-          {
-            "key": "common.priority.high",
-            "line": 500,
-            "exists": true
-          },
-          {
-            "key": "common.priority.urgent",
-            "line": 503,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.fields.assigned_to",
             "line": 511,
             "exists": true
           },
           {
+            "key": "common.priority.medium",
+            "line": 514,
+            "exists": true
+          },
+          {
+            "key": "common.priority.high",
+            "line": 517,
+            "exists": true
+          },
+          {
+            "key": "common.priority.urgent",
+            "line": 520,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.fields.assigned_to",
+            "line": 528,
+            "exists": true
+          },
+          {
             "key": "get_ready.vehicle_form.fields.notes",
-            "line": 527,
+            "line": 544,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.placeholders.notes",
-            "line": 533,
+            "line": 550,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 548,
+            "line": 565,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 557,
+            "line": 574,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 558,
+            "line": 575,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 95,
+        "coverage": 93,
         "severity": "low"
       },
       {
@@ -49951,9 +50096,9 @@
         "src\\components\\users\\DirectUserCreationModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
+        "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\components\\dealer\\EditUserRoleModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
-        "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
         "src\\components\\profile\\UnsavedChangesModal.tsx",
         "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
@@ -50003,7 +50148,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "345 Component components need translation",
+      "description": "346 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -50063,6 +50208,7 @@
         "src\\test\\components\\PermissionGuard.test.tsx",
         "src\\lib\\cloudSync.ts",
         "src\\hooks\\useVehiclePhotos.ts",
+        "src\\hooks\\useVehicleManagement.tsx",
         "src\\hooks\\useNFCWorkflows.tsx",
         "src\\hooks\\useEnhancedNotifications.tsx",
         "src\\components\\CompletedDateInline.tsx",
