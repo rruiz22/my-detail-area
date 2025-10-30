@@ -14738,23 +14738,23 @@
           },
           {
             "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 150,
-            "context": "149: onError: (error: any) => {\n150: console.error('Update vehicle error:', error);\n151: toast({"
+            "line": 159,
+            "context": "158: onError: (error: any) => {\n159: console.error('Update vehicle error:', error);\n160: toast({"
           },
           {
             "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 180,
-            "context": "179: onError: (error: any) => {\n180: console.error('Delete vehicle error:', error);\n181: toast({"
+            "line": 189,
+            "context": "188: onError: (error: any) => {\n189: console.error('Delete vehicle error:', error);\n190: toast({"
           },
           {
             "text": ", error);\r\n\r\n      // Show specific error message if it",
-            "line": 293,
-            "context": "292: onError: (error: any) => {\n293: console.error('Move vehicle error:', error);\n294: "
+            "line": 302,
+            "context": "301: onError: (error: any) => {\n302: console.error('Move vehicle error:', error);\n303: "
           },
           {
             "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 343,
-            "context": "342: onError: (error: any) => {\n343: console.error('Bulk update error:', error);\n344: toast({"
+            "line": 352,
+            "context": "351: onError: (error: any) => {\n352: console.error('Bulk update error:', error);\n353: toast({"
           }
         ],
         "translationCalls": [
@@ -14770,52 +14770,52 @@
           },
           {
             "key": "common.error",
-            "line": 152,
+            "line": 161,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.save_failed",
-            "line": 153,
+            "line": 162,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 182,
+            "line": 191,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.delete_failed",
-            "line": 183,
+            "line": 192,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 288,
+            "line": 297,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.success.moved",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "common.error",
             "line": 298,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 304,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.move_failed",
-            "line": 305,
+            "line": 307,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 345,
+            "line": 313,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.errors.move_failed",
+            "line": 314,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 354,
             "exists": true
           }
         ],
