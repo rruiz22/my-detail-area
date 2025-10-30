@@ -460,7 +460,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-[95vw] sm:max-w-[90vw] w-full max-h-[95vh] sm:max-h-[90vh] h-full p-0 gap-0 overflow-hidden"
+        className="max-w-[90vw] sm:max-w-[85vw] w-full max-h-[92vh] sm:max-h-[88vh] h-full p-0 gap-0 overflow-hidden"
         data-testid="unified-order-detail-modal"
         hideCloseButton
       >
@@ -484,7 +484,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
           {/* Unified Content Container - Single Scroll */}
           <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scroll-smooth">
-            <div className="p-2 sm:p-3 lg:p-4 max-w-full" id="unified-modal-top">
+            <div className="p-2 sm:p-2.5 lg:p-3 max-w-full" id="unified-modal-top">
               {/* Unified Header - Card Grid Design */}
               <UnifiedOrderHeaderV2
                 order={orderData}
@@ -496,13 +496,13 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 onEdit={handleEdit}
               />
 
-              <div className="grid grid-cols-1 xl:grid-cols-[2fr,1fr] gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 xl:grid-cols-[2fr,1fr] gap-2 sm:gap-3">
                 {/* Main Content Area */}
-                <div className="space-y-3 sm:space-y-4 min-w-0 overflow-hidden">
+                <div className="space-y-2 sm:space-y-3 min-w-0 overflow-hidden">
                   {/* Row 1: Type-specific fields (Left column) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {/* Left: Order fields and notes */}
-                    <div className="space-y-2 sm:space-y-3">
+                    <div className="space-y-2">
                       <OrderTypeFields orderType={orderType} order={orderData} />
                       <SimpleNotesDisplay order={orderData} />
                     </div>
@@ -516,7 +516,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 </div>
 
                 {/* Right Sidebar - Clean Design */}
-                <div className="space-y-2 sm:space-y-3 min-w-0 overflow-hidden">
+                <div className="space-y-2 min-w-0 overflow-hidden">
                   {/* Enhanced QR Code & Short Link Block */}
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />
@@ -559,66 +559,64 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             </div>
           </div>
 
-          {/* Footer with Actions */}
-          <footer className="flex-none border-t bg-background p-4">
-            <div className="flex flex-col sm:flex-row justify-between gap-3">
-              {/* Left: Delete Only */}
-              <div className="flex gap-2">
+          {/* Footer with Actions - Modern Design */}
+          <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-2.5 sm:p-3">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+              {/* Left: Destructive Actions */}
+              <div className="flex gap-2 w-full sm:w-auto">
                 {canDeleteOrder && (
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     onClick={handleDelete}
-                    className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="flex-1 sm:flex-none h-9 px-3 gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 hover:border-red-300 transition-all"
                   >
-                    <Trash2 className="h-4 w-4" />
-                    {t('orders.delete_order')}
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span className="text-sm font-medium">{t('orders.delete_order')}</span>
                   </Button>
                 )}
               </div>
 
-              {/* Right: All Other Actions */}
-              <div className="flex flex-wrap gap-2">
-                {/* Edit Button */}
+              {/* Right: Primary Actions */}
+              <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
+                {/* Edit Button - Secondary action */}
                 {canEditOrder && (
                   <Button
                     variant="outline"
                     onClick={handleEdit}
-                    className="flex items-center gap-2"
+                    className="h-9 px-3 gap-2 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all"
                   >
-                    <Edit2 className="h-4 w-4" />
-                    {t('orders.edit')}
+                    <Edit2 className="h-3.5 w-3.5" />
+                    <span className="text-sm font-medium hidden sm:inline">{t('orders.edit')}</span>
                   </Button>
                 )}
 
-                {/* Copy Button */}
+                {/* Copy/Share Button - Secondary action */}
                 <Button
                   variant="outline"
                   onClick={handleShare}
                   disabled={!qrProps.shortLink}
-                  className="flex items-center gap-2"
+                  className="h-9 px-3 gap-2 hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-all disabled:opacity-50"
                 >
-                  <Copy className="h-4 w-4" />
-                  {t('orders.share_order')}
+                  <Copy className="h-3.5 w-3.5" />
+                  <span className="text-sm font-medium hidden lg:inline">{t('orders.share_order')}</span>
                 </Button>
 
-                {/* Print Action */}
+                {/* Print Button - Secondary action */}
                 <Button
                   variant="outline"
                   onClick={() => previewPrint(mapToPrintOrderData(orderData))}
-                  className="flex items-center gap-2"
+                  className="h-9 px-3 gap-2 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 transition-all"
                 >
-                  <Printer className="h-4 w-4" />
-                  <span className="hidden sm:inline">{t('orders.print')}</span>
+                  <Printer className="h-3.5 w-3.5" />
+                  <span className="text-sm font-medium hidden lg:inline">{t('orders.print')}</span>
                 </Button>
 
-                {/* Close Button */}
+                {/* Close Button - Primary action with gradient */}
                 <Button
-                  variant="destructive"
                   onClick={onClose}
-                  size="lg"
-                  className="min-w-[120px]"
+                  className="h-9 px-6 gap-2 min-w-[100px] sm:min-w-[120px] bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-sm hover:shadow-md transition-all font-semibold"
                 >
-                  {t('common.action_buttons.close')}
+                  <span className="text-sm">{t('common.action_buttons.close')}</span>
                 </Button>
               </div>
             </div>

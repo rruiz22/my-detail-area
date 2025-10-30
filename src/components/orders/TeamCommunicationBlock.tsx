@@ -6,7 +6,15 @@ import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
 import { useAttachments } from '@/hooks/useAttachments';
 import { useOrderComments } from '@/hooks/useOrderComments';
 import {
@@ -18,7 +26,8 @@ import {
     MoreHorizontal,
     Reply,
     Send,
-    Shield
+    Shield,
+    Trash2
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,12 +39,15 @@ interface TeamCommunicationBlockProps {
 
 export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('comments');
   const [newMessage, setNewMessage] = useState('');
   const [currentMentions, setCurrentMentions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyMessage, setReplyMessage] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
   // Separate attachments for Comments and Internal Notes
   const commentsAttachments = useAttachments(orderId);
@@ -47,6 +59,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     loading: commentsLoading,
     error,
     addComment,
+    deleteComment,
     commentsCount,
     internalNotesCount,
     canAccessInternal
@@ -140,6 +153,32 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
   const startReply = (commentId: string) => {
     setReplyingTo(commentId);
     setReplyMessage('');
+  };
+
+  // Open delete confirmation dialog
+  const openDeleteDialog = (commentId: string) => {
+    setCommentToDelete(commentId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Confirm and delete comment
+  const confirmDeleteComment = async () => {
+    if (!commentToDelete) return;
+
+    try {
+      await deleteComment(commentToDelete);
+      toast.success(
+        activeTab === 'comments'
+          ? t('order_comments.comment_deleted', 'Comment deleted successfully')
+          : t('order_comments.note_deleted', 'Internal note deleted successfully')
+      );
+    } catch (error) {
+      console.error('❌ Failed to delete comment:', error);
+      toast.error(t('order_comments.delete_failed', 'Failed to delete comment'));
+    } finally {
+      setCommentToDelete(null);
+      setDeleteDialogOpen(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -245,16 +284,29 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                     Reply
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/60"
-                    onClick={() => {
-                      toast.info('More actions coming soon');
-                    }}
-                  >
-                    <MoreHorizontal className="h-3.5 w-3.5" />
-                  </Button>
+                  {/* Show More menu only if user is author */}
+                  {user?.id === message.userId && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                        >
+                          <MoreHorizontal className="h-3.5 w-3.5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                          onClick={() => openDeleteDialog(message.id as string)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5 mr-2" />
+                          {t('order_comments.delete', 'Delete')}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               </div>
 
@@ -569,6 +621,18 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
           </div>
         )}
       </CardContent>
+
+      {/* Delete Comment Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('order_comments.confirm_delete_title', 'Delete Comment')}
+        description={t('order_comments.confirm_delete_description', 'Are you sure you want to delete this comment? This action cannot be undone.')}
+        confirmText={t('order_comments.delete_confirm', 'Delete')}
+        cancelText={t('common.cancel', 'Cancel')}
+        onConfirm={confirmDeleteComment}
+        variant="destructive"
+      />
     </Card>
   );
 }

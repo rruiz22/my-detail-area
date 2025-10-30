@@ -31,6 +31,7 @@ export interface OrderCommentsHookResult {
   loading: boolean;
   error: string | null;
   addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;
+  deleteComment: (commentId: string) => Promise<void>;
   refreshComments: () => Promise<void>;
   commentsCount: number;
   internalNotesCount: number;
@@ -285,6 +286,79 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     }
   }, [user, orderId, canAccessInternal, fetchComments]);
 
+  // Delete comment (soft delete or hard delete)
+  const deleteComment = useCallback(async (commentId: string): Promise<void> => {
+    if (!user) throw new Error('User not authenticated');
+
+    try {
+      console.log('🗑️ Deleting comment:', commentId);
+
+      // First, get the comment to check its type before deleting
+      const { data: commentData, error: fetchError } = await supabase
+        .from('order_comments')
+        .select('comment_type, comment_text')
+        .eq('id', commentId)
+        .single();
+
+      if (fetchError) {
+        console.error('❌ Failed to fetch comment before deletion:', fetchError);
+        throw fetchError;
+      }
+
+      const commentType = commentData.comment_type; // 'public' or 'internal'
+      const isInternalNote = commentType === 'internal';
+
+      // Delete the comment from database
+      const { error: deleteError } = await supabase
+        .from('order_comments')
+        .delete()
+        .eq('id', commentId);
+
+      if (deleteError) {
+        console.error('❌ Failed to delete comment:', deleteError);
+        throw deleteError;
+      }
+
+      // Create activity log entry with appropriate action based on type
+      const action = isInternalNote ? 'internal_note_deleted' : 'comment_deleted';
+      const description = isInternalNote ? 'Deleted an internal note' : 'Deleted a comment';
+
+      const { error: activityError } = await supabase
+        .from('order_activities')
+        .insert({
+          order_id: orderId,
+          user_id: user.id,
+          action: action,
+          description: description,
+          action_type: isInternalNote ? 'internal_note' : 'comment',
+          old_value: null,
+          new_value: null,
+          field_name: null,
+          metadata: {
+            comment_id: commentId,
+            comment_type: commentType
+          }
+        });
+
+      if (activityError) {
+        console.error('⚠️ Failed to log comment deletion activity:', activityError);
+      }
+
+      // Dispatch event to refresh recent activity
+      window.dispatchEvent(new CustomEvent('orderCommentDeleted', {
+        detail: { orderId, commentId, commentType }
+      }));
+
+      console.log(`✅ ${isInternalNote ? 'Internal note' : 'Comment'} deleted successfully`);
+
+      // Refresh comments list
+      await fetchComments();
+    } catch (err) {
+      console.error('❌ Error deleting comment:', err);
+      throw err;
+    }
+  }, [user, orderId, fetchComments]);
+
   // Initialize data and set up real-time subscription
   useEffect(() => {
     fetchComments();
@@ -315,6 +389,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     loading,
     error,
     addComment,
+    deleteComment,
     refreshComments: fetchComments,
     commentsCount: comments.length,
     internalNotesCount: internalNotes.length,
