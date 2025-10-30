@@ -1,4 +1,3 @@
-import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,10 +7,10 @@ import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
 import { logger } from '@/utils/logger';
 import {
-  Copy,
-  Edit2,
-  Printer,
-  Trash2
+    Copy,
+    Edit2,
+    Printer,
+    Trash2
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +21,7 @@ import { SkeletonLoader } from './SkeletonLoader';
 // Phase 2: Import unified types
 import type { OrderData as SystemOrderData } from '@/types/order';
 import {
-  UnifiedOrderData
+    UnifiedOrderData
 } from '@/types/unifiedOrder';
 
 // Type-specific field components
@@ -36,7 +35,6 @@ import { EnhancedQRCodeBlock } from './EnhancedQRCodeBlock';
 import { FollowersBlock } from './FollowersBlock';
 import { RecentActivityBlock } from './RecentActivityBlock';
 import { ScheduleViewBlock } from './ScheduleViewBlock';
-import { ServicesDisplay } from './ServicesDisplay';
 import { SimpleNotesDisplay } from './SimpleNotesDisplay';
 import { TeamCommunicationBlock } from './TeamCommunicationBlock';
 import { UnifiedOrderHeaderV2 } from './UnifiedOrderHeaderV2';
@@ -462,10 +460,11 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-none max-h-none w-screen h-screen p-0 gap-0 m-0 rounded-none border-0"
+        className="max-w-[95vw] sm:max-w-[90vw] w-full max-h-[95vh] sm:max-h-[90vh] h-full p-0 gap-0 overflow-hidden"
         data-testid="unified-order-detail-modal"
+        hideCloseButton
       >
-        <div className="h-screen flex flex-col">
+        <div className="h-full flex flex-col overflow-hidden">
           <DialogTitle className="sr-only">
             {t('orders.order_details_modal_title', {
               defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,
@@ -484,8 +483,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           </DialogDescription>
 
           {/* Unified Content Container - Single Scroll */}
-          <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
-            <div className="p-6" id="unified-modal-top">
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scroll-smooth">
+            <div className="p-2 sm:p-3 lg:p-4 max-w-full" id="unified-modal-top">
               {/* Unified Header - Card Grid Design */}
               <UnifiedOrderHeaderV2
                 order={orderData}
@@ -497,24 +496,27 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 onEdit={handleEdit}
               />
 
-              <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-[2fr,1fr] gap-3 sm:gap-4">
                 {/* Main Content Area */}
-                <div className="space-y-6">
-                  {/* Row 1: Type-specific fields + Schedule View (Two blocks side by side) */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <OrderTypeFields orderType={orderType} order={orderData} />
+                <div className="space-y-3 sm:space-y-4 min-w-0 overflow-hidden">
+                  {/* Row 1: Type-specific fields (Left column) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
+                    {/* Left: Order fields and notes */}
+                    <div className="space-y-2 sm:space-y-3">
+                      <OrderTypeFields orderType={orderType} order={orderData} />
+                      <SimpleNotesDisplay order={orderData} />
+                    </div>
+
+                    {/* Right: Schedule */}
                     <ScheduleViewBlock order={orderData as SystemOrderData} orderType={orderType} />
                   </div>
 
-                  {/* Row 2: Simple Notes Display (Full width) */}
-                  <SimpleNotesDisplay order={orderData} />
-
-                  {/* Row 3: Team Communication - Unified with tabs (Full width) */}
+                  {/* Row 2: Team Communication - Unified with tabs (Full width) */}
                   <TeamCommunicationBlock orderId={orderData.id} />
                 </div>
 
                 {/* Right Sidebar - Clean Design */}
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-3 min-w-0 overflow-hidden">
                   {/* Enhanced QR Code & Short Link Block */}
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />

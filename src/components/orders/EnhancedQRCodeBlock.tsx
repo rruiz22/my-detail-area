@@ -2,14 +2,11 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { ShortLinkData, shortLinkService } from '@/services/shortLinkService';
 import {
-  AlertCircle,
-  BarChart3,
-  Copy,
-  ExternalLink,
-  Eye,
-  QrCode,
-  RefreshCw,
-  Users
+    AlertCircle,
+    Copy,
+    ExternalLink,
+    QrCode,
+    RefreshCw
 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -206,22 +203,27 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   }, [analytics]);
 
   return (
-    <div className="bg-muted/30 p-4 rounded-lg">
-      <div className="flex items-center gap-2 mb-4">
-        <QrCode className="h-5 w-5 text-gray-700" />
-        <h3 className="font-semibold text-base">{t('orders.qr_code', 'QR Code')} & {t('orders.short_link', 'Short Link')}</h3>
+    <div className="bg-gradient-to-br from-background to-muted/20 p-4 sm:p-5 rounded-xl border border-border/60 shadow-sm">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="p-2 rounded-lg bg-primary/10">
+          <QrCode className="h-5 w-5 text-primary" />
+        </div>
+        <h3 className="font-bold text-base">{t('orders.qr_code', 'QR Code')} & {t('orders.short_link', 'Short Link')}</h3>
       </div>
 
       {/* Error State */}
       {error && (
-        <div className="text-center py-4">
-          <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
-          <p className="text-sm text-destructive mb-4">{error}</p>
+        <div className="text-center py-4 px-3 rounded-xl bg-red-50 border-2 border-red-200">
+          <div className="p-2 rounded-lg bg-red-100 inline-block mb-3">
+            <AlertCircle className="h-8 w-8 text-red-600" />
+          </div>
+          <p className="text-sm font-medium text-red-700 mb-4">{error}</p>
           <Button
             onClick={generateQRCode}
             disabled={loading}
             variant="outline"
             size="sm"
+            className="w-full sm:w-auto"
           >
             {loading ? (
               <>
@@ -243,12 +245,14 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
         // Case 1: QR generation is in progress
         if (qrGenerationStatus === 'generating' || loading) {
           return (
-            <div className="text-center py-8">
-              <RefreshCw className="h-12 w-12 text-gray-700 mx-auto mb-3 animate-spin" />
-              <p className="text-sm font-medium text-gray-700 mb-2">
+            <div className="text-center py-8 px-4 rounded-xl bg-blue-50 border-2 border-blue-200">
+              <div className="p-3 rounded-lg bg-blue-100 inline-block mb-3">
+                <RefreshCw className="h-10 w-10 text-blue-600 animate-spin" />
+              </div>
+              <p className="text-sm font-bold text-blue-900 mb-2">
                 {t('orders.qr_generating', 'Generating QR code...')}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-blue-700">
                 {t('orders.qr_generating_desc', 'Please wait while we create your QR code')}
               </p>
             </div>
@@ -258,12 +262,14 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
         // Case 2: QR generation failed - show retry option
         if (qrGenerationStatus === 'failed') {
           return (
-            <div className="text-center py-6">
-              <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-3" />
-              <p className="text-sm text-destructive mb-2">
+            <div className="text-center py-6 px-4 rounded-xl bg-red-50 border-2 border-red-200">
+              <div className="p-3 rounded-lg bg-red-100 inline-block mb-3">
+                <AlertCircle className="h-10 w-10 text-red-600" />
+              </div>
+              <p className="text-sm font-bold text-red-900 mb-2">
                 {t('orders.qr_generation_failed', 'QR code generation failed')}
               </p>
-              <p className="text-xs text-muted-foreground mb-4">
+              <p className="text-xs text-red-700 mb-4">
                 {t('orders.qr_retry_desc', 'Click below to try generating the QR code again')}
               </p>
               <Button
@@ -284,12 +290,12 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
           return (
             <div className="space-y-4">
               {/* QR Code Display */}
-              <div className="bg-white p-6 rounded-lg border text-center">
-                <div className="w-40 h-40 bg-gray-50 rounded-lg mx-auto mb-4 flex items-center justify-center shadow-lg">
+              <div className="bg-white p-4 sm:p-6 rounded-xl border-2 border-border/60 text-center shadow-md">
+                <div className="w-36 h-36 sm:w-40 sm:h-40 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg ring-4 ring-primary/10">
                   {qrUrl ? (
                     <QRCodeCanvas
                       value={qrUrl}
-                      size={150}
+                      size={140}
                       level="M"
                       includeMargin
                       imageSettings={{
@@ -300,32 +306,34 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
                       }}
                     />
                   ) : (
-                    <QrCode className="h-20 w-20 text-gray-400" />
+                    <QrCode className="h-16 w-16 sm:h-20 sm:w-20 text-gray-400" />
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">
+                <p className="text-sm font-bold text-foreground">
                   {t('orders.scan_for_quick_access')}
                 </p>
               </div>
 
               {/* Short Link */}
-              <div className="space-y-2">
+              <div className="space-y-3 p-4 rounded-xl bg-muted/40 border border-border/50">
                 <div className="flex items-center gap-2">
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">{t('orders.short_link', 'Short Link')}:</span>
+                  <div className="p-1.5 rounded-lg bg-primary/10">
+                    <ExternalLink className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-bold text-foreground">{t('orders.short_link', 'Short Link')}:</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 text-xs bg-background p-2 rounded border font-mono truncate">
+                  <code className="flex-1 text-xs bg-background p-2.5 rounded-lg border border-border/60 font-mono truncate font-medium shadow-sm">
                     {qrUrl}
                   </code>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={copyLink}
-                    className="flex-shrink-0"
+                    className="flex-shrink-0 h-9 w-9 p-0 shadow-sm hover:shadow-md transition-shadow"
                     disabled={!qrUrl}
                   >
-                    <Copy className="h-3 w-3" />
+                    <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -338,12 +346,12 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
                   size="sm"
                   onClick={regenerateQR}
                   disabled={loading}
-                  className="flex-1"
+                  className="flex-1 font-medium shadow-sm hover:shadow-md transition-shadow"
                 >
                   {loading ? (
-                    <RefreshCw className="h-3 w-3 mr-2 animate-spin" />
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
-                    <RefreshCw className="h-3 w-3 mr-2" />
+                    <RefreshCw className="h-4 w-4 mr-2" />
                   )}
                   {t('orders.regenerate_qr', 'Regenerate QR')}
                 </Button>
@@ -354,9 +362,11 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
 
         // Case 4: No QR code available - show generate option
         return (
-          <div className="text-center py-6">
-            <QrCode className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground mb-2">
+          <div className="text-center py-6 px-4 rounded-xl bg-muted/40 border-2 border-dashed border-border">
+            <div className="p-3 rounded-lg bg-muted/60 inline-block mb-3">
+              <QrCode className="h-10 w-10 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-bold text-foreground mb-2">
               {t('orders.no_qr_code', 'No QR code available')}
             </p>
             <p className="text-xs text-muted-foreground mb-4">
@@ -366,7 +376,7 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
               onClick={generateQRCode}
               disabled={loading}
               variant="outline"
-              className="w-full"
+              className="w-full font-medium shadow-sm hover:shadow-md transition-shadow"
             >
               {loading ? (
                 <>

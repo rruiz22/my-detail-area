@@ -1,29 +1,27 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  MessageSquare,
-  Send,
-  Paperclip,
-  Lock,
-  Shield,
-  AtSign,
-  Clock,
-  Eye,
-  Reply,
-  MoreHorizontal
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useOrderComments } from '@/hooks/useOrderComments';
-import { AvatarSystem } from '@/components/ui/avatar-system';
-import { FileSelector } from '@/components/attachments/FileSelector';
 import { AttachmentsList } from '@/components/attachments/AttachmentsList';
+import { FileSelector } from '@/components/attachments/FileSelector';
 import { MentionInput } from '@/components/mentions/MentionInput';
 import { CommentReactions } from '@/components/reactions/CommentReactions';
+import { AvatarSystem } from '@/components/ui/avatar-system';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAttachments } from '@/hooks/useAttachments';
+import { useOrderComments } from '@/hooks/useOrderComments';
+import {
+    AtSign,
+    Clock,
+    Eye,
+    Lock,
+    MessageSquare,
+    MoreHorizontal,
+    Reply,
+    Send,
+    Shield
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface TeamCommunicationBlockProps {
@@ -159,21 +157,25 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     });
   };
 
-  const renderMessageList = (messages: any[], type: 'comments' | 'internal') => {
+  const renderMessageList = (messages: Array<Record<string, unknown>>, type: 'comments' | 'internal') => {
     if (messages.length === 0) {
       return (
-        <div className="text-center py-6 text-muted-foreground">
+        <div className="text-center py-8 px-4 rounded-xl bg-muted/40 border-2 border-dashed">
           {type === 'comments' ? (
             <>
-              <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">{t('order_comments.no_comments', 'No comments yet')}</p>
-              <p className="text-xs">{t('order_comments.start_conversation', 'Start the conversation')}</p>
+              <div className="p-3 rounded-lg bg-muted/60 w-fit mx-auto mb-3">
+                <MessageSquare className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium mb-1">{t('order_comments.no_comments', 'No comments yet')}</p>
+              <p className="text-xs text-muted-foreground">{t('order_comments.start_conversation', 'Start the conversation')}</p>
             </>
           ) : (
             <>
-              <Lock className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">{t('order_comments.no_internal_notes', 'No internal notes yet')}</p>
-              <p className="text-xs">{t('order_comments.add_private_notes', 'Add private notes for the detail team')}</p>
+              <div className="p-3 rounded-lg bg-amber-100/60 w-fit mx-auto mb-3">
+                <Lock className="h-8 w-8 text-amber-600" />
+              </div>
+              <p className="text-sm font-medium mb-1">{t('order_comments.no_internal_notes', 'No internal notes yet')}</p>
+              <p className="text-xs text-muted-foreground">{t('order_comments.add_private_notes', 'Add private notes for the detail team')}</p>
             </>
           )}
         </div>
@@ -181,83 +183,84 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     }
 
     return (
-      <div className="space-y-4 max-h-[500px] overflow-y-auto">
+      <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
         {messages.map((message) => (
-          <div key={message.id} className="space-y-3">
+          <div key={message.id as string} className="space-y-2">
             {/* Parent Comment/Note */}
-            <div className={`p-3 rounded-lg ${
+            <div className={`p-2.5 rounded-lg shadow-sm hover:shadow-md transition-shadow border-l-3 ${
               type === 'internal'
-                ? 'bg-amber-100/50 border border-amber-200'
-                : 'bg-muted/30'
+                ? 'bg-gradient-to-br from-amber-50 to-amber-100/50 border-amber-400'
+                : 'bg-gradient-to-br from-background to-muted/30 border-primary'
             }`}>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-1.5">
                 <AvatarSystem
-                  name={message.userName}
-                  firstName={message.userFirstName}
-                  lastName={message.userLastName}
-                  email={message.userEmail}
-                  seed={message.avatarSeed}
-                  size={24}
+                  name={message.userName as string}
+                  firstName={message.userFirstName as string}
+                  lastName={message.userLastName as string}
+                  email={message.userEmail as string}
+                  seed={message.avatarSeed as number}
+                  size={26}
+                  className="ring-1 ring-primary/10"
                 />
-                <span className={`text-sm font-medium ${
-                  type === 'internal' ? 'text-amber-800' : ''
+                <span className={`text-sm font-bold ${
+                  type === 'internal' ? 'text-amber-900' : 'text-foreground'
                 }`}>
-                  {message.userName}
+                  {message.userName as string}
                 </span>
                 {type === 'internal' && (
-                  <Badge variant="outline" className="text-xs border-amber-300 text-amber-700">
+                  <Badge variant="outline" className="text-xs leading-none py-0.5 px-1.5 font-medium border-amber-400 text-amber-800 bg-amber-50">
                     {t('order_comments.detail_team', 'Detail Team')}
                   </Badge>
                 )}
-                <div className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
+                <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-muted/60 text-xs font-medium text-muted-foreground ml-auto">
                   <Clock className="h-3 w-3" />
-                  {formatTime(message.createdAt)}
+                  {formatTime(message.createdAt as string)}
                 </div>
               </div>
-              <p className={`text-sm whitespace-pre-wrap ${
-                type === 'internal' ? 'text-amber-900' : ''
+              <p className={`text-sm font-medium whitespace-pre-wrap ${
+                type === 'internal' ? 'text-amber-900' : 'text-foreground'
               }`}>
-                {message.commentText}
+                {message.commentText as string}
               </p>
 
               {/* Show attachments for this comment */}
               <AttachmentsList
                 orderId={orderId}
-                commentId={message.id}
+                commentId={message.id as string}
                 context={type === 'internal' ? 'internal_note' : 'public_comment'}
               />
 
               {/* Comment Actions: Reactions + Reply */}
-              <div className="flex items-center justify-between mt-2 pt-2 border-t border-muted">
-                <CommentReactions commentId={message.id} />
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/40">
+                <CommentReactions commentId={message.id as string} />
 
                 <div className="flex items-center gap-1">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                    onClick={() => startReply(message.id)}
+                    className="h-6 px-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    onClick={() => startReply(message.id as string)}
                   >
-                    <Reply className="h-3 w-3 mr-1" />
+                    <Reply className="h-3.5 w-3.5 mr-1" />
                     Reply
                   </Button>
 
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                    className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/60"
                     onClick={() => {
                       toast.info('More actions coming soon');
                     }}
                   >
-                    <MoreHorizontal className="h-3 w-3" />
+                    <MoreHorizontal className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </div>
 
               {/* Reply input (shown when replying to this comment) */}
               {replyingTo === message.id && (
-                <div className="mt-3 space-y-2 border-l-2 border-muted pl-4">
+                <div className="mt-2 border-l-2 border-primary pl-3 bg-muted/20 rounded-r-lg p-2">
                   <div className="flex gap-2">
                     <MentionInput
                       value={replyMessage}
@@ -268,24 +271,26 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                       onKeyPress={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
                           e.preventDefault();
-                          handleAddReply(message.id);
+                          handleAddReply(message.id as string);
                         }
                       }}
                       placeholder={t('order_comments.reply_placeholder', 'Write a reply...')}
-                      className="flex-1"
+                      className="flex-1 text-xs"
                       disabled={loading || commentsLoading}
                     />
                     <Button
-                      onClick={() => handleAddReply(message.id)}
+                      onClick={() => handleAddReply(message.id as string)}
                       disabled={loading || !replyMessage.trim() || commentsLoading}
                       size="sm"
+                      className="h-8"
                     >
-                      <Send className="h-4 w-4" />
+                      <Send className="h-3.5 w-3.5" />
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => setReplyingTo(null)}
                       size="sm"
+                      className="h-8 text-xs"
                     >
                       Cancel
                     </Button>
@@ -295,47 +300,48 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
             </div>
 
             {/* Threaded Replies */}
-            {message.replies && message.replies.length > 0 && (
-              <div className={`ml-8 space-y-3 border-l-2 pl-4 ${
-                type === 'internal' ? 'border-amber-300' : 'border-blue-200'
+            {message.replies && (message.replies as Array<Record<string, unknown>>).length > 0 && (
+              <div className={`ml-6 space-y-1.5 border-l-2 pl-3 ${
+                type === 'internal' ? 'border-amber-300' : 'border-primary/40'
               }`}>
-                {message.replies.map((reply: any) => (
-                  <div key={reply.id} className={`p-3 rounded-lg ${
+                {(message.replies as Array<Record<string, unknown>>).map((reply) => (
+                  <div key={reply.id as string} className={`p-2 rounded-lg shadow-sm border-l-2 ${
                     type === 'internal'
-                      ? 'bg-amber-50/80 border border-amber-100'
-                      : 'bg-gray-50/80 border border-gray-100'
+                      ? 'bg-gradient-to-br from-amber-50 to-amber-100/30 border-amber-300'
+                      : 'bg-gradient-to-br from-muted/30 to-muted/50 border-primary/30'
                   }`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="text-xs">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Badge variant="secondary" className="text-xs leading-none py-0.5 px-1.5 font-medium">
                         Reply
                       </Badge>
                       <AvatarSystem
-                        name={reply.userName}
-                        firstName={reply.userFirstName}
-                        lastName={reply.userLastName}
-                        email={reply.userEmail}
-                        seed={reply.avatarSeed}
-                        size={20}
+                        name={reply.userName as string}
+                        firstName={reply.userFirstName as string}
+                        lastName={reply.userLastName as string}
+                        email={reply.userEmail as string}
+                        seed={reply.avatarSeed as number}
+                        size={22}
+                        className="ring-1 ring-primary/10"
                       />
-                      <span className={`text-xs font-medium ${
-                        type === 'internal' ? 'text-amber-700' : 'text-gray-700'
+                      <span className={`text-xs font-bold ${
+                        type === 'internal' ? 'text-amber-800' : 'text-foreground'
                       }`}>
-                        {reply.userName}
+                        {reply.userName as string}
                       </span>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
+                      <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-muted/60 text-xs font-medium text-muted-foreground ml-auto">
                         <Clock className="h-3 w-3" />
-                        {formatTime(reply.createdAt)}
+                        {formatTime(reply.createdAt as string)}
                       </div>
                     </div>
-                    <p className={`text-xs whitespace-pre-wrap ${
-                      type === 'internal' ? 'text-amber-800' : 'text-gray-800'
+                    <p className={`text-xs font-medium whitespace-pre-wrap ${
+                      type === 'internal' ? 'text-amber-900' : 'text-foreground'
                     }`}>
-                      {reply.commentText}
+                      {reply.commentText as string}
                     </p>
 
                     {/* Reply actions */}
-                    <div className="flex items-center gap-2 mt-2 pt-2 border-t border-muted/30">
-                      <CommentReactions commentId={reply.id} />
+                    <div className="flex items-center gap-2 mt-1.5 pt-1.5 border-t border-border/30">
+                      <CommentReactions commentId={reply.id as string} />
                     </div>
                   </div>
                 ))}
@@ -348,11 +354,13 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-gray-700" />
-          {t('order_comments.title', 'Order Comments')}
+    <Card className="shadow-sm border-border/60">
+      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+        <CardTitle className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <MessageSquare className="h-5 w-5 text-primary" />
+          </div>
+          <span className="font-bold">{t('order_comments.title', 'Order Comments')}</span>
         </CardTitle>
       </CardHeader>
 
@@ -426,15 +434,18 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
 
             {/* Comments List */}
             {error && (
-              <div className="text-center py-4 text-red-600">
-                <p className="text-xs">{error}</p>
+              <div className="text-center py-6 px-4 rounded-xl bg-red-50 border-2 border-red-200">
+                <div className="p-3 rounded-lg bg-red-100 w-fit mx-auto mb-3">
+                  <MessageSquare className="h-6 w-6 text-red-600" />
+                </div>
+                <p className="text-sm font-medium text-red-900">{error}</p>
               </div>
             )}
 
             {commentsLoading ? (
-              <div className="text-center py-4">
-                <div className="animate-spin w-6 h-6 border-2 border-gray-700 border-t-transparent rounded-full mx-auto"></div>
-                <p className="text-xs text-muted-foreground mt-2">
+              <div className="text-center py-6 px-3 rounded-xl bg-muted/40 border">
+                <div className="animate-spin w-8 h-8 border-3 border-primary border-t-transparent rounded-full mx-auto"></div>
+                <p className="text-xs font-medium text-muted-foreground mt-3">
                   {t('order_comments.loading_comments', 'Loading comments...')}
                 </p>
               </div>
@@ -443,16 +454,18 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
             )}
 
             {/* Comments Footer */}
-            <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
-              <div className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                <span>{t('order_comments.comments_count', '{{count}} comments', { count: commentsCount })}</span>
+            {commentsCount > 0 && (
+              <div className="flex items-center justify-between text-xs font-medium text-muted-foreground pt-3 border-t border-border/60">
+                <div className="flex items-center gap-1.5">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>{t('order_comments.comments_count', '{{count}} comments', { count: commentsCount })}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  <span>{t('order_comments.team_discussion', 'Team discussion')}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <MessageSquare className="h-3 w-3" />
-                <span>{t('order_comments.team_discussion', 'Team discussion')}</span>
-              </div>
-            </div>
+            )}
           </TabsContent>
 
           {canAccessInternal && (
@@ -503,15 +516,18 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
 
               {/* Internal Notes List */}
               {error && (
-                <div className="text-center py-4 text-red-600">
-                  <p className="text-xs">{error}</p>
+                <div className="text-center py-6 px-4 rounded-xl bg-red-50 border-2 border-red-200">
+                  <div className="p-3 rounded-lg bg-red-100 w-fit mx-auto mb-3">
+                    <Lock className="h-6 w-6 text-red-600" />
+                  </div>
+                  <p className="text-sm font-medium text-red-900">{error}</p>
                 </div>
               )}
 
               {commentsLoading ? (
-                <div className="text-center py-4">
-                  <div className="animate-spin w-6 h-6 border-2 border-amber-600 border-t-transparent rounded-full mx-auto"></div>
-                  <p className="text-xs text-muted-foreground mt-2">
+                <div className="text-center py-6 px-3 rounded-xl bg-amber-50/60 border-2 border-amber-200">
+                  <div className="animate-spin w-8 h-8 border-3 border-amber-600 border-t-transparent rounded-full mx-auto"></div>
+                  <p className="text-xs font-medium text-amber-800 mt-3">
                     {t('order_comments.loading_notes', 'Loading internal notes...')}
                   </p>
                 </div>
@@ -520,30 +536,34 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
               )}
 
               {/* Internal Notes Footer */}
-              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-amber-200">
-                <div className="flex items-center gap-1">
-                  <Lock className="h-3 w-3" />
-                  <span>{t('order_comments.internal_count', '{{count}} internal notes', { count: internalNotesCount })}</span>
+              {internalNotesCount > 0 && (
+                <div className="flex items-center justify-between text-xs font-medium text-muted-foreground pt-3 border-t border-amber-300">
+                  <div className="flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5" />
+                    <span>{t('order_comments.internal_count', '{{count}} internal notes', { count: internalNotesCount })}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Shield className="h-3.5 w-3.5" />
+                    <span>{t('order_comments.confidential', 'Confidential')}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Shield className="h-3 w-3" />
-                  <span>{t('order_comments.confidential', 'Confidential')}</span>
-                </div>
-              </div>
+              )}
             </TabsContent>
           )}
         </Tabs>
 
         {/* Access Denied Message for Internal Notes (if user can't access) */}
         {!canAccessInternal && activeTab === 'internal' && (
-          <div className="text-center py-6 border-2 border-dashed border-muted rounded-lg">
-            <Lock className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <h4 className="font-medium mb-1">{t('order_comments.access_denied', 'Access Denied')}</h4>
-            <p className="text-sm text-muted-foreground">
+          <div className="text-center py-8 px-4 border-2 border-dashed border-amber-300 rounded-xl bg-amber-50/40">
+            <div className="p-4 rounded-lg bg-amber-100 w-fit mx-auto mb-4">
+              <Lock className="h-12 w-12 text-amber-600" />
+            </div>
+            <h4 className="font-bold text-lg mb-2">{t('order_comments.access_denied', 'Access Denied')}</h4>
+            <p className="text-sm font-medium text-muted-foreground mb-3">
               {t('order_comments.detail_access_required', 'Detail team access required')}
             </p>
-            <Badge variant="secondary" className="mt-2">
-              <Shield className="h-3 w-3 mr-1" />
+            <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-300 font-medium">
+              <Shield className="h-3.5 w-3.5 mr-1.5" />
               {t('order_comments.restricted_access', 'Restricted Access')}
             </Badge>
           </div>

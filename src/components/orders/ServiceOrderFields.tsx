@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Tag, Wrench } from 'lucide-react';
 import React from 'react';
@@ -61,27 +60,34 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
   return (
     <div className="space-y-4">
       {/* Service Information Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Wrench className="h-5 w-5 text-gray-700" />
-            {t('service_orders.service_information')}
+      <Card className="shadow-sm border-border/60">
+        <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Wrench className="h-5 w-5 text-primary" />
+            </div>
+            <span className="font-bold">{t('service_orders.service_information')}</span>
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-4">
           {/* PO, RO, TAG inline */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {serviceInfo.map((info, index) => {
               const Icon = info.icon;
               return (
-                <div key={index} className="flex items-start gap-2 p-3 rounded-lg bg-muted/30">
-                  <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <div
+                  key={index}
+                  className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
+                    <Icon className="h-4 w-4 text-primary" />
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                       {info.label}
                     </p>
-                    <p className="text-sm font-medium font-mono truncate">
+                    <p className="text-sm font-bold text-foreground font-mono truncate">
                       {info.value}
                     </p>
                   </div>
@@ -92,9 +98,10 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
 
           {/* Services/Work Requested */}
           {order.services && Array.isArray(order.services) && order.services.length > 0 && (
-            <div className="pt-3 border-t border-border">
-              <div className="space-y-2">
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+            <div className="pt-4 border-t border-border">
+              <div className="space-y-3">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                  <Wrench className="h-3.5 w-3.5" />
                   {t('orders.services')} ({order.services.length})
                 </p>
                 <ServicesDisplay

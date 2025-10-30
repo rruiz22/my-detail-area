@@ -1,31 +1,30 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Plus,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  ExternalLink,
-  User2,
-  Calendar,
-  Hash,
-  UserPlus
-} from 'lucide-react';
-import { useProductivityTodos, ProductivityTodo } from '@/hooks/useProductivityTodos';
 import { AssignUserDialog } from '@/components/productivity/AssignUserDialog';
 import { UserAvatar } from '@/components/productivity/UserAvatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { ProductivityTodo, useProductivityTodos } from '@/hooks/useProductivityTodos';
 import { format } from 'date-fns';
+import {
+    AlertCircle,
+    Calendar,
+    CheckCircle2,
+    Clock,
+    ExternalLink,
+    Hash,
+    Plus,
+    UserPlus
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface OrderTasksSectionProps {
   orderId: string;
@@ -107,7 +106,7 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
   });
 
   const handleTemplateSelect = (templateIndex: string) => {
-    if (templateIndex && templateIndex !== '') {
+    if (templateIndex && templateIndex !== 'custom') {
       const template = ORDER_TASK_TEMPLATES[parseInt(templateIndex)];
       if (template) {
         setNewTask({
@@ -185,19 +184,21 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
   const completedTasks = orderTodos.filter(task => task.status === 'completed');
 
   return (
-    <Card>
-      <CardHeader className="pb-4">
+    <Card className="shadow-sm border-border/60">
+      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
         <div className="flex items-center justify-between mb-4">
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5" />
-            Tasks &amp; Reminders
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+            </div>
+            <span className="font-bold">Tasks &amp; Reminders</span>
           </CardTitle>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  Add Task
+                <Button size="sm" className="font-medium shadow-sm hover:shadow-md transition-shadow h-7 px-2 gap-1.5 text-xs">
+                  <Plus className="w-3.5 h-3.5" />
+                  <span className="hidden lg:inline">Add</span>
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -212,7 +213,7 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
                         <SelectValue placeholder="Select a template or create custom" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Custom Task</SelectItem>
+                        <SelectItem value="custom">Custom Task</SelectItem>
                         {ORDER_TASK_TEMPLATES.map((template, index) => (
                           <SelectItem key={index} value={index.toString()}>
                             {template.title}
@@ -284,9 +285,9 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
 
             {orderTodos.length > 0 && (
               <Link to={`/productivity?order=${orderId}`}>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <ExternalLink className="w-4 h-4" />
-                  View All
+                <Button variant="outline" size="sm" className="font-medium shadow-sm hover:shadow-md transition-shadow h-7 px-2 gap-1.5 text-xs">
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span className="hidden lg:inline">View</span>
                 </Button>
               </Link>
             )}
@@ -296,33 +297,35 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
         {/* Filter Tabs */}
         {todos.filter(todo => todo.order_id === orderId).length > 0 && (
           <Tabs value={taskFilter} onValueChange={(value) => setTaskFilter(value as any)}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
-              <TabsTrigger value="my_tasks" className="text-xs">My Tasks</TabsTrigger>
-              <TabsTrigger value="pending" className="text-xs">Pending</TabsTrigger>
-              <TabsTrigger value="completed" className="text-xs">Completed</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4 bg-muted/40">
+              <TabsTrigger value="all" className="text-xs font-medium">All</TabsTrigger>
+              <TabsTrigger value="my_tasks" className="text-xs font-medium">My Tasks</TabsTrigger>
+              <TabsTrigger value="pending" className="text-xs font-medium">Pending</TabsTrigger>
+              <TabsTrigger value="completed" className="text-xs font-medium">Completed</TabsTrigger>
             </TabsList>
           </Tabs>
         )}
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 pt-4">
         {/* Order Context */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
-          <Hash className="w-4 h-4" />
-          <span>Order: <strong>#{orderNumber}</strong></span>
+        <div className="flex items-center gap-3 text-sm p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <Hash className="w-4 h-4 text-primary" />
+          </div>
+          <span className="text-foreground">Order: <strong className="font-bold">#{orderNumber}</strong></span>
         </div>
 
         {/* Progress Summary */}
         {orderTodos.length > 0 && (
-          <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
-              <span>{pendingTasks.length} pending</span>
+          <div className="flex items-center gap-4 sm:gap-6 text-sm p-3 rounded-xl bg-muted/40 border border-border/50">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-amber-500 rounded-full ring-2 ring-amber-200"></div>
+              <span className="font-medium text-foreground">{pendingTasks.length} <span className="text-muted-foreground hidden sm:inline">pending</span></span>
             </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-              <span>{completedTasks.length} completed</span>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-emerald-200"></div>
+              <span className="font-medium text-foreground">{completedTasks.length} <span className="text-muted-foreground hidden sm:inline">completed</span></span>
             </div>
           </div>
         )}
@@ -330,10 +333,12 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
         {/* Tasks List */}
         <div className="space-y-3">
           {orderTodos.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-              <p className="text-sm">No tasks created for this order yet</p>
-              <p className="text-xs text-gray-400 mt-1">Create tasks to track follow-ups and deliverables</p>
+            <div className="text-center py-8 px-4 rounded-xl bg-muted/40 border-2 border-dashed border-border">
+              <div className="p-3 rounded-lg bg-muted/60 inline-block mb-3">
+                <CheckCircle2 className="w-10 h-10 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-bold text-foreground">No tasks created for this order yet</p>
+              <p className="text-xs text-muted-foreground mt-2">Create tasks to track follow-ups and deliverables</p>
             </div>
           ) : (
             orderTodos
@@ -360,24 +365,28 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
               .map((task) => (
                 <div
                   key={task.id}
-                  className={`flex items-start gap-3 p-3 rounded-lg border transition-all hover:shadow-sm ${
-                    task.status === 'completed' ? 'bg-gray-50 opacity-75' : 'bg-white'
+                  className={`flex items-start gap-3 p-3 rounded-xl border border-border/50 transition-all hover:shadow-md ${
+                    task.status === 'completed'
+                      ? 'bg-gradient-to-r from-muted/60 to-muted/40 opacity-75'
+                      : 'bg-gradient-to-r from-background to-muted/30 shadow-sm hover:border-primary/20'
                   }`}
                 >
-                  <Checkbox
-                    checked={task.status === 'completed'}
-                    onCheckedChange={() => toggleTodoStatus(task.id)}
-                    className="mt-1"
-                  />
+                  <div className="mt-0.5">
+                    <Checkbox
+                      checked={task.status === 'completed'}
+                      onCheckedChange={() => toggleTodoStatus(task.id)}
+                      className="w-5 h-5"
+                    />
+                  </div>
 
-                  <div className="flex-1 space-y-1">
+                  <div className="flex-1 space-y-2 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className={`text-sm font-medium ${
-                        task.status === 'completed' ? 'line-through text-gray-500' : ''
+                      <h4 className={`text-sm font-bold ${
+                        task.status === 'completed' ? 'line-through text-muted-foreground' : 'text-foreground'
                       }`}>
                         {task.title}
                       </h4>
-                      <Badge variant={getPriorityColor(task.priority)} className="text-xs">
+                      <Badge variant={getPriorityColor(task.priority)} className="text-xs font-medium px-2">
                         {task.priority}
                       </Badge>
                       <div className="flex items-center gap-1">
@@ -386,21 +395,23 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
                     </div>
 
                     {task.description && (
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-muted-foreground font-medium">
                         {task.description}
                       </p>
                     )}
 
-                    <div className="flex items-center gap-3 flex-wrap text-xs text-gray-500">
+                    <div className="flex items-center gap-3 flex-wrap text-xs">
                       {task.due_date && (
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          Due: {format(new Date(task.due_date), 'MMM dd, yyyy')}
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-muted/60">
+                          <Calendar className="w-3 h-3 text-primary" />
+                          <span className="font-medium text-foreground">
+                            Due: {format(new Date(task.due_date), 'MMM dd, yyyy')}
+                          </span>
                         </div>
                       )}
-                      
+
                       {task.assigned_to && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-muted/60">
                           <UserAvatar userId={task.assigned_to} size="sm" />
                         </div>
                       )}
@@ -411,11 +422,11 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 flex-shrink-0"
+                    className="h-8 w-8 p-0 flex-shrink-0 hover:bg-primary/10"
                     onClick={() => openAssignDialog(task)}
                     title="Assign task"
                   >
-                    <UserPlus className="h-4 w-4" />
+                    <UserPlus className="h-4 w-4 text-primary" />
                   </Button>
                 </div>
               ))
@@ -426,7 +437,11 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
         {orderTodos.length > 5 && (
           <div className="text-center pt-2">
             <Link to={`/productivity?order=${orderId}`}>
-              <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="font-medium text-primary hover:text-primary/80 hover:bg-primary/10 transition-colors"
+              >
                 +{orderTodos.length - 5} more tasks
               </Button>
             </Link>
