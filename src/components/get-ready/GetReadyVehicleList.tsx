@@ -86,12 +86,12 @@ export function GetReadyVehicleList({
   const { moveVehicle, isMoving, updateVehicle, isUpdating } = useVehicleManagement();
 
   // Handle image click - ALWAYS open lightbox (even without image)
-  const handleImageClick = (e: React.MouseEvent, vehicle: GetReadyVehicle) => {
+  const handleImageClick = (e: React.MouseEvent, vehicle: { vin: string; year: number; make: string; model: string; stock_number: string }) => {
     e.stopPropagation(); // Prevent row click
     // Always open lightbox with VIN
     setLightboxVehicle({
       vin: vehicle.vin,
-      info: `${vehicle.vehicle_year} ${vehicle.vehicle_make} ${vehicle.vehicle_model} - ${vehicle.stock_number}`
+      info: `${vehicle.year} ${vehicle.make} ${vehicle.model} - ${vehicle.stock_number}`
     });
     setLightboxOpen(true);
   };
@@ -156,7 +156,7 @@ export function GetReadyVehicleList({
   const handleUpdateVehicle = (vehicleId: string, updates: { workflow_type?: 'standard' | 'express' | 'priority'; priority?: 'low' | 'normal' | 'medium' | 'high' | 'urgent' }) => {
     updateVehicle({
       id: vehicleId,
-      ...updates
+      data: updates
     });
   };
 
