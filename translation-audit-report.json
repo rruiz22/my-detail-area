@@ -41922,62 +41922,62 @@
         "hardcodedStrings": [
           {
             "text": "Fullscreen (F)",
-            "line": 191,
-            "context": "190: className=\"text-white hover:bg-white/20\"\n191: title=\"Fullscreen (F)\"\n192: >"
+            "line": 194,
+            "context": "193: className=\"text-white hover:bg-white/20\"\n194: title=\"Fullscreen (F)\"\n195: >"
           },
           {
             "text": "Close (ESC)",
-            "line": 202,
-            "context": "201: className=\"text-white hover:bg-white/20\"\n202: title=\"Close (ESC)\"\n203: >"
+            "line": 205,
+            "context": "204: className=\"text-white hover:bg-white/20\"\n205: title=\"Close (ESC)\"\n206: >"
           }
         ],
         "translationCalls": [
           {
             "key": "stock.image_from_inventory",
-            "line": 148,
+            "line": 151,
             "exists": true
           },
           {
             "key": "stock.no_photos_available",
-            "line": 148,
+            "line": 151,
             "exists": false
           },
           {
             "key": "common.download",
-            "line": 180,
+            "line": 183,
             "exists": false
           },
           {
             "key": "common.previous",
-            "line": 218,
+            "line": 221,
             "exists": false
           },
           {
             "key": "common.next",
-            "line": 227,
+            "line": 230,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "stock.no_photos_available",
-            "line": 148,
-            "context": "147: <p className=\"text-xs text-gray-300\">\n148: {photos.length > 0 ? t('stock.image_from_inventory') : t('stock.no_photos_available', 'No photos available')}\n149: </p>"
+            "line": 151,
+            "context": "150: <p className=\"text-xs text-gray-300\">\n151: {photos.length > 0 ? t('stock.image_from_inventory') : t('stock.no_photos_available', 'No photos available')}\n152: </p>"
           },
           {
             "key": "common.download",
-            "line": 180,
-            "context": "179: className=\"text-white hover:bg-white/20\"\n180: title={t('common.download')}\n181: >"
+            "line": 183,
+            "context": "182: className=\"text-white hover:bg-white/20\"\n183: title={t('common.download')}\n184: >"
           },
           {
             "key": "common.previous",
-            "line": 218,
-            "context": "217: className=\"absolute left-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 h-12 w-12\"\n218: title={t('common.previous', 'Previous')}\n219: >"
+            "line": 221,
+            "context": "220: className=\"absolute left-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 h-12 w-12\"\n221: title={t('common.previous', 'Previous')}\n222: >"
           },
           {
             "key": "common.next",
-            "line": 227,
-            "context": "226: className=\"absolute right-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 h-12 w-12\"\n227: title={t('common.next', 'Next')}\n228: >"
+            "line": 230,
+            "context": "229: className=\"absolute right-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 h-12 w-12\"\n230: title={t('common.next', 'Next')}\n231: >"
           }
         ],
         "coverage": 71,
@@ -42331,20 +42331,20 @@
         "translationCalls": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 82,
+            "line": 79,
             "exists": false
           },
           {
             "key": "get_ready.deleted_vehicles.title",
-            "line": 115,
+            "line": 112,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.tabs.${tab.key}",
-            "line": 82,
-            "context": "81: <span className=\"hidden sm:inline\">\n82: {t(`get_ready.tabs.${tab.key}`)}\n83: </span>"
+            "line": 79,
+            "context": "78: <span className=\"hidden sm:inline\">\n79: {t(`get_ready.tabs.${tab.key}`)}\n80: </span>"
           }
         ],
         "coverage": 100,
