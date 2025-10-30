@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 732,
-  "totalStrings": 6941,
-  "hardcodedStrings": 1512,
-  "translatedStrings": 5429,
+  "scannedFiles": 731,
+  "totalStrings": 6924,
+  "hardcodedStrings": 1507,
+  "translatedStrings": 5417,
   "issues": {
     "critical": [
       {
@@ -14726,101 +14726,6 @@
         ],
         "missingKeys": [],
         "coverage": 70,
-        "severity": "low"
-      },
-      {
-        "file": "src\\hooks\\useVehicleManagement.ts",
-        "hardcodedStrings": [
-          {
-            "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 109,
-            "context": "108: onError: (error: any) => {\n109: console.error('Create vehicle error:', error);\n110: toast({"
-          },
-          {
-            "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 159,
-            "context": "158: onError: (error: any) => {\n159: console.error('Update vehicle error:', error);\n160: toast({"
-          },
-          {
-            "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 189,
-            "context": "188: onError: (error: any) => {\n189: console.error('Delete vehicle error:', error);\n190: toast({"
-          },
-          {
-            "text": ", error);\r\n\r\n      // Show specific error message if it",
-            "line": 302,
-            "context": "301: onError: (error: any) => {\n302: console.error('Move vehicle error:', error);\n303: "
-          },
-          {
-            "text": ", error);\r\n      toast({\r\n        title: t(",
-            "line": 352,
-            "context": "351: onError: (error: any) => {\n352: console.error('Bulk update error:', error);\n353: toast({"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "common.error",
-            "line": 111,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.save_failed",
-            "line": 112,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 161,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.save_failed",
-            "line": 162,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 191,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.delete_failed",
-            "line": 192,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 297,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.success.moved",
-            "line": 298,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 307,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 313,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.errors.move_failed",
-            "line": 314,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 354,
-            "exists": true
-          }
-        ],
-        "missingKeys": [],
-        "coverage": 71,
         "severity": "low"
       },
       {
@@ -42658,17 +42563,17 @@
           },
           {
             "key": "get_ready.sidebar.fresh",
-            "line": 457,
+            "line": 454,
             "exists": true
           },
           {
             "key": "get_ready.sidebar.normal",
-            "line": 478,
+            "line": 475,
             "exists": true
           },
           {
             "key": "get_ready.sidebar.critical",
-            "line": 499,
+            "line": 496,
             "exists": true
           }
         ],
@@ -50199,7 +50104,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "346 Component components need translation",
+      "description": "345 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -50269,7 +50174,6 @@
         "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
         "src\\services\\PUSH_NOTIFICATION_HOOK_EXAMPLE.ts",
         "src\\pages\\NFCTracking.tsx",
-        "src\\hooks\\useVehicleManagement.ts",
         "src\\hooks\\useUserPresence.tsx",
         "src\\hooks\\useSmartPolling.ts",
         "src\\hooks\\useSmartNotifications.tsx",
