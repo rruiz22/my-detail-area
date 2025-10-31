@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 750,
-  "totalStrings": 7042,
-  "hardcodedStrings": 1504,
-  "translatedStrings": 5538,
+  "scannedFiles": 758,
+  "totalStrings": 7056,
+  "hardcodedStrings": 1510,
+  "translatedStrings": 5546,
   "issues": {
     "critical": [
       {
@@ -10719,12 +10719,12 @@
           {
             "key": "settings.branding",
             "line": 272,
-            "exists": false
+            "exists": true
           },
           {
             "key": "settings.general",
             "line": 276,
-            "exists": false
+            "exists": true
           },
           {
             "key": "settings.profile_settings",
@@ -10764,12 +10764,12 @@
           {
             "key": "settings.preferences",
             "line": 337,
-            "exists": false
+            "exists": true
           },
           {
             "key": "settings.templates",
             "line": 342,
-            "exists": false
+            "exists": true
           },
           {
             "key": "settings.notification_preferences",
@@ -10887,28 +10887,7 @@
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "settings.branding",
-            "line": 272,
-            "context": "271: <Palette className=\"h-4 w-4\" />\n272: {t('settings.branding')}\n273: </TabsTrigger>"
-          },
-          {
-            "key": "settings.general",
-            "line": 276,
-            "context": "275: <SettingsIcon className=\"h-4 w-4\" />\n276: {t('settings.general')}\n277: </TabsTrigger>"
-          },
-          {
-            "key": "settings.preferences",
-            "line": 337,
-            "context": "336: <Bell className=\"h-4 w-4\" />\n337: {t('settings.preferences')}\n338: </TabsTrigger>"
-          },
-          {
-            "key": "settings.templates",
-            "line": 342,
-            "context": "341: <Mail className=\"h-4 w-4\" />\n342: {t('settings.templates')}\n343: </TabsTrigger>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 98,
         "severity": "low"
       },
@@ -15793,6 +15772,76 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useNotificationRetry.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 16,
+            "context": "15: error: Error | null;\n16: retryNotification: (notificationId: string, options?: RetryOptions) => Promise<boolean>;\n17: retryBatch: (notificationIds: string[], options?: RetryOptions) => Promise<{ success: number; failed: number }>;"
+          },
+          {
+            "text": "Promise",
+            "line": 17,
+            "context": "16: retryNotification: (notificationId: string, options?: RetryOptions) => Promise<boolean>;\n17: retryBatch: (notificationIds: string[], options?: RetryOptions) => Promise<{ success: number; failed: number }>;\n18: }"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "notifications.delivery.retry_success",
+            "line": 53,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_success_message",
+            "line": 54,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_limit",
+            "line": 60,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_limit_message",
+            "line": 61,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 72,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_error",
+            "line": 73,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.batch_retry_complete",
+            "line": 107,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.batch_retry_message",
+            "line": 108,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 119,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.batch_retry_error",
+            "line": 120,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 83,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useNFCManagement.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -16112,6 +16161,20 @@
             "text": "Promise",
             "line": 26,
             "context": "25: updateNotificationLevel: (level: string) => Promise<void>;\n26: refreshFollowers: () => Promise<void>;\n27: }"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useDeliveryTracking.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 20,
+            "context": "19: error: Error | null;\n20: refetch: () => Promise<void>;\n21: }"
           }
         ],
         "translationCalls": [],
@@ -22220,12 +22283,12 @@
           {
             "key": "settings.platform.general.save_success",
             "line": 182,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.save_error",
             "line": 186,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.business_name_required",
@@ -22250,12 +22313,12 @@
           {
             "key": "settings.platform.general.title",
             "line": 273,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.description",
             "line": 276,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.system_admin_only",
@@ -22265,7 +22328,7 @@
           {
             "key": "settings.platform.general.business_name",
             "line": 289,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.characters",
@@ -22275,7 +22338,7 @@
           {
             "key": "settings.platform.general.timezone",
             "line": 313,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.select_timezone",
@@ -22290,12 +22353,12 @@
           {
             "key": "settings.platform.general.date_format",
             "line": 335,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.currency",
             "line": 366,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.select_currency",
@@ -22305,7 +22368,7 @@
           {
             "key": "settings.platform.general.number_format",
             "line": 387,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.comma_decimal",
@@ -22320,7 +22383,7 @@
           {
             "key": "settings.platform.general.fiscal_year_start",
             "line": 415,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.select_month",
@@ -22340,7 +22403,7 @@
           {
             "key": "settings.platform.general.save_changes",
             "line": 452,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.platform.general.changes_note",
@@ -22349,6 +22412,16 @@
           }
         ],
         "missingKeys": [
+          {
+            "key": "settings.platform.general.save_success",
+            "line": 182,
+            "context": "181: queryClient.invalidateQueries({ queryKey: ['system-settings', 'platform_general_config'] });\n182: toast.success(t('settings.platform.general.save_success'));\n183: },"
+          },
+          {
+            "key": "settings.platform.general.save_error",
+            "line": 186,
+            "context": "185: console.error('[Platform General Settings] Update failed:', error);\n186: toast.error(t('settings.platform.general.save_error'));\n187: },"
+          },
           {
             "key": "settings.platform.general.business_name_required",
             "line": 208,
@@ -22370,9 +22443,29 @@
             "context": "239: <AlertDescription>\n240: {t('settings.system_admin_required', 'System Administrator access required')}\n241: </AlertDescription>"
           },
           {
+            "key": "settings.platform.general.title",
+            "line": 273,
+            "context": "272: <Settings className=\"h-5 w-5 text-gray-700\" />\n273: {t('settings.platform.general.title')}\n274: </CardTitle>"
+          },
+          {
+            "key": "settings.platform.general.description",
+            "line": 276,
+            "context": "275: <CardDescription className=\"mt-2\">\n276: {t('settings.platform.general.description')}\n277: </CardDescription>"
+          },
+          {
             "key": "settings.system_admin_only",
             "line": 280,
             "context": "279: <Badge variant=\"outline\" className=\"px-3 py-1 bg-gray-50 text-gray-700 border-gray-300\">\n280: {t('settings.system_admin_only', 'System Admin Only')}\n281: </Badge>"
+          },
+          {
+            "key": "settings.platform.general.business_name",
+            "line": 289,
+            "context": "288: <Label htmlFor=\"business-name\" className=\"text-gray-700 font-medium\">\n289: {t('settings.platform.general.business_name')}\n290: </Label>"
+          },
+          {
+            "key": "settings.platform.general.timezone",
+            "line": 313,
+            "context": "312: <Globe className=\"h-4 w-4\" />\n313: {t('settings.platform.general.timezone')}\n314: </Label>"
           },
           {
             "key": "settings.platform.general.select_timezone",
@@ -22385,9 +22478,24 @@
             "context": "320: <SelectGroup>\n321: <SelectLabel>{t('settings.platform.general.common_timezones')}</SelectLabel>\n322: {TIMEZONES.map((tz) => ("
           },
           {
+            "key": "settings.platform.general.date_format",
+            "line": 335,
+            "context": "334: <Label className=\"text-gray-700 font-medium\">\n335: {t('settings.platform.general.date_format')}\n336: </Label>"
+          },
+          {
+            "key": "settings.platform.general.currency",
+            "line": 366,
+            "context": "365: <DollarSign className=\"h-4 w-4\" />\n366: {t('settings.platform.general.currency')}\n367: </Label>"
+          },
+          {
             "key": "settings.platform.general.select_currency",
             "line": 370,
             "context": "369: <SelectTrigger id=\"currency\">\n370: <SelectValue placeholder={t('settings.platform.general.select_currency')} />\n371: </SelectTrigger>"
+          },
+          {
+            "key": "settings.platform.general.number_format",
+            "line": 387,
+            "context": "386: <Label className=\"text-gray-700 font-medium\">\n387: {t('settings.platform.general.number_format')}\n388: </Label>"
           },
           {
             "key": "settings.platform.general.comma_decimal",
@@ -22400,6 +22508,11 @@
             "context": "403: <span className=\"ml-2 text-xs text-muted-foreground\">\n404: ({t('settings.platform.general.period_decimal')})\n405: </span>"
           },
           {
+            "key": "settings.platform.general.fiscal_year_start",
+            "line": 415,
+            "context": "414: <Calendar className=\"h-4 w-4\" />\n415: {t('settings.platform.general.fiscal_year_start')}\n416: </Label>"
+          },
+          {
             "key": "settings.platform.general.select_month",
             "line": 422,
             "context": "421: <SelectTrigger id=\"fiscal-year\">\n422: <SelectValue placeholder={t('settings.platform.general.select_month')} />\n423: </SelectTrigger>"
@@ -22408,6 +22521,11 @@
             "key": "settings.platform.general.fiscal_year_help",
             "line": 435,
             "context": "434: <p className=\"text-xs text-muted-foreground\">\n435: {t('settings.platform.general.fiscal_year_help')}\n436: </p>"
+          },
+          {
+            "key": "settings.platform.general.save_changes",
+            "line": 452,
+            "context": "451: ) : (\n452: t('settings.platform.general.save_changes')\n453: )}"
           },
           {
             "key": "settings.platform.general.changes_note",
@@ -22842,7 +22960,7 @@
           {
             "key": "settings.notifications.templates.created",
             "line": 202,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.error",
@@ -22862,7 +22980,7 @@
           {
             "key": "settings.notifications.templates.updated",
             "line": 242,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.error",
@@ -22882,7 +23000,7 @@
           {
             "key": "settings.notifications.templates.deleted",
             "line": 271,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.error",
@@ -22942,22 +23060,22 @@
           {
             "key": "settings.notifications.templates.title",
             "line": 480,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.description",
             "line": 483,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.create",
             "line": 491,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.no_templates",
             "line": 504,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.create_first",
@@ -22972,12 +23090,12 @@
           {
             "key": "settings.notifications.templates.subject",
             "line": 564,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.body",
             "line": 573,
-            "exists": true
+            "exists": false
           },
           {
             "key": "common.action_buttons.edit",
@@ -22987,12 +23105,12 @@
           {
             "key": "settings.notifications.templates.edit",
             "line": 618,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.create",
             "line": 619,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.form_description",
@@ -23002,7 +23120,7 @@
           {
             "key": "settings.notifications.templates.template_name",
             "line": 630,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.template_name_placeholder",
@@ -23012,7 +23130,7 @@
           {
             "key": "settings.notifications.templates.type",
             "line": 646,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.types.order_status",
@@ -23037,7 +23155,7 @@
           {
             "key": "settings.notifications.templates.channel",
             "line": 677,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.channels.email",
@@ -23067,27 +23185,27 @@
           {
             "key": "settings.notifications.templates.language",
             "line": 711,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.subject",
             "line": 737,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.insert_variable",
             "line": 749,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.subject_placeholder",
             "line": 764,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.body",
             "line": 774,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.available_variables",
@@ -23097,27 +23215,27 @@
           {
             "key": "settings.notifications.templates.insert_variable",
             "line": 792,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.body_placeholder",
             "line": 805,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.preview",
             "line": 816,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.subject",
             "line": 823,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.body",
             "line": 832,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.preview_empty",
@@ -23127,7 +23245,7 @@
           {
             "key": "settings.notifications.templates.enabled",
             "line": 849,
-            "exists": true
+            "exists": false
           },
           {
             "key": "settings.notifications.templates.enabled_description",
@@ -23177,14 +23295,29 @@
         ],
         "missingKeys": [
           {
+            "key": "settings.notifications.templates.created",
+            "line": 202,
+            "context": "201: title: t('common.success'),\n202: description: t('settings.notifications.templates.created')\n203: });"
+          },
+          {
             "key": "settings.notifications.templates.create_error",
             "line": 211,
             "context": "210: title: t('common.error'),\n211: description: error.message || t('settings.notifications.templates.create_error'),\n212: variant: 'destructive'"
           },
           {
+            "key": "settings.notifications.templates.updated",
+            "line": 242,
+            "context": "241: title: t('common.success'),\n242: description: t('settings.notifications.templates.updated')\n243: });"
+          },
+          {
             "key": "settings.notifications.templates.update_error",
             "line": 252,
             "context": "251: title: t('common.error'),\n252: description: error.message || t('settings.notifications.templates.update_error'),\n253: variant: 'destructive'"
+          },
+          {
+            "key": "settings.notifications.templates.deleted",
+            "line": 271,
+            "context": "270: title: t('common.success'),\n271: description: t('settings.notifications.templates.deleted')\n272: });"
           },
           {
             "key": "settings.notifications.templates.delete_error",
@@ -23212,6 +23345,26 @@
             "context": "444: <p className=\"text-muted-foreground\">\n445: {t('settings.notifications.templates.access_denied')}\n446: </p>"
           },
           {
+            "key": "settings.notifications.templates.title",
+            "line": 480,
+            "context": "479: <Bell className=\"h-5 w-5 text-slate-700\" />\n480: {t('settings.notifications.templates.title')}\n481: </CardTitle>"
+          },
+          {
+            "key": "settings.notifications.templates.description",
+            "line": 483,
+            "context": "482: <CardDescription className=\"mt-2\">\n483: {t('settings.notifications.templates.description')}\n484: </CardDescription>"
+          },
+          {
+            "key": "settings.notifications.templates.create",
+            "line": 491,
+            "context": "490: <Plus className=\"h-4 w-4 mr-2\" />\n491: {t('settings.notifications.templates.create')}\n492: </Button>"
+          },
+          {
+            "key": "settings.notifications.templates.no_templates",
+            "line": 504,
+            "context": "503: <p className=\"text-slate-600 mb-4\">\n504: {t('settings.notifications.templates.no_templates')}\n505: </p>"
+          },
+          {
             "key": "settings.notifications.templates.create_first",
             "line": 512,
             "context": "511: <Plus className=\"h-4 w-4 mr-2\" />\n512: {t('settings.notifications.templates.create_first')}\n513: </Button>"
@@ -23222,14 +23375,44 @@
             "context": "545: >\n546: {t(`settings.notifications.templates.types.${template.template_type}`)}\n547: </Badge>"
           },
           {
+            "key": "settings.notifications.templates.subject",
+            "line": 564,
+            "context": "563: <Label className=\"text-xs text-slate-600\">\n564: {t('settings.notifications.templates.subject')}\n565: </Label>"
+          },
+          {
+            "key": "settings.notifications.templates.body",
+            "line": 573,
+            "context": "572: <Label className=\"text-xs text-slate-600\">\n573: {t('settings.notifications.templates.body')}\n574: </Label>"
+          },
+          {
+            "key": "settings.notifications.templates.edit",
+            "line": 618,
+            "context": "617: {isEditModalOpen\n618: ? t('settings.notifications.templates.edit')\n619: : t('settings.notifications.templates.create')}"
+          },
+          {
+            "key": "settings.notifications.templates.create",
+            "line": 619,
+            "context": "618: ? t('settings.notifications.templates.edit')\n619: : t('settings.notifications.templates.create')}\n620: </DialogTitle>"
+          },
+          {
             "key": "settings.notifications.templates.form_description",
             "line": 622,
             "context": "621: <DialogDescription>\n622: {t('settings.notifications.templates.form_description')}\n623: </DialogDescription>"
           },
           {
+            "key": "settings.notifications.templates.template_name",
+            "line": 630,
+            "context": "629: <Label htmlFor=\"template_name\">\n630: {t('settings.notifications.templates.template_name')}\n631: <span className=\"text-red-500 ml-1\">*</span>"
+          },
+          {
             "key": "settings.notifications.templates.template_name_placeholder",
             "line": 637,
             "context": "636: onChange={(e) => setFormData(prev => ({ ...prev, template_name: e.target.value }))}\n637: placeholder={t('settings.notifications.templates.template_name_placeholder')}\n638: className=\"border-slate-300\""
+          },
+          {
+            "key": "settings.notifications.templates.type",
+            "line": 646,
+            "context": "645: <Label htmlFor=\"template_type\">\n646: {t('settings.notifications.templates.type')}\n647: </Label>"
           },
           {
             "key": "settings.notifications.templates.types.order_status",
@@ -23250,6 +23433,11 @@
             "key": "settings.notifications.templates.types.custom",
             "line": 669,
             "context": "668: <SelectItem value=\"custom\">\n669: {t('settings.notifications.templates.types.custom')}\n670: </SelectItem>"
+          },
+          {
+            "key": "settings.notifications.templates.channel",
+            "line": 677,
+            "context": "676: <Label htmlFor=\"channel\">\n677: {t('settings.notifications.templates.channel')}\n678: </Label>"
           },
           {
             "key": "settings.notifications.templates.channels.email",
@@ -23277,14 +23465,69 @@
             "context": "702: <SelectItem value=\"all\">\n703: {t('settings.notifications.templates.channels.all')}\n704: </SelectItem>"
           },
           {
+            "key": "settings.notifications.templates.language",
+            "line": 711,
+            "context": "710: <Label htmlFor=\"language\">\n711: {t('settings.notifications.templates.language')}\n712: </Label>"
+          },
+          {
+            "key": "settings.notifications.templates.subject",
+            "line": 737,
+            "context": "736: <Label htmlFor=\"subject\">\n737: {t('settings.notifications.templates.subject')}\n738: <span className=\"text-red-500 ml-1\">*</span>"
+          },
+          {
+            "key": "settings.notifications.templates.insert_variable",
+            "line": 749,
+            "context": "748: className=\"h-6 px-2 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100\"\n749: title={`${t('settings.notifications.templates.insert_variable')}: ${variable.label}`}\n750: >"
+          },
+          {
+            "key": "settings.notifications.templates.subject_placeholder",
+            "line": 764,
+            "context": "763: }}\n764: placeholder={t('settings.notifications.templates.subject_placeholder')}\n765: className=\"border-slate-300\""
+          },
+          {
+            "key": "settings.notifications.templates.body",
+            "line": 774,
+            "context": "773: <Label htmlFor=\"body\">\n774: {t('settings.notifications.templates.body')}\n775: <span className=\"text-red-500 ml-1\">*</span>"
+          },
+          {
             "key": "settings.notifications.templates.available_variables",
             "line": 782,
             "context": "781: <span className=\"text-xs text-slate-600 font-medium mr-2\">\n782: {t('settings.notifications.templates.available_variables')}:\n783: </span>"
           },
           {
+            "key": "settings.notifications.templates.insert_variable",
+            "line": 792,
+            "context": "791: className=\"h-7 px-2 text-xs border-slate-300 text-slate-700 hover:bg-slate-100\"\n792: title={`${t('settings.notifications.templates.insert_variable')}: ${variable.label} (${variable.sample})`}\n793: >"
+          },
+          {
+            "key": "settings.notifications.templates.body_placeholder",
+            "line": 805,
+            "context": "804: onChange={(e) => setFormData(prev => ({ ...prev, body: e.target.value }))}\n805: placeholder={t('settings.notifications.templates.body_placeholder')}\n806: rows={8}"
+          },
+          {
+            "key": "settings.notifications.templates.preview",
+            "line": 816,
+            "context": "815: <Label className=\"text-slate-900 font-semibold\">\n816: {t('settings.notifications.templates.preview')}\n817: </Label>"
+          },
+          {
+            "key": "settings.notifications.templates.subject",
+            "line": 823,
+            "context": "822: <span className=\"text-xs font-medium text-slate-600\">\n823: {t('settings.notifications.templates.subject')}:\n824: </span>"
+          },
+          {
+            "key": "settings.notifications.templates.body",
+            "line": 832,
+            "context": "831: <span className=\"text-xs font-medium text-slate-600\">\n832: {t('settings.notifications.templates.body')}:\n833: </span>"
+          },
+          {
             "key": "settings.notifications.templates.preview_empty",
             "line": 837,
             "context": "836: <span className=\"text-slate-400 italic\">\n837: {t('settings.notifications.templates.preview_empty')}\n838: </span>"
+          },
+          {
+            "key": "settings.notifications.templates.enabled",
+            "line": 849,
+            "context": "848: <Label className=\"text-slate-900 font-medium\">\n849: {t('settings.notifications.templates.enabled')}\n850: </Label>"
           },
           {
             "key": "settings.notifications.templates.enabled_description",
@@ -36008,126 +36251,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\notifications\\SmartNotificationCenter.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "notifications.actions.mark_read",
-            "line": 147,
-            "exists": true
-          },
-          {
-            "key": "notifications.actions.delete",
-            "line": 152,
-            "exists": true
-          },
-          {
-            "key": "notifications.actions.save_later",
-            "line": 157,
-            "exists": true
-          },
-          {
-            "key": "notifications.actions.archive",
-            "line": 161,
-            "exists": true
-          },
-          {
-            "key": "notifications.loading",
-            "line": 186,
-            "exists": true
-          },
-          {
-            "key": "notifications.title",
-            "line": 199,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.all",
-            "line": 210,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.unread",
-            "line": 210,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.important",
-            "line": 210,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.all_description",
-            "line": 215,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.unread_description",
-            "line": 218,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.important_description",
-            "line": 221,
-            "exists": true
-          },
-          {
-            "key": "notifications.actions.mark_all_read",
-            "line": 229,
-            "exists": false
-          },
-          {
-            "key": "notifications.tabs.grouped",
-            "line": 239,
-            "exists": true
-          },
-          {
-            "key": "notifications.tabs.recent",
-            "line": 240,
-            "exists": true
-          },
-          {
-            "key": "notifications.empty.message",
-            "line": 248,
-            "exists": true
-          },
-          {
-            "key": "notifications.count.singular",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "notifications.count.plural",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "notifications.count.unread",
-            "line": 264,
-            "exists": true
-          },
-          {
-            "key": "notifications.show_more",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "notifications.empty.filtered",
-            "line": 306,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "notifications.actions.mark_all_read",
-            "line": 229,
-            "context": "228: <CheckCheck className=\"h-4 w-4 mr-2\" />\n229: {t('notifications.actions.mark_all_read')}\n230: </Button>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\notifications\\PushNotificationSettings.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -37145,6 +37268,146 @@
           }
         ],
         "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\DeliveryStatusBadge.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.delivery.status.${status}",
+            "line": 95,
+            "exists": false
+          },
+          {
+            "key": "notifications.channels.${channel}",
+            "line": 133,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.delivery.status.${status}",
+            "line": 95,
+            "context": "94: {getStatusIcon(status)}\n95: <span>{t(`notifications.delivery.status.${status}`)}</span>\n96: {showLatency && latencyMs !== undefined && latencyMs > 0 && ("
+          },
+          {
+            "key": "notifications.channels.${channel}",
+            "line": 133,
+            "context": "132: >\n133: {t(`notifications.channels.${channel}`)}\n134: </Badge>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\DeliveryDetails.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "bg-amber-50 border-amber-200 text-amber-700",
+            "line": 263,
+            "context": "262: neutral: 'bg-gray-50 border-gray-200 text-gray-700',\n263: warning: 'bg-amber-50 border-amber-200 text-amber-700',\n264: success: 'bg-emerald-50 border-emerald-200 text-emerald-700',"
+          },
+          {
+            "text": "bg-emerald-50 border-emerald-200 text-emerald-700",
+            "line": 264,
+            "context": "263: warning: 'bg-amber-50 border-amber-200 text-amber-700',\n264: success: 'bg-emerald-50 border-emerald-200 text-emerald-700',\n265: error: 'bg-red-50 border-red-200 text-red-700',"
+          },
+          {
+            "text": "bg-red-50 border-red-200 text-red-700",
+            "line": 265,
+            "context": "264: success: 'bg-emerald-50 border-emerald-200 text-emerald-700',\n265: error: 'bg-red-50 border-red-200 text-red-700',\n266: };"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "notifications.delivery.details_title",
+            "line": 59,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.timeline",
+            "line": 72,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.sent_at",
+            "line": 78,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.delivered_at",
+            "line": 86,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.clicked_at",
+            "line": 94,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.read_at",
+            "line": 102,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.failed_at",
+            "line": 110,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.latency",
+            "line": 123,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_count",
+            "line": 131,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.cost",
+            "line": 139,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.provider",
+            "line": 147,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.error",
+            "line": 163,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.error_code",
+            "line": 167,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retrying",
+            "line": 190,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_delivery",
+            "line": 191,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.retry_attempts",
+            "line": 194,
+            "exists": true
+          },
+          {
+            "key": "notifications.delivery.additional_metadata",
+            "line": 206,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 85,
         "severity": "low"
       },
       {
@@ -51228,7 +51491,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "356 Component components need translation",
+      "description": "359 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -51349,6 +51612,7 @@
         "src\\components\\orders\\TeamCommunicationBlock.tsx",
         "src\\components\\orders\\OrderViewErrorBoundary.tsx",
         "src\\components\\orders\\EnhancedOrderDetailLayout.tsx",
+        "src\\components\\notifications\\DeliveryDetails.tsx",
         "src\\components\\management\\SystemBrandingEditor.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
         "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
@@ -51369,6 +51633,7 @@
         "src\\hooks\\useRealtimeOrderData.ts",
         "src\\hooks\\usePushNotifications.tsx",
         "src\\hooks\\useOptimizedVinScanner.tsx",
+        "src\\hooks\\useNotificationRetry.tsx",
         "src\\hooks\\useDealershipModules.tsx",
         "src\\hooks\\useAdvancedVinScanner.tsx",
         "src\\config\\firebase.ts",
@@ -51412,6 +51677,7 @@
         "src\\hooks\\usePerformanceMonitor.ts",
         "src\\hooks\\useManualRefresh.ts",
         "src\\hooks\\useGlobalSearch.ts",
+        "src\\hooks\\useDeliveryTracking.tsx",
         "src\\hooks\\useDealerActiveModules.ts",
         "src\\hooks\\useAuthBranding.ts",
         "src\\hooks\\useAccessibleDealerships.tsx",
@@ -51539,9 +51805,9 @@
         "src\\components\\orders\\communication\\MessageComposer.tsx",
         "src\\components\\orders\\communication\\MentionPicker.tsx",
         "src\\components\\orders\\communication\\CommunicationHub.tsx",
-        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\notifications\\PushNotificationSettings.tsx",
         "src\\components\\notifications\\NotificationAnalyticsDashboard.tsx",
+        "src\\components\\notifications\\DeliveryStatusBadge.tsx",
         "src\\components\\notifications\\analytics\\ProviderComparisonChart.tsx",
         "src\\components\\notifications\\analytics\\NotificationAnalyticsDashboard.tsx",
         "src\\components\\notifications\\analytics\\MetricsOverview.tsx",
@@ -51587,14 +51853,14 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "178 hours"
+      "estimatedEffort": "180 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2393 translation keys are referenced but missing",
+      "description": "2426 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "120 hours"
+      "estimatedEffort": "122 hours"
     }
   ],
   "coverage": 79
