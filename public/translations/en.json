@@ -1186,7 +1186,17 @@
   "settings": {
     "title": "Settings",
     "description": "Manage your preferences and system configurations",
-    "platform": {
+    "platform": "Platform",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "dealership": "Dealership",
+    "integrations": "Integrations",
+    "security": "Security",
+    "branding": "Branding",
+    "general": "General",
+    "preferences": "Preferences",
+    "templates": "Templates",
+    "platform_settings": {
       "general": {
         "title": "General Settings",
         "description": "Configure platform-wide general settings",
@@ -1210,8 +1220,7 @@
         "characters": "characters"
       }
     },
-    "profile": "Profile",
-    "notifications": {
+    "notification_settings": {
       "templates": {
         "title": "Notification Templates",
         "description": "Manage notification templates for automated communications",
@@ -4994,6 +5003,50 @@
       "savedMessage": "Notification preferences saved successfully",
       "saveError": "Error",
       "saveErrorMessage": "Failed to save notification preferences"
+    },
+    "delivery": {
+      "status": {
+        "pending": "Sending...",
+        "sent": "Sent",
+        "delivered": "Delivered",
+        "failed": "Failed",
+        "clicked": "Clicked",
+        "read": "Read"
+      },
+      "details_title": "Delivery Details",
+      "timeline": "Timeline",
+      "sent_at": "Sent",
+      "delivered_at": "Delivered",
+      "clicked_at": "Clicked",
+      "read_at": "Read",
+      "failed_at": "Failed",
+      "latency": "Latency",
+      "retry_count": "Retries",
+      "cost": "Cost",
+      "provider": "Provider",
+      "error": "Error Details",
+      "error_code": "Error Code",
+      "view_details": "View details",
+      "hide_details": "Hide details",
+      "retry_delivery": "Retry Delivery",
+      "retrying": "Retrying...",
+      "retry_attempts": "{{count}} of {{max}} retry attempts used",
+      "retry_success": "Retry Successful",
+      "retry_success_message": "Notification queued for retry",
+      "retry_limit": "Retry Limit Reached",
+      "retry_limit_message": "Maximum retry attempts reached for this notification",
+      "retry_error": "Failed to retry notification delivery",
+      "batch_retry_complete": "Batch Retry Complete",
+      "batch_retry_message": "{{success}} succeeded, {{failed}} failed",
+      "batch_retry_error": "Failed to retry notifications",
+      "additional_metadata": "Additional Metadata"
+    },
+    "actions": {
+      "mark_read": "Mark as read",
+      "mark_all_read": "Mark all as read",
+      "delete": "Delete",
+      "save_later": "Save for later",
+      "archive": "Archive"
     }
   }
 }
