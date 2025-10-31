@@ -100,61 +100,74 @@ export const useInvoices = (filters: InvoiceFilters) => {
   return useQuery({
     queryKey: ['invoices', filters],
     queryFn: async (): Promise<Invoice[]> => {
-      let query = supabase
-        .from('invoices')
-        .select(`
-          *,
-          orders (
-            order_number,
-            custom_order_number,
-            order_type,
-            customer_name,
-            customer_email,
-            customer_phone,
-            vehicle_make,
-            vehicle_model,
-            vehicle_year,
-            vehicle_vin,
-            vehicle_info,
-            services,
-            total_amount,
-            status
-          ),
-          dealerships (
-            id,
-            name,
-            email,
-            phone,
-            address,
-            logo
-          )
-        `)
-        .order('created_at', { ascending: false });
+      // Use RPC function for complex filtering with order fields
+      const dealerId = filters.dealerId && filters.dealerId !== 'all'
+        ? (typeof filters.dealerId === 'string' ? parseInt(filters.dealerId) : filters.dealerId)
+        : null;
 
-      // Apply filters
-      if (filters.dealerId && filters.dealerId !== 'all') {
-        query = query.eq('dealer_id', filters.dealerId);
-      }
-      if (filters.status && filters.status !== 'all') {
-        query = query.eq('status', filters.status);
-      }
-      if (filters.orderType && filters.orderType !== 'all') {
-        query = query.eq('orders.order_type', filters.orderType);
-      }
-      if (filters.startDate) {
-        query = query.gte('issue_date', filters.startDate.toISOString());
-      }
-      if (filters.endDate) {
-        query = query.lte('issue_date', filters.endDate.toISOString());
-      }
-      if (filters.searchTerm) {
-        query = query.or(`invoice_number.ilike.%${filters.searchTerm}%,orders.customer_name.ilike.%${filters.searchTerm}%`);
-      }
-
-      const { data, error } = await query;
+      const { data, error } = await supabase.rpc('get_invoices_with_filters', {
+        p_dealer_id: dealerId,
+        p_status: filters.status && filters.status !== 'all' ? filters.status : null,
+        p_order_type: filters.orderType && filters.orderType !== 'all' ? filters.orderType : null,
+        p_start_date: filters.startDate?.toISOString() || null,
+        p_end_date: filters.endDate?.toISOString() || null,
+        p_search_term: filters.searchTerm || null
+      });
 
       if (error) throw error;
-      return (data || []).map(transformInvoice);
+
+      // Transform RPC results to Invoice type
+      return (data || []).map((row: any) => ({
+        id: row.id,
+        invoiceNumber: row.invoice_number,
+        orderId: row.order_id,
+        dealerId: row.dealer_id,
+        createdBy: row.created_by,
+        issueDate: row.issue_date,
+        dueDate: row.due_date,
+        subtotal: parseFloat(row.subtotal),
+        taxRate: parseFloat(row.tax_rate),
+        taxAmount: parseFloat(row.tax_amount),
+        discountAmount: parseFloat(row.discount_amount || 0),
+        totalAmount: parseFloat(row.total_amount),
+        amountPaid: parseFloat(row.amount_paid || 0),
+        amountDue: parseFloat(row.amount_due),
+        status: row.status,
+        invoiceNotes: row.invoice_notes,
+        termsAndConditions: row.terms_and_conditions,
+        emailSent: row.email_sent,
+        emailSentAt: row.email_sent_at,
+        emailSentCount: row.email_sent_count,
+        lastEmailRecipient: row.last_email_recipient,
+        metadata: row.metadata || {},
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        paidAt: row.paid_at,
+        cancelledAt: row.cancelled_at,
+        order: row.order_number ? {
+          orderNumber: row.order_number || row.custom_order_number,
+          orderType: row.order_type,
+          customerName: row.customer_name,
+          customerEmail: row.customer_email,
+          customerPhone: row.customer_phone,
+          vehicleMake: row.vehicle_make,
+          vehicleModel: row.vehicle_model,
+          vehicleYear: row.vehicle_year,
+          vehicleVin: row.vehicle_vin,
+          vehicleInfo: row.vehicle_info,
+          services: row.order_services,
+          totalAmount: parseFloat(row.order_total_amount || 0),
+          status: row.order_status
+        } : undefined,
+        dealership: row.dealership_name ? {
+          id: row.dealership_id,
+          name: row.dealership_name,
+          email: row.dealership_email,
+          phone: row.dealership_phone,
+          address: row.dealership_address,
+          logo: row.dealership_logo_url
+        } : undefined
+      } as Invoice));
     },
     staleTime: 30 * 1000, // 30 seconds
   });

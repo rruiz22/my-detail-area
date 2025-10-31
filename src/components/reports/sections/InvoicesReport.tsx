@@ -68,7 +68,7 @@ interface VehicleForInvoice {
   custom_order_number: string | null;
   order_type: string;
   customer_name: string;
-  assigned_to: string | null;
+  assigned_group_id: string | null;
   stock_number: string | null;
   po: string | null;
   ro: string | null;
@@ -203,34 +203,29 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     enabled: !!dealerId,
   });
 
-  // Fetch ALL vehicles for counts (without status filter)
+  // Fetch ALL vehicles for counts (without status filter) using RPC
   const { data: allVehiclesForCounts = [], isLoading: loadingVehicles } = useQuery({
     queryKey: ['all-vehicles-for-counts', dealerId, orderType, startDate, endDate],
     queryFn: async (): Promise<VehicleForInvoice[]> => {
       if (!dealerId) return [];
 
-      let query = supabase
-        .from('orders')
-        .select('id, order_number, custom_order_number, order_type, customer_name, assigned_to, stock_number, po, ro, tag, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, updated_at')
-        .eq('dealer_id', dealerId)
-        .limit(500);
+      // Use RPC function for complex filtering
+      const startDateTime = startDate ? new Date(startDate).toISOString() : null;
+      const endDateTime = endDate ? (() => {
+        const dt = new Date(endDate);
+        dt.setHours(23, 59, 59, 999);
+        return dt.toISOString();
+      })() : null;
 
-      if (orderType !== 'all') {
-        query = query.eq('order_type', orderType);
-      }
+      const { data: orders, error: ordersError } = await supabase.rpc('get_orders_for_reports', {
+        p_dealer_id: dealerId,
+        p_order_type: orderType !== 'all' ? orderType : null,
+        p_status: null, // No status filter for counts
+        p_start_date: startDateTime,
+        p_end_date: endDateTime,
+        p_limit: 500
+      });
 
-      if (startDate) {
-        query = query.gte('updated_at', new Date(startDate).toISOString());
-      }
-      if (endDate) {
-        const endDateTime = new Date(endDate);
-        endDateTime.setHours(23, 59, 59, 999);
-        query = query.lte('updated_at', endDateTime.toISOString());
-      }
-
-      query = query.order('updated_at', { ascending: false });
-
-      const { data: orders, error: ordersError } = await query;
       if (ordersError) throw ordersError;
       if (!orders) return [];
 
@@ -691,7 +686,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                             >
                               <span>{orderNumber}</span>
                               <span className="text-xs text-muted-foreground">
-                                {invoice.order?.assignedTo || invoice.order?.assigned_to || 'Unassigned'}
+                                Unassigned
                               </span>
                             </button>
                           </TableCell>
@@ -939,22 +934,22 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   <Table>
                     <TableHeader className="sticky top-0 bg-white z-10">
                       <TableRow>
-                        <TableHead className="w-12">
+                        <TableHead className="w-12 text-center">
                           <Checkbox
                             checked={selectedVehicleIds.size === filteredVehicles.length && filteredVehicles.length > 0}
                             onCheckedChange={handleSelectAll}
                           />
                         </TableHead>
-                        <TableHead>Order Number</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>
+                        <TableHead className="text-center font-bold">Order Number</TableHead>
+                        <TableHead className="text-center font-bold">Date</TableHead>
+                        <TableHead className="text-center font-bold">
                           {orderType === 'service' ? 'PO / RO / Tag' : orderType === 'carwash' ? 'Stock / Tag' : 'Stock'}
                         </TableHead>
-                        <TableHead>Vehicle</TableHead>
-                        <TableHead>VIN</TableHead>
-                        <TableHead>Services</TableHead>
-                        <TableHead>Dept</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
+                        <TableHead className="text-center font-bold">Vehicle</TableHead>
+                        <TableHead className="text-center font-bold">VIN</TableHead>
+                        <TableHead className="text-center font-bold">Services</TableHead>
+                        <TableHead className="text-center font-bold">Dept</TableHead>
+                        <TableHead className="text-center font-bold">Amount</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -968,13 +963,13 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                             key={vehicle.id}
                             className={selectedVehicleIds.has(vehicle.id) ? 'bg-indigo-50' : ''}
                           >
-                            <TableCell>
+                            <TableCell className="text-center">
                               <Checkbox
                                 checked={selectedVehicleIds.has(vehicle.id)}
                                 onCheckedChange={() => handleToggleVehicle(vehicle.id)}
                               />
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="text-center">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -982,18 +977,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   setSelectedOrderType(vehicle.order_type as any);
                                   setShowOrderModal(true);
                                 }}
-                                className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline flex flex-col text-left"
+                                className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline flex flex-col items-center mx-auto"
                               >
                                 <span className="text-sm">{orderNumber}</span>
                                 <span className="text-xs text-muted-foreground">
-                                  {vehicle.assigned_to || 'Unassigned'}
+                                  {vehicle.assigned_group_id ? 'Assigned' : 'Unassigned'}
                                 </span>
                               </button>
                             </TableCell>
-                            <TableCell className="text-sm">
+                            <TableCell className="text-sm text-center">
                               {formatDate(vehicle.completed_at || vehicle.created_at)}
                             </TableCell>
-                            <TableCell className="font-medium text-sm">
+                            <TableCell className="font-medium text-sm text-center">
                               {orderType === 'service' ? (
                                 <div className="flex flex-col gap-0.5">
                                   {vehicle.po && <span className="text-xs text-muted-foreground">PO: {vehicle.po}</span>}
@@ -1011,21 +1006,21 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                 vehicle.stock_number || 'N/A'
                               )}
                             </TableCell>
-                            <TableCell className="text-sm">
+                            <TableCell className="text-sm text-center">
                               {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                             </TableCell>
-                            <TableCell className="font-mono text-xs">
+                            <TableCell className="font-mono text-xs text-center">
                               {vehicle.vehicle_vin || 'N/A'}
                             </TableCell>
-                            <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">
+                            <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate text-center">
                               {getServiceNames(vehicle.services)}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="text-center">
                               <Badge variant="outline" className="text-xs capitalize">
                                 {vehicle.order_type}
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-right font-medium">
+                            <TableCell className="text-center font-medium">
                               {formatCurrency(vehicle.total_amount || 0)}
                             </TableCell>
                           </TableRow>
