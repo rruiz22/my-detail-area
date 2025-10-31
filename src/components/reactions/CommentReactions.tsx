@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import {
-    Frown,
-    Heart,
-    Plus,
-    Smile,
-    ThumbsUp
+  Frown,
+  Heart,
+  Plus,
+  Smile,
+  ThumbsUp
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -58,7 +58,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
       // Group reactions and check if user reacted
       const reactionMap = new Map<string, { count: number; userReacted: boolean }>();
 
-      (data || []).forEach(reaction => {
+      (data || []).forEach((reaction) => {
         const existing = reactionMap.get(reaction.reaction_type) || { count: 0, userReacted: false };
         existing.count++;
         if (reaction.user_id === user?.id) {
@@ -89,7 +89,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
     try {
       const existingReaction = reactions.find(r => r.type === reactionType && r.userReacted);
 
-      // First, get the comment to find the order_id for activity logging
+      // Get comment data for event dispatching
       const { data: commentData } = await supabase
         .from('order_comments')
         .select('order_id, comment_type')
@@ -109,22 +109,6 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
 
         if (error) throw error;
 
-        // Log reaction removal in order_activities
-        if (orderId) {
-          await supabase.from('order_activities').insert({
-            order_id: orderId,
-            user_id: user.id,
-            action: 'reaction_removed',
-            description: `Removed ${reactionType} reaction`,
-            action_type: 'reaction',
-            metadata: {
-              comment_id: commentId,
-              reaction_type: reactionType,
-              comment_type: commentData?.comment_type
-            }
-          });
-        }
-
         toast.success('Reaction removed');
       } else {
         // Add reaction
@@ -138,22 +122,8 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
 
         if (error) throw error;
 
-        // Log reaction addition in order_activities
+        // Dispatch event to refresh recent activity
         if (orderId) {
-          await supabase.from('order_activities').insert({
-            order_id: orderId,
-            user_id: user.id,
-            action: 'reaction_added',
-            description: `Added ${reactionType} reaction`,
-            action_type: 'reaction',
-            metadata: {
-              comment_id: commentId,
-              reaction_type: reactionType,
-              comment_type: commentData?.comment_type
-            }
-          });
-
-          // Dispatch event to refresh recent activity
           window.dispatchEvent(new CustomEvent('reactionAdded', {
             detail: { orderId, commentId, reactionType }
           }));
@@ -176,6 +146,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
   // Load reactions on mount
   useEffect(() => {
     fetchReactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentId]);
 
   if (reactions.length === 0) {

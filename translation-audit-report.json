@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 731,
-  "totalStrings": 6924,
-  "hardcodedStrings": 1507,
-  "translatedStrings": 5417,
+  "scannedFiles": 750,
+  "totalStrings": 7042,
+  "hardcodedStrings": 1504,
+  "translatedStrings": 5538,
   "issues": {
     "critical": [
       {
@@ -4615,75 +4615,6 @@
           }
         ],
         "coverage": 28,
-        "severity": "high"
-      },
-      {
-        "file": "src\\components\\notifications\\SmartNotificationCenter.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Mark as read",
-            "line": 144,
-            "context": "143: <DropdownMenuItem onClick={() => markAsRead(notification.id)}>\n144: <Check className=\"h-4 w-4 mr-2\" />\n145: Mark as read"
-          },
-          {
-            "text": "Delete",
-            "line": 149,
-            "context": "148: <DropdownMenuItem onClick={() => deleteNotification(notification.id)}>\n149: <X className=\"h-4 w-4 mr-2\" />\n150: Delete"
-          },
-          {
-            "text": "Save for later",
-            "line": 154,
-            "context": "153: <DropdownMenuItem>\n154: <Star className=\"h-4 w-4 mr-2\" />\n155: Save for later"
-          },
-          {
-            "text": "Archive",
-            "line": 158,
-            "context": "157: <DropdownMenuItem>\n158: <Archive className=\"h-4 w-4 mr-2\" />\n159: Archive"
-          },
-          {
-            "text": "All notifications",
-            "line": 212,
-            "context": "211: <DropdownMenuContent align=\"end\">\n212: <DropdownMenuItem onClick={() => setSelectedFilter('all')}>\n213: All notifications"
-          },
-          {
-            "text": "Unread only",
-            "line": 215,
-            "context": "214: </DropdownMenuItem>\n215: <DropdownMenuItem onClick={() => setSelectedFilter('unread')}>\n216: Unread only"
-          },
-          {
-            "text": "Important only",
-            "line": 218,
-            "context": "217: </DropdownMenuItem>\n218: <DropdownMenuItem onClick={() => setSelectedFilter('important')}>\n219: Important only"
-          },
-          {
-            "text": "Mark all read",
-            "line": 226,
-            "context": "225: <Button variant=\"outline\" size=\"sm\" onClick={markAllAsRead}>\n226: <CheckCheck className=\"h-4 w-4 mr-2\" />\n227: Mark all read"
-          },
-          {
-            "text": "By Context",
-            "line": 237,
-            "context": "236: <TabsList className=\"grid w-full grid-cols-2\">\n237: <TabsTrigger value=\"grouped\">By Context</TabsTrigger>\n238: <TabsTrigger value=\"chronological\">Recent</TabsTrigger>"
-          },
-          {
-            "text": "Recent",
-            "line": 238,
-            "context": "237: <TabsTrigger value=\"grouped\">By Context</TabsTrigger>\n238: <TabsTrigger value=\"chronological\">Recent</TabsTrigger>\n239: </TabsList>"
-          },
-          {
-            "text": "No notifications to display",
-            "line": 246,
-            "context": "245: <Bell className=\"h-8 w-8 mx-auto mb-4 opacity-50\" />\n246: <p>No notifications to display</p>\n247: </div>"
-          },
-          {
-            "text": "No notifications match your filter",
-            "line": 304,
-            "context": "303: <Bell className=\"h-8 w-8 mx-auto mb-4 opacity-50\" />\n304: <p>No notifications match your filter</p>\n305: </div>"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
         "severity": "high"
       },
       {
@@ -10270,6 +10201,40 @@
         "severity": "low"
       },
       {
+        "file": "src\\types\\notification-analytics.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 196,
+            "context": "195: error: Error | null;\n196: refetch: () => Promise<void>;\n197: }"
+          },
+          {
+            "text": "Promise",
+            "line": 204,
+            "context": "203: error: Error | null;\n204: refetch: () => Promise<void>;\n205: }"
+          },
+          {
+            "text": "Promise",
+            "line": 211,
+            "context": "210: error: Error | null;\n211: refetch: () => Promise<void>;\n212: }"
+          },
+          {
+            "text": "Promise",
+            "line": 219,
+            "context": "218: error: Error | null;\n219: retry: (id: string) => Promise<void>;\n220: refetch: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 220,
+            "context": "219: retry: (id: string) => Promise<void>;\n220: refetch: () => Promise<void>;\n221: }"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\tests\\performance\\UnifiedOrderDetailModal.performance.test.tsx",
         "hardcodedStrings": [
           {
@@ -10686,257 +10651,262 @@
         "hardcodedStrings": [
           {
             "text": "Dev Only",
-            "line": 495,
-            "context": "494: 🛠️ Storage Development Tools\n495: <Badge variant=\"outline\" className=\"text-xs\">Dev Only</Badge>\n496: </summary>"
+            "line": 505,
+            "context": "504: 🛠️ Storage Development Tools\n505: <Badge variant=\"outline\" className=\"text-xs\">Dev Only</Badge>\n506: </summary>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.success",
-            "line": 163,
+            "line": 165,
             "exists": true
           },
           {
             "key": "settings.preferences_saved",
-            "line": 164,
+            "line": 166,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 170,
+            "line": 172,
             "exists": true
           },
           {
             "key": "settings.save_error",
-            "line": 171,
+            "line": 173,
             "exists": true
           },
           {
             "key": "settings.title",
-            "line": 225,
+            "line": 227,
             "exists": true
           },
           {
             "key": "settings.description",
-            "line": 226,
+            "line": 228,
             "exists": true
           },
           {
             "key": "settings.platform",
-            "line": 235,
+            "line": 237,
             "exists": true
           },
           {
             "key": "settings.profile",
-            "line": 240,
+            "line": 242,
             "exists": true
           },
           {
             "key": "settings.notifications",
-            "line": 244,
+            "line": 246,
             "exists": true
           },
           {
             "key": "settings.dealership",
-            "line": 248,
+            "line": 250,
             "exists": true
           },
           {
             "key": "settings.integrations",
-            "line": 252,
+            "line": 254,
             "exists": true
           },
           {
             "key": "settings.security",
-            "line": 257,
+            "line": 259,
             "exists": true
           },
           {
             "key": "settings.branding",
-            "line": 270,
+            "line": 272,
             "exists": false
           },
           {
             "key": "settings.general",
-            "line": 274,
+            "line": 276,
             "exists": false
           },
           {
             "key": "settings.profile_settings",
-            "line": 295,
+            "line": 297,
             "exists": true
           },
           {
             "key": "settings.profile_description",
-            "line": 298,
+            "line": 300,
             "exists": true
           },
           {
             "key": "settings.current_user",
-            "line": 304,
+            "line": 306,
             "exists": true
           },
           {
             "key": "settings.role",
-            "line": 307,
+            "line": 309,
             "exists": true
           },
           {
             "key": "settings.user_type",
-            "line": 311,
+            "line": 313,
             "exists": true
           },
           {
             "key": "settings.dealership",
-            "line": 314,
+            "line": 316,
             "exists": true
           },
           {
             "key": "settings.dealership_id",
-            "line": 318,
+            "line": 320,
             "exists": true
           },
           {
             "key": "settings.preferences",
-            "line": 335,
+            "line": 337,
             "exists": false
           },
           {
             "key": "settings.templates",
-            "line": 340,
+            "line": 342,
             "exists": false
           },
           {
             "key": "settings.notification_preferences",
-            "line": 354,
+            "line": 356,
             "exists": true
           },
           {
             "key": "settings.notification_description",
-            "line": 357,
+            "line": 359,
             "exists": true
           },
           {
             "key": "settings.email_notifications",
-            "line": 363,
-            "exists": true
-          },
-          {
-            "key": "settings.email_alerts_description",
             "line": 365,
             "exists": true
           },
           {
-            "key": "settings.sms_notifications",
-            "line": 376,
+            "key": "settings.email_alerts_description",
+            "line": 367,
             "exists": true
           },
           {
-            "key": "settings.sms_alerts_description",
+            "key": "settings.sms_notifications",
             "line": 378,
             "exists": true
           },
           {
-            "key": "settings.in_app_alerts",
-            "line": 389,
+            "key": "settings.sms_alerts_description",
+            "line": 380,
             "exists": true
           },
           {
-            "key": "settings.toast_description",
+            "key": "settings.in_app_alerts",
             "line": 391,
             "exists": true
           },
           {
+            "key": "settings.toast_description",
+            "line": 393,
+            "exists": true
+          },
+          {
             "key": "settings.save_preferences",
-            "line": 403,
+            "line": 405,
+            "exists": true
+          },
+          {
+            "key": "notifications.preferences",
+            "line": 413,
             "exists": true
           },
           {
             "key": "settings.dealership_information",
-            "line": 424,
+            "line": 434,
             "exists": true
           },
           {
             "key": "settings.dealership_info_description",
-            "line": 427,
+            "line": 437,
             "exists": true
           },
           {
             "key": "settings.dealership_name",
-            "line": 433,
+            "line": 443,
             "exists": true
           },
           {
             "key": "settings.no_dealership",
-            "line": 435,
+            "line": 445,
             "exists": true
           },
           {
             "key": "settings.location",
-            "line": 439,
+            "line": 449,
             "exists": true
           },
           {
             "key": "settings.no_location",
-            "line": 441,
-            "exists": true
-          },
-          {
-            "key": "settings.contact_info",
-            "line": 447,
-            "exists": true
-          },
-          {
-            "key": "settings.email",
-            "line": 450,
-            "exists": true
-          },
-          {
-            "key": "settings.no_email",
             "line": 451,
             "exists": true
           },
           {
+            "key": "settings.contact_info",
+            "line": 457,
+            "exists": true
+          },
+          {
+            "key": "settings.email",
+            "line": 460,
+            "exists": true
+          },
+          {
+            "key": "settings.no_email",
+            "line": 461,
+            "exists": true
+          },
+          {
             "key": "settings.phone",
-            "line": 454,
+            "line": 464,
             "exists": true
           },
           {
             "key": "settings.no_phone",
-            "line": 455,
+            "line": 465,
             "exists": true
           },
           {
             "key": "settings.dealership_edit_note",
-            "line": 463,
+            "line": 473,
             "exists": true
           },
           {
             "key": "settings.edit_dealership",
-            "line": 466,
+            "line": 476,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "settings.branding",
-            "line": 270,
-            "context": "269: <Palette className=\"h-4 w-4\" />\n270: {t('settings.branding')}\n271: </TabsTrigger>"
+            "line": 272,
+            "context": "271: <Palette className=\"h-4 w-4\" />\n272: {t('settings.branding')}\n273: </TabsTrigger>"
           },
           {
             "key": "settings.general",
-            "line": 274,
-            "context": "273: <SettingsIcon className=\"h-4 w-4\" />\n274: {t('settings.general')}\n275: </TabsTrigger>"
+            "line": 276,
+            "context": "275: <SettingsIcon className=\"h-4 w-4\" />\n276: {t('settings.general')}\n277: </TabsTrigger>"
           },
           {
             "key": "settings.preferences",
-            "line": 335,
-            "context": "334: <Bell className=\"h-4 w-4\" />\n335: {t('settings.preferences')}\n336: </TabsTrigger>"
+            "line": 337,
+            "context": "336: <Bell className=\"h-4 w-4\" />\n337: {t('settings.preferences')}\n338: </TabsTrigger>"
           },
           {
             "key": "settings.templates",
-            "line": 340,
-            "context": "339: <Mail className=\"h-4 w-4\" />\n340: {t('settings.templates')}\n341: </TabsTrigger>"
+            "line": 342,
+            "context": "341: <Mail className=\"h-4 w-4\" />\n342: {t('settings.templates')}\n343: </TabsTrigger>"
           }
         ],
         "coverage": 98,
@@ -14305,6 +14275,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\lib\\notification-analytics.ts",
+        "hardcodedStrings": [
+          {
+            "text": "ReturnType",
+            "line": 404,
+            "context": "403: */\n404: export function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(\n405: func: T,"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\lib\\firebase.ts",
         "hardcodedStrings": [
           {
@@ -15021,28 +15005,28 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 36,
-            "context": "35: unreadCount: number;\n36: markAsRead: (notificationId: string) => Promise<void>;\n37: markAllAsRead: () => Promise<void>;"
+            "line": 52,
+            "context": "51: unreadCount: number;\n52: markAsRead: (notificationId: string) => Promise<void>;\n53: markAllAsRead: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 37,
-            "context": "36: markAsRead: (notificationId: string) => Promise<void>;\n37: markAllAsRead: () => Promise<void>;\n38: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
+            "line": 53,
+            "context": "52: markAsRead: (notificationId: string) => Promise<void>;\n53: markAllAsRead: () => Promise<void>;\n54: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 38,
-            "context": "37: markAllAsRead: () => Promise<void>;\n38: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n39: deleteNotification: (notificationId: string) => Promise<void>;"
+            "line": 54,
+            "context": "53: markAllAsRead: () => Promise<void>;\n54: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n55: deleteNotification: (notificationId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 39,
-            "context": "38: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n39: deleteNotification: (notificationId: string) => Promise<void>;\n40: refreshNotifications: () => Promise<void>;"
+            "line": 55,
+            "context": "54: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n55: deleteNotification: (notificationId: string) => Promise<void>;\n56: refreshNotifications: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 40,
-            "context": "39: deleteNotification: (notificationId: string) => Promise<void>;\n40: refreshNotifications: () => Promise<void>;\n41: }"
+            "line": 56,
+            "context": "55: deleteNotification: (notificationId: string) => Promise<void>;\n56: refreshNotifications: () => Promise<void>;\n57: }"
           }
         ],
         "translationCalls": [],
@@ -16674,65 +16658,60 @@
         "translationCalls": [
           {
             "key": "search.global_placeholder",
-            "line": 113,
+            "line": 112,
             "exists": true
           },
           {
             "key": "layout.mobile_menu",
-            "line": 127,
+            "line": 126,
             "exists": true
           },
           {
             "key": "layout.tools",
-            "line": 132,
+            "line": 131,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 138,
+            "line": 137,
             "exists": true
           },
           {
             "key": "layout.preferences",
-            "line": 146,
+            "line": 145,
             "exists": true
           },
           {
             "key": "common.notifications",
-            "line": 158,
+            "line": 157,
             "exists": false
           },
           {
             "key": "layout.footer.copyright",
-            "line": 192,
-            "exists": true
-          },
-          {
-            "key": "layout.footer.version",
-            "line": 194,
+            "line": 191,
             "exists": true
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 204,
+            "line": 203,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 212,
+            "line": 211,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 220,
+            "line": 219,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.notifications",
-            "line": 158,
-            "context": "157: <label className=\"text-sm font-medium text-muted-foreground\">\n158: {t('common.notifications')}\n159: </label>"
+            "line": 157,
+            "context": "156: <label className=\"text-sm font-medium text-muted-foreground\">\n157: {t('common.notifications')}\n158: </label>"
           }
         ],
         "coverage": 100,
@@ -17492,6 +17471,20 @@
           }
         ],
         "coverage": 98,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\version\\UpdateBanner.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Actualizar",
+            "line": 28,
+            "context": "27: >\n28: <RefreshCw className=\"h-4 w-4\" />\n29: Actualizar"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -30197,13 +30190,13 @@
         "hardcodedStrings": [
           {
             "text": "Like",
-            "line": 192,
-            "context": "191: >\n192: <ThumbsUp className=\"h-3 w-3 mr-1\" />\n193: Like"
+            "line": 163,
+            "context": "162: >\n163: <ThumbsUp className=\"h-3 w-3 mr-1\" />\n164: Like"
           },
           {
             "text": "Love",
-            "line": 202,
-            "context": "201: >\n202: <Heart className=\"h-3 w-3 mr-1\" />\n203: Love"
+            "line": 173,
+            "context": "172: >\n173: <Heart className=\"h-3 w-3 mr-1\" />\n174: Love"
           }
         ],
         "translationCalls": [],
@@ -36015,6 +36008,126 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\notifications\\SmartNotificationCenter.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.actions.mark_read",
+            "line": 147,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.delete",
+            "line": 152,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.save_later",
+            "line": 157,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.archive",
+            "line": 161,
+            "exists": true
+          },
+          {
+            "key": "notifications.loading",
+            "line": 186,
+            "exists": true
+          },
+          {
+            "key": "notifications.title",
+            "line": 199,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.all",
+            "line": 210,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.unread",
+            "line": 210,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.important",
+            "line": 210,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.all_description",
+            "line": 215,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.unread_description",
+            "line": 218,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.important_description",
+            "line": 221,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.mark_all_read",
+            "line": 229,
+            "exists": false
+          },
+          {
+            "key": "notifications.tabs.grouped",
+            "line": 239,
+            "exists": true
+          },
+          {
+            "key": "notifications.tabs.recent",
+            "line": 240,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.message",
+            "line": 248,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.singular",
+            "line": 260,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.plural",
+            "line": 260,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.unread",
+            "line": 264,
+            "exists": true
+          },
+          {
+            "key": "notifications.show_more",
+            "line": 289,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.filtered",
+            "line": 306,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.actions.mark_all_read",
+            "line": 229,
+            "context": "228: <CheckCheck className=\"h-4 w-4 mr-2\" />\n229: {t('notifications.actions.mark_all_read')}\n230: </Button>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\notifications\\PushNotificationSettings.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -36352,27 +36465,27 @@
           {
             "key": "notifications.preferences",
             "line": 293,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.channels",
             "line": 299,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.priorities",
             "line": 300,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.schedule",
             "line": 301,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.entities",
             "line": 302,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.channels.${channel}",
@@ -36397,27 +36510,27 @@
           {
             "key": "notifications.frequency",
             "line": 344,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.frequency.all",
             "line": 353,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.frequency.mentions",
             "line": 354,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.frequency.important",
             "line": 355,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.frequency.none",
             "line": 356,
-            "exists": false
+            "exists": true
           },
           {
             "key": "notifications.enablePush",
@@ -36562,31 +36675,6 @@
             "context": "245: title: t('notifications.error'),\n246: description: t('notifications.saveError'),\n247: variant: 'destructive'"
           },
           {
-            "key": "notifications.preferences",
-            "line": 293,
-            "context": "292: <Bell className=\"h-5 w-5\" />\n293: {t('notifications.preferences')}\n294: </DialogTitle>"
-          },
-          {
-            "key": "notifications.channels",
-            "line": 299,
-            "context": "298: <TabsList className=\"grid w-full grid-cols-4\">\n299: <TabsTrigger value=\"channels\">{t('notifications.channels')}</TabsTrigger>\n300: <TabsTrigger value=\"priorities\">{t('notifications.priorities')}</TabsTrigger>"
-          },
-          {
-            "key": "notifications.priorities",
-            "line": 300,
-            "context": "299: <TabsTrigger value=\"channels\">{t('notifications.channels')}</TabsTrigger>\n300: <TabsTrigger value=\"priorities\">{t('notifications.priorities')}</TabsTrigger>\n301: <TabsTrigger value=\"schedule\">{t('notifications.schedule')}</TabsTrigger>"
-          },
-          {
-            "key": "notifications.schedule",
-            "line": 301,
-            "context": "300: <TabsTrigger value=\"priorities\">{t('notifications.priorities')}</TabsTrigger>\n301: <TabsTrigger value=\"schedule\">{t('notifications.schedule')}</TabsTrigger>\n302: <TabsTrigger value=\"entities\">{t('notifications.entities')}</TabsTrigger>"
-          },
-          {
-            "key": "notifications.entities",
-            "line": 302,
-            "context": "301: <TabsTrigger value=\"schedule\">{t('notifications.schedule')}</TabsTrigger>\n302: <TabsTrigger value=\"entities\">{t('notifications.entities')}</TabsTrigger>\n303: </TabsList>"
-          },
-          {
             "key": "notifications.channels.${channel}",
             "line": 318,
             "context": "317: <Icon className=\"h-5 w-5\" />\n318: {t(`notifications.channels.${channel}`)}\n319: {isPushChannel && !pushSupported && ("
@@ -36605,31 +36693,6 @@
             "key": "notifications.channels.${channel}Description",
             "line": 337,
             "context": "336: <CardDescription>\n337: {t(`notifications.channels.${channel}Description`)}\n338: </CardDescription>"
-          },
-          {
-            "key": "notifications.frequency",
-            "line": 344,
-            "context": "343: <div className=\"flex items-center gap-2\">\n344: <Label>{t('notifications.frequency')}:</Label>\n345: <Select"
-          },
-          {
-            "key": "notifications.frequency.all",
-            "line": 353,
-            "context": "352: <SelectContent>\n353: <SelectItem value=\"all\">{t('notifications.frequency.all')}</SelectItem>\n354: <SelectItem value=\"mentions\">{t('notifications.frequency.mentions')}</SelectItem>"
-          },
-          {
-            "key": "notifications.frequency.mentions",
-            "line": 354,
-            "context": "353: <SelectItem value=\"all\">{t('notifications.frequency.all')}</SelectItem>\n354: <SelectItem value=\"mentions\">{t('notifications.frequency.mentions')}</SelectItem>\n355: <SelectItem value=\"important\">{t('notifications.frequency.important')}</SelectItem>"
-          },
-          {
-            "key": "notifications.frequency.important",
-            "line": 355,
-            "context": "354: <SelectItem value=\"mentions\">{t('notifications.frequency.mentions')}</SelectItem>\n355: <SelectItem value=\"important\">{t('notifications.frequency.important')}</SelectItem>\n356: <SelectItem value=\"none\">{t('notifications.frequency.none')}</SelectItem>"
-          },
-          {
-            "key": "notifications.frequency.none",
-            "line": 356,
-            "context": "355: <SelectItem value=\"important\">{t('notifications.frequency.important')}</SelectItem>\n356: <SelectItem value=\"none\">{t('notifications.frequency.none')}</SelectItem>\n357: </SelectContent>"
           },
           {
             "key": "notifications.enablePush",
@@ -37079,6 +37142,1067 @@
             "key": "notifications.analytics.notificationTrendsDescription",
             "line": 337,
             "context": "336: <CardDescription>\n337: {t('notifications.analytics.notificationTrendsDescription')}\n338: </CardDescription>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\ProviderComparisonChart.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.analytics.charts.provider_comparison",
+            "line": 47,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.provider_comparison_description",
+            "line": 49,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.no_data",
+            "line": 67,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.provider_comparison",
+            "line": 77,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.provider_comparison_description",
+            "line": 79,
+            "exists": false
+          },
+          {
+            "key": "notifications.channels.${provider.channel}",
+            "line": 98,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.performance.${performance.rating}",
+            "line": 112,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.delivery_rate",
+            "line": 134,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.sent",
+            "line": 142,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.avg_latency",
+            "line": 150,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.avg_cost",
+            "line": 158,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.analytics.charts.provider_comparison",
+            "line": 47,
+            "context": "46: <CardHeader>\n47: <CardTitle>{t('notifications.analytics.charts.provider_comparison')}</CardTitle>\n48: <CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.charts.provider_comparison_description",
+            "line": 49,
+            "context": "48: <CardDescription>\n49: {t('notifications.analytics.charts.provider_comparison_description')}\n50: </CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.no_data",
+            "line": 67,
+            "context": "66: </svg>\n67: <p>{t('notifications.analytics.no_data')}</p>\n68: </div>"
+          },
+          {
+            "key": "notifications.analytics.charts.provider_comparison",
+            "line": 77,
+            "context": "76: <CardHeader>\n77: <CardTitle>{t('notifications.analytics.charts.provider_comparison')}</CardTitle>\n78: <CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.charts.provider_comparison_description",
+            "line": 79,
+            "context": "78: <CardDescription>\n79: {t('notifications.analytics.charts.provider_comparison_description')}\n80: </CardDescription>"
+          },
+          {
+            "key": "notifications.channels.${provider.channel}",
+            "line": 98,
+            "context": "97: <div className=\"text-sm text-gray-600\">\n98: {t(`notifications.channels.${provider.channel}`)}\n99: </div>"
+          },
+          {
+            "key": "notifications.analytics.performance.${performance.rating}",
+            "line": 112,
+            "context": "111: >\n112: {t(`notifications.analytics.performance.${performance.rating}`)}\n113: </Badge>"
+          },
+          {
+            "key": "notifications.analytics.metrics.delivery_rate",
+            "line": 134,
+            "context": "133: <div className=\"text-gray-600 text-xs\">\n134: {t('notifications.analytics.metrics.delivery_rate')}\n135: </div>"
+          },
+          {
+            "key": "notifications.analytics.metrics.sent",
+            "line": 142,
+            "context": "141: <div className=\"text-gray-600 text-xs\">\n142: {t('notifications.analytics.metrics.sent')}\n143: </div>"
+          },
+          {
+            "key": "notifications.analytics.metrics.avg_latency",
+            "line": 150,
+            "context": "149: <div className=\"text-gray-600 text-xs\">\n150: {t('notifications.analytics.metrics.avg_latency')}\n151: </div>"
+          },
+          {
+            "key": "notifications.analytics.metrics.avg_cost",
+            "line": 158,
+            "context": "157: <div className=\"text-gray-600 text-xs\">\n158: {t('notifications.analytics.metrics.avg_cost')}\n159: </div>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\NotificationAnalyticsDashboard.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.analytics.refresh_success",
+            "line": 112,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.data_updated",
+            "line": 113,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.refresh_error",
+            "line": 119,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.refresh_error_message",
+            "line": 120,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.retry_success",
+            "line": 144,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.retry_success_message",
+            "line": 145,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.retry_error",
+            "line": 151,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.retry_error_message",
+            "line": 152,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.error",
+            "line": 167,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.retry",
+            "line": 172,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.title",
+            "line": 185,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.description",
+            "line": 187,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.title",
+            "line": 196,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.refresh",
+            "line": 209,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export",
+            "line": 213,
+            "exists": true
+          },
+          {
+            "key": "notifications.analytics.tabs.overview",
+            "line": 237,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.tabs.performance",
+            "line": 239,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.tabs.engagement",
+            "line": 242,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.tabs.failures",
+            "line": 244,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.auto_refresh_enabled",
+            "line": 291,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.analytics.refresh_success",
+            "line": 112,
+            "context": "111: toast({\n112: title: t('notifications.analytics.refresh_success'),\n113: description: t('notifications.analytics.data_updated'),"
+          },
+          {
+            "key": "notifications.analytics.data_updated",
+            "line": 113,
+            "context": "112: title: t('notifications.analytics.refresh_success'),\n113: description: t('notifications.analytics.data_updated'),\n114: variant: 'default',"
+          },
+          {
+            "key": "notifications.analytics.refresh_error",
+            "line": 119,
+            "context": "118: toast({\n119: title: t('notifications.analytics.refresh_error'),\n120: description: t('notifications.analytics.refresh_error_message'),"
+          },
+          {
+            "key": "notifications.analytics.refresh_error_message",
+            "line": 120,
+            "context": "119: title: t('notifications.analytics.refresh_error'),\n120: description: t('notifications.analytics.refresh_error_message'),\n121: variant: 'destructive',"
+          },
+          {
+            "key": "notifications.analytics.retry_success",
+            "line": 144,
+            "context": "143: toast({\n144: title: t('notifications.analytics.retry_success'),\n145: description: t('notifications.analytics.retry_success_message'),"
+          },
+          {
+            "key": "notifications.analytics.retry_success_message",
+            "line": 145,
+            "context": "144: title: t('notifications.analytics.retry_success'),\n145: description: t('notifications.analytics.retry_success_message'),\n146: variant: 'default',"
+          },
+          {
+            "key": "notifications.analytics.retry_error",
+            "line": 151,
+            "context": "150: toast({\n151: title: t('notifications.analytics.retry_error'),\n152: description: t('notifications.analytics.retry_error_message'),"
+          },
+          {
+            "key": "notifications.analytics.retry_error_message",
+            "line": 152,
+            "context": "151: title: t('notifications.analytics.retry_error'),\n152: description: t('notifications.analytics.retry_error_message'),\n153: variant: 'destructive',"
+          },
+          {
+            "key": "notifications.analytics.error",
+            "line": 167,
+            "context": "166: <div className=\"text-red-500 text-lg font-medium mb-4\">\n167: {t('notifications.analytics.error')}\n168: </div>"
+          },
+          {
+            "key": "common.action_buttons.retry",
+            "line": 172,
+            "context": "171: <RefreshCw className=\"h-4 w-4 mr-2\" />\n172: {t('common.action_buttons.retry')}\n173: </Button>"
+          },
+          {
+            "key": "notifications.analytics.title",
+            "line": 185,
+            "context": "184: <h1 className=\"text-2xl font-semibold text-gray-900\">\n185: {t('notifications.analytics.title')}\n186: </h1>"
+          },
+          {
+            "key": "notifications.analytics.description",
+            "line": 187,
+            "context": "186: </h1>\n187: <p className=\"text-gray-600 mt-1\">{t('notifications.analytics.description')}</p>\n188: </div>"
+          },
+          {
+            "key": "notifications.analytics.filters.title",
+            "line": 196,
+            "context": "195: <Settings className=\"h-4 w-4 mr-2\" />\n196: {t('notifications.analytics.filters.title')}\n197: </Button>"
+          },
+          {
+            "key": "notifications.analytics.tabs.overview",
+            "line": 237,
+            "context": "236: <TabsList className=\"grid grid-cols-4 w-full max-w-2xl\">\n237: <TabsTrigger value=\"overview\">{t('notifications.analytics.tabs.overview')}</TabsTrigger>\n238: <TabsTrigger value=\"performance\">"
+          },
+          {
+            "key": "notifications.analytics.tabs.performance",
+            "line": 239,
+            "context": "238: <TabsTrigger value=\"performance\">\n239: {t('notifications.analytics.tabs.performance')}\n240: </TabsTrigger>"
+          },
+          {
+            "key": "notifications.analytics.tabs.engagement",
+            "line": 242,
+            "context": "241: <TabsTrigger value=\"engagement\">\n242: {t('notifications.analytics.tabs.engagement')}\n243: </TabsTrigger>"
+          },
+          {
+            "key": "notifications.analytics.tabs.failures",
+            "line": 244,
+            "context": "243: </TabsTrigger>\n244: <TabsTrigger value=\"failures\">{t('notifications.analytics.tabs.failures')}</TabsTrigger>\n245: </TabsList>"
+          },
+          {
+            "key": "notifications.analytics.auto_refresh_enabled",
+            "line": 291,
+            "context": "290: <div className=\"w-2 h-2 bg-emerald-500 rounded-full animate-pulse\" />\n291: <span>{t('notifications.analytics.auto_refresh_enabled')}</span>\n292: </div>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\MetricsOverview.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.from_previous_period",
+            "line": 77,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.total_sent",
+            "line": 110,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.delivery_rate",
+            "line": 132,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.open_rate",
+            "line": 154,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.click_rate",
+            "line": 182,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.avg_time_to_read",
+            "line": 204,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.failed_deliveries",
+            "line": 226,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.active_users",
+            "line": 247,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.total_delivered",
+            "line": 268,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.from_previous_period",
+            "line": 77,
+            "context": "76: <span className={trendColor}>{formatPercentage(trend.percentage)}</span>\n77: <span>{t('common.from_previous_period')}</span>\n78: </div>"
+          },
+          {
+            "key": "notifications.analytics.metrics.total_sent",
+            "line": 110,
+            "context": "109: <MetricCard\n110: title={t('notifications.analytics.metrics.total_sent')}\n111: value={overview.totalSent}"
+          },
+          {
+            "key": "notifications.analytics.metrics.delivery_rate",
+            "line": 132,
+            "context": "131: <MetricCard\n132: title={t('notifications.analytics.metrics.delivery_rate')}\n133: value={overview.deliveryRate}"
+          },
+          {
+            "key": "notifications.analytics.metrics.open_rate",
+            "line": 154,
+            "context": "153: <MetricCard\n154: title={t('notifications.analytics.metrics.open_rate')}\n155: value={overview.openRate}"
+          },
+          {
+            "key": "notifications.analytics.metrics.click_rate",
+            "line": 182,
+            "context": "181: <MetricCard\n182: title={t('notifications.analytics.metrics.click_rate')}\n183: value={overview.clickRate}"
+          },
+          {
+            "key": "notifications.analytics.metrics.avg_time_to_read",
+            "line": 204,
+            "context": "203: <MetricCard\n204: title={t('notifications.analytics.metrics.avg_time_to_read')}\n205: value={overview.avgTimeToRead}"
+          },
+          {
+            "key": "notifications.analytics.metrics.failed_deliveries",
+            "line": 226,
+            "context": "225: <MetricCard\n226: title={t('notifications.analytics.metrics.failed_deliveries')}\n227: value={overview.totalFailed}"
+          },
+          {
+            "key": "notifications.analytics.metrics.active_users",
+            "line": 247,
+            "context": "246: <MetricCard\n247: title={t('notifications.analytics.metrics.active_users')}\n248: value={overview.activeUsers}"
+          },
+          {
+            "key": "notifications.analytics.metrics.total_delivered",
+            "line": 268,
+            "context": "267: <MetricCard\n268: title={t('notifications.analytics.metrics.total_delivered')}\n269: value={overview.totalDelivered}"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\FiltersPanel.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.analytics.filters.time_range",
+            "line": 87,
+            "exists": false
+          },
+          {
+            "key": "common.timeRange.24h",
+            "line": 96,
+            "exists": false
+          },
+          {
+            "key": "common.timeRange.7d",
+            "line": 97,
+            "exists": false
+          },
+          {
+            "key": "common.timeRange.30d",
+            "line": 98,
+            "exists": false
+          },
+          {
+            "key": "common.timeRange.90d",
+            "line": 99,
+            "exists": false
+          },
+          {
+            "key": "common.timeRange.custom",
+            "line": 100,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.date_range",
+            "line": 108,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.start_date",
+            "line": 122,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.end_date",
+            "line": 149,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.channels",
+            "line": 168,
+            "exists": false
+          },
+          {
+            "key": "notifications.channels.${channel}",
+            "line": 177,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.status",
+            "line": 185,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.status.${status}",
+            "line": 195,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.priority",
+            "line": 204,
+            "exists": false
+          },
+          {
+            "key": "common.priority.${priority}",
+            "line": 214,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.user_search",
+            "line": 223,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.user_search_placeholder",
+            "line": 225,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.active",
+            "line": 237,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.none_active",
+            "line": 238,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.filters.reset",
+            "line": 244,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.analytics.filters.time_range",
+            "line": 87,
+            "context": "86: <div className=\"space-y-2\">\n87: <Label>{t('notifications.analytics.filters.time_range')}</Label>\n88: <Select"
+          },
+          {
+            "key": "common.timeRange.24h",
+            "line": 96,
+            "context": "95: <SelectContent>\n96: <SelectItem value=\"24h\">{t('common.timeRange.24h')}</SelectItem>\n97: <SelectItem value=\"7d\">{t('common.timeRange.7d')}</SelectItem>"
+          },
+          {
+            "key": "common.timeRange.7d",
+            "line": 97,
+            "context": "96: <SelectItem value=\"24h\">{t('common.timeRange.24h')}</SelectItem>\n97: <SelectItem value=\"7d\">{t('common.timeRange.7d')}</SelectItem>\n98: <SelectItem value=\"30d\">{t('common.timeRange.30d')}</SelectItem>"
+          },
+          {
+            "key": "common.timeRange.30d",
+            "line": 98,
+            "context": "97: <SelectItem value=\"7d\">{t('common.timeRange.7d')}</SelectItem>\n98: <SelectItem value=\"30d\">{t('common.timeRange.30d')}</SelectItem>\n99: <SelectItem value=\"90d\">{t('common.timeRange.90d')}</SelectItem>"
+          },
+          {
+            "key": "common.timeRange.90d",
+            "line": 99,
+            "context": "98: <SelectItem value=\"30d\">{t('common.timeRange.30d')}</SelectItem>\n99: <SelectItem value=\"90d\">{t('common.timeRange.90d')}</SelectItem>\n100: <SelectItem value=\"custom\">{t('common.timeRange.custom')}</SelectItem>"
+          },
+          {
+            "key": "common.timeRange.custom",
+            "line": 100,
+            "context": "99: <SelectItem value=\"90d\">{t('common.timeRange.90d')}</SelectItem>\n100: <SelectItem value=\"custom\">{t('common.timeRange.custom')}</SelectItem>\n101: </SelectContent>"
+          },
+          {
+            "key": "notifications.analytics.filters.date_range",
+            "line": 108,
+            "context": "107: <div className=\"space-y-2\">\n108: <Label>{t('notifications.analytics.filters.date_range')}</Label>\n109: <div className=\"flex gap-2\">"
+          },
+          {
+            "key": "notifications.analytics.filters.start_date",
+            "line": 122,
+            "context": "121: ? format(new Date(filters.startDate), 'PPP')\n122: : t('notifications.analytics.filters.start_date')}\n123: </Button>"
+          },
+          {
+            "key": "notifications.analytics.filters.end_date",
+            "line": 149,
+            "context": "148: ? format(new Date(filters.endDate), 'PPP')\n149: : t('notifications.analytics.filters.end_date')}\n150: </Button>"
+          },
+          {
+            "key": "notifications.analytics.filters.channels",
+            "line": 168,
+            "context": "167: <div className=\"space-y-2\">\n168: <Label>{t('notifications.analytics.filters.channels')}</Label>\n169: <div className=\"flex flex-wrap gap-2\">"
+          },
+          {
+            "key": "notifications.channels.${channel}",
+            "line": 177,
+            "context": "176: >\n177: {t(`notifications.channels.${channel}`)}\n178: </Badge>"
+          },
+          {
+            "key": "notifications.analytics.filters.status",
+            "line": 185,
+            "context": "184: <div className=\"space-y-2\">\n185: <Label>{t('notifications.analytics.filters.status')}</Label>\n186: <div className=\"flex flex-wrap gap-2\">"
+          },
+          {
+            "key": "notifications.analytics.status.${status}",
+            "line": 195,
+            "context": "194: >\n195: {t(`notifications.analytics.status.${status}`)}\n196: </Badge>"
+          },
+          {
+            "key": "notifications.analytics.filters.priority",
+            "line": 204,
+            "context": "203: <div className=\"space-y-2\">\n204: <Label>{t('notifications.analytics.filters.priority')}</Label>\n205: <div className=\"flex flex-wrap gap-2\">"
+          },
+          {
+            "key": "common.priority.${priority}",
+            "line": 214,
+            "context": "213: >\n214: {t(`common.priority.${priority}`)}\n215: </Badge>"
+          },
+          {
+            "key": "notifications.analytics.filters.user_search",
+            "line": 223,
+            "context": "222: <div className=\"space-y-2\">\n223: <Label>{t('notifications.analytics.filters.user_search')}</Label>\n224: <Input"
+          },
+          {
+            "key": "notifications.analytics.filters.user_search_placeholder",
+            "line": 225,
+            "context": "224: <Input\n225: placeholder={t('notifications.analytics.filters.user_search_placeholder')}\n226: value={filters.userSearch || ''}"
+          },
+          {
+            "key": "notifications.analytics.filters.active",
+            "line": 237,
+            "context": "236: {hasActiveFilters\n237: ? t('notifications.analytics.filters.active')\n238: : t('notifications.analytics.filters.none_active')}"
+          },
+          {
+            "key": "notifications.analytics.filters.none_active",
+            "line": 238,
+            "context": "237: ? t('notifications.analytics.filters.active')\n238: : t('notifications.analytics.filters.none_active')}\n239: </span>"
+          },
+          {
+            "key": "notifications.analytics.filters.reset",
+            "line": 244,
+            "context": "243: <X className=\"h-4 w-4 mr-2\" />\n244: {t('notifications.analytics.filters.reset')}\n245: </Button>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\FailedDeliveriesTable.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 34,
+            "context": "33: loading?: boolean;\n34: onRetry?: (id: string) => Promise<void>;\n35: onViewDetails?: (delivery: FailedDelivery) => void;"
+          },
+          {
+            "text": "Promise",
+            "line": 8,
+            "context": "7: import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';\n8: import { Button } from '@/components/ui/button';\n9: import { Badge } from '@/components/ui/badge';"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "notifications.analytics.charts.failed_deliveries",
+            "line": 147,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.failed_deliveries_description",
+            "line": 149,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.export_csv",
+            "line": 155,
+            "exists": true
+          },
+          {
+            "key": "notifications.analytics.search_placeholder",
+            "line": 166,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.table.timestamp",
+            "line": 183,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.table.user",
+            "line": 189,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.table.channel",
+            "line": 195,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.table.provider",
+            "line": 201,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.table.error",
+            "line": 203,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.table.retries",
+            "line": 208,
+            "exists": false
+          },
+          {
+            "key": "common.actions",
+            "line": 211,
+            "exists": true
+          },
+          {
+            "key": "notifications.analytics.no_failures",
+            "line": 232,
+            "exists": false
+          },
+          {
+            "key": "notifications.channels.${delivery.channel}",
+            "line": 253,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.actions.retry",
+            "line": 293,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.actions.view_details",
+            "line": 299,
+            "exists": false
+          },
+          {
+            "key": "common.showing",
+            "line": 315,
+            "exists": true
+          },
+          {
+            "key": "common.of",
+            "line": 315,
+            "exists": true
+          },
+          {
+            "key": "notifications.analytics.table.failed_deliveries",
+            "line": 316,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.analytics.charts.failed_deliveries",
+            "line": 147,
+            "context": "146: <div>\n147: <CardTitle>{t('notifications.analytics.charts.failed_deliveries')}</CardTitle>\n148: <CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.charts.failed_deliveries_description",
+            "line": 149,
+            "context": "148: <CardDescription>\n149: {t('notifications.analytics.charts.failed_deliveries_description')}\n150: </CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.search_placeholder",
+            "line": 166,
+            "context": "165: <Input\n166: placeholder={t('notifications.analytics.search_placeholder')}\n167: value={searchQuery}"
+          },
+          {
+            "key": "notifications.analytics.table.timestamp",
+            "line": 183,
+            "context": "182: >\n183: {t('notifications.analytics.table.timestamp')}\n184: </TableHead>"
+          },
+          {
+            "key": "notifications.analytics.table.user",
+            "line": 189,
+            "context": "188: >\n189: {t('notifications.analytics.table.user')}\n190: </TableHead>"
+          },
+          {
+            "key": "notifications.analytics.table.channel",
+            "line": 195,
+            "context": "194: >\n195: {t('notifications.analytics.table.channel')}\n196: </TableHead>"
+          },
+          {
+            "key": "notifications.analytics.table.provider",
+            "line": 201,
+            "context": "200: >\n201: {t('notifications.analytics.table.provider')}\n202: </TableHead>"
+          },
+          {
+            "key": "notifications.analytics.table.error",
+            "line": 203,
+            "context": "202: </TableHead>\n203: <TableHead>{t('notifications.analytics.table.error')}</TableHead>\n204: <TableHead"
+          },
+          {
+            "key": "notifications.analytics.table.retries",
+            "line": 208,
+            "context": "207: >\n208: {t('notifications.analytics.table.retries')}\n209: </TableHead>"
+          },
+          {
+            "key": "notifications.analytics.no_failures",
+            "line": 232,
+            "context": "231: </svg>\n232: <p>{t('notifications.analytics.no_failures')}</p>\n233: </TableCell>"
+          },
+          {
+            "key": "notifications.channels.${delivery.channel}",
+            "line": 253,
+            "context": "252: <Badge variant=\"outline\" className=\"text-xs\">\n253: {t(`notifications.channels.${delivery.channel}`)}\n254: </Badge>"
+          },
+          {
+            "key": "notifications.analytics.actions.retry",
+            "line": 293,
+            "context": "292: />\n293: {t('notifications.analytics.actions.retry')}\n294: </DropdownMenuItem>"
+          },
+          {
+            "key": "notifications.analytics.actions.view_details",
+            "line": 299,
+            "context": "298: <Eye className=\"h-4 w-4 mr-2\" />\n299: {t('notifications.analytics.actions.view_details')}\n300: </DropdownMenuItem>"
+          },
+          {
+            "key": "notifications.analytics.table.failed_deliveries",
+            "line": 316,
+            "context": "315: {t('common.showing')} {filteredData.length} {t('common.of')} {data.length}{' '}\n316: {t('notifications.analytics.table.failed_deliveries')}\n317: </div>"
+          }
+        ],
+        "coverage": 90,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\EngagementFunnel.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.analytics.funnel.sent",
+            "line": 52,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.delivered",
+            "line": 53,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.opened",
+            "line": 54,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.clicked",
+            "line": 55,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.engagement_funnel",
+            "line": 68,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.engagement_funnel_description",
+            "line": 70,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.notifications",
+            "line": 101,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.dropped_off",
+            "line": 133,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.delivery_rate",
+            "line": 151,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.open_rate",
+            "line": 159,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.funnel.click_rate",
+            "line": 167,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.analytics.funnel.sent",
+            "line": 52,
+            "context": "51: const stageLabels = {\n52: sent: t('notifications.analytics.funnel.sent'),\n53: delivered: t('notifications.analytics.funnel.delivered'),"
+          },
+          {
+            "key": "notifications.analytics.funnel.delivered",
+            "line": 53,
+            "context": "52: sent: t('notifications.analytics.funnel.sent'),\n53: delivered: t('notifications.analytics.funnel.delivered'),\n54: opened: t('notifications.analytics.funnel.opened'),"
+          },
+          {
+            "key": "notifications.analytics.funnel.opened",
+            "line": 54,
+            "context": "53: delivered: t('notifications.analytics.funnel.delivered'),\n54: opened: t('notifications.analytics.funnel.opened'),\n55: clicked: t('notifications.analytics.funnel.clicked'),"
+          },
+          {
+            "key": "notifications.analytics.funnel.clicked",
+            "line": 55,
+            "context": "54: opened: t('notifications.analytics.funnel.opened'),\n55: clicked: t('notifications.analytics.funnel.clicked'),\n56: };"
+          },
+          {
+            "key": "notifications.analytics.charts.engagement_funnel",
+            "line": 68,
+            "context": "67: <CardHeader>\n68: <CardTitle>{t('notifications.analytics.charts.engagement_funnel')}</CardTitle>\n69: <CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.charts.engagement_funnel_description",
+            "line": 70,
+            "context": "69: <CardDescription>\n70: {t('notifications.analytics.charts.engagement_funnel_description')}\n71: </CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.funnel.notifications",
+            "line": 101,
+            "context": "100: <div className=\"text-white/80 text-sm\">\n101: {stage.value.toLocaleString()} {t('notifications.analytics.funnel.notifications')}\n102: </div>"
+          },
+          {
+            "key": "notifications.analytics.funnel.dropped_off",
+            "line": 133,
+            "context": "132: <span>\n133: {stage.dropOff.toLocaleString()} {t('notifications.analytics.funnel.dropped_off')} (\n134: {formatPercentage((stage.dropOff / stage.value) * 100)})"
+          },
+          {
+            "key": "notifications.analytics.funnel.delivery_rate",
+            "line": 151,
+            "context": "150: <div className=\"text-sm text-gray-600\">\n151: {t('notifications.analytics.funnel.delivery_rate')}\n152: </div>"
+          },
+          {
+            "key": "notifications.analytics.funnel.open_rate",
+            "line": 159,
+            "context": "158: <div className=\"text-sm text-gray-600\">\n159: {t('notifications.analytics.funnel.open_rate')}\n160: </div>"
+          },
+          {
+            "key": "notifications.analytics.funnel.click_rate",
+            "line": 167,
+            "context": "166: <div className=\"text-sm text-gray-600\">\n167: {t('notifications.analytics.funnel.click_rate')}\n168: </div>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\DeliveryTimelineChart.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.analytics.charts.delivery_timeline",
+            "line": 85,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.delivery_timeline_description",
+            "line": 87,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.sent",
+            "line": 120,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.delivered",
+            "line": 129,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.failed",
+            "line": 138,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.analytics.charts.delivery_timeline",
+            "line": 85,
+            "context": "84: <CardHeader>\n85: <CardTitle>{t('notifications.analytics.charts.delivery_timeline')}</CardTitle>\n86: <CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.charts.delivery_timeline_description",
+            "line": 87,
+            "context": "86: <CardDescription>\n87: {t('notifications.analytics.charts.delivery_timeline_description')}\n88: </CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.metrics.sent",
+            "line": 120,
+            "context": "119: strokeWidth={2}\n120: name={t('notifications.analytics.metrics.sent')}\n121: dot={{ fill: colors.sent, strokeWidth: 2, r: 4 }}"
+          },
+          {
+            "key": "notifications.analytics.metrics.delivered",
+            "line": 129,
+            "context": "128: strokeWidth={2}\n129: name={t('notifications.analytics.metrics.delivered')}\n130: dot={{ fill: colors.delivered, strokeWidth: 2, r: 4 }}"
+          },
+          {
+            "key": "notifications.analytics.metrics.failed",
+            "line": 138,
+            "context": "137: strokeWidth={2}\n138: name={t('notifications.analytics.metrics.failed')}\n139: dot={{ fill: colors.failed, strokeWidth: 2, r: 4 }}"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\notifications\\analytics\\ChannelPerformanceChart.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "notifications.channels.${metric.channel}",
+            "line": 35,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.channel_performance",
+            "line": 94,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.charts.channel_performance_description",
+            "line": 96,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.sent",
+            "line": 127,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.delivered",
+            "line": 133,
+            "exists": false
+          },
+          {
+            "key": "notifications.analytics.metrics.failed",
+            "line": 139,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.channels.${metric.channel}",
+            "line": 35,
+            "context": "34: const chartData = data.map((metric) => ({\n35: channel: t(`notifications.channels.${metric.channel}`),\n36: sent: metric.total_sent,"
+          },
+          {
+            "key": "notifications.analytics.charts.channel_performance",
+            "line": 94,
+            "context": "93: <CardHeader>\n94: <CardTitle>{t('notifications.analytics.charts.channel_performance')}</CardTitle>\n95: <CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.charts.channel_performance_description",
+            "line": 96,
+            "context": "95: <CardDescription>\n96: {t('notifications.analytics.charts.channel_performance_description')}\n97: </CardDescription>"
+          },
+          {
+            "key": "notifications.analytics.metrics.sent",
+            "line": 127,
+            "context": "126: fill={colors.sent}\n127: name={t('notifications.analytics.metrics.sent')}\n128: radius={[2, 2, 0, 0]}"
+          },
+          {
+            "key": "notifications.analytics.metrics.delivered",
+            "line": 133,
+            "context": "132: fill={colors.delivered}\n133: name={t('notifications.analytics.metrics.delivered')}\n134: radius={[2, 2, 0, 0]}"
+          },
+          {
+            "key": "notifications.analytics.metrics.failed",
+            "line": 139,
+            "context": "138: fill={colors.failed}\n139: name={t('notifications.analytics.metrics.failed')}\n140: radius={[2, 2, 0, 0]}"
           }
         ],
         "coverage": 100,
@@ -50104,7 +51228,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "345 Component components need translation",
+      "description": "356 Component components need translation",
       "files": [
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\detail-hub\\EmployeePortal.tsx",
@@ -50136,7 +51260,6 @@
         "src\\hooks\\usePrintOrder.ts",
         "src\\components\\scanner\\enhanced\\VinStatistics.tsx",
         "src\\components\\orders\\OrderPrintView.tsx",
-        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\debug\\DuplicateTooltipTester.tsx",
         "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHistoryTable.tsx",
@@ -50172,6 +51295,7 @@
         "src\\components\\get-ready\\GetReadyExample.tsx",
         "src\\components\\get-ready\\notifications\\NotificationPanel.tsx",
         "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
+        "src\\types\\notification-analytics.ts",
         "src\\services\\PUSH_NOTIFICATION_HOOK_EXAMPLE.ts",
         "src\\pages\\NFCTracking.tsx",
         "src\\hooks\\useUserPresence.tsx",
@@ -50258,6 +51382,7 @@
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
+        "src\\components\\notifications\\analytics\\FailedDeliveriesTable.tsx",
         "src\\components\\loading\\SplashScreen.tsx",
         "src\\components\\get-ready\\WorkItemsGroupedTable.tsx",
         "src\\components\\get-ready\\StockImageLightbox.tsx",
@@ -50280,6 +51405,7 @@
         "src\\pages\\QRRedirect.tsx",
         "src\\pages\\Auth.tsx",
         "src\\lib\\sessionRecovery.ts",
+        "src\\lib\\notification-analytics.ts",
         "src\\lib\\firebase.ts",
         "src\\hooks\\useSweetAlert.tsx",
         "src\\hooks\\useServerExport.tsx",
@@ -50296,6 +51422,7 @@
         "src\\components\\StatusBadgeInteractive.tsx",
         "src\\components\\LandingHeader.tsx",
         "src\\components\\workflows\\VisualWorkflowBuilder.tsx",
+        "src\\components\\version\\UpdateBanner.tsx",
         "src\\components\\ui\\vehicle-search-input.tsx",
         "src\\components\\ui\\sheet.tsx",
         "src\\components\\ui\\duplicate-popover.tsx",
@@ -50412,8 +51539,16 @@
         "src\\components\\orders\\communication\\MessageComposer.tsx",
         "src\\components\\orders\\communication\\MentionPicker.tsx",
         "src\\components\\orders\\communication\\CommunicationHub.tsx",
+        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\notifications\\PushNotificationSettings.tsx",
         "src\\components\\notifications\\NotificationAnalyticsDashboard.tsx",
+        "src\\components\\notifications\\analytics\\ProviderComparisonChart.tsx",
+        "src\\components\\notifications\\analytics\\NotificationAnalyticsDashboard.tsx",
+        "src\\components\\notifications\\analytics\\MetricsOverview.tsx",
+        "src\\components\\notifications\\analytics\\FiltersPanel.tsx",
+        "src\\components\\notifications\\analytics\\EngagementFunnel.tsx",
+        "src\\components\\notifications\\analytics\\DeliveryTimelineChart.tsx",
+        "src\\components\\notifications\\analytics\\ChannelPerformanceChart.tsx",
         "src\\components\\nfc\\NFCVehicleTracker.tsx",
         "src\\components\\nfc\\NFCTagTemplates.tsx",
         "src\\components\\nfc\\NFCPhysicalReader.tsx",
@@ -50452,15 +51587,15 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "173 hours"
+      "estimatedEffort": "178 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2308 translation keys are referenced but missing",
+      "description": "2393 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "116 hours"
+      "estimatedEffort": "120 hours"
     }
   ],
-  "coverage": 78
+  "coverage": 79
 }

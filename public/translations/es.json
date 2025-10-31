@@ -4810,6 +4810,90 @@
       "enable_push": "Activar notificaciones push",
       "enable_email": "Activar notificaciones por correo",
       "enable_in_app": "Activar notificaciones en la aplicación"
+    },
+    "preferences": "Preferencias de Notificación",
+    "channels": {
+      "sms": "SMS",
+      "sms_description": "Notificaciones por mensaje de texto",
+      "email": "Correo Electrónico",
+      "email_description": "Notificaciones por correo electrónico",
+      "push": "Notificaciones Push",
+      "push_description": "Notificaciones push de navegador y móvil",
+      "in_app": "En la Aplicación",
+      "in_app_description": "Notificaciones dentro de la aplicación"
+    },
+    "priorities": {
+      "low": "Baja",
+      "normal": "Normal",
+      "high": "Alta",
+      "urgent": "Urgente",
+      "critical": "Crítica"
+    },
+    "schedule": {
+      "quietHours": "Horario de Silencio",
+      "quietHours_description": "No molestar durante estas horas",
+      "quietStart": "Hora de Inicio",
+      "quietEnd": "Hora de Fin",
+      "timezone": "Zona Horaria",
+      "workingHours": "Horario Laboral",
+      "workingHours_description": "Horario comercial normal"
+    },
+    "entities": {
+      "sales_orders": "Órdenes de Venta",
+      "sales_orders_description": "Notificaciones para actividades de órdenes de venta",
+      "service_orders": "Órdenes de Servicio",
+      "service_orders_description": "Notificaciones para actividades de órdenes de servicio",
+      "recon_orders": "Órdenes de Recon",
+      "recon_orders_description": "Notificaciones para actividades de reacondicionamiento",
+      "car_wash": "Car Wash",
+      "car_wash_description": "Notificaciones para actividades de lavado de autos",
+      "get_ready": "Get Ready",
+      "get_ready_description": "Notificaciones para actividades de Get Ready",
+      "contacts": "Contactos",
+      "contacts_description": "Notificaciones para actividades de contactos",
+      "teams": "Equipos",
+      "teams_description": "Notificaciones de colaboración en equipo"
+    },
+    "frequency": {
+      "all": "Todas las Notificaciones",
+      "mentions": "Solo Menciones",
+      "important": "Solo Importantes",
+      "none": "Ninguna"
+    },
+    "loading": "Cargando notificaciones...",
+    "tabs": {
+      "grouped": "Agrupadas",
+      "recent": "Recientes"
+    },
+    "filter": {
+      "all": "Todas",
+      "unread": "No leídas",
+      "important": "Importantes",
+      "all_description": "Mostrar todas las notificaciones",
+      "unread_description": "Mostrar solo notificaciones no leídas",
+      "important_description": "Mostrar solo notificaciones importantes"
+    },
+    "actions": {
+      "mark_read": "Marcar como leída",
+      "delete": "Eliminar",
+      "save_later": "Guardar para después",
+      "archive": "Archivar"
+    },
+    "count": {
+      "singular": "{{count}} notificación",
+      "plural": "{{count}} notificaciones",
+      "unread": "{{count}} sin leer"
+    },
+    "empty": {
+      "message": "No hay notificaciones",
+      "filtered": "No hay notificaciones que coincidan con tus filtros"
+    },
+    "show_more": "Mostrar más",
+    "toast": {
+      "saved": "Guardado",
+      "savedMessage": "Preferencias de notificación guardadas exitosamente",
+      "saveError": "Error",
+      "saveErrorMessage": "Error al guardar preferencias de notificación"
     }
   }
 }

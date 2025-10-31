@@ -29,6 +29,7 @@ import {
 import { useSmartNotifications } from '@/hooks/useSmartNotifications';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface SmartNotificationCenterProps {
   dealerId?: number;
@@ -36,6 +37,7 @@ interface SmartNotificationCenterProps {
 }
 
 export function SmartNotificationCenter({ dealerId, className }: SmartNotificationCenterProps) {
+  const { t } = useTranslation();
   const {
     notifications,
     groupedNotifications,
@@ -142,21 +144,21 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
               {notification.status !== 'read' && (
                 <DropdownMenuItem onClick={() => markAsRead(notification.id)}>
                   <Check className="h-4 w-4 mr-2" />
-                  Mark as read
+                  {t('notifications.actions.mark_read')}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => deleteNotification(notification.id)}>
                 <X className="h-4 w-4 mr-2" />
-                Delete
+                {t('notifications.actions.delete')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Star className="h-4 w-4 mr-2" />
-                Save for later
+                {t('notifications.actions.save_later')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Archive className="h-4 w-4 mr-2" />
-                Archive
+                {t('notifications.actions.archive')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -181,7 +183,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
         <CardContent className="p-6">
           <div className="flex items-center justify-center text-muted-foreground">
             <Bell className="h-6 w-6 animate-pulse mr-2" />
-            Loading notifications...
+            {t('notifications.loading')}
           </div>
         </CardContent>
       </Card>
@@ -194,7 +196,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
-            Notifications
+            {t('notifications.title')}
             {unreadCount > 0 && (
               <Badge variant="secondary">{unreadCount}</Badge>
             )}
@@ -205,18 +207,18 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Filter className="h-4 w-4 mr-2" />
-                  {selectedFilter === 'all' ? 'All' : selectedFilter === 'unread' ? 'Unread' : 'Important'}
+                  {selectedFilter === 'all' ? t('notifications.filter.all') : selectedFilter === 'unread' ? t('notifications.filter.unread') : t('notifications.filter.important')}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setSelectedFilter('all')}>
-                  All notifications
+                  {t('notifications.filter.all_description')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setSelectedFilter('unread')}>
-                  Unread only
+                  {t('notifications.filter.unread_description')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setSelectedFilter('important')}>
-                  Important only
+                  {t('notifications.filter.important_description')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -224,7 +226,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
             {unreadCount > 0 && (
               <Button variant="outline" size="sm" onClick={markAllAsRead}>
                 <CheckCheck className="h-4 w-4 mr-2" />
-                Mark all read
+                {t('notifications.actions.mark_all_read')}
               </Button>
             )}
           </div>
@@ -234,8 +236,8 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
       <CardContent className="p-0">
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="grouped">By Context</TabsTrigger>
-            <TabsTrigger value="chronological">Recent</TabsTrigger>
+            <TabsTrigger value="grouped">{t('notifications.tabs.grouped')}</TabsTrigger>
+            <TabsTrigger value="chronological">{t('notifications.tabs.recent')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="grouped" className="mt-0">
@@ -243,7 +245,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
               {groupedNotifications.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
                   <Bell className="h-8 w-8 mx-auto mb-4 opacity-50" />
-                  <p>No notifications to display</p>
+                  <p>{t('notifications.empty.message')}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -255,11 +257,11 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                             {group.entity_type}
                           </Badge>
                           <span className="text-sm font-medium">
-                            {group.notifications.length} notification{group.notifications.length === 1 ? '' : 's'}
+                            {group.notifications.length} {group.notifications.length === 1 ? t('notifications.count.singular') : t('notifications.count.plural')}
                           </span>
                           {group.unreadCount > 0 && (
                             <Badge variant="secondary" className="text-xs">
-                              {group.unreadCount} unread
+                              {group.unreadCount} {t('notifications.count.unread')}
                             </Badge>
                           )}
                         </div>
@@ -284,7 +286,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                         {group.notifications.length > 3 && (
                           <div className="p-4 text-center">
                             <Button variant="ghost" size="sm">
-                              Show {group.notifications.length - 3} more
+                              {t('notifications.show_more', { count: group.notifications.length - 3 })}
                             </Button>
                           </div>
                         )}
@@ -301,7 +303,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
               {filteredNotifications.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
                   <Bell className="h-8 w-8 mx-auto mb-4 opacity-50" />
-                  <p>No notifications match your filter</p>
+                  <p>{t('notifications.empty.filtered')}</p>
                 </div>
               ) : (
                 <div className="space-y-0">
