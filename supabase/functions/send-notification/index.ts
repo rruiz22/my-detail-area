@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0'
+import { createNotificationLogger, type DeliveryLog } from '../_shared/notification-logger.ts'
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -56,6 +57,7 @@ const FIREBASE_PROJECT_ID = Deno.env.get('FIREBASE_PROJECT_ID') || 'my-detail-ar
 // ============================================================================
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+const logger = createNotificationLogger(supabase)
 
 // ============================================================================
 // LOGGING UTILITIES
@@ -238,10 +240,36 @@ async function sendFCMNotificationV1(
   token: string,
   title: string,
   body: string,
+  userId: string,
+  dealerId: number,
   url?: string,
   data?: Record<string, any>
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; logId?: string }> {
+  const startTime = Date.now()
+  let deliveryLogId: string | undefined
+
   try {
+    // Pre-send logging - create delivery log in "pending" status
+    const notificationId = crypto.randomUUID()
+    const deliveryLogResult = await logger.logDelivery({
+      dealership_id: dealerId.toString(),
+      notification_id: notificationId,
+      user_id: userId,
+      channel: 'push',
+      status: 'pending',
+      provider: 'fcm',
+      device_token: token.substring(0, 50),
+      notification_title: title,
+      notification_body: body,
+      metadata: {
+        url,
+        data,
+        fcm_version: 'v1'
+      }
+    })
+
+    deliveryLogId = deliveryLogResult?.id
+
     // Get OAuth2 access token
     const accessToken = await getFirebaseAccessToken()
 
@@ -286,6 +314,7 @@ async function sendFCMNotificationV1(
     )
 
     const responseText = await response.text()
+    const latency = Date.now() - startTime
     console.log('[send-notification] FCM v1 response status:', response.status)
 
     if (!response.ok) {
@@ -297,13 +326,15 @@ async function sendFCMNotificationV1(
       })
 
       // Parse error response
+      let errorCode = 'UNKNOWN'
       try {
         const errorData = JSON.parse(responseText)
+        errorCode = errorData.error?.details?.[0]?.errorCode || errorData.error?.status || 'UNKNOWN'
 
         // Mark token as invalid for specific errors
         if (
-          errorData.error?.details?.[0]?.errorCode === 'UNREGISTERED' ||
-          errorData.error?.details?.[0]?.errorCode === 'INVALID_ARGUMENT'
+          errorCode === 'UNREGISTERED' ||
+          errorCode === 'INVALID_ARGUMENT'
         ) {
           console.log('[send-notification] Marking token as invalid')
           await supabase
@@ -315,19 +346,68 @@ async function sendFCMNotificationV1(
         console.error('[send-notification] Error parsing FCM error response:', parseError)
       }
 
-      return { success: false, error: responseText }
+      // Update delivery log with failure
+      if (deliveryLogId) {
+        await logger.updateStatus(deliveryLogId, 'failed', {
+          failed_at: new Date(),
+          error_message: responseText.substring(0, 500),
+          error_code: errorCode,
+          latency_ms: latency,
+          provider_response: { status: response.status }
+        })
+      }
+
+      return { success: false, error: responseText, logId: deliveryLogId }
+    }
+
+    // Parse success response to get provider message ID
+    let providerMessageId: string | undefined
+    try {
+      const responseData = JSON.parse(responseText)
+      providerMessageId = responseData.name // FCM v1 returns message name
+    } catch (parseError) {
+      console.warn('[send-notification] Could not parse FCM success response')
+    }
+
+    // Update delivery log with success
+    if (deliveryLogId) {
+      await logger.updateStatus(deliveryLogId, 'sent', {
+        sent_at: new Date(),
+        latency_ms: latency,
+        provider_response: { status: response.status, message_name: providerMessageId }
+      })
+
+      // Update provider_message_id separately if available
+      if (providerMessageId) {
+        await supabase
+          .from('notification_delivery_log')
+          .update({ provider_message_id: providerMessageId })
+          .eq('id', deliveryLogId)
+      }
     }
 
     console.log('[send-notification] FCM v1 notification sent successfully')
-    return { success: true }
+    return { success: true, logId: deliveryLogId }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    console.error('[send-notification] FCM v1 send error:', errorMessage)
+    const latency = Date.now() - startTime
+    console.error('[send-notification] FCM v1 send exception:', errorMessage)
     await logToDatabase('error', 'FCM v1 send exception', {
       error: errorMessage,
       tokenPreview: token.substring(0, 20) + '...',
     })
-    return { success: false, error: errorMessage }
+
+    // Update delivery log with failure
+    if (deliveryLogId) {
+      await logger.updateStatus(deliveryLogId, 'failed', {
+        failed_at: new Date(),
+        error_message: errorMessage,
+        error_code: 'EXCEPTION',
+        latency_ms: latency
+      })
+    }
+
+    return { success: false, error: errorMessage, logId: deliveryLogId }
   }
 }
 
@@ -400,7 +480,7 @@ serve(async (req) => {
     // Send notifications to all tokens (parallel)
     const results = await Promise.allSettled(
       tokens.map((tokenRecord: FCMToken) =>
-        sendFCMNotificationV1(tokenRecord.fcm_token, title, messageBody, url, data)
+        sendFCMNotificationV1(tokenRecord.fcm_token, title, messageBody, userId, dealerId, url, data)
       )
     )
 
