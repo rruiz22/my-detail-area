@@ -68,7 +68,11 @@ interface VehicleForInvoice {
   custom_order_number: string | null;
   order_type: string;
   customer_name: string;
+  assigned_to: string | null;
   stock_number: string | null;
+  po: string | null;
+  ro: string | null;
+  tag: string | null;
   vehicle_make: string | null;
   vehicle_model: string | null;
   vehicle_year: number | null;
@@ -207,7 +211,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
       let query = supabase
         .from('orders')
-        .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, updated_at')
+        .select('id, order_number, custom_order_number, order_type, customer_name, assigned_to, stock_number, po, ro, tag, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, updated_at')
         .eq('dealer_id', dealerId)
         .limit(500);
 
@@ -266,6 +270,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       filtered = filtered.filter(vehicle =>
         vehicle.customer_name?.toLowerCase().includes(term) ||
         vehicle.stock_number?.toLowerCase().includes(term) ||
+        vehicle.po?.toLowerCase().includes(term) ||
+        vehicle.ro?.toLowerCase().includes(term) ||
+        vehicle.tag?.toLowerCase().includes(term) ||
         vehicle.vehicle_vin?.toLowerCase().includes(term) ||
         vehicle.vehicle_make?.toLowerCase().includes(term) ||
         vehicle.vehicle_model?.toLowerCase().includes(term) ||
@@ -655,8 +662,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     {invoices.map((invoice) => {
                       const orderType = invoice.order?.orderType || 'sales';
                       const orderPath = `/${orderType}`;
-                      // Use ONLY custom_order_number (the customer's tag/stock number)
-                      const orderNumber = invoice.order?.custom_order_number || invoice.order?.customOrderNumber || 'N/A';
+                      // Use order_number (internal system code like SA-1234, CW-1331)
+                      const orderNumber = invoice.order?.orderNumber || invoice.order?.order_number || 'N/A';
 
                       return (
                         <TableRow
@@ -683,8 +690,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline flex flex-col text-left"
                             >
                               <span>{orderNumber}</span>
-                              <span className="text-xs text-muted-foreground capitalize">
-                                {invoice.order?.customerName || 'N/A'}
+                              <span className="text-xs text-muted-foreground">
+                                {invoice.order?.assignedTo || invoice.order?.assigned_to || 'Unassigned'}
                               </span>
                             </button>
                           </TableCell>
@@ -940,7 +947,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         </TableHead>
                         <TableHead>Order Number</TableHead>
                         <TableHead>Date</TableHead>
-                        <TableHead>Stock</TableHead>
+                        <TableHead>
+                          {orderType === 'service' ? 'PO / RO / Tag' : orderType === 'carwash' ? 'Stock / Tag' : 'Stock'}
+                        </TableHead>
                         <TableHead>Vehicle</TableHead>
                         <TableHead>VIN</TableHead>
                         <TableHead>Services</TableHead>
@@ -950,8 +959,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </TableHeader>
                     <TableBody>
                       {filteredVehicles.map((vehicle) => {
-                        // Use custom_order_number (the one displayed in modules)
-                        const orderNumber = vehicle.custom_order_number || 'N/A';
+                        // Use order_number (internal system code like SA-1234, CW-1331)
+                        const orderNumber = vehicle.order_number || 'N/A';
                         const orderPath = `/${vehicle.order_type}`;
 
                         return (
@@ -977,7 +986,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               >
                                 <span className="text-sm">{orderNumber}</span>
                                 <span className="text-xs text-muted-foreground">
-                                  {vehicle.customer_name}
+                                  {vehicle.assigned_to || 'Unassigned'}
                                 </span>
                               </button>
                             </TableCell>
@@ -985,7 +994,22 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               {formatDate(vehicle.completed_at || vehicle.created_at)}
                             </TableCell>
                             <TableCell className="font-medium text-sm">
-                              {vehicle.stock_number || 'N/A'}
+                              {orderType === 'service' ? (
+                                <div className="flex flex-col gap-0.5">
+                                  {vehicle.po && <span className="text-xs text-muted-foreground">PO: {vehicle.po}</span>}
+                                  {vehicle.ro && <span className="text-xs text-muted-foreground">RO: {vehicle.ro}</span>}
+                                  {vehicle.tag && <span className="text-xs font-medium">Tag: {vehicle.tag}</span>}
+                                  {!vehicle.po && !vehicle.ro && !vehicle.tag && 'N/A'}
+                                </div>
+                              ) : orderType === 'carwash' ? (
+                                <div className="flex flex-col gap-0.5">
+                                  {vehicle.stock_number && <span className="text-xs font-medium">Stock: {vehicle.stock_number}</span>}
+                                  {vehicle.tag && <span className="text-xs font-medium">Tag: {vehicle.tag}</span>}
+                                  {!vehicle.stock_number && !vehicle.tag && 'N/A'}
+                                </div>
+                              ) : (
+                                vehicle.stock_number || 'N/A'
+                              )}
                             </TableCell>
                             <TableCell className="text-sm">
                               {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
