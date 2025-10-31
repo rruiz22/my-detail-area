@@ -3,7 +3,7 @@ import { TermsOfServiceModal } from "@/components/legal/TermsOfServiceModal";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { APP_VERSION } from "@/config/version";
+import { VersionDisplay } from "@/components/version/VersionDisplay";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { Menu, Search } from "lucide-react";
@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { AnnouncementBanner } from "./announcements/AnnouncementBanner";
 import { AppSidebar } from "./AppSidebar";
-import { FloatingChatBubble } from "./chat/FloatingChatBubble";
 import { DealershipFilter } from "./filters/DealershipFilter";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Breadcrumbs } from "./navigation/Breadcrumbs";
@@ -191,7 +190,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
               <div className="flex items-center gap-2 sm:gap-4 text-sm text-muted-foreground flex-wrap justify-center sm:justify-start">
                 <span>{t('layout.footer.copyright', { year: new Date().getFullYear() })}</span>
                 <span className="hidden sm:inline">•</span>
-                <span className="text-xs">{t('layout.footer.version', { version: APP_VERSION })}</span>
+                <VersionDisplay showDetails={true} />
               </div>
 
               <div className="flex items-center gap-4 text-sm">

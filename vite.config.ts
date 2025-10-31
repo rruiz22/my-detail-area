@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
 import { componentTagger } from "lovable-tagger";
+import path from "path";
+import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
@@ -169,8 +169,15 @@ export default defineConfig(({ mode }) => ({
     format: 'es'
   },
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    // Cache busting habilitado por defecto con hashes en nombres de archivo
     rollupOptions: {
       output: {
+        // Nombres de archivos con hash para cache busting
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         manualChunks: {
           // Core framework - highest priority
           'react-vendor': ['react', 'react-dom'],
