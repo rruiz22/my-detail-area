@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Bell,
-  Mail,
-  MessageSquare,
-  Smartphone,
-  Volume2,
-  VolumeX,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  Info,
-  Zap
-} from 'lucide-react';
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from '@/hooks/use-toast';
 import { useNotificationPreferences } from '@/hooks/useEnhancedNotifications';
 import { pushNotificationService } from '@/services/pushNotificationService';
-import { toast } from '@/hooks/use-toast';
+import {
+    AlertTriangle,
+    Bell,
+    CheckCircle,
+    Clock,
+    Info,
+    Mail,
+    MessageSquare,
+    Smartphone,
+    Volume2,
+    VolumeX,
+    Zap
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type NotificationChannel = 'sms' | 'email' | 'push' | 'in_app';
@@ -96,7 +96,7 @@ export function NotificationPreferencesModal({
     // Check push notification support
     const supported = pushNotificationService.isSupported();
     setPushSupported(supported);
-    
+
     if (supported) {
       setPushPermission(Notification.permission);
     }
@@ -193,7 +193,7 @@ export function NotificationPreferencesModal({
     try {
       const permission = await pushNotificationService.requestPermission();
       setPushPermission(permission);
-      
+
       if (permission === 'granted') {
         await pushNotificationService.initialize();
         toast({
@@ -278,11 +278,11 @@ export function NotificationPreferencesModal({
     return null;
   }
 
-  const channelPrefs = localPrefs.channel_preferences;
-  const priorityFilters = localPrefs.priority_filters;
-  const quietHours = localPrefs.quiet_hours;
-  const entitySubs = localPrefs.entity_subscriptions;
-  const notificationSound = localPrefs.notification_sound;
+  const channelPrefs = localPrefs.channel_preferences || {};
+  const priorityFilters = localPrefs.priority_filters || {};
+  const quietHours = localPrefs.quiet_hours || { enabled: false, start: '21:00', end: '07:00', timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
+  const entitySubs = localPrefs.entity_subscriptions || {};
+  const notificationSound = localPrefs.notification_sound || { enabled: true, soundId: 'default' };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -304,11 +304,11 @@ export function NotificationPreferencesModal({
 
           <TabsContent value="channels" className="space-y-6">
             <div className="grid gap-6">
-              {Object.entries(channelPrefs).map(([channel, config]: [string, ChannelPreference]) => {
+              {Object.entries(channelPrefs || {}).map(([channel, config]: [string, ChannelPreference]) => {
                 const Icon = channelIcons[channel as keyof typeof channelIcons];
                 const isPushChannel = channel === 'push';
                 const needsPermission = isPushChannel && pushPermission !== 'granted';
-                
+
                 return (
                   <Card key={channel}>
                     <CardHeader className="pb-3">
@@ -390,9 +390,9 @@ export function NotificationPreferencesModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {Object.entries(priorityFilters).map(([priority, enabled]: [string, boolean]) => {
+                  {Object.entries(priorityFilters || {}).map(([priority, enabled]: [string, boolean]) => {
                     const Icon = priorityIcons[priority as keyof typeof priorityIcons];
-                    
+
                     return (
                       <div key={priority} className="flex items-center justify-between p-3 border rounded-lg">
                         <div className="flex items-center gap-3">
@@ -436,7 +436,7 @@ export function NotificationPreferencesModal({
                       onCheckedChange={handleQuietHoursToggle}
                     />
                   </div>
-                  
+
                   {quietHours.enabled && (
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -499,7 +499,7 @@ export function NotificationPreferencesModal({
                   <Label>{t('notifications.enableSounds')}</Label>
                   <Switch
                     checked={notificationSound.enabled}
-                    onCheckedChange={(enabled) => 
+                    onCheckedChange={(enabled) =>
                       setLocalPrefs({
                         ...localPrefs,
                         notification_sound: {
@@ -524,7 +524,7 @@ export function NotificationPreferencesModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {Object.entries(entitySubs).map(([entityType, config]: [string, EntitySubscription]) => (
+                  {Object.entries(entitySubs || {}).map(([entityType, config]: [string, EntitySubscription]) => (
                     <div key={entityType} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
                         <Label className="text-base">{t(`notifications.entities.${entityType}`)}</Label>
