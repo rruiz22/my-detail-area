@@ -22,10 +22,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 13%;
 
-    /* Teal/Turquoise Green - perfect balance of fresh and professional */
-    --primary: 173 80% 40%;  /* Teal/Turquoise Green */
+    /* Professional Blue - #0072CE */
+    --primary: 207 100% 40%;  /* Blue #0072CE */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 173 80% 50%;
+    --primary-glow: 207 100% 50%;
 
     /* Subtle gray backgrounds - Apple style */
     --secondary: 240 5% 96%;
@@ -34,8 +34,8 @@ All colors MUST be HSL.
     --muted: 240 5% 96%;
     --muted-foreground: 0 0% 45%;
 
-    /* Accent color - matches primary teal */
-    --accent: 173 80% 40%;
+    /* Accent color - matches primary blue */
+    --accent: 207 100% 40%;
     --accent-foreground: 0 0% 100%;
 
     /* Status colors - Apple Human Interface Guidelines */
@@ -80,7 +80,7 @@ All colors MUST be HSL.
     --sidebar-accent: 240 5% 94%;
     --sidebar-accent-foreground: 0 0% 13%;
     --sidebar-border: 240 6% 92%;
-    --sidebar-ring: 173 80% 40%;
+    --sidebar-ring: 207 100% 40%;
   }
 
   /* ============================================
@@ -149,10 +149,10 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
-    /* Teal/Turquoise Green - vibrant and balanced in dark mode */
-    --primary: 173 80% 45%;
+    /* Professional Blue - #0072CE - brighter in dark mode */
+    --primary: 207 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 173 80% 55%;
+    --primary-glow: 207 100% 60%;
 
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -160,7 +160,7 @@ All colors MUST be HSL.
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 70%;
 
-    --accent: 173 80% 45%;
+    --accent: 207 100% 50%;
     --accent-foreground: 0 0% 100%;
 
     /* Status colors - brighter in dark mode */
@@ -178,17 +178,17 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 173 80% 45%;
+    --ring: 207 100% 50%;
 
     /* Sidebar dark mode */
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 173 80% 45%;
+    --sidebar-primary: 207 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 173 80% 45%;
+    --sidebar-ring: 207 100% 50%;
   }
 
   /* ============================================

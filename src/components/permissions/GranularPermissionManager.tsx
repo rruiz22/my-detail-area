@@ -7,28 +7,28 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { useDealershipModules } from '@/hooks/useDealershipModules';
-import { useRoleModuleAccess } from '@/hooks/useRoleModuleAccess';
 import type { AppModule } from '@/hooks/usePermissions';
+import { useRoleModuleAccess } from '@/hooks/useRoleModuleAccess';
 import { supabase } from '@/integrations/supabase/client';
 import type {
-    ModulePermission,
-    ModulePermissionKey,
-    SystemPermission,
-    SystemPermissionKey
+  ModulePermission,
+  ModulePermissionKey,
+  SystemPermission,
+  SystemPermissionKey
 } from '@/types/permissions';
 import {
-    getPrerequisitePermissions,
-    isDangerousPermission,
-    sortPermissions,
-    validatePermissions
+  getPrerequisitePermissions,
+  isDangerousPermission,
+  sortPermissions,
+  validatePermissions
 } from '@/utils/permissionHelpers';
 import {
-    AlertTriangle,
-    Info,
-    Lock,
-    RotateCcw,
-    Save,
-    Shield
+  AlertTriangle,
+  Info,
+  Lock,
+  RotateCcw,
+  Save,
+  Shield
 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -162,7 +162,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
 
       console.log('✅ [GranularPermissionManager] Loaded permissions for', Object.keys(modPermState).length, 'modules');
       console.log('   - System permissions:', sysPermSet.size);
-      Object.entries(modPermState).forEach(([mod, perms]) => {
+      Object.entries(modPermState || {}).forEach(([mod, perms]) => {
         console.log(`   - ${mod}: ${perms.size} permissions`);
       });
 
@@ -288,7 +288,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
 
       // Insert module permissions
       const modPermsToInsert: any[] = [];
-      for (const [module, perms] of Object.entries(modulePermissions)) {
+      for (const [module, perms] of Object.entries(modulePermissions || {})) {
         for (const permKey of perms) {
           // Get permission ID
           const { data: permData } = await supabase
@@ -475,7 +475,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
           Module Permissions
         </h4>
 
-        {Object.entries(availableModulePerms)
+        {Object.entries(availableModulePerms || {})
           .filter(([module]) => {
             // Don't filter if no dealerId provided (backwards compatibility)
             if (!dealerId) return true;
@@ -487,7 +487,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
             return hasModuleAccess(module as AppModule);
           })
           .map(([module, perms]) => {
-          const modulePerms = modulePermissions[module] || new Set();
+          const modulePerms = (modulePermissions || {})[module] || new Set();
           const checkedCount = modulePerms.size;
           const totalCount = perms.length;
           const isModuleEnabled = hasModuleAccess(module as AppModule);
