@@ -7,6 +7,7 @@ import {
   showBrowserNotification,
   areBrowserNotificationsEnabled,
 } from '@/utils/notificationUtils';
+import * as logger from '@/utils/logger';
 
 // Type for notification data payload
 export interface NotificationData {
@@ -228,7 +229,7 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
   useEffect(() => {
     if (!user?.id || !dealerId) return;
 
-    console.log('[useSmartNotifications] Setting up real-time subscription', {
+    logger.dev('[useSmartNotifications] Setting up real-time subscription', {
       userId: user.id,
       dealerId,
     });
@@ -245,13 +246,13 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
         },
         async (payload) => {
           try {
-            console.log('[useSmartNotifications] INSERT event received:', payload);
+            logger.dev('[useSmartNotifications] INSERT event received:', payload);
 
             const newNotification = payload.new as SmartNotification;
 
             // Verify notification belongs to current dealer
             if (newNotification.dealer_id !== dealerId) {
-              console.log('[useSmartNotifications] Notification for different dealer, skipping');
+              logger.dev('[useSmartNotifications] Notification for different dealer, skipping');
               return;
             }
 
@@ -259,20 +260,20 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
             setNotifications((prev) => {
               // Prevent duplicates
               if (prev.some((n) => n.id === newNotification.id)) {
-                console.log('[useSmartNotifications] Notification already exists, skipping');
+                logger.dev('[useSmartNotifications] Notification already exists, skipping');
                 return prev;
               }
-              console.log('[useSmartNotifications] Adding notification to state (optimistic)');
+              logger.dev('[useSmartNotifications] Adding notification to state (optimistic)');
               return [newNotification, ...prev];
             });
 
             // Play notification sound based on priority
-            console.log('[useSmartNotifications] Playing notification sound');
+            logger.dev('[useSmartNotifications] Playing notification sound');
             await playNotificationSound(newNotification.priority);
 
             // Show browser notification if enabled
             if (areBrowserNotificationsEnabled()) {
-              console.log('[useSmartNotifications] Showing browser notification');
+              logger.dev('[useSmartNotifications] Showing browser notification');
               await showBrowserNotification({
                 title: newNotification.title,
                 message: newNotification.message,
@@ -280,7 +281,7 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
                 data: newNotification.data,
               });
             } else {
-              console.log('[useSmartNotifications] Browser notifications not enabled');
+              logger.dev('[useSmartNotifications] Browser notifications not enabled');
             }
 
             // Show toast for high priority notifications
@@ -288,7 +289,7 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
               newNotification.priority === 'high' ||
               newNotification.priority === 'urgent'
             ) {
-              console.log('[useSmartNotifications] Showing toast for high priority notification');
+              logger.dev('[useSmartNotifications] Showing toast for high priority notification');
 
               const toastDuration =
                 newNotification.priority === 'urgent' ? 10000 : 5000;
@@ -316,13 +317,13 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
         },
         (payload) => {
           try {
-            console.log('[useSmartNotifications] UPDATE event received:', payload);
+            logger.dev('[useSmartNotifications] UPDATE event received:', payload);
 
             const updatedNotification = payload.new as SmartNotification;
 
             // Verify notification belongs to current dealer
             if (updatedNotification.dealer_id !== dealerId) {
-              console.log('[useSmartNotifications] Notification for different dealer, skipping');
+              logger.dev('[useSmartNotifications] Notification for different dealer, skipping');
               return;
             }
 
@@ -330,11 +331,11 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
             setNotifications((prev) => {
               const exists = prev.some((n) => n.id === updatedNotification.id);
               if (!exists) {
-                console.log('[useSmartNotifications] Updated notification not in state, skipping');
+                logger.dev('[useSmartNotifications] Updated notification not in state, skipping');
                 return prev;
               }
 
-              console.log('[useSmartNotifications] Updating notification in state (optimistic)', {
+              logger.dev('[useSmartNotifications] Updating notification in state (optimistic)', {
                 id: updatedNotification.id,
                 status: updatedNotification.status,
                 readAt: updatedNotification.read_at,
@@ -350,11 +351,11 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
         }
       )
       .subscribe((status) => {
-        console.log('[useSmartNotifications] Subscription status:', status);
+        logger.dev('[useSmartNotifications] Subscription status:', status);
       });
 
     return () => {
-      console.log('[useSmartNotifications] Cleaning up real-time subscription');
+      logger.dev('[useSmartNotifications] Cleaning up real-time subscription');
       supabase.removeChannel(channel);
     };
   }, [user?.id, dealerId]);

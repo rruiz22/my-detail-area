@@ -3,10 +3,10 @@ import { initReactI18next } from 'react-i18next';
 
 // Translation cache version - increment this when translations are updated
 // This forces browsers to reload translation files
-const TRANSLATION_VERSION = `1.5.0-${Date.now()}`; // v1.5.0: Added getReady.analytics translations (58 keys)
+const TRANSLATION_VERSION = `1.5.1-${Date.now()}`; // v1.5.1: Added NotificationPreferencesModal translations (26 keys)
 
 // ✅ PHASE 1.3: SessionStorage cache key for translations
-const TRANSLATION_CACHE_KEY = 'i18n_translations_cache_v1';
+const TRANSLATION_CACHE_KEY = 'i18n_translations_cache_v2'; // v2: Force reload for settings tabs fix
 
 // Language resources will be loaded dynamically
 const resources = {};

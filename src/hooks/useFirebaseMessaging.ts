@@ -81,51 +81,25 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
           return;
         }
 
-        // Check if token already exists
-        const { data: existingToken } = await supabase
+        // Use UPSERT for atomic operation (prevents race conditions and duplicate key errors)
+        const { error } = await supabase
           .from('fcm_tokens')
-          .select('id, fcm_token')
-          .eq('user_id', user.id)
-          .eq('dealer_id', dealershipId)
-          .maybeSingle();
-
-        if (existingToken) {
-          // Update existing token if it changed
-          if (existingToken.fcm_token !== fcmToken) {
-            const { error } = await supabase
-              .from('fcm_tokens')
-              .update({
-                fcm_token: fcmToken,
-                is_active: true,
-                updated_at: new Date().toISOString(),
-              })
-              .eq('id', existingToken.id);
-
-            if (error) {
-              console.error('[FCM] Error updating token:', error);
-              throw error;
-            }
-
-            console.log('[FCM] Token updated successfully');
-          } else {
-            console.log('[FCM] Token already up to date');
-          }
-        } else {
-          // Insert new token
-          const { error } = await supabase.from('fcm_tokens').insert({
+          .upsert({
             user_id: user.id,
             dealer_id: dealershipId,
             fcm_token: fcmToken,
             is_active: true,
+            updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'user_id,dealer_id,fcm_token'
           });
 
-          if (error) {
-            console.error('[FCM] Error inserting token:', error);
-            throw error;
-          }
-
-          console.log('[FCM] Token saved successfully');
+        if (error) {
+          console.error('[FCM] Error upserting token:', error);
+          throw error;
         }
+
+        console.log('[FCM] Token saved successfully');
       } catch (error) {
         console.error('[FCM] Error saving token to database:', error);
         throw error;

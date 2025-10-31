@@ -30,6 +30,7 @@ import DealerView from "./pages/DealerView";
 import DetailHub from "./pages/DetailHub";
 import GetReady from "./pages/GetReady";
 import Index from "./pages/Index";
+// Invoices moved to Reports tab - no longer a separate page
 import { InvitationAccept } from "./pages/InvitationAccept";
 import NFCTracking from "./pages/NFCTracking";
 import NotFound from "./pages/NotFound";
@@ -174,6 +175,7 @@ const AppRoutes = () => {
               </PermissionGuard>
             }
           />
+              {/* Invoices moved to Reports tab */}
           <Route
             path="settings"
             element={

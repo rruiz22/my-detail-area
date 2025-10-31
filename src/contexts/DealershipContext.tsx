@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import * as logger from '@/utils/logger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -142,11 +143,11 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
     queryKey: ['accessible_dealerships', user?.id],
     queryFn: async () => {
       if (!user?.id) {
-        console.log('⏭️ [DealershipContext] No user ID, skipping fetch');
+        logger.dev('⏭️ [DealershipContext] No user ID, skipping fetch');
         return [];
       }
 
-      console.log('🔄 [DealershipContext] Fetching dealerships for user:', user.id);
+      logger.dev('🔄 [DealershipContext] Fetching dealerships for user:', user.id);
 
       const { data, error: fetchError } = await supabase.rpc('get_user_accessible_dealers', {
         user_uuid: user.id
@@ -158,7 +159,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
       }
 
       const dealershipsData = (data || []) as Dealership[];
-      console.log('✅ [DealershipContext] Fetched dealerships:', dealershipsData.length);
+      logger.dev('✅ [DealershipContext] Fetched dealerships:', dealershipsData.length);
 
       // Cache in localStorage for instant subsequent loads
       try {
@@ -167,7 +168,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
           timestamp: Date.now(),
           userId: user.id
         }));
-        console.log('💾 [DealershipContext] Cached dealerships in localStorage');
+        logger.dev('💾 [DealershipContext] Cached dealerships in localStorage');
       } catch (error) {
         console.warn('⚠️ [DealershipContext] Failed to cache in localStorage:', error);
       }
@@ -188,7 +189,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
             userId === user.id &&
             Date.now() - timestamp < 15 * 60 * 1000
           ) {
-            console.log('⚡ [DealershipContext] Using cached dealerships');
+            logger.dev('⚡ [DealershipContext] Using cached dealerships');
             return data as Dealership[];
           }
         }
@@ -223,7 +224,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
 
     if (dealerships.length > 0 && !hasInitialized.current && user) {
       hasInitialized.current = true;
-      console.log('🎯 [DealershipContext] Initializing dealership selection');
+      logger.dev('🎯 [DealershipContext] Initializing dealership selection');
 
       const savedFilter = localStorage.getItem('selectedDealerFilter');
 
@@ -239,12 +240,12 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
             detail: { dealerId: singleDealer.id }
           }));
 
-          console.log('✅ [DealershipContext] Auto-selected single dealership:', singleDealer.name);
+          logger.dev('✅ [DealershipContext] Auto-selected single dealership:', singleDealer.name);
         } else {
           // Multi-dealer or system_admin: Keep 'all'
           setCurrentDealershipState(null);
           prevDealerIdRef.current = 'all';
-          console.log('📋 [DealershipContext] Multi-dealer user, defaulting to "all"');
+          logger.dev('📋 [DealershipContext] Multi-dealer user, defaulting to "all"');
         }
       } else {
         // Restore specific dealer
@@ -254,7 +255,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
         if (savedDealership) {
           setCurrentDealershipState(savedDealership);
           prevDealerIdRef.current = savedId;
-          console.log('✅ [DealershipContext] Restored saved dealership:', savedDealership.name);
+          logger.dev('✅ [DealershipContext] Restored saved dealership:', savedDealership.name);
         } else {
           // Saved dealer not found - use first dealer
           console.warn('⚠️ [DealershipContext] Saved dealer not found, using first');
@@ -289,7 +290,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
           updatedDealership.logo_url !== currentDealership.logo_url ||
           updatedDealership.thumbnail_logo_url !== currentDealership.thumbnail_logo_url
         ) {
-          console.log('🔄 [DealershipContext] Logo changed, updating currentDealership');
+          logger.dev('🔄 [DealershipContext] Logo changed, updating currentDealership');
           setCurrentDealershipState(updatedDealership);
         }
       }
@@ -312,26 +313,26 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
       const customEvent = event as CustomEvent;
       const { dealerId } = customEvent.detail;
 
-      console.log('🔔 [DealershipContext] dealerFilterChanged event:', {
+      logger.dev('🔔 [DealershipContext] dealerFilterChanged event:', {
         dealerId,
         prevId: prevDealerIdRef.current
       });
 
       // Prevent redundant updates
       if (dealerId === prevDealerIdRef.current) {
-        console.log('⏭️ [DealershipContext] Skipping redundant update');
+        logger.dev('⏭️ [DealershipContext] Skipping redundant update');
         return;
       }
 
       prevDealerIdRef.current = dealerId;
 
       if (dealerId === 'all') {
-        console.log('🔄 [DealershipContext] Setting to null (all dealers)');
+        logger.dev('🔄 [DealershipContext] Setting to null (all dealers)');
         setCurrentDealershipState(null);
       } else {
         const selectedDealership = dealerships.find(d => d.id === dealerId);
         if (selectedDealership) {
-          console.log('✅ [DealershipContext] Setting dealership:', selectedDealership.name);
+          logger.dev('✅ [DealershipContext] Setting dealership:', selectedDealership.name);
           setCurrentDealershipState(selectedDealership);
         } else {
           console.warn('⚠️ [DealershipContext] Dealer not found:', dealerId);
@@ -357,7 +358,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
   const setCurrentDealership = useCallback((dealer: Dealership | null) => {
     if (!isMountedRef.current) return;
 
-    console.log('🔧 [DealershipContext] setCurrentDealership called:', dealer?.name || 'null');
+    logger.dev('🔧 [DealershipContext] setCurrentDealership called:', dealer?.name || 'null');
     setCurrentDealershipState(dealer);
     prevDealerIdRef.current = dealer?.id || 'all';
 
@@ -375,7 +376,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
   const refreshDealerships = useCallback(() => {
     if (!isMountedRef.current) return;
 
-    console.log('🔄 [DealershipContext] Refreshing dealerships');
+    logger.dev('🔄 [DealershipContext] Refreshing dealerships');
     queryClient.invalidateQueries({ queryKey: ['accessible_dealerships', user?.id] });
   }, [queryClient, user?.id]);
 
@@ -385,7 +386,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
   const filterByModule = useCallback(async (moduleName: AppModule): Promise<Dealership[]> => {
     if (!isMountedRef.current) return [];
 
-    console.log('🔍 [DealershipContext] Filtering by module:', moduleName);
+    logger.dev('🔍 [DealershipContext] Filtering by module:', moduleName);
     const filteredDealerships: Dealership[] = [];
 
     for (const dealership of dealerships) {
@@ -406,7 +407,7 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
       }
     }
 
-    console.log('✅ [DealershipContext] Filtered dealerships:', filteredDealerships.length);
+    logger.dev('✅ [DealershipContext] Filtered dealerships:', filteredDealerships.length);
     return filteredDealerships;
   }, [dealerships]);
 
