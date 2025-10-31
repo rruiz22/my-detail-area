@@ -296,10 +296,10 @@ export function NotificationPreferencesModal({
 
         <Tabs defaultValue="channels" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="channels">{t('notifications.channels')}</TabsTrigger>
-            <TabsTrigger value="priorities">{t('notifications.priorities')}</TabsTrigger>
-            <TabsTrigger value="schedule">{t('notifications.schedule')}</TabsTrigger>
-            <TabsTrigger value="entities">{t('notifications.entities')}</TabsTrigger>
+            <TabsTrigger value="channels">{t('notifications.channels_tab')}</TabsTrigger>
+            <TabsTrigger value="priorities">{t('notifications.priorities_tab')}</TabsTrigger>
+            <TabsTrigger value="schedule">{t('notifications.schedule_tab')}</TabsTrigger>
+            <TabsTrigger value="entities">{t('notifications.entities_tab')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="channels" className="space-y-6">

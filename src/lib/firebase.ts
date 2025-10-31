@@ -1,5 +1,6 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import { getMessaging, Messaging, getToken, onMessage } from 'firebase/messaging';
+import * as logger from '@/utils/logger';
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
@@ -15,19 +16,35 @@ const firebaseConfig = {
 // FCM VAPID Key for web push
 const FCM_VAPID_KEY = import.meta.env.VITE_FCM_VAPID_KEY;
 
+// Check if Firebase is properly configured
+const isFirebaseConfigured = (): boolean => {
+  return !!(
+    firebaseConfig.apiKey &&
+    firebaseConfig.projectId &&
+    firebaseConfig.appId
+  );
+};
+
 // Initialize Firebase
-let app: FirebaseApp;
+let app: FirebaseApp | null = null;
 let messaging: Messaging | null = null;
 
 try {
-  app = initializeApp(firebaseConfig);
+  // Only initialize if Firebase is configured
+  if (isFirebaseConfigured()) {
+    app = initializeApp(firebaseConfig);
 
-  // Initialize Firebase Cloud Messaging only in browser environment
-  if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-    messaging = getMessaging(app);
+    // Initialize Firebase Cloud Messaging only in browser environment
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      messaging = getMessaging(app);
+      logger.dev('🔥 Firebase Cloud Messaging initialized successfully');
+    }
+  } else {
+    logger.dev('⚠️ Firebase not configured - FCM features disabled');
   }
 } catch (error) {
-  console.error('Firebase initialization error:', error);
+  // Only log error in development
+  logger.dev('Firebase initialization error:', error);
 }
 
 /**
@@ -36,7 +53,7 @@ try {
  */
 export async function requestNotificationPermission(): Promise<string | null> {
   if (!messaging) {
-    console.warn('Firebase Messaging not initialized');
+    logger.dev('Firebase Messaging not initialized');
     return null;
   }
 
@@ -45,7 +62,7 @@ export async function requestNotificationPermission(): Promise<string | null> {
     const permission = await Notification.requestPermission();
 
     if (permission !== 'granted') {
-      console.warn('Notification permission denied');
+      logger.dev('Notification permission denied');
       return null;
     }
 
@@ -55,7 +72,7 @@ export async function requestNotificationPermission(): Promise<string | null> {
       { scope: '/' }
     );
 
-    console.log('Service Worker registered successfully');
+    logger.dev('Service Worker registered successfully');
 
     // Get FCM token
     const token = await getToken(messaging, {
@@ -64,14 +81,14 @@ export async function requestNotificationPermission(): Promise<string | null> {
     });
 
     if (token) {
-      console.log('FCM Token obtained:', token);
+      logger.dev('FCM Token obtained:', token);
       return token;
     } else {
-      console.warn('No FCM token received');
+      logger.dev('No FCM token received');
       return null;
     }
   } catch (error) {
-    console.error('Error getting FCM token:', error);
+    logger.dev('Error getting FCM token:', error);
     return null;
   }
 }
@@ -84,12 +101,12 @@ export function onForegroundMessage(
   callback: (payload: any) => void
 ): (() => void) | null {
   if (!messaging) {
-    console.warn('Firebase Messaging not initialized');
+    logger.dev('Firebase Messaging not initialized');
     return null;
   }
 
   return onMessage(messaging, (payload) => {
-    console.log('Foreground message received:', payload);
+    logger.dev('Foreground message received:', payload);
     callback(payload);
   });
 }

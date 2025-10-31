@@ -19,6 +19,7 @@ import { NotificationBell } from "./notifications/NotificationBell";
 import { GlobalSearch } from "./search/GlobalSearch";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserDropdown } from "./ui/user-dropdown";
+import * as logger from "@/utils/logger";
 
 interface ProtectedLayoutProps {
   children?: ReactNode;
@@ -40,7 +41,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
     const isGetReadyModule = location.pathname.startsWith('/get-ready');
     const wasGetReadyModule = previousPathRef.current.startsWith('/get-ready');
 
-    console.log('🏗️ [PROTECTED LAYOUT] Sidebar navigation check:', {
+    logger.dev('🏗️ [PROTECTED LAYOUT] Sidebar navigation check:', {
       pathname: location.pathname,
       previousPath: previousPathRef.current,
       isGetReadyModule,
@@ -51,7 +52,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
 
     // Case 1: Entering Get Ready - collapse sidebar
     if (isGetReadyModule && !wasGetReadyModule && open) {
-      console.log('🔧 [PROTECTED LAYOUT] Entering Get Ready - Collapsing sidebar');
+      logger.dev('🔧 [PROTECTED LAYOUT] Entering Get Ready - Collapsing sidebar');
       setTimeout(() => {
         setOpen(false);
       }, 100);
@@ -59,7 +60,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
 
     // Case 2: Leaving Get Ready - expand sidebar
     if (!isGetReadyModule && wasGetReadyModule && !open) {
-      console.log('🔧 [PROTECTED LAYOUT] Leaving Get Ready - Opening sidebar');
+      logger.dev('🔧 [PROTECTED LAYOUT] Leaving Get Ready - Opening sidebar');
       setTimeout(() => {
         setOpen(true);
       }, 100);
@@ -67,7 +68,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
 
     // Case 3: Already in Get Ready and sidebar is open - keep it collapsed
     if (isGetReadyModule && open) {
-      console.log('🔧 [PROTECTED LAYOUT] In Get Ready with open sidebar - Collapsing');
+      logger.dev('🔧 [PROTECTED LAYOUT] In Get Ready with open sidebar - Collapsing');
       setTimeout(() => {
         setOpen(false);
       }, 100);
@@ -174,7 +175,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
           {/* Main Content */}
           <main className="flex-1 p-6 mb-24">
            {(() => {
-             console.log('🎯 [OUTLET DEBUG] Rendering content for:', {
+             logger.dev('🎯 [OUTLET DEBUG] Rendering content for:', {
                pathname: location.pathname,
                hasChildren: !!children,
                usingOutlet: !children,
@@ -238,7 +239,7 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
   const location = useLocation();
 
   // Debug navigation rendering
-  console.log('🏗️ [PROTECTED LAYOUT] Rendering for:', {
+  logger.dev('🏗️ [PROTECTED LAYOUT] Rendering for:', {
     pathname: location.pathname,
     hasUser: !!user,
     loading,
@@ -246,7 +247,7 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
   });
 
   if (loading) {
-    console.log('⏳ [PROTECTED LAYOUT] Auth loading - showing spinner');
+    logger.dev('⏳ [PROTECTED LAYOUT] Auth loading - showing spinner');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -264,7 +265,7 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
   const isGetReadyModule = location.pathname.startsWith('/get-ready');
   const initialOpen = !isGetReadyModule; // Closed if in Get Ready, open otherwise
 
-  console.log('🏗️ [PROTECTED LAYOUT] Sidebar initial state:', {
+  logger.dev('🏗️ [PROTECTED LAYOUT] Sidebar initial state:', {
     pathname: location.pathname,
     isGetReadyModule,
     initialOpen,

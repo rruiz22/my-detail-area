@@ -194,7 +194,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
             <SelectItem value="sales">{t('reports.filters.sales')}</SelectItem>
             <SelectItem value="service">{t('reports.filters.service')}</SelectItem>
             <SelectItem value="recon">{t('reports.filters.recon')}</SelectItem>
-            <SelectItem value="car_wash">{t('reports.filters.car_wash')}</SelectItem>
+            <SelectItem value="carwash">{t('reports.filters.car_wash')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -225,7 +225,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           <div className="flex gap-2">
             {filters.orderType !== 'all' && (
               <span className="px-2 py-1 bg-primary/10 text-primary rounded-md font-medium">
-                {t(`reports.filters.${filters.orderType}`)}
+                {t(`reports.filters.${filters.orderType === 'carwash' ? 'car_wash' : filters.orderType}`)}
               </span>
             )}
             {filters.status !== 'all' && (

@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import * as logger from "@/utils/logger";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -63,11 +64,11 @@ const SidebarProvider = React.forwardRef<
 
     if (sidebarCookie) {
       const value = sidebarCookie.split('=')[1];
-      console.log('🍪 [SIDEBAR] Reading cookie:', value);
+      logger.dev('🍪 [SIDEBAR] Reading cookie:', value);
       return value === 'true';
     }
 
-    console.log('🍪 [SIDEBAR] No cookie found, using default:', defaultOpen);
+    logger.dev('🍪 [SIDEBAR] No cookie found, using default:', defaultOpen);
     return defaultOpen;
   };
 
@@ -86,7 +87,7 @@ const SidebarProvider = React.forwardRef<
 
       // This sets the cookie to keep the sidebar state.
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-      console.log('🍪 [SIDEBAR] Saving cookie:', openState);
+      logger.dev('🍪 [SIDEBAR] Saving cookie:', openState);
     },
     [setOpenProp, open],
   );
@@ -255,7 +256,7 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
         size="icon"
         className={cn("h-7 w-7", className)}
         onClick={(event) => {
-          console.log('🖱️ SidebarTrigger clicked!');
+          logger.dev('🖱️ SidebarTrigger clicked!');
           onClick?.(event);
           toggleSidebar();
         }}

@@ -1,6 +1,7 @@
 import type { AppModule } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { useCallback, useEffect, useState } from 'react';
+import * as logger from '@/utils/logger';
 
 export interface DealershipModule {
   module: AppModule;
@@ -52,7 +53,7 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
       setLoading(true);
       setError(null);
 
-      console.log(`🔍 [useDealershipModules] Fetching modules for dealership ID: ${dealerId}`);
+      logger.dev(`🔍 [useDealershipModules] Fetching modules for dealership ID: ${dealerId}`);
 
       const { data, error: fetchError } = await supabase.rpc('get_dealership_modules', {
         p_dealer_id: dealerId
@@ -63,7 +64,7 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
         throw fetchError;
       }
 
-      console.log(`✅ [useDealershipModules] Received ${data?.length || 0} modules for dealer ${dealerId}:`, data);
+      logger.dev(`✅ [useDealershipModules] Received ${data?.length || 0} modules for dealer ${dealerId}:`, data);
       setModules(data || []);
     } catch (err) {
       console.error('Error fetching dealership modules:', err);
@@ -149,9 +150,9 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
     const isEnabled = moduleData?.is_enabled || false;
 
     if (!isEnabled) {
-      console.log(`[hasModuleAccess] Module ${module} is explicitly disabled for dealership`);
+      logger.dev(`[hasModuleAccess] Module ${module} is explicitly disabled for dealership`);
     } else {
-      console.log(`[hasModuleAccess] ✅ Module ${module} is enabled for dealership`);
+      logger.dev(`[hasModuleAccess] ✅ Module ${module} is enabled for dealership`);
     }
 
     return isEnabled;

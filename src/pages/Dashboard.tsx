@@ -10,8 +10,10 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { AlertTriangle, Clock, MessageCircle, Plus, Settings, TrendingUp, Users, Zap } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import * as logger from '@/utils/logger';
+
 export default function Dashboard() {
-  console.log('🟢 Dashboard component is RENDERING');
+  logger.dev('🟢 Dashboard component is RENDERING');
   const { t } = useTranslation();
   const navigate = useNavigate();
   const notifications = useNotifications();

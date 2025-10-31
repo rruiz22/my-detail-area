@@ -215,7 +215,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
         let carWashQuery = supabase
           .from('orders')
           .select('*')
-          .eq('order_type', 'car_wash')
+          .eq('order_type', 'carwash')
           .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern);
 
         if (selectedDealerId !== 'all') {

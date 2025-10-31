@@ -1,4 +1,5 @@
 import { useDealershipContext } from '@/contexts/DealershipContext';
+import * as logger from '@/utils/logger';
 
 // ============================================================================
 // RE-EXPORT TYPES FROM CONTEXT
@@ -52,7 +53,7 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
   // All the complex logic now lives in DealershipProvider
   const context = useDealershipContext();
 
-  console.log('🔗 [useAccessibleDealerships] Hook called, proxying to context');
+  logger.dev('🔗 [useAccessibleDealerships] Hook called, proxying to context');
 
   return {
     dealerships: context.dealerships,

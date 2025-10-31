@@ -7,10 +7,12 @@ import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useDealershipModules } from "@/hooks/useDealershipModules";
 import { usePermissions } from "@/hooks/usePermissions";
 import { getSystemTimezone } from "@/utils/dateUtils";
-import { Building2, Calendar, Clock, Droplets, FileText, Globe, LayoutDashboard, Megaphone, MessageCircle, Nfc, Package, QrCode, RefreshCw, Settings, Shield, ShoppingCart, Sparkles, User, Users2, Wrench, Zap } from "lucide-react";
+import { Building2, Calendar, Clock, Droplets, FileText, Globe, LayoutDashboard, Megaphone, MessageCircle, Nfc, Package, QrCode, Receipt, RefreshCw, Settings, Shield, ShoppingCart, Sparkles, User, Users2, Wrench, Zap } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation } from "react-router-dom";
+import * as logger from "@/utils/logger";
+
 export function AppSidebar() {
   const { state, open, setOpen, isMobile, openMobile, setOpenMobile } = useSidebar();
   const { enhancedUser, getAllowedOrderTypes, hasPermission } = usePermissions();
@@ -23,7 +25,7 @@ export function AppSidebar() {
 
   // Debug logging for currentDealership changes
   React.useEffect(() => {
-    console.log('🏢 [AppSidebar] currentDealership changed:', {
+    logger.dev('🏢 [AppSidebar] currentDealership changed:', {
       name: currentDealership?.name || 'null',
       id: currentDealership?.id || 'null',
       hasLogo: !!currentDealership?.logo_url,
