@@ -909,7 +909,17 @@
   "settings": {
     "title": "Configurações",
     "description": "Gerencie suas preferências e configurações do sistema",
-    "platform": {
+    "platform": "Plataforma",
+    "profile": "Perfil",
+    "notifications": "Notificações",
+    "dealership": "Concessionária",
+    "integrations": "Integrações",
+    "security": "Segurança",
+    "branding": "Marca",
+    "general": "Geral",
+    "preferences": "Preferências",
+    "templates": "Modelos",
+    "platform_settings": {
       "general": {
         "title": "Configurações Gerais",
         "description": "Configurar ajustes gerais da plataforma",
@@ -933,8 +943,7 @@
         "characters": "caracteres"
       }
     },
-    "profile": "Perfil",
-    "notifications": {
+    "notification_settings": {
       "templates": {
         "title": "Modelos de Notificações",
         "description": "Gerenciar modelos de notificações para comunicações automatizadas",
@@ -4678,6 +4687,50 @@
       "savedMessage": "Preferências de notificação salvas com sucesso",
       "saveError": "Erro",
       "saveErrorMessage": "Falha ao salvar preferências de notificação"
+    },
+    "delivery": {
+      "status": {
+        "pending": "Enviando...",
+        "sent": "Enviado",
+        "delivered": "Entregue",
+        "failed": "Falhado",
+        "clicked": "Clicado",
+        "read": "Lido"
+      },
+      "details_title": "Detalhes de Entrega",
+      "timeline": "Linha do Tempo",
+      "sent_at": "Enviado",
+      "delivered_at": "Entregue",
+      "clicked_at": "Clicado",
+      "read_at": "Lido",
+      "failed_at": "Falhado",
+      "latency": "Latência",
+      "retry_count": "Tentativas",
+      "cost": "Custo",
+      "provider": "Provedor",
+      "error": "Detalhes do Erro",
+      "error_code": "Código de Erro",
+      "view_details": "Ver detalhes",
+      "hide_details": "Ocultar detalhes",
+      "retry_delivery": "Tentar Novamente",
+      "retrying": "Tentando novamente...",
+      "retry_attempts": "{{count}} de {{max}} tentativas de reenvio usadas",
+      "retry_success": "Tentativa Bem-Sucedida",
+      "retry_success_message": "Notificação na fila para reenvio",
+      "retry_limit": "Limite de Tentativas Atingido",
+      "retry_limit_message": "Número máximo de tentativas atingido para esta notificação",
+      "retry_error": "Erro ao tentar reenviar a notificação",
+      "batch_retry_complete": "Reenvio em Lote Concluído",
+      "batch_retry_message": "{{success}} bem-sucedidos, {{failed}} falhados",
+      "batch_retry_error": "Erro ao tentar reenviar notificações",
+      "additional_metadata": "Metadados Adicionais"
+    },
+    "actions": {
+      "mark_read": "Marcar como lido",
+      "mark_all_read": "Marcar tudo como lido",
+      "delete": "Excluir",
+      "save_later": "Salvar para depois",
+      "archive": "Arquivar"
     }
   }
 }

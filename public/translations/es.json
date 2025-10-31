@@ -909,7 +909,17 @@
   "settings": {
     "title": "Configuraciones",
     "description": "Gestiona tus preferencias y configuraciones del sistema",
-    "platform": {
+    "platform": "Plataforma",
+    "profile": "Perfil",
+    "notifications": "Notificaciones",
+    "dealership": "Concesionario",
+    "integrations": "Integraciones",
+    "security": "Seguridad",
+    "branding": "Marca",
+    "general": "General",
+    "preferences": "Preferencias",
+    "templates": "Plantillas",
+    "platform_settings": {
       "general": {
         "title": "Configuración General",
         "description": "Configurar ajustes generales de la plataforma",
@@ -933,8 +943,7 @@
         "characters": "caracteres"
       }
     },
-    "profile": "Perfil",
-    "notifications": {
+    "notification_settings": {
       "templates": {
         "title": "Plantillas de Notificaciones",
         "description": "Gestionar plantillas de notificaciones para comunicaciones automatizadas",
@@ -4894,6 +4903,50 @@
       "savedMessage": "Preferencias de notificación guardadas exitosamente",
       "saveError": "Error",
       "saveErrorMessage": "Error al guardar preferencias de notificación"
+    },
+    "delivery": {
+      "status": {
+        "pending": "Enviando...",
+        "sent": "Enviado",
+        "delivered": "Entregado",
+        "failed": "Fallido",
+        "clicked": "Clicado",
+        "read": "Leído"
+      },
+      "details_title": "Detalles de Entrega",
+      "timeline": "Línea de Tiempo",
+      "sent_at": "Enviado",
+      "delivered_at": "Entregado",
+      "clicked_at": "Clicado",
+      "read_at": "Leído",
+      "failed_at": "Fallido",
+      "latency": "Latencia",
+      "retry_count": "Reintentos",
+      "cost": "Costo",
+      "provider": "Proveedor",
+      "error": "Detalles del Error",
+      "error_code": "Código de Error",
+      "view_details": "Ver detalles",
+      "hide_details": "Ocultar detalles",
+      "retry_delivery": "Reintentar Entrega",
+      "retrying": "Reintentando...",
+      "retry_attempts": "{{count}} de {{max}} intentos de reintento usados",
+      "retry_success": "Reintento Exitoso",
+      "retry_success_message": "Notificación en cola para reintento",
+      "retry_limit": "Límite de Reintentos Alcanzado",
+      "retry_limit_message": "Se alcanzó el máximo de intentos de reintento para esta notificación",
+      "retry_error": "Error al reintentar la entrega de notificación",
+      "batch_retry_complete": "Reintento en Lote Completo",
+      "batch_retry_message": "{{success}} exitosos, {{failed}} fallidos",
+      "batch_retry_error": "Error al reintentar notificaciones",
+      "additional_metadata": "Metadatos Adicionales"
+    },
+    "actions": {
+      "mark_read": "Marcar como leído",
+      "mark_all_read": "Marcar todo como leído",
+      "delete": "Eliminar",
+      "save_later": "Guardar para después",
+      "archive": "Archivar"
     }
   }
 }
