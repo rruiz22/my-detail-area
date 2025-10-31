@@ -1,9 +1,9 @@
 {
-  "version": "1.0.2",
-  "buildTime": "2025-10-31T14:08:26.222Z",
-  "buildTimestamp": 1761919706222,
-  "gitCommit": "5d64907",
+  "version": "1.0.3",
+  "buildTime": "2025-10-31T16:40:47.389Z",
+  "buildTimestamp": 1761928847390,
+  "gitCommit": "c2ada4d",
   "gitBranch": "main",
-  "buildNumber": "1761919706314",
+  "buildNumber": "1761928847520",
   "environment": "production"
 }
