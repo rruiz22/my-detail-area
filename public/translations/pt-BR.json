@@ -4594,6 +4594,90 @@
       "enable_push": "Ativar notificações push",
       "enable_email": "Ativar notificações por e-mail",
       "enable_in_app": "Ativar notificações no aplicativo"
+    },
+    "preferences": "Preferências de Notificação",
+    "channels": {
+      "sms": "SMS",
+      "sms_description": "Notificações por mensagem de texto",
+      "email": "E-mail",
+      "email_description": "Notificações por e-mail",
+      "push": "Notificações Push",
+      "push_description": "Notificações push do navegador e dispositivos móveis",
+      "in_app": "No Aplicativo",
+      "in_app_description": "Notificações dentro do aplicativo"
+    },
+    "priorities": {
+      "low": "Baixa",
+      "normal": "Normal",
+      "high": "Alta",
+      "urgent": "Urgente",
+      "critical": "Crítica"
+    },
+    "schedule": {
+      "quietHours": "Horário de Silêncio",
+      "quietHours_description": "Não perturbe durante esses horários",
+      "quietStart": "Hora de Início",
+      "quietEnd": "Hora de Término",
+      "timezone": "Fuso Horário",
+      "workingHours": "Horário de Trabalho",
+      "workingHours_description": "Horário comercial normal"
+    },
+    "entities": {
+      "sales_orders": "Pedidos de Venda",
+      "sales_orders_description": "Notificações para atividades de pedidos de venda",
+      "service_orders": "Ordens de Serviço",
+      "service_orders_description": "Notificações para atividades de ordens de serviço",
+      "recon_orders": "Ordens de Recondicionamento",
+      "recon_orders_description": "Notificações para atividades de recondicionamento",
+      "car_wash": "Lavagem",
+      "car_wash_description": "Notificações para atividades de lavagem de veículos",
+      "get_ready": "Get Ready",
+      "get_ready_description": "Notificações para atividades do Get Ready",
+      "contacts": "Contatos",
+      "contacts_description": "Notificações para atividades de contatos",
+      "teams": "Equipes",
+      "teams_description": "Notificações de colaboração em equipe"
+    },
+    "frequency": {
+      "all": "Todas as Notificações",
+      "mentions": "Apenas Menções",
+      "important": "Apenas Importantes",
+      "none": "Nenhuma"
+    },
+    "loading": "Carregando notificações...",
+    "tabs": {
+      "grouped": "Agrupadas",
+      "recent": "Recentes"
+    },
+    "filter": {
+      "all": "Todas",
+      "unread": "Não lidas",
+      "important": "Importantes",
+      "all_description": "Mostrar todas as notificações",
+      "unread_description": "Mostrar apenas notificações não lidas",
+      "important_description": "Mostrar apenas notificações importantes"
+    },
+    "actions": {
+      "mark_read": "Marcar como lida",
+      "delete": "Excluir",
+      "save_later": "Salvar para depois",
+      "archive": "Arquivar"
+    },
+    "count": {
+      "singular": "{{count}} notificação",
+      "plural": "{{count}} notificações",
+      "unread": "{{count}} não lida(s)"
+    },
+    "empty": {
+      "message": "Sem notificações",
+      "filtered": "Nenhuma notificação corresponde aos seus filtros"
+    },
+    "show_more": "Mostrar mais",
+    "toast": {
+      "saved": "Salvo",
+      "savedMessage": "Preferências de notificação salvas com sucesso",
+      "saveError": "Erro",
+      "saveErrorMessage": "Falha ao salvar preferências de notificação"
     }
   }
 }

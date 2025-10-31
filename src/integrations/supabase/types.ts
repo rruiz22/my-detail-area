@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -14,6 +14,95 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          content: string
+          created_at: string | null
+          created_by: string | null
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          priority: number | null
+          start_date: string | null
+          target_dealer_ids: number[] | null
+          target_roles: string[] | null
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          priority?: number | null
+          start_date?: string | null
+          target_dealer_ids?: number[] | null
+          target_roles?: string[] | null
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          priority?: number | null
+          start_date?: string | null
+          target_dealer_ids?: number[] | null
+          target_roles?: string[] | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      appointment_slots: {
+        Row: {
+          booked_count: number
+          created_at: string | null
+          date_slot: string
+          dealer_id: number
+          hour_slot: number
+          id: string
+          max_capacity: number
+          updated_at: string | null
+        }
+        Insert: {
+          booked_count?: number
+          created_at?: string | null
+          date_slot: string
+          dealer_id: number
+          hour_slot: number
+          id?: string
+          max_capacity?: number
+          updated_at?: string | null
+        }
+        Update: {
+          booked_count?: number
+          created_at?: string | null
+          date_slot?: string
+          dealer_id?: number
+          hour_slot?: number
+          id?: string
+          max_capacity?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointment_slots_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bulk_password_operations: {
         Row: {
           completed_at: string | null
@@ -191,7 +280,7 @@ export type Database = {
           metadata: Json | null
           parent_message_id: string | null
           reactions: Json | null
-          search_vector: unknown | null
+          search_vector: unknown
           thread_count: number | null
           updated_at: string
           user_id: string
@@ -217,7 +306,7 @@ export type Database = {
           metadata?: Json | null
           parent_message_id?: string | null
           reactions?: Json | null
-          search_vector?: unknown | null
+          search_vector?: unknown
           thread_count?: number | null
           updated_at?: string
           user_id: string
@@ -243,7 +332,7 @@ export type Database = {
           metadata?: Json | null
           parent_message_id?: string | null
           reactions?: Json | null
-          search_vector?: unknown | null
+          search_vector?: unknown
           thread_count?: number | null
           updated_at?: string
           user_id?: string
@@ -456,6 +545,221 @@ export type Database = {
           },
         ]
       }
+      comment_mentions: {
+        Row: {
+          comment_id: string
+          created_at: string | null
+          id: string
+          mentioned_by: string
+          mentioned_user_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string | null
+          id?: string
+          mentioned_by: string
+          mentioned_user_id: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string | null
+          id?: string
+          mentioned_by?: string
+          mentioned_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_mentions_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "order_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comment_mentions_mentioned_by_fkey"
+            columns: ["mentioned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comment_mentions_mentioned_user_id_fkey"
+            columns: ["mentioned_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comment_reactions: {
+        Row: {
+          comment_id: string
+          created_at: string | null
+          id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string | null
+          id?: string
+          reaction_type: string
+          user_id: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string | null
+          id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_reactions_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "order_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comment_reactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_custom_roles: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number | null
+          description: string | null
+          display_name: string
+          id: string
+          is_active: boolean | null
+          permissions: Json | null
+          role_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json | null
+          role_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_active?: boolean | null
+          permissions?: Json | null
+          role_name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_custom_roles_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_custom_roles_backup_20251023_roles: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number | null
+          description: string | null
+          display_name: string | null
+          id: string | null
+          is_active: boolean | null
+          permissions: Json | null
+          role_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          display_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          permissions?: Json | null
+          role_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          display_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          permissions?: Json | null
+          role_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      dealer_dms_config: {
+        Row: {
+          auto_sync_enabled: boolean
+          created_at: string | null
+          dealer_id: number
+          dms_provider: string
+          id: string
+          last_sync_at: string | null
+          sync_frequency: string
+          sync_settings: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          auto_sync_enabled?: boolean
+          created_at?: string | null
+          dealer_id: number
+          dms_provider?: string
+          id?: string
+          last_sync_at?: string | null
+          sync_frequency?: string
+          sync_settings?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          auto_sync_enabled?: boolean
+          created_at?: string | null
+          dealer_id?: number
+          dms_provider?: string
+          id?: string
+          last_sync_at?: string | null
+          sync_frequency?: string
+          sync_settings?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_dms_config_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: true
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_dms_configs: {
         Row: {
           auto_sync_enabled: boolean
@@ -494,35 +798,44 @@ export type Database = {
       }
       dealer_groups: {
         Row: {
+          allowed_order_types: string[]
           created_at: string
           dealer_id: number
+          department: string | null
           description: string | null
           id: string
           is_active: boolean
+          is_template: boolean | null
           name: string
-          permissions: Json
+          permission_level: string | null
           slug: string
           updated_at: string
         }
         Insert: {
+          allowed_order_types?: string[]
           created_at?: string
           dealer_id: number
+          department?: string | null
           description?: string | null
           id?: string
           is_active?: boolean
+          is_template?: boolean | null
           name: string
-          permissions?: Json
+          permission_level?: string | null
           slug: string
           updated_at?: string
         }
         Update: {
+          allowed_order_types?: string[]
           created_at?: string
           dealer_id?: number
+          department?: string | null
           description?: string | null
           id?: string
           is_active?: boolean
+          is_template?: boolean | null
           name?: string
-          permissions?: Json
+          permission_level?: string | null
           slug?: string
           updated_at?: string
         }
@@ -535,6 +848,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dealer_groups_backup_20250920: {
+        Row: {
+          allowed_order_types: string[] | null
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number | null
+          description: string | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          permissions: Json | null
+          slug: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          allowed_order_types?: string[] | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          permissions?: Json | null
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          allowed_order_types?: string[] | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          permissions?: Json | null
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       dealer_inventory_sync_log: {
         Row: {
@@ -593,8 +948,12 @@ export type Database = {
       dealer_invitations: {
         Row: {
           accepted_at: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
           created_at: string
           dealer_id: number
+          deleted_at: string | null
+          deleted_by: string | null
           email: string
           expires_at: string
           id: string
@@ -605,8 +964,12 @@ export type Database = {
         }
         Insert: {
           accepted_at?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           created_at?: string
           dealer_id: number
+          deleted_at?: string | null
+          deleted_by?: string | null
           email: string
           expires_at?: string
           id?: string
@@ -617,8 +980,12 @@ export type Database = {
         }
         Update: {
           accepted_at?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           created_at?: string
           dealer_id?: number
+          deleted_at?: string | null
+          deleted_by?: string | null
           email?: string
           expires_at?: string
           id?: string
@@ -629,10 +996,24 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "dealer_invitations_cancelled_by_fkey"
+            columns: ["cancelled_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "dealer_invitations_dealer_id_fkey"
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_invitations_deleted_by_fkey"
+            columns: ["deleted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -686,32 +1067,52 @@ export type Database = {
       dealer_memberships: {
         Row: {
           created_at: string
+          custom_role_id: string | null
           dealer_id: number
           id: string
           is_active: boolean
           joined_at: string
+          role: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          custom_role_id?: string | null
           dealer_id: number
           id?: string
           is_active?: boolean
           joined_at?: string
+          role?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          custom_role_id?: string | null
           dealer_id?: number
           id?: string
           is_active?: boolean
           joined_at?: string
+          role?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "dealer_memberships_custom_role_id_fkey"
+            columns: ["custom_role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_memberships_custom_role_id_fkey"
+            columns: ["custom_role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
+          },
           {
             foreignKeyName: "dealer_memberships_dealer_id_fkey"
             columns: ["dealer_id"]
@@ -727,6 +1128,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dealer_memberships_backup_20251023_roles: {
+        Row: {
+          created_at: string | null
+          custom_role_id: string | null
+          dealer_id: number | null
+          id: string | null
+          is_active: boolean | null
+          joined_at: string | null
+          role: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          custom_role_id?: string | null
+          dealer_id?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          joined_at?: string | null
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          custom_role_id?: string | null
+          dealer_id?: number | null
+          id?: string | null
+          is_active?: boolean | null
+          joined_at?: string | null
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       dealer_notification_configs: {
         Row: {
@@ -772,6 +1209,110 @@ export type Database = {
           },
         ]
       }
+      dealer_notification_rules: {
+        Row: {
+          channels: Json
+          conditions: Json | null
+          created_at: string
+          created_by: string | null
+          dealer_id: number
+          description: string | null
+          enabled: boolean
+          event: string
+          id: string
+          metadata: Json | null
+          module: string
+          priority: number
+          recipients: Json
+          rule_name: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          channels?: Json
+          conditions?: Json | null
+          created_at?: string
+          created_by?: string | null
+          dealer_id: number
+          description?: string | null
+          enabled?: boolean
+          event: string
+          id?: string
+          metadata?: Json | null
+          module: string
+          priority?: number
+          recipients?: Json
+          rule_name: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          channels?: Json
+          conditions?: Json | null
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number
+          description?: string | null
+          enabled?: boolean
+          event?: string
+          id?: string
+          metadata?: Json | null
+          module?: string
+          priority?: number
+          recipients?: Json
+          rule_name?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_notification_rules_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_role_permissions: {
+        Row: {
+          created_at: string | null
+          id: string
+          module: string
+          permission_level: string
+          role_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          module: string
+          permission_level: string
+          role_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          module?: string
+          permission_level?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
+          },
+        ]
+      }
       dealer_service_groups: {
         Row: {
           created_at: string
@@ -811,6 +1352,7 @@ export type Database = {
       dealer_services: {
         Row: {
           category_id: string
+          color: string | null
           created_at: string
           dealer_id: number
           description: string | null
@@ -823,6 +1365,7 @@ export type Database = {
         }
         Insert: {
           category_id: string
+          color?: string | null
           created_at?: string
           dealer_id: number
           description?: string | null
@@ -835,6 +1378,7 @@ export type Database = {
         }
         Update: {
           category_id?: string
+          color?: string | null
           created_at?: string
           dealer_id?: number
           description?: string | null
@@ -851,6 +1395,66 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_vehicle_activity_log: {
+        Row: {
+          action_at: string | null
+          action_by: string | null
+          activity_type: string
+          created_at: string | null
+          dealer_id: number
+          description: string
+          field_name: string | null
+          id: string
+          metadata: Json | null
+          new_value: string | null
+          old_value: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          action_at?: string | null
+          action_by?: string | null
+          activity_type: string
+          created_at?: string | null
+          dealer_id: number
+          description: string
+          field_name?: string | null
+          id?: string
+          metadata?: Json | null
+          new_value?: string | null
+          old_value?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          action_at?: string | null
+          action_by?: string | null
+          activity_type?: string
+          created_at?: string | null
+          dealer_id?: number
+          description?: string
+          field_name?: string | null
+          id?: string
+          metadata?: Json | null
+          new_value?: string | null
+          old_value?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_vehicle_activity_log_action_by_fkey"
+            columns: ["action_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_vehicle_activity_log_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_vehicle_inventory"
             referencedColumns: ["id"]
           },
         ]
@@ -1035,6 +1639,66 @@ export type Database = {
         }
         Relationships: []
       }
+      dealer_vehicle_photos: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          dealer_id: number
+          display_order: number | null
+          id: string
+          is_key_photo: boolean | null
+          metadata: Json | null
+          photo_url: string
+          storage_path: string | null
+          updated_at: string | null
+          uploaded_by: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          dealer_id: number
+          display_order?: number | null
+          id?: string
+          is_key_photo?: boolean | null
+          metadata?: Json | null
+          photo_url: string
+          storage_path?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          dealer_id?: number
+          display_order?: number | null
+          id?: string
+          is_key_photo?: boolean | null
+          metadata?: Json | null
+          photo_url?: string
+          storage_path?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_vehicle_photos_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_vehicle_photos_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_vehicle_inventory"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealership_contacts: {
         Row: {
           avatar_url: string | null
@@ -1177,6 +1841,7 @@ export type Database = {
             | Database["public"]["Enums"]["subscription_plan"]
             | null
           tax_number: string | null
+          thumbnail_logo_url: string | null
           updated_at: string | null
           website: string | null
           zip_code: string | null
@@ -1201,6 +1866,7 @@ export type Database = {
             | Database["public"]["Enums"]["subscription_plan"]
             | null
           tax_number?: string | null
+          thumbnail_logo_url?: string | null
           updated_at?: string | null
           website?: string | null
           zip_code?: string | null
@@ -1225,11 +1891,111 @@ export type Database = {
             | Database["public"]["Enums"]["subscription_plan"]
             | null
           tax_number?: string | null
+          thumbnail_logo_url?: string | null
           updated_at?: string | null
           website?: string | null
           zip_code?: string | null
         }
         Relationships: []
+      }
+      dealerships_v2: {
+        Row: {
+          address: Json
+          brand: string
+          business_hours: Json | null
+          code: string
+          contact_info: Json
+          created_at: string | null
+          id: string
+          name: string
+          settings: Json | null
+          status: string | null
+          timezone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: Json
+          brand: string
+          business_hours?: Json | null
+          code: string
+          contact_info?: Json
+          created_at?: string | null
+          id?: string
+          name: string
+          settings?: Json | null
+          status?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: Json
+          brand?: string
+          business_hours?: Json | null
+          code?: string
+          contact_info?: Json
+          created_at?: string | null
+          id?: string
+          name?: string
+          settings?: Json | null
+          status?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      departments_v2: {
+        Row: {
+          created_at: string | null
+          dealership_id: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          manager_user_id: string | null
+          name: string
+          settings: Json | null
+          type: Database["public"]["Enums"]["department_type_v2"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dealership_id: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          manager_user_id?: string | null
+          name: string
+          settings?: Json | null
+          type: Database["public"]["Enums"]["department_type_v2"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dealership_id?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          manager_user_id?: string | null
+          name?: string
+          settings?: Json | null
+          type?: Database["public"]["Enums"]["department_type_v2"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_v2_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "departments_v2_manager_user_id_fkey"
+            columns: ["manager_user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       detail_employees: {
         Row: {
@@ -1377,7 +2143,7 @@ export type Database = {
           created_by: string | null
           dealer_id: number
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           is_active: boolean | null
           last_ping: string | null
           location: string | null
@@ -1392,7 +2158,7 @@ export type Database = {
           created_by?: string | null
           dealer_id: number
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_active?: boolean | null
           last_ping?: string | null
           location?: string | null
@@ -1407,7 +2173,7 @@ export type Database = {
           created_by?: string | null
           dealer_id?: number
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_active?: boolean | null
           last_ping?: string | null
           location?: string | null
@@ -1566,6 +2332,50 @@ export type Database = {
           },
         ]
       }
+      edge_function_logs: {
+        Row: {
+          created_at: string
+          data: Json | null
+          dealer_id: number | null
+          error_details: Json | null
+          function_name: string
+          id: string
+          level: string
+          message: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          dealer_id?: number | null
+          error_details?: Json | null
+          function_name: string
+          id?: string
+          level: string
+          message: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          dealer_id?: number | null
+          error_details?: Json | null
+          function_name?: string
+          id?: string
+          level?: string
+          message?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edge_function_logs_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entity_followers: {
         Row: {
           auto_added_reason: string | null
@@ -1620,7 +2430,1289 @@ export type Database = {
             referencedRelation: "dealerships"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_entity_followers_user_id"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      fcm_tokens: {
+        Row: {
+          created_at: string | null
+          dealer_id: number
+          fcm_token: string
+          id: string
+          is_active: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: number
+          fcm_token: string
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: number
+          fcm_token?: string
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fcm_tokens_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      get_ready_approval_history: {
+        Row: {
+          action: Database["public"]["Enums"]["approval_status"]
+          action_at: string
+          action_by: string
+          created_at: string | null
+          dealer_id: number
+          id: string
+          notes: string | null
+          reason: string | null
+          vehicle_id: string
+          vehicle_priority: string | null
+          vehicle_step_id: string | null
+          vehicle_workflow_type: string | null
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["approval_status"]
+          action_at?: string
+          action_by: string
+          created_at?: string | null
+          dealer_id: number
+          id?: string
+          notes?: string | null
+          reason?: string | null
+          vehicle_id: string
+          vehicle_priority?: string | null
+          vehicle_step_id?: string | null
+          vehicle_workflow_type?: string | null
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["approval_status"]
+          action_at?: string
+          action_by?: string
+          created_at?: string | null
+          dealer_id?: number
+          id?: string
+          notes?: string | null
+          reason?: string | null
+          vehicle_id?: string
+          vehicle_priority?: string | null
+          vehicle_step_id?: string | null
+          vehicle_workflow_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "get_ready_approval_history_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_approval_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_approval_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_approval_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_approval_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      get_ready_notifications: {
+        Row: {
+          action_label: string | null
+          action_url: string | null
+          created_at: string
+          dealer_id: number
+          dismissed_at: string | null
+          expires_at: string | null
+          id: string
+          is_read: boolean
+          message: string
+          metadata: Json | null
+          notification_type: Database["public"]["Enums"]["notification_type"]
+          priority: Database["public"]["Enums"]["notification_priority"]
+          read_at: string | null
+          related_step_id: string | null
+          related_vehicle_id: string | null
+          related_work_item_id: string | null
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          dealer_id: number
+          dismissed_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          metadata?: Json | null
+          notification_type: Database["public"]["Enums"]["notification_type"]
+          priority: Database["public"]["Enums"]["notification_priority"]
+          read_at?: string | null
+          related_step_id?: string | null
+          related_vehicle_id?: string | null
+          related_work_item_id?: string | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          action_label?: string | null
+          action_url?: string | null
+          created_at?: string
+          dealer_id?: number
+          dismissed_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          metadata?: Json | null
+          notification_type?: Database["public"]["Enums"]["notification_type"]
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          read_at?: string | null
+          related_step_id?: string | null
+          related_vehicle_id?: string | null
+          related_work_item_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_dealer"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_notifications_related_vehicle_id_fkey"
+            columns: ["related_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_notifications_related_vehicle_id_fkey"
+            columns: ["related_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_notifications_related_vehicle_id_fkey"
+            columns: ["related_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_notifications_related_vehicle_id_fkey"
+            columns: ["related_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      get_ready_sla_config: {
+        Row: {
+          business_days: number[] | null
+          business_hours_end: string | null
+          business_hours_start: string | null
+          count_business_hours_only: boolean | null
+          count_weekends: boolean | null
+          created_at: string | null
+          created_by: string | null
+          danger_threshold: number
+          dealer_id: number
+          default_time_goal: number
+          enable_notifications: boolean | null
+          green_threshold: number
+          id: string
+          max_time_goal: number
+          notification_recipients: string[] | null
+          updated_at: string | null
+          updated_by: string | null
+          warning_threshold: number
+        }
+        Insert: {
+          business_days?: number[] | null
+          business_hours_end?: string | null
+          business_hours_start?: string | null
+          count_business_hours_only?: boolean | null
+          count_weekends?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          danger_threshold?: number
+          dealer_id: number
+          default_time_goal?: number
+          enable_notifications?: boolean | null
+          green_threshold?: number
+          id?: string
+          max_time_goal?: number
+          notification_recipients?: string[] | null
+          updated_at?: string | null
+          updated_by?: string | null
+          warning_threshold?: number
+        }
+        Update: {
+          business_days?: number[] | null
+          business_hours_end?: string | null
+          business_hours_start?: string | null
+          count_business_hours_only?: boolean | null
+          count_weekends?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          danger_threshold?: number
+          dealer_id?: number
+          default_time_goal?: number
+          enable_notifications?: boolean | null
+          green_threshold?: number
+          id?: string
+          max_time_goal?: number
+          notification_recipients?: string[] | null
+          updated_at?: string | null
+          updated_by?: string | null
+          warning_threshold?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "get_ready_sla_config_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_sla_config_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: true
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_sla_config_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      get_ready_step_sla_config: {
+        Row: {
+          created_at: string | null
+          danger_threshold: number
+          green_threshold: number
+          id: string
+          sla_config_id: string
+          step_id: string
+          time_goal: number
+          updated_at: string | null
+          warning_threshold: number
+        }
+        Insert: {
+          created_at?: string | null
+          danger_threshold: number
+          green_threshold: number
+          id?: string
+          sla_config_id: string
+          step_id: string
+          time_goal: number
+          updated_at?: string | null
+          warning_threshold: number
+        }
+        Update: {
+          created_at?: string | null
+          danger_threshold?: number
+          green_threshold?: number
+          id?: string
+          sla_config_id?: string
+          step_id?: string
+          time_goal?: number
+          updated_at?: string | null
+          warning_threshold?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "get_ready_step_sla_config_sla_config_id_fkey"
+            columns: ["sla_config_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_sla_config"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_step_sla_config_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      get_ready_steps: {
+        Row: {
+          bottleneck_threshold: number | null
+          color: string
+          cost_per_day: number | null
+          created_at: string | null
+          dealer_id: number
+          description: string | null
+          express_lane_eligible: boolean | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          name: string
+          order_index: number
+          parallel_capable: boolean | null
+          sla_hours: number | null
+          target_throughput: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          bottleneck_threshold?: number | null
+          color?: string
+          cost_per_day?: number | null
+          created_at?: string | null
+          dealer_id: number
+          description?: string | null
+          express_lane_eligible?: boolean | null
+          icon?: string | null
+          id: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name: string
+          order_index: number
+          parallel_capable?: boolean | null
+          sla_hours?: number | null
+          target_throughput?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          bottleneck_threshold?: number | null
+          color?: string
+          cost_per_day?: number | null
+          created_at?: string | null
+          dealer_id?: number
+          description?: string | null
+          express_lane_eligible?: boolean | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name?: string
+          order_index?: number
+          parallel_capable?: boolean | null
+          sla_hours?: number | null
+          target_throughput?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "get_ready_steps_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      get_ready_vehicle_activity_log: {
+        Row: {
+          action_at: string
+          action_by: string | null
+          activity_type: string
+          created_at: string | null
+          dealer_id: number
+          description: string | null
+          field_name: string | null
+          id: string
+          metadata: Json | null
+          new_value: string | null
+          old_value: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          action_at?: string
+          action_by?: string | null
+          activity_type: string
+          created_at?: string | null
+          dealer_id: number
+          description?: string | null
+          field_name?: string | null
+          id?: string
+          metadata?: Json | null
+          new_value?: string | null
+          old_value?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          action_at?: string
+          action_by?: string | null
+          activity_type?: string
+          created_at?: string | null
+          dealer_id?: number
+          description?: string | null
+          field_name?: string | null
+          id?: string
+          metadata?: Json | null
+          new_value?: string | null
+          old_value?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "get_ready_vehicle_activity_log_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicle_activity_log_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicle_activity_log_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicle_activity_log_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicle_activity_log_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      get_ready_vehicles: {
+        Row: {
+          actual_t2l: number | null
+          approval_notes: string | null
+          approval_status: Database["public"]["Enums"]["approval_status"] | null
+          approved_at: string | null
+          approved_by: string | null
+          assigned_group_id: string | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          days_in_step: number | null
+          dealer_id: number
+          deleted_at: string | null
+          deleted_by: string | null
+          escalation_level: number | null
+          frontline_reached_at: string | null
+          holding_cost_daily: number | null
+          id: string
+          intake_date: string | null
+          is_bottlenecked: boolean | null
+          media_count: number | null
+          metadata: Json | null
+          notes: string | null
+          notes_count: number | null
+          priority: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score: number | null
+          progress: number | null
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          requires_approval: boolean | null
+          sla_hours_remaining: number | null
+          sla_status: Database["public"]["Enums"]["get_ready_sla_status"] | null
+          status: string | null
+          step_id: string
+          stock_number: string
+          t2l_estimate: number | null
+          target_frontline_date: string | null
+          timer_paused: boolean | null
+          total_holding_cost: number | null
+          updated_at: string | null
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_trim: string | null
+          vehicle_year: number | null
+          vin: string
+          workflow_type:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Insert: {
+          actual_t2l?: number | null
+          approval_notes?: string | null
+          approval_status?:
+            | Database["public"]["Enums"]["approval_status"]
+            | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          days_in_step?: number | null
+          dealer_id: number
+          deleted_at?: string | null
+          deleted_by?: string | null
+          escalation_level?: number | null
+          frontline_reached_at?: string | null
+          holding_cost_daily?: number | null
+          id?: string
+          intake_date?: string | null
+          is_bottlenecked?: boolean | null
+          media_count?: number | null
+          metadata?: Json | null
+          notes?: string | null
+          notes_count?: number | null
+          priority?: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score?: number | null
+          progress?: number | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requires_approval?: boolean | null
+          sla_hours_remaining?: number | null
+          sla_status?:
+            | Database["public"]["Enums"]["get_ready_sla_status"]
+            | null
+          status?: string | null
+          step_id: string
+          stock_number: string
+          t2l_estimate?: number | null
+          target_frontline_date?: string | null
+          timer_paused?: boolean | null
+          total_holding_cost?: number | null
+          updated_at?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin: string
+          workflow_type?:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Update: {
+          actual_t2l?: number | null
+          approval_notes?: string | null
+          approval_status?:
+            | Database["public"]["Enums"]["approval_status"]
+            | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          days_in_step?: number | null
+          dealer_id?: number
+          deleted_at?: string | null
+          deleted_by?: string | null
+          escalation_level?: number | null
+          frontline_reached_at?: string | null
+          holding_cost_daily?: number | null
+          id?: string
+          intake_date?: string | null
+          is_bottlenecked?: boolean | null
+          media_count?: number | null
+          metadata?: Json | null
+          notes?: string | null
+          notes_count?: number | null
+          priority?: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score?: number | null
+          progress?: number | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requires_approval?: boolean | null
+          sla_hours_remaining?: number | null
+          sla_status?:
+            | Database["public"]["Enums"]["get_ready_sla_status"]
+            | null
+          status?: string | null
+          step_id?: string
+          stock_number?: string
+          t2l_estimate?: number | null
+          target_frontline_date?: string | null
+          timer_paused?: boolean | null
+          total_holding_cost?: number | null
+          updated_at?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin?: string
+          workflow_type?:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_get_ready_vehicles_approved_by"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_get_ready_vehicles_rejected_by"
+            columns: ["rejected_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_assigned_group_id_fkey"
+            columns: ["assigned_group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      get_ready_work_items: {
+        Row: {
+          actual_cost: number | null
+          actual_end: string | null
+          actual_hours: number | null
+          actual_start: string | null
+          approval_required: boolean | null
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
+          assigned_technician: string | null
+          assigned_vendor_id: string | null
+          blocked_by: string[] | null
+          blocked_reason: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
+          cancelled_reason: string | null
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number
+          decline_reason: string | null
+          description: string | null
+          estimated_cost: number | null
+          estimated_hours: number | null
+          id: string
+          on_hold_reason: string | null
+          parts_required: Json | null
+          parts_status: string | null
+          photos_after: string[] | null
+          photos_before: string[] | null
+          priority: number
+          scheduled_end: string | null
+          scheduled_start: string | null
+          status: Database["public"]["Enums"]["work_item_status"]
+          title: string
+          updated_at: string | null
+          vehicle_id: string
+          work_type: Database["public"]["Enums"]["work_item_type"]
+        }
+        Insert: {
+          actual_cost?: number | null
+          actual_end?: string | null
+          actual_hours?: number | null
+          actual_start?: string | null
+          approval_required?: boolean | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_technician?: string | null
+          assigned_vendor_id?: string | null
+          blocked_by?: string[] | null
+          blocked_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          cancelled_reason?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id: number
+          decline_reason?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string
+          on_hold_reason?: string | null
+          parts_required?: Json | null
+          parts_status?: string | null
+          photos_after?: string[] | null
+          photos_before?: string[] | null
+          priority?: number
+          scheduled_end?: string | null
+          scheduled_start?: string | null
+          status?: Database["public"]["Enums"]["work_item_status"]
+          title: string
+          updated_at?: string | null
+          vehicle_id: string
+          work_type?: Database["public"]["Enums"]["work_item_type"]
+        }
+        Update: {
+          actual_cost?: number | null
+          actual_end?: string | null
+          actual_hours?: number | null
+          actual_start?: string | null
+          approval_required?: boolean | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_technician?: string | null
+          assigned_vendor_id?: string | null
+          blocked_by?: string[] | null
+          blocked_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          cancelled_reason?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number
+          decline_reason?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string
+          on_hold_reason?: string | null
+          parts_required?: Json | null
+          parts_status?: string | null
+          photos_after?: string[] | null
+          photos_before?: string[] | null
+          priority?: number
+          scheduled_end?: string | null
+          scheduled_start?: string | null
+          status?: Database["public"]["Enums"]["work_item_status"]
+          title?: string
+          updated_at?: string | null
+          vehicle_id?: string
+          work_type?: Database["public"]["Enums"]["work_item_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "get_ready_work_items_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_assigned_technician_fkey"
+            columns: ["assigned_technician"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_work_items_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      get_ready_work_items_backup_20251023: {
+        Row: {
+          actual_cost: number | null
+          actual_end: string | null
+          actual_hours: number | null
+          actual_start: string | null
+          approval_required: boolean | null
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
+          assigned_technician: string | null
+          assigned_vendor_id: string | null
+          blocked_by: string[] | null
+          blocked_reason: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
+          cancelled_reason: string | null
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number | null
+          decline_reason: string | null
+          description: string | null
+          estimated_cost: number | null
+          estimated_hours: number | null
+          id: string | null
+          on_hold_reason: string | null
+          parts_required: Json | null
+          parts_status: string | null
+          photos_after: string[] | null
+          photos_before: string[] | null
+          priority: number | null
+          scheduled_end: string | null
+          scheduled_start: string | null
+          status: Database["public"]["Enums"]["work_item_status"] | null
+          title: string | null
+          updated_at: string | null
+          vehicle_id: string | null
+          work_type: Database["public"]["Enums"]["work_item_type"] | null
+        }
+        Insert: {
+          actual_cost?: number | null
+          actual_end?: string | null
+          actual_hours?: number | null
+          actual_start?: string | null
+          approval_required?: boolean | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_technician?: string | null
+          assigned_vendor_id?: string | null
+          blocked_by?: string[] | null
+          blocked_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          cancelled_reason?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          decline_reason?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string | null
+          on_hold_reason?: string | null
+          parts_required?: Json | null
+          parts_status?: string | null
+          photos_after?: string[] | null
+          photos_before?: string[] | null
+          priority?: number | null
+          scheduled_end?: string | null
+          scheduled_start?: string | null
+          status?: Database["public"]["Enums"]["work_item_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          vehicle_id?: string | null
+          work_type?: Database["public"]["Enums"]["work_item_type"] | null
+        }
+        Update: {
+          actual_cost?: number | null
+          actual_end?: string | null
+          actual_hours?: number | null
+          actual_start?: string | null
+          approval_required?: boolean | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_technician?: string | null
+          assigned_vendor_id?: string | null
+          blocked_by?: string[] | null
+          blocked_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          cancelled_reason?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number | null
+          decline_reason?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string | null
+          on_hold_reason?: string | null
+          parts_required?: Json | null
+          parts_status?: string | null
+          photos_after?: string[] | null
+          photos_before?: string[] | null
+          priority?: number | null
+          scheduled_end?: string | null
+          scheduled_start?: string | null
+          status?: Database["public"]["Enums"]["work_item_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          vehicle_id?: string | null
+          work_type?: Database["public"]["Enums"]["work_item_type"] | null
+        }
+        Relationships: []
+      }
+      get_ready_work_items_backup_pre_status_migration: {
+        Row: {
+          approval_required: boolean | null
+          approval_status: string | null
+          backup_created_at: string | null
+          decline_reason: string | null
+          id: string | null
+          status: Database["public"]["Enums"]["work_item_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          approval_required?: boolean | null
+          approval_status?: string | null
+          backup_created_at?: string | null
+          decline_reason?: string | null
+          id?: string | null
+          status?: Database["public"]["Enums"]["work_item_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          approval_required?: boolean | null
+          approval_status?: string | null
+          backup_created_at?: string | null
+          decline_reason?: string | null
+          id?: string | null
+          status?: Database["public"]["Enums"]["work_item_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      invitation_templates: {
+        Row: {
+          created_at: string | null
+          dealer_id: string
+          html_content: string
+          id: string
+          subject: string
+          text_content: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: string
+          html_content: string
+          id?: string
+          subject: string
+          text_content: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: string
+          html_content?: string
+          id?: string
+          subject?: string
+          text_content?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      invoice_items: {
+        Row: {
+          created_at: string
+          description: string
+          discount_amount: number | null
+          id: string
+          invoice_id: string
+          item_type: string
+          metadata: Json | null
+          quantity: number
+          service_reference: string | null
+          sort_order: number | null
+          tax_rate: number | null
+          total_amount: number
+          unit_price: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          discount_amount?: number | null
+          id?: string
+          invoice_id: string
+          item_type: string
+          metadata?: Json | null
+          quantity?: number
+          service_reference?: string | null
+          sort_order?: number | null
+          tax_rate?: number | null
+          total_amount: number
+          unit_price: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          discount_amount?: number | null
+          id?: string
+          invoice_id?: string
+          item_type?: string
+          metadata?: Json | null
+          quantity?: number
+          service_reference?: string | null
+          sort_order?: number | null
+          tax_rate?: number | null
+          total_amount?: number
+          unit_price?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_due: number
+          amount_paid: number | null
+          cancelled_at: string | null
+          created_at: string
+          created_by: string | null
+          dealer_id: number
+          discount_amount: number | null
+          due_date: string
+          email_sent: boolean | null
+          email_sent_at: string | null
+          email_sent_count: number | null
+          id: string
+          invoice_notes: string | null
+          invoice_number: string
+          issue_date: string
+          last_email_recipient: string | null
+          metadata: Json | null
+          order_id: string
+          paid_at: string | null
+          status: string
+          subtotal: number
+          tax_amount: number
+          tax_rate: number
+          terms_and_conditions: string | null
+          total_amount: number
+          updated_at: string | null
+        }
+        Insert: {
+          amount_due: number
+          amount_paid?: number | null
+          cancelled_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          dealer_id: number
+          discount_amount?: number | null
+          due_date: string
+          email_sent?: boolean | null
+          email_sent_at?: string | null
+          email_sent_count?: number | null
+          id?: string
+          invoice_notes?: string | null
+          invoice_number: string
+          issue_date?: string
+          last_email_recipient?: string | null
+          metadata?: Json | null
+          order_id: string
+          paid_at?: string | null
+          status?: string
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          terms_and_conditions?: string | null
+          total_amount: number
+          updated_at?: string | null
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number | null
+          cancelled_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number
+          discount_amount?: number | null
+          due_date?: string
+          email_sent?: boolean | null
+          email_sent_at?: string | null
+          email_sent_count?: number | null
+          id?: string
+          invoice_notes?: string | null
+          invoice_number?: string
+          issue_date?: string
+          last_email_recipient?: string | null
+          metadata?: Json | null
+          order_id?: string
+          paid_at?: string | null
+          status?: string
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          terms_and_conditions?: string | null
+          total_amount?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      module_permissions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_name: string
+          id: string
+          is_active: boolean | null
+          module: string
+          permission_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_active?: boolean | null
+          module: string
+          permission_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_active?: boolean | null
+          module?: string
+          permission_key?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      module_permissions_v3: {
+        Row: {
+          created_at: string
+          id: string
+          module: Database["public"]["Enums"]["app_module_v3"]
+          permission_level: Database["public"]["Enums"]["permission_level_v3"]
+          role: Database["public"]["Enums"]["base_role_v3"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          module: Database["public"]["Enums"]["app_module_v3"]
+          permission_level?: Database["public"]["Enums"]["permission_level_v3"]
+          role: Database["public"]["Enums"]["base_role_v3"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          module?: Database["public"]["Enums"]["app_module_v3"]
+          permission_level?: Database["public"]["Enums"]["permission_level_v3"]
+          role?: Database["public"]["Enums"]["base_role_v3"]
+          updated_at?: string
+        }
+        Relationships: []
       }
       nfc_scans: {
         Row: {
@@ -1632,7 +3724,7 @@ export type Database = {
           is_unique_scan: boolean
           order_id: string | null
           scan_address: string | null
-          scan_location: unknown | null
+          scan_location: unknown
           scanned_at: string
           scanned_by: string
           session_id: string | null
@@ -1648,7 +3740,7 @@ export type Database = {
           is_unique_scan?: boolean
           order_id?: string | null
           scan_address?: string | null
-          scan_location?: unknown | null
+          scan_location?: unknown
           scanned_at?: string
           scanned_by: string
           session_id?: string | null
@@ -1664,7 +3756,7 @@ export type Database = {
           is_unique_scan?: boolean
           order_id?: string | null
           scan_address?: string | null
-          scan_location?: unknown | null
+          scan_location?: unknown
           scanned_at?: string
           scanned_by?: string
           session_id?: string | null
@@ -1691,7 +3783,7 @@ export type Database = {
           is_active: boolean
           is_permanent: boolean
           last_scanned_at: string | null
-          location_coordinates: unknown | null
+          location_coordinates: unknown
           location_name: string | null
           name: string
           order_id: string | null
@@ -1711,7 +3803,7 @@ export type Database = {
           is_active?: boolean
           is_permanent?: boolean
           last_scanned_at?: string | null
-          location_coordinates?: unknown | null
+          location_coordinates?: unknown
           location_name?: string | null
           name: string
           order_id?: string | null
@@ -1731,7 +3823,7 @@ export type Database = {
           is_active?: boolean
           is_permanent?: boolean
           last_scanned_at?: string | null
-          location_coordinates?: unknown | null
+          location_coordinates?: unknown
           location_name?: string | null
           name?: string
           order_id?: string | null
@@ -2232,10 +4324,26 @@ export type Database = {
           order_id?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "order_activity_log_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_activity_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_attachments: {
         Row: {
+          comment_id: string | null
           created_at: string
           description: string | null
           file_name: string
@@ -2250,6 +4358,7 @@ export type Database = {
           uploaded_by: string
         }
         Insert: {
+          comment_id?: string | null
           created_at?: string
           description?: string | null
           file_name: string
@@ -2264,6 +4373,7 @@ export type Database = {
           uploaded_by: string
         }
         Update: {
+          comment_id?: string | null
           created_at?: string
           description?: string | null
           file_name?: string
@@ -2277,7 +4387,15 @@ export type Database = {
           upload_context?: string | null
           uploaded_by?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "order_attachments_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "order_comments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_comments: {
         Row: {
@@ -2286,6 +4404,7 @@ export type Database = {
           created_at: string
           id: string
           order_id: string
+          parent_comment_id: string | null
           updated_at: string
           user_id: string
         }
@@ -2295,6 +4414,7 @@ export type Database = {
           created_at?: string
           id?: string
           order_id: string
+          parent_comment_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -2304,6 +4424,7 @@ export type Database = {
           created_at?: string
           id?: string
           order_id?: string
+          parent_comment_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -2313,6 +4434,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "order_comments"
             referencedColumns: ["id"]
           },
         ]
@@ -2394,10 +4522,11 @@ export type Database = {
           assigned_group_id: string | null
           completed_at: string | null
           created_at: string
+          created_by: string | null
           created_by_group_id: string | null
           custom_order_number: string | null
           customer_email: string | null
-          customer_name: string
+          customer_name: string | null
           customer_phone: string | null
           dealer_id: number
           due_date: string | null
@@ -2409,6 +4538,9 @@ export type Database = {
           po: string | null
           priority: string | null
           qr_code_url: string | null
+          qr_generation_attempts: number | null
+          qr_generation_status: string | null
+          qr_last_attempt_at: string | null
           ro: string | null
           salesperson: string | null
           scheduled_date: string | null
@@ -2434,10 +4566,11 @@ export type Database = {
           assigned_group_id?: string | null
           completed_at?: string | null
           created_at?: string
+          created_by?: string | null
           created_by_group_id?: string | null
           custom_order_number?: string | null
           customer_email?: string | null
-          customer_name: string
+          customer_name?: string | null
           customer_phone?: string | null
           dealer_id?: number
           due_date?: string | null
@@ -2449,6 +4582,9 @@ export type Database = {
           po?: string | null
           priority?: string | null
           qr_code_url?: string | null
+          qr_generation_attempts?: number | null
+          qr_generation_status?: string | null
+          qr_last_attempt_at?: string | null
           ro?: string | null
           salesperson?: string | null
           scheduled_date?: string | null
@@ -2474,10 +4610,11 @@ export type Database = {
           assigned_group_id?: string | null
           completed_at?: string | null
           created_at?: string
+          created_by?: string | null
           created_by_group_id?: string | null
           custom_order_number?: string | null
           customer_email?: string | null
-          customer_name?: string
+          customer_name?: string | null
           customer_phone?: string | null
           dealer_id?: number
           due_date?: string | null
@@ -2489,6 +4626,9 @@ export type Database = {
           po?: string | null
           priority?: string | null
           qr_code_url?: string | null
+          qr_generation_attempts?: number | null
+          qr_generation_status?: string | null
+          qr_last_attempt_at?: string | null
           ro?: string | null
           salesperson?: string | null
           scheduled_date?: string | null
@@ -2593,6 +4733,130 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          dealer_id: number | null
+          id: string
+          invoice_id: string
+          metadata: Json | null
+          notes: string | null
+          payment_date: string
+          payment_method: string
+          payment_number: string
+          recorded_by: string | null
+          reference_number: string | null
+          refunded_at: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          dealer_id?: number | null
+          id?: string
+          invoice_id: string
+          metadata?: Json | null
+          notes?: string | null
+          payment_date?: string
+          payment_method: string
+          payment_number: string
+          recorded_by?: string | null
+          reference_number?: string | null
+          refunded_at?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          dealer_id?: number | null
+          id?: string
+          invoice_id?: string
+          metadata?: Json | null
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string
+          payment_number?: string
+          recorded_by?: string | null
+          reference_number?: string | null
+          refunded_at?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permission_audit_log: {
+        Row: {
+          action: string
+          changed_at: string | null
+          changed_by: string | null
+          id: string
+          metadata: Json | null
+          permission_key: string
+          permission_type: string
+          role_id: string
+        }
+        Insert: {
+          action: string
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          metadata?: Json | null
+          permission_key: string
+          permission_type: string
+          role_id: string
+        }
+        Update: {
+          action?: string
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          metadata?: Json | null
+          permission_key?: string
+          permission_type?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permission_audit_log_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permission_audit_log_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permission_audit_log_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
+          },
+        ]
       }
       productivity_calendars: {
         Row: {
@@ -2737,6 +5001,7 @@ export type Database = {
           created_at: string
           created_by: string
           dealer_id: number
+          deleted_at: string | null
           description: string | null
           due_date: string | null
           id: string
@@ -2756,6 +5021,7 @@ export type Database = {
           created_at?: string
           created_by: string
           dealer_id: number
+          deleted_at?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
@@ -2775,6 +5041,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           dealer_id?: number
+          deleted_at?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
@@ -2791,42 +5058,152 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_colors: string[] | null
+          avatar_seed: string | null
+          avatar_url: string | null
+          avatar_variant: string | null
           created_at: string | null
           dealership_id: number | null
           email: string
           first_name: string | null
           id: string
           last_name: string | null
+          phone_number: string | null
           role: string | null
           updated_at: string | null
+          use_new_role_system: boolean | null
           user_type: Database["public"]["Enums"]["user_type"] | null
         }
         Insert: {
+          avatar_colors?: string[] | null
+          avatar_seed?: string | null
+          avatar_url?: string | null
+          avatar_variant?: string | null
           created_at?: string | null
           dealership_id?: number | null
           email: string
           first_name?: string | null
           id: string
           last_name?: string | null
+          phone_number?: string | null
           role?: string | null
           updated_at?: string | null
+          use_new_role_system?: boolean | null
           user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Update: {
+          avatar_colors?: string[] | null
+          avatar_seed?: string | null
+          avatar_url?: string | null
+          avatar_variant?: string | null
           created_at?: string | null
           dealership_id?: number | null
           email?: string
           first_name?: string | null
           id?: string
           last_name?: string | null
+          phone_number?: string | null
           role?: string | null
           updated_at?: string | null
+          use_new_role_system?: boolean | null
           user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Relationships: [
           {
             foreignKeyName: "profiles_dealership_id_fkey"
             columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles_backup_20251023_roles: {
+        Row: {
+          avatar_colors: string[] | null
+          avatar_seed: string | null
+          avatar_url: string | null
+          avatar_variant: string | null
+          created_at: string | null
+          dealership_id: number | null
+          email: string | null
+          first_name: string | null
+          id: string | null
+          last_name: string | null
+          role: string | null
+          updated_at: string | null
+          user_type: Database["public"]["Enums"]["user_type"] | null
+        }
+        Insert: {
+          avatar_colors?: string[] | null
+          avatar_seed?: string | null
+          avatar_url?: string | null
+          avatar_variant?: string | null
+          created_at?: string | null
+          dealership_id?: number | null
+          email?: string | null
+          first_name?: string | null
+          id?: string | null
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
+        }
+        Update: {
+          avatar_colors?: string[] | null
+          avatar_seed?: string | null
+          avatar_url?: string | null
+          avatar_variant?: string | null
+          created_at?: string | null
+          dealership_id?: number | null
+          email?: string | null
+          first_name?: string | null
+          id?: string | null
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"] | null
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth_key: string
+          created_at: string | null
+          dealer_id: number
+          endpoint: string
+          id: string
+          is_active: boolean | null
+          p256dh_key: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          auth_key: string
+          created_at?: string | null
+          dealer_id: number
+          endpoint: string
+          id?: string
+          is_active?: boolean | null
+          p256dh_key: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          auth_key?: string
+          created_at?: string | null
+          dealer_id?: number
+          endpoint?: string
+          id?: string
+          is_active?: boolean | null
+          p256dh_key?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_dealer_id_fkey"
+            columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
             referencedColumns: ["id"]
@@ -3111,7 +5488,7 @@ export type Database = {
       }
       recon_vehicle_locations: {
         Row: {
-          coordinates: unknown | null
+          coordinates: unknown
           created_at: string | null
           id: string
           location_name: string
@@ -3122,7 +5499,7 @@ export type Database = {
           scanned_by: string | null
         }
         Insert: {
-          coordinates?: unknown | null
+          coordinates?: unknown
           created_at?: string | null
           id?: string
           location_name: string
@@ -3133,7 +5510,7 @@ export type Database = {
           scanned_by?: string | null
         }
         Update: {
-          coordinates?: unknown | null
+          coordinates?: unknown
           created_at?: string | null
           id?: string
           location_name?: string
@@ -3471,6 +5848,194 @@ export type Database = {
           },
         ]
       }
+      report_send_history: {
+        Row: {
+          created_at: string
+          dealer_id: number | null
+          error_message: string | null
+          export_format: string
+          file_size: number | null
+          file_url: string | null
+          id: string
+          metadata: Json | null
+          recipients: string[]
+          report_type: string
+          scheduled_report_id: string | null
+          sent_at: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          dealer_id?: number | null
+          error_message?: string | null
+          export_format: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          metadata?: Json | null
+          recipients: string[]
+          report_type: string
+          scheduled_report_id?: string | null
+          sent_at?: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number | null
+          error_message?: string | null
+          export_format?: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          metadata?: Json | null
+          recipients?: string[]
+          report_type?: string
+          scheduled_report_id?: string | null
+          sent_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_send_history_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "report_send_history_scheduled_report_id_fkey"
+            columns: ["scheduled_report_id"]
+            isOneToOne: false
+            referencedRelation: "scheduled_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_module_access: {
+        Row: {
+          created_at: string
+          id: string
+          is_enabled: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          role_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          role_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          module?: Database["public"]["Enums"]["app_module"]
+          role_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_module_access_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_module_access_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
+          },
+        ]
+      }
+      role_module_permissions_new: {
+        Row: {
+          created_at: string | null
+          granted_at: string | null
+          granted_by: string | null
+          id: string
+          permission_id: string
+          role_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          permission_id: string
+          role_id: string
+        }
+        Update: {
+          created_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          permission_id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_module_permissions_new_granted_by_fkey"
+            columns: ["granted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_module_permissions_new_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "module_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_module_permissions_new_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_module_permissions_new_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
+          },
+        ]
+      }
+      role_module_permissions_new_backup_20251023_roles: {
+        Row: {
+          created_at: string | null
+          granted_at: string | null
+          granted_by: string | null
+          id: string | null
+          permission_id: string | null
+          role_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string | null
+          permission_id?: string | null
+          role_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string | null
+          permission_id?: string | null
+          role_id?: string | null
+        }
+        Relationships: []
+      }
       role_permissions: {
         Row: {
           created_at: string
@@ -3503,6 +6068,100 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "roles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_permissions_v2: {
+        Row: {
+          conditions: Json | null
+          created_at: string | null
+          id: string
+          module: Database["public"]["Enums"]["system_module_v2"]
+          permission_level: Database["public"]["Enums"]["permission_level"]
+          role_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string | null
+          id?: string
+          module: Database["public"]["Enums"]["system_module_v2"]
+          permission_level: Database["public"]["Enums"]["permission_level"]
+          role_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string | null
+          id?: string
+          module?: Database["public"]["Enums"]["system_module_v2"]
+          permission_level?: Database["public"]["Enums"]["permission_level"]
+          role_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_v2_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "simplified_roles_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_system_permissions: {
+        Row: {
+          created_at: string | null
+          granted_at: string | null
+          granted_by: string | null
+          id: string
+          permission_id: string
+          role_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          permission_id: string
+          role_id: string
+        }
+        Update: {
+          created_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          permission_id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_system_permissions_granted_by_fkey"
+            columns: ["granted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_system_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "system_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_system_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_system_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
           },
         ]
       }
@@ -3548,6 +6207,42 @@ export type Database = {
         }
         Relationships: []
       }
+      roles_v2: {
+        Row: {
+          created_at: string | null
+          department: Database["public"]["Enums"]["department_type_v2"] | null
+          description: string | null
+          display_name: string
+          id: string
+          is_management: boolean | null
+          is_system_role: boolean | null
+          name: Database["public"]["Enums"]["system_role_v2"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["department_type_v2"] | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_management?: boolean | null
+          is_system_role?: boolean | null
+          name: Database["public"]["Enums"]["system_role_v2"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["department_type_v2"] | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_management?: boolean | null
+          is_system_role?: boolean | null
+          name?: Database["public"]["Enums"]["system_role_v2"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       sales_order_link_clicks: {
         Row: {
           browser: string | null
@@ -3557,7 +6252,7 @@ export type Database = {
           country: string | null
           device_type: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           is_mobile: boolean | null
           is_unique_click: boolean | null
           link_id: string
@@ -3574,7 +6269,7 @@ export type Database = {
           country?: string | null
           device_type?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_mobile?: boolean | null
           is_unique_click?: boolean | null
           link_id: string
@@ -3591,7 +6286,7 @@ export type Database = {
           country?: string | null
           device_type?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_mobile?: boolean | null
           is_unique_click?: boolean | null
           link_id?: string
@@ -3667,13 +6362,93 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_reports: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          deactivated_at: string | null
+          dealer_id: number | null
+          export_format: string
+          filters: Json | null
+          frequency: string
+          id: string
+          include_sections: Json | null
+          is_active: boolean | null
+          last_sent_at: string | null
+          metadata: Json | null
+          next_send_at: string | null
+          recipients: string[]
+          report_name: string
+          report_type: string
+          schedule_day: number | null
+          schedule_time: string
+          send_count: number | null
+          timezone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          deactivated_at?: string | null
+          dealer_id?: number | null
+          export_format?: string
+          filters?: Json | null
+          frequency: string
+          id?: string
+          include_sections?: Json | null
+          is_active?: boolean | null
+          last_sent_at?: string | null
+          metadata?: Json | null
+          next_send_at?: string | null
+          recipients: string[]
+          report_name: string
+          report_type: string
+          schedule_day?: number | null
+          schedule_time?: string
+          send_count?: number | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          deactivated_at?: string | null
+          dealer_id?: number | null
+          export_format?: string
+          filters?: Json | null
+          frequency?: string
+          id?: string
+          include_sections?: Json | null
+          is_active?: boolean | null
+          last_sent_at?: string | null
+          metadata?: Json | null
+          next_send_at?: string | null
+          recipients?: string[]
+          report_name?: string
+          report_type?: string
+          schedule_day?: number | null
+          schedule_time?: string
+          send_count?: number | null
+          timezone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_reports_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_audit_log: {
         Row: {
           created_at: string | null
           event_details: Json | null
           event_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           success: boolean | null
           user_agent: string | null
           user_id: string | null
@@ -3683,7 +6458,7 @@ export type Database = {
           event_details?: Json | null
           event_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean | null
           user_agent?: string | null
           user_id?: string | null
@@ -3693,7 +6468,7 @@ export type Database = {
           event_details?: Json | null
           event_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean | null
           user_agent?: string | null
           user_id?: string | null
@@ -3772,6 +6547,42 @@ export type Database = {
           is_system_category?: boolean
           name?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      simplified_roles_v2: {
+        Row: {
+          created_at: string | null
+          department: Database["public"]["Enums"]["department_type_v2"] | null
+          description: string | null
+          display_name: string
+          id: string
+          is_management: boolean | null
+          is_system_role: boolean | null
+          name: Database["public"]["Enums"]["system_role_simplified_v2"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["department_type_v2"] | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_management?: boolean | null
+          is_system_role?: boolean | null
+          name: Database["public"]["Enums"]["system_role_simplified_v2"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["department_type_v2"] | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_management?: boolean | null
+          is_system_role?: boolean | null
+          name?: Database["public"]["Enums"]["system_role_simplified_v2"]
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3893,9 +6704,109 @@ export type Database = {
           },
         ]
       }
+      sms_send_history: {
+        Row: {
+          cost_cents: number | null
+          dealer_id: number
+          entity_id: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          message_content: string
+          module: string
+          phone_number: string
+          sent_at: string | null
+          status: string | null
+          twilio_sid: string | null
+          user_id: string
+        }
+        Insert: {
+          cost_cents?: number | null
+          dealer_id: number
+          entity_id?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          message_content: string
+          module: string
+          phone_number: string
+          sent_at?: string | null
+          status?: string | null
+          twilio_sid?: string | null
+          user_id: string
+        }
+        Update: {
+          cost_cents?: number | null
+          dealer_id?: number
+          entity_id?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          message_content?: string
+          module?: string
+          phone_number?: string
+          sent_at?: string | null
+          status?: string | null
+          twilio_sid?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_send_history_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sms_send_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_permissions: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          display_name: string
+          id: string
+          is_active: boolean | null
+          permission_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          id?: string
+          is_active?: boolean | null
+          permission_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          id?: string
+          is_active?: boolean | null
+          permission_key?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       system_settings: {
         Row: {
           created_at: string | null
+          description: string | null
+          id: string
+          is_encrypted: boolean | null
+          is_public: boolean | null
           setting_key: string
           setting_type: string
           setting_value: Json
@@ -3904,29 +6815,29 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          description?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          is_public?: boolean | null
           setting_key: string
-          setting_type: string
+          setting_type?: string
           setting_value: Json
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
           created_at?: string | null
+          description?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          is_public?: boolean | null
           setting_key?: string
           setting_type?: string
           setting_value?: Json
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "system_settings_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_activity_log: {
         Row: {
@@ -3935,7 +6846,7 @@ export type Database = {
           created_at: string
           details: Json | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string
         }
@@ -3945,7 +6856,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id: string
         }
@@ -3955,7 +6866,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string
         }
@@ -3969,7 +6880,7 @@ export type Database = {
           entity_type: string
           event_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           metadata: Json | null
           user_agent: string | null
           user_id: string | null
@@ -3981,7 +6892,7 @@ export type Database = {
           entity_type: string
           event_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           metadata?: Json | null
           user_agent?: string | null
           user_id?: string | null
@@ -3993,7 +6904,7 @@ export type Database = {
           entity_type?: string
           event_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           metadata?: Json | null
           user_agent?: string | null
           user_id?: string | null
@@ -4064,46 +6975,462 @@ export type Database = {
           },
         ]
       }
-      user_notification_preferences: {
+      user_custom_role_assignments: {
         Row: {
-          channel_preferences: Json
+          assigned_at: string | null
+          assigned_by: string | null
           created_at: string | null
+          custom_role_id: string
           dealer_id: number
-          entity_subscriptions: Json | null
           id: string
-          notification_sound: Json | null
-          priority_filters: Json | null
-          quiet_hours: Json | null
+          is_active: boolean | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
-          channel_preferences?: Json
+          assigned_at?: string | null
+          assigned_by?: string | null
           created_at?: string | null
+          custom_role_id: string
           dealer_id: number
-          entity_subscriptions?: Json | null
           id?: string
-          notification_sound?: Json | null
-          priority_filters?: Json | null
-          quiet_hours?: Json | null
+          is_active?: boolean | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
-          channel_preferences?: Json
+          assigned_at?: string | null
+          assigned_by?: string | null
           created_at?: string | null
+          custom_role_id?: string
           dealer_id?: number
-          entity_subscriptions?: Json | null
           id?: string
-          notification_sound?: Json | null
-          priority_filters?: Json | null
-          quiet_hours?: Json | null
+          is_active?: boolean | null
           updated_at?: string | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_notification_preferences_dealer_id_fkey"
+            foreignKeyName: "user_custom_role_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_custom_role_assignments_custom_role_id_fkey"
+            columns: ["custom_role_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_custom_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_custom_role_assignments_custom_role_id_fkey"
+            columns: ["custom_role_id"]
+            isOneToOne: false
+            referencedRelation: "v_permission_migration_status"
+            referencedColumns: ["role_id"]
+          },
+          {
+            foreignKeyName: "user_custom_role_assignments_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_custom_role_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_dealership_memberships_v2: {
+        Row: {
+          created_at: string | null
+          dealership_id: string
+          id: string
+          joined_at: string | null
+          primary_dealership: boolean | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dealership_id: string
+          id?: string
+          joined_at?: string | null
+          primary_dealership?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dealership_id?: string
+          id?: string
+          joined_at?: string | null
+          primary_dealership?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_dealership_memberships_v2_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_dealership_memberships_v2_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_group_memberships: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          group_id: string
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          group_id: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          group_id?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_group_memberships_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_group_memberships_backup_20250920: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          group_id: string | null
+          id: string | null
+          is_active: boolean | null
+          notes: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          group_id?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          notes?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          group_id?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          notes?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_invitations_v2: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          dealership_id: string
+          department_id: string | null
+          email: string
+          expires_at: string
+          id: string
+          invitation_token: string
+          invited_by: string
+          metadata: Json | null
+          role: Database["public"]["Enums"]["system_role_v2"]
+          status: Database["public"]["Enums"]["invitation_status_v2"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          dealership_id: string
+          department_id?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          invitation_token: string
+          invited_by: string
+          metadata?: Json | null
+          role: Database["public"]["Enums"]["system_role_v2"]
+          status?: Database["public"]["Enums"]["invitation_status_v2"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          dealership_id?: string
+          department_id?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          invitation_token?: string
+          invited_by?: string
+          metadata?: Json | null
+          role?: Database["public"]["Enums"]["system_role_v2"]
+          status?: Database["public"]["Enums"]["invitation_status_v2"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_invitations_v2_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_invitations_v2_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_invitations_v2_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_invitations_v3: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          dealer_id: number
+          email: string
+          expires_at: string
+          id: string
+          invitation_token: string
+          invited_by: string
+          role: Database["public"]["Enums"]["base_role_v3"]
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          dealer_id: number
+          email: string
+          expires_at?: string
+          id?: string
+          invitation_token: string
+          invited_by: string
+          role: Database["public"]["Enums"]["base_role_v3"]
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          dealer_id?: number
+          email?: string
+          expires_at?: string
+          id?: string
+          invitation_token?: string
+          invited_by?: string
+          role?: Database["public"]["Enums"]["base_role_v3"]
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_notification_preferences: {
+        Row: {
+          approval_notifications_enabled: boolean
+          auto_dismiss_read_after_days: number | null
+          auto_dismiss_unread_after_days: number | null
+          bottleneck_alerts_enabled: boolean
+          created_at: string
+          dealer_id: number
+          deprecated_at: string | null
+          desktop_enabled: boolean
+          email_enabled: boolean
+          in_app_enabled: boolean
+          quiet_hours_enabled: boolean
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sla_critical_enabled: boolean
+          sla_warnings_enabled: boolean
+          sound_enabled: boolean
+          step_completion_enabled: boolean
+          system_alerts_enabled: boolean
+          updated_at: string
+          user_id: string
+          vehicle_status_enabled: boolean
+          work_item_notifications_enabled: boolean
+        }
+        Insert: {
+          approval_notifications_enabled?: boolean
+          auto_dismiss_read_after_days?: number | null
+          auto_dismiss_unread_after_days?: number | null
+          bottleneck_alerts_enabled?: boolean
+          created_at?: string
+          dealer_id: number
+          deprecated_at?: string | null
+          desktop_enabled?: boolean
+          email_enabled?: boolean
+          in_app_enabled?: boolean
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sla_critical_enabled?: boolean
+          sla_warnings_enabled?: boolean
+          sound_enabled?: boolean
+          step_completion_enabled?: boolean
+          system_alerts_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          vehicle_status_enabled?: boolean
+          work_item_notifications_enabled?: boolean
+        }
+        Update: {
+          approval_notifications_enabled?: boolean
+          auto_dismiss_read_after_days?: number | null
+          auto_dismiss_unread_after_days?: number | null
+          bottleneck_alerts_enabled?: boolean
+          created_at?: string
+          dealer_id?: number
+          deprecated_at?: string | null
+          desktop_enabled?: boolean
+          email_enabled?: boolean
+          in_app_enabled?: boolean
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sla_critical_enabled?: boolean
+          sla_warnings_enabled?: boolean
+          sound_enabled?: boolean
+          step_completion_enabled?: boolean
+          system_alerts_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          vehicle_status_enabled?: boolean
+          work_item_notifications_enabled?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_dealer"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_notification_preferences_universal: {
+        Row: {
+          auto_dismiss_read_after_days: number | null
+          auto_dismiss_unread_after_days: number | null
+          created_at: string
+          dealer_id: number
+          email_enabled: boolean
+          event_preferences: Json
+          frequency: string
+          id: string
+          in_app_enabled: boolean
+          metadata: Json | null
+          module: string
+          phone_number_override: string | null
+          push_enabled: boolean
+          quiet_hours_enabled: boolean
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          quiet_hours_timezone: string | null
+          rate_limits: Json
+          sms_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_dismiss_read_after_days?: number | null
+          auto_dismiss_unread_after_days?: number | null
+          created_at?: string
+          dealer_id: number
+          email_enabled?: boolean
+          event_preferences?: Json
+          frequency?: string
+          id?: string
+          in_app_enabled?: boolean
+          metadata?: Json | null
+          module: string
+          phone_number_override?: string | null
+          push_enabled?: boolean
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          quiet_hours_timezone?: string | null
+          rate_limits?: Json
+          sms_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_dismiss_read_after_days?: number | null
+          auto_dismiss_unread_after_days?: number | null
+          created_at?: string
+          dealer_id?: number
+          email_enabled?: boolean
+          event_preferences?: Json
+          frequency?: string
+          id?: string
+          in_app_enabled?: boolean
+          metadata?: Json | null
+          module?: string
+          phone_number_override?: string | null
+          push_enabled?: boolean
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          quiet_hours_timezone?: string | null
+          rate_limits?: Json
+          sms_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notification_preferences_universal_dealer_id_fkey"
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealerships"
@@ -4299,7 +7626,7 @@ export type Database = {
           custom_status: string | null
           dealer_id: number
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           is_mobile: boolean | null
           last_activity_at: string | null
           last_seen_at: string | null
@@ -4315,7 +7642,7 @@ export type Database = {
           custom_status?: string | null
           dealer_id: number
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_mobile?: boolean | null
           last_activity_at?: string | null
           last_seen_at?: string | null
@@ -4331,7 +7658,7 @@ export type Database = {
           custom_status?: string | null
           dealer_id?: number
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_mobile?: boolean | null
           last_activity_at?: string | null
           last_seen_at?: string | null
@@ -4409,12 +7736,161 @@ export type Database = {
           },
         ]
       }
+      user_role_assignments_v2: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          created_at: string | null
+          dealership_id: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          role_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          dealership_id?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          role_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          dealership_id?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          role_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_role_assignments_v2_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_role_assignments_v2_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_role_assignments_v2_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "simplified_roles_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_role_assignments_v2_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_role_assignments_v2_backup: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          created_at: string | null
+          dealership_id: string | null
+          department_id: string | null
+          expires_at: string | null
+          id: string | null
+          is_active: boolean | null
+          role: Database["public"]["Enums"]["system_role_v2"] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          dealership_id?: string | null
+          department_id?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          role?: Database["public"]["Enums"]["system_role_v2"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          dealership_id?: string | null
+          department_id?: string | null
+          expires_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          role?: Database["public"]["Enums"]["system_role_v2"] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_roles_v3: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          created_at: string
+          dealer_id: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          role: Database["public"]["Enums"]["base_role_v3"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          dealer_id: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          role: Database["public"]["Enums"]["base_role_v3"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          dealer_id?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          role?: Database["public"]["Enums"]["base_role_v3"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_sessions: {
         Row: {
           created_at: string
           expires_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           is_current: boolean | null
           last_activity: string | null
           location_info: Json | null
@@ -4426,7 +7902,7 @@ export type Database = {
           created_at?: string
           expires_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_current?: boolean | null
           last_activity?: string | null
           location_info?: Json | null
@@ -4438,7 +7914,7 @@ export type Database = {
           created_at?: string
           expires_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           is_current?: boolean | null
           last_activity?: string | null
           location_info?: Json | null
@@ -4447,6 +7923,75 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_sms_notification_preferences: {
+        Row: {
+          created_at: string | null
+          dealer_id: number
+          deprecated_at: string | null
+          event_preferences: Json | null
+          id: string
+          max_sms_per_day: number | null
+          max_sms_per_hour: number | null
+          module: string
+          phone_number: string | null
+          quiet_hours_enabled: boolean | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sms_enabled: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: number
+          deprecated_at?: string | null
+          event_preferences?: Json | null
+          id?: string
+          max_sms_per_day?: number | null
+          max_sms_per_hour?: number | null
+          module: string
+          phone_number?: string | null
+          quiet_hours_enabled?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: number
+          deprecated_at?: string | null
+          event_preferences?: Json | null
+          id?: string
+          max_sms_per_day?: number | null
+          max_sms_per_hour?: number | null
+          module?: string
+          phone_number?: string | null
+          quiet_hours_enabled?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_sms_notification_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_sms_notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_status: {
         Row: {
@@ -4504,20 +8049,1274 @@ export type Database = {
           },
         ]
       }
+      users_v2: {
+        Row: {
+          auth_user_id: string | null
+          avatar_settings: Json | null
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          employee_id: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          primary_dealership_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          auth_user_id?: string | null
+          avatar_settings?: Json | null
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          employee_id?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          primary_dealership_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          auth_user_id?: string | null
+          avatar_settings?: Json | null
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          employee_id?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          primary_dealership_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      vehicle_media: {
+        Row: {
+          annotations: Json | null
+          category: string
+          created_at: string | null
+          dealer_id: number
+          file_name: string
+          file_path: string
+          file_size: number | null
+          file_type: string | null
+          id: string
+          is_required: boolean | null
+          linked_work_item_id: string | null
+          metadata: Json | null
+          thumbnail_path: string | null
+          uploaded_by: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          annotations?: Json | null
+          category: string
+          created_at?: string | null
+          dealer_id: number
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+          is_required?: boolean | null
+          linked_work_item_id?: string | null
+          metadata?: Json | null
+          thumbnail_path?: string | null
+          uploaded_by?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          annotations?: Json | null
+          category?: string
+          created_at?: string | null
+          dealer_id?: number
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+          is_required?: boolean | null
+          linked_work_item_id?: string | null
+          metadata?: Json | null
+          thumbnail_path?: string | null
+          uploaded_by?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_media_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_media_linked_work_item_id_fkey"
+            columns: ["linked_work_item_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_work_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_media_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_media_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_media_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_media_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_media_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      vehicle_note_replies: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string | null
+          dealer_id: number
+          id: string
+          note_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string | null
+          dealer_id: number
+          id?: string
+          note_id: string
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string | null
+          dealer_id?: number
+          id?: string
+          note_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_note_replies_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_note_replies_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehicle_notes: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          is_pinned: boolean
+          linked_work_item_id: string | null
+          note_type: string
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_pinned?: boolean
+          linked_work_item_id?: string | null
+          note_type?: string
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_pinned?: boolean
+          linked_work_item_id?: string | null
+          note_type?: string
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_notes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_notes_linked_work_item_id_fkey"
+            columns: ["linked_work_item_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_work_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_notes_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_notes_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_notes_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_notes_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      vehicle_step_history: {
+        Row: {
+          created_at: string | null
+          dealer_id: number
+          entry_date: string
+          exit_date: string | null
+          hours_accumulated: number | null
+          id: string
+          is_backtrack: boolean | null
+          is_current_visit: boolean | null
+          metadata: Json | null
+          notes: string | null
+          priority_at_entry: string | null
+          step_color: string | null
+          step_id: string
+          step_name: string
+          updated_at: string | null
+          vehicle_id: string
+          visit_number: number
+          work_items_pending_at_entry: number | null
+          workflow_type_at_entry: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: number
+          entry_date: string
+          exit_date?: string | null
+          hours_accumulated?: number | null
+          id?: string
+          is_backtrack?: boolean | null
+          is_current_visit?: boolean | null
+          metadata?: Json | null
+          notes?: string | null
+          priority_at_entry?: string | null
+          step_color?: string | null
+          step_id: string
+          step_name: string
+          updated_at?: string | null
+          vehicle_id: string
+          visit_number?: number
+          work_items_pending_at_entry?: number | null
+          workflow_type_at_entry?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: number
+          entry_date?: string
+          exit_date?: string | null
+          hours_accumulated?: number | null
+          id?: string
+          is_backtrack?: boolean | null
+          is_current_visit?: boolean | null
+          metadata?: Json | null
+          notes?: string | null
+          priority_at_entry?: string | null
+          step_color?: string | null
+          step_id?: string
+          step_name?: string
+          updated_at?: string | null
+          vehicle_id?: string
+          visit_number?: number
+          work_items_pending_at_entry?: number | null
+          workflow_type_at_entry?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_step_history_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      vehicle_timeline_events: {
+        Row: {
+          cost_impact: number | null
+          dealer_id: number
+          delay_reason: string | null
+          duration_hours: number | null
+          event_color: string | null
+          event_description: string | null
+          event_icon: string | null
+          event_title: string
+          event_type: Database["public"]["Enums"]["timeline_event_type"]
+          id: string
+          linked_vendor_id: string | null
+          linked_work_item: string | null
+          metadata: Json | null
+          timestamp: string | null
+          user_id: string | null
+          user_triggered: boolean | null
+          vehicle_id: string
+        }
+        Insert: {
+          cost_impact?: number | null
+          dealer_id: number
+          delay_reason?: string | null
+          duration_hours?: number | null
+          event_color?: string | null
+          event_description?: string | null
+          event_icon?: string | null
+          event_title: string
+          event_type: Database["public"]["Enums"]["timeline_event_type"]
+          id?: string
+          linked_vendor_id?: string | null
+          linked_work_item?: string | null
+          metadata?: Json | null
+          timestamp?: string | null
+          user_id?: string | null
+          user_triggered?: boolean | null
+          vehicle_id: string
+        }
+        Update: {
+          cost_impact?: number | null
+          dealer_id?: number
+          delay_reason?: string | null
+          duration_hours?: number | null
+          event_color?: string | null
+          event_description?: string | null
+          event_icon?: string | null
+          event_title?: string
+          event_type?: Database["public"]["Enums"]["timeline_event_type"]
+          id?: string
+          linked_vendor_id?: string | null
+          linked_work_item?: string | null
+          metadata?: Json | null
+          timestamp?: string | null
+          user_id?: string | null
+          user_triggered?: boolean | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_timeline_events_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_timeline_events_linked_work_item_fkey"
+            columns: ["linked_work_item"]
+            isOneToOne: false
+            referencedRelation: "get_ready_work_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_timeline_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_timeline_events_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_timeline_events_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_timeline_events_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_timeline_events_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      work_item_templates: {
+        Row: {
+          approval_required: boolean | null
+          auto_assign: boolean | null
+          created_at: string | null
+          dealer_id: number
+          description: string | null
+          estimated_cost: number | null
+          estimated_hours: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          order_index: number | null
+          priority: number | null
+          step_id: string | null
+          updated_at: string | null
+          work_type: Database["public"]["Enums"]["work_item_type"]
+        }
+        Insert: {
+          approval_required?: boolean | null
+          auto_assign?: boolean | null
+          created_at?: string | null
+          dealer_id: number
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          order_index?: number | null
+          priority?: number | null
+          step_id?: string | null
+          updated_at?: string | null
+          work_type: Database["public"]["Enums"]["work_item_type"]
+        }
+        Update: {
+          approval_required?: boolean | null
+          auto_assign?: boolean | null
+          created_at?: string | null
+          dealer_id?: number
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_hours?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          order_index?: number | null
+          priority?: number | null
+          step_id?: string | null
+          updated_at?: string | null
+          work_type?: Database["public"]["Enums"]["work_item_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_item_templates_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_item_templates_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      active_get_ready_vehicles: {
+        Row: {
+          actual_t2l: number | null
+          approval_notes: string | null
+          approval_status: Database["public"]["Enums"]["approval_status"] | null
+          approved_at: string | null
+          approved_by: string | null
+          assigned_group_id: string | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          days_in_step: number | null
+          dealer_id: number | null
+          deleted_at: string | null
+          deleted_by: string | null
+          escalation_level: number | null
+          frontline_reached_at: string | null
+          holding_cost_daily: number | null
+          id: string | null
+          intake_date: string | null
+          is_bottlenecked: boolean | null
+          media_count: number | null
+          metadata: Json | null
+          notes: string | null
+          notes_count: number | null
+          priority: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score: number | null
+          progress: number | null
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          requires_approval: boolean | null
+          sla_hours_remaining: number | null
+          sla_status: Database["public"]["Enums"]["get_ready_sla_status"] | null
+          status: string | null
+          step_id: string | null
+          stock_number: string | null
+          t2l_estimate: number | null
+          target_frontline_date: string | null
+          timer_paused: boolean | null
+          total_holding_cost: number | null
+          updated_at: string | null
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_trim: string | null
+          vehicle_year: number | null
+          vin: string | null
+          workflow_type:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Insert: {
+          actual_t2l?: number | null
+          approval_notes?: string | null
+          approval_status?:
+            | Database["public"]["Enums"]["approval_status"]
+            | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          days_in_step?: number | null
+          dealer_id?: number | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          escalation_level?: number | null
+          frontline_reached_at?: string | null
+          holding_cost_daily?: number | null
+          id?: string | null
+          intake_date?: string | null
+          is_bottlenecked?: boolean | null
+          media_count?: number | null
+          metadata?: Json | null
+          notes?: string | null
+          notes_count?: number | null
+          priority?: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score?: number | null
+          progress?: number | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requires_approval?: boolean | null
+          sla_hours_remaining?: number | null
+          sla_status?:
+            | Database["public"]["Enums"]["get_ready_sla_status"]
+            | null
+          status?: string | null
+          step_id?: string | null
+          stock_number?: string | null
+          t2l_estimate?: number | null
+          target_frontline_date?: string | null
+          timer_paused?: boolean | null
+          total_holding_cost?: number | null
+          updated_at?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin?: string | null
+          workflow_type?:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Update: {
+          actual_t2l?: number | null
+          approval_notes?: string | null
+          approval_status?:
+            | Database["public"]["Enums"]["approval_status"]
+            | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          days_in_step?: number | null
+          dealer_id?: number | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          escalation_level?: number | null
+          frontline_reached_at?: string | null
+          holding_cost_daily?: number | null
+          id?: string | null
+          intake_date?: string | null
+          is_bottlenecked?: boolean | null
+          media_count?: number | null
+          metadata?: Json | null
+          notes?: string | null
+          notes_count?: number | null
+          priority?: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score?: number | null
+          progress?: number | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requires_approval?: boolean | null
+          sla_hours_remaining?: number | null
+          sla_status?:
+            | Database["public"]["Enums"]["get_ready_sla_status"]
+            | null
+          status?: string | null
+          step_id?: string | null
+          stock_number?: string | null
+          t2l_estimate?: number | null
+          target_frontline_date?: string | null
+          timer_paused?: boolean | null
+          total_holding_cost?: number | null
+          updated_at?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin?: string | null
+          workflow_type?:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_get_ready_vehicles_approved_by"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_get_ready_vehicles_rejected_by"
+            columns: ["rejected_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_assigned_group_id_fkey"
+            columns: ["assigned_group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deleted_get_ready_vehicles: {
+        Row: {
+          actual_t2l: number | null
+          approval_notes: string | null
+          approval_status: Database["public"]["Enums"]["approval_status"] | null
+          approved_at: string | null
+          approved_by: string | null
+          assigned_group_id: string | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          days_in_step: number | null
+          dealer_id: number | null
+          deleted_at: string | null
+          deleted_by: string | null
+          escalation_level: number | null
+          frontline_reached_at: string | null
+          holding_cost_daily: number | null
+          id: string | null
+          intake_date: string | null
+          is_bottlenecked: boolean | null
+          media_count: number | null
+          metadata: Json | null
+          notes: string | null
+          notes_count: number | null
+          priority: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score: number | null
+          progress: number | null
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          requires_approval: boolean | null
+          sla_hours_remaining: number | null
+          sla_status: Database["public"]["Enums"]["get_ready_sla_status"] | null
+          status: string | null
+          step_id: string | null
+          stock_number: string | null
+          t2l_estimate: number | null
+          target_frontline_date: string | null
+          timer_paused: boolean | null
+          total_holding_cost: number | null
+          updated_at: string | null
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_trim: string | null
+          vehicle_year: number | null
+          vin: string | null
+          workflow_type:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Insert: {
+          actual_t2l?: number | null
+          approval_notes?: string | null
+          approval_status?:
+            | Database["public"]["Enums"]["approval_status"]
+            | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          days_in_step?: number | null
+          dealer_id?: number | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          escalation_level?: number | null
+          frontline_reached_at?: string | null
+          holding_cost_daily?: number | null
+          id?: string | null
+          intake_date?: string | null
+          is_bottlenecked?: boolean | null
+          media_count?: number | null
+          metadata?: Json | null
+          notes?: string | null
+          notes_count?: number | null
+          priority?: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score?: number | null
+          progress?: number | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requires_approval?: boolean | null
+          sla_hours_remaining?: number | null
+          sla_status?:
+            | Database["public"]["Enums"]["get_ready_sla_status"]
+            | null
+          status?: string | null
+          step_id?: string | null
+          stock_number?: string | null
+          t2l_estimate?: number | null
+          target_frontline_date?: string | null
+          timer_paused?: boolean | null
+          total_holding_cost?: number | null
+          updated_at?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin?: string | null
+          workflow_type?:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Update: {
+          actual_t2l?: number | null
+          approval_notes?: string | null
+          approval_status?:
+            | Database["public"]["Enums"]["approval_status"]
+            | null
+          approved_at?: string | null
+          approved_by?: string | null
+          assigned_group_id?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          days_in_step?: number | null
+          dealer_id?: number | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          escalation_level?: number | null
+          frontline_reached_at?: string | null
+          holding_cost_daily?: number | null
+          id?: string | null
+          intake_date?: string | null
+          is_bottlenecked?: boolean | null
+          media_count?: number | null
+          metadata?: Json | null
+          notes?: string | null
+          notes_count?: number | null
+          priority?: Database["public"]["Enums"]["get_ready_priority"] | null
+          priority_score?: number | null
+          progress?: number | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requires_approval?: boolean | null
+          sla_hours_remaining?: number | null
+          sla_status?:
+            | Database["public"]["Enums"]["get_ready_sla_status"]
+            | null
+          status?: string | null
+          step_id?: string | null
+          stock_number?: string | null
+          t2l_estimate?: number | null
+          target_frontline_date?: string | null
+          timer_paused?: boolean | null
+          total_holding_cost?: number | null
+          updated_at?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_trim?: string | null
+          vehicle_year?: number | null
+          vin?: string | null
+          workflow_type?:
+            | Database["public"]["Enums"]["get_ready_workflow_type"]
+            | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_get_ready_vehicles_approved_by"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_get_ready_vehicles_rejected_by"
+            columns: ["rejected_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_assigned_group_id_fkey"
+            columns: ["assigned_group_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "get_ready_vehicles_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sms_analytics: {
+        Row: {
+          avg_cost_cents: number | null
+          dealer_id: number | null
+          delivered: number | null
+          event_type: string | null
+          failed: number | null
+          module: string | null
+          sent_date: string | null
+          total_cost_cents: number | null
+          total_sent: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_send_history_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_notification_preferences_legacy: {
+        Row: {
+          approval_notifications_enabled: boolean | null
+          auto_dismiss_read_after_days: number | null
+          auto_dismiss_unread_after_days: number | null
+          bottleneck_alerts_enabled: boolean | null
+          created_at: string | null
+          dealer_id: number | null
+          desktop_enabled: boolean | null
+          email_enabled: boolean | null
+          in_app_enabled: boolean | null
+          quiet_hours_enabled: boolean | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sla_critical_enabled: boolean | null
+          sla_warnings_enabled: boolean | null
+          step_completion_enabled: boolean | null
+          system_alerts_enabled: boolean | null
+          updated_at: string | null
+          user_id: string | null
+          vehicle_status_enabled: boolean | null
+          work_item_notifications_enabled: boolean | null
+        }
+        Insert: {
+          approval_notifications_enabled?: never
+          auto_dismiss_read_after_days?: number | null
+          auto_dismiss_unread_after_days?: number | null
+          bottleneck_alerts_enabled?: never
+          created_at?: string | null
+          dealer_id?: number | null
+          desktop_enabled?: boolean | null
+          email_enabled?: boolean | null
+          in_app_enabled?: boolean | null
+          quiet_hours_enabled?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sla_critical_enabled?: never
+          sla_warnings_enabled?: never
+          step_completion_enabled?: never
+          system_alerts_enabled?: never
+          updated_at?: string | null
+          user_id?: string | null
+          vehicle_status_enabled?: never
+          work_item_notifications_enabled?: never
+        }
+        Update: {
+          approval_notifications_enabled?: never
+          auto_dismiss_read_after_days?: number | null
+          auto_dismiss_unread_after_days?: number | null
+          bottleneck_alerts_enabled?: never
+          created_at?: string | null
+          dealer_id?: number | null
+          desktop_enabled?: boolean | null
+          email_enabled?: boolean | null
+          in_app_enabled?: boolean | null
+          quiet_hours_enabled?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sla_critical_enabled?: never
+          sla_warnings_enabled?: never
+          step_completion_enabled?: never
+          system_alerts_enabled?: never
+          updated_at?: string | null
+          user_id?: string | null
+          vehicle_status_enabled?: never
+          work_item_notifications_enabled?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notification_preferences_universal_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_sms_notification_preferences_legacy: {
+        Row: {
+          created_at: string | null
+          dealer_id: number | null
+          event_preferences: Json | null
+          id: string | null
+          max_sms_per_day: number | null
+          max_sms_per_hour: number | null
+          module: string | null
+          phone_number: string | null
+          quiet_hours_enabled: boolean | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sms_enabled: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id?: number | null
+          event_preferences?: Json | null
+          id?: string | null
+          max_sms_per_day?: never
+          max_sms_per_hour?: never
+          module?: string | null
+          phone_number?: string | null
+          quiet_hours_enabled?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: number | null
+          event_preferences?: Json | null
+          id?: string | null
+          max_sms_per_day?: never
+          max_sms_per_hour?: never
+          module?: string | null
+          phone_number?: string | null
+          quiet_hours_enabled?: boolean | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notification_preferences_universal_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_permission_migration_status: {
+        Row: {
+          dealer_id: number | null
+          display_name: string | null
+          migration_status: string | null
+          new_module_permission_count: number | null
+          new_system_permission_count: number | null
+          old_permission_count: number | null
+          role_id: string | null
+          role_name: string | null
+        }
+        Insert: {
+          dealer_id?: number | null
+          display_name?: string | null
+          migration_status?: never
+          new_module_permission_count?: never
+          new_system_permission_count?: never
+          old_permission_count?: never
+          role_id?: string | null
+          role_name?: string | null
+        }
+        Update: {
+          dealer_id?: number | null
+          display_name?: string | null
+          migration_status?: never
+          new_module_permission_count?: never
+          new_system_permission_count?: never
+          old_permission_count?: never
+          role_id?: string | null
+          role_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_custom_roles_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehicle_step_time_summary: {
+        Row: {
+          avg_hours_per_visit: number | null
+          backtrack_count: number | null
+          first_entry: string | null
+          is_current_step: boolean | null
+          last_exit: string | null
+          max_hours: number | null
+          min_hours: number | null
+          step_color: string | null
+          step_id: string | null
+          step_name: string | null
+          total_hours: number | null
+          vehicle_id: string | null
+          visit_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_step_history_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_steps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "active_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "get_ready_vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_step_history_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_step_times_current"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
+      vehicle_step_times_current: {
+        Row: {
+          current_step_entry: string | null
+          current_step_name: string | null
+          current_visit_days: number | null
+          current_visit_hours: number | null
+          previous_visits_hours: number | null
+          stock_number: string | null
+          vehicle_id: string | null
+          vin: string | null
+          visit_number: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_dealer_invitation: {
-        Args: { p_invitation_token: string }
+        Args: { token_input: string }
+        Returns: undefined
+      }
+      accept_dealer_invitation_v2: {
+        Args: { token_input: string }
         Returns: boolean
       }
-      assign_role: {
-        Args:
-          | { expires_at?: string; role_name: string; target_user_id: string }
-          | { p_role_name: string; p_user_id: string }
-        Returns: boolean
+      approve_vehicle: {
+        Args: { p_notes?: string; p_vehicle_id: string }
+        Returns: Json
+      }
+      approve_vehicle_v1_backup: {
+        Args: { p_notes?: string; p_vehicle_id: string }
+        Returns: Json
+      }
+      assign_role:
+        | {
+            Args: {
+              expires_at?: string
+              role_name: string
+              target_user_id: string
+            }
+            Returns: boolean
+          }
+        | { Args: { p_role_name: string; p_user_id: string }; Returns: boolean }
+      audit_role_inconsistencies: {
+        Args: never
+        Returns: {
+          assigned_role_display: string
+          assigned_role_name: string
+          dealership_id: number
+          has_dealer_membership: boolean
+          has_role_assignment: boolean
+          inconsistency_type: string
+          profile_role: string
+          profile_user_type: Database["public"]["Enums"]["user_type"]
+          recommended_action: string
+          severity: string
+          user_email: string
+          user_id: string
+        }[]
       }
       auto_add_follower: {
         Args: {
@@ -4529,6 +9328,26 @@ export type Database = {
         }
         Returns: string
       }
+      bulk_set_role_module_access: {
+        Args: { p_modules_access: Json; p_role_id: string }
+        Returns: boolean
+      }
+      calculate_step_hours: {
+        Args: { p_entry_date: string; p_exit_date: string }
+        Returns: number
+      }
+      can_access_dealership: {
+        Args: { dealer_id: number; user_id: string }
+        Returns: boolean
+      }
+      can_user_access_order_type: {
+        Args: { target_order_type: string; user_uuid: string }
+        Returns: boolean
+      }
+      can_user_edit_order: {
+        Args: { target_order_id: string; user_uuid: string }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           p_identifier: string
@@ -4538,10 +9357,45 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_user_permission_v2: {
+        Args: { module_name: string; permission_level: string; user_id: string }
+        Returns: boolean
+      }
+      check_vehicle_approval_needed: {
+        Args: { p_vehicle_id: string }
+        Returns: boolean
+      }
+      cleanup_old_edge_logs: { Args: never; Returns: undefined }
+      cleanup_old_notifications: { Args: never; Returns: number }
       create_dealer_invitation: {
         Args: { p_dealer_id: number; p_email: string; p_role_name: string }
+        Returns: Json
+      }
+      create_default_get_ready_steps: {
+        Args: { p_dealer_id: number }
+        Returns: undefined
+      }
+      create_default_notification_preferences: {
+        Args: { p_dealer_id: number; p_module: string; p_user_id: string }
         Returns: string
       }
+      create_get_ready_notification: {
+        Args: {
+          p_action_label?: string
+          p_action_url?: string
+          p_dealer_id: number
+          p_message: string
+          p_metadata?: Json
+          p_priority: Database["public"]["Enums"]["notification_priority"]
+          p_step_id?: string
+          p_title: string
+          p_type: Database["public"]["Enums"]["notification_type"]
+          p_user_id: string
+          p_vehicle_id?: string
+        }
+        Returns: string
+      }
+      create_role_system_backup: { Args: never; Returns: string }
       dealership_has_module_access: {
         Args: {
           p_dealer_id: number
@@ -4549,33 +9403,117 @@ export type Database = {
         }
         Returns: boolean
       }
+      debug_user_permissions: {
+        Args: { target_dealer_id?: number; user_uuid: string }
+        Returns: {
+          allowed_order_types: string[]
+          dealership_id: number
+          group_memberships: string[]
+          has_dealer_membership: boolean
+          user_id: string
+          user_role: string
+          user_type: string
+        }[]
+      }
+      dismiss_notification: {
+        Args: { p_notification_id: string; p_user_id: string }
+        Returns: boolean
+      }
       execute_nfc_workflows: {
         Args: { p_scan_data?: Json; p_tag_id: string }
         Returns: Json
       }
-      format_dh: {
-        Args: { interval_val: unknown }
-        Returns: string
-      }
-      generate_custom_order_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      format_dh: { Args: { interval_val: unknown }; Returns: string }
+      generate_avatar_seed: { Args: { user_uuid: string }; Returns: string }
+      generate_car_wash_order_number: { Args: never; Returns: string }
+      generate_custom_order_number: { Args: never; Returns: string }
       generate_employee_number: {
         Args: { p_dealer_id: number }
         Returns: string
       }
-      generate_sales_order_number: {
-        Args: Record<PropertyKey, never>
+      generate_invoice_number: {
+        Args: { p_dealer_id: number }
         Returns: string
       }
-      generate_service_order_number: {
-        Args: Record<PropertyKey, never>
+      generate_payment_number: {
+        Args: { p_dealer_id: number }
         Returns: string
       }
-      generate_unique_slug: {
-        Args: Record<PropertyKey, never>
-        Returns: string
+      generate_recon_order_number: { Args: never; Returns: string }
+      generate_sales_order_number: { Args: never; Returns: string }
+      generate_service_order_number: { Args: never; Returns: string }
+      generate_unique_slug: { Args: never; Returns: string }
+      get_accumulated_hours_in_step: {
+        Args: { p_step_id: string; p_vehicle_id: string }
+        Returns: number
+      }
+      get_active_announcements: {
+        Args: never
+        Returns: {
+          content: string
+          created_at: string | null
+          created_by: string | null
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          priority: number | null
+          start_date: string | null
+          target_dealer_ids: number[] | null
+          target_roles: string[] | null
+          title: string
+          type: string
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "announcements"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_available_slots: {
+        Args: { p_date_slot: string; p_dealer_id: number; p_hour_slot?: number }
+        Returns: {
+          available_slots: number
+          date_slot: string
+          hour_slot: number
+          is_available: boolean
+          max_capacity: number
+        }[]
+      }
+      get_bottleneck_alerts: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          avg_wait_time: number
+          created_at: string
+          recommended_action: string
+          severity: string
+          step_id: string
+          step_name: string
+          vehicle_count: number
+        }[]
+      }
+      get_comment_reactions_summary: {
+        Args: { p_comment_id: string }
+        Returns: {
+          count: number
+          reaction_type: string
+          user_reacted: boolean
+        }[]
+      }
+      get_comment_thread: {
+        Args: { p_comment_id: string }
+        Returns: {
+          comment_text: string
+          comment_type: string
+          created_at: string
+          id: string
+          order_id: string
+          parent_comment_id: string
+          thread_level: number
+          updated_at: string
+          user_id: string
+        }[]
       }
       get_conversation_last_messages: {
         Args: { conversation_ids: string[] }
@@ -4584,28 +9522,34 @@ export type Database = {
           last_message_at: string
           last_message_content: string
           last_message_type: string
-          last_sender_name: string
+          last_message_user_id: string
         }[]
       }
       get_conversation_participants: {
         Args: { conversation_uuid: string; requesting_user_id: string }
         Returns: {
-          joined_at: string
-          last_seen_at: string
+          is_active: boolean
+          last_read_at: string
           permission_level: string
           presence_status: string
+          user_avatar_url: string
           user_email: string
           user_id: string
           user_name: string
         }[]
       }
-      get_current_user_dealership: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: string
+      get_current_user_dealership: { Args: never; Returns: number }
+      get_current_user_role: { Args: never; Returns: string }
+      get_current_vehicles_per_step: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          avg_days_in_step: number
+          current_vehicle_count: number
+          step_id: string
+          step_name: string
+          step_order: number
+          vehicles_over_sla: number
+        }[]
       }
       get_dealer_categories_for_module: {
         Args: {
@@ -4634,6 +9578,20 @@ export type Database = {
           total_orders: number
         }[]
       }
+      get_dealer_services_by_department: {
+        Args: { p_dealer_id: number; p_department_name: string }
+        Returns: {
+          category_color: string
+          category_id: string
+          category_name: string
+          color: string
+          description: string
+          duration: number
+          id: string
+          name: string
+          price: number
+        }[]
+      }
       get_dealer_services_for_user: {
         Args: { p_dealer_id: number }
         Returns: {
@@ -4649,6 +9607,20 @@ export type Database = {
           name: string
           price: number
           updated_at: string
+        }[]
+      }
+      get_dealer_step_analytics: {
+        Args: { p_days_back?: number; p_dealer_id: number }
+        Returns: {
+          avg_time_first_visit: number
+          avg_time_revisits: number
+          avg_total_time: number
+          backtrack_count: number
+          max_revisits: number
+          revisit_rate: number
+          step_id: string
+          step_name: string
+          total_vehicles: number
         }[]
       }
       get_dealer_t2l_stats: {
@@ -4672,7 +9644,7 @@ export type Database = {
         }[]
       }
       get_dealership_performance_stats: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           active_users: number
           avg_orders_per_user: number
@@ -4713,6 +9685,32 @@ export type Database = {
           user_name: string
         }[]
       }
+      get_historical_kpis: {
+        Args: { p_dealer_id: number; p_end_date: string; p_start_date: string }
+        Returns: {
+          active_vehicles: number
+          avg_t2l: number
+          daily_throughput: number
+          date: string
+          sla_compliance: number
+          vehicles_completed: number
+        }[]
+      }
+      get_invoice_analytics: {
+        Args: { p_dealer_id: number; p_end_date: string; p_start_date: string }
+        Returns: {
+          avg_days_to_payment: number
+          monthly_trend: Json
+          overdue_count: number
+          paid_count: number
+          payment_method_distribution: Json
+          pending_count: number
+          total_amount: number
+          total_due: number
+          total_invoices: number
+          total_paid: number
+        }[]
+      }
       get_nfc_analytics: {
         Args: {
           p_dealer_id: number
@@ -4732,9 +9730,9 @@ export type Database = {
       get_orders_analytics: {
         Args: {
           p_dealer_id: number
-          p_end_date?: string
+          p_end_date: string
           p_order_type?: string
-          p_start_date?: string
+          p_start_date: string
           p_status?: string
         }
         Returns: {
@@ -4777,12 +9775,20 @@ export type Database = {
           work_item_counts: Json
         }[]
       }
+      get_pending_work_items_for_vehicle: {
+        Args: { p_vehicle_id: string }
+        Returns: {
+          description: string
+          estimated_cost: number
+          estimated_hours: number
+          id: string
+          priority: number
+          title: string
+          work_type: string
+        }[]
+      }
       get_performance_trends: {
-        Args: {
-          p_dealer_id: number
-          p_end_date?: string
-          p_start_date?: string
-        }
+        Args: { p_dealer_id: number; p_end_date: string; p_start_date: string }
         Returns: {
           department_performance: Json
           efficiency_trends: Json
@@ -4790,8 +9796,20 @@ export type Database = {
           volume_trends: Json
         }[]
       }
+      get_ready_kpis: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          avg_holding_cost: number
+          avg_t2l: number
+          daily_throughput: number
+          sla_compliance: number
+          target_t2l: number
+          total_holding_costs: number
+          weekly_capacity: number
+        }[]
+      }
       get_recent_system_activity: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           activity_description: string
           activity_type: string
@@ -4804,9 +9822,9 @@ export type Database = {
       get_revenue_analytics: {
         Args: {
           p_dealer_id: number
-          p_end_date?: string
+          p_end_date: string
           p_grouping?: string
-          p_start_date?: string
+          p_start_date: string
         }
         Returns: {
           avg_revenue_per_period: number
@@ -4814,6 +9832,74 @@ export type Database = {
           period_data: Json
           top_services: Json
           total_revenue: number
+        }[]
+      }
+      get_role_module_access: {
+        Args: { p_role_id: string }
+        Returns: {
+          created_at: string
+          is_enabled: boolean
+          module: Database["public"]["Enums"]["app_module"]
+          updated_at: string
+        }[]
+      }
+      get_role_statistics: {
+        Args: never
+        Returns: {
+          count: number
+          details: Json
+          metric: string
+        }[]
+      }
+      get_sla_alerts: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          created_at: string
+          escalation_level: number
+          hours_overdue: number
+          severity: string
+          stock_number: string
+          vehicle_id: string
+          vehicle_info: string
+        }[]
+      }
+      get_sla_config_for_dealer: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          config_id: string
+          danger_threshold: number
+          default_time_goal: number
+          green_threshold: number
+          max_time_goal: number
+          step_danger_threshold: number
+          step_green_threshold: number
+          step_id: string
+          step_time_goal: number
+          step_warning_threshold: number
+          warning_threshold: number
+        }[]
+      }
+      get_sla_status_for_vehicle: {
+        Args: { p_dealer_id: number; p_vehicle_id: string }
+        Returns: string
+      }
+      get_step_vehicle_counts: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          avg_days_in_step: number
+          step_id: string
+          step_name: string
+          vehicle_count: number
+        }[]
+      }
+      get_step_visit_breakdown: {
+        Args: { p_step_id: string; p_vehicle_id: string }
+        Returns: {
+          entry_date: string
+          exit_date: string
+          hours_spent: number
+          is_current: boolean
+          visit_number: number
         }[]
       }
       get_steps_with_counts: {
@@ -4830,7 +9916,7 @@ export type Database = {
         }[]
       }
       get_system_stats: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           active_dealerships: number
           active_users: number
@@ -4850,6 +9936,10 @@ export type Database = {
           unread_count: number
         }[]
       }
+      get_unread_notification_count: {
+        Args: { p_dealer_id: number; p_user_id: string }
+        Returns: number
+      }
       get_user_accessible_dealers: {
         Args: { user_uuid: string }
         Returns: {
@@ -4858,11 +9948,13 @@ export type Database = {
           country: string
           email: string
           id: number
+          logo_url: string
           name: string
           phone: string
           state: string
           status: string
           subscription_plan: string
+          thumbnail_logo_url: string
           website: string
           zip_code: string
         }[]
@@ -4899,6 +9991,29 @@ export type Database = {
           vehicle_year: number
         }[]
       }
+      get_user_allowed_order_types: {
+        Args: { user_uuid: string }
+        Returns: string[]
+      }
+      get_user_data_v2: { Args: { p_user_id: string }; Returns: Json }
+      get_user_dealership: { Args: { user_id: string }; Returns: number }
+      get_user_effective_permissions: {
+        Args: { user_uuid: string }
+        Returns: Json
+      }
+      get_user_notification_config: {
+        Args: { p_dealer_id: number; p_module: string; p_user_id: string }
+        Returns: {
+          config_exists: boolean
+          email_enabled: boolean
+          event_preferences: Json
+          in_app_enabled: boolean
+          phone_number_override: string
+          push_enabled: boolean
+          quiet_hours_enabled: boolean
+          sms_enabled: boolean
+        }[]
+      }
       get_user_permissions: {
         Args: { user_uuid: string }
         Returns: {
@@ -4906,6 +10021,29 @@ export type Database = {
           permission_level: Database["public"]["Enums"]["permission_level"]
         }[]
       }
+      get_user_permissions_batch: { Args: { p_user_id: string }; Returns: Json }
+      get_user_permissions_v3:
+        | {
+            Args: { p_dealer_id: number; p_user_id: string }
+            Returns: {
+              module: string
+              permission_level: string
+            }[]
+          }
+        | {
+            Args: { p_dealer_id: number; p_user_id: string }
+            Returns: {
+              module: Database["public"]["Enums"]["app_module_v3"]
+              permission_level: Database["public"]["Enums"]["permission_level_v3"]
+              role_name: Database["public"]["Enums"]["base_role_v3"]
+            }[]
+          }
+      get_user_role_v3:
+        | { Args: { p_dealer_id: number; p_user_id: string }; Returns: string }
+        | {
+            Args: { p_dealer_id: number; p_user_id: string }
+            Returns: Database["public"]["Enums"]["base_role_v3"]
+          }
       get_user_roles: {
         Args: { user_uuid: string }
         Returns: {
@@ -4918,6 +10056,28 @@ export type Database = {
           user_type: Database["public"]["Enums"]["user_type"]
         }[]
       }
+      get_user_roles_v2: {
+        Args: { p_user_id: string }
+        Returns: {
+          dealership_name: string
+          department: Database["public"]["Enums"]["department_type_v2"]
+          is_management: boolean
+          role: Database["public"]["Enums"]["system_role_simplified_v2"]
+          role_display_name: string
+          role_id: string
+        }[]
+      }
+      get_users_with_module_access: {
+        Args: { p_dealer_id: number; p_module: string }
+        Returns: {
+          email: string
+          first_name: string
+          is_system_admin: boolean
+          last_name: string
+          role_name: string
+          user_id: string
+        }[]
+      }
       get_vehicle_detail: {
         Args: { p_vehicle_id: string }
         Returns: {
@@ -4928,6 +10088,31 @@ export type Database = {
           work_items: Json
         }[]
       }
+      get_vehicle_step_times: {
+        Args: { p_vehicle_id: string }
+        Returns: {
+          is_current_step: boolean
+          step_id: string
+          step_name: string
+          total_days: number
+          total_hours: number
+          visit_count: number
+        }[]
+      }
+      get_vehicles_by_days_in_step: {
+        Args: { p_dealer_id: number; p_step_id?: string }
+        Returns: {
+          avg_days_in_step: number
+          cost_per_day: number
+          sla_hours: number
+          step_id: string
+          step_name: string
+          total_vehicles: number
+          vehicles_1_day: number
+          vehicles_2_3_days: number
+          vehicles_4_plus_days: number
+        }[]
+      }
       has_permission: {
         Args: {
           check_module: Database["public"]["Enums"]["app_module"]
@@ -4936,18 +10121,40 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_permission_v3:
+        | {
+            Args: {
+              p_dealer_id: number
+              p_module: string
+              p_required_level: string
+              p_user_id: string
+            }
+            Returns: boolean
+          }
+        | {
+            Args: {
+              p_dealer_id: number
+              p_module: Database["public"]["Enums"]["app_module_v3"]
+              p_required_level: Database["public"]["Enums"]["permission_level_v3"]
+              p_user_id: string
+            }
+            Returns: boolean
+          }
       initialize_dealership_modules: {
         Args: { p_dealer_id: number }
         Returns: boolean
       }
-      is_admin: {
-        Args: { user_id?: string }
+      is_admin:
+        | { Args: { user_id: string }; Returns: boolean }
+        | { Args: never; Returns: boolean }
+      is_dealer_admin_v3: {
+        Args: { p_dealer_id: number; p_user_id: string }
         Returns: boolean
       }
-      is_system_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_system_admin:
+        | { Args: { user_id: string }; Returns: boolean }
+        | { Args: never; Returns: boolean }
+      is_system_admin_v3: { Args: { p_user_id: string }; Returns: boolean }
       is_user_member_of_dealer: {
         Args: { p_dealer_id: number }
         Returns: boolean
@@ -4962,13 +10169,86 @@ export type Database = {
         }
         Returns: string
       }
+      map_specialized_to_simplified_role: {
+        Args: {
+          specialized_role: Database["public"]["Enums"]["system_role_v2"]
+        }
+        Returns: Database["public"]["Enums"]["system_role_simplified_v2"]
+      }
+      mark_all_notifications_read: {
+        Args: { p_dealer_id: number; p_user_id: string }
+        Returns: number
+      }
+      mark_notification_read: {
+        Args: { p_notification_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      migrate_dealership_to_v2: {
+        Args: { dealership_id_old: number }
+        Returns: string
+      }
+      migrate_permission_level_to_granular: {
+        Args: {
+          p_module: string
+          p_permission_level: string
+          p_role_id: string
+        }
+        Returns: undefined
+      }
+      migrate_user_to_v2: { Args: { user_auth_id: string }; Returns: string }
+      preview_role_fixes: {
+        Args: never
+        Returns: {
+          current_state: string
+          proposed_action: string
+          risk_level: string
+          safe_to_apply: boolean
+          user_email: string
+        }[]
+      }
+      reject_vehicle: {
+        Args: { p_notes?: string; p_reason: string; p_vehicle_id: string }
+        Returns: Json
+      }
+      release_appointment_slot: {
+        Args: { p_date_slot: string; p_dealer_id: number; p_hour_slot: number }
+        Returns: boolean
+      }
+      request_approval: {
+        Args: { p_notes?: string; p_vehicle_id: string }
+        Returns: Json
+      }
+      reserve_appointment_slot: {
+        Args: { p_date_slot: string; p_dealer_id: number; p_hour_slot: number }
+        Returns: boolean
+      }
+      restore_vehicle: {
+        Args: { p_user_id?: string; p_vehicle_id: string }
+        Returns: Json
+      }
+      safely_assign_missing_roles: {
+        Args: never
+        Returns: {
+          action_taken: string
+          error_message: string
+          membership_created: boolean
+          new_role_assigned: string
+          success: boolean
+          user_email: string
+        }[]
+      }
       set_membership_groups: {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
       }
-      short_vin: {
-        Args: { vin_text: string }
-        Returns: string
+      short_vin: { Args: { vin_text: string }; Returns: string }
+      soft_delete_vehicle: {
+        Args: { p_user_id?: string; p_vehicle_id: string }
+        Returns: Json
+      }
+      toggle_role_module_access: {
+        Args: { p_is_enabled: boolean; p_module: string; p_role_id: string }
+        Returns: boolean
       }
       update_dealership_module: {
         Args: {
@@ -4977,6 +10257,22 @@ export type Database = {
           p_module: Database["public"]["Enums"]["app_module"]
         }
         Returns: boolean
+      }
+      update_qr_generation_status: {
+        Args: {
+          p_increment_attempts?: boolean
+          p_order_id: string
+          p_status: string
+        }
+        Returns: undefined
+      }
+      update_qr_status_only: {
+        Args: {
+          p_increment_attempts?: boolean
+          p_order_id: string
+          p_status: string
+        }
+        Returns: undefined
       }
       update_user_presence: {
         Args: { p_activity?: string; p_dealer_id: number; p_status?: string }
@@ -5011,6 +10307,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      user_has_internal_notes_permission: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
       user_has_module_access: {
         Args: {
           module_name: string
@@ -5027,6 +10327,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      user_has_permission_v2: {
+        Args: {
+          p_module: Database["public"]["Enums"]["system_module_v2"]
+          p_permission: Database["public"]["Enums"]["permission_level"]
+          p_user_id: string
+        }
+        Returns: boolean
+      }
+      user_is_system_admin: { Args: { user_id?: string }; Returns: boolean }
       validate_order_due_date: {
         Args: { due_date_param: string }
         Returns: boolean
@@ -5034,6 +10343,20 @@ export type Database = {
       validate_order_due_date_v2: {
         Args: { due_date_param: string }
         Returns: boolean
+      }
+      validate_role_system: {
+        Args: never
+        Returns: {
+          check_name: string
+          description: string
+          issue_count: number
+          status: string
+        }[]
+      }
+      verify_invitation_token: { Args: { token_input: string }; Returns: Json }
+      verify_invitation_token_v2: {
+        Args: { token_input: string }
+        Returns: Json
       }
     }
     Enums: {
@@ -5051,6 +10374,41 @@ export type Database = {
         | "chat"
         | "stock"
         | "productivity"
+        | "get_ready"
+        | "vin_scanner"
+        | "contacts"
+      app_module_v3:
+        | "dashboard"
+        | "sales_orders"
+        | "service_orders"
+        | "recon_orders"
+        | "car_wash"
+        | "contacts"
+        | "reports"
+        | "users"
+        | "settings"
+        | "get_ready"
+        | "vin_scanner"
+        | "productivity"
+      approval_status: "pending" | "approved" | "rejected" | "not_required"
+      audit_action_v2:
+        | "create"
+        | "update"
+        | "delete"
+        | "login"
+        | "logout"
+        | "role_assigned"
+        | "role_removed"
+        | "permission_granted"
+        | "permission_revoked"
+      base_role_v3:
+        | "system_admin"
+        | "dealer_admin"
+        | "dealer_manager"
+        | "sales_user"
+        | "service_user"
+        | "detail_user"
+        | "viewer"
       chat_conversation_type: "direct" | "group" | "channel" | "announcement"
       chat_message_type: "text" | "voice" | "file" | "image" | "system"
       chat_permission_level: "read" | "write" | "moderate" | "admin"
@@ -5065,6 +10423,14 @@ export type Database = {
         | "dispatcher"
         | "receptionist"
       dealership_status: "active" | "inactive" | "suspended"
+      department_type_v2:
+        | "sales"
+        | "service"
+        | "recon"
+        | "carwash"
+        | "parts"
+        | "administrative"
+        | "management"
       detail_role:
         | "super_manager"
         | "detail_manager"
@@ -5072,12 +10438,38 @@ export type Database = {
         | "quality_inspector"
         | "mobile_technician"
       entity_follow_type: "manual" | "auto" | "assigned" | "creator"
+      get_ready_priority: "low" | "normal" | "medium" | "high" | "urgent"
+      get_ready_sla_status: "on_track" | "warning" | "critical"
+      get_ready_workflow_type: "standard" | "express" | "priority"
+      invitation_status_v2: "pending" | "accepted" | "expired" | "cancelled"
       language_code: "en" | "es" | "pt-BR"
+      note_type:
+        | "general"
+        | "issue"
+        | "decision"
+        | "vendor_communication"
+        | "cost_change"
+        | "timeline_change"
+        | "quality_concern"
       notification_frequency: "all" | "mentions" | "none" | "scheduled"
       notification_level: "all" | "important" | "mentions" | "none"
       notification_priority: "low" | "normal" | "high" | "urgent"
       notification_status: "pending" | "sent" | "delivered" | "failed" | "read"
+      notification_type:
+        | "sla_warning"
+        | "sla_critical"
+        | "approval_pending"
+        | "approval_approved"
+        | "approval_rejected"
+        | "bottleneck_detected"
+        | "bottleneck_resolved"
+        | "vehicle_status_change"
+        | "work_item_completed"
+        | "work_item_created"
+        | "step_completed"
+        | "system_alert"
       permission_level: "none" | "read" | "write" | "delete" | "admin"
+      permission_level_v3: "none" | "read" | "write" | "admin"
       presence_status: "online" | "away" | "busy" | "offline"
       recon_step_status:
         | "pending"
@@ -5087,10 +10479,87 @@ export type Database = {
         | "skipped"
       sms_direction: "inbound" | "outbound"
       subscription_plan: "basic" | "premium" | "enterprise"
+      system_module_v2:
+        | "dashboard"
+        | "sales_orders"
+        | "service_orders"
+        | "recon_orders"
+        | "car_wash"
+        | "stock"
+        | "chat"
+        | "reports"
+        | "settings"
+        | "dealerships"
+        | "users"
+        | "management"
+        | "productivity"
+        | "contacts"
+        | "analytics"
+      system_role_simplified_v2:
+        | "super_admin"
+        | "platform_admin"
+        | "dealership_admin"
+        | "dealership_manager"
+        | "dealership_user"
+        | "dealership_viewer"
+      system_role_v2:
+        | "platform_admin"
+        | "dealership_owner"
+        | "sales_manager"
+        | "service_manager"
+        | "recon_manager"
+        | "carwash_manager"
+        | "sales_associate"
+        | "finance_manager"
+        | "service_advisor"
+        | "technician"
+        | "recon_technician"
+        | "carwash_attendant"
+        | "office_manager"
+        | "receptionist"
+        | "parts_manager"
+        | "quality_inspector"
+        | "porter"
+      timeline_event_type:
+        | "arrival"
+        | "step_change"
+        | "work_started"
+        | "work_completed"
+        | "vendor_sent"
+        | "vendor_returned"
+        | "parts_ordered"
+        | "parts_received"
+        | "inspection"
+        | "approval_needed"
+        | "cost_change"
+        | "delay"
+        | "completion"
       user_department: "detailing" | "wash" | "service"
       user_presence_status: "online" | "away" | "busy" | "offline" | "invisible"
       user_role: "admin" | "manager" | "technician" | "viewer"
       user_type: "dealer" | "detail" | "system_admin"
+      work_item_status:
+        | "awaiting_approval"
+        | "approved"
+        | "pending"
+        | "rejected"
+        | "queued"
+        | "ready"
+        | "scheduled"
+        | "in_progress"
+        | "on_hold"
+        | "blocked"
+        | "completed"
+        | "cancelled"
+        | "declined"
+      work_item_type:
+        | "mechanical"
+        | "body_repair"
+        | "detailing"
+        | "safety_inspection"
+        | "reconditioning"
+        | "parts_ordering"
+        | "other"
       workflow_step_type:
         | "created"
         | "bring_to_recon"
@@ -5245,6 +10714,44 @@ export const Constants = {
         "chat",
         "stock",
         "productivity",
+        "get_ready",
+        "vin_scanner",
+        "contacts",
+      ],
+      app_module_v3: [
+        "dashboard",
+        "sales_orders",
+        "service_orders",
+        "recon_orders",
+        "car_wash",
+        "contacts",
+        "reports",
+        "users",
+        "settings",
+        "get_ready",
+        "vin_scanner",
+        "productivity",
+      ],
+      approval_status: ["pending", "approved", "rejected", "not_required"],
+      audit_action_v2: [
+        "create",
+        "update",
+        "delete",
+        "login",
+        "logout",
+        "role_assigned",
+        "role_removed",
+        "permission_granted",
+        "permission_revoked",
+      ],
+      base_role_v3: [
+        "system_admin",
+        "dealer_admin",
+        "dealer_manager",
+        "sales_user",
+        "service_user",
+        "detail_user",
+        "viewer",
       ],
       chat_conversation_type: ["direct", "group", "channel", "announcement"],
       chat_message_type: ["text", "voice", "file", "image", "system"],
@@ -5261,6 +10768,15 @@ export const Constants = {
         "receptionist",
       ],
       dealership_status: ["active", "inactive", "suspended"],
+      department_type_v2: [
+        "sales",
+        "service",
+        "recon",
+        "carwash",
+        "parts",
+        "administrative",
+        "management",
+      ],
       detail_role: [
         "super_manager",
         "detail_manager",
@@ -5269,12 +10785,40 @@ export const Constants = {
         "mobile_technician",
       ],
       entity_follow_type: ["manual", "auto", "assigned", "creator"],
+      get_ready_priority: ["low", "normal", "medium", "high", "urgent"],
+      get_ready_sla_status: ["on_track", "warning", "critical"],
+      get_ready_workflow_type: ["standard", "express", "priority"],
+      invitation_status_v2: ["pending", "accepted", "expired", "cancelled"],
       language_code: ["en", "es", "pt-BR"],
+      note_type: [
+        "general",
+        "issue",
+        "decision",
+        "vendor_communication",
+        "cost_change",
+        "timeline_change",
+        "quality_concern",
+      ],
       notification_frequency: ["all", "mentions", "none", "scheduled"],
       notification_level: ["all", "important", "mentions", "none"],
       notification_priority: ["low", "normal", "high", "urgent"],
       notification_status: ["pending", "sent", "delivered", "failed", "read"],
+      notification_type: [
+        "sla_warning",
+        "sla_critical",
+        "approval_pending",
+        "approval_approved",
+        "approval_rejected",
+        "bottleneck_detected",
+        "bottleneck_resolved",
+        "vehicle_status_change",
+        "work_item_completed",
+        "work_item_created",
+        "step_completed",
+        "system_alert",
+      ],
       permission_level: ["none", "read", "write", "delete", "admin"],
+      permission_level_v3: ["none", "read", "write", "admin"],
       presence_status: ["online", "away", "busy", "offline"],
       recon_step_status: [
         "pending",
@@ -5285,10 +10829,93 @@ export const Constants = {
       ],
       sms_direction: ["inbound", "outbound"],
       subscription_plan: ["basic", "premium", "enterprise"],
+      system_module_v2: [
+        "dashboard",
+        "sales_orders",
+        "service_orders",
+        "recon_orders",
+        "car_wash",
+        "stock",
+        "chat",
+        "reports",
+        "settings",
+        "dealerships",
+        "users",
+        "management",
+        "productivity",
+        "contacts",
+        "analytics",
+      ],
+      system_role_simplified_v2: [
+        "super_admin",
+        "platform_admin",
+        "dealership_admin",
+        "dealership_manager",
+        "dealership_user",
+        "dealership_viewer",
+      ],
+      system_role_v2: [
+        "platform_admin",
+        "dealership_owner",
+        "sales_manager",
+        "service_manager",
+        "recon_manager",
+        "carwash_manager",
+        "sales_associate",
+        "finance_manager",
+        "service_advisor",
+        "technician",
+        "recon_technician",
+        "carwash_attendant",
+        "office_manager",
+        "receptionist",
+        "parts_manager",
+        "quality_inspector",
+        "porter",
+      ],
+      timeline_event_type: [
+        "arrival",
+        "step_change",
+        "work_started",
+        "work_completed",
+        "vendor_sent",
+        "vendor_returned",
+        "parts_ordered",
+        "parts_received",
+        "inspection",
+        "approval_needed",
+        "cost_change",
+        "delay",
+        "completion",
+      ],
       user_department: ["detailing", "wash", "service"],
       user_presence_status: ["online", "away", "busy", "offline", "invisible"],
       user_role: ["admin", "manager", "technician", "viewer"],
       user_type: ["dealer", "detail", "system_admin"],
+      work_item_status: [
+        "awaiting_approval",
+        "approved",
+        "pending",
+        "rejected",
+        "queued",
+        "ready",
+        "scheduled",
+        "in_progress",
+        "on_hold",
+        "blocked",
+        "completed",
+        "cancelled",
+        "declined",
+      ],
+      work_item_type: [
+        "mechanical",
+        "body_repair",
+        "detailing",
+        "safety_inspection",
+        "reconditioning",
+        "parts_ordering",
+        "other",
+      ],
       workflow_step_type: [
         "created",
         "bring_to_recon",

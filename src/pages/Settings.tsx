@@ -16,6 +16,7 @@ import { PlatformBrandingSettings } from '@/components/settings/platform/Platfor
 import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
 import { SecurityAuditLogViewer } from '@/components/settings/security/SecurityAuditLogViewer';
 import { NotificationTemplatesManager, PushNotificationSettings } from '@/components/settings/notifications';
+import { NotificationPreferencesModal } from '@/components/notifications/NotificationPreferencesModal';
 import { StorageDevTools } from "@/components/dev/StorageDevTools";
 import { developmentConfig } from "@/config/development";
 import { Save, Database, Mail, MessageSquare, User, Building2, Palette, Bell, Shield, Settings as SettingsIcon } from "lucide-react";
@@ -54,6 +55,7 @@ export default function Settings() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showAdvancedPreferences, setShowAdvancedPreferences] = useState(false);
 
   // Optimized data loading with parallel queries to prevent flashing
   const loadSettings = useCallback(async () => {
@@ -397,10 +399,18 @@ export default function Settings() {
                     />
                   </div>
 
-                  <div className="pt-4">
+                  <div className="pt-4 flex items-center gap-3">
                     <Button onClick={saveUserPreferences} disabled={saving}>
                       <Save className="h-4 w-4 mr-2" />
                       {t('settings.save_preferences')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowAdvancedPreferences(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <Bell className="h-4 w-4" />
+                      {t('notifications.preferences')}
                     </Button>
                   </div>
                 </CardContent>
@@ -500,6 +510,13 @@ export default function Settings() {
           </details>
         </div>
       )}
+
+      {/* Advanced Notification Preferences Modal */}
+      <NotificationPreferencesModal
+        open={showAdvancedPreferences}
+        onOpenChange={setShowAdvancedPreferences}
+        dealerId={enhancedUser?.dealership_id || 0}
+      />
     </div>
   );
 }

@@ -224,10 +224,7 @@ class PushNotificationService {
   // Private helper methods
   private async saveSubscription(userId: string, dealerId: number, subscription: PushSubscription): Promise<void> {
     try {
-      // TODO: Uncomment when push_subscriptions table is created via migration
-      console.log('Would save subscription:', { userId, dealerId, subscription });
-      
-      /*
+      // Save subscription to database
       const { error } = await supabase
         .from('push_subscriptions')
         .upsert({
@@ -241,7 +238,6 @@ class PushNotificationService {
         });
 
       if (error) throw error;
-      */
     } catch (error) {
       console.error('Save subscription failed:', error);
       throw error;
@@ -250,10 +246,7 @@ class PushNotificationService {
 
   private async removeSubscription(userId: string, dealerId: number): Promise<void> {
     try {
-      // TODO: Uncomment when push_subscriptions table is created via migration
-      console.log('Would remove subscription:', { userId, dealerId });
-      
-      /*
+      // Remove subscription from database
       const { error } = await supabase
         .from('push_subscriptions')
         .update({ is_active: false })
@@ -261,7 +254,6 @@ class PushNotificationService {
         .eq('dealer_id', dealerId);
 
       if (error) throw error;
-      */
     } catch (error) {
       console.error('Remove subscription failed:', error);
       throw error;

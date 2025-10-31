@@ -1,0 +1,381 @@
+{
+  "INSTRUCTIONS": "Add these translations to public/translations/{en|es|pt-BR}.json under the 'notifications.analytics' key",
+
+  "EN": {
+    "notifications": {
+      "analytics": {
+        "title": "Notification Analytics",
+        "description": "Comprehensive analytics dashboard for notification delivery and engagement",
+        "loading": "Loading analytics...",
+        "error": "Failed to load analytics",
+        "refresh_success": "Analytics refreshed",
+        "data_updated": "Data updated successfully",
+        "refresh_error": "Refresh failed",
+        "refresh_error_message": "Could not refresh analytics data",
+        "retry_success": "Delivery retried",
+        "retry_success_message": "Notification queued for retry",
+        "retry_error": "Retry failed",
+        "retry_error_message": "Could not retry delivery",
+        "auto_refresh_enabled": "Auto-refresh enabled",
+        "no_data": "No data available",
+        "no_failures": "No failed deliveries",
+        "search_placeholder": "Search by user, provider, or error...",
+        "metrics": {
+          "total_sent": "Total Sent",
+          "total_delivered": "Total Delivered",
+          "delivery_rate": "Delivery Rate",
+          "open_rate": "Open Rate",
+          "click_rate": "Click-Through Rate",
+          "failed_deliveries": "Failed Deliveries",
+          "active_users": "Active Users",
+          "avg_time_to_read": "Avg Time to Read",
+          "avg_latency": "Avg Latency",
+          "avg_cost": "Avg Cost per Notification",
+          "sent": "Sent",
+          "delivered": "Delivered",
+          "failed": "Failed",
+          "opened": "Opened",
+          "clicked": "Clicked"
+        },
+        "charts": {
+          "delivery_timeline": "Delivery Timeline",
+          "delivery_timeline_description": "Notification volume and delivery status over time",
+          "engagement_funnel": "Engagement Funnel",
+          "engagement_funnel_description": "Conversion rates from sent to clicked",
+          "channel_performance": "Channel Performance",
+          "channel_performance_description": "Delivery metrics by notification channel",
+          "provider_comparison": "Provider Comparison",
+          "provider_comparison_description": "Provider performance and reliability metrics",
+          "failed_deliveries": "Failed Deliveries",
+          "failed_deliveries_description": "Debug and retry failed notification deliveries"
+        },
+        "funnel": {
+          "sent": "Sent",
+          "delivered": "Delivered",
+          "opened": "Opened",
+          "clicked": "Clicked",
+          "notifications": "notifications",
+          "dropped_off": "dropped off",
+          "delivery_rate": "Delivery Rate",
+          "open_rate": "Open Rate",
+          "click_rate": "Click-Through Rate"
+        },
+        "performance": {
+          "excellent": "Excellent",
+          "good": "Good",
+          "fair": "Fair",
+          "poor": "Poor"
+        },
+        "status": {
+          "sent": "Sent",
+          "delivered": "Delivered",
+          "failed": "Failed",
+          "opened": "Opened",
+          "clicked": "Clicked"
+        },
+        "table": {
+          "timestamp": "Timestamp",
+          "user": "User",
+          "channel": "Channel",
+          "provider": "Provider",
+          "error": "Error",
+          "retries": "Retries",
+          "failed_deliveries": "failed deliveries"
+        },
+        "actions": {
+          "retry": "Retry Delivery",
+          "view_details": "View Details"
+        },
+        "filters": {
+          "title": "Filters",
+          "time_range": "Time Range",
+          "date_range": "Date Range",
+          "start_date": "Start Date",
+          "end_date": "End Date",
+          "channels": "Channels",
+          "status": "Status",
+          "priority": "Priority",
+          "user_search": "User Search",
+          "user_search_placeholder": "Search by email or name...",
+          "active": "Filters active",
+          "none_active": "No filters applied",
+          "reset": "Reset Filters"
+        },
+        "tabs": {
+          "overview": "Overview",
+          "performance": "Performance",
+          "engagement": "Engagement",
+          "failures": "Failures"
+        }
+      },
+      "channels": {
+        "push": "Push",
+        "email": "Email",
+        "in_app": "In-App",
+        "sms": "SMS"
+      }
+    },
+    "common": {
+      "from_previous_period": "from previous period",
+      "timeRange": {
+        "24h": "Last 24 Hours",
+        "7d": "Last 7 Days",
+        "30d": "Last 30 Days",
+        "90d": "Last 90 Days",
+        "custom": "Custom Range"
+      }
+    }
+  },
+
+  "ES": {
+    "notifications": {
+      "analytics": {
+        "title": "Analítica de Notificaciones",
+        "description": "Panel completo de analítica para entrega y engagement de notificaciones",
+        "loading": "Cargando analítica...",
+        "error": "Error al cargar analítica",
+        "refresh_success": "Analítica actualizada",
+        "data_updated": "Datos actualizados exitosamente",
+        "refresh_error": "Error de actualización",
+        "refresh_error_message": "No se pudieron actualizar los datos de analítica",
+        "retry_success": "Entrega reintentada",
+        "retry_success_message": "Notificación en cola para reintentar",
+        "retry_error": "Error al reintentar",
+        "retry_error_message": "No se pudo reintentar la entrega",
+        "auto_refresh_enabled": "Actualización automática activada",
+        "no_data": "No hay datos disponibles",
+        "no_failures": "No hay entregas fallidas",
+        "search_placeholder": "Buscar por usuario, proveedor o error...",
+        "metrics": {
+          "total_sent": "Total Enviado",
+          "total_delivered": "Total Entregado",
+          "delivery_rate": "Tasa de Entrega",
+          "open_rate": "Tasa de Apertura",
+          "click_rate": "Tasa de Clics",
+          "failed_deliveries": "Entregas Fallidas",
+          "active_users": "Usuarios Activos",
+          "avg_time_to_read": "Tiempo Promedio de Lectura",
+          "avg_latency": "Latencia Promedio",
+          "avg_cost": "Costo Promedio por Notificación",
+          "sent": "Enviado",
+          "delivered": "Entregado",
+          "failed": "Fallido",
+          "opened": "Abierto",
+          "clicked": "Clic"
+        },
+        "charts": {
+          "delivery_timeline": "Línea de Tiempo de Entregas",
+          "delivery_timeline_description": "Volumen de notificaciones y estado de entrega en el tiempo",
+          "engagement_funnel": "Embudo de Engagement",
+          "engagement_funnel_description": "Tasas de conversión desde enviado hasta clic",
+          "channel_performance": "Rendimiento por Canal",
+          "channel_performance_description": "Métricas de entrega por canal de notificación",
+          "provider_comparison": "Comparación de Proveedores",
+          "provider_comparison_description": "Métricas de rendimiento y confiabilidad de proveedores",
+          "failed_deliveries": "Entregas Fallidas",
+          "failed_deliveries_description": "Depurar y reintentar entregas de notificaciones fallidas"
+        },
+        "funnel": {
+          "sent": "Enviado",
+          "delivered": "Entregado",
+          "opened": "Abierto",
+          "clicked": "Clic",
+          "notifications": "notificaciones",
+          "dropped_off": "cayeron",
+          "delivery_rate": "Tasa de Entrega",
+          "open_rate": "Tasa de Apertura",
+          "click_rate": "Tasa de Clics"
+        },
+        "performance": {
+          "excellent": "Excelente",
+          "good": "Bueno",
+          "fair": "Regular",
+          "poor": "Pobre"
+        },
+        "status": {
+          "sent": "Enviado",
+          "delivered": "Entregado",
+          "failed": "Fallido",
+          "opened": "Abierto",
+          "clicked": "Clic"
+        },
+        "table": {
+          "timestamp": "Fecha/Hora",
+          "user": "Usuario",
+          "channel": "Canal",
+          "provider": "Proveedor",
+          "error": "Error",
+          "retries": "Reintentos",
+          "failed_deliveries": "entregas fallidas"
+        },
+        "actions": {
+          "retry": "Reintentar Entrega",
+          "view_details": "Ver Detalles"
+        },
+        "filters": {
+          "title": "Filtros",
+          "time_range": "Rango de Tiempo",
+          "date_range": "Rango de Fechas",
+          "start_date": "Fecha Inicial",
+          "end_date": "Fecha Final",
+          "channels": "Canales",
+          "status": "Estado",
+          "priority": "Prioridad",
+          "user_search": "Buscar Usuario",
+          "user_search_placeholder": "Buscar por email o nombre...",
+          "active": "Filtros activos",
+          "none_active": "Sin filtros aplicados",
+          "reset": "Restablecer Filtros"
+        },
+        "tabs": {
+          "overview": "Resumen",
+          "performance": "Rendimiento",
+          "engagement": "Engagement",
+          "failures": "Fallos"
+        }
+      },
+      "channels": {
+        "push": "Push",
+        "email": "Email",
+        "in_app": "In-App",
+        "sms": "SMS"
+      }
+    },
+    "common": {
+      "from_previous_period": "del período anterior",
+      "timeRange": {
+        "24h": "Últimas 24 Horas",
+        "7d": "Últimos 7 Días",
+        "30d": "Últimos 30 Días",
+        "90d": "Últimos 90 Días",
+        "custom": "Rango Personalizado"
+      }
+    }
+  },
+
+  "PT_BR": {
+    "notifications": {
+      "analytics": {
+        "title": "Analítica de Notificações",
+        "description": "Painel completo de analítica para entrega e engajamento de notificações",
+        "loading": "Carregando analítica...",
+        "error": "Erro ao carregar analítica",
+        "refresh_success": "Analítica atualizada",
+        "data_updated": "Dados atualizados com sucesso",
+        "refresh_error": "Erro de atualização",
+        "refresh_error_message": "Não foi possível atualizar os dados de analítica",
+        "retry_success": "Entrega tentada novamente",
+        "retry_success_message": "Notificação na fila para tentar novamente",
+        "retry_error": "Erro ao tentar novamente",
+        "retry_error_message": "Não foi possível tentar novamente a entrega",
+        "auto_refresh_enabled": "Atualização automática ativada",
+        "no_data": "Nenhum dado disponível",
+        "no_failures": "Nenhuma entrega falhada",
+        "search_placeholder": "Buscar por usuário, provedor ou erro...",
+        "metrics": {
+          "total_sent": "Total Enviado",
+          "total_delivered": "Total Entregue",
+          "delivery_rate": "Taxa de Entrega",
+          "open_rate": "Taxa de Abertura",
+          "click_rate": "Taxa de Cliques",
+          "failed_deliveries": "Entregas Falhadas",
+          "active_users": "Usuários Ativos",
+          "avg_time_to_read": "Tempo Médio de Leitura",
+          "avg_latency": "Latência Média",
+          "avg_cost": "Custo Médio por Notificação",
+          "sent": "Enviado",
+          "delivered": "Entregue",
+          "failed": "Falhado",
+          "opened": "Aberto",
+          "clicked": "Clicado"
+        },
+        "charts": {
+          "delivery_timeline": "Linha do Tempo de Entregas",
+          "delivery_timeline_description": "Volume de notificações e status de entrega ao longo do tempo",
+          "engagement_funnel": "Funil de Engajamento",
+          "engagement_funnel_description": "Taxas de conversão de enviado até clicado",
+          "channel_performance": "Desempenho por Canal",
+          "channel_performance_description": "Métricas de entrega por canal de notificação",
+          "provider_comparison": "Comparação de Provedores",
+          "provider_comparison_description": "Métricas de desempenho e confiabilidade de provedores",
+          "failed_deliveries": "Entregas Falhadas",
+          "failed_deliveries_description": "Depurar e tentar novamente entregas de notificações falhadas"
+        },
+        "funnel": {
+          "sent": "Enviado",
+          "delivered": "Entregue",
+          "opened": "Aberto",
+          "clicked": "Clicado",
+          "notifications": "notificações",
+          "dropped_off": "caíram",
+          "delivery_rate": "Taxa de Entrega",
+          "open_rate": "Taxa de Abertura",
+          "click_rate": "Taxa de Cliques"
+        },
+        "performance": {
+          "excellent": "Excelente",
+          "good": "Bom",
+          "fair": "Regular",
+          "poor": "Pobre"
+        },
+        "status": {
+          "sent": "Enviado",
+          "delivered": "Entregue",
+          "failed": "Falhado",
+          "opened": "Aberto",
+          "clicked": "Clicado"
+        },
+        "table": {
+          "timestamp": "Data/Hora",
+          "user": "Usuário",
+          "channel": "Canal",
+          "provider": "Provedor",
+          "error": "Erro",
+          "retries": "Tentativas",
+          "failed_deliveries": "entregas falhadas"
+        },
+        "actions": {
+          "retry": "Tentar Entrega Novamente",
+          "view_details": "Ver Detalhes"
+        },
+        "filters": {
+          "title": "Filtros",
+          "time_range": "Intervalo de Tempo",
+          "date_range": "Intervalo de Datas",
+          "start_date": "Data Inicial",
+          "end_date": "Data Final",
+          "channels": "Canais",
+          "status": "Status",
+          "priority": "Prioridade",
+          "user_search": "Buscar Usuário",
+          "user_search_placeholder": "Buscar por email ou nome...",
+          "active": "Filtros ativos",
+          "none_active": "Nenhum filtro aplicado",
+          "reset": "Redefinir Filtros"
+        },
+        "tabs": {
+          "overview": "Visão Geral",
+          "performance": "Desempenho",
+          "engagement": "Engajamento",
+          "failures": "Falhas"
+        }
+      },
+      "channels": {
+        "push": "Push",
+        "email": "Email",
+        "in_app": "In-App",
+        "sms": "SMS"
+      }
+    },
+    "common": {
+      "from_previous_period": "do período anterior",
+      "timeRange": {
+        "24h": "Últimas 24 Horas",
+        "7d": "Últimos 7 Dias",
+        "30d": "Últimos 30 Dias",
+        "90d": "Últimos 90 Dias",
+        "custom": "Intervalo Personalizado"
+      }
+    }
+  }
+}

@@ -4910,6 +4910,90 @@
       "enable_push": "Enable push notifications",
       "enable_email": "Enable email notifications",
       "enable_in_app": "Enable in-app notifications"
+    },
+    "preferences": "Notification Preferences",
+    "channels": {
+      "sms": "SMS",
+      "sms_description": "Text message notifications",
+      "email": "Email",
+      "email_description": "Email notifications",
+      "push": "Push Notifications",
+      "push_description": "Browser and mobile push notifications",
+      "in_app": "In-App",
+      "in_app_description": "Notifications within the application"
+    },
+    "priorities": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent",
+      "critical": "Critical"
+    },
+    "schedule": {
+      "quietHours": "Quiet Hours",
+      "quietHours_description": "Don't disturb during these hours",
+      "quietStart": "Start Time",
+      "quietEnd": "End Time",
+      "timezone": "Timezone",
+      "workingHours": "Working Hours",
+      "workingHours_description": "Normal business hours"
+    },
+    "entities": {
+      "sales_orders": "Sales Orders",
+      "sales_orders_description": "Notifications for sales order activities",
+      "service_orders": "Service Orders",
+      "service_orders_description": "Notifications for service order activities",
+      "recon_orders": "Recon Orders",
+      "recon_orders_description": "Notifications for reconditioning activities",
+      "car_wash": "Car Wash",
+      "car_wash_description": "Notifications for car wash activities",
+      "get_ready": "Get Ready",
+      "get_ready_description": "Notifications for Get Ready activities",
+      "contacts": "Contacts",
+      "contacts_description": "Notifications for contact activities",
+      "teams": "Teams",
+      "teams_description": "Team collaboration notifications"
+    },
+    "frequency": {
+      "all": "All Notifications",
+      "mentions": "Mentions Only",
+      "important": "Important Only",
+      "none": "None"
+    },
+    "loading": "Loading notifications...",
+    "tabs": {
+      "grouped": "Grouped",
+      "recent": "Recent"
+    },
+    "filter": {
+      "all": "All",
+      "unread": "Unread",
+      "important": "Important",
+      "all_description": "Show all notifications",
+      "unread_description": "Show only unread notifications",
+      "important_description": "Show only important notifications"
+    },
+    "actions": {
+      "mark_read": "Mark as read",
+      "delete": "Delete",
+      "save_later": "Save for later",
+      "archive": "Archive"
+    },
+    "count": {
+      "singular": "{{count}} notification",
+      "plural": "{{count}} notifications",
+      "unread": "{{count}} unread"
+    },
+    "empty": {
+      "message": "No notifications",
+      "filtered": "No notifications match your filters"
+    },
+    "show_more": "Show more",
+    "toast": {
+      "saved": "Saved",
+      "savedMessage": "Notification preferences saved successfully",
+      "saveError": "Error",
+      "saveErrorMessage": "Failed to save notification preferences"
     }
   }
 }

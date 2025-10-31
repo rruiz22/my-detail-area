@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -28,10 +28,9 @@ function getBuildNumber() {
   return Date.now().toString();
 }
 
-// Read package.json version
-const packageJson = JSON.parse(
-  execSync('type package.json', { encoding: 'utf8', shell: 'powershell.exe' })
-);
+// Read package.json version (cross-platform)
+const packageJsonPath = path.join(__dirname, '..', 'package.json');
+const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
 const versionInfo = {
   version: packageJson.version,
