@@ -105,14 +105,14 @@ ORDER BY name;
 
 ### Vehículos Completados (orders)
 ```sql
-SELECT 
+SELECT
   id, order_number, custom_order_number, order_type,
-  customer_name, stock_number, 
+  customer_name, stock_number,
   vehicle_make, vehicle_model, vehicle_year, vehicle_vin,
   total_amount, services, status,
   created_at, completed_at, updated_at
 FROM orders
-WHERE dealer_id = ? 
+WHERE dealer_id = ?
   AND status = 'completed'
   AND updated_at >= ?
   AND updated_at <= ?
@@ -126,7 +126,7 @@ LIMIT 500;
 
 ### Caso 1: Dealer nuevo sin servicios
 **Síntoma:** Dropdowns de servicios vacíos
-**Solución:** 
+**Solución:**
 1. Ir a Settings → Services
 2. Crear servicios (ej: "Used Photos", "Detail", etc.)
 3. Refrescar página de Invoices
@@ -136,9 +136,9 @@ LIMIT 500;
 **Debug:**
 ```javascript
 // En console:
-SELECT * FROM orders 
-WHERE dealer_id = 1 
-  AND order_type = 'sales' 
+SELECT * FROM orders
+WHERE dealer_id = 1
+  AND order_type = 'sales'
   AND status = 'completed';
 ```
 **Posibles causas:**
@@ -168,12 +168,12 @@ ORDER BY name;
 
 ### Verificar órdenes completadas:
 ```sql
-SELECT 
+SELECT
   id, order_type, customer_name, status,
   completed_at, updated_at,
   jsonb_array_length(services) as service_count
 FROM orders
-WHERE dealer_id = 1 
+WHERE dealer_id = 1
   AND status = 'completed'
 ORDER BY updated_at DESC
 LIMIT 10;
@@ -181,7 +181,7 @@ LIMIT 10;
 
 ### Verificar qué órdenes tienen completed_at NULL:
 ```sql
-SELECT 
+SELECT
   order_type,
   COUNT(*) as total,
   COUNT(completed_at) as with_completed_at,
@@ -262,7 +262,7 @@ const serviceId = service.id || service.type || service;
 
 Si ves esto en la console, todo funciona:
 ```
-✅ Services loaded: 5 
+✅ Services loaded: 5
 ✅ Orders loaded: 25 orders
 📊 Order types: ['sales', 'service', 'recon', 'carwash']
 ```
@@ -276,5 +276,3 @@ Available Vehicles (25 of 50)
 ---
 
 **Fix completado el 31 de Octubre, 2024** 🚀
-
-
