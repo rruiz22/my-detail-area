@@ -7,17 +7,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Build outputs
 node_modules
 dist
 dist-ssr
 *.local
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # Editor directories and files
 .vscode/*
@@ -30,12 +24,74 @@ dist-ssr
 *.sln
 *.sw?
 
-# Claude temporary files
-*.sql
-step*.sql
-fix_*.sql
-create_*.sql
-diagnostic_*.sql
-src/utils/debug*.js
+# Environment files
+.env
+.env.local
+.env.*.local
 
+# Supabase
+.branches
+.temp
+
+# OS files
+Thumbs.db
 nul
+
+# Temporary files
+*.tmp
+*.temp
+temp_*
+
+# Documentation and SQL scripts (development artifacts)
+*.md.backup
+schema.sql
+APPLY_*.sql
+APPLY_*.md
+CHECK_*.sql
+CREATE_*.sql
+DIAGNOSE_*.sql
+DIAGNOSTIC_*.sql
+FIX_*.sql
+FIX_*.md
+MIGRATE_*.sql
+RESTORE_*.sql
+RUN_*.sql
+TEST_*.sql
+UPDATE_*.sql
+URGENT_*.sql
+VERIFY_*.sql
+apply_*.sql
+check-*.sql
+cleanup_*.sql
+fix-*.sql
+fix_*.sql
+verify-*.sql
+verify_*.sql
+test_*.sql
+temp_*.sql
+
+# Testing artifacts
+src/components/testing/
+src/examples/
+
+# Analysis and audit reports
+*_AUDIT_REPORT.md
+*_ANALYSIS*.md
+*_SUMMARY*.md
+*_REPORT*.md
+*_DEBUG*.md
+*_IMPLEMENTATION*.md
+*_GUIDE*.md
+*_CHECKLIST*.md
+*_DOCUMENTATION*.md
+*_COMMIT_MESSAGE.txt
+*_INSTRUCTIONS.txt
+bundle-analysis.json
+translation-audit-report.json
+
+# Lock files (keep package-lock.json but ignore bun)
+bun.lockb
+
+# Generated files
+public/version.json
+src/version.json
