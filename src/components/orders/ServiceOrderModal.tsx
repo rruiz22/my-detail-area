@@ -74,6 +74,7 @@ interface AssignedUser {
   role_name?: string;
   first_name?: string;
   last_name?: string;
+  avatar_url?: string | null;
   isSystemAdmin?: boolean;
 }
 
@@ -384,6 +385,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           role_name: user.role_name || 'No Role',
           first_name: user.first_name,
           last_name: user.last_name,
+          avatar_url: user.avatar_url,
           isSystemAdmin: user.is_system_admin
         }));
 
@@ -643,6 +645,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                                        firstName={selectedUser.first_name}
                                        lastName={selectedUser.last_name}
                                        email={selectedUser.email}
+                                       avatarUrl={selectedUser.avatar_url}
                                        size={24}
                                      />
                                      <span className="truncate">{selectedUser.name}</span>
@@ -722,6 +725,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                                          firstName={user.first_name}
                                          lastName={user.last_name}
                                          email={user.email}
+                                         avatarUrl={user.avatar_url}
                                          size={32}
                                        />
 

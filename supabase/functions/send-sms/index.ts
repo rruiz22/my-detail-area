@@ -19,9 +19,14 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const twilioAccountSid = Deno.env.get("TWILIO_ACCOUNT_SID");
     const twilioAuthToken = Deno.env.get("TWILIO_AUTH_TOKEN");
-    
+    const twilioPhoneNumber = Deno.env.get("TWILIO_PHONE_NUMBER");
+
     if (!twilioAccountSid || !twilioAuthToken) {
-      throw new Error("Twilio credentials not configured");
+      throw new Error("Twilio credentials not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in Supabase Secrets");
+    }
+
+    if (!twilioPhoneNumber) {
+      throw new Error("Twilio phone number not configured. Set TWILIO_PHONE_NUMBER in Supabase Secrets");
     }
 
     const { to, message, orderNumber }: SMSRequest = await req.json();
@@ -31,10 +36,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send SMS using Twilio REST API
     const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`;
-    
+
     const body = new URLSearchParams({
       To: formattedPhone,
-      From: '+1YOUR_TWILIO_PHONE', // Replace with your Twilio phone number
+      From: twilioPhoneNumber,
       Body: `${message}\n\nOrder: ${orderNumber}`,
     });
 
@@ -53,7 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const result = await response.json();
-    
+
     console.log(`SMS sent successfully to ${formattedPhone} for order ${orderNumber}`);
 
     return new Response(
@@ -73,15 +78,15 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-sms function:", error);
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message 
+      JSON.stringify({
+        success: false,
+        error: error.message
       }),
       {
         status: 500,
-        headers: { 
-          "Content-Type": "application/json", 
-          ...corsHeaders 
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders
         },
       }
     );

@@ -1,205 +1,86 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { userProfileCache } from '@/services/userProfileCache';
-import { dev, error as logError, success, warn } from '@/utils/logger';
-import Avatar from 'boring-avatars';
-import { useCallback, useEffect, useState } from 'react';
+import { dev } from '@/utils/logger';
+import { useCallback } from 'react';
 
-// Using only "beam" variant as requested - 25 different seeds for variety
-export const AVATAR_SEEDS = [
-  'beam-1', 'beam-2', 'beam-3', 'beam-4', 'beam-5',
-  'beam-6', 'beam-7', 'beam-8', 'beam-9', 'beam-10',
-  'beam-11', 'beam-12', 'beam-13', 'beam-14', 'beam-15',
-  'beam-16', 'beam-17', 'beam-18', 'beam-19', 'beam-20',
-  'beam-21', 'beam-22', 'beam-23', 'beam-24', 'beam-25'
+// Avatar colors for consistent color generation
+const AVATAR_COLORS = [
+  'bg-indigo-500',
+  'bg-purple-500',
+  'bg-cyan-500',
+  'bg-emerald-500',
+  'bg-amber-500',
+  'bg-rose-500',
+  'bg-blue-500',
+  'bg-teal-500',
+  'bg-pink-500',
+  'bg-orange-500'
 ] as const;
 
-export type AvatarSeed = typeof AVATAR_SEEDS[number];
+// Keeping AvatarSeed type for backward compatibility (will be deprecated)
+export type AvatarSeed = string;
+export const AVATAR_SEEDS: readonly string[] = [];
 
 interface AvatarSystemProps {
   name: string;
   size?: number;
   className?: string;
-  seed?: AvatarSeed;
+  seed?: AvatarSeed; // Deprecated - kept for backward compatibility
   firstName?: string;
   lastName?: string;
   email?: string;
+  avatarUrl?: string | null; // Profile photo URL
 }
 
+// Generate consistent background color based on name/email
+function getAvatarColor(firstName?: string, lastName?: string, email?: string, name?: string): string {
+  const colors = AVATAR_COLORS;
+
+  // Use name or email to generate consistent color index
+  const str = firstName || lastName || email || name || 'User';
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+}
+
+// Simplified hook - no longer needs to save preferences since avatars are based on name/initials
 export function useAvatarPreferences() {
-  const [seed, setSeed] = useState<AvatarSeed>('beam-1');
-  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // Load avatar preference with cache-first strategy
-  useEffect(() => {
-    const loadAvatarPreference = async () => {
-      if (!user?.id) return;
+  // Return empty string since we don't use seeds anymore
+  const seed = '';
+  const loading = false;
 
-      try {
-        dev('Loading avatar preference for user:', user.id);
+  const setSeed = useCallback(async (newSeed: AvatarSeed) => {
+    // No-op: Avatar is now based purely on first_name + last_name
+    dev('Avatar seed no longer used - using initials based on name');
+  }, []);
 
-        // PRIORITY 1: Check if AuthContext already has it (from cache or DB)
-        if (user.avatar_seed && AVATAR_SEEDS.includes(user.avatar_seed as AvatarSeed)) {
-          dev('Using avatar from AuthContext:', user.avatar_seed);
-          setSeed(user.avatar_seed as AvatarSeed);
-          // Sync to localStorage for additional backup
-          localStorage.setItem('user_avatar_seed', user.avatar_seed);
-          return;
-        }
-
-        // PRIORITY 2: Check userProfileCache directly
-        const cachedProfile = userProfileCache.getCachedProfile(user.id);
-        if (cachedProfile?.avatar_seed && AVATAR_SEEDS.includes(cachedProfile.avatar_seed as AvatarSeed)) {
-          dev('Using avatar from cache:', cachedProfile.avatar_seed);
-          setSeed(cachedProfile.avatar_seed as AvatarSeed);
-          localStorage.setItem('user_avatar_seed', cachedProfile.avatar_seed);
-          return;
-        }
-
-        // PRIORITY 3: Fallback to localStorage
-        const saved = localStorage.getItem('user_avatar_seed');
-        if (saved && AVATAR_SEEDS.includes(saved as AvatarSeed)) {
-          dev('Using localStorage avatar:', saved);
-          setSeed(saved as AvatarSeed);
-
-          // Sync to database in background
-          if (user?.id) {
-            supabase
-              .from('profiles')
-              .update({
-                avatar_seed: saved,
-                avatar_variant: 'beam',
-                updated_at: new Date().toISOString()
-              })
-              .eq('id', user.id)
-              .then(() => dev('Synced localStorage avatar to database'));
-          }
-          return;
-        }
-
-        // PRIORITY 4: Load from database (only if not in cache/localStorage)
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('avatar_seed, avatar_variant')
-          .eq('id', user.id)
-          .single();
-
-        if (!error && profile?.avatar_seed && AVATAR_SEEDS.includes(profile.avatar_seed as AvatarSeed)) {
-          dev('Loaded avatar from database:', profile.avatar_seed);
-          setSeed(profile.avatar_seed as AvatarSeed);
-          localStorage.setItem('user_avatar_seed', profile.avatar_seed);
-          // Update cache
-          userProfileCache.updateCacheField(user.id, 'avatar_seed', profile.avatar_seed);
-        }
-
-      } catch (error) {
-        warn('Failed to load avatar preference:', error);
-        // Use default if all else fails
-      }
-    };
-
-    loadAvatarPreference();
-  }, [user?.id, user?.avatar_seed]);
-
-  const saveSeed = useCallback(async (newSeed: AvatarSeed) => {
-    if (!user?.id) {
-      console.warn('⚠️ No user ID, saving to localStorage only');
-      try {
-        localStorage.setItem('user_avatar_seed', newSeed);
-        setSeed(newSeed);
-      } catch (error) {
-        console.warn('Failed to save to localStorage:', error);
-      }
-      return;
-    }
-
-    setLoading(true);
-    try {
-      dev('Saving avatar preference with cache integration:', newSeed);
-
-      // 1. Update UI immediately
-      setSeed(newSeed);
-
-      // 2. Update cache immediately
-      userProfileCache.updateCacheField(user.id, 'avatar_seed', newSeed);
-
-      // 3. Save to database in background
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          avatar_seed: newSeed,
-          avatar_variant: 'beam',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', user.id);
-
-      if (error) {
-        logError('Failed to save avatar to database:', error);
-        throw error;
-      }
-
-      // 4. Update localStorage as additional backup
-      localStorage.setItem('user_avatar_seed', newSeed);
-
-      success('Avatar preference saved with cache sync');
-
-    } catch (error) {
-      logError('Failed to save avatar preference:', error);
-      // Fallback: still save to cache and localStorage
-      try {
-        userProfileCache.updateCacheField(user.id, 'avatar_seed', newSeed);
-        localStorage.setItem('user_avatar_seed', newSeed);
-        setSeed(newSeed);
-        dev('Saved to cache/localStorage as fallback');
-      } catch (localError) {
-        warn('Failed to save to cache/localStorage:', localError);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id]);
-
-  return { seed, setSeed: saveSeed, loading };
+  return { seed, setSeed, loading };
 }
 
-// Modern avatar component using Boring Avatars "beam" variant
+// Modern avatar component - supports both custom photos and initials
 export function AvatarSystem({
   name,
   size = 40,
   className,
-  seed,
+  seed, // Deprecated - kept for backward compatibility
   firstName,
   lastName,
-  email
+  email,
+  avatarUrl
 }: AvatarSystemProps) {
 
-  // Generate consistent avatar name for Boring Avatars
-  const getAvatarName = (): string => {
-    // Use actual name if we have first + last name
-    if (firstName && lastName) {
-      return `${firstName} ${lastName}`;
-    }
-
-    // Use email or provided name
-    return email || name || 'User';
-  };
-
-  // Get seed for avatar variation (use custom seed or generate from name)
-  const getAvatarSeed = (): string => {
-    if (seed) return seed;
-
-    // Generate seed from user's email/name for consistency
-    const baseName = email || name || 'User';
-    return `${baseName}-beam`;
-  };
-
-  // Fallback initials if Boring Avatars fails
+  // Get initials from first name and last name
   const getInitials = (): string => {
+    // Priority 1: Use first name + last name (Rudy Ruiz = RR)
     if (firstName && lastName) {
       return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
     }
 
+    // Priority 2: Try to get from email
     const emailToUse = email || name;
     if (emailToUse && emailToUse.includes('@')) {
       const emailPart = emailToUse.split('@')[0];
@@ -211,57 +92,63 @@ export function AvatarSystem({
       }
     }
 
+    // Fallback
     return 'U';
   };
 
-  // Try to render Boring Avatar, fallback to initials
-  try {
-    return (
-      <div
-        className={className}
-        style={{
-          width: size,
-          height: size,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Avatar
-          size={size}
-          name={getAvatarSeed()}
-          variant="beam"
-          colors={['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b']}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    );
-  } catch (error) {
-    console.warn('Boring Avatars failed, using initials fallback:', error);
-
-    // Fallback to initials
-    const baseClasses = "flex items-center justify-center rounded-full text-white font-medium";
-    const colorClass = 'bg-primary';
-    const finalClassName = className ? `${baseClasses} ${colorClass} ${className}` : `${baseClasses} ${colorClass}`;
+  // If avatar URL exists, show photo
+  if (avatarUrl) {
+    const baseClasses = "rounded-full overflow-hidden flex items-center justify-center bg-muted";
+    const finalClassName = className ? `${baseClasses} ${className}` : baseClasses;
 
     return (
       <div
         className={finalClassName}
         style={{
           width: size,
-          height: size,
-          fontSize: Math.max(12, size * 0.4)
+          height: size
         }}
       >
-        {getInitials()}
+        <img
+          src={avatarUrl}
+          alt={firstName && lastName ? `${firstName} ${lastName}` : name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            // On error, hide image and show initials fallback
+            const target = e.currentTarget;
+            target.style.display = 'none';
+            const parent = target.parentElement;
+            if (parent) {
+              parent.className = `flex items-center justify-center rounded-full text-white font-semibold ${getAvatarColor(firstName, lastName, email, name)}`;
+              parent.innerHTML = `<span style="font-size: ${Math.max(12, size * 0.4)}px">${getInitials()}</span>`;
+            }
+          }}
+        />
       </div>
     );
   }
+
+  // Render avatar with initials (default)
+  const baseClasses = "flex items-center justify-center rounded-full text-white font-semibold";
+  const colorClass = getAvatarColor(firstName, lastName, email, name);
+  const finalClassName = className ? `${baseClasses} ${colorClass} ${className}` : `${baseClasses} ${colorClass}`;
+
+  return (
+    <div
+      className={finalClassName}
+      style={{
+        width: size,
+        height: size,
+        fontSize: Math.max(12, size * 0.4)
+      }}
+    >
+      {getInitials()}
+    </div>
+  );
 }
 
-// Avatar selector for profile page - beam variants only
+// Avatar selector for profile page - simplified (no longer needed as avatars are based on initials)
+// Kept for backward compatibility
 interface AvatarSeedSelectorProps {
   userName: string;
   currentSeed?: AvatarSeed;
@@ -271,46 +158,23 @@ interface AvatarSeedSelectorProps {
 
 export function AvatarSeedSelector({
   userName,
-  currentSeed = 'beam-1',
+  currentSeed,
   onSeedChange,
   className
 }: AvatarSeedSelectorProps) {
-  const containerClassName = className ? `space-y-4 ${className}` : "space-y-4";
-
   return (
-    <div className={containerClassName}>
+    <div className={className ? `space-y-4 ${className}` : "space-y-4"}>
       <div>
-        <h3 className="text-sm font-medium mb-3">Choose Your Avatar Style</h3>
+        <h3 className="text-sm font-medium mb-3">Avatar Preview</h3>
         <p className="text-xs text-muted-foreground mb-3">
-          Select from unique "beam" style avatars. Each creates a distinctive look based on your name.
+          Your avatar is automatically generated from your first and last name initials.
         </p>
-        <div className="grid grid-cols-5 gap-3">
-          {AVATAR_SEEDS.map((seedOption) => {
-            const isSelected = currentSeed === seedOption;
-            const buttonClassName = `flex flex-col items-center p-2 rounded-lg border-2 transition-all hover:shadow-md ${
-              isSelected
-                ? "border-primary bg-primary/5 shadow-sm"
-                : "border-border hover:border-muted-foreground"
-            }`;
-
-            return (
-              <button
-                key={seedOption}
-                onClick={() => onSeedChange(seedOption)}
-                className={buttonClassName}
-              >
-                <AvatarSystem
-                  name={userName}
-                  size={40}
-                  seed={seedOption}
-                  className="mb-1"
-                />
-                <span className="text-xs font-medium text-center">
-                  {seedOption.split('-')[1]}
-                </span>
-              </button>
-            );
-          })}
+        <div className="flex justify-center">
+          <AvatarSystem
+            name={userName}
+            size={96}
+            className="mb-1"
+          />
         </div>
       </div>
     </div>

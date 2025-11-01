@@ -33,8 +33,14 @@ export const personalInformationSchema = z.object({
     .string()
     .optional()
     .refine(
-      (val) => !val || val.length === 0 || (val.length >= 10 && phoneRegex.test(val)),
-      'Phone number must be at least 10 digits and contain only numbers, spaces, +, -, (, )'
+      (val) => {
+        if (!val || val.length === 0) return true;
+        // Extract only digits
+        const digits = val.replace(/\D/g, '');
+        // Must be exactly 10 digits for US phone numbers
+        return digits.length === 10;
+      },
+      'Phone number must be exactly 10 digits'
     ),
 
   bio: z
@@ -150,34 +156,64 @@ export function formatZodError(error: z.ZodError): Record<string, string> {
 }
 
 /**
- * Phone number formatter
- * Formats phone numbers as user types
+ * Phone number formatter - US Format Only
+ * Formats phone numbers as user types: (555) 123-4567
+ * Only accepts 10 digits (US phone numbers)
+ * The system will automatically add +1 when saving
  */
 export function formatPhoneNumber(value: string): string {
-  // Remove all non-numeric characters except + at the start
-  const cleaned = value.replace(/[^\d+]/g, '');
+  // Remove all non-numeric characters
+  const numbers = value.replace(/\D/g, '');
 
-  // If it starts with +, keep it
-  const hasPlus = cleaned.startsWith('+');
-  const numbers = cleaned.replace(/\+/g, '');
+  // Limit to 10 digits
+  const limited = numbers.slice(0, 10);
 
-  // Format based on length (US format example)
-  if (numbers.length <= 3) {
-    return hasPlus ? `+${numbers}` : numbers;
-  } else if (numbers.length <= 6) {
-    return hasPlus
-      ? `+${numbers.slice(0, 3)} ${numbers.slice(3)}`
-      : `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
-  } else if (numbers.length <= 10) {
-    return hasPlus
-      ? `+${numbers.slice(0, 3)} ${numbers.slice(3, 6)} ${numbers.slice(6)}`
-      : `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+  // Format based on length: (555) 123-4567
+  if (limited.length === 0) {
+    return '';
+  } else if (limited.length <= 3) {
+    return `(${limited}`;
+  } else if (limited.length <= 6) {
+    return `(${limited.slice(0, 3)}) ${limited.slice(3)}`;
   } else {
-    // International format
-    return hasPlus
-      ? `+${numbers.slice(0, 3)} ${numbers.slice(3, 6)} ${numbers.slice(6, 10)}`
-      : `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
+    return `(${limited.slice(0, 3)}) ${limited.slice(3, 6)}-${limited.slice(6)}`;
   }
+}
+
+/**
+ * Convert formatted phone to E.164 format with +1
+ * Example: (555) 123-4567 → +15551234567
+ */
+export function phoneToE164(formattedPhone: string): string {
+  if (!formattedPhone) return '';
+
+  // Extract only digits
+  const digits = formattedPhone.replace(/\D/g, '');
+
+  // Must be exactly 10 digits for US numbers
+  if (digits.length !== 10) return formattedPhone; // Return as-is if invalid
+
+  // Add +1 prefix
+  return `+1${digits}`;
+}
+
+/**
+ * Convert E.164 format to formatted display
+ * Example: +15551234567 → (555) 123-4567
+ */
+export function phoneFromE164(e164Phone: string): string {
+  if (!e164Phone) return '';
+
+  // Remove +1 prefix if present
+  const cleaned = e164Phone.replace(/^\+1/, '');
+  const digits = cleaned.replace(/\D/g, '');
+
+  // Format for display
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+
+  return e164Phone; // Return as-is if not valid format
 }
 
 /**

@@ -3,6 +3,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export interface OrderComment {
   id: string;
@@ -265,11 +266,47 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
           : user.email || 'Someone';
 
-        pushNotificationHelper
-          .notifyNewComment(parseInt(orderId), userName, text.trim())
+        // Get order number for notification (fire-and-forget)
+        supabase
+          .from('orders')
+          .select('order_number, custom_order_number')
+          .eq('id', orderId)
+          .single()
+          .then(async ({ data: orderData }) => {
+            if (orderData) {
+              const orderNumber = orderData.custom_order_number || orderData.order_number || orderId;
+
+              // Show toast notification
+              toast.loading('📲 Sending push notification to followers...', { id: 'push-notif' });
+
+              const result = await pushNotificationHelper.notifyNewComment(
+                orderId,
+                orderNumber,
+                userName,
+                text.trim()
+              );
+
+              // Show appropriate message based on result
+              if (result && result.message) {
+                if (result.message.includes('No active push notification tokens')) {
+                  // User hasn't enabled push notifications - this is normal
+                  toast.dismiss('push-notif'); // Just dismiss, don't show anything
+                  console.log('ℹ️ User has not enabled push notifications (normal)');
+                } else if (result.message.includes('not available') || result.message.includes('not deployed')) {
+                  toast.info('ℹ️ Push notifications not configured', { id: 'push-notif' });
+                } else if (result.sent > 0) {
+                  toast.success(`✅ Push notification sent to ${result.sent} device${result.sent > 1 ? 's' : ''}`, { id: 'push-notif' });
+                }
+              } else if (result && result.sent > 0) {
+                toast.success(`✅ Push notification sent to ${result.sent} device${result.sent > 1 ? 's' : ''}`, { id: 'push-notif' });
+              } else {
+                toast.dismiss('push-notif');
+              }
+            }
+          })
           .catch((notifError) => {
             console.error('❌ Push notification failed (non-critical):', notifError);
-            // Don't fail the comment operation if notification fails
+            toast.error('⚠️ Push notification failed (comment saved)', { id: 'push-notif' });
           });
       }
 

@@ -14,6 +14,22 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Table,
   TableBody,
   TableCell,
@@ -21,11 +37,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useInvoice } from '@/hooks/useInvoices';
+import { useInvoice, useDeleteInvoice, useDeletePayment } from '@/hooks/useInvoices';
 import type { InvoiceStatus } from '@/types/invoices';
 import { format } from 'date-fns';
-import { Download, FileText, Loader2, Mail, Printer } from 'lucide-react';
-import React from 'react';
+import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, Trash2, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
+import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
+import { toast } from 'sonner';
 
 interface InvoiceDetailsDialogProps {
   open: boolean;
@@ -52,7 +72,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   onOpenChange,
   invoiceId,
 }) => {
+  const { t } = useTranslation();
   const { data: invoice, isLoading } = useInvoice(invoiceId);
+  const deleteMutation = useDeleteInvoice();
+  const deletePaymentMutation = useDeletePayment();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -69,9 +94,28 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     window.print();
   };
 
-  const handleDownload = () => {
-    // TODO: Implement PDF download
-    console.log('Download invoice:', invoiceId);
+  const handleDownloadPDF = async () => {
+    if (!invoice) return;
+
+    try {
+      await generateInvoicePDF(invoice);
+      toast.success('PDF downloaded successfully');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Failed to generate PDF');
+    }
+  };
+
+  const handleDownloadExcel = () => {
+    if (!invoice) return;
+
+    try {
+      generateInvoiceExcel(invoice);
+      toast.success('Excel file downloaded successfully');
+    } catch (error) {
+      console.error('Error generating Excel:', error);
+      toast.error('Failed to generate Excel file');
+    }
   };
 
   const handleEmail = () => {
@@ -123,15 +167,38 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             <div className="flex gap-2">
               <Button size="sm" variant="outline" onClick={handleEmail}>
                 <Mail className="h-4 w-4 mr-2" />
-                Email
+                {t('reports.invoices.send_email')}
               </Button>
               <Button size="sm" variant="outline" onClick={handlePrint}>
                 <Printer className="h-4 w-4 mr-2" />
-                Print
+                {t('common.action_buttons.print')}
               </Button>
-              <Button size="sm" variant="outline" onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                Download
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="sm" variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    {t('common.action_buttons.download')}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleDownloadPDF}>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDownloadExcel}>
+                    <FileSpreadsheet className="h-4 w-4 mr-2" />
+                    Download Excel
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={invoice.status === 'paid'}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {t('reports.invoices.delete')}
               </Button>
             </div>
           </div>
@@ -186,37 +253,64 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               <Table>
                 <TableHeader>
                   <TableRow className="bg-gray-50">
-                    <TableHead className="font-semibold">Date</TableHead>
-                    <TableHead className="font-semibold">Stock</TableHead>
-                    <TableHead className="font-semibold">Vehicle</TableHead>
-                    <TableHead className="font-semibold">VIN</TableHead>
-                    <TableHead className="font-semibold text-right">Amount</TableHead>
+                    <TableHead className="font-bold text-center">Date</TableHead>
+                    <TableHead className="font-bold text-center">Order</TableHead>
+                    <TableHead className="font-bold text-center">
+                      {(invoice.order?.orderType || invoice.order?.order_type) === 'service' ? 'PO/RO/Tag' : 'Stock'}
+                    </TableHead>
+                    <TableHead className="font-bold text-center">Vehicle</TableHead>
+                    <TableHead className="font-bold text-center">VIN</TableHead>
+                    <TableHead className="font-bold text-left">Services</TableHead>
+                    <TableHead className="font-bold text-center">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {invoice.items && invoice.items.length > 0 ? (
                     invoice.items.map((item) => (
                       <TableRow key={item.id}>
-                        <TableCell className="text-sm">
+                        <TableCell className="text-sm text-center">
                           {item.metadata?.completed_at
-                            ? format(new Date(item.metadata.completed_at), 'MM/dd/yyyy')
-                            : 'N/A'}
+                            ? format(new Date(item.metadata.completed_at), 'MM/dd')
+                            : item.createdAt
+                            ? format(new Date(item.createdAt), 'MM/dd')
+                            : format(new Date(invoice.issueDate), 'MM/dd')}
                         </TableCell>
-                        <TableCell className="font-medium text-sm">
-                          {item.metadata?.stock_number || 'N/A'}
+                        <TableCell className="text-sm text-center font-medium">
+                          {item.metadata?.order_number || 'N/A'}
                         </TableCell>
-                        <TableCell className="text-sm">{item.description}</TableCell>
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="font-medium text-sm text-center">
+                          {(item.metadata?.order_type) === 'service' ? (
+                            <div className="flex flex-col gap-0.5 text-xs">
+                              {item.metadata?.po && <span>PO: {item.metadata.po}</span>}
+                              {item.metadata?.ro && <span>RO: {item.metadata.ro}</span>}
+                              {item.metadata?.tag && <span className="font-semibold">Tag: {item.metadata.tag}</span>}
+                              {!item.metadata?.po && !item.metadata?.ro && !item.metadata?.tag && 'N/A'}
+                            </div>
+                          ) : (
+                            item.metadata?.stock_number || 'N/A'
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-center">{item.description}</TableCell>
+                        <TableCell className="font-mono text-sm font-semibold text-center">
                           {item.metadata?.vehicle_vin || 'N/A'}
                         </TableCell>
-                        <TableCell className="text-right font-medium">
+                        <TableCell className="text-sm text-left">
+                          {item.metadata?.service_names ? (
+                            <span className="text-xs text-gray-700">{item.metadata.service_names}</span>
+                          ) : item.serviceReference ? (
+                            <span className="text-xs text-gray-700">{item.serviceReference}</span>
+                          ) : (
+                            <span className="text-xs text-gray-500">N/A</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center font-medium">
                           {formatCurrency(item.totalAmount)}
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                         No items found
                       </TableCell>
                     </TableRow>
@@ -296,9 +390,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                 {invoice.payments.map((payment) => (
                   <div
                     key={payment.id}
-                    className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg text-sm"
+                    className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg text-sm group"
                   >
-                    <div>
+                    <div className="flex-1">
                       <p className="font-medium">
                         Payment {payment.paymentNumber} - {payment.paymentMethod}
                       </p>
@@ -307,15 +401,92 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         {payment.referenceNumber && ` • Ref: ${payment.referenceNumber}`}
                       </p>
                     </div>
-                    <p className="font-bold text-emerald-600">
-                      {formatCurrency(payment.amount)}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <p className="font-bold text-emerald-600">
+                        {formatCurrency(payment.amount)}
+                      </p>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => setPaymentToDelete(payment.id)}
+                      >
+                        <X className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="space-y-2">
+                <p>
+                  {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {t('reports.invoices.vehicles_available_again')}
+                </p>
+                {invoice.payments && invoice.payments.length > 0 && (
+                  <p className="text-red-600 font-semibold mt-2">
+                    {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}
+                  </p>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={async () => {
+                  await deleteMutation.mutateAsync(invoiceId);
+                  setShowDeleteConfirm(false);
+                  onOpenChange(false);
+                }}
+                className="bg-red-600 hover:bg-red-700"
+                disabled={deleteMutation.isPending}
+              >
+                {deleteMutation.isPending
+                  ? t('reports.invoices.deleting')
+                  : t('reports.invoices.delete_invoice')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Delete Payment Confirmation Dialog */}
+        <AlertDialog open={!!paymentToDelete} onOpenChange={() => setPaymentToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Payment?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. The payment will be permanently deleted and the invoice balance will be updated.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={async () => {
+                  if (paymentToDelete) {
+                    await deletePaymentMutation.mutateAsync(paymentToDelete);
+                    setPaymentToDelete(null);
+                  }
+                }}
+                className="bg-red-600 hover:bg-red-700"
+                disabled={deletePaymentMutation.isPending}
+              >
+                {deletePaymentMutation.isPending ? 'Deleting...' : 'Delete Payment'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </DialogContent>
     </Dialog>
   );

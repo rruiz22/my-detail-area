@@ -16,6 +16,7 @@ interface ExtendedUser extends User {
   dealershipId?: number;
   dealership_name?: string;
   avatar_seed?: string;
+  avatar_url?: string | null;
 }
 
 interface AuthContextType {
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Add timeout to prevent infinite loading
       const profilePromise = supabase
         .from('profiles')
-        .select('user_type, role, first_name, last_name, dealership_id, avatar_seed')
+        .select('user_type, role, first_name, last_name, dealership_id, avatar_seed, avatar_url')
         .eq('id', authUser.id)
         .single();
 
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data: profile, error } = await Promise.race([
         profilePromise,
         timeoutPromise
-      ]) as { data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string } | null; error: Error | null };
+      ]) as { data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; error: Error | null };
 
       if (error) {
         logError('Error loading user profile:', error);
@@ -85,7 +86,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         first_name: profile.first_name,
         last_name: profile.last_name,
         dealershipId: profile.dealership_id,
-        avatar_seed: profile.avatar_seed
+        avatar_seed: profile.avatar_seed,
+        avatar_url: profile.avatar_url
       };
 
       auth('Extended user profile loaded:', {

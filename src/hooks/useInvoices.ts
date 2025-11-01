@@ -177,13 +177,13 @@ export const useInvoice = (invoiceId: string) => {
   return useQuery({
     queryKey: ['invoice', invoiceId],
     queryFn: async (): Promise<InvoiceWithDetails> => {
+      // Get basic invoice data
       const { data, error } = await supabase
         .from('invoices')
         .select(`
           *,
           orders (*),
           dealerships (*),
-          invoice_items (*),
           payments (*)
         `)
         .eq('id', invoiceId)
@@ -192,10 +192,16 @@ export const useInvoice = (invoiceId: string) => {
       if (error) throw error;
       if (!data) throw new Error('Invoice not found');
 
+      // Get invoice items with order info using RPC
+      const { data: itemsData, error: itemsError } = await supabase
+        .rpc('get_invoice_items_with_order_info', { p_invoice_id: invoiceId });
+
+      if (itemsError) throw itemsError;
+
       return {
         ...transformInvoice(data),
         order: data.orders,
-        items: (data.invoice_items || []).map((item: any) => ({
+        items: (itemsData || []).map((item: any) => ({
           id: item.id,
           invoiceId: item.invoice_id,
           itemType: item.item_type,
@@ -207,7 +213,16 @@ export const useInvoice = (invoiceId: string) => {
           totalAmount: parseFloat(item.total_amount),
           serviceReference: item.service_reference,
           sortOrder: item.sort_order,
-          metadata: item.metadata || {},
+          metadata: {
+            ...(item.metadata || {}),
+            // Add order info from RPC
+            order_number: item.order_number,
+            order_type: item.order_type,
+            po: item.po,
+            ro: item.ro,
+            tag: item.tag,
+            service_names: item.service_names
+          },
           createdAt: item.created_at,
           updatedAt: item.updated_at
         })),
@@ -426,4 +441,71 @@ export const useSendInvoiceEmail = () => {
   });
 };
 
+export const useDeleteInvoice = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (invoiceId: string) => {
+      // Check if invoice has payments
+      const { data: payments } = await supabase
+        .from('payments')
+        .select('id')
+        .eq('invoice_id', invoiceId);
+
+      if (payments && payments.length > 0) {
+        throw new Error(`Cannot delete invoice with ${payments.length} payment(s). Please delete all payments first.`);
+      }
+
+      // Delete invoice (CASCADE will delete invoice_items automatically)
+      const { error } = await supabase
+        .from('invoices')
+        .delete()
+        .eq('id', invoiceId);
+
+      if (error) throw error;
+
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
+      toast.success('Invoice deleted successfully - vehicles are now available for billing');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete invoice', {
+        duration: 5000,
+        description: 'Please try again or contact support if the problem persists.'
+      });
+    }
+  });
+};
+
+export const useDeletePayment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (paymentId: string) => {
+      const { error } = await supabase
+        .from('payments')
+        .delete()
+        .eq('id', paymentId);
+
+      if (error) throw error;
+
+      return { success: true };
+    },
+    onSuccess: (_, paymentId) => {
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
+      toast.success('Payment deleted successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete payment', {
+        duration: 5000,
+        description: 'Please try again or contact support if the problem persists.'
+      });
+    }
+  });
+};
 

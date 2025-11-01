@@ -1,33 +1,33 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { AvatarSelectionModal } from '@/components/ui/avatar-selection-modal';
-import {
-  User,
-  Shield,
-  Bell,
-  Activity,
-  Database,
-  Mail,
-  Edit,
-  Building2
-} from 'lucide-react';
+import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { usePermissions } from '@/hooks/usePermissions';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { useQueryClient } from '@tanstack/react-query';
+import {
+    Activity,
+    Bell,
+    Building2,
+    Database,
+    Edit,
+    Mail,
+    Shield,
+    User
+} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Direct imports - no lazy loading for instant tab display
-import { PersonalInformationTab } from '@/components/profile/PersonalInformationTab';
 import { AccountSecurityTab } from '@/components/profile/AccountSecurityTab';
-import { NotificationsPreferencesTab } from '@/components/profile/NotificationsPreferencesTab';
 import { ActivityAuditTab } from '@/components/profile/ActivityAuditTab';
 import { DataPrivacyTab } from '@/components/profile/DataPrivacyTab';
+import { NotificationsPreferencesTab } from '@/components/profile/NotificationsPreferencesTab';
+import { PersonalInformationTab } from '@/components/profile/PersonalInformationTab';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -135,6 +135,7 @@ export default function Profile() {
                 firstName={user?.first_name}
                 lastName={user?.last_name}
                 email={user?.email}
+                avatarUrl={user?.avatar_url}
                 seed={seed}
                 size={96}
                 className="mx-auto sm:mx-0"
@@ -234,6 +235,7 @@ export default function Profile() {
           firstName={user?.first_name}
           lastName={user?.last_name}
           email={user?.email}
+          avatarUrl={user?.avatar_url}
           currentSeed={seed}
           onSeedChange={handleAvatarChange}
         />
