@@ -21,6 +21,14 @@ const NETWORK_ERROR_PATTERNS = [
   'A network error occurred',
 ];
 
+// Push notification non-critical patterns to suppress
+const PUSH_NOTIFICATION_INFO_PATTERNS = [
+  'No active FCM tokens found',
+  'no active fcm tokens',
+  'PushNotificationHelper] Edge Function error',
+  'Edge Function returned a non-2xx status code',
+];
+
 // Node.js polyfill warnings to suppress (from Excel/CSV libraries)
 const POLYFILL_WARNING_PATTERNS = [
   'called in browser',
@@ -44,6 +52,13 @@ function isPolyfillWarning(message: string): boolean {
   );
 }
 
+// Check if message is a non-critical push notification info
+function isPushNotificationInfo(message: string): boolean {
+  return PUSH_NOTIFICATION_INFO_PATTERNS.some((pattern) =>
+    message.toLowerCase().includes(pattern.toLowerCase())
+  );
+}
+
 // Enhanced console.error that suppresses network errors
 console.error = (...args: any[]) => {
   const message = args[0]?.toString() || '';
@@ -52,6 +67,13 @@ console.error = (...args: any[]) => {
   // Check message and stack for network error patterns
   if (isNetworkError(message) || isNetworkError(stack)) {
     // Silently ignore - user is likely offline or experiencing connectivity issues
+    return;
+  }
+
+  // Check for non-critical push notification info messages
+  if (isPushNotificationInfo(message)) {
+    // Downgrade to info log - not a real error
+    console.info('ℹ️ [Info]', ...args);
     return;
   }
 

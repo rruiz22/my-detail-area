@@ -97,7 +97,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (usersWithPermission.length === 0) {
       return new Response(
-        JSON.stringify({ success: true, sent: 0, message: 'No users with SMS permission found' }),
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: 0,
+          message: 'No users with SMS permission found'
+        }),
         { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }
@@ -114,7 +120,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (eligibleUsers.length === 0) {
       return new Response(
-        JSON.stringify({ success: true, sent: 0, message: 'No users match event preferences' }),
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: usersWithPermission.length,
+          message: 'No users match event preferences'
+        }),
         { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }
@@ -125,7 +137,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (usersAfterRateLimit.length === 0) {
       return new Response(
-        JSON.stringify({ success: true, sent: 0, message: 'All users hit rate limits' }),
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: eligibleUsers.length,
+          message: 'All users hit rate limits'
+        }),
         { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }
@@ -136,7 +154,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (finalUsers.length === 0) {
       return new Response(
-        JSON.stringify({ success: true, sent: 0, message: 'Only trigger user would receive notification' }),
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: usersAfterRateLimit.length,
+          message: 'Only trigger user would receive notification'
+        }),
         { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }

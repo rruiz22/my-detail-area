@@ -849,7 +849,12 @@
     "minutes": "minutos",
     "service": "servicio",
     "services": "servicios",
-    "confirm_delete_title": "¿Eliminar Servicio?"
+    "status": "Estado",
+    "confirm_delete_title": "¿Eliminar Servicio?",
+    "categoryRequired": "La selección de categoría es obligatoria",
+    "noCategoriesAvailable": "No hay categorías disponibles",
+    "noCategoriesFound": "No se encontraron categorías",
+    "noCategoriesWarning": "No hay categorías de servicio disponibles. Por favor contacte al administrador del sistema."
   },
   "vin_scanner_errors": {
     "vin_input_placeholder": "Ingresa VIN de 17 caracteres o escanea con cámara"
@@ -4943,6 +4948,12 @@
       "teams": "Equipos",
       "teams_description": "Notificaciones de colaboración en equipo"
     },
+    "sms_sent": "Notificaciones SMS Enviadas",
+    "sms_sent_description": "{{count}} notificación(es) SMS enviada(s) exitosamente",
+    "sms_sent_to_users": "SMS enviado a {{count}} usuario(s)",
+    "sms_error": "Error al enviar notificaciones SMS",
+    "sms_partial_success": "SMS: {{sent}} enviado(s), {{failed}} fallido(s)",
+    "sms_all_failed": "Error al enviar SMS ({{count}} errores)",
     "frequency": {
       "all": "Todas las Notificaciones",
       "mentions": "Solo Menciones",

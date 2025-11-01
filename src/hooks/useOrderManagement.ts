@@ -13,6 +13,8 @@ import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { OrderStatus } from '@/constants/orderStatus';
+import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 // Constants for magic numbers
 const REFRESH_THROTTLE_MS = 1000;
@@ -254,6 +256,8 @@ const transformOrder = (supabaseOrder: SupabaseOrderWithComments): Order => {
 
 export const useOrderManagement = (activeTab: string, weekOffset: number = 0) => {
   const { createSubscription, removeSubscription } = useSubscriptionManager();
+  const { toast } = useToast();
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [tabCounts, setTabCounts] = useState({
     today: 0,
@@ -857,6 +861,11 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         updateData.internal_notes = orderData.internal_notes;
       }
 
+      // Get current order before updating (for tracking changes)
+      const currentOrders = queryClient.getQueryData<Order[]>(['orders', 'all']) || [];
+      const oldOrder = currentOrders.find(o => o.id === orderId);
+      const oldStatus = oldOrder?.order_status;
+
       const { data, error } = await supabase
         .from('orders')
         .update(updateData)
@@ -887,6 +896,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
           : user.email || 'Someone';
 
+        // Send push notifications to followers
         pushNotificationHelper
           .notifyOrderStatusChange(
             parseInt(orderId),
@@ -897,6 +907,44 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           .catch((notifError) => {
             logError('❌ Push notification failed (non-critical):', notifError);
             // Don't fail the order update if notification fails
+          });
+
+        // Send SMS notifications to users with SMS permissions
+        supabase.functions
+          .invoke('send-order-sms-notification', {
+            body: {
+              orderId: orderId,
+              dealerId: selectedDealerId,
+              module: 'sales_orders',
+              eventType: 'status_changed',
+              eventData: {
+                orderNumber: data.order_number,
+                customerName: data.customer_name || '',
+                newStatus: orderData.order_status,
+                oldStatus: oldStatus,
+                shortLink: `https://app.mydetailarea.com/sales/${orderId}`,
+              },
+              triggeredBy: user.id,
+            },
+          })
+          .then(({ data: smsData, error: smsError }) => {
+            if (smsError) {
+              logError('⚠️ SMS notification failed (non-critical):', smsError);
+            } else {
+              const sentCount = smsData?.sent || 0;
+              dev(`✅ SMS notifications sent: ${sentCount} recipients`);
+
+              // Show success toast if SMS were sent
+              if (sentCount > 0) {
+                toast({
+                  title: t('notifications.sms_sent'),
+                  description: t('notifications.sms_sent_description', { count: sentCount }),
+                });
+              }
+            }
+          })
+          .catch((smsError) => {
+            logError('⚠️ SMS notification error (non-critical):', smsError);
           });
       }
 

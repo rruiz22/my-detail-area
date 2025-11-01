@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["deno.ns", "deno.unstable", "dom"],
+    "strict": true
+  },
+  "tasks": {
+    "dev": "deno run --watch index.ts"
+  }
+}

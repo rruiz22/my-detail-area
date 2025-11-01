@@ -838,7 +838,12 @@
     "minutes": "minutes",
     "service": "service",
     "services": "services",
-    "confirm_delete_title": "Delete Service?"
+    "status": "Status",
+    "confirm_delete_title": "Delete Service?",
+    "categoryRequired": "Category selection is required",
+    "noCategoriesAvailable": "No categories available",
+    "noCategoriesFound": "No categories found",
+    "noCategoriesWarning": "No service categories available. Please contact system administrator."
   },
   "vin_scanner_errors": {
     "vin_input_placeholder": "Enter 17-character VIN or scan with camera"
@@ -4943,6 +4948,12 @@
     "not_supported": "Notifications are not supported in this browser",
     "error": "Error managing notifications",
     "new_message": "New notification",
+    "sms_sent": "SMS Notifications Sent",
+    "sms_sent_description": "{{count}} SMS notification(s) sent successfully",
+    "sms_sent_to_users": "SMS sent to {{count}} user(s)",
+    "sms_error": "Error sending SMS notifications",
+    "sms_partial_success": "SMS: {{sent}} sent, {{failed}} failed",
+    "sms_all_failed": "Failed to send SMS ({{count}} errors)",
     "granular_settings": "Event-Based Notifications",
     "event": "Event",
     "category": "Category",

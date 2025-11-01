@@ -23,13 +23,23 @@ export default function Reports() {
     ? (typeof selectedDealerId === 'number' ? selectedDealerId : parseInt(selectedDealerId))
     : defaultDealerId;
 
+  // Helper function to get week dates (Monday to Sunday)
+  const getWeekDates = (date: Date) => {
+    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = current.getDay();
+    const daysToMonday = day === 0 ? -6 : 1 - day;
+    const monday = new Date(current);
+    monday.setDate(current.getDate() + daysToMonday);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    return { monday, sunday };
+  };
+
+  const { monday: defaultStartDate, sunday: defaultEndDate } = getWeekDates(new Date());
+
   const [filters, setFilters] = useState<ReportsFilters>({
-    startDate: (() => {
-      const date = new Date();
-      date.setDate(date.getDate() - 30);
-      return date;
-    })(),
-    endDate: new Date(),
+    startDate: defaultStartDate,
+    endDate: defaultEndDate,
     orderType: 'all',
     status: 'all',
     dealerId: effectiveDealerId
@@ -62,12 +72,6 @@ export default function Reports() {
         }
       >
         <div className="space-y-6">
-          {/* Report Filters */}
-          <ReportFilters
-            filters={filters}
-            onFiltersChange={setFilters}
-          />
-
           {/* Main Reports Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
@@ -86,10 +90,20 @@ export default function Reports() {
             </TabsList>
 
             <TabsContent value="operational" className="space-y-6">
+              {/* Report Filters */}
+              <ReportFilters
+                filters={filters}
+                onFiltersChange={setFilters}
+              />
               <OperationalReports filters={filters} />
             </TabsContent>
 
             <TabsContent value="financial" className="space-y-6">
+              {/* Report Filters */}
+              <ReportFilters
+                filters={filters}
+                onFiltersChange={setFilters}
+              />
               <FinancialReports filters={filters} />
             </TabsContent>
 

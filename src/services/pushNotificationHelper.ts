@@ -122,7 +122,7 @@ class PushNotificationHelper {
           // Check if it's specifically "no tokens" message
           if (errorMsg.toLowerCase().includes('no active fcm tokens') ||
               errorMsg.toLowerCase().includes('tokens found')) {
-            console.log('ℹ️ [PushNotificationHelper] No active push tokens for user (normal)');
+            console.info('ℹ️ [PushNotificationHelper] No active push tokens for user (this is normal if notifications are not enabled)');
             return {
               success: true, // Not an error - user just hasn't enabled push
               sent: 0,
@@ -134,7 +134,7 @@ class PushNotificationHelper {
           }
 
           // Otherwise, function might not be deployed
-          console.warn('⚠️ [PushNotificationHelper] Edge Function not available');
+          console.info('ℹ️ [PushNotificationHelper] Edge Function not available (non-critical)');
           return {
             success: false,
             sent: 0,
@@ -145,7 +145,10 @@ class PushNotificationHelper {
           };
         }
 
-        console.error('[PushNotificationHelper] Edge Function error:', error);
+        // Only log as error if it's NOT a "no tokens" issue
+        if (!errorMsg.toLowerCase().includes('no active') && !errorMsg.toLowerCase().includes('404')) {
+          console.error('[PushNotificationHelper] Edge Function error:', error);
+        }
         return this.createErrorResponse(error.message);
       }
 
@@ -494,7 +497,11 @@ class PushNotificationHelper {
         }
       );
 
-      console.log('[PushNotificationHelper] New comment notification sent');
+      if (result.sent > 0) {
+        console.log(`✅ [PushNotificationHelper] New comment notification sent to ${result.sent} user(s)`);
+      } else {
+        console.info(`ℹ️ [PushNotificationHelper] New comment notification attempted (no active push tokens found)`);
+      }
       return result;
     } catch (error) {
       console.error('[PushNotificationHelper] Error notifying new comment:', error);

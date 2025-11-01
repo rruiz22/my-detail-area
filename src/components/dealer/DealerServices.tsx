@@ -2,20 +2,20 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { usePermissionContext } from '@/contexts/PermissionContext';
 import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { canViewPricing } from '@/utils/permissions';
-import { Clock, DollarSign, Edit, Plus, Settings, Tag, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Clock, Edit, Plus, Tag, Trash2 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,13 +24,18 @@ interface DealerService {
   name: string;
   description?: string;
   price?: number;
-  category_id: string;
+  category_id?: string;  // This field exists in DB but not in generated types
   category_name: string;
   category_color: string;
   color?: string;
   duration?: number;
   is_active: boolean;
   assigned_groups: string[];
+}
+
+// Extended type that includes category_id from the RPC
+interface DealerServiceWithCategory extends DealerService {
+  category_id: string;
 }
 
 interface ServiceCategory {
@@ -57,8 +62,7 @@ interface DealerServicesProps {
 export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { permissions, roles } = usePermissionContext();
-  const { enhancedUser } = usePermissions();
+  const { permissions, roles, enhancedUser } = usePermissions();
   const [services, setServices] = useState<DealerService[]>([]);
   const [groups, setGroups] = useState<DealerGroup[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
@@ -84,9 +88,11 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   });
 
   const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
-  const canManageServices = permissions?.some(p =>
-    p.module === 'dealerships' && ['write', 'delete', 'admin'].includes(p.permission_level)
-  ) ?? true; // Allow all dealer members for now
+  // System admins can always manage services, otherwise check permissions
+  const canManageServices = enhancedUser?.is_system_admin ||
+    (permissions?.some(p =>
+      p.module === 'dealerships' && ['write', 'delete', 'admin'].includes(p.permission_level)
+    ) ?? false);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -94,7 +100,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         .rpc('get_dealer_services_for_user', { p_dealer_id: parseInt(dealerId) });
 
       if (error) throw error;
-      setServices(data || []);
+
+      // Type assertion because Supabase generated types are outdated (missing category_id)
+      setServices((data as unknown as DealerService[]) || []);
     } catch (error) {
       console.error('Error fetching services:', error);
       toast({
@@ -123,7 +131,6 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   }, [dealerId]);
 
   const fetchCategories = useCallback(async () => {
-    console.log('🔍 Fetching categories for dealer:', dealerId);
     try {
       // Fetch categories available for all modules (for services management)
       // For now, just fetch global categories (dealer_id IS NULL) which are available to all dealerships
@@ -134,17 +141,14 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         .is('dealer_id', null)
         .order('name');
 
-      console.log('📊 Categories query result:', { data, error });
-
       if (error) throw error;
 
-      console.log(`✅ Found ${data?.length || 0} categories:`, data);
       setCategories(data || []);
 
     } catch (error) {
-      console.error('❌ Error fetching categories:', error);
+      console.error('Error fetching categories:', error);
     }
-  }, [dealerId]);
+  }, []);
 
   useEffect(() => {
     fetchServices();
@@ -155,7 +159,6 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   // Set default category when categories are loaded
   useEffect(() => {
     if (categories.length > 0 && !formData.category_id) {
-      console.log('🎯 Setting default category from effect:', categories[0]);
       setFormData(prev => ({ ...prev, category_id: categories[0].id }));
     }
   }, [categories, formData.category_id]);
@@ -167,7 +170,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
     if (!formData.category_id) {
       toast({
         title: t('services.error'),
-        description: 'Category selection is required',
+        description: t('services.categoryRequired', 'Category selection is required'),
         variant: 'destructive'
       });
       return;
@@ -292,13 +295,17 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
   const openEditModal = (service: DealerService) => {
     setEditingService(service);
+
+    // Ensure category_id is properly set
+    const categoryId = service.category_id || categories[0]?.id || '';
+
     setFormData({
       name: service.name,
       description: service.description || '',
       price: service.price?.toString() || '',
-      category_id: service.category_id || '', // Usar category_id directamente
+      category_id: categoryId,
       duration: service.duration?.toString() || '',
-      color: service.color || service.category_color || '#6B7280', // Fallback a category_color
+      color: service.color || service.category_color || '#6B7280',
       is_active: service.is_active,
       assigned_groups: service.assigned_groups
     });
@@ -356,14 +363,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">{t('services.title')}</h2>
-          <p className="text-muted-foreground">{t('services.subtitle')}</p>
-        </div>
-
+    <div className="space-y-4">
+      {/* Header with Add Button */}
+      <div className="flex justify-end">
         {canManageServices && (
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
@@ -396,39 +398,40 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
                   <div>
                     <Label htmlFor="category">{t('services.department')} *</Label>
-                    <Select value={formData.category_id} onValueChange={(value) =>
-                      setFormData(prev => ({ ...prev, category_id: value }))
-                    }>
+                    <Select
+                      value={formData.category_id}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
+                      disabled={categories.length === 0}
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('services.selectDepartment')} />
+                        <SelectValue placeholder={
+                          categories.length === 0
+                            ? t('services.noCategoriesAvailable', 'No categories available')
+                            : t('services.selectDepartment')
+                        } />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="adf6477f-0819-44b0-813f-4869a2cf5a27">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10B981' }} />
-                            <span>Sales Dept</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="bd46fe22-7023-4b84-974d-db35e9fa6a03">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#6366F1' }} />
-                            <span>Service Dept</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="63837333-c41f-4c18-b4b2-98e1bc1bb85d">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#F59E0B' }} />
-                            <span>Recon Dept</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="ae0e020b-7456-4ac5-991b-72d18295d224">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#06B6D4' }} />
-                            <span>CarWash Dept</span>
-                          </div>
-                        </SelectItem>
+                        {categories.length === 0 ? (
+                          <SelectItem value="none" disabled>
+                            {t('services.noCategoriesFound', 'No categories found')}
+                          </SelectItem>
+                        ) : (
+                          categories.map(category => (
+                            <SelectItem key={category.id} value={category.id}>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
+                                <span>{category.name}</span>
+                              </div>
+                            </SelectItem>
+                          ))
+                        )}
                       </SelectContent>
                     </Select>
+                    {categories.length === 0 && (
+                      <p className="text-xs text-amber-600 mt-1">
+                        {t('services.noCategoriesWarning', 'No service categories available. Please contact system administrator.')}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -533,10 +536,10 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
                 <div className="flex justify-end space-x-2">
                   <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
-                    {t('common.cancel')}
+                    {t('common.action_buttons.cancel')}
                   </Button>
-                  <Button type="submit">
-                    {editingService ? t('common.update') : t('common.create')}
+                  <Button type="submit" disabled={categories.length === 0}>
+                    {editingService ? t('common.action_buttons.update') : t('common.action_buttons.create')}
                   </Button>
                 </div>
               </form>
@@ -546,17 +549,18 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1">
           <Input
             placeholder={t('services.search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="h-9"
           />
         </div>
 
         <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-52 h-9">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -576,118 +580,138 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         </Select>
       </div>
 
-      {/* Services List Grouped by Category */}
+      {/* Services Table Grouped by Category */}
       <div className="space-y-4">
         {Object.entries(groupedServices).map(([categoryName, { color, services }]) => (
-          <Card key={categoryName} className="card-enhanced">
+          <Card key={categoryName} className="card-enhanced overflow-hidden">
             <Collapsible
               open={openCategories[categoryName] ?? true}
               onOpenChange={() => toggleCategory(categoryName)}
             >
               <CollapsibleTrigger className="w-full">
-                <CardHeader className="hover:bg-gray-50 transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {openCategories[categoryName] ? (
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                      ) : (
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      )}
-                      <div
-                        className="w-4 h-4 rounded-full"
-                        style={{ backgroundColor: color }}
-                      />
-                      <CardTitle className="text-xl">{categoryName}</CardTitle>
-                      <Badge variant="secondary" className="ml-2">
-                        {services.length} {services.length === 1 ? t('services.service') : t('services.services')}
-                      </Badge>
-                    </div>
+                <CardHeader className="hover:bg-gray-50 transition-colors cursor-pointer py-3 px-4">
+                  <div className="flex items-center gap-3">
+                    {openCategories[categoryName] ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: color }}
+                    />
+                    <CardTitle className="text-base font-semibold">{categoryName}</CardTitle>
+                    <Badge variant="secondary" className="ml-auto text-xs">
+                      {services.length}
+                    </Badge>
                   </div>
                 </CardHeader>
               </CollapsibleTrigger>
 
               <CollapsibleContent>
-                <CardContent className="pt-0">
-                  <div className="space-y-2">
-                    {services.map(service => (
-                      <div
-                        key={service.id}
-                        className={`flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-gray-50 transition-colors ${
-                          !service.is_active ? 'opacity-60' : ''
-                        }`}
-                      >
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-3">
-                            <h4 className="font-semibold text-base">{service.name}</h4>
-                            {!service.is_active && (
-                              <Badge variant="secondary" className="text-xs">
-                                {t('services.inactive')}
-                              </Badge>
-                            )}
-                          </div>
-
-                          {service.description && (
-                            <p className="text-sm text-muted-foreground">
-                              {service.description}
-                            </p>
-                          )}
-
-                          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                            {service.price && canViewPrices && (
-                              <div className="flex items-center gap-1">
-                                <DollarSign className="h-4 w-4" />
-                                <span className="font-medium">${service.price.toFixed(2)}</span>
-                              </div>
-                            )}
-
-                            {service.duration && (
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-4 w-4" />
-                                <span>{service.duration} {t('services.minutes')}</span>
-                              </div>
-                            )}
-
-                            {service.assigned_groups.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                <Settings className="h-4 w-4" />
+                <div className="border-t">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="w-[25%] h-9 text-xs font-semibold">{t('services.name')}</TableHead>
+                        <TableHead className="w-[30%] h-9 text-xs font-semibold">{t('services.description')}</TableHead>
+                        {canViewPrices && (
+                          <TableHead className="w-[12%] h-9 text-xs font-semibold text-center">{t('services.price')}</TableHead>
+                        )}
+                        <TableHead className="w-[13%] h-9 text-xs font-semibold text-center">{t('services.duration')}</TableHead>
+                        <TableHead className="w-[12%] h-9 text-xs font-semibold text-center">{t('services.status', 'Status')}</TableHead>
+                        {canManageServices && (
+                          <TableHead className="w-[8%] h-9 text-xs font-semibold text-right">{t('common.actions')}</TableHead>
+                        )}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {services.map(service => (
+                        <TableRow
+                          key={service.id}
+                          className={`${!service.is_active ? 'opacity-50' : ''} hover:bg-gray-50`}
+                        >
+                          <TableCell className="py-2 px-4">
+                            <div className="flex flex-col gap-1">
+                              <span className="text-sm font-medium">{service.name}</span>
+                              {service.assigned_groups.length > 0 && (
                                 <div className="flex flex-wrap gap-1">
                                   {service.assigned_groups.map(groupId => {
                                     const group = groups.find(g => g.id === groupId);
                                     return group ? (
-                                      <Badge key={groupId} variant="outline" className="text-xs">
+                                      <Badge key={groupId} variant="outline" className="text-[10px] px-1.5 py-0 h-4">
                                         {group.name}
                                       </Badge>
                                     ) : null;
                                   })}
                                 </div>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            className="py-2 px-4 text-xs text-muted-foreground max-w-xs truncate"
+                            title={service.description || ''}
+                          >
+                            {service.description || '—'}
+                          </TableCell>
+                          {canViewPrices && (
+                            <TableCell className="py-2 px-4 text-center text-sm font-medium">
+                              {service.price ? `$${service.price.toFixed(2)}` : '—'}
+                            </TableCell>
+                          )}
+                          <TableCell className="py-2 px-4 text-center text-xs">
+                            {service.duration ? (
+                              <div className="flex items-center justify-center gap-1">
+                                <Clock className="h-3 w-3 text-muted-foreground" />
+                                <span>{service.duration}m</span>
                               </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {canManageServices && (
-                          <div className="flex items-center gap-2 ml-4">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => openEditModal(service)}
+                            ) : '—'}
+                          </TableCell>
+                          <TableCell className="py-2 px-4 text-center">
+                            <Badge
+                              variant={service.is_active ? "default" : "secondary"}
+                              className="text-[10px] px-2 py-0 h-5"
                             >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleDelete(service.id)}
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
+                              {service.is_active ? t('services.active') : t('services.inactive')}
+                            </Badge>
+                          </TableCell>
+                          {canManageServices && (
+                            <TableCell className="py-2 px-4">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openEditModal(service);
+                                  }}
+                                  className="h-8 w-8 p-0 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                  title={t('services.edit')}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                  <span className="sr-only">{t('services.edit')}</span>
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(service.id);
+                                  }}
+                                  className="h-8 w-8 p-0 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                  title={t('common.action_buttons.delete')}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  <span className="sr-only">{t('common.action_buttons.delete')}</span>
+                                </Button>
+                              </div>
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CollapsibleContent>
             </Collapsible>
           </Card>
@@ -695,17 +719,19 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
       </div>
 
       {filteredServices.length === 0 && (
-        <div className="text-center py-12">
-          <Tag className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium mb-2">{t('services.noServices')}</h3>
-          <p className="text-muted-foreground mb-4">{t('services.noServicesDescription')}</p>
-          {canManageServices && (
-            <Button onClick={() => { resetForm(); setIsModalOpen(true); }}>
-              <Plus className="h-4 w-4 mr-2" />
-              {t('services.addFirst')}
-            </Button>
-          )}
-        </div>
+        <Card className="card-enhanced">
+          <CardContent className="text-center py-12">
+            <Tag className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+            <h3 className="text-base font-semibold mb-1">{t('services.noServices')}</h3>
+            <p className="text-sm text-muted-foreground mb-4">{t('services.noServicesDescription')}</p>
+            {canManageServices && (
+              <Button onClick={() => { resetForm(); setIsModalOpen(true); }} size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                {t('services.addFirst')}
+              </Button>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Delete Confirmation Dialog - Team Chat Style */}
@@ -714,8 +740,8 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
         onOpenChange={setDeleteDialogOpen}
         title={t('services.confirm_delete_title', 'Delete Service?')}
         description={t('services.confirmDelete', 'Are you sure you want to delete this service? This action cannot be undone.')}
-        confirmText={t('common.delete', 'Delete')}
-        cancelText={t('common.cancel', 'Cancel')}
+        confirmText={t('common.action_buttons.delete', 'Delete')}
+        cancelText={t('common.action_buttons.cancel', 'Cancel')}
         onConfirm={confirmDeleteService}
         variant="destructive"
       />

@@ -14,48 +14,144 @@ interface ReportFiltersProps {
   onFiltersChange: (filters: ReportsFilters) => void;
 }
 
+type DateRangeType = 'today' | 'this_week' | 'last_week' | 'last_30_days' | 'last_90_days' | 'this_year' | 'custom';
+
 export const ReportFilters: React.FC<ReportFiltersProps> = ({
   filters,
   onFiltersChange
 }) => {
   const { t } = useTranslation();
 
-  // Function to detect if a quick range is currently active
-  const isActiveRange = (days: number): boolean => {
-    const diffTime = filters.endDate.getTime() - filters.startDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  // Helper function to get week dates (Monday to Sunday)
+  const getWeekDates = (date: Date) => {
+    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-    // Check if end date is today (within 24 hours tolerance)
-    const now = new Date();
-    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    const isEndToday = Math.abs(filters.endDate.getTime() - endOfToday.getTime()) < 86400000;
+    // Calculate days to Monday
+    const daysToMonday = day === 0 ? -6 : 1 - day;
 
-    return diffDays === days && isEndToday;
+    const monday = new Date(current);
+    monday.setDate(current.getDate() + daysToMonday);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    return { monday, sunday };
   };
 
-  const quickDateRanges = [
+  // Function to detect if a specific date range is active
+  const isActiveRange = (rangeType: DateRangeType): boolean => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const filterStart = new Date(filters.startDate.getFullYear(), filters.startDate.getMonth(), filters.startDate.getDate());
+    const filterEnd = new Date(filters.endDate.getFullYear(), filters.endDate.getMonth(), filters.endDate.getDate());
+
+    switch (rangeType) {
+      case 'today': {
+        return filterStart.getTime() === today.getTime() && filterEnd.getTime() === today.getTime();
+      }
+      case 'this_week': {
+        const { monday, sunday } = getWeekDates(now);
+        const mondayTime = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()).getTime();
+        const sundayTime = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate()).getTime();
+        return filterStart.getTime() === mondayTime && filterEnd.getTime() === sundayTime;
+      }
+      case 'last_week': {
+        const lastWeekDate = new Date(now);
+        lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+        const { monday, sunday } = getWeekDates(lastWeekDate);
+        const mondayTime = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()).getTime();
+        const sundayTime = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate()).getTime();
+        return filterStart.getTime() === mondayTime && filterEnd.getTime() === sundayTime;
+      }
+      case 'last_30_days': {
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - 30);
+        return filterStart.getTime() === startDate.getTime() && filterEnd.getTime() === today.getTime();
+      }
+      case 'last_90_days': {
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - 90);
+        return filterStart.getTime() === startDate.getTime() && filterEnd.getTime() === today.getTime();
+      }
+      case 'this_year': {
+        const yearStart = new Date(now.getFullYear(), 0, 1);
+        return filterStart.getTime() === yearStart.getTime() && filterEnd.getTime() === today.getTime();
+      }
+      default:
+        return false;
+    }
+  };
+
+  const quickDateRanges: Array<{ label: string; value: DateRangeType }> = [
     {
-      label: t('reports.filters.last_7_days'),
-      value: 7,
+      label: 'Today',
+      value: 'today',
     },
     {
-      label: t('reports.filters.last_30_days'),
-      value: 30,
+      label: 'This Week',
+      value: 'this_week',
     },
     {
-      label: t('reports.filters.last_90_days'),
-      value: 90,
+      label: 'Last Week',
+      value: 'last_week',
     },
     {
-      label: t('reports.filters.this_year'),
-      value: 365,
+      label: 'Last 30 Days',
+      value: 'last_30_days',
+    },
+    {
+      label: 'Last 90 Days',
+      value: 'last_90_days',
+    },
+    {
+      label: 'This Year',
+      value: 'this_year',
     }
   ];
 
-  const handleQuickDateRange = (days: number) => {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - days);
+  const handleQuickDateRange = (rangeType: DateRangeType) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let startDate: Date;
+    let endDate: Date;
+
+    switch (rangeType) {
+      case 'today':
+        startDate = new Date(today);
+        endDate = new Date(today);
+        break;
+      case 'this_week': {
+        const { monday, sunday } = getWeekDates(now);
+        startDate = monday;
+        endDate = sunday;
+        break;
+      }
+      case 'last_week': {
+        const lastWeekDate = new Date(now);
+        lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+        const { monday, sunday } = getWeekDates(lastWeekDate);
+        startDate = monday;
+        endDate = sunday;
+        break;
+      }
+      case 'last_30_days':
+        endDate = new Date(today);
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 30);
+        break;
+      case 'last_90_days':
+        endDate = new Date(today);
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 90);
+        break;
+      case 'this_year':
+        endDate = new Date(today);
+        startDate = new Date(now.getFullYear(), 0, 1);
+        break;
+      default:
+        return;
+    }
 
     onFiltersChange({
       ...filters,
@@ -65,14 +161,13 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   };
 
   const clearFilters = () => {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 30);
+    const now = new Date();
+    const { monday, sunday } = getWeekDates(now);
 
     onFiltersChange({
       ...filters,
-      startDate,
-      endDate,
+      startDate: monday,
+      endDate: sunday,
       orderType: 'all',
       status: 'all'
       // dealerId is now controlled by global filter, don't reset it
