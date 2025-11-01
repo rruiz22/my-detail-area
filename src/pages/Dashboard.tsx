@@ -11,7 +11,6 @@ import { AlertTriangle, Clock, MessageCircle, Plus, Settings, TrendingUp, Users,
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import * as logger from '@/utils/logger';
-import { TestSMSButton } from '@/components/testing/TestSMSButton';
 
 export default function Dashboard() {
   logger.dev('🟢 Dashboard component is RENDERING');
@@ -166,9 +165,6 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-
-        {/* 🧪 TESTING: SMS Button (Remover después de probar) */}
-        <TestSMSButton />
     </div>
   );
 }
