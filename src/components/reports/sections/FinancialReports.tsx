@@ -3,14 +3,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  DollarSign, 
-  TrendingUp, 
+import {
+  DollarSign,
+  TrendingUp,
   TrendingDown,
   Target,
-  BarChart3
+  BarChart3,
+  PieChart,
+  ArrowUpRight,
+  ArrowDownRight,
+  Award
 } from 'lucide-react';
-import { 
+import {
   ResponsiveContainer,
   LineChart,
   Line,
@@ -45,14 +49,23 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
     }).format(amount);
   };
 
+  const formatCompactCurrency = (amount: number) => {
+    if (amount >= 1000000) {
+      return `$${(amount / 1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+      return `$${(amount / 1000).toFixed(1)}K`;
+    }
+    return formatCurrency(amount);
+  };
+
   const CustomTooltip = ({ active, payload, label }: ChartTooltipProps) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border border-border rounded-lg shadow-lg p-3">
-          <p className="font-medium text-foreground">{`${t('reports.period')}: ${label}`}</p>
+        <div className="bg-background border-2 rounded-lg shadow-lg p-4">
+          <p className="font-semibold text-foreground mb-2">{label}</p>
           {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm">
-              {`${entry.name}: ${entry.name.includes('Revenue') ? formatCurrency(entry.value) : entry.value}`}
+            <p key={index} style={{ color: entry.color }} className="text-sm font-medium">
+              {`${entry.name}: ${entry.name.includes('Revenue') ? formatCurrency(Number(entry.value)) : entry.value}`}
             </p>
           ))}
         </div>
@@ -69,56 +82,164 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   })) || [];
 
   const topServicesData = revenueData?.top_services || [];
+  const growthRate = revenueData?.growth_rate || 0;
+  const isPositiveGrowth = growthRate >= 0;
 
   return (
     <div className="space-y-6">
+      {/* Executive Financial Summary */}
+      <Card className="border-2">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">Financial Performance Overview</CardTitle>
+              <CardDescription className="mt-1">
+                Revenue insights and financial metrics
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 border rounded-lg">
+              <div className={`p-2 rounded-lg ${isPositiveGrowth ? 'border border-green-200' : 'border border-red-200'}`}>
+                {isPositiveGrowth ? (
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                ) : (
+                  <TrendingDown className="h-5 w-5 text-red-600" />
+                )}
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">Growth Rate</div>
+                <div className={`text-2xl font-bold ${isPositiveGrowth ? 'text-green-600' : 'text-red-600'}`}>
+                  {isPositiveGrowth ? '+' : ''}{growthRate.toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 border rounded-lg space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="text-2xl font-bold">{formatCompactCurrency(revenueData?.total_revenue || 0)}</div>
+              <div className="text-xs text-muted-foreground">period total</div>
+            </div>
+            <div className="p-4 border rounded-lg space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Avg per Period</span>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="text-2xl font-bold">{formatCompactCurrency(revenueData?.avg_revenue_per_period || 0)}</div>
+              <div className="text-xs text-muted-foreground">average performance</div>
+            </div>
+            <div className="p-4 border rounded-lg space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Top Services</span>
+                <Award className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="text-2xl font-bold">{topServicesData.length}</div>
+              <div className="text-xs text-muted-foreground">revenue generators</div>
+            </div>
+            <div className="p-4 border rounded-lg space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Growth Trend</span>
+                {isPositiveGrowth ? (
+                  <ArrowUpRight className="h-4 w-4 text-green-600" />
+                ) : (
+                  <ArrowDownRight className="h-4 w-4 text-red-600" />
+                )}
+              </div>
+              <div className={`text-2xl font-bold ${isPositiveGrowth ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositiveGrowth ? '+' : ''}{growthRate.toFixed(1)}%
+              </div>
+              <div className="text-xs text-muted-foreground">vs previous period</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Key Financial Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          title={t('reports.metrics.total_revenue')}
-          value={formatCurrency(revenueData?.total_revenue || 0)}
-          change={revenueData?.growth_rate}
-          changeLabel={t('reports.metrics.growth_rate')}
-          icon={<DollarSign className="h-4 w-4" />}
-          loading={isLoading}
-        />
-        <MetricCard
-          title={t('reports.metrics.avg_revenue_per_period')}
-          value={formatCurrency(revenueData?.avg_revenue_per_period || 0)}
-          icon={<TrendingUp className="h-4 w-4" />}
-          loading={isLoading}
-        />
-        <MetricCard
-          title={t('reports.metrics.revenue_growth')}
-          value={`${revenueData?.growth_rate || 0}%`}
-          icon={revenueData?.growth_rate && revenueData.growth_rate >= 0 ? 
-            <TrendingUp className="h-4 w-4" /> : 
-            <TrendingDown className="h-4 w-4" />
-          }
-          loading={isLoading}
-        />
-        <MetricCard
-          title={t('reports.metrics.top_services_count')}
-          value={topServicesData.length}
-          icon={<Target className="h-4 w-4" />}
-          loading={isLoading}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription className="text-xs flex items-center gap-2">
+              <DollarSign className="h-3.5 w-3.5" />
+              Total Revenue
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold">{formatCurrency(revenueData?.total_revenue || 0)}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-sm">
+              {isPositiveGrowth ? (
+                <>
+                  <div className="flex items-center gap-1 text-green-600">
+                    <ArrowUpRight className="h-4 w-4" />
+                    <span className="font-semibold">+{growthRate.toFixed(1)}%</span>
+                  </div>
+                  <span className="text-muted-foreground">vs previous period</span>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1 text-red-600">
+                    <ArrowDownRight className="h-4 w-4" />
+                    <span className="font-semibold">{growthRate.toFixed(1)}%</span>
+                  </div>
+                  <span className="text-muted-foreground">vs previous period</span>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription className="text-xs flex items-center gap-2">
+              <BarChart3 className="h-3.5 w-3.5" />
+              Average per Period
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold">{formatCurrency(revenueData?.avg_revenue_per_period || 0)}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-sm">
+              <Target className="h-4 w-4 text-blue-600" />
+              <span className="text-muted-foreground">Consistent performance</span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardDescription className="text-xs flex items-center gap-2">
+              <Award className="h-3.5 w-3.5" />
+              Top Service Revenue
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold">
+              {topServicesData.length > 0 ? formatCurrency(topServicesData[0].revenue) : '$0'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-sm">
+              <PieChart className="h-4 w-4 text-amber-600" />
+              <span className="text-muted-foreground">
+                {topServicesData.length > 0 ? topServicesData[0].name : 'No data'}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Revenue Analysis Charts */}
       <Tabs defaultValue="trends" className="space-y-4">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="trends">{t('reports.tabs.revenue_trends')}</TabsTrigger>
-          <TabsTrigger value="services">{t('reports.tabs.top_services')}</TabsTrigger>
-          <TabsTrigger value="analysis">{t('reports.tabs.detailed_analysis')}</TabsTrigger>
+          <TabsTrigger value="trends">Revenue Trends</TabsTrigger>
+          <TabsTrigger value="services">Top Services</TabsTrigger>
+          <TabsTrigger value="analysis">Detailed Analysis</TabsTrigger>
         </TabsList>
 
         <TabsContent value="trends" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>{t('reports.charts.revenue_trends')}</CardTitle>
+              <CardTitle>Revenue Performance Over Time</CardTitle>
               <CardDescription>
-                {t('reports.charts.monthly_revenue_performance')}
+                Monthly revenue trends with order volume correlation
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -127,22 +248,22 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                   <div className="text-muted-foreground">{t('common.loading')}</div>
                 </div>
               ) : revenueChartData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={revenueChartData}>
                     <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis 
-                      dataKey="period" 
+                    <XAxis
+                      dataKey="period"
                       className="text-xs text-muted-foreground"
                       tick={{ fontSize: 12 }}
                     />
-                    <YAxis 
+                    <YAxis
                       yAxisId="revenue"
                       orientation="left"
                       className="text-xs text-muted-foreground"
                       tick={{ fontSize: 12 }}
-                      tickFormatter={formatCurrency}
+                      tickFormatter={formatCompactCurrency}
                     />
-                    <YAxis 
+                    <YAxis
                       yAxisId="orders"
                       orientation="right"
                       className="text-xs text-muted-foreground"
@@ -155,24 +276,25 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                       dataKey="revenue"
                       stroke="hsl(var(--primary))"
                       fill="hsl(var(--primary))"
-                      fillOpacity={0.3}
+                      fillOpacity={0.2}
                       strokeWidth={3}
-                      name={t('reports.charts.revenue')}
+                      name="Revenue"
                     />
                     <Line
                       yAxisId="orders"
                       type="monotone"
                       dataKey="orders"
-                      stroke="hsl(var(--secondary))"
+                      stroke="hsl(var(--chart-2))"
                       strokeWidth={2}
-                      dot={{ fill: "hsl(var(--secondary))", r: 4 }}
-                      name={t('reports.charts.orders')}
+                      dot={{ fill: "hsl(var(--chart-2))", r: 4 }}
+                      name="Orders"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  {t('reports.no_data')}
+                <div className="text-center py-12 text-muted-foreground">
+                  <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-20" />
+                  <p>No revenue data available</p>
                 </div>
               )}
             </CardContent>
@@ -183,9 +305,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>{t('reports.charts.top_services_by_revenue')}</CardTitle>
+                <CardTitle>Top Revenue Generators</CardTitle>
                 <CardDescription>
-                  {t('reports.charts.highest_revenue_generating_services')}
+                  Services ranked by total revenue contribution
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -194,25 +316,26 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     <div className="text-muted-foreground">{t('common.loading')}</div>
                   </div>
                 ) : topServicesData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer width="100%" height={320}>
                     <BarChart data={topServicesData} layout="horizontal">
                       <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                      <XAxis 
+                      <XAxis
                         type="number"
                         className="text-xs text-muted-foreground"
                         tick={{ fontSize: 12 }}
-                        tickFormatter={formatCurrency}
+                        tickFormatter={formatCompactCurrency}
                       />
-                      <YAxis 
+                      <YAxis
                         type="category"
                         dataKey="name"
                         className="text-xs text-muted-foreground"
                         tick={{ fontSize: 12 }}
-                        width={100}
+                        width={120}
                       />
-                      <Tooltip 
-                        formatter={(value: number) => [formatCurrency(value), t('reports.charts.revenue')]}
+                      <Tooltip
+                        formatter={(value: number) => [formatCurrency(value), 'Revenue']}
                         labelStyle={{ color: 'hsl(var(--foreground))' }}
+                        contentStyle={{ border: '2px solid hsl(var(--border))' }}
                       />
                       <Bar
                         dataKey="revenue"
@@ -222,8 +345,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    {t('reports.no_data')}
+                  <div className="text-center py-12 text-muted-foreground">
+                    <PieChart className="h-12 w-12 mx-auto mb-3 opacity-20" />
+                    <p>No service data available</p>
                   </div>
                 )}
               </CardContent>
@@ -231,16 +355,16 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
             <Card>
               <CardHeader>
-                <CardTitle>{t('reports.charts.service_performance')}</CardTitle>
+                <CardTitle>Revenue Distribution</CardTitle>
                 <CardDescription>
-                  {t('reports.charts.service_revenue_breakdown')}
+                  Detailed breakdown of service contributions
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isLoading ? (
                   <div className="space-y-3">
                     {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                      <div key={i} className="flex justify-between items-center p-4 border rounded-lg">
                         <div className="h-4 w-32 bg-muted rounded animate-pulse" />
                         <div className="h-4 w-20 bg-muted rounded animate-pulse" />
                       </div>
@@ -249,17 +373,21 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                 ) : topServicesData.length > 0 ? (
                   <>
                     {topServicesData.slice(0, 5).map((service, index) => {
-                      const percentage = revenueData?.total_revenue 
-                        ? (service.revenue / revenueData.total_revenue) * 100 
+                      const percentage = revenueData?.total_revenue
+                        ? (service.revenue / revenueData.total_revenue) * 100
                         : 0;
                       return (
-                        <div key={index} className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-sm">{service.name}</span>
-                            <Badge variant="outline">{formatCurrency(service.revenue)}</Badge>
-                          </div>
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>{percentage.toFixed(1)}% of total revenue</span>
+                        <div key={index} className="p-4 border rounded-lg hover:border-primary/50 transition-colors space-y-3">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <div className="font-semibold text-sm mb-1">{service.name}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {percentage.toFixed(1)}% of total revenue
+                              </div>
+                            </div>
+                            <Badge variant="outline" className="ml-2 font-mono">
+                              {formatCurrency(service.revenue)}
+                            </Badge>
                           </div>
                           <Progress value={percentage} className="h-2" />
                         </div>
@@ -267,8 +395,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     })}
                   </>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    {t('reports.no_data')}
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Award className="h-12 w-12 mx-auto mb-3 opacity-20" />
+                    <p>No service data available</p>
                   </div>
                 )}
               </CardContent>
@@ -279,9 +408,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
         <TabsContent value="analysis" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>{t('reports.charts.average_order_value_trend')}</CardTitle>
+              <CardTitle>Average Order Value Analysis</CardTitle>
               <CardDescription>
-                {t('reports.charts.aov_analysis_over_time')}
+                Track changes in transaction values over time
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -290,18 +419,18 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                   <div className="text-muted-foreground">{t('common.loading')}</div>
                 </div>
               ) : revenueChartData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={320}>
                   <LineChart data={revenueChartData}>
                     <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis 
-                      dataKey="period" 
+                    <XAxis
+                      dataKey="period"
                       className="text-xs text-muted-foreground"
                       tick={{ fontSize: 12 }}
                     />
-                    <YAxis 
+                    <YAxis
                       className="text-xs text-muted-foreground"
                       tick={{ fontSize: 12 }}
-                      tickFormatter={formatCurrency}
+                      tickFormatter={formatCompactCurrency}
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Line
@@ -310,13 +439,14 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                       stroke="hsl(var(--primary))"
                       strokeWidth={3}
                       dot={{ fill: "hsl(var(--primary))", r: 6 }}
-                      name={t('reports.charts.avg_order_value')}
+                      name="Avg Order Value"
                     />
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  {t('reports.no_data')}
+                <div className="text-center py-12 text-muted-foreground">
+                  <Target className="h-12 w-12 mx-auto mb-3 opacity-20" />
+                  <p>No analysis data available</p>
                 </div>
               )}
             </CardContent>

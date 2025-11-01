@@ -849,7 +849,12 @@
     "minutes": "minutos",
     "service": "serviço",
     "services": "serviços",
-    "confirm_delete_title": "Excluir Serviço?"
+    "status": "Status",
+    "confirm_delete_title": "Excluir Serviço?",
+    "categoryRequired": "A seleção de categoria é obrigatória",
+    "noCategoriesAvailable": "Nenhuma categoria disponível",
+    "noCategoriesFound": "Nenhuma categoria encontrada",
+    "noCategoriesWarning": "Nenhuma categoria de serviço disponível. Entre em contato com o administrador do sistema."
   },
   "vin_scanner_errors": {
     "vin_input_placeholder": "Digite VIN de 17 caracteres ou escaneie com câmera"
@@ -4629,6 +4634,12 @@
     "not_supported": "Notificações não são suportadas neste navegador",
     "error": "Erro ao gerenciar notificações",
     "new_message": "Nova notificação",
+    "sms_sent": "Notificações SMS Enviadas",
+    "sms_sent_description": "{{count}} notificação(ões) SMS enviada(s) com sucesso",
+    "sms_sent_to_users": "SMS enviado para {{count}} usuário(s)",
+    "sms_error": "Erro ao enviar notificações SMS",
+    "sms_partial_success": "SMS: {{sent}} enviado(s), {{failed}} falharam",
+    "sms_all_failed": "Falha ao enviar SMS ({{count}} erros)",
     "granular_settings": "Notificações por Evento",
     "event": "Evento",
     "category": "Categoria",

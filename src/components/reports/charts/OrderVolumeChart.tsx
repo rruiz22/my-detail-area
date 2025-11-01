@@ -11,7 +11,7 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import type { OrderAnalytics } from '@/hooks/useReportsData';
 import type { ChartTooltipProps, FormattedChartDataPoint } from '@/types/charts';
@@ -21,14 +21,14 @@ interface OrderVolumeChartProps {
   type?: 'line' | 'bar';
 }
 
-export const OrderVolumeChart: React.FC<OrderVolumeChartProps> = ({ 
-  data, 
-  type = 'line' 
+export const OrderVolumeChart: React.FC<OrderVolumeChartProps> = ({
+  data,
+  type = 'line'
 }) => {
   const { t } = useTranslation();
 
   const chartData = data.daily_data.map((item) => ({
-    date: format(new Date(item.date), 'MMM dd'),
+    date: format(parseISO(item.date), 'MMM dd'),
     orders: item.orders,
     revenue: item.revenue
   }));
@@ -54,18 +54,18 @@ export const OrderVolumeChart: React.FC<OrderVolumeChartProps> = ({
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-          <XAxis 
-            dataKey="date" 
+          <XAxis
+            dataKey="date"
             className="text-xs text-muted-foreground"
             tick={{ fontSize: 12 }}
           />
-          <YAxis 
+          <YAxis
             yAxisId="orders"
             orientation="left"
             className="text-xs text-muted-foreground"
             tick={{ fontSize: 12 }}
           />
-          <YAxis 
+          <YAxis
             yAxisId="revenue"
             orientation="right"
             className="text-xs text-muted-foreground"
@@ -96,18 +96,18 @@ export const OrderVolumeChart: React.FC<OrderVolumeChartProps> = ({
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-        <XAxis 
-          dataKey="date" 
+        <XAxis
+          dataKey="date"
           className="text-xs text-muted-foreground"
           tick={{ fontSize: 12 }}
         />
-        <YAxis 
+        <YAxis
           yAxisId="orders"
           orientation="left"
           className="text-xs text-muted-foreground"
           tick={{ fontSize: 12 }}
         />
-        <YAxis 
+        <YAxis
           yAxisId="revenue"
           orientation="right"
           className="text-xs text-muted-foreground"

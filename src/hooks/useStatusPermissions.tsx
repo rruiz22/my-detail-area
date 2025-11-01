@@ -1,6 +1,11 @@
 import { AppModule, usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { useCallback } from 'react';
+import { pushNotificationHelper } from '@/services/pushNotificationHelper';
+import { orderSMSNotificationService, OrderModule } from '@/services/orderSMSNotificationService';
+import { dev, error as logError } from '@/utils/logger';
+import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 interface UseStatusPermissionsReturn {
   canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;
@@ -10,6 +15,8 @@ interface UseStatusPermissionsReturn {
 
 export function useStatusPermissions(): UseStatusPermissionsReturn {
   const { enhancedUser, hasModulePermission, loading } = usePermissions();
+  const { toast } = useToast();
+  const { t } = useTranslation();
 
   const canUpdateStatus = useCallback(async (
     dealerId: string,
@@ -89,6 +96,16 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
     dealerId: string
   ): Promise<boolean> => {
     try {
+      // Get current order before updating (to get order_number, old_status, type, and vehicle info)
+      const { data: currentOrder } = await supabase
+        .from('orders')
+        .select('order_number, status, customer_name, order_type, vehicle_year, vehicle_make, vehicle_model, short_link')
+        .eq('id', orderId)
+        .single();
+
+      const oldStatus = currentOrder?.status;
+
+      // Update order status
       const { error } = await supabase
         .from('orders')
         .update({
@@ -102,12 +119,73 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         return false;
       }
 
+      // Send notifications after successful update
+      if (currentOrder?.order_number && enhancedUser) {
+        const userName = enhancedUser.first_name
+          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+          : enhancedUser.email || 'Someone';
+
+        // Send push notifications to followers (non-blocking)
+        pushNotificationHelper
+          .notifyOrderStatusChange(
+            orderId,
+            currentOrder.order_number,
+            newStatus,
+            userName
+          )
+          .catch((notifError) => {
+            logError('❌ Push notification failed (non-critical):', notifError);
+          });
+
+        // Determine module based on order type
+        const moduleMap: Record<string, OrderModule> = {
+          'sales': 'sales_orders',
+          'service': 'service_orders',
+          'recon': 'recon_orders',
+          'carwash': 'car_wash'
+        };
+        const module = moduleMap[currentOrder.order_type || 'sales'] || 'sales_orders';
+
+        // Build vehicle info string
+        const vehicleInfo = currentOrder.vehicle_year && currentOrder.vehicle_make && currentOrder.vehicle_model
+          ? `${currentOrder.vehicle_year} ${currentOrder.vehicle_make} ${currentOrder.vehicle_model}`
+          : undefined;
+
+        // Use mda.to short link if available, otherwise fallback
+        const shortLink = currentOrder.short_link || `https://app.mydetailarea.com/sales/${orderId}`;
+
+        // Send SMS notifications ONLY when status changes to 'completed' (enterprise requirement)
+        if (newStatus === 'completed') {
+          console.log('📱 [SMS] Status changed to completed - sending SMS notification');
+
+          try {
+            const smsResult = await orderSMSNotificationService.notifyStatusChange(
+              orderId,
+              parseInt(dealerId),
+              module,
+              currentOrder.order_number,
+              newStatus,
+              oldStatus || '',
+              vehicleInfo,
+              shortLink,
+              enhancedUser.id
+            );
+            console.log('✅ [SMS] SMS notification result:', smsResult);
+          } catch (smsError) {
+            console.error('❌ [SMS] Error sending notification:', smsError);
+            logError('⚠️ SMS notification error (non-critical):', smsError);
+          }
+        } else {
+          console.log(`ℹ️ [SMS] Status changed to '${newStatus}' - SMS only sent for 'completed' status`);
+        }
+      }
+
       return true;
     } catch (error) {
       console.error('Error in updateOrderStatus:', error);
       return false;
     }
-  }, []);
+  }, [enhancedUser, toast, t]);
 
   return {
     canUpdateStatus,

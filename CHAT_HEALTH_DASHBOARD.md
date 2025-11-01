@@ -432,4 +432,3 @@ Monitoreo:
 ---
 
 *Este dashboard debe actualizarse cada vez que se realice un cambio significativo al módulo de chat.*
-

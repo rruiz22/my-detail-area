@@ -1,7 +1,21 @@
 /**
- * Order SMS Service
+ * Order SMS Service (DEPRECATED)
  *
- * Servicio para enviar notificaciones SMS a followers de órdenes
+ * @deprecated This service is deprecated. Use orderSMSNotificationService instead.
+ *
+ * ⚠️ DEPRECATION NOTICE:
+ * This service is being phased out in favor of the enterprise SMS notification system.
+ * Please migrate to orderSMSNotificationService which provides:
+ * - ✅ Permission-based notifications (Custom Roles)
+ * - ✅ Granular event preferences
+ * - ✅ Rate limiting
+ * - ✅ Quiet hours
+ * - ✅ Auto-exclusion of trigger user
+ * - ✅ Complete audit trail
+ *
+ * Migration Guide: See docs/SMS_NOTIFICATION_SERVICE.md
+ *
+ * Old System: Servicio para enviar notificaciones SMS a followers de órdenes
  * basado en el nivel de notificación y tipo de evento
  */
 
