@@ -137,9 +137,9 @@ serve(async (req: Request) => {
     }
 
     if (!notifications || notifications.length === 0) {
-      return new Response(JSON.stringify({ 
-        success: true, 
-        message: 'No notifications to process' 
+      return new Response(JSON.stringify({
+        success: true,
+        message: 'No notifications to process'
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
@@ -182,8 +182,8 @@ async function processNotification(notification: NotificationQueueItem): Promise
     // Mark as processing
     await supabase
       .from('notification_queue')
-      .update({ 
-        status: 'processing', 
+      .update({
+        status: 'processing',
         last_attempt_at: new Date().toISOString(),
         attempts: notification.attempts + 1
       })
@@ -198,7 +198,7 @@ async function processNotification(notification: NotificationQueueItem): Promise
 
     // Process each channel
     const channelResults = await Promise.all(
-      notification.channels.map(channel => 
+      notification.channels.map(channel =>
         processChannel(channel, notification, userPrefs, dealerConfig, template)
       )
     );
@@ -207,13 +207,13 @@ async function processNotification(notification: NotificationQueueItem): Promise
     const hasFailures = channelResults.some(r => !r.success);
 
     // Update notification status
-    const finalStatus = allSuccessful ? 'completed' : 
-                       hasFailures && notification.attempts >= notification.max_attempts ? 'failed' : 
+    const finalStatus = allSuccessful ? 'completed' :
+                       hasFailures && notification.attempts >= notification.max_attempts ? 'failed' :
                        'queued'; // Retry later
 
     await supabase
       .from('notification_queue')
-      .update({ 
+      .update({
         status: finalStatus,
         processed_at: allSuccessful ? new Date().toISOString() : null,
         error_message: hasFailures ? channelResults.filter(r => !r.success).map(r => r.error).join('; ') : null
@@ -222,7 +222,7 @@ async function processNotification(notification: NotificationQueueItem): Promise
 
     // Track analytics for each channel
     await Promise.all(
-      channelResults.map(result => 
+      channelResults.map(result =>
         trackAnalytics({
           dealer_id: notification.dealer_id,
           user_id: notification.user_id,
@@ -235,7 +235,7 @@ async function processNotification(notification: NotificationQueueItem): Promise
           entity_id: notification.entity_id,
           template_id: notification.template_id,
           response_time_ms: result.responseTime,
-          metadata: { 
+          metadata: {
             success: result.success,
             error: result.error,
             priority: notification.priority
@@ -282,17 +282,17 @@ async function processChannel(
   try {
     // Check if channel is enabled
     if (!isChannelEnabled(channel, userPrefs, dealerConfig)) {
-      return { 
-        success: false, 
-        channel, 
+      return {
+        success: false,
+        channel,
         error: 'Channel disabled in preferences or config',
         responseTime: Date.now() - startTime
       };
     }
 
     // Get content from template or use notification data
-    const content = template ? 
-      renderTemplate(template, channel, notification.notification_data) : 
+    const content = template ?
+      renderTemplate(template, channel, notification.notification_data) :
       notification.notification_data;
 
     let result: boolean = false;
@@ -376,13 +376,14 @@ async function sendEmail(notification: NotificationQueueItem, content: Notificat
       return false;
     }
 
-    // Call existing email function  
-    const { error } = await supabase.functions.invoke('send-order-email', {
+    // Call email function (uses Sendgrid with Supabase Secrets)
+    const { error } = await supabase.functions.invoke('send-email', {
       body: {
         to: profile.email,
         subject: content.subject || 'Notification',
-        html: content.html || content.content || JSON.stringify(content),
-        dealerId: notification.dealer_id
+        text: content.content || content.message || '',
+        html: content.html,
+        from_name: content.from_name
       }
     });
 
@@ -519,7 +520,7 @@ function renderTemplate(template: NotificationTemplate, channel: string, data: N
     }
 
     const channelTemplate = template.channels[channel];
-    
+
     // Simple template interpolation
     const interpolate = (text: string, data: NotificationData): string => {
       return text.replace(/\{\{(\w+)\}\}/g, (match, key) => {

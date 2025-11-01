@@ -13,6 +13,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   personalInformationSchema,
   formatPhoneNumber,
+  phoneToE164,
+  phoneFromE164,
   type PersonalInformationInput
 } from '@/schemas/profileSchemas';
 import { z } from 'zod';
@@ -41,7 +43,8 @@ export function PersonalInformationTab() {
       setFormData({
         first_name: user.first_name || '',
         last_name: user.last_name || '',
-        phone: preferences?.phone || '',
+        // Convert from E.164 format (+15551234567) to display format (555) 123-4567
+        phone: phoneFromE164(preferences?.phone || ''),
         bio: preferences?.bio || '',
         job_title: preferences?.job_title || '',
         department: preferences?.department || '',
@@ -103,7 +106,8 @@ export function PersonalInformationTab() {
 
       // Build preferences update object with ALL fields (including empty ones)
       const preferencesUpdates: Record<string, any> = {
-        phone: formData.phone || '',
+        // Convert phone from display format (555) 123-4567 to E.164 format +15551234567
+        phone: formData.phone ? phoneToE164(formData.phone) : '',
         bio: formData.bio || '',
         job_title: formData.job_title || '',
         department: formData.department || '',
@@ -224,7 +228,7 @@ export function PersonalInformationTab() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">{t('profile.phone', 'Phone')}</Label>
+            <Label htmlFor="phone">{t('profile.phone', 'Phone (SMS Notifications)')}</Label>
             <div className="relative">
               <Input
                 id="phone"
@@ -232,7 +236,8 @@ export function PersonalInformationTab() {
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 onBlur={() => handleBlur('phone')}
-                placeholder={t('profile.enter_phone', 'Enter your phone number')}
+                placeholder="(555) 123-4567"
+                maxLength={14}
                 className={errors.phone && touched.phone ? 'border-red-500' : ''}
               />
               {!errors.phone && touched.phone && formData.phone && (
@@ -243,7 +248,7 @@ export function PersonalInformationTab() {
               <p className="text-sm text-red-500">{errors.phone}</p>
             )}
             <p className="text-sm text-muted-foreground">
-              {t('profile.phone_format_hint', 'Format: (555) 123-4567 or +1 555 123 4567')}
+              📱 Enter 10 digits. System automatically adds +1 for SMS notifications.
             </p>
           </div>
         </CardContent>

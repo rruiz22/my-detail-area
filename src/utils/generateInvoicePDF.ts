@@ -1,30 +1,17 @@
 // =====================================================
 // GENERATE INVOICE PDF
 // Created: 2025-10-23
-// Description: Generate professional PDF from invoice data
+// Updated: 2025-10-31
+// Description: Generate professional PDF from invoice data with 7-column table
 // =====================================================
 
 import jsPDF from 'jspdf';
-import type { Invoice } from '@/types/invoices';
+import autoTable from 'jspdf-autotable';
+import type { InvoiceWithDetails } from '@/types/invoices';
 
-interface InvoiceItem {
-  id: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  totalAmount: number;
-  discountAmount?: number;
-}
-
-interface GeneratePDFOptions {
-  invoice: Invoice;
-  items?: InvoiceItem[];
-  dealershipName?: string;
-  dealershipAddress?: string;
-  dealershipEmail?: string;
-  dealershipPhone?: string;
-  dealershipLogo?: string;
-}
+// =====================================================
+// UTILITY FUNCTIONS
+// =====================================================
 
 /**
  * Format currency for PDF display
@@ -39,9 +26,30 @@ function formatCurrency(amount: number): string {
 }
 
 /**
- * Format date for PDF display
+ * Format date for PDF display (MM/DD/YYYY)
  */
 function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+}
+
+/**
+ * Format date for header (MM/DD)
+ */
+function formatShortDate(dateString: string): string {
+  const date = new Date(dateString);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${month}/${day}`;
+}
+
+/**
+ * Format long date for invoice header
+ */
+function formatLongDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -49,21 +57,21 @@ function formatDate(dateString: string): string {
   });
 }
 
-/**
- * Generate a professional invoice PDF
- * Uses jsPDF for direct PDF generation (no HTML rendering)
- */
-export async function generateInvoicePDF(options: GeneratePDFOptions): Promise<void> {
-  const {
-    invoice,
-    items = [],
-    dealershipName = 'My Detail Area',
-    dealershipAddress,
-    dealershipEmail,
-    dealershipPhone,
-  } = options;
+// =====================================================
+// PDF GENERATION
+// =====================================================
 
-  // Create PDF document (A4 size)
+/**
+ * Generate a professional invoice PDF with 7-column table
+ * Uses jsPDF + autoTable for table generation
+ */
+export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<void> {
+  // Validate invoice
+  if (!invoice || !invoice.invoiceNumber) {
+    throw new Error('Invalid invoice data');
+  }
+
+  // Create PDF document (Portrait A4)
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -71,225 +79,203 @@ export async function generateInvoicePDF(options: GeneratePDFOptions): Promise<v
   });
 
   const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 20;
-  let yPosition = margin;
+  let yPosition = 20;
 
-  // Colors (Notion-style muted palette)
+  // ===== COLORS (Notion-style muted palette) =====
   const colors = {
     primary: '#111827',      // Gray-900
     secondary: '#6b7280',    // Gray-500
     muted: '#9ca3af',        // Gray-400
     border: '#e5e7eb',       // Gray-200
-    accent: '#10b981'        // Emerald-500
+    headerBg: '#f3f4f6',     // Gray-100 (NO indigo in headers per spec)
   };
 
-  // Helper function to add text with word wrap
-  const addText = (
-    text: string,
-    x: number,
-    y: number,
-    options?: {
-      maxWidth?: number;
-      align?: 'left' | 'center' | 'right';
-      fontSize?: number;
-      fontStyle?: 'normal' | 'bold';
-      color?: string;
-    }
-  ) => {
-    const fontSize = options?.fontSize || 10;
-    const fontStyle = options?.fontStyle || 'normal';
-    const color = options?.color || colors.primary;
-    const align = options?.align || 'left';
-    const maxWidth = options?.maxWidth || pageWidth - 2 * margin;
+  // ===== HEADER SECTION (COMPACT) =====
+  const leftCol = 20;
+  const rightCol = pageWidth - 70;
 
-    doc.setFontSize(fontSize);
-    doc.setFont('helvetica', fontStyle);
-    doc.setTextColor(color);
-
-    const lines = doc.splitTextToSize(text, maxWidth);
-
-    if (align === 'center') {
-      doc.text(lines, x, y, { align: 'center' });
-    } else if (align === 'right') {
-      doc.text(lines, x, y, { align: 'right' });
-    } else {
-      doc.text(lines, x, y);
-    }
-
-    return y + (lines.length * fontSize * 0.35);
-  };
-
-  // Helper to draw horizontal line
-  const addLine = (y: number, color: string = colors.border) => {
-    doc.setDrawColor(color);
-    doc.setLineWidth(0.5);
-    doc.line(margin, y, pageWidth - margin, y);
-    return y + 5;
-  };
-
-  // ===== HEADER SECTION =====
-  doc.setFillColor(colors.primary);
-  doc.rect(0, 0, pageWidth, 40, 'F');
-
-  // Company name
-  doc.setTextColor('#ffffff');
-  doc.setFontSize(24);
+  // LEFT SIDE
+  // "Dealer Detail Service" title (16pt, bold, black)
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text(dealershipName, pageWidth / 2, 20, { align: 'center' });
+  doc.setTextColor('#000000');
+  doc.text('Dealer Detail Service', leftCol, yPosition);
 
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.text('INVOICE', pageWidth / 2, 30, { align: 'center' });
+  yPosition += 8;
 
-  yPosition = 50;
-
-  // ===== INVOICE INFO SECTION =====
-  doc.setTextColor(colors.primary);
-  doc.setFontSize(11);
+  // "Bill To:" label
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.text('Invoice Information', margin, yPosition);
-  yPosition += 7;
-
-  // Invoice details box
-  doc.setDrawColor(colors.border);
-  doc.setFillColor('#f9fafb');
-  doc.roundedRect(margin, yPosition, pageWidth - 2 * margin, 30, 2, 2, 'FD');
-
-  doc.setFontSize(9);
   doc.setTextColor(colors.secondary);
-  doc.setFont('helvetica', 'normal');
+  doc.text('Bill To:', leftCol, yPosition);
 
-  const leftCol = margin + 5;
-  const rightCol = pageWidth / 2 + 5;
-  let infoY = yPosition + 7;
-
-  // Left column
-  doc.text('Invoice Number:', leftCol, infoY);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(colors.primary);
-  doc.text(invoice.invoiceNumber, leftCol + 35, infoY);
-
-  infoY += 6;
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(colors.secondary);
-  doc.text('Issue Date:', leftCol, infoY);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(colors.primary);
-  doc.text(formatDate(invoice.issueDate), leftCol + 35, infoY);
-
-  infoY += 6;
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(colors.secondary);
-  doc.text('Due Date:', leftCol, infoY);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(colors.primary);
-  doc.text(formatDate(invoice.dueDate), leftCol + 35, infoY);
-
-  // Right column
-  infoY = yPosition + 7;
-  if (invoice.order?.customerName) {
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(colors.secondary);
-    doc.text('Customer:', rightCol, infoY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(colors.primary);
-    doc.text(invoice.order.customerName, rightCol + 25, infoY);
-    infoY += 6;
-  }
-
-  if (invoice.order?.orderNumber || invoice.order?.customOrderNumber) {
-    const orderNum = invoice.order.customOrderNumber || invoice.order.orderNumber || '';
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(colors.secondary);
-    doc.text('Order Number:', rightCol, infoY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(colors.primary);
-    doc.text(orderNum, rightCol + 25, infoY);
-    infoY += 6;
-  }
-
-  // Vehicle info if available
-  if (invoice.order?.vehicleMake) {
-    const vehicleInfo = `${invoice.order.vehicleYear || ''} ${invoice.order.vehicleMake} ${invoice.order.vehicleModel || ''}`.trim();
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(colors.secondary);
-    doc.text('Vehicle:', rightCol, infoY);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(colors.primary);
-    doc.text(vehicleInfo, rightCol + 25, infoY);
-  }
-
-  yPosition += 35;
-
-  // ===== ITEMS TABLE =====
   yPosition += 5;
-  doc.setFontSize(11);
+
+  // Dealer name (12pt, bold)
+  doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(colors.primary);
-  doc.text('Invoice Items', margin, yPosition);
-  yPosition += 7;
+  doc.text(invoice.dealership?.name || 'Bmw of Sudbury', leftCol, yPosition);
 
-  // Table header
-  doc.setFillColor('#f3f4f6');
-  doc.rect(margin, yPosition, pageWidth - 2 * margin, 8, 'F');
-
+  yPosition += 5;
   doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(colors.secondary);
+  if (invoice.dealership?.address) {
+    doc.text(invoice.dealership.address, leftCol, yPosition);
+    yPosition += 4;
+  }
+  if (invoice.dealership?.email) {
+    doc.text(`Email: ${invoice.dealership.email}`, leftCol, yPosition);
+  }
+
+  // RIGHT SIDE - Invoice number and details
+  let rightY = 20;
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor('#000000');
+  doc.text(`#${invoice.invoiceNumber}`, pageWidth - 20, rightY, { align: 'right' });
+
+  rightY += 8;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(colors.secondary);
+  doc.text('Issue Date:', rightCol, rightY);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(colors.primary);
+  doc.text(formatLongDate(invoice.issueDate), pageWidth - 20, rightY, { align: 'right' });
 
-  const descCol = margin + 2;
-  const qtyCol = pageWidth - margin - 70;
-  const priceCol = pageWidth - margin - 45;
-  const totalCol = pageWidth - margin - 20;
+  rightY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(colors.secondary);
+  doc.text('Due Date:', rightCol, rightY);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(colors.primary);
+  doc.text(formatLongDate(invoice.dueDate), pageWidth - 20, rightY, { align: 'right' });
 
-  doc.text('Description', descCol, yPosition + 5);
-  doc.text('Qty', qtyCol, yPosition + 5);
-  doc.text('Price', priceCol, yPosition + 5);
-  doc.text('Total', totalCol, yPosition + 5, { align: 'right' });
+  rightY += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(colors.secondary);
+  doc.text('Total Amount:', rightCol, rightY);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(colors.primary);
+  doc.text(formatCurrency(invoice.totalAmount), pageWidth - 20, rightY, { align: 'right' });
+
+  rightY += 5;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(colors.secondary);
+  const vehicleCount = invoice.items?.length || 0;
+  doc.text('Total Vehicles:', rightCol, rightY);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(colors.primary);
+  doc.text(vehicleCount.toString(), pageWidth - 20, rightY, { align: 'right' });
+
+  yPosition = Math.max(yPosition, rightY) + 8;
 
   yPosition += 10;
 
-  // Table rows
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(colors.primary);
+  // ===== ITEMS TABLE WITH AUTOTABLE (7 COLUMNS) =====
 
-  items.forEach((item, index) => {
-    // Check if we need a new page
-    if (yPosition > pageHeight - 60) {
-      doc.addPage();
-      yPosition = margin;
+  // Determine header for column 3 based on order type
+  const hasServiceOrders = invoice.items?.some(item => item.metadata?.order_type === 'service');
+  const poRoTagHeader = hasServiceOrders ? 'PO/RO/Tag' : 'Stock';
+
+  // Prepare table headers
+  const tableHeaders = [['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
+
+  // Prepare table data
+  const tableData = (invoice.items || []).map(item => {
+    // Date (MM/DD)
+    const date = formatShortDate(item.createdAt);
+
+    // Order number
+    const orderNumber = item.metadata?.order_number || '';
+
+    // PO/RO/Tag or Stock
+    let poRoTagStock = '';
+    if (item.metadata?.order_type === 'service') {
+      const parts = [];
+      if (item.metadata.po) parts.push(`PO: ${item.metadata.po}`);
+      if (item.metadata.ro) parts.push(`RO: ${item.metadata.ro}`);
+      if (item.metadata.tag) parts.push(`Tag: ${item.metadata.tag}`);
+      poRoTagStock = parts.join('\n');
+    } else {
+      poRoTagStock = item.metadata?.stock_number || '';
     }
 
-    const itemY = yPosition;
+    // Vehicle description
+    const vehicle = item.description || '';
 
-    // Description (wrapped if needed)
-    const descLines = doc.splitTextToSize(item.description, qtyCol - descCol - 5);
-    doc.text(descLines, descCol, itemY);
+    // VIN
+    const vin = item.metadata?.vehicle_vin || '';
 
-    // Quantity
-    doc.text(item.quantity.toString(), qtyCol, itemY);
+    // Services (service names from metadata)
+    const services = item.metadata?.service_names || '';
 
-    // Unit price
-    doc.text(formatCurrency(item.unitPrice), priceCol, itemY);
+    // Amount
+    const amount = formatCurrency(item.totalAmount);
 
-    // Total
-    doc.text(formatCurrency(item.totalAmount), totalCol, itemY, { align: 'right' });
-
-    yPosition += Math.max(6, descLines.length * 4);
-
-    // Border line
-    doc.setDrawColor(colors.border);
-    doc.setLineWidth(0.3);
-    doc.line(margin, yPosition, pageWidth - margin, yPosition);
-    yPosition += 2;
+    return [date, orderNumber, poRoTagStock, vehicle, vin, services, amount];
   });
 
-  // ===== TOTALS SECTION =====
-  yPosition += 5;
+  // Generate table using autoTable
+  autoTable(doc, {
+    head: tableHeaders,
+    body: tableData,
+    startY: yPosition,
+    theme: 'plain',
+    styles: {
+      fontSize: 8,
+      cellPadding: 2,
+      textColor: colors.primary,
+      lineColor: colors.border,
+      lineWidth: 0.1,
+    },
+    headStyles: {
+      fillColor: colors.headerBg,
+      textColor: colors.primary,
+      fontStyle: 'bold',
+      halign: 'center',
+    },
+    columnStyles: {
+      0: { cellWidth: 16, halign: 'center' },                                      // Date
+      1: { cellWidth: 22, halign: 'center' },                                      // Order
+      2: { cellWidth: 22, halign: 'left' },                                        // PO/RO/Tag or Stock
+      3: { cellWidth: 35, halign: 'left' },                                        // Vehicle
+      4: { cellWidth: 30, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
+      5: { cellWidth: 32, halign: 'left' },                                        // Services
+      6: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },                    // Amount
+    },
+    alternateRowStyles: {
+      fillColor: [249, 250, 251], // Gray-50 for zebra striping
+    },
+    showHead: 'everyPage',
+    margin: { left: 20, right: 20 },
+    didDrawPage: (data) => {
+      // Add page numbers if multi-page
+      if (doc.getNumberOfPages() > 1) {
+        doc.setFontSize(8);
+        doc.setTextColor(colors.muted);
+        doc.text(
+          `Page ${doc.getCurrentPageInfo().pageNumber} of ${doc.getNumberOfPages()}`,
+          pageWidth / 2,
+          doc.internal.pageSize.height - 10,
+          { align: 'center' }
+        );
+      }
+    }
+  });
 
-  const totalsX = pageWidth - margin - 60;
-  const valuesX = pageWidth - margin - 5;
+  // Get Y position after table
+  // @ts-ignore - autoTable adds lastAutoTable property to jsPDF instance
+  const finalY = doc.lastAutoTable?.finalY || yPosition + 50;
+  yPosition = finalY + 10;
+
+  // ===== TOTALS SECTION =====
+  const totalsX = pageWidth - 70;
+  const valuesX = pageWidth - 20;
 
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
@@ -319,8 +305,8 @@ export async function generateInvoicePDF(options: GeneratePDFOptions): Promise<v
 
   // Total line
   doc.setDrawColor(colors.primary);
-  doc.setLineWidth(1);
-  doc.line(totalsX, yPosition, pageWidth - margin, yPosition);
+  doc.setLineWidth(0.5);
+  doc.line(totalsX, yPosition, pageWidth - 20, yPosition);
   yPosition += 6;
 
   // Total amount
@@ -335,74 +321,40 @@ export async function generateInvoicePDF(options: GeneratePDFOptions): Promise<v
     yPosition += 10;
 
     doc.setFillColor('#fef3c7');
-    doc.roundedRect(margin, yPosition - 5, pageWidth - 2 * margin, 20, 2, 2, 'F');
+    doc.roundedRect(20, yPosition - 5, pageWidth - 40, 15, 2, 2, 'F');
 
     doc.setFontSize(10);
     doc.setTextColor(colors.secondary);
-    doc.text('Amount Due:', margin + 5, yPosition + 3);
+    doc.text('Amount Due:', 25, yPosition + 3);
 
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor('#78350f');
-    doc.text(formatCurrency(invoice.amountDue), pageWidth - margin - 5, yPosition + 3, { align: 'right' });
+    doc.text(formatCurrency(invoice.amountDue), pageWidth - 25, yPosition + 3, { align: 'right' });
 
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(colors.secondary);
-    doc.text(`Due by ${formatDate(invoice.dueDate)}`, margin + 5, yPosition + 10);
+    doc.text(`Due by ${formatLongDate(invoice.dueDate)}`, 25, yPosition + 9);
 
-    yPosition += 25;
+    yPosition += 20;
   }
 
-  // ===== FOOTER SECTION =====
-  yPosition = pageHeight - 40;
-
-  // Dealership info
-  if (dealershipAddress || dealershipEmail || dealershipPhone) {
+  // ===== NOTES SECTION (if any) =====
+  if (invoice.invoiceNotes) {
+    yPosition += 10;
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(colors.primary);
-    doc.text(dealershipName, margin, yPosition);
+    doc.text('Notes:', 20, yPosition);
     yPosition += 5;
 
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(colors.secondary);
     doc.setFontSize(8);
-
-    if (dealershipAddress) {
-      doc.text(dealershipAddress, margin, yPosition);
-      yPosition += 4;
-    }
-    if (dealershipEmail) {
-      doc.text(`Email: ${dealershipEmail}`, margin, yPosition);
-      yPosition += 4;
-    }
-    if (dealershipPhone) {
-      doc.text(`Phone: ${dealershipPhone}`, margin, yPosition);
-    }
+    const noteLines = doc.splitTextToSize(invoice.invoiceNotes, pageWidth - 40);
+    doc.text(noteLines, 20, yPosition);
   }
-
-  // Notes section (if any)
-  if (invoice.invoiceNotes) {
-    yPosition = pageHeight - 55;
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(colors.primary);
-    doc.text('Notes:', margin, yPosition);
-    yPosition += 4;
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(colors.secondary);
-    const noteLines = doc.splitTextToSize(invoice.invoiceNotes, pageWidth - 2 * margin);
-    doc.text(noteLines, margin, yPosition);
-  }
-
-  // Footer
-  const footerY = pageHeight - 10;
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(colors.muted);
-  doc.text('Powered by My Detail Area', pageWidth / 2, footerY, { align: 'center' });
 
   // Save the PDF
   const filename = `INV-${invoice.invoiceNumber}.pdf`;

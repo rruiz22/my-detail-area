@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,14 +16,20 @@ import {
   Globe,
   Calendar,
   Save,
-  Filter
+  Filter,
+  AlertCircle
 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useProfileMutations } from '@/hooks/useProfileMutations';
 import { NotificationEventsTable, NotificationChannel } from '@/components/profile/NotificationEventsTable';
 import { getEventsForModule, getAllCategories } from '@/constants/notificationEvents';
 
 export function NotificationsPreferencesTab() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { preferences, isLoading: preferencesLoading } = useUserPreferences();
   const { loading, updatePreferences } = useProfileMutations();
 
   const [formData, setFormData] = useState({
@@ -39,6 +45,25 @@ export function NotificationsPreferencesTab() {
     date_format: 'MM/dd/yyyy',
     time_format: '12h',
   });
+
+  // Load preferences from database
+  useEffect(() => {
+    if (preferences) {
+      setFormData({
+        notification_email: preferences.notification_email ?? true,
+        notification_sms: preferences.notification_sms ?? false,
+        notification_push: preferences.notification_push ?? true,
+        notification_in_app: preferences.notification_in_app ?? true,
+        notification_frequency: preferences.notification_frequency || 'immediate',
+        quiet_hours_start: preferences.quiet_hours_start || '',
+        quiet_hours_end: preferences.quiet_hours_end || '',
+        timezone: preferences.timezone || 'America/New_York',
+        language_preference: preferences.language_preference || 'en',
+        date_format: preferences.date_format || 'MM/dd/yyyy',
+        time_format: preferences.time_format || '12h',
+      });
+    }
+  }, [preferences]);
 
   // Granular event preferences state
   const [activeModule, setActiveModule] = useState('sales_orders');
@@ -64,15 +89,22 @@ export function NotificationsPreferencesTab() {
   };
 
   const handleSave = async () => {
+    // Validate SMS notifications
+    if (formData.notification_sms && !hasPhoneNumber) {
+      // Allow saving but show warning that SMS won't work
+      console.warn('SMS notifications enabled but no phone number configured');
+    }
+
     // ✅ FIX: Convert empty strings to null for TIME fields
-    // ⚠️ NOTE: event_preferences saved separately (not in user_preferences table)
     const sanitizedData = {
       ...formData,
       quiet_hours_start: formData.quiet_hours_start || null,
       quiet_hours_end: formData.quiet_hours_end || null,
-      // TODO: Save eventPreferences to user_sms_notification_preferences per module
     };
+
     await updatePreferences(sanitizedData);
+
+    // TODO Phase 2: Save eventPreferences to user_notification_preferences_universal per module/event
   };
 
   const filteredEvents = getEventsForModule(activeModule).filter(
@@ -104,8 +136,32 @@ export function NotificationsPreferencesTab() {
     { value: '24h', label: '12:00 (24-hour)' },
   ];
 
+  // Check if user has phone number for SMS
+  const hasPhoneNumber = !!preferences?.phone;
+
+  if (preferencesLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading notification preferences...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
+      {/* SMS Warning if no phone number */}
+      {formData.notification_sms && !hasPhoneNumber && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            📱 You need to add a phone number in <strong>Personal Information</strong> tab to receive SMS notifications.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Notification Types */}
       <Card>
         <CardHeader>
@@ -134,13 +190,18 @@ export function NotificationsPreferencesTab() {
           <Separator />
 
           <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
+            <div className="space-y-0.5 flex-1">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
                 <Label className="font-medium">{t('profile.sms_notifications')}</Label>
+                {hasPhoneNumber ? (
+                  <span className="text-xs text-emerald-600 font-medium">✓ {preferences?.phone}</span>
+                ) : (
+                  <span className="text-xs text-amber-600 font-medium">⚠️ No phone</span>
+                )}
               </div>
               <p className="text-sm text-muted-foreground">
-                {t('profile.sms_notifications_desc')}
+                {t('profile.sms_notifications_desc', 'Receive notifications via SMS')}
               </p>
             </div>
             <Switch
@@ -227,7 +288,7 @@ export function NotificationsPreferencesTab() {
                 <SelectContent>
                   {Array.from({ length: 24 }, (_, i) => (
                     <SelectItem key={i} value={`${i.toString().padStart(2, '0')}:00`}>
-                      {formData.time_format === '12h' 
+                      {formData.time_format === '12h'
                         ? `${i === 0 ? 12 : i > 12 ? i - 12 : i}:00 ${i >= 12 ? 'PM' : 'AM'}`
                         : `${i.toString().padStart(2, '0')}:00`
                       }
@@ -249,7 +310,7 @@ export function NotificationsPreferencesTab() {
                 <SelectContent>
                   {Array.from({ length: 24 }, (_, i) => (
                     <SelectItem key={i} value={`${i.toString().padStart(2, '0')}:00`}>
-                      {formData.time_format === '12h' 
+                      {formData.time_format === '12h'
                         ? `${i === 0 ? 12 : i > 12 ? i - 12 : i}:00 ${i >= 12 ? 'PM' : 'AM'}`
                         : `${i.toString().padStart(2, '0')}:00`
                       }

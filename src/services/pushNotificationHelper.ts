@@ -115,6 +115,36 @@ class PushNotificationHelper {
       );
 
       if (error) {
+        const errorMsg = error.message || String(error);
+
+        // Check if it's a 404 - could be no tokens or function not deployed
+        if (errorMsg.includes('404') || errorMsg.toLowerCase().includes('not found')) {
+          // Check if it's specifically "no tokens" message
+          if (errorMsg.toLowerCase().includes('no active fcm tokens') ||
+              errorMsg.toLowerCase().includes('tokens found')) {
+            console.log('ℹ️ [PushNotificationHelper] No active push tokens for user (normal)');
+            return {
+              success: true, // Not an error - user just hasn't enabled push
+              sent: 0,
+              failed: 0,
+              total: 0,
+              message: 'No active push notification tokens',
+              errors: []
+            };
+          }
+
+          // Otherwise, function might not be deployed
+          console.warn('⚠️ [PushNotificationHelper] Edge Function not available');
+          return {
+            success: false,
+            sent: 0,
+            failed: 0,
+            total: 0,
+            message: 'Push notification service not available (non-critical)',
+            errors: []
+          };
+        }
+
         console.error('[PushNotificationHelper] Edge Function error:', error);
         return this.createErrorResponse(error.message);
       }
@@ -422,8 +452,21 @@ class PushNotificationHelper {
     orderNumber: string,
     commenterName: string,
     commentText: string
-  ): Promise<void> {
+  ): Promise<NotificationResponse> {
     try {
+      // Validate commentText
+      if (!commentText || typeof commentText !== 'string') {
+        console.warn('[PushNotificationHelper] Invalid comment text, skipping notification');
+        return {
+          success: false,
+          sent: 0,
+          failed: 0,
+          total: 0,
+          message: 'Invalid comment text',
+          errors: []
+        };
+      }
+
       console.log('[PushNotificationHelper] Notifying new comment:', {
         orderId,
         orderNumber,
@@ -435,7 +478,7 @@ class PushNotificationHelper {
       const truncatedComment =
         commentText.length > 100 ? `${commentText.substring(0, 100)}...` : commentText;
 
-      await this.notifyOrderFollowers(
+      const result = await this.notifyOrderFollowers(
         orderId,
         `New Comment on Order ${orderNumber}`,
         `${commenterName}: ${truncatedComment}`,
@@ -452,9 +495,18 @@ class PushNotificationHelper {
       );
 
       console.log('[PushNotificationHelper] New comment notification sent');
+      return result;
     } catch (error) {
       console.error('[PushNotificationHelper] Error notifying new comment:', error);
       // Don't throw - notification failures should not break the main flow
+      return {
+        success: false,
+        sent: 0,
+        failed: 0,
+        total: 0,
+        message: 'Notification failed (non-critical)',
+        errors: [String(error)]
+      };
     }
   }
 

@@ -18,6 +18,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Table,
   TableBody,
   TableCell,
@@ -50,6 +56,7 @@ import {
   Filter,
   Mail,
   Plus,
+  Printer,
   Receipt,
   Search,
   X
@@ -152,6 +159,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const [showQuickCreateDialog, setShowQuickCreateDialog] = useState(false);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showInvoicePreview, setShowInvoicePreview] = useState(false);
+  const [invoiceHtml, setInvoiceHtml] = useState('');
 
   // Order detail modal
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
@@ -477,6 +486,445 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     return services.map((s: any) => s.name || s.type || 'Unknown').join(', ');
   };
 
+  const handleDownloadInvoice = async (invoice: Invoice) => {
+    try {
+      // Fetch full invoice with items and payments
+      const { data: fullInvoice, error } = await supabase
+        .from('invoices')
+        .select(`
+          *,
+          dealer:dealers(name, logo_url, thumbnail_logo_url, address, email, phone),
+          items:invoice_items(*),
+          payments(*)
+        `)
+        .eq('id', invoice.id)
+        .single();
+
+      if (error) throw error;
+      if (!fullInvoice) throw new Error('Invoice not found');
+
+      const dealerName = fullInvoice.dealer?.name || 'Dealership';
+      const dealerLogo = fullInvoice.dealer?.thumbnail_logo_url || fullInvoice.dealer?.logo_url || '';
+      const dealerAddress = fullInvoice.dealer?.address || '';
+      const dealerEmail = fullInvoice.dealer?.email || '';
+      const dealerPhone = fullInvoice.dealer?.phone || '';
+
+      // Parse dates
+      const issueDate = new Date(fullInvoice.issue_date);
+      const dueDate = new Date(fullInvoice.due_date);
+
+      // Get order type from first item
+      const firstItem = fullInvoice.items?.[0];
+      const orderType = firstItem?.metadata?.order_type || 'sales';
+      const isServiceOrder = orderType === 'service';
+      const isCarWashOrder = orderType === 'carwash';
+
+      // Generate HTML for printing/PDF with modern clean design
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Invoice ${fullInvoice.invoice_number}</title>
+          <style>
+            @page {
+              margin: 0.5in;
+              @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 10px;
+                color: #6b7280;
+              }
+            }
+            @media print {
+              body { margin: 0; }
+              .page-break {
+                page-break-after: always;
+              }
+              .no-break {
+                page-break-inside: avoid;
+              }
+              .logo-header {
+                page-break-after: avoid;
+              }
+              .invoice-header {
+                page-break-after: avoid;
+              }
+              table {
+                page-break-inside: auto;
+              }
+              tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+              }
+              thead {
+                display: table-header-group;
+              }
+              tfoot {
+                display: table-footer-group;
+              }
+            }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+              margin: 0;
+              padding: 40px;
+              color: #1a1a1a;
+              line-height: 1.6;
+            }
+            .logo-header {
+              text-align: center;
+              margin-bottom: 30px;
+              padding-bottom: 20px;
+              border-bottom: 2px solid #e5e7eb;
+            }
+            .logo-header img {
+              max-height: 80px;
+              max-width: 250px;
+              object-fit: contain;
+              margin-bottom: 12px;
+            }
+            .logo-header .dealer-name {
+              font-size: 24px;
+              font-weight: 600;
+              color: #1a1a1a;
+            }
+            .invoice-header {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 40px;
+              padding-bottom: 20px;
+              border-bottom: 1px solid #e5e7eb;
+            }
+            .bill-to {
+              flex: 1;
+            }
+            .bill-to h3 {
+              font-size: 16px;
+              font-weight: 600;
+              margin: 0 0 12px 0;
+            }
+            .bill-to p {
+              margin: 4px 0;
+              color: #6b7280;
+              font-size: 14px;
+            }
+            .bill-to .company-name {
+              font-size: 16px;
+              font-weight: 500;
+              color: #1a1a1a;
+            }
+            .invoice-details {
+              text-align: right;
+              flex: 1;
+            }
+            .invoice-details > div {
+              margin-bottom: 8px;
+            }
+            .invoice-details label {
+              color: #6b7280;
+              font-size: 14px;
+              display: block;
+            }
+            .invoice-details .value {
+              font-weight: 500;
+              color: #1a1a1a;
+              font-size: 14px;
+              margin-top: 2px;
+            }
+            .vehicles-section {
+              margin: 30px 0;
+            }
+            .vehicles-section h3 {
+              font-size: 15px;
+              font-weight: 600;
+              margin-bottom: 12px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            th {
+              background-color: #f9fafb;
+              padding: 12px;
+              text-align: left;
+              font-weight: 600;
+              font-size: 13px;
+              color: #374151;
+              border-bottom: 2px solid #e5e7eb;
+            }
+            td {
+              padding: 12px;
+              border-bottom: 1px solid #f3f4f6;
+              font-size: 13px;
+            }
+            tr:last-child td {
+              border-bottom: none;
+            }
+            .text-right { text-align: right; }
+            .font-mono { font-family: 'Courier New', monospace; font-size: 12px; }
+            .font-medium { font-weight: 500; }
+            .totals-section {
+              margin-top: 30px;
+              display: flex;
+              justify-content: flex-end;
+            }
+            .totals-box {
+              width: 350px;
+            }
+            .total-row {
+              display: flex;
+              justify-content: space-between;
+              padding: 8px 0;
+              font-size: 14px;
+            }
+            .total-row.border-top {
+              border-top: 2px solid #e5e7eb;
+              padding-top: 12px;
+              margin-top: 8px;
+            }
+            .total-row.main-total {
+              font-size: 18px;
+              font-weight: 600;
+            }
+            .total-row.amount-due {
+              font-size: 16px;
+              font-weight: 600;
+              color: #f59e0b;
+            }
+            .text-muted { color: #6b7280; }
+            .text-success { color: #10b981; }
+            .payment-history {
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #e5e7eb;
+            }
+            .payment-history h4 {
+              font-size: 14px;
+              font-weight: 600;
+              margin-bottom: 12px;
+            }
+            .payment-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 12px 16px;
+              background-color: #f0fdf4;
+              border-radius: 8px;
+              margin-bottom: 8px;
+            }
+            .payment-item .left p {
+              margin: 2px 0;
+            }
+            .payment-item .method {
+              font-weight: 500;
+              font-size: 14px;
+            }
+            .payment-item .date {
+              font-size: 12px;
+              color: #6b7280;
+            }
+            .payment-item .amount {
+              font-weight: 600;
+              color: #10b981;
+              font-size: 16px;
+            }
+            .page-footer {
+              position: fixed;
+              bottom: 0;
+              right: 0;
+              font-size: 10px;
+              color: #6b7280;
+              padding: 10px 20px;
+            }
+            @media print {
+              .page-footer {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <!-- Logo Header -->
+          <div class="logo-header">
+            ${dealerLogo ? `<img src="${dealerLogo}" alt="${dealerName}" />` : ''}
+            <div class="dealer-name">${dealerName}</div>
+          </div>
+
+          <!-- Invoice Header -->
+          <div class="invoice-header">
+            <div class="bill-to">
+              <h3>Bill To:</h3>
+              <p class="company-name">${dealerName}</p>
+              ${dealerAddress ? `<p>${dealerAddress}</p>` : ''}
+              ${dealerEmail ? `<p>${dealerEmail}</p>` : ''}
+              ${dealerPhone ? `<p>${dealerPhone}</p>` : ''}
+            </div>
+            <div class="invoice-details">
+              <div>
+                <label>Invoice Date:</label>
+                <div class="value">${format(issueDate, 'MMM dd, yyyy')}</div>
+              </div>
+              <div>
+                <label>Due Date:</label>
+                <div class="value">${format(dueDate, 'MMM dd, yyyy')}</div>
+              </div>
+              <div>
+                <label>Invoice Number:</label>
+                <div class="value font-mono">${fullInvoice.invoice_number}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicles Section -->
+          <div class="vehicles-section">
+            <h3>Vehicles (${fullInvoice.items?.length || 0})</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>
+                  <th>Vehicle</th>
+                  <th>VIN</th>
+                  <th class="text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${fullInvoice.items?.map(item => {
+                  const metadata = item.metadata || {};
+                  const itemDate = metadata.completed_at || fullInvoice.issue_date;
+                  const vehicle = item.description || 'N/A';
+                  const vin = metadata.vehicle_vin || 'N/A';
+
+                  let stockDisplay = 'N/A';
+                  if (isServiceOrder) {
+                    const parts = [];
+                    if (metadata.ro) parts.push(`RO: ${metadata.ro}`);
+                    if (metadata.po) parts.push(`PO: ${metadata.po}`);
+                    if (metadata.tag) parts.push(`Tag: ${metadata.tag}`);
+                    stockDisplay = parts.length > 0 ? parts.join(', ') : 'N/A';
+                  } else if (isCarWashOrder) {
+                    const parts = [];
+                    if (metadata.stock_number) parts.push(metadata.stock_number);
+                    if (metadata.tag) parts.push(metadata.tag);
+                    stockDisplay = parts.length > 0 ? parts.join(' / ') : 'N/A';
+                  } else {
+                    stockDisplay = metadata.stock_number || 'N/A';
+                  }
+
+                  return `
+                    <tr>
+                      <td>${format(new Date(itemDate), 'MM/dd/yyyy')}</td>
+                      <td class="font-medium">${stockDisplay}</td>
+                      <td>${vehicle}</td>
+                      <td class="font-mono">${vin}</td>
+                      <td class="text-right font-medium">${formatCurrency(item.total_amount)}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Totals Section -->
+          <div class="totals-section no-break">
+            <div class="totals-box">
+              <div class="total-row">
+                <span class="text-muted">Subtotal:</span>
+                <span class="font-medium">${formatCurrency(fullInvoice.subtotal)}</span>
+              </div>
+              ${fullInvoice.tax_rate > 0 ? `
+                <div class="total-row">
+                  <span class="text-muted">Tax (${fullInvoice.tax_rate}%):</span>
+                  <span class="font-medium">${formatCurrency(fullInvoice.tax_amount)}</span>
+                </div>
+              ` : ''}
+              ${fullInvoice.discount_amount > 0 ? `
+                <div class="total-row">
+                  <span class="text-muted">Discount:</span>
+                  <span class="font-medium">-${formatCurrency(fullInvoice.discount_amount)}</span>
+                </div>
+              ` : ''}
+              <div class="total-row border-top main-total">
+                <span>Total:</span>
+                <span>${formatCurrency(fullInvoice.total_amount)}</span>
+              </div>
+              ${fullInvoice.amount_paid > 0 ? `
+                <div class="total-row">
+                  <span class="text-success">Amount Paid:</span>
+                  <span class="text-success font-medium">${formatCurrency(fullInvoice.amount_paid)}</span>
+                </div>
+                <div class="total-row border-top amount-due">
+                  <span>Amount Due:</span>
+                  <span>${formatCurrency(fullInvoice.amount_due)}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Payment History -->
+          ${fullInvoice.payments && fullInvoice.payments.length > 0 ? `
+            <div class="payment-history no-break">
+              <h4>Payment History:</h4>
+              ${fullInvoice.payments.map(payment => `
+                <div class="payment-item">
+                  <div class="left">
+                    <p class="method">Payment ${payment.payment_number} - ${payment.payment_method}</p>
+                    <p class="date">${format(new Date(payment.payment_date), 'MMM dd, yyyy')}</p>
+                  </div>
+                  <div class="amount">${formatCurrency(payment.amount)}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <!-- Page Counter for Print -->
+          <script>
+            // Auto-number pages when printing
+            if (window.matchMedia) {
+              const mediaQueryList = window.matchMedia('print');
+              mediaQueryList.addListener((mql) => {
+                if (mql.matches) {
+                  // Printing
+                } else {
+                  // Not printing
+                }
+              });
+            }
+          </script>
+        </body>
+        </html>
+      `;
+
+      // Show invoice in modal
+      setInvoiceHtml(htmlContent);
+      setShowInvoicePreview(true);
+
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      toast.error('Failed to generate invoice');
+    }
+  };
+
+  const handlePrintInvoice = () => {
+    // Create a new window with only the invoice content
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    if (printWindow) {
+      printWindow.document.write(invoiceHtml);
+      printWindow.document.close();
+
+      // Wait for images to load before printing
+      printWindow.onload = () => {
+        setTimeout(() => {
+          printWindow.focus();
+          printWindow.print();
+        }, 500);
+      };
+    }
+  };
+
   if (!dealerId) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -731,8 +1179,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                 variant="ghost"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // TODO: Download PDF
+                                  handleDownloadInvoice(invoice);
                                 }}
+                                title="Download/Print Invoice"
                               >
                                 <Download className="h-4 w-4" />
                               </Button>
@@ -1009,7 +1458,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                             <TableCell className="text-sm text-center">
                               {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                             </TableCell>
-                            <TableCell className="font-mono text-xs text-center">
+                            <TableCell className="font-mono text-sm font-semibold text-center">
                               {vehicle.vehicle_vin || 'N/A'}
                             </TableCell>
                             <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate text-center">
@@ -1181,6 +1630,32 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           isLoadingData={loadingOrderData}
         />
       )}
+
+      {/* Invoice Preview Modal */}
+      <Dialog open={showInvoicePreview} onOpenChange={setShowInvoicePreview}>
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0">
+          <DialogHeader className="px-6 py-4 border-b">
+            <div className="flex items-center justify-between">
+              <DialogTitle>Invoice Preview</DialogTitle>
+              <Button
+                onClick={handlePrintInvoice}
+                variant="default"
+                size="sm"
+                className="ml-auto"
+              >
+                <Printer className="h-4 w-4 mr-2" />
+                Print / Save as PDF
+              </Button>
+            </div>
+          </DialogHeader>
+          <div className="overflow-auto max-h-[calc(95vh-80px)]">
+            <div
+              dangerouslySetInnerHTML={{ __html: invoiceHtml }}
+              className="bg-white"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

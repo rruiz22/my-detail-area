@@ -79,6 +79,7 @@ export function UserDropdown() {
             firstName={user?.first_name}
             lastName={user?.last_name}
             email={user?.email}
+            avatarUrl={user?.avatar_url}
             seed={seed}
             size={30}
             className="absolute inset-1"
@@ -96,6 +97,7 @@ export function UserDropdown() {
                 firstName={user?.first_name}
                 lastName={user?.last_name}
                 email={user?.email}
+                avatarUrl={user?.avatar_url}
                 seed={seed}
                 size={36}
                 className="rounded-full flex-shrink-0"

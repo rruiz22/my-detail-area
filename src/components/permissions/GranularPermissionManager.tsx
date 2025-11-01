@@ -32,7 +32,6 @@ import {
 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
 interface GranularPermissionManagerProps {
   roleId: string;
   roleName?: string;
@@ -61,7 +60,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
   const [systemPermissions, setSystemPermissions] = useState<Set<SystemPermissionKey>>(new Set());
   const [modulePermissions, setModulePermissions] = useState<ModulePermissionsState>({});
   const [availableSystemPerms, setAvailableSystemPerms] = useState<SystemPermission[]>([]);
-  const [availableModulePerms, setAvailableModulePerms] = useState<Record<AppModule, ModulePermission[]>>({});
+  const [availableModulePerms, setAvailableModulePerms] = useState<Partial<Record<AppModule, ModulePermission[]>>>({});
   const [warnings, setWarnings] = useState<string[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -78,7 +77,10 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
         .order('category', { ascending: true });
 
       if (sysError) throw sysError;
-      setAvailableSystemPerms(sysPerms || []);
+      setAvailableSystemPerms((sysPerms || []).map(perm => ({
+        ...perm,
+        permission_key: perm.permission_key as SystemPermissionKey
+      })));
 
       // Load module permissions
       const { data: modPerms, error: modError } = await supabase
@@ -93,9 +95,12 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
       const grouped = (modPerms || []).reduce((acc, perm) => {
         const module = perm.module as AppModule;
         if (!acc[module]) acc[module] = [];
-        acc[module].push(perm);
+        acc[module].push({
+          ...perm,
+          module: perm.module as AppModule
+        } as ModulePermission);
         return acc;
-      }, {} as Record<AppModule, ModulePermission[]>);
+      }, {} as Partial<Record<AppModule, ModulePermission[]>>);
 
       setAvailableModulePerms(grouped);
     } catch (error) {
@@ -128,7 +133,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
       console.log('🔍 [GranularPermissionManager] System perms loaded:', sysPerms?.length || 0);
 
       const sysPermSet = new Set<SystemPermissionKey>();
-      (sysPerms || []).forEach((item: any) => {
+      (sysPerms || []).forEach((item: { system_permissions?: { permission_key: string } }) => {
         if (item.system_permissions?.permission_key) {
           sysPermSet.add(item.system_permissions.permission_key as SystemPermissionKey);
         }
@@ -147,7 +152,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
       console.log('🔍 [GranularPermissionManager] Module perms loaded:', modPerms?.length || 0);
 
       const modPermState: ModulePermissionsState = {};
-      (modPerms || []).forEach((item: any) => {
+      (modPerms || []).forEach((item: { module_permissions?: { module: string; permission_key: string } }) => {
         if (item.module_permissions) {
           const module = item.module_permissions.module;
           const permKey = item.module_permissions.permission_key as ModulePermissionKey;
@@ -260,7 +265,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
 
       // Insert system permissions
       if (systemPermissions.size > 0) {
-        const sysPermsToInsert: any[] = [];
+        const sysPermsToInsert: Array<{ role_id: string; permission_id: string }> = [];
         for (const permKey of systemPermissions) {
           // Get permission ID
           const { data: permData } = await supabase
@@ -287,7 +292,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
       }
 
       // Insert module permissions
-      const modPermsToInsert: any[] = [];
+      const modPermsToInsert: Array<{ role_id: string; permission_id: string }> = [];
       for (const [module, perms] of Object.entries(modulePermissions || {})) {
         for (const permKey of perms) {
           // Get permission ID
