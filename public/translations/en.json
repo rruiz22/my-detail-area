@@ -2315,7 +2315,7 @@
     "dealership": "Dealership",
     "select_dealership": "Select dealership",
     "vehicle_display": "Vehicle Information",
-    "stock_number": "Stock Number",
+    "stock_number": "Stock/Tag",
     "tag": "TAG",
     "waiter_priority": "Waiter - Customer Waiting",
     "waiter_description": "This order will be marked as urgent priority (customer is waiting)",

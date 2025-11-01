@@ -287,8 +287,10 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                        isSameDayOrder(order.createdAt, order.dueDate) && (
                         <DueDateIndicator
                           dueDate={order.dueDate}
+                          orderStatus={order.status}
                           orderType={tabType}
                           compact={false}
+                          showDateTime={true}
                         />
                       )}
                     </div>
@@ -349,7 +351,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                       )}
                       {/* Assigned To */}
                       {order.assignedTo && (
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <div className="text-sm font-semibold text-foreground mt-2">
                           {order.assignedTo}
                         </div>
                       )}

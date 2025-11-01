@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { useNotifications } from "@/hooks/useNotifications";
 import { usePermissions } from '@/hooks/usePermissions';
+import * as logger from '@/utils/logger';
 import { AlertTriangle, Clock, MessageCircle, Plus, Settings, TrendingUp, Users, Zap } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import * as logger from '@/utils/logger';
 
 export default function Dashboard() {
   logger.dev('🟢 Dashboard component is RENDERING');

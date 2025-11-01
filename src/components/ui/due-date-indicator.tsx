@@ -38,15 +38,23 @@ export function DueDateIndicator({
     };
 
     updateTimeStatus();
-    
+
     // Update every 60 seconds for live countdown
     const interval = setInterval(updateTimeStatus, 60000);
 
     return () => clearInterval(interval);
   }, [dueDate, orderStatus]);
 
-  // Don't render if no time status, but do render for completed/cancelled
-  if (!timeStatus || (timeStatus.status === 'no-due-date' && !timeStatus.badge)) {
+  // Don't render if no due date or no time status
+  if (!dueDate || !timeStatus || (timeStatus.status === 'no-due-date' && !timeStatus.badge)) {
+    return null;
+  }
+
+  // For completed/cancelled orders, only show date/time without badges
+  const isFinalized = orderStatus === 'completed' || orderStatus === 'cancelled';
+
+  // If order is finalized and showDateTime is false, don't render
+  if (isFinalized && !showDateTime) {
     return null;
   }
 
@@ -100,21 +108,23 @@ export function DueDateIndicator({
 
   return (
     <div className={cn("flex flex-col items-center gap-1 text-center", className)}>
-      {/* Status Badge - Primera fila */}
-      <Badge
-        variant={getBadgeVariant(timeStatus.status)}
-        className={cn(
-          "text-xs font-medium h-5 px-2 whitespace-nowrap",
-          timeStatus.bgColor,
-          timeStatus.color,
-          "border border-current/20"
-        )}
-      >
-        <div className="flex items-center gap-1">
-          {getIcon(timeStatus.status, orderStatus)}
-          <span>{timeStatus.badge}</span>
-        </div>
-      </Badge>
+      {/* Status Badge - Primera fila (Solo para órdenes activas) */}
+      {!isFinalized && (
+        <Badge
+          variant={getBadgeVariant(timeStatus.status)}
+          className={cn(
+            "text-xs font-medium h-5 px-2 whitespace-nowrap",
+            timeStatus.bgColor,
+            timeStatus.color,
+            "border border-current/20"
+          )}
+        >
+          <div className="flex items-center gap-1">
+            {getIcon(timeStatus.status, orderStatus)}
+            <span>{timeStatus.badge}</span>
+          </div>
+        </Badge>
+      )}
 
       {/* Date and Time Display - Segunda fila (más notable) */}
       {showDateTime && dueDate && (
@@ -132,7 +142,7 @@ export function DueDateIndicator({
       )}
 
       {/* Time Countdown - Tercera fila (Solo para órdenes activas) */}
-      {!['completed', 'cancelled'].includes(orderStatus || '') && timeStatus.formattedTime && (
+      {!isFinalized && timeStatus.formattedTime && (
         <div className={cn(
           "flex items-center gap-1 text-xs font-semibold justify-center",
           timeStatus.color

@@ -25,7 +25,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useRecordPayment } from '@/hooks/useInvoices';
 import type { Invoice, PaymentFormData, PaymentMethod } from '@/types/invoices';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Calendar, CreditCard, DollarSign } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
@@ -136,7 +136,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
               id="paymentDate"
               type="date"
               value={format(paymentDate, 'yyyy-MM-dd')}
-              onChange={(e) => setPaymentDate(new Date(e.target.value))}
+              onChange={(e) => setPaymentDate(parseISO(e.target.value))}
               required
             />
           </div>

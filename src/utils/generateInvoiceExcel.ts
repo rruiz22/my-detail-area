@@ -1,12 +1,13 @@
 // =====================================================
 // GENERATE INVOICE EXCEL
 // Created: 2025-10-31
-// Description: Generate Excel file from invoice data
+// Updated: 2025-11-01 - Migrated to ExcelJS for better styling
+// Description: Generate Excel file from invoice data with professional styling
 // =====================================================
 
-import * as XLSX from 'xlsx';
 import type { InvoiceWithDetails } from '@/types/invoices';
 import { format } from 'date-fns';
+import ExcelJS from 'exceljs';
 
 /**
  * Format currency for Excel display
@@ -32,340 +33,424 @@ function formatDate(dateString: string): string {
 }
 
 /**
- * Format date with year for invoice details (MM/DD/YYYY)
+ * Format date with year for invoice details (MMM DD, YYYY)
  */
 function formatDateWithYear(dateString: string): string {
   try {
-    return format(new Date(dateString), 'MMMM dd, yyyy');
+    return format(new Date(dateString), 'MMM dd, yyyy');
   } catch (error) {
     return dateString;
   }
 }
 
 /**
- * Generate Excel file from invoice data
- * Matches the 7-column format from the UI
+ * Generate Excel file from invoice data with professional styling
+ * Uses ExcelJS for advanced formatting and styling capabilities
  */
-export function generateInvoiceExcel(invoice: InvoiceWithDetails): void {
-  // Create worksheet data
-  const wsData: (string | number | null)[][] = [];
+export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise<void> {
+  // Create workbook and worksheet
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'My Detail Area';
+  workbook.created = new Date();
+  workbook.modified = new Date();
 
-  // Row 1: Title (left) and Invoice number (right)
-  wsData.push(['Dealer Detail Service', '', '', '', '', '', `#${invoice.invoiceNumber}`]);
-  wsData.push([]); // Empty row
+  const worksheet = workbook.addWorksheet('Invoice', {
+    pageSetup: {
+      paperSize: 9, // A4
+      orientation: 'portrait',
+      fitToPage: true,
+      fitToWidth: 1,
+      fitToHeight: 0
+    }
+  });
 
-  // Row 3-6: Bill To (left) and Invoice Details (right) - 2 column layout
-  wsData.push(['Bill To:', '', '', '', 'Issue Date:', formatDateWithYear(invoice.issueDate)]);
-  wsData.push([invoice.dealership?.name || 'N/A', '', '', '', 'Due Date:', formatDateWithYear(invoice.dueDate)]);
-  wsData.push([invoice.dealership?.address || '', '', '', '', 'Total Amount:', invoice.totalAmount]);
-  wsData.push([`Email: ${invoice.dealership?.email || ''}`, '', '', '', 'Total Vehicles:', invoice.items?.length || 0]);
-  wsData.push([]); // Empty row
+  // Define color palette (consistent with UI)
+  const colors = {
+    headerBg: 'FF6B7280',      // gray-500
+    headerText: 'FFFFFFFF',    // white
+    titleText: 'FF111827',     // gray-900
+    labelText: 'FF6B7280',     // gray-500
+    valueText: 'FF000000',     // black
+    totalsBg: 'FFF3F4F6',      // gray-100
+    zebraStripe: 'FFF9FAFB',   // gray-50
+    borderLight: 'FFE5E7EB',   // gray-200
+    borderDark: 'FF9CA3AF'     // gray-400
+  };
 
-  // Dynamic table header based on order type
+  // Set column widths (services column will be auto-adjusted later)
+  worksheet.columns = [
+    { key: 'date', width: 12 },
+    { key: 'order', width: 10 },
+    { key: 'po_ro_stock', width: 15 },
+    { key: 'vehicle', width: 20 },
+    { key: 'vin', width: 18 },
+    { key: 'services', width: 10 }, // Will be auto-adjusted
+    { key: 'amount', width: 12 }
+  ];
+
+  let currentRow = 1;
+
+  // ===============================================
+  // HEADER SECTION (Rows 1-2)
+  // ===============================================
+
+  // Row 1: Title and Invoice Number
+  const titleRow = worksheet.getRow(currentRow);
+  titleRow.height = 30;
+
+  const titleCell = titleRow.getCell(1);
+  titleCell.value = 'Dealer Detail Service';
+  titleCell.font = { name: 'Calibri', size: 16, bold: true, color: { argb: colors.titleText } };
+  titleCell.alignment = { vertical: 'middle', horizontal: 'left' };
+  worksheet.mergeCells(currentRow, 1, currentRow, 4);
+
+  const invoiceNumCell = titleRow.getCell(7);
+  invoiceNumCell.value = `#${invoice.invoiceNumber}`;
+  invoiceNumCell.font = { name: 'Calibri', size: 18, bold: true, color: { argb: colors.titleText } };
+  invoiceNumCell.alignment = { vertical: 'middle', horizontal: 'right' };
+
+  currentRow += 2; // Skip row 2 (empty space)
+
+  // ===============================================
+  // BILL TO / INVOICE DETAILS (Rows 3-6)
+  // ===============================================
+
+  // Row 3: "Bill To:" label and "Issue Date:"
+  let detailRow = worksheet.getRow(currentRow);
+  detailRow.height = 18;
+  detailRow.getCell(1).value = 'Bill To:';
+  detailRow.getCell(1).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.labelText } };
+  detailRow.getCell(6).value = 'Issue Date:';
+  detailRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.labelText } };
+  detailRow.getCell(6).alignment = { horizontal: 'right' };
+  detailRow.getCell(7).value = formatDateWithYear(invoice.issueDate);
+  detailRow.getCell(7).font = { name: 'Calibri', size: 10, color: { argb: colors.valueText } };
+  detailRow.getCell(7).alignment = { horizontal: 'right' };
+  currentRow++;
+
+  // Row 4: Dealership name and "Due Date:"
+  detailRow = worksheet.getRow(currentRow);
+  detailRow.height = 18;
+  detailRow.getCell(1).value = invoice.dealership?.name || 'N/A';
+  detailRow.getCell(1).font = { name: 'Calibri', size: 12, bold: true, color: { argb: colors.valueText } };
+  worksheet.mergeCells(currentRow, 1, currentRow, 4);
+  detailRow.getCell(6).value = 'Due Date:';
+  detailRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.labelText } };
+  detailRow.getCell(6).alignment = { horizontal: 'right' };
+  detailRow.getCell(7).value = formatDateWithYear(invoice.dueDate);
+  detailRow.getCell(7).font = { name: 'Calibri', size: 10, color: { argb: colors.valueText } };
+  detailRow.getCell(7).alignment = { horizontal: 'right' };
+  currentRow++;
+
+  // Row 5: Address and "Total Amount:"
+  detailRow = worksheet.getRow(currentRow);
+  detailRow.height = 18;
+  detailRow.getCell(1).value = invoice.dealership?.address || '';
+  detailRow.getCell(1).font = { name: 'Calibri', size: 9, color: { argb: colors.labelText } };
+  worksheet.mergeCells(currentRow, 1, currentRow, 4);
+  detailRow.getCell(6).value = 'Total Amount:';
+  detailRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.labelText } };
+  detailRow.getCell(6).alignment = { horizontal: 'right' };
+  detailRow.getCell(7).value = invoice.totalAmount;
+  detailRow.getCell(7).font = { name: 'Calibri', size: 11, bold: true, color: { argb: colors.valueText } };
+  detailRow.getCell(7).numFmt = '$#,##0.00';
+  detailRow.getCell(7).alignment = { horizontal: 'right' };
+  currentRow++;
+
+  // Row 6: Email and "Total Vehicles:"
+  detailRow = worksheet.getRow(currentRow);
+  detailRow.height = 18;
+  detailRow.getCell(1).value = `Email: ${invoice.dealership?.email || ''}`;
+  detailRow.getCell(1).font = { name: 'Calibri', size: 9, color: { argb: colors.labelText } };
+  worksheet.mergeCells(currentRow, 1, currentRow, 4);
+  detailRow.getCell(6).value = 'Total Vehicles:';
+  detailRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.labelText } };
+  detailRow.getCell(6).alignment = { horizontal: 'right' };
+  detailRow.getCell(7).value = invoice.items?.length || 0;
+  detailRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+  detailRow.getCell(7).alignment = { horizontal: 'right' };
+  currentRow += 2; // Empty row before table
+
+  // ===============================================
+  // TABLE HEADER (Dynamic based on order type)
+  // ===============================================
+
   const poRoTagHeader = invoice.items?.some(i => i.metadata?.order_type === 'service')
     ? 'PO/RO/Tag'
     : 'Stock';
 
-  // Table headers (7 columns)
-  wsData.push(['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']);
+  const headerRow = worksheet.getRow(currentRow);
+  headerRow.height = 22;
+  headerRow.values = ['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount'];
 
-  // Table data rows
-  (invoice.items || []).forEach(item => {
-    // Format date (MM/DD)
+  // Style header cells with gray background
+  headerRow.eachCell((cell, colNumber) => {
+    cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: colors.headerText } };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: colors.headerBg }
+    };
+    cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+    cell.border = {
+      top: { style: 'medium', color: { argb: colors.borderDark } },
+      bottom: { style: 'medium', color: { argb: colors.borderDark } },
+      left: { style: 'thin', color: { argb: colors.borderLight } },
+      right: { style: 'thin', color: { argb: colors.borderLight } }
+    };
+  });
+  currentRow++;
+
+  // ===============================================
+  // TABLE DATA ROWS (with zebra striping)
+  // ===============================================
+
+  const dataStartRow = currentRow;
+  (invoice.items || []).forEach((item, index) => {
+    const row = worksheet.getRow(currentRow);
+    row.height = 20;
+
+    // Prepare data
     const dateStr = formatDate(item.createdAt);
-
-    // Order number
     const orderNum = item.metadata?.order_number || 'N/A';
-
-    // PO/RO/Tag or Stock column (simplified format without labels)
     const poRoTagStock = item.metadata?.order_type === 'service'
       ? [item.metadata?.po, item.metadata?.ro, item.metadata?.tag]
           .filter(Boolean)
           .join(' | ') || 'N/A'
       : item.metadata?.stock_number || 'N/A';
 
-    // Vehicle description
-    const vehicle = item.description || 'N/A';
+    // Clean vehicle description - remove stock number suffix if present
+    let vehicle = item.description || 'N/A';
+    if (vehicle !== 'N/A' && vehicle.includes(' - ')) {
+      vehicle = vehicle.split(' - ')[0].trim();
+    }
 
-    // VIN
     const vin = item.metadata?.vehicle_vin || 'N/A';
-
-    // Services
     const services = item.metadata?.service_names || 'N/A';
 
-    // Amount (numeric for Excel calculations)
-    const amount = item.totalAmount;
+    // Set values
+    row.getCell(1).value = dateStr;
+    row.getCell(2).value = orderNum;
+    row.getCell(3).value = poRoTagStock;
+    row.getCell(4).value = vehicle;
+    row.getCell(5).value = vin;
+    row.getCell(6).value = services;
+    row.getCell(7).value = item.totalAmount;
+    row.getCell(7).numFmt = '$#,##0.00';
 
-    wsData.push([dateStr, orderNum, poRoTagStock, vehicle, vin, services, amount]);
+    // Apply zebra striping
+    const isEvenRow = index % 2 === 0;
+    const fillColor = isEvenRow ? 'FFFFFFFF' : colors.zebraStripe;
+
+    row.eachCell((cell, colNumber) => {
+      cell.font = {
+        name: 'Calibri',
+        size: colNumber === 5 ? 8 : 9, // VIN column smaller
+        color: { argb: colors.valueText }
+      };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: fillColor }
+      };
+      cell.alignment = {
+        vertical: 'middle',
+        horizontal: colNumber === 1 || colNumber === 2 ? 'center' : colNumber === 7 ? 'right' : 'left',
+        wrapText: true
+      };
+      cell.border = {
+        top: { style: 'thin', color: { argb: colors.borderLight } },
+        bottom: { style: 'thin', color: { argb: colors.borderLight } },
+        left: { style: 'thin', color: { argb: colors.borderLight } },
+        right: { style: 'thin', color: { argb: colors.borderLight } }
+      };
+    });
+
+    currentRow++;
   });
 
-  // Empty row before totals
-  wsData.push([]);
+  // Auto-adjust Services column width based on content
+  let maxServicesLength = 'Services'.length; // Start with header length
+  (invoice.items || []).forEach(item => {
+    const services = item.metadata?.service_names || 'N/A';
+    if (services.length > maxServicesLength) {
+      maxServicesLength = services.length;
+    }
+  });
+  // Set width with constraints (min: 15, max: 40)
+  const servicesColumn = worksheet.getColumn(6);
+  servicesColumn.width = Math.min(Math.max(maxServicesLength + 2, 15), 40);
 
-  // Totals section
-  wsData.push(['', '', '', '', '', 'Subtotal:', invoice.subtotal]);
-  wsData.push(['', '', '', '', '', `Tax (${invoice.taxRate}%):`, invoice.taxAmount]);
+  currentRow++; // Empty row before totals
 
+  // ===============================================
+  // TOTALS SECTION
+  // ===============================================
+
+  // Subtotal
+  let totalRow = worksheet.getRow(currentRow);
+  totalRow.getCell(6).value = 'Subtotal:';
+  totalRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+  totalRow.getCell(6).alignment = { horizontal: 'right' };
+  totalRow.getCell(6).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+  totalRow.getCell(7).value = invoice.subtotal;
+  totalRow.getCell(7).numFmt = '$#,##0.00';
+  totalRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+  totalRow.getCell(7).alignment = { horizontal: 'right' };
+  totalRow.getCell(7).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+  totalRow.getCell(6).border = {
+    top: { style: 'thin', color: { argb: colors.borderLight } },
+    bottom: { style: 'thin', color: { argb: colors.borderLight } },
+    left: { style: 'thin', color: { argb: colors.borderLight } },
+    right: { style: 'thin', color: { argb: colors.borderLight } }
+  };
+  totalRow.getCell(7).border = {
+    top: { style: 'thin', color: { argb: colors.borderLight } },
+    bottom: { style: 'thin', color: { argb: colors.borderLight } },
+    left: { style: 'thin', color: { argb: colors.borderLight } },
+    right: { style: 'thin', color: { argb: colors.borderLight } }
+  };
+  currentRow++;
+
+  // Tax
+  totalRow = worksheet.getRow(currentRow);
+  totalRow.getCell(6).value = `Tax (${invoice.taxRate}%):`;
+  totalRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+  totalRow.getCell(6).alignment = { horizontal: 'right' };
+  totalRow.getCell(6).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+  totalRow.getCell(7).value = invoice.taxAmount;
+  totalRow.getCell(7).numFmt = '$#,##0.00';
+  totalRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+  totalRow.getCell(7).alignment = { horizontal: 'right' };
+  totalRow.getCell(7).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+  totalRow.getCell(6).border = {
+    top: { style: 'thin', color: { argb: colors.borderLight } },
+    bottom: { style: 'thin', color: { argb: colors.borderLight } },
+    left: { style: 'thin', color: { argb: colors.borderLight } },
+    right: { style: 'thin', color: { argb: colors.borderLight } }
+  };
+  totalRow.getCell(7).border = {
+    top: { style: 'thin', color: { argb: colors.borderLight } },
+    bottom: { style: 'thin', color: { argb: colors.borderLight } },
+    left: { style: 'thin', color: { argb: colors.borderLight } },
+    right: { style: 'thin', color: { argb: colors.borderLight } }
+  };
+  currentRow++;
+
+  // Discount (if applicable)
   if (invoice.discountAmount && invoice.discountAmount > 0) {
-    wsData.push(['', '', '', '', '', 'Discount:', -invoice.discountAmount]);
+    totalRow = worksheet.getRow(currentRow);
+    totalRow.getCell(6).value = 'Discount:';
+    totalRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+    totalRow.getCell(6).alignment = { horizontal: 'right' };
+    totalRow.getCell(6).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+    totalRow.getCell(7).value = -invoice.discountAmount;
+    totalRow.getCell(7).numFmt = '$#,##0.00';
+    totalRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
+    totalRow.getCell(7).alignment = { horizontal: 'right' };
+    totalRow.getCell(7).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+    totalRow.getCell(6).border = {
+      top: { style: 'thin', color: { argb: colors.borderLight } },
+      bottom: { style: 'thin', color: { argb: colors.borderLight } },
+      left: { style: 'thin', color: { argb: colors.borderLight } },
+      right: { style: 'thin', color: { argb: colors.borderLight } }
+    };
+    totalRow.getCell(7).border = {
+      top: { style: 'thin', color: { argb: colors.borderLight } },
+      bottom: { style: 'thin', color: { argb: colors.borderLight } },
+      left: { style: 'thin', color: { argb: colors.borderLight } },
+      right: { style: 'thin', color: { argb: colors.borderLight } }
+    };
+    currentRow++;
   }
 
-  wsData.push(['', '', '', '', '', 'Total:', invoice.totalAmount]);
+  // Total (with darker border on top)
+  totalRow = worksheet.getRow(currentRow);
+  totalRow.height = 22;
+  totalRow.getCell(6).value = 'Total:';
+  totalRow.getCell(6).font = { name: 'Calibri', size: 12, bold: true, color: { argb: colors.valueText } };
+  totalRow.getCell(6).alignment = { horizontal: 'right', vertical: 'middle' };
+  totalRow.getCell(6).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+  totalRow.getCell(7).value = invoice.totalAmount;
+  totalRow.getCell(7).numFmt = '$#,##0.00';
+  totalRow.getCell(7).font = { name: 'Calibri', size: 12, bold: true, color: { argb: colors.valueText } };
+  totalRow.getCell(7).alignment = { horizontal: 'right', vertical: 'middle' };
+  totalRow.getCell(7).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colors.totalsBg } };
+  totalRow.getCell(6).border = {
+    top: { style: 'medium', color: { argb: colors.borderDark } },
+    bottom: { style: 'medium', color: { argb: colors.borderDark } },
+    left: { style: 'thin', color: { argb: colors.borderLight } },
+    right: { style: 'thin', color: { argb: colors.borderLight } }
+  };
+  totalRow.getCell(7).border = {
+    top: { style: 'medium', color: { argb: colors.borderDark } },
+    bottom: { style: 'medium', color: { argb: colors.borderDark } },
+    left: { style: 'thin', color: { argb: colors.borderLight } },
+    right: { style: 'thin', color: { argb: colors.borderLight } }
+  };
+  currentRow++;
 
+  // Amount Paid / Amount Due (if applicable)
   if (invoice.amountPaid > 0) {
-    wsData.push([]);
-    wsData.push(['', '', '', '', '', 'Amount Paid:', invoice.amountPaid]);
-    wsData.push(['', '', '', '', '', 'Amount Due:', invoice.amountDue]);
+    currentRow++; // Empty row
+
+    totalRow = worksheet.getRow(currentRow);
+    totalRow.getCell(6).value = 'Amount Paid:';
+    totalRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF10B981' } };
+    totalRow.getCell(6).alignment = { horizontal: 'right' };
+    totalRow.getCell(7).value = invoice.amountPaid;
+    totalRow.getCell(7).numFmt = '$#,##0.00';
+    totalRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF10B981' } };
+    totalRow.getCell(7).alignment = { horizontal: 'right' };
+    currentRow++;
+
+    totalRow = worksheet.getRow(currentRow);
+    totalRow.getCell(6).value = 'Amount Due:';
+    totalRow.getCell(6).font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFF59E0B' } };
+    totalRow.getCell(6).alignment = { horizontal: 'right' };
+    totalRow.getCell(7).value = invoice.amountDue;
+    totalRow.getCell(7).numFmt = '$#,##0.00';
+    totalRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFF59E0B' } };
+    totalRow.getCell(7).alignment = { horizontal: 'right' };
+    currentRow++;
   }
 
-  // Notes section
+  // ===============================================
+  // NOTES SECTION
+  // ===============================================
+
   if (invoice.invoiceNotes) {
-    wsData.push([]);
-    wsData.push(['Notes:']);
-    wsData.push([invoice.invoiceNotes]);
+    currentRow += 2; // Empty rows before notes
+
+    const notesLabelRow = worksheet.getRow(currentRow);
+    notesLabelRow.getCell(1).value = 'Notes:';
+    notesLabelRow.getCell(1).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.labelText } };
+    currentRow++;
+
+    const notesRow = worksheet.getRow(currentRow);
+    notesRow.getCell(1).value = invoice.invoiceNotes;
+    notesRow.getCell(1).font = { name: 'Calibri', size: 9, color: { argb: colors.labelText } };
+    notesRow.getCell(1).alignment = { wrapText: true, vertical: 'top' };
+    worksheet.mergeCells(currentRow, 1, currentRow, 7);
   }
 
-  // Create workbook
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  // ===============================================
+  // DOWNLOAD FILE
+  // ===============================================
 
-  // Calculate column widths based on content (auto-fit)
-  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
-  const colWidths: number[] = [];
-
-  for (let C = range.s.c; C <= range.e.c; ++C) {
-    let maxWidth = 10; // minimum width
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      const cellAddress = { c: C, r: R };
-      const cellRef = XLSX.utils.encode_cell(cellAddress);
-      const cell = ws[cellRef];
-      if (!cell || !cell.v) continue;
-
-      const cellValue = cell.v.toString();
-      const cellWidth = cellValue.length + 2; // Add padding
-
-      if (cellWidth > maxWidth) {
-        maxWidth = cellWidth;
-      }
-    }
-    // Cap max width at 50 characters
-    colWidths[C] = Math.min(maxWidth, 50);
-  }
-
-  ws['!cols'] = colWidths.map(wch => ({ wch }));
-
-  // Find header row (where table headers are)
-  let headerRowIndex = -1;
-  for (let i = 0; i < wsData.length; i++) {
-    if (wsData[i][0] === 'Date' && wsData[i][1] === 'Order') {
-      headerRowIndex = i;
-      break;
-    }
-  }
-
-  // Apply professional invoice styling (Notion-inspired, flat colors, no gradients)
-  // const range (already declared above) = XLSX.utils.decode_range(ws['!ref'] || 'A1');
-
-  // 1. Style title "Dealer Detail Service" (A1:D1) - 16pt, bold, black on white
-  if (ws['A1']) {
-    ws['A1'].s = {
-      font: { bold: true, sz: 16, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-  }
-
-  // 2. Style invoice number (G1) - 18pt, bold, right-aligned, black on white
-  if (ws['G1']) {
-    ws['G1'].s = {
-      font: { bold: true, sz: 18, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'right', vertical: 'center' }
-    };
-  }
-
-  // 3. Style "Bill To:" label (A3) - 10pt, bold, gray
-  if (ws['A3']) {
-    ws['A3'].s = {
-      font: { bold: true, sz: 10, color: { rgb: '6B7280' } }, // gray-500
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-  }
-
-  // 4. Style dealership name (A4) - 12pt, bold, black
-  if (ws['A4']) {
-    ws['A4'].s = {
-      font: { bold: true, sz: 12, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-  }
-
-  // 5. Style address and email (A5:A6) - 9pt, gray
-  ['A5', 'A6'].forEach(cell => {
-    if (ws[cell]) {
-      ws[cell].s = {
-        font: { sz: 9, color: { rgb: '6B7280' } }, // gray-500
-        fill: { fgColor: { rgb: 'FFFFFF' } },
-        alignment: { horizontal: 'left', vertical: 'center' }
-      };
-    }
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
 
-  // 6. Style right-side labels (E3:E6) - 9pt, bold, gray
-  ['E3', 'E4', 'E5', 'E6'].forEach(cell => {
-    if (ws[cell]) {
-      ws[cell].s = {
-        font: { bold: true, sz: 9, color: { rgb: '6B7280' } }, // gray-500
-        fill: { fgColor: { rgb: 'FFFFFF' } },
-        alignment: { horizontal: 'left', vertical: 'center' }
-      };
-    }
-  });
-
-  // 7. Style right-side values (F3:F6)
-  if (ws['F3']) {
-    ws['F3'].s = {
-      font: { sz: 9, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-  }
-  if (ws['F4']) {
-    ws['F4'].s = {
-      font: { sz: 9, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-  }
-  if (ws['F5']) {
-    ws['F5'].s = {
-      font: { bold: true, sz: 11, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-    ws['F5'].z = '$#,##0.00';
-  }
-  if (ws['F6']) {
-    ws['F6'].s = {
-      font: { bold: true, sz: 9, color: { rgb: '000000' } },
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left', vertical: 'center' }
-    };
-  }
-
-  // 8. Style table headers (row with Date, Order, etc.) - ALL CENTERED, gray-100 background
-  if (headerRowIndex !== -1) {
-    const headerRow = headerRowIndex + 1;
-    const headerCells = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-
-    headerCells.forEach(col => {
-      const cellRef = `${col}${headerRow}`;
-      if (ws[cellRef]) {
-        ws[cellRef].s = {
-          font: { bold: true, sz: 11, color: { rgb: 'FFFFFF' } }, // White text for better contrast
-          fill: { fgColor: { rgb: '4B5563' } }, // gray-600 (darker, more professional)
-          alignment: { horizontal: 'center', vertical: 'center' },
-          border: {
-            top: { style: 'medium', color: { rgb: '374151' } }, // gray-700
-            bottom: { style: 'medium', color: { rgb: '374151' } },
-            left: { style: 'thin', color: { rgb: '6B7280' } },
-            right: { style: 'thin', color: { rgb: '6B7280' } }
-          }
-        };
-      }
-    });
-  }
-
-  // 9. Style data rows with zebra striping and borders (matching PDF)
-  const dataStartRow = headerRowIndex !== -1 ? headerRowIndex + 2 : 8;
-  const dataEndRow = wsData.length - 10; // Before totals
-
-  for (let row = dataStartRow; row <= dataEndRow; row++) {
-    const isEvenRow = (row - dataStartRow) % 2 === 0;
-    const fillColor = isEvenRow ? 'FFFFFF' : 'F9FAFB'; // white / gray-50
-
-    ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(col => {
-      const cellRef = `${col}${row}`;
-      if (ws[cellRef]) {
-        // Date and Order columns centered, others left-aligned, Amount right-aligned
-        const alignment = col === 'A' || col === 'B'
-          ? 'center'
-          : col === 'G'
-          ? 'right'
-          : 'left';
-
-        ws[cellRef].s = {
-          font: { sz: 9, color: { rgb: '000000' } },
-          fill: { fgColor: { rgb: fillColor } },
-          alignment: {
-            horizontal: alignment,
-            vertical: 'center',
-            wrapText: true
-          },
-          border: {
-            top: { style: 'thin', color: { rgb: 'E5E7EB' } },
-            bottom: { style: 'thin', color: { rgb: 'E5E7EB' } },
-            left: { style: 'thin', color: { rgb: 'E5E7EB' } },
-            right: { style: 'thin', color: { rgb: 'E5E7EB' } }
-          }
-        };
-
-        // VIN column: smaller font
-        if (col === 'E') {
-          ws[cellRef].s.font.sz = 8;
-        }
-      }
-    });
-  }
-
-  // 10. Format currency columns with $ sign (Amount column)
-  for (let row = dataStartRow; row <= dataEndRow; row++) {
-    const cellRef = `G${row}`;
-    if (ws[cellRef] && typeof ws[cellRef].v === 'number') {
-      ws[cellRef].z = '$#,##0.00';
-    }
-  }
-
-  // 11. Style totals section (bold, right-aligned, gray background)
-  const totalsStartRow = dataEndRow + 2;
-  for (let row = totalsStartRow; row <= wsData.length; row++) {
-    ['F', 'G'].forEach(col => {
-      const cellRef = `${col}${row}`;
-      if (ws[cellRef]) {
-        ws[cellRef].s = {
-          font: { bold: true, sz: 10, color: { rgb: '000000' } },
-          fill: { fgColor: { rgb: 'F3F4F6' } }, // gray-100
-          alignment: { horizontal: 'right', vertical: 'center' },
-          border: {
-            top: { style: 'thin', color: { rgb: 'E5E7EB' } },
-            bottom: { style: 'thin', color: { rgb: 'E5E7EB' } },
-            left: { style: 'thin', color: { rgb: 'E5E7EB' } },
-            right: { style: 'thin', color: { rgb: 'E5E7EB' } }
-          }
-        };
-
-        // Format currency in totals column
-        if (col === 'G' && typeof ws[cellRef].v === 'number') {
-          ws[cellRef].z = '$#,##0.00';
-        }
-      }
-    });
-  }
-
-  // 12. Merge cells for title "Dealer Detail Service" (A1:D1)
-  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
-
-  // 13. Set row heights
-  ws['!rows'] = [
-    { hpt: 25 }, // Row 1 (title)
-  ];
-
-  // Add worksheet to workbook
-  XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
-
-  // Save file
   const filename = `Invoice-${invoice.invoiceNumber}.xlsx`;
-  XLSX.writeFile(wb, filename);
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
