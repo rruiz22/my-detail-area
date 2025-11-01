@@ -2049,7 +2049,7 @@
     "dealership": "Concesionario",
     "select_dealership": "Seleccionar concesionario",
     "vehicle_display": "Información del Vehículo",
-    "stock_number": "Número de Stock",
+    "stock_number": "Stock/Tag",
     "tag": "TAG",
     "waiter_priority": "Espera - Cliente Esperando",
     "waiter_description": "Esta orden se marcará con prioridad urgente (cliente está esperando)",

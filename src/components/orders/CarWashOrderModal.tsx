@@ -485,29 +485,16 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   )}
                 </div>
 
-                {/* Stock Number and Tag - Side by Side */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="stockNumber">{t('car_wash_orders.stock_number')}</Label>
-                    <Input
-                      id="stockNumber"
-                      value={formData.stockNumber}
-                      onChange={(e) => handleInputChange('stockNumber', e.target.value.toUpperCase())}
-                      className="border-input bg-background uppercase"
-                      placeholder="ST-001"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="tag">{t('car_wash_orders.tag')}</Label>
-                    <Input
-                      id="tag"
-                      value={formData.tag}
-                      onChange={(e) => handleInputChange('tag', e.target.value.toUpperCase())}
-                      className="border-input bg-background uppercase"
-                      placeholder="LOT-A1"
-                    />
-                  </div>
+                {/* Stock/Tag - Single Field */}
+                <div>
+                  <Label htmlFor="stockNumber">{t('car_wash_orders.stock_number')}</Label>
+                  <Input
+                    id="stockNumber"
+                    value={formData.stockNumber}
+                    onChange={(e) => handleInputChange('stockNumber', e.target.value.toUpperCase())}
+                    className="border-input bg-background uppercase"
+                    placeholder="ST-001"
+                  />
                 </div>
 
                 <div>
@@ -717,10 +704,8 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     value={formData.notes}
                     onChange={(e) => handleInputChange('notes', e.target.value)}
                     rows={3}
-                    className="border-input bg-muted/50 resize-none cursor-not-allowed"
-                    placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
-                    readOnly
-                    disabled
+                    className="border-input bg-background resize-none"
+                    placeholder={t('car_wash_orders.notes_placeholder')}
                   />
                 </div>
                   </div>

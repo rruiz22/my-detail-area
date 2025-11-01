@@ -39,7 +39,7 @@ import {
 } from '@/components/ui/table';
 import { useInvoice, useDeleteInvoice, useDeletePayment } from '@/hooks/useInvoices';
 import type { InvoiceStatus } from '@/types/invoices';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,7 +87,19 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   };
 
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'MMM dd, yyyy');
+    return format(parseISO(dateString), 'MMM dd, yyyy');
+  };
+
+  // Clean vehicle description - remove stock number suffix if present
+  const cleanVehicleDescription = (description: string): string => {
+    if (!description || description === 'N/A') return description;
+
+    // Remove everything after " - " (which is usually the stock number)
+    if (description.includes(' - ')) {
+      return description.split(' - ')[0].trim();
+    }
+
+    return description;
   };
 
   const handlePrint = () => {
@@ -106,11 +118,11 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     }
   };
 
-  const handleDownloadExcel = () => {
+  const handleDownloadExcel = async () => {
     if (!invoice) return;
 
     try {
-      generateInvoiceExcel(invoice);
+      await generateInvoiceExcel(invoice);
       toast.success('Excel file downloaded successfully');
     } catch (error) {
       console.error('Error generating Excel:', error);
@@ -127,6 +139,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Loading Invoice</DialogTitle>
+            <DialogDescription>
+              Please wait while we load the invoice details...
+            </DialogDescription>
+          </DialogHeader>
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
@@ -139,6 +157,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Invoice Not Found</DialogTitle>
+            <DialogDescription>
+              The requested invoice could not be found or has been deleted.
+            </DialogDescription>
+          </DialogHeader>
           <div className="flex items-center justify-center py-12">
             <p className="text-muted-foreground">Invoice not found</p>
           </div>
@@ -153,15 +177,19 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div>
-              <DialogTitle className="flex items-center gap-2 text-xl">
-                <FileText className="h-5 w-5" />
-                Invoice {invoice.invoiceNumber}
+              <DialogTitle asChild>
+                <div className="flex items-center gap-2 text-xl">
+                  <FileText className="h-5 w-5" />
+                  <span>Invoice {invoice.invoiceNumber}</span>
+                </div>
               </DialogTitle>
-              <DialogDescription className="flex items-center gap-2 mt-1">
-                {getStatusBadge(invoice.status)}
-                <span className="text-muted-foreground">
-                  • {invoice.items?.length || 0} vehicle{invoice.items?.length !== 1 ? 's' : ''}
-                </span>
+              <DialogDescription asChild>
+                <div className="flex items-center gap-2 mt-1">
+                  {getStatusBadge(invoice.status)}
+                  <span className="text-muted-foreground">
+                    • {invoice.items?.length || 0} vehicle{invoice.items?.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
               </DialogDescription>
             </div>
             <div className="flex gap-2">
@@ -270,10 +298,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                       <TableRow key={item.id}>
                         <TableCell className="text-sm text-center">
                           {item.metadata?.completed_at
-                            ? format(new Date(item.metadata.completed_at), 'MM/dd')
+                            ? format(parseISO(item.metadata.completed_at), 'MM/dd')
                             : item.createdAt
-                            ? format(new Date(item.createdAt), 'MM/dd')
-                            : format(new Date(invoice.issueDate), 'MM/dd')}
+                            ? format(parseISO(item.createdAt), 'MM/dd')
+                            : format(parseISO(invoice.issueDate), 'MM/dd')}
                         </TableCell>
                         <TableCell className="text-sm text-center font-medium">
                           {item.metadata?.order_number || 'N/A'}
@@ -290,7 +318,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                             item.metadata?.stock_number || 'N/A'
                           )}
                         </TableCell>
-                        <TableCell className="text-sm text-center">{item.description}</TableCell>
+                        <TableCell className="text-sm text-center">{cleanVehicleDescription(item.description)}</TableCell>
                         <TableCell className="font-mono text-sm font-semibold text-center">
                           {item.metadata?.vehicle_vin || 'N/A'}
                         </TableCell>
@@ -428,18 +456,20 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               <AlertDialogTitle>
                 {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}
               </AlertDialogTitle>
-              <AlertDialogDescription className="space-y-2">
-                <p>
-                  {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {t('reports.invoices.vehicles_available_again')}
-                </p>
-                {invoice.payments && invoice.payments.length > 0 && (
-                  <p className="text-red-600 font-semibold mt-2">
-                    {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}
+              <AlertDialogDescription asChild>
+                <div className="space-y-2">
+                  <p>
+                    {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}
                   </p>
-                )}
+                  <p className="text-sm text-gray-600">
+                    {t('reports.invoices.vehicles_available_again')}
+                  </p>
+                  {invoice.payments && invoice.payments.length > 0 && (
+                    <p className="text-red-600 font-semibold mt-2">
+                      {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}
+                    </p>
+                  )}
+                </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

@@ -1908,7 +1908,7 @@
     "dealership": "Concessionária",
     "select_dealership": "Selecionar concessionária",
     "vehicle_display": "Informações do Veículo",
-    "stock_number": "Número de Estoque",
+    "stock_number": "Stock/Tag",
     "tag": "TAG",
     "waiter_priority": "Espera - Cliente Aguardando",
     "waiter_description": "Este pedido será marcado com prioridade urgente (cliente está aguardando)",

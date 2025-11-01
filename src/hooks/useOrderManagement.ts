@@ -469,8 +469,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     }
 
     // Apply sorting based on active tab
-    if (tab === 'today' || tab === 'tomorrow') {
-      // Sort by due_date ascending (earliest first) for today and tomorrow tabs
+    if (tab === 'today' || tab === 'tomorrow' || tab === 'pending' || tab === 'in_process' || tab === 'week') {
+      // Sort by due_date ascending (earliest first) for today, tomorrow, pending, in_process, and week tabs
       filtered = filtered.sort((a, b) => {
         const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
         const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;

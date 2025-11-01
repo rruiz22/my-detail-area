@@ -36,8 +36,8 @@ import { useCreateInvoice } from '@/hooks/useInvoices';
 import { supabase } from '@/integrations/supabase/client';
 import type { InvoiceFormData } from '@/types/invoices';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { AlertCircle, Calendar, Car, DollarSign, FileText, Filter, Receipt } from 'lucide-react';
+import { format, parseISO } from 'date-fns';
+import { AlertCircle, Calendar, Car, DollarSign, FileText, Filter, Receipt, Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
@@ -75,13 +75,83 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   const defaultDueDate = new Date(today);
   defaultDueDate.setDate(today.getDate() + 30);
 
+  // Calculate start and end of this week (Monday to Sunday) - using local dates
+  const getWeekDates = (date: Date) => {
+    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Local date only
+    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+    // Calculate days to Monday
+    const daysToMonday = day === 0 ? -6 : 1 - day; // Sunday: -6, Monday: 0, Tuesday: -1, ..., Saturday: -5
+
+    const monday = new Date(current);
+    monday.setDate(current.getDate() + daysToMonday);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6); // Add 6 days to get Sunday
+
+    return { monday, sunday };
+  };
+
+  const { monday: startOfThisWeek, sunday: endOfThisWeek } = getWeekDates(new Date());
+
   // Filters
   const [orderType, setOrderType] = useState<string>('all');
-  const [startDate, setStartDate] = useState<string>(
-    format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd')
-  );
-  const [endDate, setEndDate] = useState<string>(format(today, 'yyyy-MM-dd'));
+  const [dateRange, setDateRange] = useState<'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom'>('this_week');
+  const [startDate, setStartDate] = useState<string>(format(startOfThisWeek, 'yyyy-MM-dd'));
+  const [endDate, setEndDate] = useState<string>(format(endOfThisWeek, 'yyyy-MM-dd'));
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Handle date range preset changes
+  const handleDateRangeChange = (value: 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom') => {
+    setDateRange(value);
+    const now = new Date();
+
+    switch (value) {
+      case 'today':
+        setStartDate(format(now, 'yyyy-MM-dd'));
+        setEndDate(format(now, 'yyyy-MM-dd'));
+        break;
+      case 'this_week':
+        // This week: Monday to Sunday (using local dates)
+        const current = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const day = current.getDay();
+        const daysToMonday = day === 0 ? -6 : 1 - day;
+        const startOfWeek = new Date(current);
+        startOfWeek.setDate(current.getDate() + daysToMonday);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        setStartDate(format(startOfWeek, 'yyyy-MM-dd'));
+        setEndDate(format(endOfWeek, 'yyyy-MM-dd'));
+        break;
+      case 'last_week':
+        // Last week: Monday to Sunday (using local dates)
+        const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const currentDay = currentDate.getDay();
+        const daysToLastMonday = currentDay === 0 ? -13 : 1 - currentDay - 7;
+        const lastWeekStart = new Date(currentDate);
+        lastWeekStart.setDate(currentDate.getDate() + daysToLastMonday);
+        const lastWeekEnd = new Date(lastWeekStart);
+        lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
+        setStartDate(format(lastWeekStart, 'yyyy-MM-dd'));
+        setEndDate(format(lastWeekEnd, 'yyyy-MM-dd'));
+        break;
+      case 'this_month':
+        setStartDate(format(new Date(now.getFullYear(), now.getMonth(), 1), 'yyyy-MM-dd'));
+        setEndDate(format(now, 'yyyy-MM-dd'));
+        break;
+      case 'last_month':
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+        setStartDate(format(lastMonth, 'yyyy-MM-dd'));
+        setEndDate(format(lastMonthEnd, 'yyyy-MM-dd'));
+        break;
+      case 'last_3_months':
+        const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+        setStartDate(format(threeMonthsAgo, 'yyyy-MM-dd'));
+        setEndDate(format(now, 'yyyy-MM-dd'));
+        break;
+    }
+  };
 
   // Selected vehicles
   const [selectedVehicleIds, setSelectedVehicleIds] = useState<Set<string>>(new Set());
@@ -114,10 +184,10 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
       // Use updated_at as fallback for date filtering (handles sales/service orders)
       if (startDate) {
-        query = query.gte('updated_at', new Date(startDate).toISOString());
+        query = query.gte('updated_at', parseISO(startDate).toISOString());
       }
       if (endDate) {
-        const endDateTime = new Date(endDate);
+        const endDateTime = parseISO(endDate);
         endDateTime.setHours(23, 59, 59, 999);
         query = query.lte('updated_at', endDateTime.toISOString());
       }
@@ -159,9 +229,9 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   // Filter vehicles by search term
   const filteredVehicles = useMemo(() => {
     if (!searchTerm) return availableVehicles;
-    
+
     const term = searchTerm.toLowerCase();
-    return availableVehicles.filter(vehicle => 
+    return availableVehicles.filter(vehicle =>
       vehicle.customer_name?.toLowerCase().includes(term) ||
       vehicle.stock_number?.toLowerCase().includes(term) ||
       vehicle.vehicle_vin?.toLowerCase().includes(term) ||
@@ -278,7 +348,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       if (itemsError) throw itemsError;
 
       toast.success(`Invoice created with ${selectedVehicles.length} vehicles`);
-      
+
       // Reset and close
       setSelectedVehicleIds(new Set());
       setSearchTerm('');
@@ -317,16 +387,18 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
           {/* Filters Section */}
-          <div className="space-y-4 mb-4">
-            <div className="flex items-center gap-2 text-sm font-medium">
+          <div className="border rounded-lg p-4 mb-4 bg-white">
+            <div className="flex items-center gap-2 text-sm font-semibold mb-3">
               <Filter className="h-4 w-4" />
               Filter Vehicles
             </div>
-            <div className="grid grid-cols-4 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="orderType" className="text-xs">Department</Label>
+
+            {/* First Row: Department and Date Range Preset */}
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="orderType" className="text-xs font-medium">Department</Label>
                 <Select value={orderType} onValueChange={setOrderType}>
-                  <SelectTrigger id="orderType" className="h-9">
+                  <SelectTrigger id="orderType" className="h-10">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -338,35 +410,79 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="startDate" className="text-xs">From Date</Label>
-                <Input
-                  id="startDate"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="h-9"
-                />
+
+              <div className="space-y-1.5">
+                <Label htmlFor="dateRange" className="text-xs font-medium">Date Range</Label>
+                <Select value={dateRange} onValueChange={handleDateRangeChange}>
+                  <SelectTrigger id="dateRange" className="h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="this_week">This Week</SelectItem>
+                    <SelectItem value="last_week">Last Week</SelectItem>
+                    <SelectItem value="this_month">This Month</SelectItem>
+                    <SelectItem value="last_month">Last Month</SelectItem>
+                    <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                    <SelectItem value="custom">Custom Range</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="endDate" className="text-xs">To Date</Label>
-                <Input
-                  id="endDate"
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="h-9"
-                />
+
+              <div className="space-y-1.5">
+                <Label htmlFor="search" className="text-xs font-medium">Search</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="search"
+                    placeholder="VIN, stock, customer..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-10 pl-9"
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="search" className="text-xs">Search</Label>
-                <Input
-                  id="search"
-                  placeholder="VIN, stock, customer..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="h-9"
-                />
+            </div>
+
+            {/* Second Row: Custom Date Range (only shown when custom is selected) */}
+            {dateRange === 'custom' && (
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t">
+                <div className="space-y-1.5">
+                  <Label htmlFor="startDate" className="text-xs font-medium">From Date</Label>
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => {
+                      setStartDate(e.target.value);
+                      setDateRange('custom');
+                    }}
+                    className="h-10"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="endDate" className="text-xs font-medium">To Date</Label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => {
+                      setEndDate(e.target.value);
+                      setDateRange('custom');
+                    }}
+                    className="h-10"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Date Range Display */}
+            <div className="mt-3 pt-3 border-t">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5" />
+                <span>
+                  Showing vehicles from <span className="font-medium text-foreground">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className="font-medium text-foreground">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>
+                </span>
               </div>
             </div>
           </div>
@@ -406,7 +522,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                   {filteredVehicles.map((vehicle) => (
                     <TableRow
                       key={vehicle.id}
-                      className={selectedVehicleIds.has(vehicle.id) ? 'bg-indigo-50' : ''}
+                      className={selectedVehicleIds.has(vehicle.id) ? 'bg-emerald-50 border-l-2 border-l-emerald-500' : ''}
                     >
                       <TableCell>
                         <Checkbox
@@ -445,85 +561,90 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
           {/* Summary and Invoice Details */}
           {selectedVehicleIds.size > 0 && (
             <div className="mt-4 space-y-4 border-t pt-4">
-              <div className="grid grid-cols-3 gap-4">
-                {/* Invoice Dates */}
-                <div className="space-y-2">
-                  <Label htmlFor="issueDate" className="text-xs flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    Issue Date
-                  </Label>
-                  <Input
-                    id="issueDate"
-                    type="date"
-                    value={format(issueDate, 'yyyy-MM-dd')}
-                    onChange={(e) => setIssueDate(new Date(e.target.value))}
-                    className="h-9"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="dueDate" className="text-xs flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    Due Date
-                  </Label>
-                  <Input
-                    id="dueDate"
-                    type="date"
-                    value={format(dueDate, 'yyyy-MM-dd')}
-                    onChange={(e) => setDueDate(new Date(e.target.value))}
-                    className="h-9"
-                    required
-                  />
-                </div>
-
-                {/* Financial */}
-                <div className="space-y-2">
-                  <Label htmlFor="taxRate" className="text-xs flex items-center gap-1">
-                    <DollarSign className="h-3 w-3" />
-                    Tax Rate (%)
-                  </Label>
-                  <Input
-                    id="taxRate"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max="100"
-                    value={taxRate}
-                    onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-                    className="h-9"
-                  />
+              {/* Invoice Configuration */}
+              <div className="border rounded-lg p-4 bg-white">
+                <div className="text-sm font-semibold mb-3">Invoice Configuration</div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="issueDate" className="text-xs font-medium flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      Issue Date
+                    </Label>
+                    <Input
+                      id="issueDate"
+                      type="date"
+                      value={format(issueDate, 'yyyy-MM-dd')}
+                      onChange={(e) => setIssueDate(new Date(e.target.value))}
+                      className="h-10"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="dueDate" className="text-xs font-medium flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      Due Date
+                    </Label>
+                    <Input
+                      id="dueDate"
+                      type="date"
+                      value={format(dueDate, 'yyyy-MM-dd')}
+                      onChange={(e) => setDueDate(new Date(e.target.value))}
+                      className="h-10"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="taxRate" className="text-xs font-medium flex items-center gap-1">
+                      <DollarSign className="h-3 w-3" />
+                      Tax Rate (%)
+                    </Label>
+                    <Input
+                      id="taxRate"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="100"
+                      value={taxRate}
+                      onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
+                      className="h-10"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Total Summary */}
-              <div className="bg-indigo-50 p-4 rounded-lg">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="text-sm text-muted-foreground">Selected Vehicles</div>
-                    <div className="text-2xl font-bold">{selectedVehicleIds.size}</div>
+              <div className="border rounded-lg p-4 bg-white">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Selected Vehicles</div>
+                    <div className="text-3xl font-bold">{selectedVehicleIds.size}</div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-sm text-muted-foreground">Invoice Total</div>
-                    <div className="text-2xl font-bold text-indigo-600">
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Invoice Total</div>
+                    <div className="text-3xl font-bold text-emerald-600">
                       {formatCurrency(totalAmount)}
                     </div>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-indigo-200 space-y-1 text-xs">
+                <div className="mt-4 pt-4 border-t space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Subtotal:</span>
-                    <span>{formatCurrency(subtotal)}</span>
+                    <span className="text-muted-foreground">Subtotal:</span>
+                    <span className="font-medium">{formatCurrency(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Tax ({taxRate}%):</span>
-                    <span>{formatCurrency(taxAmount)}</span>
+                    <span className="text-muted-foreground">Tax ({taxRate}%):</span>
+                    <span className="font-medium">{formatCurrency(taxAmount)}</span>
                   </div>
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-amber-600">
                       <span>Discount:</span>
-                      <span>-{formatCurrency(discountAmount)}</span>
+                      <span className="font-medium">-{formatCurrency(discountAmount)}</span>
                     </div>
                   )}
+                  <div className="flex justify-between pt-2 border-t text-base">
+                    <span className="font-semibold">Total Amount:</span>
+                    <span className="font-bold">{formatCurrency(totalAmount)}</span>
+                  </div>
                 </div>
               </div>
             </div>

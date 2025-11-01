@@ -35,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreateInvoiceDialog } from '../invoices/CreateInvoiceDialog';
 import { InvoiceDetailsDialog } from '../invoices/InvoiceDetailsDialog';
 import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
+import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInvoices, useInvoiceSummary } from '@/hooks/useInvoices';
@@ -43,7 +44,7 @@ import type { ReportsFilters } from '@/hooks/useReportsData';
 import type { Invoice, InvoiceFilters, InvoiceStatus } from '@/types/invoices';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import {
   AlertCircle,
   Calendar,
@@ -134,16 +135,86 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     searchTerm: ''
   });
 
+  // Calculate start and end of this week (Monday to Sunday) - using local dates
+  const getWeekDates = (date: Date) => {
+    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Local date only
+    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+    // Calculate days to Monday
+    const daysToMonday = day === 0 ? -6 : 1 - day; // Sunday: -6, Monday: 0, Tuesday: -1, ..., Saturday: -5
+
+    const monday = new Date(current);
+    monday.setDate(current.getDate() + daysToMonday);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6); // Add 6 days to get Sunday
+
+    return { monday, sunday };
+  };
+
+  const { monday: startOfThisWeek, sunday: endOfThisWeek } = getWeekDates(new Date());
+
   // Create invoice filters
   const [orderType, setOrderType] = useState<string>('all');
   const [orderStatus, setOrderStatus] = useState<string>('completed');
-  const [startDate, setStartDate] = useState<string>(
-    format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd')
-  );
-  const [endDate, setEndDate] = useState<string>(format(today, 'yyyy-MM-dd'));
+  const [dateRange, setDateRange] = useState<'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom'>('this_week');
+  const [startDate, setStartDate] = useState<string>(format(startOfThisWeek, 'yyyy-MM-dd'));
+  const [endDate, setEndDate] = useState<string>(format(endOfThisWeek, 'yyyy-MM-dd'));
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedService, setSelectedService] = useState<string>('all');
   const [excludedServices, setExcludedServices] = useState<Set<string>>(new Set());
+
+  // Handle date range preset changes for inline tab
+  const handleDateRangeChange = (value: 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom') => {
+    setDateRange(value);
+    const now = new Date();
+
+    switch (value) {
+      case 'today':
+        setStartDate(format(now, 'yyyy-MM-dd'));
+        setEndDate(format(now, 'yyyy-MM-dd'));
+        break;
+      case 'this_week':
+        // This week: Monday to Sunday (using local dates)
+        const current = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const day = current.getDay();
+        const daysToMonday = day === 0 ? -6 : 1 - day;
+        const startOfWeek = new Date(current);
+        startOfWeek.setDate(current.getDate() + daysToMonday);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        setStartDate(format(startOfWeek, 'yyyy-MM-dd'));
+        setEndDate(format(endOfWeek, 'yyyy-MM-dd'));
+        break;
+      case 'last_week':
+        // Last week: Monday to Sunday (using local dates)
+        const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const currentDay = currentDate.getDay();
+        const daysToLastMonday = currentDay === 0 ? -13 : 1 - currentDay - 7;
+        const lastWeekStart = new Date(currentDate);
+        lastWeekStart.setDate(currentDate.getDate() + daysToLastMonday);
+        const lastWeekEnd = new Date(lastWeekStart);
+        lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
+        setStartDate(format(lastWeekStart, 'yyyy-MM-dd'));
+        setEndDate(format(lastWeekEnd, 'yyyy-MM-dd'));
+        break;
+      case 'this_month':
+        setStartDate(format(new Date(now.getFullYear(), now.getMonth(), 1), 'yyyy-MM-dd'));
+        setEndDate(format(now, 'yyyy-MM-dd'));
+        break;
+      case 'last_month':
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+        setStartDate(format(lastMonth, 'yyyy-MM-dd'));
+        setEndDate(format(lastMonthEnd, 'yyyy-MM-dd'));
+        break;
+      case 'last_3_months':
+        const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+        setStartDate(format(threeMonthsAgo, 'yyyy-MM-dd'));
+        setEndDate(format(now, 'yyyy-MM-dd'));
+        break;
+    }
+  };
 
   // Selected vehicles for new invoice
   const [selectedVehicleIds, setSelectedVehicleIds] = useState<Set<string>>(new Set());
@@ -219,9 +290,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       if (!dealerId) return [];
 
       // Use RPC function for complex filtering
-      const startDateTime = startDate ? new Date(startDate).toISOString() : null;
+      const startDateTime = startDate ? parseISO(startDate).toISOString() : null;
       const endDateTime = endDate ? (() => {
-        const dt = new Date(endDate);
+        const dt = parseISO(endDate);
         dt.setHours(23, 59, 59, 999);
         return dt.toISOString();
       })() : null;
@@ -478,12 +549,33 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'N/A';
-    return format(new Date(dateString), 'MMM dd, yyyy');
+    return format(parseISO(dateString), 'MMM dd, yyyy');
   };
 
   const getServiceNames = (services: any[] | null): string => {
     if (!services || !Array.isArray(services) || services.length === 0) return 'N/A';
-    return services.map((s: any) => s.name || s.type || 'Unknown').join(', ');
+
+    return services.map((s: any) => {
+      // Handle different service data structures
+      if (typeof s === 'string') {
+        // If service is just a string ID, try to find it in availableServices
+        const serviceData = availableServices?.find(ds => ds.id === s);
+        return serviceData?.name || s;
+      }
+
+      // If service is an object, try name, type, or id
+      if (s.name) return s.name;
+      if (s.type) return s.type;
+      if (s.service_name) return s.service_name;
+
+      // If service has an id, look it up in availableServices
+      if (s.id) {
+        const serviceData = availableServices?.find(ds => ds.id === s.id);
+        if (serviceData) return serviceData.name;
+      }
+
+      return 'Unknown';
+    }).join(', ');
   };
 
   const handleDownloadInvoice = async (invoice: Invoice) => {
@@ -816,7 +908,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
                   return `
                     <tr>
-                      <td>${format(new Date(itemDate), 'MM/dd/yyyy')}</td>
+                      <td>${format(parseISO(itemDate), 'MM/dd/yyyy')}</td>
                       <td class="font-medium">${stockDisplay}</td>
                       <td>${vehicle}</td>
                       <td class="font-mono">${vin}</td>
@@ -872,7 +964,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                 <div class="payment-item">
                   <div class="left">
                     <p class="method">Payment ${payment.payment_number} - ${payment.payment_method}</p>
-                    <p class="date">${format(new Date(payment.payment_date), 'MMM dd, yyyy')}</p>
+                    <p class="date">${format(parseISO(payment.payment_date), 'MMM dd, yyyy')}</p>
                   </div>
                   <div class="amount">${formatCurrency(payment.amount)}</div>
                 </div>
@@ -1014,7 +1106,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="invoices">
             <FileText className="h-4 w-4 mr-2" />
             Invoices List
@@ -1022,6 +1114,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           <TabsTrigger value="create">
             <Plus className="h-4 w-4 mr-2" />
             Create Invoice
+          </TabsTrigger>
+          <TabsTrigger value="search">
+            <Search className="h-4 w-4 mr-2" />
+            Check Vehicle
           </TabsTrigger>
         </TabsList>
 
@@ -1091,7 +1187,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Invoice</TableHead>
-                      <TableHead>Order Number</TableHead>
+                      <TableHead>Date Range</TableHead>
                       <TableHead>Issue Date</TableHead>
                       <TableHead>Due Date</TableHead>
                       <TableHead className="text-right">Amount</TableHead>
@@ -1103,10 +1199,27 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => {
-                      const orderType = invoice.order?.orderType || 'sales';
-                      const orderPath = `/${orderType}`;
-                      // Use order_number (internal system code like SA-1234, CW-1331)
-                      const orderNumber = invoice.order?.orderNumber || invoice.order?.order_number || 'N/A';
+                      // Calculate date range from invoice items
+                      let dateRangeText = 'N/A';
+                      if (invoice.items && invoice.items.length > 0) {
+                        const dates = invoice.items
+                          .map(item => item.metadata?.completed_at || item.createdAt)
+                          .filter(Boolean)
+                          .map(d => parseISO(d as string));
+
+                        if (dates.length > 0) {
+                          const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+                          const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+
+                          const formatShort = (date: Date) => format(date, 'MMM dd');
+
+                          if (minDate.getTime() === maxDate.getTime()) {
+                            dateRangeText = formatShort(minDate);
+                          } else {
+                            dateRangeText = `${formatShort(minDate)} - ${formatShort(maxDate)}`;
+                          }
+                        }
+                      }
 
                       return (
                         <TableRow
@@ -1121,22 +1234,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                             {invoice.invoiceNumber}
                           </TableCell>
                           <TableCell>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (invoice.order?.id) {
-                                  setSelectedOrderId(invoice.order.id);
-                                  setSelectedOrderType(orderType as any);
-                                  setShowOrderModal(true);
-                                }
-                              }}
-                              className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline flex flex-col text-left"
-                            >
-                              <span>{orderNumber}</span>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium">{dateRangeText}</span>
                               <span className="text-xs text-muted-foreground">
-                                Unassigned
+                                {invoice.items?.length || 0} vehicle{invoice.items?.length !== 1 ? 's' : ''}
                               </span>
-                            </button>
+                            </div>
                           </TableCell>
                           <TableCell className="text-sm">{formatDate(invoice.issueDate)}</TableCell>
                           <TableCell className="text-sm">{formatDate(invoice.dueDate)}</TableCell>
@@ -1209,11 +1312,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-5 gap-4">
-                <div className="space-y-2">
-                  <Label>Department</Label>
+              {/* First Row: Department, Status, Date Range, Search */}
+              <div className="grid grid-cols-4 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="dept-filter-inline" className="text-xs font-medium">Department</Label>
                   <Select value={orderType} onValueChange={setOrderType}>
-                    <SelectTrigger>
+                    <SelectTrigger id="dept-filter-inline" className="h-10">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1225,10 +1329,11 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>Status</Label>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="status-filter-inline" className="text-xs font-medium">Status</Label>
                   <Select value={orderStatus} onValueChange={setOrderStatus}>
-                    <SelectTrigger>
+                    <SelectTrigger id="status-filter-inline" className="h-10">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1250,29 +1355,79 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>From Date</Label>
-                  <Input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                  />
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="daterange-filter-inline" className="text-xs font-medium">Date Range</Label>
+                  <Select value={dateRange} onValueChange={handleDateRangeChange}>
+                    <SelectTrigger id="daterange-filter-inline" className="h-10">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="today">Today</SelectItem>
+                      <SelectItem value="this_week">This Week</SelectItem>
+                      <SelectItem value="last_week">Last Week</SelectItem>
+                      <SelectItem value="this_month">This Month</SelectItem>
+                      <SelectItem value="last_month">Last Month</SelectItem>
+                      <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                      <SelectItem value="custom">Custom Range</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>To Date</Label>
-                  <Input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="search-filter-inline" className="text-xs font-medium">Search</Label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="search-filter-inline"
+                      placeholder="VIN, stock, customer..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="h-10 pl-9"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Search</Label>
-                  <Input
-                    placeholder="VIN, stock, customer..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+              </div>
+
+              {/* Second Row: Custom Date Range (only shown when custom is selected) */}
+              {dateRange === 'custom' && (
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="start-date-filter-inline" className="text-xs font-medium">From Date</Label>
+                    <Input
+                      id="start-date-filter-inline"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => {
+                        setStartDate(e.target.value);
+                        setDateRange('custom');
+                      }}
+                      className="h-10"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="end-date-filter-inline" className="text-xs font-medium">To Date</Label>
+                    <Input
+                      id="end-date-filter-inline"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => {
+                        setEndDate(e.target.value);
+                        setDateRange('custom');
+                      }}
+                      className="h-10"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Date Range Display */}
+              <div className="pt-4 border-t">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span>
+                    Showing vehicles from <span className="font-medium text-foreground">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className="font-medium text-foreground">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>
+                  </span>
                 </div>
               </div>
 
@@ -1503,7 +1658,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         id="issueDate"
                         type="date"
                         value={format(issueDate, 'yyyy-MM-dd')}
-                        onChange={(e) => setIssueDate(new Date(e.target.value))}
+                        onChange={(e) => setIssueDate(parseISO(e.target.value))}
                         required
                       />
                     </div>
@@ -1516,7 +1671,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         id="dueDate"
                         type="date"
                         value={format(dueDate, 'yyyy-MM-dd')}
-                        onChange={(e) => setDueDate(new Date(e.target.value))}
+                        onChange={(e) => setDueDate(parseISO(e.target.value))}
                         required
                       />
                     </div>
@@ -1589,6 +1744,11 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+
+        {/* VEHICLE SEARCH TAB */}
+        <TabsContent value="search" className="space-y-4">
+          <VehicleInvoiceSearch dealerId={dealerId} />
         </TabsContent>
       </Tabs>
 

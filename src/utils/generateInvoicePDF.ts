@@ -47,12 +47,12 @@ function formatShortDate(dateString: string): string {
 }
 
 /**
- * Format long date for invoice header
+ * Format long date for invoice header (abbreviated month)
  */
 function formatLongDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric'
   });
 }
@@ -81,13 +81,15 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
 
-  // ===== COLORS (Notion-style muted palette) =====
+  // ===== COLORS (Professional palette matching Excel) =====
   const colors = {
-    primary: '#111827',      // Gray-900
-    secondary: '#6b7280',    // Gray-500
-    muted: '#9ca3af',        // Gray-400
-    border: '#e5e7eb',       // Gray-200
-    headerBg: '#f3f4f6',     // Gray-100 (NO indigo in headers per spec)
+    primary: '#111827',      // Gray-900 (text)
+    secondary: '#6b7280',    // Gray-500 (labels)
+    muted: '#9ca3af',        // Gray-400 (muted text)
+    border: '#e5e7eb',       // Gray-200 (borders)
+    headerBg: '#6b7280',     // Gray-500 (header background - matches Excel)
+    headerText: '#ffffff',   // White (header text)
+    zebraStripe: '#f9fafb',  // Gray-50 (zebra stripe)
   };
 
   // ===== HEADER SECTION (COMPACT) =====
@@ -174,7 +176,12 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
 
   yPosition = Math.max(yPosition, rightY) + 8;
 
-  yPosition += 10;
+  // Add visual separator line
+  doc.setDrawColor(colors.border);
+  doc.setLineWidth(0.5);
+  doc.line(20, yPosition, pageWidth - 20, yPosition);
+
+  yPosition += 8;
 
   // ===== ITEMS TABLE WITH AUTOTABLE (7 COLUMNS) =====
 
@@ -205,8 +212,11 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       poRoTagStock = item.metadata?.stock_number || '';
     }
 
-    // Vehicle description
-    const vehicle = item.description || '';
+    // Vehicle description - clean stock number suffix if present
+    let vehicle = item.description || '';
+    if (vehicle && vehicle.includes(' - ')) {
+      vehicle = vehicle.split(' - ')[0].trim();
+    }
 
     // VIN
     const vin = item.metadata?.vehicle_vin || '';
@@ -228,16 +238,18 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     theme: 'plain',
     styles: {
       fontSize: 8,
-      cellPadding: 2,
+      cellPadding: 3,
       textColor: colors.primary,
       lineColor: colors.border,
       lineWidth: 0.1,
     },
     headStyles: {
       fillColor: colors.headerBg,
-      textColor: colors.primary,
+      textColor: colors.headerText,
       fontStyle: 'bold',
       halign: 'center',
+      fontSize: 9,
+      cellPadding: 3.5,
     },
     columnStyles: {
       0: { cellWidth: 16, halign: 'center' },                                      // Date
@@ -252,19 +264,51 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       fillColor: [249, 250, 251], // Gray-50 for zebra striping
     },
     showHead: 'everyPage',
-    margin: { left: 20, right: 20 },
+    margin: { left: 20, right: 20, bottom: 25 },
     didDrawPage: (data) => {
-      // Add page numbers if multi-page
-      if (doc.getNumberOfPages() > 1) {
-        doc.setFontSize(8);
-        doc.setTextColor(colors.muted);
+      const pageHeight = doc.internal.pageSize.height;
+      const currentPage = doc.getCurrentPageInfo().pageNumber;
+      const totalPages = doc.getNumberOfPages();
+
+      // Add footer separator line
+      doc.setDrawColor(colors.border);
+      doc.setLineWidth(0.3);
+      doc.line(20, pageHeight - 20, pageWidth - 20, pageHeight - 20);
+
+      // Footer metadata (left side)
+      doc.setFontSize(7);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(colors.muted);
+
+      // Generated date and invoice info
+      const generatedDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      doc.text(`Generated: ${generatedDate}`, 20, pageHeight - 14);
+      doc.text(`Invoice: ${invoice.invoiceNumber}`, 20, pageHeight - 10);
+
+      // Page numbers (center)
+      if (totalPages > 1) {
         doc.text(
-          `Page ${doc.getCurrentPageInfo().pageNumber} of ${doc.getNumberOfPages()}`,
+          `Page ${currentPage} of ${totalPages}`,
           pageWidth / 2,
-          doc.internal.pageSize.height - 10,
+          pageHeight - 12,
           { align: 'center' }
         );
       }
+
+      // Dealer name (right side)
+      doc.text(
+        invoice.dealership?.name || 'My Detail Area',
+        pageWidth - 20,
+        pageHeight - 12,
+        { align: 'right' }
+      );
     }
   });
 
@@ -272,73 +316,6 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   // @ts-ignore - autoTable adds lastAutoTable property to jsPDF instance
   const finalY = doc.lastAutoTable?.finalY || yPosition + 50;
   yPosition = finalY + 10;
-
-  // ===== TOTALS SECTION =====
-  const totalsX = pageWidth - 70;
-  const valuesX = pageWidth - 20;
-
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(colors.secondary);
-
-  // Subtotal
-  doc.text('Subtotal:', totalsX, yPosition);
-  doc.setTextColor(colors.primary);
-  doc.text(formatCurrency(invoice.subtotal), valuesX, yPosition, { align: 'right' });
-  yPosition += 6;
-
-  // Discount (if any)
-  if (invoice.discountAmount && invoice.discountAmount > 0) {
-    doc.setTextColor(colors.secondary);
-    doc.text('Discount:', totalsX, yPosition);
-    doc.setTextColor(colors.primary);
-    doc.text(`-${formatCurrency(invoice.discountAmount)}`, valuesX, yPosition, { align: 'right' });
-    yPosition += 6;
-  }
-
-  // Tax
-  doc.setTextColor(colors.secondary);
-  doc.text(`Tax (${invoice.taxRate}%):`, totalsX, yPosition);
-  doc.setTextColor(colors.primary);
-  doc.text(formatCurrency(invoice.taxAmount), valuesX, yPosition, { align: 'right' });
-  yPosition += 8;
-
-  // Total line
-  doc.setDrawColor(colors.primary);
-  doc.setLineWidth(0.5);
-  doc.line(totalsX, yPosition, pageWidth - 20, yPosition);
-  yPosition += 6;
-
-  // Total amount
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(colors.primary);
-  doc.text('Total Amount:', totalsX, yPosition);
-  doc.text(formatCurrency(invoice.totalAmount), valuesX, yPosition, { align: 'right' });
-
-  // Amount Due (if different from total)
-  if (invoice.amountDue > 0 && invoice.amountDue !== invoice.totalAmount) {
-    yPosition += 10;
-
-    doc.setFillColor('#fef3c7');
-    doc.roundedRect(20, yPosition - 5, pageWidth - 40, 15, 2, 2, 'F');
-
-    doc.setFontSize(10);
-    doc.setTextColor(colors.secondary);
-    doc.text('Amount Due:', 25, yPosition + 3);
-
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor('#78350f');
-    doc.text(formatCurrency(invoice.amountDue), pageWidth - 25, yPosition + 3, { align: 'right' });
-
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(colors.secondary);
-    doc.text(`Due by ${formatLongDate(invoice.dueDate)}`, 25, yPosition + 9);
-
-    yPosition += 20;
-  }
 
   // ===== NOTES SECTION (if any) =====
   if (invoice.invoiceNotes) {
