@@ -1,6 +1,6 @@
 # 📋 Implementación de Sistema de Invoices para Múltiples Vehículos
 
-**Fecha:** 31 de Octubre, 2024  
+**Fecha:** 31 de Octubre, 2024
 **Estado:** ✅ Completado
 
 ---
@@ -304,5 +304,3 @@ Sistema de invoicing completamente funcional que permite:
 - ✅ UI/UX profesional y moderna
 
 **Igual que el PDF de ejemplo, pero digital y con funcionalidades avanzadas!** 🚗💰
-
-
