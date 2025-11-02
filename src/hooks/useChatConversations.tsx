@@ -104,11 +104,14 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
   const activeDealerId = dealerId || dealerships[0]?.id;
 
   // Fetch conversations with optimized batch RPC calls
-  const fetchConversations = useCallback(async () => {
+  const fetchConversations = useCallback(async (isInitialLoad = false) => {
     if (!user?.id || !activeDealerId) return;
 
     try {
-      setLoading(true);
+      // Only show loading spinner on initial load, not on refreshes
+      if (isInitialLoad || conversations.length === 0) {
+        setLoading(true);
+      }
       setError(null);
 
       // Step 1: Get base conversations where user is participant
@@ -214,7 +217,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
             .from('user_presence')
             .select('user_id, status')
             .in('user_id', uniqueUserIds)
-            .eq('dealer_id', dealerId);
+            .eq('dealer_id', activeDealerId);
 
           if (presenceError) {
             console.error('Error fetching presence (non-critical):', presenceError);
@@ -487,11 +490,19 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
     return true;
   });
 
-  // Real-time subscriptions - invalidate RPC cache on changes
+  // Real-time subscriptions - invalidate RPC cache on changes (with debounce for better UX)
   useEffect(() => {
     if (!user?.id || !activeDealerId) return;
 
-    // Subscribe to conversation changes
+    let refreshTimeout: NodeJS.Timeout;
+    const debouncedRefresh = () => {
+      clearTimeout(refreshTimeout);
+      refreshTimeout = setTimeout(() => {
+        fetchConversations();
+      }, 500); // Wait 500ms before refreshing to batch multiple updates
+    };
+
+    // Subscribe to conversation changes (create, update, delete)
     const conversationChannel = supabase
       .channel(`conversations:${activeDealerId}`)
       .on(
@@ -503,8 +514,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           filter: `dealer_id=eq.${activeDealerId}`
         },
         () => {
-          // Invalidate and re-fetch to update all RPC data
-          fetchConversations();
+          debouncedRefresh();
         }
       )
       .subscribe();
@@ -521,8 +531,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           filter: `user_id=eq.${user.id}`
         },
         () => {
-          // Invalidate and re-fetch to update participant counts
-          fetchConversations();
+          debouncedRefresh();
         }
       )
       .subscribe();
@@ -538,13 +547,13 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           table: 'chat_messages'
         },
         () => {
-          // Invalidate and re-fetch to update unread counts and last messages
-          fetchConversations();
+          debouncedRefresh();
         }
       )
       .subscribe();
 
     return () => {
+      clearTimeout(refreshTimeout);
       supabase.removeChannel(conversationChannel);
       supabase.removeChannel(participantChannel);
       supabase.removeChannel(messagesChannel);
@@ -553,7 +562,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
 
   // Initial load
   useEffect(() => {
-    fetchConversations();
+    fetchConversations(true); // isInitialLoad = true
   }, [fetchConversations]);
 
   return {
