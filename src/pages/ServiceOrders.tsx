@@ -10,6 +10,7 @@ import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { orderEvents } from '@/utils/eventBus';
 import { dev, warn } from '@/utils/logger';
+import { determineTabForOrder } from '@/utils/orderUtils';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -68,6 +69,7 @@ export default function ServiceOrders() {
 
   const {
     orders,
+    allOrders,
     tabCounts,
     filters,
     loading,
@@ -87,18 +89,28 @@ export default function ServiceOrders() {
 
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
-    if (orderIdFromUrl && orders.length > 0 && !hasProcessedUrlOrder) {
+    if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
       dev('🎯 [Service] Processing order from URL (one-time):', orderIdFromUrl);
 
-      // Find the order in the loaded orders
-      const targetOrder = orders.find(order => order.id === orderIdFromUrl);
+      // Find the order in ALL orders (not just filtered by active tab)
+      const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
         dev('✅ [Service] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+
+        // Determine the correct tab for this order
+        const correctTab = determineTabForOrder(targetOrder);
+
+        // Auto-navigate to the correct tab if not already there
+        if (correctTab !== activeFilter) {
+          dev('📍 [Service] Auto-navigating to correct tab:', correctTab);
+          setActiveFilter(correctTab);
+        }
+
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        warn('⚠️ [Service] Order not found in current orders list:', orderIdFromUrl);
+        warn('⚠️ [Service] Order not found in orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -106,7 +118,7 @@ export default function ServiceOrders() {
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, orders, hasProcessedUrlOrder, t, toast]);
+  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, activeFilter, setActiveFilter, t, toast]);
 
   const handleCreateOrder = useCallback(() => {
     if (!canCreate) {

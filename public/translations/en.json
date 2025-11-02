@@ -735,6 +735,7 @@
     "edit_service_order": "Edit Service Order",
     "clientInfo": "Customer Info",
     "polling_error": "Failed to refresh order data",
+    "order_not_found": "Order not found. It may have been deleted or you don't have access to it.",
     "customer_information": "Customer Information",
     "customerName": "Customer Name",
     "priority": "Priority",
@@ -1612,6 +1613,7 @@
     "mentioned_you": "Mentioned you",
     "replying_to": "Replying to",
     "replies": "replies",
+    "more_replies": "more replies",
     "unsupported_message_type": "Unsupported message type",
     "unknown_user": "Unknown User",
     "you_reacted": "You reacted",
@@ -5087,7 +5089,7 @@
       "message": "No notifications",
       "filtered": "No notifications match your filters"
     },
-    "show_more": "Show more",
+    "show_more": "Show {{count}} more",
     "toast": {
       "saved": "Saved",
       "savedMessage": "Notification preferences saved successfully",

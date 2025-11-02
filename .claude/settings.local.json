@@ -41,7 +41,12 @@
       "Bash(del execute-migration.js verify-dealership-config.js fix-missing-modules.js final-verification.js)",
       "Bash(if [ -f \".env\" ])",
       "Bash(then echo \"File exists\")",
-      "Bash(else echo \"No .env file\")"
+      "Bash(else echo \"No .env file\")",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__apply_migration",
+      "Bash(src/types/supabase.ts)",
+      "mcp__supabase__list_migrations"
     ],
     "deny": [],
     "ask": []

@@ -11,7 +11,8 @@ import {
   Image as ImageIcon,
   FileText,
   Smile,
-  X
+  X,
+  Reply
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -50,6 +51,12 @@ interface MessageComposerProps {
   disabled?: boolean;
   placeholder?: string;
   participants?: MentionSuggestion[];
+  replyingTo?: {
+    id: string;
+    content: string;
+    sender_name: string;
+  } | null;
+  onCancelReply?: () => void;
 }
 
 export const MessageComposer: React.FC<MessageComposerProps> = ({
@@ -59,7 +66,9 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   onTyping,
   disabled = false,
   placeholder,
-  participants = []
+  participants = [],
+  replyingTo = null,
+  onCancelReply
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -115,7 +124,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   // Handle typing events
   const handleTyping = useCallback((typing: boolean) => {
     onTyping(typing);
-    
+
     if (typing) {
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
@@ -131,7 +140,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     const value = e.target.value;
     setMessage(value);
     adjustTextareaHeight();
-    
+
     if (value.trim()) {
       handleTyping(true);
     } else {
@@ -333,6 +342,31 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
   return (
     <div className="p-2 sm:p-4 space-y-2 sm:space-y-3" data-testid="message-composer">
+      {/* Reply Banner */}
+      {replyingTo && (
+        <div className="flex items-center justify-between bg-muted/50 border-l-4 border-primary rounded-r-lg px-3 py-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <Reply className="h-3 w-3 text-primary flex-shrink-0" />
+              <span className="text-xs font-medium text-primary">
+                {t('chat.replying_to')} {replyingTo.sender_name}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground truncate">
+              {replyingTo.content}
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 w-6 p-0 ml-2 flex-shrink-0 hover:bg-destructive/10 hover:text-destructive"
+            onClick={onCancelReply}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
       {/* Attached Files Preview */}
       {attachedFiles.length > 0 && (
         <div className="flex flex-wrap gap-2">
@@ -533,7 +567,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         onChange={handleFileSelect}
         accept="*/*"
       />
-      
+
       <input
         ref={imageInputRef}
         type="file"

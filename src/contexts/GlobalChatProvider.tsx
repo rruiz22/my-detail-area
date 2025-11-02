@@ -19,20 +19,20 @@ interface GlobalChatContextType {
   isFloatingChatOpen: boolean;
   setIsFloatingChatOpen: (open: boolean) => void;
   activeChats: ActiveChat[];
-  
+
   // Quick actions
   openContextualChat: (entityType: string, entityId: string, participantId?: string) => void;
   openDirectMessage: (userId: string) => void;
   sendQuickSMS: (phone: string, message: string, entityType?: string, entityId?: string) => Promise<void>;
-  
+
   // Notifications
   totalUnreadCount: number;
   notificationGroups: any[];
-  
+
   // Presence
   teamPresence: any[];
   userStatus: any;
-  
+
   // Loading states
   loading: boolean;
 }
@@ -64,7 +64,7 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     try {
       // Create or find existing conversation
       let conversationName = `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} Discussion`;
-      
+
       if (entityType === 'order') {
         // Get order details for better naming
         const { data: order } = await supabase
@@ -72,7 +72,7 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
           .select('order_number, customer_name')
           .eq('id', entityId)
           .single();
-        
+
         if (order) {
           conversationName = `Order ${order.order_number}`;
         }
@@ -155,9 +155,9 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
   };
 
   const sendQuickSMS = async (
-    phone: string, 
-    message: string, 
-    entityType?: string, 
+    phone: string,
+    message: string,
+    entityType?: string,
     entityId?: string
   ) => {
     if (!dealerId) {
@@ -184,7 +184,7 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     }
   };
 
-  // Load active conversations on mount
+  // Load active conversations - optimized to prevent infinite loops
   useEffect(() => {
     if (!conversations.length) {
       setLoading(false);
@@ -200,15 +200,24 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
         lastMessage: conv.other_participant?.name || ''
       }));
 
-    // Only update if actually different to prevent infinite loop
+    // FIX: Compare using array comparison instead of JSON.stringify
+    // This prevents expensive serialization on every update
     setActiveChats(prev => {
-      const isDifferent = JSON.stringify(prev.map(c => c.conversationId)) !==
-                          JSON.stringify(recentConversations.map(c => c.conversationId));
-      return isDifferent ? recentConversations : prev;
+      // Quick length check first
+      if (prev.length !== recentConversations.length) {
+        return recentConversations;
+      }
+
+      // Compare conversation IDs only (cheaper than JSON.stringify)
+      const hasChanges = prev.some((chat, idx) =>
+        chat.conversationId !== recentConversations[idx]?.conversationId ||
+        chat.unreadCount !== recentConversations[idx]?.unreadCount
+      );
+
+      return hasChanges ? recentConversations : prev;
     });
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversations.length, conversations[0]?.id]);
+  }, [conversations]);
 
   // Keyboard shortcut for opening chat
   useEffect(() => {
@@ -228,20 +237,20 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     isFloatingChatOpen,
     setIsFloatingChatOpen,
     activeChats,
-    
+
     // Quick actions
     openContextualChat,
     openDirectMessage,
     sendQuickSMS,
-    
+
     // Notifications
     totalUnreadCount: unreadCount,
     notificationGroups: groupedNotifications,
-    
+
     // Presence
     teamPresence: usersPresence,
     userStatus: myPresence,
-    
+
     // Loading
     loading
   };

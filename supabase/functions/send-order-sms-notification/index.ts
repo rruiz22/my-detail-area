@@ -11,8 +11,10 @@ const twilioPhoneNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // =====================================================
-// Types
+// Types - V6 Followers + Permissions Integration
 // =====================================================
+// ARCHITECTURE: Only ORDER FOLLOWERS with SMS permissions receive notifications
+// This combines: Followers + Custom Role Permissions + User Preferences + Rate Limiting
 
 type OrderSMSEvent =
   | 'order_created'
@@ -58,6 +60,7 @@ interface SMSRecipient {
   name: string;
   phone_number: string;
   role_name?: string;
+  notification_level?: 'all' | 'important' | 'none';
 }
 
 interface SMSPreferences {
@@ -88,12 +91,13 @@ const handler = async (req: Request): Promise<Response> => {
     const request: SMSNotificationRequest = await req.json();
     console.log('📱 SMS Notification Request:', request);
 
-    // 1. Get users with SMS permission for this module
+    // 1. Get followers of this order who have SMS permission
     const usersWithPermission = await getUsersWithSMSPermission(
       request.dealerId,
-      request.module
+      request.module,
+      request.orderId
     );
-    console.log(`✅ Found ${usersWithPermission.length} users with SMS permission`);
+    console.log(`✅ Found ${usersWithPermission.length} followers with SMS permission for order ${request.orderId}`);
 
     if (usersWithPermission.length === 0) {
       return new Response(
@@ -190,14 +194,18 @@ const handler = async (req: Request): Promise<Response> => {
     const successCount = results.filter(r => r.status === 'fulfilled').length;
     const failedCount = results.filter(r => r.status === 'rejected').length;
 
-    console.log(`✅ SMS Sent: ${successCount} successful, ${failedCount} failed`);
+    // Include recipient names for better UX in frontend toasts
+    const recipientNames = finalUsers.map(u => u.name);
+
+    console.log(`✅ SMS Sent: ${successCount} successful, ${failedCount} failed to: ${recipientNames.join(', ')}`);
 
     return new Response(
       JSON.stringify({
         success: true,
         sent: successCount,
         failed: failedCount,
-        recipients: finalUsers.length
+        recipients: finalUsers.length,
+        recipientNames: recipientNames
       }),
       {
         status: 200,
@@ -223,51 +231,74 @@ const handler = async (req: Request): Promise<Response> => {
 
 async function getUsersWithSMSPermission(
   dealerId: number,
-  module: string
+  module: string,
+  orderId: string
 ): Promise<SMSRecipient[]> {
+  // Query followers of this specific order who have SMS permissions
+  // This combines 3 filters:
+  // 1. User is a follower of this order (entity_followers)
+  // 2. User has receive_sms_notifications permission in their role
+  // 3. User has phone number configured
+
   const { data, error } = await supabase
-    .from('dealer_memberships')
+    .from('entity_followers')
     .select(`
       user_id,
+      notification_level,
+      dealer_id,
       profiles!inner(
         id,
         first_name,
         last_name,
         phone_number
       ),
-      dealer_custom_roles!inner(
-        id,
-        role_name,
-        role_module_permissions_new!inner(
-          module_permissions!inner(
-            module,
-            permission_key
+      dealer_memberships!inner(
+        is_active,
+        custom_role_id,
+        dealer_custom_roles!inner(
+          id,
+          role_name,
+          role_module_permissions_new!inner(
+            module_permissions!inner(
+              module,
+              permission_key
+            )
           )
         )
       )
     `)
-    .eq('dealer_id', dealerId)
+    .eq('entity_type', 'order')
+    .eq('entity_id', orderId)
     .eq('is_active', true)
-    .eq('dealer_custom_roles.role_module_permissions_new.module_permissions.module', module)
-    .eq('dealer_custom_roles.role_module_permissions_new.module_permissions.permission_key', 'receive_sms_notifications')
-    .not('profiles.phone_number', 'is', null)
-    .eq('profiles.is_active', true);
+    .neq('notification_level', 'none')
+    .eq('dealer_id', dealerId)
+    .eq('dealer_memberships.is_active', true)
+    .eq('dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.module', module)
+    .eq('dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.permission_key', 'receive_sms_notifications')
+    .not('profiles.phone_number', 'is', null);
 
   if (error) {
-    console.error('Error fetching users with SMS permission:', error);
+    console.error('Error fetching followers with SMS permission:', error);
+    console.error('Error details:', JSON.stringify(error));
     return [];
   }
 
   if (!data || data.length === 0) {
+    console.log(`No followers with SMS permission found for order ${orderId}`);
     return [];
   }
 
-  return data.map((m: any) => ({
+  const users = data.map((m: any) => ({
     id: m.profiles.id,
     name: `${m.profiles.first_name} ${m.profiles.last_name}`.trim(),
     phone_number: m.profiles.phone_number,
-    role_name: m.dealer_custom_roles?.role_name
+    role_name: m.dealer_memberships?.dealer_custom_roles?.role_name,
+    notification_level: m.notification_level
   }));
+
+  console.log(`✅ Found ${users.length} followers with SMS permission:`, users.map(u => `${u.name} (${u.notification_level})`));
+
+  return users;
 }
 
 async function filterByPreferences(
@@ -297,6 +328,22 @@ async function filterByPreferences(
   return users.filter(user => {
     const prefs = preferences.find((p: any) => p.user_id === user.id);
     if (!prefs) return false;
+
+    // Check follower notification level
+    // If user only wants 'important' notifications, filter non-important events
+    if (user.notification_level === 'important') {
+      const importantEvents: OrderSMSEvent[] = [
+        'order_assigned',
+        'status_changed',
+        'due_date_approaching',
+        'overdue',
+        'priority_changed'
+      ];
+      if (!importantEvents.includes(eventType)) {
+        console.log(`[Follower Filter] User ${user.name} has notification_level='important', skipping non-important event '${eventType}'`);
+        return false;
+      }
+    }
 
     const eventPrefs = prefs.event_preferences || {};
 

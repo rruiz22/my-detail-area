@@ -35,10 +35,10 @@ import { cn } from '@/lib/utils';
 import { DeliveryStatusBadge } from './DeliveryStatusBadge';
 import { DeliveryDetails } from './DeliveryDetails';
 import { useDeliveryTracking } from '@/hooks/useDeliveryTracking';
-import type { SmartNotification } from '@/hooks/useSmartNotifications';
+import type { UnifiedNotification } from '@/types/notifications';
 
 interface NotificationItemProps {
-  notification: SmartNotification;
+  notification: UnifiedNotification;
   showEntity?: boolean;
   onMarkAsRead: (id: string) => void;
   onDelete: (id: string) => void;
@@ -69,10 +69,12 @@ function getNotificationIcon(type: string) {
 function getPriorityColor(priority: string) {
   switch (priority) {
     case 'urgent':
+    case 'critical':
       return 'border-red-300 bg-red-50/30';
     case 'high':
       return 'border-amber-300 bg-amber-50/30';
     case 'normal':
+    case 'medium':
       return 'border-gray-200 bg-white';
     case 'low':
       return 'border-gray-200 bg-gray-50/50';
@@ -94,11 +96,11 @@ export function NotificationItem({
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
-  // Track delivery status
+  // Track delivery status (only for notification_log)
   const { status: deliveryStatus, metadata: deliveryMetadata, loading: trackingLoading } =
-    useDeliveryTracking(notification.id);
+    useDeliveryTracking(notification.source === 'notification_log' ? notification.id : '');
 
-  const isRead = notification.status === 'read';
+  const isRead = notification.is_read;
 
   return (
     <div
@@ -118,7 +120,7 @@ export function NotificationItem({
             isRead ? 'bg-muted' : 'bg-primary/10'
           )}
         >
-          {getNotificationIcon(notification.notification_type)}
+          {getNotificationIcon(notification.module || 'default')}
         </div>
 
         {/* Content */}
@@ -166,9 +168,9 @@ export function NotificationItem({
           <p className="text-sm text-muted-foreground mb-2">{notification.message}</p>
 
           {/* Entity Badge */}
-          {showEntity && notification.entity_type && (
+          {showEntity && notification.metadata?.entity_type && (
             <Badge variant="outline" className="mb-2 text-xs">
-              {notification.entity_type}: {notification.entity_id?.slice(0, 8)}
+              {notification.metadata.entity_type as string}: {(notification.metadata.entity_id as string)?.slice(0, 8)}
             </Badge>
           )}
 
@@ -190,11 +192,11 @@ export function NotificationItem({
                 {notification.priority}
               </Badge>
 
-              {/* Delivery Status Badge */}
-              {deliveryStatus && !trackingLoading && (
+              {/* Delivery Status Badge (only for notification_log) */}
+              {notification.source === 'notification_log' && deliveryStatus && !trackingLoading && (
                 <DeliveryStatusBadge
                   status={deliveryStatus}
-                  channel={notification.channel}
+                  channel={(notification.metadata?.channel as string) || 'in_app'}
                   latencyMs={deliveryMetadata?.latency_ms}
                   showLatency={false}
                   size="sm"

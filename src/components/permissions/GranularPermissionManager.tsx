@@ -10,6 +10,8 @@ import { useDealershipModules } from '@/hooks/useDealershipModules';
 import type { AppModule } from '@/hooks/usePermissions';
 import { useRoleModuleAccess } from '@/hooks/useRoleModuleAccess';
 import { supabase } from '@/integrations/supabase/client';
+import { clearPermissionsCache } from '@/utils/permissionSerialization';
+import { useQueryClient } from '@tanstack/react-query';
 import type {
   ModulePermission,
   ModulePermissionKey,
@@ -51,6 +53,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(dealerId || 0);
   const { moduleAccess, toggleModuleAccess, bulkSetModuleAccess, hasRoleModuleAccess, loading: moduleAccessLoading } = useRoleModuleAccess(roleId);
 
@@ -320,9 +323,36 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
         if (modInsertError) throw modInsertError;
       }
 
+      // Invalidate permission cache for all users who have this role assigned
+      const { data: affectedUsers, error: rpcError } = await supabase
+        .rpc('invalidate_role_permission_cache', { p_role_id: roleId });
+
+      if (rpcError) {
+        console.error('Error fetching affected users:', rpcError);
+      } else if (affectedUsers && affectedUsers.length > 0) {
+        console.log(`🔄 Invalidating permissions cache for ${affectedUsers.length} affected user(s)`);
+
+        // Invalidate React Query cache for each affected user
+        for (const { affected_user_id } of affectedUsers) {
+          await queryClient.invalidateQueries({
+            queryKey: ['user-permissions', affected_user_id]
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ['user_profile_permissions', affected_user_id]
+          });
+        }
+
+        // Clear global localStorage permission cache
+        clearPermissionsCache();
+
+        console.log('✅ Permissions cache invalidated for all affected users');
+      }
+
       toast({
         title: t('common.success'),
-        description: 'Permissions saved successfully'
+        description: affectedUsers?.length
+          ? `Permissions saved successfully (${affectedUsers.length} users affected)`
+          : 'Permissions saved successfully'
       });
 
       setHasChanges(false);
@@ -337,7 +367,7 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
     } finally {
       setSaving(false);
     }
-  }, [roleId, systemPermissions, modulePermissions, t, toast, onSave]);
+  }, [roleId, systemPermissions, modulePermissions, t, toast, onSave, queryClient]);
 
   /**
    * Toggle module access for role

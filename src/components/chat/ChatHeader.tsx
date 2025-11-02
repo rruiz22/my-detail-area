@@ -12,11 +12,13 @@ import { useTranslation } from 'react-i18next';
 interface ChatHeaderProps {
   conversationId: string;
   conversations: ChatConversation[];
+  compact?: boolean; // For mobile layout
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
   conversationId,
-  conversations
+  conversations,
+  compact = false
 }) => {
   const { t } = useTranslation();
   const conversation = conversations.find(c => c.id === conversationId);
@@ -24,8 +26,8 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   if (!conversation) {
     return (
-      <div className="h-16 border-b flex items-center justify-center bg-muted/20">
-        <span className="text-muted-foreground">{t('chat.conversation_not_found')}</span>
+      <div className={`${compact ? 'h-auto py-2' : 'h-16'} border-b flex items-center justify-center bg-muted/20`}>
+        <span className="text-muted-foreground text-sm">{t('chat.conversation_not_found')}</span>
       </div>
     );
   }
@@ -50,12 +52,28 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   const isDirectConversation = conversation.conversation_type === 'direct';
   const isOtherUserOnline = usersPresence.some(u => u.is_online);
+  const memberCount = conversation.participant_count || 0;
 
+  // Compact mode for mobile
+  if (compact) {
+    return (
+      <div className="flex items-center flex-1 min-w-0">
+        <h3 className="font-semibold text-foreground truncate text-sm">
+          {getConversationName()}
+        </h3>
+        {isDirectConversation && (
+          <span className={`ml-2 w-2 h-2 rounded-full ${isOtherUserOnline ? 'bg-green-500' : 'bg-gray-300'}`} />
+        )}
+      </div>
+    );
+  }
+
+  // Full desktop layout
   return (
-    <div className="h-16 border-b bg-background flex items-center justify-between px-4">
-      <div className="flex items-center space-x-3">
+    <div className="h-16 border-b bg-background flex items-center justify-between px-4 flex-shrink-0">
+      <div className="flex items-center space-x-3 flex-1 min-w-0">
         {/* Avatar */}
-        <div className="relative">
+        <div className="relative flex-shrink-0">
           {isDirectConversation && conversation.other_participant ? (
             <div className="h-10 w-10 rounded-full overflow-hidden">
               <AvatarSystem
@@ -99,13 +117,17 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
               </span>
             ) : (
             <>
-              <Users className="h-3 w-3" />
-              <span>
-                {conversation.max_participants || 0} {t('chat.members')}
-              </span>
+              {memberCount > 0 && (
+                <>
+                  <Users className="h-3 w-3" />
+                  <span>
+                    {memberCount} {memberCount === 1 ? t('chat.member') : t('chat.members')}
+                  </span>
+                </>
+              )}
               {getOnlineParticipants() > 0 && (
                 <>
-                  <span>•</span>
+                  {memberCount > 0 && <span>•</span>}
                   <Badge variant="secondary" className="h-4 px-1.5 text-xs">
                     {getOnlineParticipants()} {t('chat.online')}
                   </Badge>
@@ -118,13 +140,13 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1 flex-shrink-0">
         {/* Quick Actions */}
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hidden sm:flex">
           <Phone className="h-4 w-4" />
         </Button>
 
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hidden sm:flex">
           <VideoIcon className="h-4 w-4" />
         </Button>
 

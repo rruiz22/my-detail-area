@@ -37,6 +37,9 @@ export interface ChatConversation {
   other_participant?: {
     id: string;
     name: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
     avatar_url?: string;
     is_online?: boolean;
   };
@@ -91,7 +94,7 @@ interface CreateConversationData {
 export const useChatConversations = (dealerId?: number): UseChatConversationsReturn => {
   const { user } = useAuth();
   const { dealerships } = useAccessibleDealerships();
-  
+
   const [conversations, setConversations] = useState<ChatConversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -178,28 +181,91 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
         // Graceful degradation - continue without last messages
       }
 
-      // Step 4: Batch call RPC #3 - get_conversation_participants (for participant count and direct chat info)
-      const participantsPromises = conversationIds.map(async (convId) => {
-        try {
-          const { data: participants, error: participantsError } = await supabase
-            .rpc('get_conversation_participants', {
-              conversation_uuid: convId,
-              requesting_user_id: user.id
-            });
+      // Step 4: OPTIMIZED - Fetch participants for all conversations in ONE query
+      // Instead of N queries, we do 1 query with filter
+      let participantsResults: Array<{ convId: string; participants: any[] }> = [];
 
-          if (participantsError) {
-            console.error(`Error fetching participants for ${convId} (non-critical):`, participantsError);
-            return { convId, participants: [] };
+      try {
+        // First, get all participants
+        const { data: allParticipants, error: participantsError } = await supabase
+          .from('chat_participants')
+          .select('conversation_id, user_id, permission_level, is_active, last_read_at')
+          .in('conversation_id', conversationIds)
+          .eq('is_active', true);
+
+        if (participantsError) {
+          console.error('Error fetching participants (non-critical):', participantsError);
+        } else if (allParticipants && allParticipants.length > 0) {
+          // Get unique user IDs
+          const uniqueUserIds = [...new Set(allParticipants.map(p => p.user_id))];
+
+          // Fetch all profiles in one query
+          const { data: profiles, error: profilesError } = await supabase
+            .from('profiles')
+            .select('id, first_name, last_name, email, avatar_url')
+            .in('id', uniqueUserIds);
+
+          if (profilesError) {
+            console.error('Error fetching profiles (non-critical):', profilesError);
           }
 
-          return { convId, participants: participants || [] };
-        } catch (error) {
-          console.error(`Failed to fetch participants for ${convId} (non-critical):`, error);
-          return { convId, participants: [] };
-        }
-      });
+          // Fetch presence status for all users
+          const { data: presenceData, error: presenceError } = await supabase
+            .from('user_presence')
+            .select('user_id, status')
+            .in('user_id', uniqueUserIds)
+            .eq('dealer_id', dealerId);
 
-      const participantsResults = await Promise.all(participantsPromises);
+          if (presenceError) {
+            console.error('Error fetching presence (non-critical):', presenceError);
+          }
+
+          // Create a map of user_id -> profile for quick lookup
+          const profilesMap = new Map(
+            (profiles || []).map(p => [p.id, p])
+          );
+
+          // Create a map of user_id -> presence status for quick lookup
+          const presenceMap = new Map(
+            (presenceData || []).map(p => [p.user_id, p.status])
+          );
+
+          // Group participants by conversation_id
+          const participantsMap = new Map<string, any[]>();
+
+          allParticipants.forEach((p: any) => {
+            const convId = p.conversation_id;
+            if (!participantsMap.has(convId)) {
+              participantsMap.set(convId, []);
+            }
+
+            const profile = profilesMap.get(p.user_id);
+            const presenceStatus = presenceMap.get(p.user_id) || 'offline';
+
+            participantsMap.get(convId)!.push({
+              user_id: p.user_id,
+              user_name: profile
+                ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.email || 'Unknown'
+                : 'Unknown',
+              user_first_name: profile?.first_name,
+              user_last_name: profile?.last_name,
+              user_email: profile?.email,
+              user_avatar_url: profile?.avatar_url,
+              presence_status: presenceStatus,
+              permission_level: p.permission_level,
+              is_active: p.is_active,
+              last_read_at: p.last_read_at
+            });
+          });
+
+          participantsResults = Array.from(participantsMap.entries()).map(([convId, participants]) => ({
+            convId,
+            participants
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch participants (non-critical):', error);
+      }
 
       // Step 5: Merge all RPC results into conversations
       const enrichedConversations: ChatConversation[] = conversationsData.map(conv => {
@@ -215,6 +281,9 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           otherParticipant = {
             id: participant.user_id,
             name: participant.user_name,
+            first_name: participant.user_first_name,
+            last_name: participant.user_last_name,
+            email: participant.user_email,
             avatar_url: participant.user_avatar_url || undefined,
             is_online: participant.presence_status === 'online'
           };
@@ -264,7 +333,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
         // Find existing direct conversation between these users
         const existingConv = existing?.find(conv => {
           const participantIds = conv.chat_participants.map((p: any) => p.user_id);
-          return participantIds.includes(user.id) && 
+          return participantIds.includes(user.id) &&
                  participantIds.includes(data.participant_ids[0]) &&
                  participantIds.length === 2;
         });
@@ -411,7 +480,7 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
         conv.description?.toLowerCase(),
         conv.other_participant?.name?.toLowerCase()
       ].filter(Boolean);
-      
+
       return searchTerms.some(term => term?.includes(query));
     }
 

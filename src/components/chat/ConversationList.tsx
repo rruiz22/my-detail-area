@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -578,14 +578,22 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                   >
                     <div className="relative flex-shrink-0">
                       {conversation.conversation_type === 'direct' && conversation.other_participant ? (
-                        <div className="h-10 w-10 rounded-full overflow-hidden">
-                          <AvatarSystem
-                            name={conversation.other_participant.name}
-                            email={conversation.other_participant.email}
-                            seed={conversation.other_participant.avatar_seed as any}
-                            size={40}
-                          />
-                        </div>
+                        <>
+                          <div className="h-10 w-10 rounded-full overflow-hidden">
+                            <AvatarSystem
+                              name={conversation.other_participant.name}
+                              firstName={conversation.other_participant.first_name}
+                              lastName={conversation.other_participant.last_name}
+                              email={conversation.other_participant.email}
+                              avatarUrl={conversation.other_participant.avatar_url}
+                              size={40}
+                            />
+                          </div>
+                          {/* Online indicator */}
+                          {conversation.other_participant.is_online && (
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
+                          )}
+                        </>
                       ) : (
                         <Avatar className="h-10 w-10">
                           <AvatarFallback className="text-xs bg-gray-100 text-gray-700">
@@ -615,7 +623,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                           </div>
 
                           <div className="flex items-center gap-2 flex-shrink-0">
-                            {conversation.unread_count && conversation.unread_count > 0 && (
+                            {(conversation.unread_count || 0) > 0 && (
                               <Badge className="bg-emerald-500 text-white hover:bg-emerald-600 text-xs px-2 py-0.5 rounded-full border-0 font-semibold">
                                 {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
                               </Badge>
@@ -669,7 +677,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                           )}>
                             {getConversationName(conversation)}
                           </h4>
-                          {conversation.unread_count && conversation.unread_count > 0 && (
+                          {(conversation.unread_count || 0) > 0 && (
                             <Badge className="ml-2 bg-emerald-500 text-white hover:bg-emerald-600 text-xs px-2 py-0.5 rounded-full border-0 font-semibold">
                               {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
                             </Badge>

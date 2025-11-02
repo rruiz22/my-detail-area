@@ -8,6 +8,7 @@ import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import logger from '@/utils/logger';
+import { determineTabForOrder } from '@/utils/orderUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from 'react';
@@ -93,15 +94,25 @@ export default function CarWash() {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
       logger.dev('[CarWash] Processing order from URL (one-time):', orderIdFromUrl);
 
-      // Find the order in the loaded orders
+      // Find the order in ALL orders (not just filtered by active tab)
       const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
         logger.success('[CarWash] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
+
+        // Determine the correct tab for this order
+        const correctTab = determineTabForOrder(targetOrder);
+
+        // Auto-navigate to the correct tab if not already there
+        if (correctTab !== activeFilter) {
+          logger.dev('[CarWash] Auto-navigating to correct tab:', correctTab);
+          setActiveFilter(correctTab);
+        }
+
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        logger.warn('[CarWash] Order not found in current orders list:', orderIdFromUrl);
+        logger.warn('[CarWash] Order not found in orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -109,7 +120,7 @@ export default function CarWash() {
         setHasProcessedUrlOrder(true); // Prevent retrying
       }
     }
-  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, t, toast]);
+  }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, activeFilter, setActiveFilter, t, toast]);
 
   // Helper function to get dates in system timezone for filtering
   const getSystemTimezoneDates = useMemo(() => (offset: number = 0) => {

@@ -753,6 +753,7 @@
     "edit_service_order": "Editar Pedido de Serviço",
     "clientInfo": "Info do Cliente",
     "polling_error": "Falha ao atualizar dados do pedido",
+    "order_not_found": "Pedido não encontrado. Pode ter sido excluído ou você não tem acesso a ele.",
     "customer_information": "Informações do Cliente",
     "customerName": "Nome do Cliente",
     "priority": "Prioridade",
@@ -4773,7 +4774,7 @@
       "message": "Sem notificações",
       "filtered": "Nenhuma notificação corresponde aos seus filtros"
     },
-    "show_more": "Mostrar mais",
+    "show_more": "Mostrar {{count}} mais",
     "toast": {
       "saved": "Salvo",
       "savedMessage": "Preferências de notificação salvas com sucesso",

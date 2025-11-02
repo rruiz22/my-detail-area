@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { toast } from '@/hooks/use-toast';
 import {
   playNotificationSound,
@@ -8,234 +10,454 @@ import {
   areBrowserNotificationsEnabled,
 } from '@/utils/notificationUtils';
 import * as logger from '@/utils/logger';
+import { validateDealerId } from '@/utils/dealerValidation';
+import type {
+  UnifiedNotification,
+  NotificationSource,
+  SmartNotification,
+  GetReadyNotification,
+  transformSmartNotificationToUnified,
+  transformGetReadyToUnified,
+} from '@/types/notifications';
 
-// Type for notification data payload
-export interface NotificationData {
-  entity_type?: string;
-  entity_id?: string;
-  action?: string;
-  url?: string;
-  metadata?: Record<string, unknown>;
-  [key: string]: unknown;
-}
+// Import transformation functions
+import {
+  transformSmartNotificationToUnified as transformSmart,
+  transformGetReadyToUnified as transformGetReady,
+} from '@/types/notifications';
 
-export interface SmartNotification {
-  id: string;
-  user_id: string;
-  dealer_id: number;
-  entity_type?: string;
-  entity_id?: string;
-  notification_type: string;
-  channel: string;
-  title: string;
-  message: string;
-  data: NotificationData | null;
-  status: 'pending' | 'sent' | 'delivered' | 'failed' | 'read';
-  priority: 'low' | 'normal' | 'high' | 'urgent';
-  created_at: string;
-  read_at?: string;
-}
+// Legacy export for backward compatibility
+export type { NotificationData, SmartNotification } from '@/types/notifications';
 
 export interface NotificationGroup {
   entity_type: string;
   entity_id: string;
-  notifications: SmartNotification[];
+  notifications: UnifiedNotification[];
   unreadCount: number;
-  latestNotification: SmartNotification;
+  latestNotification: UnifiedNotification;
 }
 
 export interface UseSmartNotificationsReturn {
-  notifications: SmartNotification[];
+  notifications: UnifiedNotification[];
   groupedNotifications: NotificationGroup[];
   loading: boolean;
   error: string | null;
   unreadCount: number;
-  markAsRead: (notificationId: string) => Promise<void>;
+  markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;
-  deleteNotification: (notificationId: string) => Promise<void>;
+  deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;
   refreshNotifications: () => Promise<void>;
 }
 
+/**
+ * useSmartNotifications - Unified notification hook
+ *
+ * COMBINES notifications from BOTH:
+ * - notification_log (enterprise notification system)
+ * - get_ready_notifications (Get Ready module notifications)
+ *
+ * This allows the bell icon to show all notifications across the system
+ * until we fully migrate Get Ready to the unified notification system.
+ *
+ * FEATURES:
+ * - Dual table queries with TanStack Query
+ * - Real-time subscriptions for both tables
+ * - Unified notification interface
+ * - Source-aware actions (mark as read, dismiss)
+ * - Backward compatible with existing NotificationBell component
+ *
+ * @param dealerId - Optional dealerId (deprecated, uses DealerFilterContext internally)
+ */
 export function useSmartNotifications(dealerId?: number): UseSmartNotificationsReturn {
   const { user } = useAuth();
-  const [notifications, setNotifications] = useState<SmartNotification[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { selectedDealerId } = useDealerFilter();
+  const queryClient = useQueryClient();
 
-  const fetchNotifications = useCallback(async () => {
-    if (!user?.id || !dealerId) return;
+  // Use validated dealer ID from context (or fallback to prop for backward compatibility)
+  const validatedDealerId = validateDealerId(dealerId || selectedDealerId);
 
-    try {
-      setLoading(true);
-      setError(null);
+  // =====================================================
+  // QUERY 1: notification_log
+  // =====================================================
 
-      const { data, error: fetchError } = await supabase
+  const {
+    data: smartNotifications = [],
+    isLoading: isLoadingSmartNotifications,
+    error: smartNotificationsError,
+  } = useQuery({
+    queryKey: ['smartNotifications', validatedDealerId, user?.id],
+    queryFn: async (): Promise<SmartNotification[]> => {
+      if (!user?.id || !validatedDealerId) {
+        return [];
+      }
+
+      const { data, error } = await supabase
         .from('notification_log')
         .select('*')
         .eq('user_id', user.id)
-        .eq('dealer_id', dealerId)
+        .eq('dealer_id', validatedDealerId)
         .order('created_at', { ascending: false })
         .limit(100);
 
-      if (fetchError) throw fetchError;
+      if (error) throw error;
 
-      setNotifications(data || []);
-    } catch (err) {
-      console.error('Error fetching notifications:', err);
-      setError(err instanceof Error ? err.message : 'Error fetching notifications');
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id, dealerId]);
+      return data || [];
+    },
+    enabled: !!user?.id && !!validatedDealerId,
+    staleTime: 30000, // 30 seconds
+    refetchInterval: 60000, // 1 minute
+  });
 
-  const markAsRead = useCallback(async (notificationId: string) => {
-    try {
-      const { error } = await supabase
-        .from('notification_log')
-        .update({ 
-          status: 'read',
-          read_at: new Date().toISOString()
-        })
-        .eq('id', notificationId);
+  // =====================================================
+  // QUERY 2: get_ready_notifications
+  // =====================================================
+
+  const {
+    data: getReadyNotifications = [],
+    isLoading: isLoadingGetReadyNotifications,
+    error: getReadyNotificationsError,
+  } = useQuery({
+    queryKey: ['getReadyNotifications', validatedDealerId, user?.id],
+    queryFn: async (): Promise<GetReadyNotification[]> => {
+      if (!user?.id || !validatedDealerId) {
+        return [];
+      }
+
+      const { data, error } = await supabase
+        .from('get_ready_notifications')
+        .select('*')
+        .eq('dealer_id', validatedDealerId)
+        .or(`user_id.eq.${user.id},user_id.is.null`)
+        .is('dismissed_at', null)
+        .order('created_at', { ascending: false })
+        .limit(100);
 
       if (error) throw error;
 
-      setNotifications(prev => 
-        prev.map(n => 
-          n.id === notificationId 
-            ? { ...n, status: 'read' as const, read_at: new Date().toISOString() }
-            : n
-        )
-      );
-    } catch (err) {
-      console.error('Error marking notification as read:', err);
+      return data || [];
+    },
+    enabled: !!user?.id && !!validatedDealerId,
+    staleTime: 30000, // 30 seconds
+    refetchInterval: 60000, // 1 minute
+  });
+
+  // =====================================================
+  // COMBINE & TRANSFORM NOTIFICATIONS
+  // =====================================================
+
+  const notifications = useMemo(() => {
+    // Transform notification_log entries to unified format
+    const transformedSmart = smartNotifications.map(transformSmart);
+
+    // Transform get_ready_notifications entries to unified format
+    const transformedGetReady = getReadyNotifications.map(transformGetReady);
+
+    // Combine both arrays
+    const combined = [...transformedSmart, ...transformedGetReady];
+
+    // Sort by created_at (newest first)
+    return combined.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  }, [smartNotifications, getReadyNotifications]);
+
+  // =====================================================
+  // LOADING & ERROR STATE
+  // =====================================================
+
+  const loading = isLoadingSmartNotifications || isLoadingGetReadyNotifications;
+
+  const error = useMemo(() => {
+    if (smartNotificationsError) {
+      return smartNotificationsError instanceof Error
+        ? smartNotificationsError.message
+        : 'Error fetching smart notifications';
     }
-  }, []);
+    if (getReadyNotificationsError) {
+      return getReadyNotificationsError instanceof Error
+        ? getReadyNotificationsError.message
+        : 'Error fetching Get Ready notifications';
+    }
+    return null;
+  }, [smartNotificationsError, getReadyNotificationsError]);
+
+  // =====================================================
+  // MARK AS READ (Source-aware with auto-detection)
+  // =====================================================
+
+  const markAsRead = useCallback(
+    async (notificationId: string, source?: NotificationSource) => {
+      try {
+        // Auto-detect source if not provided (for backward compatibility)
+        let detectedSource = source;
+        if (!detectedSource) {
+          const notification = notifications.find(n => n.id === notificationId);
+          if (notification) {
+            detectedSource = notification.source;
+          } else {
+            throw new Error('Notification not found');
+          }
+        }
+
+        if (detectedSource === 'notification_log') {
+          // Update notification_log table
+          const { error } = await supabase
+            .from('notification_log')
+            .update({
+              status: 'read',
+              read_at: new Date().toISOString(),
+            })
+            .eq('id', notificationId);
+
+          if (error) throw error;
+        } else {
+          // Update get_ready_notifications table via RPC
+          if (!user?.id) throw new Error('User not authenticated');
+
+          const { error } = await supabase.rpc('mark_notification_read', {
+            p_notification_id: notificationId,
+            p_user_id: user.id,
+          });
+
+          if (error) throw error;
+        }
+
+        // Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
+        queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
+        queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
+      } catch (err) {
+        console.error('Error marking notification as read:', err);
+        toast({
+          title: 'Error',
+          description: 'Failed to mark notification as read',
+          variant: 'destructive',
+        });
+      }
+    },
+    [notifications, user?.id, queryClient]
+  );
+
+  // =====================================================
+  // MARK ALL AS READ
+  // =====================================================
 
   const markAllAsRead = useCallback(async () => {
-    if (!user?.id || !dealerId) return;
+    if (!user?.id || !validatedDealerId) return;
 
     try {
-      const { error } = await supabase
+      // Mark all notification_log as read
+      const { error: smartError } = await supabase
         .from('notification_log')
-        .update({ 
+        .update({
           status: 'read',
-          read_at: new Date().toISOString()
+          read_at: new Date().toISOString(),
         })
         .eq('user_id', user.id)
-        .eq('dealer_id', dealerId)
+        .eq('dealer_id', validatedDealerId)
         .neq('status', 'read');
 
-      if (error) throw error;
+      if (smartError) throw smartError;
 
-      await fetchNotifications();
+      // Mark all get_ready_notifications as read via RPC
+      const { error: getReadyError } = await supabase.rpc(
+        'mark_all_notifications_read',
+        {
+          p_user_id: user.id,
+          p_dealer_id: validatedDealerId,
+        }
+      );
+
+      if (getReadyError) throw getReadyError;
+
+      // Invalidate queries
+      queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
+      queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
+
+      toast({
+        title: 'Success',
+        description: 'All notifications marked as read',
+      });
     } catch (err) {
       console.error('Error marking all notifications as read:', err);
+      toast({
+        title: 'Error',
+        description: 'Failed to mark all notifications as read',
+        variant: 'destructive',
+      });
     }
-  }, [user?.id, dealerId, fetchNotifications]);
+  }, [user?.id, validatedDealerId, queryClient]);
 
-  const markEntityAsRead = useCallback(async (entityType: string, entityId: string) => {
-    if (!user?.id || !dealerId) return;
+  // =====================================================
+  // MARK ENTITY AS READ (notification_log only)
+  // =====================================================
 
-    try {
-      const { error } = await supabase
-        .from('notification_log')
-        .update({ 
-          status: 'read',
-          read_at: new Date().toISOString()
-        })
-        .eq('user_id', user.id)
-        .eq('dealer_id', dealerId)
-        .eq('entity_type', entityType)
-        .eq('entity_id', entityId)
-        .neq('status', 'read');
+  const markEntityAsRead = useCallback(
+    async (entityType: string, entityId: string) => {
+      if (!user?.id || !validatedDealerId) return;
 
-      if (error) throw error;
+      try {
+        const { error } = await supabase
+          .from('notification_log')
+          .update({
+            status: 'read',
+            read_at: new Date().toISOString(),
+          })
+          .eq('user_id', user.id)
+          .eq('dealer_id', validatedDealerId)
+          .eq('entity_type', entityType)
+          .eq('entity_id', entityId)
+          .neq('status', 'read');
 
-      setNotifications(prev => 
-        prev.map(n => 
-          n.entity_type === entityType && n.entity_id === entityId && n.status !== 'read'
-            ? { ...n, status: 'read' as const, read_at: new Date().toISOString() }
-            : n
-        )
-      );
-    } catch (err) {
-      console.error('Error marking entity notifications as read:', err);
-    }
-  }, [user?.id, dealerId]);
+        if (error) throw error;
 
-  const deleteNotification = useCallback(async (notificationId: string) => {
-    try {
-      const { error } = await supabase
-        .from('notification_log')
-        .delete()
-        .eq('id', notificationId);
+        // Invalidate queries
+        queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
+      } catch (err) {
+        console.error('Error marking entity notifications as read:', err);
+      }
+    },
+    [user?.id, validatedDealerId, queryClient]
+  );
 
-      if (error) throw error;
+  // =====================================================
+  // DELETE/DISMISS NOTIFICATION (Source-aware with auto-detection)
+  // =====================================================
 
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
-    } catch (err) {
-      console.error('Error deleting notification:', err);
-    }
-  }, []);
+  const deleteNotification = useCallback(
+    async (notificationId: string, source?: NotificationSource) => {
+      try {
+        // Auto-detect source if not provided (for backward compatibility)
+        let detectedSource = source;
+        if (!detectedSource) {
+          const notification = notifications.find(n => n.id === notificationId);
+          if (notification) {
+            detectedSource = notification.source;
+          } else {
+            throw new Error('Notification not found');
+          }
+        }
 
-  // Group notifications by entity
+        if (detectedSource === 'notification_log') {
+          // Delete from notification_log
+          const { error } = await supabase
+            .from('notification_log')
+            .delete()
+            .eq('id', notificationId);
+
+          if (error) throw error;
+        } else {
+          // Dismiss get_ready_notification via RPC
+          if (!user?.id) throw new Error('User not authenticated');
+
+          const { error } = await supabase.rpc('dismiss_notification', {
+            p_notification_id: notificationId,
+            p_user_id: user.id,
+          });
+
+          if (error) throw error;
+        }
+
+        // Invalidate queries
+        queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
+        queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
+        queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
+      } catch (err) {
+        console.error('Error deleting/dismissing notification:', err);
+        toast({
+          title: 'Error',
+          description: 'Failed to dismiss notification',
+          variant: 'destructive',
+        });
+      }
+    },
+    [notifications, user?.id, queryClient]
+  );
+
+  // =====================================================
+  // REFRESH NOTIFICATIONS
+  // =====================================================
+
+  const refreshNotifications = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
+    await queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
+  }, [queryClient]);
+
+  // =====================================================
+  // GROUP NOTIFICATIONS BY ENTITY (for notification_log)
+  // =====================================================
+
   const groupedNotifications = useMemo(() => {
     const groups: { [key: string]: NotificationGroup } = {};
 
-    notifications.forEach(notification => {
-      if (!notification.entity_type || !notification.entity_id) return;
+    notifications.forEach((notification) => {
+      // Only group notification_log entries (which have entity metadata)
+      if (notification.source !== 'notification_log') return;
 
-      const key = `${notification.entity_type}_${notification.entity_id}`;
-      
+      const entityType = notification.metadata?.entity_type as string | undefined;
+      const entityId = notification.metadata?.entity_id as string | undefined;
+
+      if (!entityType || !entityId) return;
+
+      const key = `${entityType}_${entityId}`;
+
       if (!groups[key]) {
         groups[key] = {
-          entity_type: notification.entity_type,
-          entity_id: notification.entity_id,
+          entity_type: entityType,
+          entity_id: entityId,
           notifications: [],
           unreadCount: 0,
-          latestNotification: notification
+          latestNotification: notification,
         };
       }
 
       groups[key].notifications.push(notification);
-      if (notification.status !== 'read') {
+      if (!notification.is_read) {
         groups[key].unreadCount++;
       }
 
       // Update latest notification if this one is newer
-      if (new Date(notification.created_at) > new Date(groups[key].latestNotification.created_at)) {
+      if (
+        new Date(notification.created_at) >
+        new Date(groups[key].latestNotification.created_at)
+      ) {
         groups[key].latestNotification = notification;
       }
     });
 
-    return Object.values(groups).sort((a, b) => 
-      new Date(b.latestNotification.created_at).getTime() - 
-      new Date(a.latestNotification.created_at).getTime()
+    return Object.values(groups).sort(
+      (a, b) =>
+        new Date(b.latestNotification.created_at).getTime() -
+        new Date(a.latestNotification.created_at).getTime()
     );
   }, [notifications]);
 
-  const unreadCount = useMemo(() => 
-    notifications.filter(n => n.status !== 'read').length, 
+  // =====================================================
+  // UNREAD COUNT
+  // =====================================================
+
+  const unreadCount = useMemo(
+    () => notifications.filter((n) => !n.is_read && !n.is_dismissed).length,
     [notifications]
   );
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications]);
+  // =====================================================
+  // REAL-TIME SUBSCRIPTIONS
+  // =====================================================
 
-  // Real-time subscription with optimistic updates
   useEffect(() => {
-    if (!user?.id || !dealerId) return;
+    if (!user?.id || !validatedDealerId) return;
 
-    logger.dev('[useSmartNotifications] Setting up real-time subscription', {
+    logger.dev('[useSmartNotifications] Setting up dual real-time subscriptions', {
       userId: user.id,
-      dealerId,
+      dealerId: validatedDealerId,
     });
 
-    const channel = supabase
-      .channel(`notifications_${user.id}_${dealerId}`)
+    // SUBSCRIPTION 1: notification_log
+    const smartChannel = supabase
+      .channel(`notifications_${user.id}_${validatedDealerId}`)
       .on(
         'postgres_changes',
         {
@@ -246,64 +468,45 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
         },
         async (payload) => {
           try {
-            logger.dev('[useSmartNotifications] INSERT event received:', payload);
+            logger.dev('[useSmartNotifications] notification_log INSERT:', payload);
 
             const newNotification = payload.new as SmartNotification;
 
             // Verify notification belongs to current dealer
-            if (newNotification.dealer_id !== dealerId) {
-              logger.dev('[useSmartNotifications] Notification for different dealer, skipping');
+            if (newNotification.dealer_id !== validatedDealerId) {
               return;
             }
 
-            // OPTIMISTIC UPDATE: Add notification immediately to state
-            setNotifications((prev) => {
-              // Prevent duplicates
-              if (prev.some((n) => n.id === newNotification.id)) {
-                logger.dev('[useSmartNotifications] Notification already exists, skipping');
-                return prev;
-              }
-              logger.dev('[useSmartNotifications] Adding notification to state (optimistic)');
-              return [newNotification, ...prev];
-            });
+            // Invalidate query to refetch
+            queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
 
-            // Play notification sound based on priority
-            logger.dev('[useSmartNotifications] Playing notification sound');
+            // Play notification sound
             await playNotificationSound(newNotification.priority);
 
             // Show browser notification if enabled
             if (areBrowserNotificationsEnabled()) {
-              logger.dev('[useSmartNotifications] Showing browser notification');
               await showBrowserNotification({
                 title: newNotification.title,
                 message: newNotification.message,
                 priority: newNotification.priority,
                 data: newNotification.data,
               });
-            } else {
-              logger.dev('[useSmartNotifications] Browser notifications not enabled');
             }
 
-            // Show toast for high priority notifications
+            // Show toast for high priority
             if (
               newNotification.priority === 'high' ||
               newNotification.priority === 'urgent'
             ) {
-              logger.dev('[useSmartNotifications] Showing toast for high priority notification');
-
-              const toastDuration =
-                newNotification.priority === 'urgent' ? 10000 : 5000;
-
               toast({
                 title: newNotification.title,
                 description: newNotification.message,
-                duration: toastDuration,
-                variant:
-                  newNotification.priority === 'urgent' ? 'destructive' : 'default',
+                duration: newNotification.priority === 'urgent' ? 10000 : 5000,
+                variant: newNotification.priority === 'urgent' ? 'destructive' : 'default',
               });
             }
           } catch (error) {
-            console.error('[useSmartNotifications] Error handling INSERT event:', error);
+            console.error('[useSmartNotifications] Error handling notification_log INSERT:', error);
           }
         }
       )
@@ -315,50 +518,91 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
           table: 'notification_log',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
+        }
+      )
+      .subscribe();
+
+    // SUBSCRIPTION 2: get_ready_notifications
+    const getReadyChannel = supabase
+      .channel(`get_ready_notifications_${validatedDealerId}_${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'get_ready_notifications',
+          filter: `dealer_id=eq.${validatedDealerId}`,
+        },
+        async (payload) => {
           try {
-            logger.dev('[useSmartNotifications] UPDATE event received:', payload);
+            logger.dev('[useSmartNotifications] get_ready_notifications INSERT:', payload);
 
-            const updatedNotification = payload.new as SmartNotification;
+            const newNotification = payload.new as GetReadyNotification;
 
-            // Verify notification belongs to current dealer
-            if (updatedNotification.dealer_id !== dealerId) {
-              logger.dev('[useSmartNotifications] Notification for different dealer, skipping');
+            // Check if notification is for this user
+            if (
+              newNotification.user_id !== null &&
+              newNotification.user_id !== user.id
+            ) {
               return;
             }
 
-            // OPTIMISTIC UPDATE: Update notification in state immediately
-            setNotifications((prev) => {
-              const exists = prev.some((n) => n.id === updatedNotification.id);
-              if (!exists) {
-                logger.dev('[useSmartNotifications] Updated notification not in state, skipping');
-                return prev;
-              }
+            // Invalidate query to refetch
+            queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
+            queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
 
-              logger.dev('[useSmartNotifications] Updating notification in state (optimistic)', {
-                id: updatedNotification.id,
-                status: updatedNotification.status,
-                readAt: updatedNotification.read_at,
+            // Play notification sound
+            const mappedPriority =
+              newNotification.priority === 'medium'
+                ? 'normal'
+                : newNotification.priority === 'critical'
+                ? 'urgent'
+                : newNotification.priority;
+            await playNotificationSound(mappedPriority);
+
+            // Show toast for high/critical priority
+            if (
+              newNotification.priority === 'high' ||
+              newNotification.priority === 'critical'
+            ) {
+              toast({
+                title: newNotification.title,
+                description: newNotification.message,
+                variant: newNotification.priority === 'critical' ? 'destructive' : 'default',
               });
-
-              return prev.map((n) =>
-                n.id === updatedNotification.id ? updatedNotification : n
-              );
-            });
+            }
           } catch (error) {
-            console.error('[useSmartNotifications] Error handling UPDATE event:', error);
+            console.error('[useSmartNotifications] Error handling get_ready_notifications INSERT:', error);
           }
         }
       )
-      .subscribe((status) => {
-        logger.dev('[useSmartNotifications] Subscription status:', status);
-      });
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'get_ready_notifications',
+          filter: `dealer_id=eq.${validatedDealerId}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
+          queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
+        }
+      )
+      .subscribe();
 
     return () => {
-      logger.dev('[useSmartNotifications] Cleaning up real-time subscription');
-      supabase.removeChannel(channel);
+      logger.dev('[useSmartNotifications] Cleaning up dual subscriptions');
+      supabase.removeChannel(smartChannel);
+      supabase.removeChannel(getReadyChannel);
     };
-  }, [user?.id, dealerId]);
+  }, [user?.id, validatedDealerId, queryClient]);
+
+  // =====================================================
+  // RETURN HOOK INTERFACE
+  // =====================================================
 
   return {
     notifications,
@@ -370,6 +614,6 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
     markAllAsRead,
     markEntityAsRead,
     deleteNotification,
-    refreshNotifications: fetchNotifications
+    refreshNotifications,
   };
 }

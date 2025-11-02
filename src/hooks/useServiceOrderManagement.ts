@@ -673,6 +673,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
   return {
     orders: filteredOrders,
+    allOrders,
     tabCounts,
     filters,
     loading,
