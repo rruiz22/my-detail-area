@@ -143,10 +143,12 @@ class OrderSMSNotificationService {
     oldStatus: string,
     vehicleInfo?: string,
     shortLink?: string,
-    triggeredBy?: string
+    triggeredBy?: string,
+    stockNumber?: string,
+    tag?: string
   ): Promise<SMSNotificationResult> {
     console.log('🔔 [SMS Service] notifyStatusChange called with:', {
-      orderId, dealerId, module, orderNumber, newStatus, oldStatus, vehicleInfo, shortLink, triggeredBy
+      orderId, dealerId, module, orderNumber, newStatus, oldStatus, vehicleInfo, shortLink, triggeredBy, stockNumber, tag
     });
 
     const payload = {
@@ -156,6 +158,8 @@ class OrderSMSNotificationService {
       eventType: 'status_changed' as OrderSMSEventType,
       eventData: {
         orderNumber,
+        stockNumber,
+        tag,
         newStatus,
         oldStatus,
         vehicleInfo,

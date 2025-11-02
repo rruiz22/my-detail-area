@@ -288,10 +288,10 @@ export const usePermissions = () => {
       }
 
       // ========================================================================
-      // 2. Load system-level role (assigned via dealer_memberships.custom_role_id)
+      // 2. Load roles from dealer_memberships (assigned via dealer_memberships.custom_role_id)
       // ========================================================================
-      // These are global system roles (dealer_id = NULL)
-      // Example: "user", "manager", "system_admin"
+      // These can be either system-wide roles (dealer_id = NULL) or dealer-specific roles
+      // Examples: "user", "manager", "system_admin" (system) OR "sales_manager", "detail_manager" (dealer-specific)
       const { data: membershipsData, error: membershipsError } = await supabase
         .from('dealer_memberships')
         .select(`
@@ -333,27 +333,19 @@ export const usePermissions = () => {
         }
       });
 
-      // Process system role (must have dealer_id = NULL)
+      // Process roles from dealer_memberships (can be system-wide OR dealer-specific)
       (membershipsData || []).forEach(m => {
         if (m.dealer_custom_roles?.id) {
-          // VALIDATION: System roles MUST have dealer_id = NULL
-          if (m.dealer_custom_roles.dealer_id === null) {
-            roleIds.add(m.dealer_custom_roles.id);
-            rolesDebug.push({
-              source: 'dealer_memberships',
-              type: 'system_role',
-              role_id: m.dealer_custom_roles.id,
-              role_name: m.dealer_custom_roles.role_name,
-              display_name: m.dealer_custom_roles.display_name,
-              dealer_id: null
-            });
-          } else {
-            console.warn(
-              '⚠️ Invalid system role assignment - dealer_id should be NULL for system roles:',
-              m.dealer_custom_roles.role_name,
-              '(dealer_id:', m.dealer_custom_roles.dealer_id, ')'
-            );
-          }
+          // Accept both system roles (dealer_id = NULL) and dealer-specific roles
+          roleIds.add(m.dealer_custom_roles.id);
+          rolesDebug.push({
+            source: 'dealer_memberships',
+            type: m.dealer_custom_roles.dealer_id === null ? 'system_role' : 'dealer_role',
+            role_id: m.dealer_custom_roles.id,
+            role_name: m.dealer_custom_roles.role_name,
+            display_name: m.dealer_custom_roles.display_name,
+            dealer_id: m.dealer_custom_roles.dealer_id
+          });
         }
       });
 

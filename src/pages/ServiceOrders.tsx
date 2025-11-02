@@ -221,16 +221,21 @@ export default function ServiceOrders() {
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
-      await updateOrder(orderId, { status: newStatus });
+      // Note: OrderDataTable already calls updateOrderStatus which handles:
+      // - DB update
+      // - Permission validation
+      // - SMS notifications
+      // - Push notifications
+      // This callback only emits events for UI consistency
 
       // Emit typed events using EventBus
       orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'service' });
       orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
     } catch (error) {
-      console.error('Status change failed:', error);
+      console.error('Status change event emission failed:', error);
       throw error;
     }
-  }, [updateOrder]);
+  }, []);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<ServiceOrder>) => {
     try {

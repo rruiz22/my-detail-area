@@ -484,7 +484,7 @@ export async function createNotification(
       target_channels: JSON.stringify(params.targetChannels || ['in_app']),
       metadata: params.metadata ? JSON.stringify(params.metadata) : null,
       thread_id: params.threadId || null,
-      parent_id: params.parentId || null,
+      parent_notification_id: params.parentId || null,
       scheduled_for: params.scheduledFor?.toISOString() || null,
 
       // Tracking fields (initialized)
