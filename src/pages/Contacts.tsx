@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,142 +23,84 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
-  Users2, 
-  Phone, 
-  Mail, 
-  Edit, 
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Users2,
+  Phone,
+  Mail,
+  Edit,
   Trash2,
   Building2,
   Star,
   PhoneCall,
   MessageSquare,
-  Eye
+  Eye,
+  Download,
+  Upload,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { ContactModal } from '@/components/contacts/ContactModal';
 import { ContactDetailModal } from '@/components/contacts/ContactDetailModal';
+import { ContactsStats } from '@/components/contacts/ContactsStats';
+import { ContactsPagination } from '@/components/contacts/ContactsPagination';
+import { ContactsTableSkeleton } from '@/components/contacts/ContactsTableSkeleton';
+import { ImportContactsDialog } from '@/components/contacts/ImportContactsDialog';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
-import { ContactDepartment, DealershipStatus, LanguageCode } from '@/types/dealership';
-
-interface Contact {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  mobile_phone?: string;
-  position?: string;
-  department: ContactDepartment;
-  is_primary: boolean;
-  status: DealershipStatus;
-  dealership_id: number;
-  avatar_url?: string;
-  preferred_language: LanguageCode;
-  can_receive_notifications: boolean;
-  dealership?: {
-    name: string;
-  };
-}
+import { useContacts, Contact } from '@/hooks/useContacts';
+import { exportContactsToCSV, exportContactsToExcel } from '@/utils/contactExport';
 
 export default function Contacts() {
   const { t } = useTranslation();
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [departmentFilter, setDepartmentFilter] = useState<string>('all');
-  const [dealershipFilter, setDealershipFilter] = useState<string>('all');
-  const [dealerships, setDealerships] = useState<{ id: number; name: string }[]>([]);
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+  const { dealerships, currentDealership } = useAccessibleDealerships();
+
+  // Use the new hook
+  const {
+    contacts,
+    loading,
+    stats,
+    pagination,
+    sorting,
+    filters,
+    setFilters,
+    setPage,
+    setPageSize,
+    setSorting,
+    fetchContacts,
+    deleteContact,
+    refreshStats,
+  } = useContacts();
+
+  // Local state for modals
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
-  const fetchContacts = useCallback(async () => {
-    try {
-      setLoading(true);
-
-      let query = supabase
-        .from('dealership_contacts')
-        .select(`
-          *,
-          dealerships!dealership_contacts_dealership_id_fkey(name)
-        `)
-        .is('deleted_at', null);
-
-      if (departmentFilter !== 'all') {
-        query = query.eq('department', departmentFilter as 'other' | 'sales' | 'service' | 'parts' | 'management');
-      }
-
-      if (dealershipFilter !== 'all') {
-        query = query.eq('dealership_id', parseInt(dealershipFilter));
-      }
-
-      if (search) {
-        query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%,position.ilike.%${search}%`);
-      }
-
-      const { data, error } = await query.order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      setContacts(data || []);
-    } catch (error) {
-      console.error('Error fetching contacts:', error);
-      toast.error(t('messages.error'));
-    } finally {
-      setLoading(false);
-    }
-  }, [departmentFilter, dealershipFilter, search, t]);
-
-  const fetchDealerships = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('dealerships')
-        .select('id, name')
-        .is('deleted_at', null)
-        .order('name');
-
-      if (error) throw error;
-      setDealerships(data || []);
-    } catch (error) {
-      console.error('Error fetching dealerships:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchDealerships();
-  }, []);
-
-  useEffect(() => {
-    fetchContacts();
-  }, [fetchContacts]);
+  // Get current dealership name
+  const currentDealershipName = selectedDealerId === 'all'
+    ? t('dealerships.all_dealerships')
+    : currentDealership?.name || '';
 
   const handleDelete = async (contact: Contact) => {
     if (!confirm(t('messages.confirm_delete'))) return;
-
-    try {
-      const { error } = await supabase
-        .from('dealership_contacts')
-        .update({ deleted_at: new Date().toISOString() })
-        .eq('id', contact.id);
-
-      if (error) throw error;
-
-      toast.success(t('messages.deleted'));
-      fetchContacts();
-    } catch (error) {
-      console.error('Error deleting contact:', error);
-      toast.error(t('messages.error'));
-    }
+    await deleteContact(contact.id);
   };
 
   const handleEdit = (contact: Contact) => {
@@ -190,7 +132,44 @@ export default function Contacts() {
 
   const handleModalSuccess = () => {
     fetchContacts();
+    refreshStats();
     handleModalClose();
+  };
+
+  const handleExportCSV = () => {
+    exportContactsToCSV(contacts, `contacts_${new Date().toISOString().split('T')[0]}.csv`);
+    toast({ description: t('contacts.exported_successfully', 'Contacts exported successfully') });
+  };
+
+  const handleExportExcel = () => {
+    exportContactsToExcel(contacts, `contacts_${new Date().toISOString().split('T')[0]}.xls`);
+    toast({ description: t('contacts.exported_successfully', 'Contacts exported successfully') });
+  };
+
+  const handleImportSuccess = () => {
+    fetchContacts();
+    refreshStats();
+  };
+
+  const handleSort = (field: string) => {
+    if (sorting.field === field) {
+      // Toggle order if same field
+      setSorting(field, sorting.order === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Default to ascending for new field
+      setSorting(field, 'asc');
+    }
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sorting.field !== field) {
+      return <ArrowUpDown className="h-4 w-4 ml-2 opacity-50" />;
+    }
+    return sorting.order === 'asc' ? (
+      <ArrowUp className="h-4 w-4 ml-2" />
+    ) : (
+      <ArrowDown className="h-4 w-4 ml-2" />
+    );
   };
 
   const getDisplayName = (contact: Contact) => {
@@ -222,19 +201,61 @@ export default function Contacts() {
               {t('contacts.title')}
             </h1>
             <p className="text-muted-foreground mt-2">
-              {t('contacts.manage_description', 'Manage contacts across all dealerships')}
+              {t('contacts.directory_note', 'Contact directory for dealership team')}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Contact information only - these are not system users
+            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
+              <Building2 className="h-3 w-3" />
+              {currentDealershipName}
             </p>
           </div>
-          <PermissionGuard module="users" permission="write">
-            <Button className="gap-2" onClick={handleAdd}>
-              <Plus className="h-4 w-4" />
-              {t('contacts.add_new')}
+          <div className="flex items-center gap-2">
+            <PermissionGuard module="users" permission="write">
+              <Button variant="outline" className="gap-2" onClick={() => setIsImportDialogOpen(true)}>
+                <Upload className="h-4 w-4" />
+                {t('common.import', 'Import')}
+              </Button>
+            </PermissionGuard>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <Download className="h-4 w-4" />
+                  {t('common.export', 'Export')}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleExportCSV}>
+                  <Download className="mr-2 h-4 w-4" />
+                  {t('common.export_csv', 'Export as CSV')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportExcel}>
+                  <Download className="mr-2 h-4 w-4" />
+                  {t('common.export_excel', 'Export as Excel')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button variant="outline" size="icon" onClick={() => { fetchContacts(); refreshStats(); }}>
+              <RefreshCw className="h-4 w-4" />
             </Button>
-          </PermissionGuard>
+
+            <PermissionGuard module="users" permission="write">
+              <Button className="gap-2" onClick={handleAdd}>
+                <Plus className="h-4 w-4" />
+                {t('contacts.add_new')}
+              </Button>
+            </PermissionGuard>
+          </div>
         </div>
+
+        {/* Stats Cards */}
+        <ContactsStats
+          total={stats.total}
+          active={stats.active}
+          inactive={stats.inactive}
+          byDepartment={stats.byDepartment}
+          loading={loading && contacts.length === 0}
+        />
 
         {/* Filters */}
         <Card>
@@ -250,13 +271,13 @@ export default function Contacts() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder={t('common.search')}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  value={filters.search}
+                  onChange={(e) => setFilters({ search: e.target.value })}
                   className="pl-9"
                 />
               </div>
-              
-              <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+
+              <Select value={filters.department} onValueChange={(value) => setFilters({ department: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('contacts.department')} />
                 </SelectTrigger>
@@ -271,17 +292,26 @@ export default function Contacts() {
                 </SelectContent>
               </Select>
 
-              <Select value={dealershipFilter} onValueChange={setDealershipFilter}>
+              <Select value={filters.status} onValueChange={(value) => setFilters({ status: value })}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('dealerships.title')} />
+                  <SelectValue placeholder={t('contacts.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('contacts.all_dealerships')}</SelectItem>
-                  {dealerships.map((dealership) => (
-                    <SelectItem key={dealership.id} value={dealership.id.toString()}>
-                      {dealership.name}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="all">{t('contacts.all_statuses', 'All Statuses')}</SelectItem>
+                  <SelectItem value="active">{t('contacts.active')}</SelectItem>
+                  <SelectItem value="inactive">{t('contacts.inactive')}</SelectItem>
+                  <SelectItem value="suspended">{t('contacts.suspended')}</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filters.isPrimary} onValueChange={(value) => setFilters({ isPrimary: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('contacts.contact_type', 'Type')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('contacts.all_contacts', 'All Contacts')}</SelectItem>
+                  <SelectItem value="true">{t('contacts.primary_only', 'Primary Only')}</SelectItem>
+                  <SelectItem value="false">{t('contacts.non_primary', 'Non-Primary')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -323,7 +353,7 @@ export default function Contacts() {
                           <p className="text-sm text-muted-foreground">{contact.position || '-'}</p>
                         </div>
                       </div>
-                      
+
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
@@ -350,7 +380,7 @@ export default function Contacts() {
                             {t('contacts.send_email')}
                           </DropdownMenuItem>
             <PermissionGuard module="management" permission="delete">
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => handleDelete(contact)}
                               className="text-destructive"
                             >
@@ -401,21 +431,41 @@ export default function Contacts() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-12"></TableHead>
-                  <TableHead>{t('contacts.name')}</TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none hover:bg-muted/50"
+                    onClick={() => handleSort('first_name')}
+                  >
+                    <div className="flex items-center">
+                      {t('contacts.name')}
+                      {getSortIcon('first_name')}
+                    </div>
+                  </TableHead>
                   <TableHead>{t('contacts.contact_info')}</TableHead>
-                  <TableHead>{t('contacts.position')}</TableHead>
-                  <TableHead>{t('contacts.department')}</TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none hover:bg-muted/50"
+                    onClick={() => handleSort('position')}
+                  >
+                    <div className="flex items-center">
+                      {t('contacts.position')}
+                      {getSortIcon('position')}
+                    </div>
+                  </TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none hover:bg-muted/50"
+                    onClick={() => handleSort('department')}
+                  >
+                    <div className="flex items-center">
+                      {t('contacts.department')}
+                      {getSortIcon('department')}
+                    </div>
+                  </TableHead>
                   <TableHead>{t('dealerships.title')}</TableHead>
                   <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center">
-                      {t('common.loading')}
-                    </TableCell>
-                  </TableRow>
+                  <ContactsTableSkeleton rows={pagination.pageSize} />
                 ) : contacts.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-24 text-center">
@@ -424,8 +474,8 @@ export default function Contacts() {
                   </TableRow>
                 ) : (
                   contacts.map((contact) => (
-                    <TableRow 
-                      key={contact.id} 
+                    <TableRow
+                      key={contact.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleViewDetails(contact)}
                     >
@@ -504,7 +554,7 @@ export default function Contacts() {
                               {t('contacts.send_email')}
                             </DropdownMenuItem>
                             <PermissionGuard module="management" permission="delete">
-                              <DropdownMenuItem 
+                              <DropdownMenuItem
                                 onClick={() => handleDelete(contact)}
                                 className="text-destructive"
                               >
@@ -520,6 +570,18 @@ export default function Contacts() {
                 )}
               </TableBody>
             </Table>
+
+            {/* Pagination */}
+            {!loading && contacts.length > 0 && (
+              <ContactsPagination
+                page={pagination.page}
+                pageSize={pagination.pageSize}
+                total={pagination.total}
+                totalPages={pagination.totalPages}
+                onPageChange={setPage}
+                onPageSizeChange={setPageSize}
+              />
+            )}
           </CardContent>
         </Card>
 
@@ -528,7 +590,7 @@ export default function Contacts() {
           onClose={handleModalClose}
           onSuccess={handleModalSuccess}
           contact={editingContact}
-          dealerships={dealerships}
+          currentDealershipName={currentDealershipName}
         />
 
         <ContactDetailModal
@@ -539,6 +601,14 @@ export default function Contacts() {
             setViewingContact(null);
           }}
           onEdit={handleEditFromDetail}
+        />
+
+        <ImportContactsDialog
+          open={isImportDialogOpen}
+          onClose={() => setIsImportDialogOpen(false)}
+          onSuccess={handleImportSuccess}
+          currentDealershipId={selectedDealerId}
+          currentDealershipName={currentDealershipName}
         />
       </div>
     </>

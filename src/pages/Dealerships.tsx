@@ -46,7 +46,7 @@ import { Dealership, DealershipStatus, SubscriptionPlan } from '@/types/dealersh
 import { DealershipModal } from '@/components/dealerships/DealershipModal';
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { DealershipStatsCard } from '@/components/dealerships/DealershipStatsCard';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export function Dealerships() {
   const { t } = useTranslation();
@@ -115,7 +115,7 @@ export function Dealerships() {
       setDealerships(dealershipsWithCounts);
     } catch (error) {
       console.error('Error fetching dealerships:', error);
-      toast.error(t('messages.error'));
+      toast({ variant: 'destructive', description: t('messages.error') });
     } finally {
       setLoading(false);
     }
@@ -146,11 +146,11 @@ export function Dealerships() {
 
       if (error) throw error;
 
-      toast.success(t('messages.deleted'));
+      toast({ description: t('messages.deleted') });
       fetchDealerships();
     } catch (error) {
       console.error('Error deleting dealership:', error);
-      toast.error(t('messages.error'));
+      toast({ variant: 'destructive', description: t('messages.error') });
     }
   };
 
@@ -210,7 +210,7 @@ export function Dealerships() {
   };
 
   const handleInvitationSent = () => {
-    toast.success('Invitación enviada exitosamente');
+    toast({ description: 'Invitación enviada exitosamente' });
     fetchDealerships(); // Refresh data to show updated stats
   };
 

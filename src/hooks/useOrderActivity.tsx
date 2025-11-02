@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrderActivity {
   id: string;
@@ -21,6 +21,7 @@ interface OrderActivity {
 }
 
 export function useOrderActivity(orderId: string) {
+  const { toast } = useToast();
   const [activities, setActivities] = useState<OrderActivity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +68,7 @@ export function useOrderActivity(orderId: string) {
     } catch (error) {
       console.error('Error fetching order activities:', error);
       setError('Failed to load activity history');
-      toast.error('Failed to load activity history');
+      toast({ variant: 'destructive', description: 'Failed to load activity history' });
     } finally {
       setLoading(false);
     }

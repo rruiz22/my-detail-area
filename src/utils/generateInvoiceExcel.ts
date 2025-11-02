@@ -66,7 +66,7 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
 
   // Define color palette (consistent with UI)
   const colors = {
-    headerBg: 'FF6B7280',      // gray-500
+    headerBg: 'FF6366F1',      // indigo-500 (matches print view)
     headerText: 'FFFFFFFF',    // white
     titleText: 'FF111827',     // gray-900
     labelText: 'FF6B7280',     // gray-500
@@ -176,7 +176,7 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
   // ===============================================
 
   const poRoTagHeader = invoice.items?.some(i => i.metadata?.order_type === 'service')
-    ? 'PO/RO/Tag'
+    ? 'PO | RO | Tag'
     : 'Stock';
 
   const headerRow = worksheet.getRow(currentRow);
@@ -445,7 +445,28 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
 
-  const filename = `Invoice-${invoice.invoiceNumber}.xlsx`;
+  // Generate filename with dealer name and date range
+  const dealerName = invoice.dealership?.name || 'Invoice';
+  const sanitizedDealerName = dealerName.replace(/[^a-zA-Z0-9]/g, '_');
+
+  let dateRangePart = '';
+  if (invoice.metadata?.filter_date_range) {
+    const startDate = new Date(invoice.metadata.filter_date_range.start);
+    const endDate = new Date(invoice.metadata.filter_date_range.end);
+
+    // Format dates like "October 27, 2025" to match department revenue report
+    const formatDateLong = (date: Date) => {
+      return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }).format(date);
+    };
+
+    dateRangePart = `_${formatDateLong(startDate)}_to_${formatDateLong(endDate)}`;
+  }
+
+  const filename = `${sanitizedDealerName}_${invoice.invoiceNumber}${dateRangePart}.xlsx`;
   link.setAttribute('href', url);
   link.setAttribute('download', filename);
   link.style.visibility = 'hidden';

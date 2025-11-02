@@ -20,7 +20,6 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 
 export interface OrderSMSOptions {
   orderId: string;
@@ -201,20 +200,8 @@ class OrderSMSService {
 
     console.log(`📊 SMS Results: ${sent} sent, ${failed} failed out of ${followers.length} total`);
 
-    // Show result toast
-    if (sent > 0 && failed === 0) {
-      toast.success(`✅ SMS sent to ${sent} follower${sent > 1 ? 's' : ''}`, {
-        id: `sms-${orderId}`
-      });
-    } else if (sent > 0 && failed > 0) {
-      toast.warning(`⚠️ SMS: ${sent} sent, ${failed} failed`, {
-        id: `sms-${orderId}`
-      });
-    } else {
-      toast.error(`❌ All SMS failed (${failed} errors)`, {
-        id: `sms-${orderId}`
-      });
-    }
+    // DEPRECATED: Toast notifications removed. Calling component should handle user feedback.
+    // Service layer should not directly interact with UI.
 
     return {
       sent,

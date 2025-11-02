@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { usePermissions } from '@/hooks/usePermissions';
-import { useTabPersistence } from '@/hooks/useTabPersistence';
+import { StorageDevTools } from "@/components/dev/StorageDevTools";
+import { NotificationPreferencesModal } from '@/components/notifications/NotificationPreferencesModal';
 import { IntegrationSettings } from '@/components/settings/IntegrationSettings';
-import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
+import { NotificationTemplatesManager, PushNotificationSettings } from '@/components/settings/notifications';
 import { PlatformBrandingSettings } from '@/components/settings/platform/PlatformBrandingSettings';
 import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
 import { SecurityAuditLogViewer } from '@/components/settings/security/SecurityAuditLogViewer';
-import { NotificationTemplatesManager, PushNotificationSettings } from '@/components/settings/notifications';
-import { NotificationPreferencesModal } from '@/components/notifications/NotificationPreferencesModal';
-import { StorageDevTools } from "@/components/dev/StorageDevTools";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { developmentConfig } from "@/config/development";
-import { Save, Database, Mail, MessageSquare, User, Building2, Palette, Bell, Shield, Settings as SettingsIcon } from "lucide-react";
+import { useToast } from '@/hooks/use-toast';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
+import { supabase } from '@/integrations/supabase/client';
+import { Bell, Building2, Database, Mail, Palette, Save, Settings as SettingsIcon, Shield, User } from "lucide-react";
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface UserPreferences {
@@ -34,6 +35,7 @@ export default function Settings() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { enhancedUser } = usePermissions();
+  const { currentDealership } = useAccessibleDealerships();
   const [activeTab, setActiveTab] = useTabPersistence('settings');
   const perms = useSettingsPermissions();
 
@@ -53,6 +55,17 @@ export default function Settings() {
     email: ''
   });
 
+  const [senderInfo, setSenderInfo] = useState({
+    company_name: 'Dealer Detail Service',
+    address: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    phone: '',
+    email: '',
+    website: ''
+  });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showAdvancedPreferences, setShowAdvancedPreferences] = useState(false);
@@ -69,7 +82,7 @@ export default function Settings() {
       setLoading(true);
 
       // PARALLEL LOADING: Execute both queries simultaneously to reduce flashing
-      const [dealershipResult, notificationResult] = await Promise.all([
+      const [dealershipResult, notificationResult, senderInfoResult] = await Promise.all([
         // Query 1: Dealership info (only if user has dealership)
         enhancedUser.dealership_id
           ? supabase
@@ -84,6 +97,13 @@ export default function Settings() {
           .from('user_notification_settings')
           .select('*')
           .eq('user_id', enhancedUser.id)
+          .single(),
+
+        // Query 3: Sender info from system settings
+        supabase
+          .from('system_settings')
+          .select('setting_value')
+          .eq('setting_key', 'sender_info')
           .single()
       ]);
 
@@ -117,6 +137,21 @@ export default function Settings() {
           in_app_alerts: true,
           theme_preference: 'system',
           language: 'en'
+        });
+      }
+
+      // Process sender info
+      if (!senderInfoResult.error && senderInfoResult.data?.setting_value) {
+        const savedInfo = senderInfoResult.data.setting_value as any;
+        setSenderInfo({
+          company_name: savedInfo.company_name || 'Dealer Detail Service',
+          address: savedInfo.address || '',
+          city: savedInfo.city || '',
+          state: savedInfo.state || '',
+          zip_code: savedInfo.zip_code || '',
+          phone: savedInfo.phone || '',
+          email: savedInfo.email || '',
+          website: savedInfo.website || ''
         });
       }
 
@@ -171,6 +206,42 @@ export default function Settings() {
       toast({
         title: t('common.error'),
         description: t('settings.save_error'),
+        variant: 'destructive'
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Save sender information
+  const saveSenderInfo = async () => {
+    try {
+      setSaving(true);
+
+      const { error } = await supabase
+        .from('system_settings')
+        .upsert({
+          setting_key: 'sender_info',
+          setting_value: senderInfo,
+          setting_type: 'features',
+          updated_by: enhancedUser?.id
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: t('common.success'),
+        description: 'Sender information saved successfully'
+      });
+
+      // Reload settings to reflect changes
+      await loadSettings();
+
+    } catch (error) {
+      console.error('Error saving sender info:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Failed to save sender information',
         variant: 'destructive'
       });
     } finally {
@@ -247,7 +318,7 @@ export default function Settings() {
           </TabsTrigger>
           <TabsTrigger value="dealership" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('settings.dealership')}</span>
+            <span className="hidden sm:inline">Sender</span>
           </TabsTrigger>
           <TabsTrigger value="integrations" className="flex items-center gap-2">
             <Database className="h-4 w-4" />
@@ -425,58 +496,138 @@ export default function Settings() {
           </Tabs>
         </TabsContent>
 
-        {/* Dealership Settings */}
+        {/* Sender Information Settings */}
         <TabsContent value="dealership" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                {t('settings.dealership_information')}
-              </CardTitle>
-              <CardDescription>
-                {t('settings.dealership_info_description')}
-              </CardDescription>
+          <Card className="border-primary/20">
+            <CardHeader className="bg-primary/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    Sender Information
+                  </CardTitle>
+                  <CardDescription className="mt-1.5">
+                    Configure your company information that will appear on all exported reports for all dealerships in the system
+                  </CardDescription>
+                </div>
+                <Badge variant="secondary" className="ml-4">Global Settings</Badge>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
+              {/* Company Name */}
+              <div className="space-y-2">
+                <Label htmlFor="company_name">Company Name</Label>
+                <Input
+                  id="company_name"
+                  value={senderInfo.company_name}
+                  onChange={(e) => setSenderInfo({ ...senderInfo, company_name: e.target.value })}
+                  placeholder="Dealer Detail Service"
+                  className="font-medium"
+                />
+              </div>
+
+              {/* Address */}
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  value={senderInfo.address}
+                  onChange={(e) => setSenderInfo({ ...senderInfo, address: e.target.value })}
+                  placeholder="123 Main Street"
+                />
+              </div>
+
+              {/* City, State, Zip Code */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    id="city"
+                    value={senderInfo.city}
+                    onChange={(e) => setSenderInfo({ ...senderInfo, city: e.target.value })}
+                    placeholder="Miami"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="state">State</Label>
+                  <Input
+                    id="state"
+                    value={senderInfo.state}
+                    onChange={(e) => setSenderInfo({ ...senderInfo, state: e.target.value })}
+                    placeholder="FL"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zip_code">Zip Code</Label>
+                  <Input
+                    id="zip_code"
+                    value={senderInfo.zip_code}
+                    onChange={(e) => setSenderInfo({ ...senderInfo, zip_code: e.target.value })}
+                    placeholder="33101"
+                  />
+                </div>
+              </div>
+
+              {/* Contact Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>{t('settings.dealership_name')}</Label>
-                  <div className="p-3 bg-muted rounded-lg">
-                    <p className="font-medium">{dealershipInfo.name || t('settings.no_dealership')}</p>
-                  </div>
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={senderInfo.phone}
+                    onChange={(e) => setSenderInfo({ ...senderInfo, phone: e.target.value })}
+                    placeholder="(305) 555-0123"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label>{t('settings.location')}</Label>
-                  <div className="p-3 bg-muted rounded-lg">
-                    <p className="font-medium">{dealershipInfo.location || t('settings.no_location')}</p>
-                  </div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={senderInfo.email}
+                    onChange={(e) => setSenderInfo({ ...senderInfo, email: e.target.value })}
+                    placeholder="info@dealerdetailservice.com"
+                  />
                 </div>
               </div>
 
+              {/* Website */}
               <div className="space-y-2">
-                <Label>{t('settings.contact_info')}</Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-3 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('settings.email')}</p>
-                    <p className="font-medium">{dealershipInfo.email || t('settings.no_email')}</p>
-                  </div>
-                  <div className="p-3 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('settings.phone')}</p>
-                    <p className="font-medium">{dealershipInfo.phone || t('settings.no_phone')}</p>
-                  </div>
-                </div>
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  type="url"
+                  value={senderInfo.website}
+                  onChange={(e) => setSenderInfo({ ...senderInfo, website: e.target.value })}
+                  placeholder="https://www.dealerdetailservice.com"
+                />
               </div>
 
-              {enhancedUser?.role === 'system_admin' && (
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.dealership_edit_note')}
-                  </p>
-                  <Button variant="outline" size="sm" className="mt-2">
-                    {t('settings.edit_dealership')}
+              {/* Save Button */}
+              <div className="pt-4 border-t">
+                <div className="flex items-start gap-3 mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="mt-0.5">
+                    <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-blue-900 mb-1">
+                      Global Configuration
+                    </p>
+                    <p className="text-xs text-blue-700">
+                      This sender information will appear on all exported reports (PDF, Excel) for <strong>all dealerships</strong> in the system. The current working dealership is: <strong>{currentDealership?.name || 'N/A'}</strong>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <Button onClick={saveSenderInfo} disabled={saving} size="lg">
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Sender Information
                   </Button>
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

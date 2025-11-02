@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import { shortLinkService } from '@/services/shortLinkService';
 
@@ -23,6 +23,7 @@ interface OrderActionsResult {
 
 export function useOrderActions(): OrderActionsResult {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
   const generateQR = async (orderId: string, orderNumber: string, dealerId: number, regenerate = false) => {
@@ -61,7 +62,7 @@ export function useOrderActions(): OrderActionsResult {
 
       // Only show toast if not auto-generated (to avoid spam during order creation)
       if (regenerate) {
-        toast.success(message);
+        toast({ description: message });
       }
 
       return {
@@ -92,7 +93,7 @@ export function useOrderActions(): OrderActionsResult {
 
       // Only show toast if regenerate (manual action)
       if (regenerate) {
-        toast.error(t('orders.error_generating_qr'));
+        toast({ variant: 'destructive', description: t('orders.error_generating_qr') });
       }
 
       return {};
@@ -111,14 +112,14 @@ export function useOrderActions(): OrderActionsResult {
       if (error) throw error;
 
       if (data.success) {
-        toast.success(t('orders.sms_sent_successfully'));
+        toast({ description: t('orders.sms_sent_successfully') });
         return true;
       } else {
         throw new Error(data.error || 'Failed to send SMS');
       }
     } catch (error) {
       console.error('Error sending SMS:', error);
-      toast.error(t('orders.error_sending_sms'));
+      toast({ variant: 'destructive', description: t('orders.error_sending_sms') });
       return false;
     } finally {
       setLoading(false);
@@ -141,14 +142,14 @@ export function useOrderActions(): OrderActionsResult {
       if (error) throw error;
 
       if (data.success) {
-        toast.success(t('orders.email_sent_successfully'));
+        toast({ description: t('orders.email_sent_successfully') });
         return true;
       } else {
         throw new Error(data.error || 'Failed to send email');
       }
     } catch (error) {
       console.error('Error sending email:', error);
-      toast.error(t('orders.error_sending_email'));
+      toast({ variant: 'destructive', description: t('orders.error_sending_email') });
       return false;
     } finally {
       setLoading(false);

@@ -7,7 +7,7 @@ import {
   isNotificationSupported,
   getNotificationPermission,
 } from '@/lib/firebase';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
 interface FirebaseMessagingState {
@@ -34,6 +34,7 @@ interface UseFirebaseMessagingReturn extends FirebaseMessagingState {
  * ```tsx
  * function NotificationManager() {
  *   const { t } = useTranslation();
+  const { toast } = useToast();
  *   const { permission, requestPermission, loading } = useFirebaseMessaging();
  *
  *   return (
@@ -113,7 +114,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
    */
   const requestPermission = useCallback(async () => {
     if (!state.isSupported) {
-      toast.error(t('notifications.not_supported'));
+      toast({ variant: 'destructive', description: t('notifications.not_supported') });
       return;
     }
 
@@ -129,7 +130,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
           permission: getNotificationPermission(),
           error: t('notifications.permission_denied'),
         }));
-        toast.error(t('notifications.permission_denied'));
+        toast({ variant: 'destructive', description: t('notifications.permission_denied') });
         return;
       }
 
@@ -144,7 +145,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         error: null,
       }));
 
-      toast.success(t('notifications.enabled'));
+      toast({ description: t('notifications.enabled') });
     } catch (error) {
       console.error('[FCM] Error requesting permission:', error);
       setState((prev) => ({
@@ -152,7 +153,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         loading: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
-      toast.error(t('notifications.error'));
+      toast({ variant: 'destructive', description: t('notifications.error') });
     }
   }, [state.isSupported, t, saveTokenToDatabase]);
 
@@ -179,11 +180,11 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         loading: false,
       }));
 
-      toast.success(t('notifications.disabled'));
+      toast({ description: t('notifications.disabled') });
     } catch (error) {
       console.error('[FCM] Error clearing token:', error);
       setState((prev) => ({ ...prev, loading: false }));
-      toast.error(t('notifications.error'));
+      toast({ variant: 'destructive', description: t('notifications.error') });
     }
   }, [user?.id, t]);
 

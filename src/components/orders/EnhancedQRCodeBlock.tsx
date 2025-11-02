@@ -11,7 +11,7 @@ import {
 import { QRCodeCanvas } from 'qrcode.react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedQRCodeBlockProps {
   orderId: string;
@@ -32,6 +32,7 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   qrGenerationStatus = 'pending'
 }: EnhancedQRCodeBlockProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [qrData, setQrData] = useState<ShortLinkData | null>(null);
   const [loading, setLoading] = useState(false);
   const [analytics, setAnalytics] = useState<ShortLinkData['analytics']>(null);
@@ -113,12 +114,12 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
           console.error('Failed to update order:', error);
         }
 
-        toast.success(t('order_detail.short_link_created', 'QR code generated successfully'));
+        toast({ description: t('order_detail.short_link_created', 'QR code generated successfully') });
       }
     } catch (err: any) {
       if (isMountedRef.current) {
         setError(err.message || 'Failed to generate QR code');
-        toast.error(t('order_detail.qr_generation_failed', 'Failed to generate QR code'));
+        toast({ variant: 'destructive', description: t('order_detail.qr_generation_failed', 'Failed to generate QR code') });
       }
     } finally {
       if (isMountedRef.current) {
@@ -158,12 +159,12 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
           console.error('Failed to update order:', error);
         }
 
-        toast.success(t('order_detail.regenerate_qr', 'QR code regenerated successfully'));
+        toast({ description: t('order_detail.regenerate_qr', 'QR code regenerated successfully') });
       }
     } catch (err: any) {
       if (isMountedRef.current) {
         setError(err.message || 'Failed to regenerate QR code');
-        toast.error(t('order_detail.qr_regeneration_failed', 'Failed to regenerate QR code'));
+        toast({ variant: 'destructive', description: t('order_detail.qr_regeneration_failed', 'Failed to regenerate QR code') });
       }
     } finally {
       if (isMountedRef.current) {
@@ -179,9 +180,9 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
 
     const success = await shortLinkService.copyToClipboard(urlToCopy);
     if (success && isMountedRef.current) {
-      toast.success(t('order_detail.copy_link', 'Link copied to clipboard'));
+      toast({ description: t('order_detail.copy_link', 'Link copied to clipboard') });
     } else if (isMountedRef.current) {
-      toast.error(t('order_detail.copy_failed', 'Failed to copy link'));
+      toast({ variant: 'destructive', description: t('order_detail.copy_failed', 'Failed to copy link') });
     }
   }, [qrData?.shortUrl, shortLink, t]);
 

@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useToast } from '@/hooks/use-toast';
@@ -393,6 +394,26 @@ export default function CarWash() {
 
         {/* Main Content - Code Split with Suspense and Error Boundaries */}
         <main aria-label={t('accessibility.car_wash_orders.main_content')} className="space-y-6">
+          <div className="space-y-4">
+            {/* Responsive Table Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+                {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
+              </h2>
+              <Badge variant="secondary" className="text-sm self-center sm:self-auto">
+                {filteredOrders.length}
+              </Badge>
+            </div>
+
+            {/* Search Context */}
+            {searchTerm && (
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">
+                  Showing results matching "{searchTerm}"
+                </p>
+              </div>
+            )}
+
           <OrderViewErrorBoundary viewType="table">
             <Suspense fallback={<OrderViewLoadingFallback viewType="table" />}>
               <OrderDataTable
@@ -406,6 +427,7 @@ export default function CarWash() {
               />
             </Suspense>
           </OrderViewErrorBoundary>
+          </div>
         </main>
 
         {/* Modals - Direct Import for Instant Open */}

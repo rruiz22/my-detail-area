@@ -25,7 +25,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface ApprovalStep {
   id: string;
@@ -179,7 +179,7 @@ export function ReconApprovalWorkflow({ orderId, orderInfo, className }: ReconAp
     setRequestReason('');
     setRequestAmount(0);
     
-    toast.success(t('recon_approval.request_created'));
+    toast({ description: t('recon_approval.request_created') });
   };
 
   const getStepsForRequestType = (type: string): ApprovalStep[] => {
@@ -277,7 +277,7 @@ export function ReconApprovalWorkflow({ orderId, orderInfo, className }: ReconAp
       })
     );
     
-    toast.success(t('recon_approval.step_approved'));
+    toast({ description: t('recon_approval.step_approved') });
   };
 
   const handleRejectStep = (approvalId: string, stepId: string, comments: string) => {
@@ -303,7 +303,7 @@ export function ReconApprovalWorkflow({ orderId, orderInfo, className }: ReconAp
       )
     );
     
-    toast.error(t('recon_approval.step_rejected'));
+    toast({ variant: 'destructive', description: t('recon_approval.step_rejected') });
   };
 
   const getRequestTypeIcon = (type: string) => {

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { storage } from '@/lib/localStorage';
 import { setupSessionRecovery } from '@/lib/sessionRecovery';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 /**
  * Hook for application initialization with cloud sync setup
  */
 export function useAppInitialization() {
+  const { toast } = useToast();
   const [isInitializing, setIsInitializing] = useState(true);
   const [cloudSyncEnabled, setCloudSyncEnabled] = useState(false);
   const [initializationError, setInitializationError] = useState<string | null>(null);
@@ -28,16 +29,10 @@ export function useAppInitialization() {
           console.log('🔄 Session recovery initialized');
           
           // Show subtle notification for successful cloud sync
-          toast.success('Enterprise features enabled', {
-            description: 'Cloud sync and session recovery are active',
-            duration: 3000
-          });
+          toast({ description: 'Enterprise features enabled' });
         } else {
           console.warn('⚠️ Cloud sync unavailable, running in offline mode');
-          toast.warning('Running in offline mode', {
-            description: 'Cloud sync will activate when connection is restored',
-            duration: 3000
-          });
+          toast({ description: 'Running in offline mode' });
         }
 
         console.log('✅ App initialization complete');
@@ -47,10 +42,7 @@ export function useAppInitialization() {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         setInitializationError(errorMessage);
         
-        toast.error('Initialization failed', {
-          description: errorMessage,
-          duration: 5000
-        });
+        toast({ variant: 'destructive', description: 'Initialization failed' });
       } finally {
         setIsInitializing(false);
       }

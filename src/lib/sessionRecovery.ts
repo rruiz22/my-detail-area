@@ -5,7 +5,7 @@
 
 import { storage } from './localStorage';
 import { cloudSync, SYNC_CONFIG } from './cloudSync';
-import { toast } from 'sonner';
+// Note: This is a service file - toast notifications handled by calling components
 
 export interface SessionData {
   tabStates: Record<string, string>;
@@ -102,8 +102,7 @@ class SessionRecoveryService {
 
       if (!sessionData) {
         if (showNotifications) {
-          toast.dismiss('session-restore');
-          toast.info('No session to restore');
+          console.info('No session to restore');
         }
         return false;
       }
@@ -112,10 +111,7 @@ class SessionRecoveryService {
       const sessionAge = Date.now() - sessionData.timestamp;
       if (skipExpired && sessionAge > maxAge) {
         if (showNotifications) {
-          toast.dismiss('session-restore');
-          toast.warning('Session expired', {
-            description: 'Previous session is too old to restore'
-          });
+          console.info('Session expired');
         }
         return false;
       }
@@ -132,13 +128,10 @@ class SessionRecoveryService {
       }
 
       if (showNotifications) {
-        toast.dismiss('session-restore');
         if (restoredCount > 0) {
-          toast.success(`Session restored`, {
-            description: `Restored ${restoredCount} workspace settings`
-          });
+          console.info(`Session restored: ${restoredCount} workspace settings`);
         } else {
-          toast.info('No changes to restore');
+          console.info('No changes to restore');
         }
       }
 
@@ -147,12 +140,9 @@ class SessionRecoveryService {
 
     } catch (error) {
       console.error('❌ Session restore failed:', error);
-      
+
       if (showNotifications) {
-        toast.dismiss('session-restore');
-        toast.error('Failed to restore session', {
-          description: error instanceof Error ? error.message : 'Unknown error'
-        });
+        console.error('Failed to restore session');
       }
       
       return false;

@@ -45,7 +45,11 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
 import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { SendInvoiceEmailDialog } from './email/SendInvoiceEmailDialog';
+import { InvoiceEmailLog } from './InvoiceEmailLog';
+import { InvoiceComments } from './InvoiceComments';
 
 interface InvoiceDetailsDialogProps {
   open: boolean;
@@ -55,16 +59,20 @@ interface InvoiceDetailsDialogProps {
 
 const getStatusBadge = (status: InvoiceStatus) => {
   const styles = {
-    draft: { variant: 'secondary' as const, label: 'Draft' },
-    pending: { variant: 'outline' as const, label: 'Pending' },
-    paid: { variant: 'default' as const, label: 'Paid' },
-    partially_paid: { variant: 'secondary' as const, label: 'Partially Paid' },
-    overdue: { variant: 'destructive' as const, label: 'Overdue' },
-    cancelled: { variant: 'outline' as const, label: 'Cancelled' }
+    draft: { variant: 'secondary' as const, label: 'Draft', className: '' },
+    pending: { variant: 'outline' as const, label: 'Pending', className: '' },
+    paid: { variant: 'default' as const, label: 'Paid', className: '' },
+    partially_paid: {
+      variant: 'secondary' as const,
+      label: 'Partially Paid',
+      className: 'bg-amber-100 text-amber-800 border-amber-300 text-sm px-3 py-1.5 font-semibold'
+    },
+    overdue: { variant: 'destructive' as const, label: 'Overdue', className: '' },
+    cancelled: { variant: 'outline' as const, label: 'Cancelled', className: '' }
   };
 
   const style = styles[status] || styles.draft;
-  return <Badge variant={style.variant}>{style.label}</Badge>;
+  return <Badge variant={style.variant} className={style.className}>{style.label}</Badge>;
 };
 
 export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
@@ -73,11 +81,13 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   invoiceId,
 }) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { data: invoice, isLoading } = useInvoice(invoiceId);
   const deleteMutation = useDeleteInvoice();
   const deletePaymentMutation = useDeletePayment();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -102,8 +112,360 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     return description;
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handlePrint = async () => {
+    if (!invoice) return;
+
+    try {
+      // Get dealership info
+      const dealerName = invoice.dealership?.name || 'Dealership';
+      const dealerLogo = invoice.dealership?.logo || '';
+      const dealerAddress = invoice.dealership?.address || '';
+      const dealerEmail = invoice.dealership?.email || '';
+      const dealerPhone = invoice.dealership?.phone || '';
+
+      // Get service period from metadata
+      const servicePeriod = invoice.metadata?.filter_date_range
+        ? `${formatDate(invoice.metadata.filter_date_range.start)} - ${formatDate(invoice.metadata.filter_date_range.end)}`
+        : null;
+
+      // Generate print-friendly HTML
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        toast({ variant: 'destructive', description: 'Please allow popups to print' });
+        return;
+      }
+
+      // Get sender info for header
+      const senderName = 'DEALER DETAIL SERVICE LLC';
+
+      // Get user full name
+      const userFullName = user?.first_name && user?.last_name
+        ? `${user.first_name} ${user.last_name}`
+        : user?.email?.split('@')[0] || 'System';
+
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Invoice ${invoice.invoiceNumber}</title>
+          <style>
+            @page {
+              margin: 0.5in;
+              size: letter portrait;
+            }
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              font-family: 'Helvetica', 'Arial', sans-serif;
+              font-size: 9pt;
+              line-height: 1.3;
+              color: #111827;
+              padding: 0;
+            }
+            .print-header {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            .sender-name {
+              font-size: 13pt;
+              font-weight: bold;
+              color: #6366F1;
+              margin-bottom: 12px;
+              letter-spacing: 1px;
+            }
+            .doc-title {
+              font-size: 18pt;
+              font-weight: bold;
+              color: #111827;
+              margin-bottom: 8px;
+            }
+            .period-info {
+              font-size: 9pt;
+              color: #374151;
+              margin-bottom: 4px;
+            }
+            .generated-time {
+              font-size: 7pt;
+              font-style: italic;
+              color: #6B7280;
+            }
+            .divider {
+              border-top: 1px solid #E5E7EB;
+              margin: 15px 0;
+            }
+            .invoice-info {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 20px;
+              gap: 30px;
+            }
+            .bill-to {
+              flex: 1;
+            }
+            .bill-to h3 {
+              font-size: 9pt;
+              font-weight: 600;
+              color: #374151;
+              text-transform: uppercase;
+              margin-bottom: 8px;
+              letter-spacing: 0.5px;
+            }
+            .bill-to .company {
+              font-size: 11pt;
+              font-weight: 600;
+              margin-bottom: 4px;
+              color: #111827;
+            }
+            .bill-to p {
+              color: #6B7280;
+              margin: 2px 0;
+              font-size: 8pt;
+            }
+            .invoice-details {
+              text-align: right;
+              flex: 1;
+            }
+            .invoice-details .detail-row {
+              margin-bottom: 6px;
+            }
+            .invoice-details .label {
+              color: #6B7280;
+              font-size: 7pt;
+              display: block;
+              margin-bottom: 2px;
+              text-transform: uppercase;
+              letter-spacing: 0.3px;
+            }
+            .invoice-details .value {
+              font-weight: 600;
+              font-size: 9pt;
+              color: #111827;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 15px 0;
+            }
+            thead {
+              background: #6366F1;
+              color: white;
+            }
+            th {
+              padding: 8px 6px;
+              text-align: center;
+              font-weight: 600;
+              font-size: 8pt;
+              text-transform: uppercase;
+              letter-spacing: 0.3px;
+            }
+            td {
+              padding: 7px 6px;
+              border-bottom: 1px solid #E5E7EB;
+              font-size: 8pt;
+              text-align: center;
+              color: #374151;
+            }
+            tbody tr:nth-child(even) {
+              background: #F9FAFB;
+            }
+            tbody tr:last-child td {
+              border-bottom: 2px solid #E5E7EB;
+            }
+            .font-mono {
+              font-family: 'Courier New', monospace;
+              font-size: 7.5pt;
+              font-weight: 600;
+            }
+            .text-left { text-align: left; }
+            .text-right { text-align: right; }
+            .po-ro-tag {
+              font-size: 8pt;
+              font-weight: 500;
+              color: #111827;
+            }
+            .amount-cell {
+              font-weight: 600;
+              color: #111827;
+              font-size: 9pt;
+            }
+            .totals-inline {
+              text-align: right;
+              margin-top: 20px;
+              padding: 15px 30px;
+            }
+            .total-line {
+              padding: 4px 0;
+              font-size: 9pt;
+              color: #374151;
+            }
+            .total-line.border-top {
+              border-top: 2px solid #E5E7EB;
+              margin-top: 8px;
+              padding-top: 10px;
+            }
+            .total-line.main-total {
+              font-size: 12pt;
+              font-weight: 700;
+              color: #111827;
+            }
+            .footer {
+              position: absolute;
+              bottom: 20px;
+              left: 0;
+              right: 0;
+              padding-top: 15px;
+              border-top: 2px solid #E5E7EB;
+              text-align: center;
+              color: #6B7280;
+              font-size: 7pt;
+            }
+            .footer-bold {
+              font-weight: 600;
+              color: #374151;
+            }
+            @media print {
+              body { padding: 0; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <!-- Header -->
+          <div class="print-header">
+            <div class="sender-name">${senderName}</div>
+            <div class="doc-title">Invoice</div>
+            ${servicePeriod ? `
+            <div class="period-info">Period: ${servicePeriod}</div>
+            ` : ''}
+            <div class="generated-time">Generated: ${format(new Date(), 'MMM dd, yyyy \'at\' h:mm a')}</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Invoice Info -->
+          <div class="invoice-info">
+            <div class="bill-to">
+              <h3>Bill To</h3>
+              <div class="company">${dealerName}</div>
+              ${dealerAddress ? `<p>${dealerAddress}</p>` : ''}
+              ${dealerEmail ? `<p>${dealerEmail}</p>` : ''}
+              ${dealerPhone ? `<p>${dealerPhone}</p>` : ''}
+            </div>
+            <div class="invoice-details">
+              <div class="detail-row">
+                <span class="label">Invoice Date</span>
+                <div class="value">${formatDate(invoice.issueDate)}</div>
+              </div>
+              <div class="detail-row">
+                <span class="label">Due Date</span>
+                <div class="value">${formatDate(invoice.dueDate)}</div>
+              </div>
+              <div class="detail-row">
+                <span class="label">Invoice Number</span>
+                <div class="value font-mono">${invoice.invoiceNumber}</div>
+              </div>
+              <div class="detail-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #E5E7EB;">
+                <span class="label">Total Amount</span>
+                <div class="value" style="font-size: 14pt; font-weight: 700; color: #6366F1;">${formatCurrency(invoice.totalAmount)}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicles Table -->
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 8%;">Date</th>
+                <th style="width: 10%;">Order</th>
+                <th style="width: 18%;">PO | RO | Tag</th>
+                <th style="width: 16%;">Vehicle</th>
+                <th style="width: 14%;">VIN</th>
+                <th style="width: 22%;" class="text-left">Services</th>
+                <th style="width: 12%;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(invoice.items || []).map(item => {
+                const po = item.metadata?.po || '';
+                const ro = item.metadata?.ro || '';
+                const tag = item.metadata?.tag || '';
+                const poRoTag = [po, ro, tag].filter(Boolean).join(' | ') || (item.metadata?.stock_number || 'N/A');
+
+                return `
+                  <tr>
+                    <td>${item.metadata?.completed_at ? format(parseISO(item.metadata.completed_at), 'MM/dd') : format(parseISO(invoice.issueDate), 'MM/dd')}</td>
+                    <td style="font-weight: 600;">${item.metadata?.order_number || 'N/A'}</td>
+                    <td class="po-ro-tag">${poRoTag}</td>
+                    <td>${cleanVehicleDescription(item.description)}</td>
+                    <td class="font-mono">${item.metadata?.vehicle_vin || 'N/A'}</td>
+                    <td class="text-left">${item.metadata?.service_names || item.serviceReference || 'N/A'}</td>
+                    <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+
+          <!-- Totals Inline -->
+          <div class="totals-inline">
+            <div class="total-line">
+              Subtotal: <strong>${formatCurrency(invoice.subtotal)}</strong>
+            </div>
+            ${invoice.taxRate > 0 ? `
+            <div class="total-line">
+              Tax (${invoice.taxRate}%): <strong>${formatCurrency(invoice.taxAmount)}</strong>
+            </div>
+            ` : ''}
+            ${invoice.discountAmount > 0 ? `
+            <div class="total-line">
+              Discount: <strong>-${formatCurrency(invoice.discountAmount)}</strong>
+            </div>
+            ` : ''}
+            <div class="total-line border-top main-total">
+              Total Amount: <strong>${formatCurrency(invoice.totalAmount)}</strong>
+            </div>
+            ${invoice.amountPaid > 0 ? `
+            <div class="total-line" style="margin-top: 10px;">
+              Amount Paid: <strong>${formatCurrency(invoice.amountPaid)}</strong>
+            </div>
+            <div class="total-line border-top main-total">
+              Amount Due: <strong>${formatCurrency(invoice.amountDue)}</strong>
+            </div>
+            ` : ''}
+          </div>
+
+          <!-- Footer -->
+          <div class="footer">
+            <p style="font-style: italic;">Generated by ${userFullName}</p>
+            <p class="footer-bold">My Detail Area LLC</p>
+            <p style="font-style: italic;">Report ID: INV-${invoice.id.substring(0, 8)} | ${dealerName}</p>
+          </div>
+
+          <script>
+            // Auto-print when loaded
+            window.onload = function() {
+              window.print();
+            };
+            // Close window after printing or canceling
+            window.onafterprint = function() {
+              window.close();
+            };
+          </script>
+        </body>
+        </html>
+      `;
+
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      toast({ description: 'Opening print dialog...' });
+    } catch (error) {
+      console.error('Error generating print view:', error);
+      toast({ variant: 'destructive', description: 'Failed to generate print view' });
+    }
   };
 
   const handleDownloadPDF = async () => {
@@ -111,10 +473,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
     try {
       await generateInvoicePDF(invoice);
-      toast.success('PDF downloaded successfully');
+      toast({ description: 'PDF downloaded successfully' });
     } catch (error) {
       console.error('Error generating PDF:', error);
-      toast.error('Failed to generate PDF');
+      toast({ variant: 'destructive', description: 'Failed to generate PDF' });
     }
   };
 
@@ -123,16 +485,15 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
     try {
       await generateInvoiceExcel(invoice);
-      toast.success('Excel file downloaded successfully');
+      toast({ description: 'Excel file downloaded successfully' });
     } catch (error) {
       console.error('Error generating Excel:', error);
-      toast.error('Failed to generate Excel file');
+      toast({ variant: 'destructive', description: 'Failed to generate Excel file' });
     }
   };
 
   const handleEmail = () => {
-    // TODO: Implement email
-    console.log('Email invoice:', invoiceId);
+    setShowEmailDialog(true);
   };
 
   if (isLoading) {
@@ -172,38 +533,69 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   }
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto" hideCloseButton>
+        <DialogHeader className="border-b pb-4">
           <div className="flex items-center justify-between">
+            {/* Invoice Title - Left */}
             <div>
               <DialogTitle asChild>
-                <div className="flex items-center gap-2 text-xl">
-                  <FileText className="h-5 w-5" />
-                  <span>Invoice {invoice.invoiceNumber}</span>
+                <div className="flex items-center gap-3 text-2xl">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <FileText className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <span className="font-bold">Invoice {invoice.invoiceNumber}</span>
+                    <div className="flex items-center gap-2 mt-2">
+                      {getStatusBadge(invoice.status)}
+                      <span className="text-sm text-muted-foreground font-normal">
+                        • {invoice.items?.length || 0} vehicle{invoice.items?.length !== 1 ? 's' : ''}
+                      </span>
+                      {invoice.metadata?.vehicle_count && invoice.metadata.vehicle_count !== invoice.items?.length && (
+                        <span className="text-xs text-amber-600 font-normal">
+                          (Expected: {invoice.metadata.vehicle_count})
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </DialogTitle>
-              <DialogDescription asChild>
-                <div className="flex items-center gap-2 mt-1">
-                  {getStatusBadge(invoice.status)}
-                  <span className="text-muted-foreground">
-                    • {invoice.items?.length || 0} vehicle{invoice.items?.length !== 1 ? 's' : ''}
-                  </span>
-                </div>
-              </DialogDescription>
             </div>
+
+            {/* Action Buttons - Right side */}
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={handleEmail}>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={invoice.status === 'paid'}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {t('reports.invoices.delete')}
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleEmail}
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+              >
                 <Mail className="h-4 w-4 mr-2" />
                 {t('reports.invoices.send_email')}
               </Button>
-              <Button size="sm" variant="outline" onClick={handlePrint}>
+              <Button
+                size="sm"
+                onClick={handlePrint}
+                className="bg-purple-500 hover:bg-purple-600 text-white"
+              >
                 <Printer className="h-4 w-4 mr-2" />
                 {t('common.action_buttons.print')}
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="sm" variant="outline">
+                  <Button
+                    size="sm"
+                    className="bg-green-500 hover:bg-green-600 text-white"
+                  >
                     <Download className="h-4 w-4 mr-2" />
                     {t('common.action_buttons.download')}
                   </Button>
@@ -221,12 +613,11 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               </DropdownMenu>
               <Button
                 size="sm"
-                variant="destructive"
-                onClick={() => setShowDeleteConfirm(true)}
-                disabled={invoice.status === 'paid'}
+                onClick={() => onOpenChange(false)}
+                className="bg-slate-500 hover:bg-slate-600 text-white"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
-                {t('reports.invoices.delete')}
+                <X className="h-4 w-4 mr-2" />
+                {t('common.action_buttons.close')}
               </Button>
             </div>
           </div>
@@ -234,40 +625,67 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
         <div className="space-y-6 mt-6">
           {/* Header Info */}
-          <div className="grid grid-cols-2 gap-6 pb-6 border-b">
+          <div className="grid grid-cols-2 gap-8 pb-6 border-b">
             <div>
-              <h3 className="font-semibold text-lg mb-3">Bill To:</h3>
-              <div className="text-sm space-y-1">
-                <p className="font-medium text-base">{invoice.dealership?.name || 'N/A'}</p>
+              <h3 className="font-bold text-sm mb-3 text-gray-500 uppercase tracking-wide">Bill To:</h3>
+              <div className="text-sm space-y-2">
+                <p className="font-bold text-xl text-gray-900">{invoice.dealership?.name || 'N/A'}</p>
                 {invoice.dealership?.address && (
-                  <p className="text-muted-foreground">{invoice.dealership.address}</p>
+                  <p className="text-gray-600 flex items-start gap-2">
+                    <span className="text-gray-400">📍</span>
+                    {invoice.dealership.address}
+                  </p>
                 )}
                 {invoice.dealership?.email && (
-                  <p className="text-muted-foreground">{invoice.dealership.email}</p>
+                  <p className="text-gray-600 flex items-center gap-2">
+                    <span className="text-gray-400">✉️</span>
+                    {invoice.dealership.email}
+                  </p>
                 )}
                 {invoice.dealership?.phone && (
-                  <p className="text-muted-foreground">{invoice.dealership.phone}</p>
+                  <p className="text-gray-600 flex items-center gap-2">
+                    <span className="text-gray-400">📞</span>
+                    {invoice.dealership.phone}
+                  </p>
                 )}
               </div>
             </div>
             <div className="text-right">
               <div className="space-y-2 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Invoice Date:</span>
-                  <p className="font-medium">{formatDate(invoice.issueDate)}</p>
+                  <span className="text-muted-foreground block mb-0.5 text-xs">Invoice Date:</span>
+                  <p className="font-semibold text-sm">{formatDate(invoice.issueDate)}</p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Due Date:</span>
-                  <p className="font-medium">{formatDate(invoice.dueDate)}</p>
+                  <span className="text-muted-foreground block mb-0.5 text-xs">Due Date:</span>
+                  <p className="font-semibold text-sm">{formatDate(invoice.dueDate)}</p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Invoice Number:</span>
-                  <p className="font-mono font-medium">{invoice.invoiceNumber}</p>
+                  <span className="text-muted-foreground block mb-0.5 text-xs">Invoice Number:</span>
+                  <p className="font-mono font-semibold text-sm">{invoice.invoiceNumber}</p>
                 </div>
+                <div className="pt-2 border-t">
+                  <span className="text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide">Total Amount</span>
+                  <p className="text-2xl font-bold text-primary">{formatCurrency(invoice.totalAmount)}</p>
+                </div>
+                {invoice.amountPaid > 0 && (
+                  <div className="pt-2">
+                    <span className="text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide">Amount Due</span>
+                    <p className="text-xl font-bold text-amber-600">{formatCurrency(invoice.amountDue)}</p>
+                  </div>
+                )}
+                {invoice.metadata?.filter_date_range && (
+                  <div className="pt-2 border-t">
+                    <span className="text-primary block mb-0.5 text-xs font-medium">Service Period:</span>
+                    <p className="font-semibold text-sm text-primary">
+                      {formatDate(invoice.metadata.filter_date_range.start)} - {formatDate(invoice.metadata.filter_date_range.end)}
+                    </p>
+                  </div>
+                )}
                 {invoice.order?.orderType && (
-                  <div>
-                    <span className="text-muted-foreground">Department:</span>
-                    <p className="font-medium capitalize">{invoice.order.orderType}</p>
+                  <div className="pt-1">
+                    <span className="text-muted-foreground block mb-0.5 text-xs">Department:</span>
+                    <p className="font-semibold text-sm capitalize">{invoice.order.orderType}</p>
                   </div>
                 )}
               </div>
@@ -275,67 +693,69 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
           </div>
 
           {/* Vehicle List */}
-          <div>
-            <h3 className="font-semibold text-base mb-3">Vehicles ({invoice.items?.length || 0})</h3>
+          <div className="bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-lg text-gray-900">
+                Vehicles
+                <span className="ml-2 text-sm font-normal text-gray-500">
+                  ({invoice.items?.length || 0} total)
+                </span>
+              </h3>
+            </div>
             <div className="border rounded-lg overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-gray-50">
-                    <TableHead className="font-bold text-center">Date</TableHead>
-                    <TableHead className="font-bold text-center">Order</TableHead>
-                    <TableHead className="font-bold text-center">
-                      {(invoice.order?.orderType || invoice.order?.order_type) === 'service' ? 'PO/RO/Tag' : 'Stock'}
-                    </TableHead>
-                    <TableHead className="font-bold text-center">Vehicle</TableHead>
-                    <TableHead className="font-bold text-center">VIN</TableHead>
-                    <TableHead className="font-bold text-left">Services</TableHead>
-                    <TableHead className="font-bold text-center">Amount</TableHead>
+                  <TableRow className="bg-indigo-500 hover:bg-indigo-500">
+                    <TableHead className="font-bold text-center text-white">Date</TableHead>
+                    <TableHead className="font-bold text-center text-white">Order</TableHead>
+                    <TableHead className="font-bold text-center text-white">PO | RO | Tag</TableHead>
+                    <TableHead className="font-bold text-center text-white">Vehicle</TableHead>
+                    <TableHead className="font-bold text-center text-white">VIN</TableHead>
+                    <TableHead className="font-bold text-left text-white">Services</TableHead>
+                    <TableHead className="font-bold text-center text-white">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {invoice.items && invoice.items.length > 0 ? (
-                    invoice.items.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell className="text-sm text-center">
-                          {item.metadata?.completed_at
-                            ? format(parseISO(item.metadata.completed_at), 'MM/dd')
-                            : item.createdAt
-                            ? format(parseISO(item.createdAt), 'MM/dd')
-                            : format(parseISO(invoice.issueDate), 'MM/dd')}
-                        </TableCell>
-                        <TableCell className="text-sm text-center font-medium">
-                          {item.metadata?.order_number || 'N/A'}
-                        </TableCell>
-                        <TableCell className="font-medium text-sm text-center">
-                          {(item.metadata?.order_type) === 'service' ? (
-                            <div className="flex flex-col gap-0.5 text-xs">
-                              {item.metadata?.po && <span>PO: {item.metadata.po}</span>}
-                              {item.metadata?.ro && <span>RO: {item.metadata.ro}</span>}
-                              {item.metadata?.tag && <span className="font-semibold">Tag: {item.metadata.tag}</span>}
-                              {!item.metadata?.po && !item.metadata?.ro && !item.metadata?.tag && 'N/A'}
-                            </div>
-                          ) : (
-                            item.metadata?.stock_number || 'N/A'
-                          )}
-                        </TableCell>
-                        <TableCell className="text-sm text-center">{cleanVehicleDescription(item.description)}</TableCell>
-                        <TableCell className="font-mono text-sm font-semibold text-center">
-                          {item.metadata?.vehicle_vin || 'N/A'}
-                        </TableCell>
-                        <TableCell className="text-sm text-left">
-                          {item.metadata?.service_names ? (
-                            <span className="text-xs text-gray-700">{item.metadata.service_names}</span>
-                          ) : item.serviceReference ? (
-                            <span className="text-xs text-gray-700">{item.serviceReference}</span>
-                          ) : (
-                            <span className="text-xs text-gray-500">N/A</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-center font-medium">
-                          {formatCurrency(item.totalAmount)}
-                        </TableCell>
-                      </TableRow>
-                    ))
+                    invoice.items.map((item, index) => {
+                      const po = item.metadata?.po || '';
+                      const ro = item.metadata?.ro || '';
+                      const tag = item.metadata?.tag || '';
+                      const poRoTag = [po, ro, tag].filter(Boolean).join(' | ') || (item.metadata?.stock_number || 'N/A');
+
+                      return (
+                        <TableRow
+                          key={item.id}
+                          className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors`}
+                        >
+                          <TableCell className="text-sm text-center font-medium text-gray-700">
+                            {item.metadata?.completed_at
+                              ? format(parseISO(item.metadata.completed_at), 'MM/dd')
+                              : item.createdAt
+                              ? format(parseISO(item.createdAt), 'MM/dd')
+                              : format(parseISO(invoice.issueDate), 'MM/dd')}
+                          </TableCell>
+                          <TableCell className="text-sm text-center font-semibold text-gray-900">
+                            {item.metadata?.order_number || 'N/A'}
+                          </TableCell>
+                          <TableCell className="text-sm text-center font-medium text-gray-900">
+                            {poRoTag}
+                          </TableCell>
+                          <TableCell className="text-sm text-center font-medium text-gray-800">
+                            {cleanVehicleDescription(item.description)}
+                          </TableCell>
+                          <TableCell className="font-mono text-xs font-semibold text-center text-gray-700">
+                            {item.metadata?.vehicle_vin || 'N/A'}
+                          </TableCell>
+                          <TableCell className="text-sm text-left text-gray-600">
+                            {item.metadata?.service_names || item.serviceReference || 'N/A'}
+                          </TableCell>
+                          <TableCell className="text-center font-semibold text-base text-gray-900">
+                            {formatCurrency(item.totalAmount)}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
                   ) : (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
@@ -349,42 +769,44 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
           </div>
 
           {/* Totals */}
-          <div className="flex justify-end">
-            <div className="w-80 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal:</span>
-                <span className="font-medium">{formatCurrency(invoice.subtotal)}</span>
-              </div>
-              {invoice.taxRate > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Tax ({invoice.taxRate}%):</span>
-                  <span className="font-medium">{formatCurrency(invoice.taxAmount)}</span>
+          <div className="flex justify-end mt-6">
+            <div className="w-96 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border-2 shadow-sm">
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm pb-2">
+                  <span className="text-gray-600 font-medium">Subtotal:</span>
+                  <span className="font-semibold text-gray-900">{formatCurrency(invoice.subtotal)}</span>
                 </div>
-              )}
-              {invoice.discountAmount > 0 && (
-                <div className="flex justify-between text-sm text-amber-600">
-                  <span>Discount:</span>
-                  <span className="font-medium">-{formatCurrency(invoice.discountAmount)}</span>
+                {invoice.taxRate > 0 && (
+                  <div className="flex justify-between text-sm pb-2">
+                    <span className="text-gray-600 font-medium">Tax ({invoice.taxRate}%):</span>
+                    <span className="font-semibold text-gray-900">{formatCurrency(invoice.taxAmount)}</span>
+                  </div>
+                )}
+                {invoice.discountAmount > 0 && (
+                  <div className="flex justify-between text-sm pb-2">
+                    <span className="text-amber-700 font-medium">Discount:</span>
+                    <span className="font-semibold text-amber-700">-{formatCurrency(invoice.discountAmount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between pt-3 border-t-2 border-gray-300">
+                  <span className="font-bold text-gray-900 text-base">Total Amount:</span>
+                  <span className="font-bold text-2xl text-blue-600">{formatCurrency(invoice.totalAmount)}</span>
                 </div>
-              )}
-              <div className="flex justify-between pt-2 border-t">
-                <span className="font-semibold">Total:</span>
-                <span className="font-bold text-xl">{formatCurrency(invoice.totalAmount)}</span>
+                {invoice.amountPaid > 0 && (
+                  <>
+                    <div className="flex justify-between text-sm pt-2 bg-emerald-50 -mx-3 px-3 py-2 rounded">
+                      <span className="text-emerald-700 font-medium">Amount Paid:</span>
+                      <span className="font-bold text-emerald-700">{formatCurrency(invoice.amountPaid)}</span>
+                    </div>
+                    <div className="flex justify-between pt-3 border-t-2 border-orange-200 bg-orange-50 -mx-3 px-3 py-3 rounded-b-lg">
+                      <span className="font-bold text-orange-900">Amount Due:</span>
+                      <span className="font-bold text-2xl text-orange-600">
+                        {formatCurrency(invoice.amountDue)}
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
-              {invoice.amountPaid > 0 && (
-                <>
-                  <div className="flex justify-between text-sm text-emerald-600">
-                    <span>Amount Paid:</span>
-                    <span className="font-medium">{formatCurrency(invoice.amountPaid)}</span>
-                  </div>
-                  <div className="flex justify-between pt-2 border-t">
-                    <span className="font-semibold">Amount Due:</span>
-                    <span className="font-bold text-lg text-orange-600">
-                      {formatCurrency(invoice.amountDue)}
-                    </span>
-                  </div>
-                </>
-              )}
             </div>
           </div>
 
@@ -447,6 +869,16 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               </div>
             </div>
           )}
+
+          {/* Email History */}
+          <div className="pt-6 border-t">
+            <InvoiceEmailLog invoiceId={invoiceId} />
+          </div>
+
+          {/* Comments & Notes */}
+          <div className="pt-6 border-t">
+            <InvoiceComments invoiceId={invoiceId} dealershipId={invoice.dealerId} />
+          </div>
         </div>
 
         {/* Delete Confirmation Dialog */}
@@ -519,5 +951,15 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         </AlertDialog>
       </DialogContent>
     </Dialog>
+
+    {/* Send Email Dialog */}
+    {invoice && (
+      <SendInvoiceEmailDialog
+        open={showEmailDialog}
+        onOpenChange={setShowEmailDialog}
+        invoice={invoice}
+      />
+    )}
+    </>
   );
 };

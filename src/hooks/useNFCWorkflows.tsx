@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export interface NFCWorkflowAction {
   type: 'send_email' | 'send_sms' | 'send_notification' | 'update_order_status' | 'create_task' | 'webhook';
@@ -49,6 +49,7 @@ interface UseNFCWorkflowsReturn {
 
 export function useNFCWorkflows(): UseNFCWorkflowsReturn {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [workflows, setWorkflows] = useState<NFCWorkflow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -169,7 +170,9 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load NFC workflows';
       setError(message);
-      toast.error(t('nfc_tracking.workflows.errors.load_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('nfc_tracking.workflows.errors.load_failed'),
         description: message
       });
     } finally {
@@ -199,14 +202,17 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
       };
 
       setWorkflows(prev => [newWorkflow, ...prev]);
-      
-      toast.success(t('nfc_tracking.workflows.workflow_created'), {
+
+      toast({
+        title: t('nfc_tracking.workflows.workflow_created'),
         description: t('nfc_tracking.workflows.workflow_created_desc', { name: newWorkflow.name })
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create NFC workflow';
       setError(message);
-      toast.error(t('nfc_tracking.workflows.errors.create_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('nfc_tracking.workflows.errors.create_failed'),
         description: message
       });
       throw err;
@@ -233,17 +239,20 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
         updated_at: new Date().toISOString()
       };
 
-      setWorkflows(prev => prev.map(workflow => 
+      setWorkflows(prev => prev.map(workflow =>
         workflow.id === workflowId ? newWorkflow : workflow
       ));
-      
-      toast.success(t('nfc_tracking.workflows.workflow_updated'), {
+
+      toast({
+        title: t('nfc_tracking.workflows.workflow_updated'),
         description: t('nfc_tracking.workflows.workflow_updated_desc', { name: newWorkflow.name })
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to update NFC workflow';
       setError(message);
-      toast.error(t('nfc_tracking.workflows.errors.update_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('nfc_tracking.workflows.errors.update_failed'),
         description: message
       });
       throw err;
@@ -260,14 +269,17 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
     try {
       // Use mock delete for now
       setWorkflows(prev => prev.filter(workflow => workflow.id !== workflowId));
-      
-      toast.success(t('nfc_tracking.workflows.workflow_deleted'), {
+
+      toast({
+        title: t('nfc_tracking.workflows.workflow_deleted'),
         description: t('nfc_tracking.workflows.workflow_deleted_desc')
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to delete NFC workflow';
       setError(message);
-      toast.error(t('nfc_tracking.workflows.errors.delete_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('nfc_tracking.workflows.errors.delete_failed'),
         description: message
       });
       throw err;
@@ -295,16 +307,16 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
         workflow.id === workflowId ? newWorkflow : workflow
       ));
       
-      toast.success(
-        isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),
-        {
-          description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })
-        }
-      );
+      toast({
+        title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),
+        description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to toggle NFC workflow';
       setError(message);
-      toast.error(t('nfc_tracking.workflows.errors.toggle_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('nfc_tracking.workflows.errors.toggle_failed'),
         description: message
       });
       throw err;
@@ -350,7 +362,8 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
       loadWorkflows();
 
       if (data.success) {
-        toast.success(t('nfc_tracking.workflows.workflow_executed'), {
+        toast({
+          title: t('nfc_tracking.workflows.workflow_executed'),
           description: t('nfc_tracking.workflows.workflow_executed_desc', { name: workflow.name })
         });
       } else {
@@ -359,7 +372,9 @@ export function useNFCWorkflows(): UseNFCWorkflowsReturn {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to execute NFC workflow';
       setError(message);
-      toast.error(t('nfc_tracking.workflows.errors.execute_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('nfc_tracking.workflows.errors.execute_failed'),
         description: message
       });
       throw err;

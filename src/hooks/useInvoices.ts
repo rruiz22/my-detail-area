@@ -7,7 +7,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import type {
   Invoice,
   InvoiceWithDetails,
@@ -354,10 +354,10 @@ export const useCreateInvoice = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
-      toast.success('Invoice created successfully');
+      toast({ description: 'Invoice created successfully' });
     },
     onError: (error: Error) => {
-      toast.error(`Failed to create invoice: ${error.message}`);
+      toast({ variant: 'destructive', description: `Failed to create invoice: ${error.message}` });
     }
   });
 };
@@ -402,10 +402,10 @@ export const useRecordPayment = () => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice', variables.invoiceId] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
-      toast.success('Payment recorded successfully');
+      toast({ description: 'Payment recorded successfully' });
     },
     onError: (error: Error) => {
-      toast.error(`Failed to record payment: ${error.message}`);
+      toast({ variant: 'destructive', description: `Failed to record payment: ${error.message}` });
     }
   });
 };
@@ -433,10 +433,10 @@ export const useSendInvoiceEmail = () => {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['invoice', variables.invoiceId] });
-      toast.success('Invoice sent successfully');
+      toast({ description: 'Invoice sent successfully' });
     },
     onError: (error: Error) => {
-      toast.error(`Failed to send invoice: ${error.message}`);
+      toast({ variant: 'destructive', description: `Failed to send invoice: ${error.message}` });
     }
   });
 };
@@ -469,13 +469,10 @@ export const useDeleteInvoice = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
-      toast.success('Invoice deleted successfully - vehicles are now available for billing');
+      toast({ description: 'Invoice deleted successfully - vehicles are now available for billing' });
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete invoice', {
-        duration: 5000,
-        description: 'Please try again or contact support if the problem persists.'
-      });
+      toast({ variant: 'destructive', description: error.message || 'Failed to delete invoice' });
     }
   });
 };
@@ -498,14 +495,10 @@ export const useDeletePayment = () => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice'] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
-      toast.success('Payment deleted successfully');
+      toast({ description: 'Payment deleted successfully' });
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete payment', {
-        duration: 5000,
-        description: 'Please try again or contact support if the problem persists.'
-      });
+      toast({ variant: 'destructive', description: error.message || 'Failed to delete payment' });
     }
   });
 };
-

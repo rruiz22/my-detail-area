@@ -27,7 +27,7 @@ import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Check, ChevronsUpDown, Loader2, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -397,7 +397,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
       if (servicesResult.error) {
         console.error('Error fetching services:', servicesResult.error);
-        toast.error('Error loading services');
+        toast({ variant: 'destructive', description: 'Error loading services' });
       }
 
       if (usersResult.data) {
@@ -427,7 +427,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
     } catch (error) {
       console.error('Error fetching dealer data:', error);
-      toast.error('An unexpected error occurred');
+      toast({ variant: 'destructive', description: 'An unexpected error occurred' });
     } finally {
       setLoading(false);
     }
@@ -545,12 +545,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);
       if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);
 
-      toast.success(
-        `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,
-        { duration: 4000 }
-      );
+      toast({
+        description: `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,
+        duration: 4000
+      });
     } else if (result.source === 'vin_api') {
-      toast.success(t('stock.autopop.vinDecoded'), { duration: 3000 });
+      toast({ description: t('stock.autopop.vinDecoded'), duration: 3000 });
     }
   };
 
@@ -569,7 +569,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       vehicleInfo: ''
     }));
 
-    toast.info(t('stock.autopop.cleared', 'Vehicle cleared - you can now enter manually'));
+    toast({ description: t('stock.autopop.cleared', 'Vehicle cleared - you can now enter manually') });
   };
 
   const handleVinChange = async (vin: string) => {
@@ -629,7 +629,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     if (checked) {
       // ✅ LIMIT: Maximum 2 services per order
       if (selectedServices.length >= 2) {
-        toast.warning(t('orders.max_services_reached', 'Maximum 2 services per order'));
+        toast({ description: t('orders.max_services_reached', 'Maximum 2 services per order') });
         return;
       }
       setSelectedServices(prev => [...prev, serviceId]);
@@ -710,35 +710,35 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const validateForm = async (): Promise<boolean> => {
     // Validate required fields with immediate toast feedback
     if (!formData.customerName.trim()) {
-      toast.error(t('validation.customerNameRequired'));
+      toast({ variant: 'destructive', description: t('validation.customerNameRequired') });
       return false;
     }
 
     // Validate VIN (always required)
     if (!formData.vehicleVin.trim()) {
-      toast.error(t('validation.vinRequired'));
+      toast({ variant: 'destructive', description: t('validation.vinRequired') });
       return false;
     }
     if (formData.vehicleVin.length !== 17) {
-      toast.error(t('validation.vinInvalidLength'));
+      toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });
       return false;
     }
 
     // Validate dealership selection
     if (!selectedDealership) {
-      toast.error(t('validation.dealershipRequired'));
+      toast({ variant: 'destructive', description: t('validation.dealershipRequired') });
       return false;
     }
 
     // Validate stock number (always required)
     if (!formData.stockNumber.trim()) {
-      toast.error(t('validation.stockNumberRequired'));
+      toast({ variant: 'destructive', description: t('validation.stockNumberRequired') });
       return false;
     }
 
     // Validate assigned to (always required)
     if (!selectedAssignedTo) {
-      toast.error(t('validation.assignedToRequired'));
+      toast({ variant: 'destructive', description: t('validation.assignedToRequired') });
       return false;
     }
 
@@ -749,7 +749,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
     if (shouldValidateDueDate) {
       if (!formData.dueDate) {
-        toast.error(t('validation.dueDateRequired'));
+        toast({ variant: 'destructive', description: t('validation.dueDateRequired') });
         return false;
       }
 
@@ -758,7 +758,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       const oneWeekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
 
       if (formData.dueDate > oneWeekFromNow) {
-        toast.error(t('validation.dueDateTooFar'));
+        toast({ variant: 'destructive', description: t('validation.dueDateTooFar') });
         return false;
       }
 
@@ -767,7 +767,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       const minimumTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
 
       if (formData.dueDate < minimumTime) {
-        toast.error(t('validation.dueDateTooSoon'));
+        toast({ variant: 'destructive', description: t('validation.dueDateTooSoon') });
         return false;
       }
     }
@@ -782,14 +782,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         );
 
         if (slot && !slot.is_available) {
-          toast.error(t('validation.slotNotAvailable', {
-            time: formData.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }));
+          toast({ variant: 'destructive', description: t('validation.slotNotAvailable') });
           return false;
         }
       } catch (capacityError) {
         // Continue with order creation even if capacity check fails
-        toast.warning(t('validation.capacityCheckFailed'));
+        toast({ description: t('validation.capacityCheckFailed') });
       }
     }
 
@@ -821,27 +819,45 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           );
 
           if (!slotReserved) {
-            toast.error(t('validation.failedToReserveSlot'));
+            toast({ variant: 'destructive', description: t('validation.failedToReserveSlot') });
             setSubmitting(false);
             return;
           }
         } catch (slotError) {
-          toast.warning(t('validation.slotReservationWarning'));
+          toast({ description: t('validation.slotReservationWarning') });
           // Continue with order creation even if slot reservation fails
         }
       }
 
-      // Proceed directly to order creation without confirmation
-      const dbData = transformToDbFormat(formData);
+      // Check if we have multiple services - create separate orders for each
+      if (!isEditing && selectedServices.length > 1) {
+        // Create an array of order data, one per service
+        const ordersData = selectedServices.map(serviceId => {
+          const dbData = transformToDbFormat(formData);
+          return {
+            ...dbData,
+            services: [serviceId] // Only include this specific service
+          };
+        });
 
-      // Show immediate success feedback
-      toast.success(t('orders.creating_order'));
+        // Show immediate success feedback
+        toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
-      onSave(dbData);
+        // Pass array of orders to onSave
+        onSave(ordersData as any);
+      } else {
+        // Single service or editing - proceed as normal
+        const dbData = transformToDbFormat(formData);
+
+        // Show immediate success feedback
+        toast({ description: t('orders.creating_order') });
+
+        onSave(dbData);
+      }
 
     } catch (error) {
       console.error('Submit error:', error);
-      toast.error(t('orders.creation_failed'));
+      toast({ variant: 'destructive', description: t('orders.creation_failed') });
     } finally {
       setSubmitting(false);
     }

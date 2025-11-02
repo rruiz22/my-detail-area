@@ -2,7 +2,7 @@ import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Copy } from 'lucide-react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface QRCodeCardProps {
   value: string;
@@ -15,9 +15,9 @@ export function QRCodeCard({ value, size = 128, caption = 'QR Code for quick acc
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(value);
-      toast.success('Link copied');
+      toast({ description: 'Link copied' });
     } catch (e) {
-      toast.error('Failed to copy link');
+      toast({ variant: 'destructive', description: 'Failed to copy link' });
     }
   };
 

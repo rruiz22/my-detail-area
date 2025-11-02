@@ -5,7 +5,7 @@ import type { Database } from '@/integrations/supabase/types';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export type ProductivityCalendar = Database['public']['Tables']['productivity_calendars']['Row'];
 export type ProductivityEvent = Database['public']['Tables']['productivity_events']['Row'];
@@ -39,6 +39,7 @@ export const productivityCalendarsKeys = {
  */
 export const useProductivityCalendars = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -119,7 +120,7 @@ export const useProductivityCalendars = () => {
           });
 
           if (payload.eventType === 'INSERT' && payload.new.created_by !== user.id) {
-            toast.info(`New calendar created: ${payload.new.name}`);
+            toast({ description: `New calendar created: ${payload.new.name}` });
           }
         }
       )
@@ -154,7 +155,7 @@ export const useProductivityCalendars = () => {
           });
 
           if (payload.eventType === 'INSERT' && payload.new.created_by !== user.id) {
-            toast.info(`New event: ${payload.new.title}`);
+            toast({ description: `New event: ${payload.new.title}` });
           }
         }
       )
@@ -191,10 +192,10 @@ export const useProductivityCalendars = () => {
           queryKey: productivityCalendarsKeys.list(currentDealership.id)
         });
       }
-      toast.success('Calendar created successfully');
+      toast({ description: 'Calendar created successfully' });
     },
     onError: (err) => {
-      toast.error('Failed to create calendar');
+      toast({ variant: 'destructive', description: 'Failed to create calendar' });
       console.error('Create calendar error:', err);
     },
   });
@@ -270,11 +271,11 @@ export const useProductivityCalendars = () => {
           context.previousEvents
         );
       }
-      toast.error('Failed to create event');
+      toast({ variant: 'destructive', description: 'Failed to create event' });
       console.error('Create event error:', err);
     },
     onSuccess: () => {
-      toast.success('Event created successfully');
+      toast({ description: 'Event created successfully' });
     },
     onSettled: () => {
       if (currentDealership) {
@@ -324,11 +325,11 @@ export const useProductivityCalendars = () => {
           context.previousEvents
         );
       }
-      toast.error('Failed to update event');
+      toast({ variant: 'destructive', description: 'Failed to update event' });
       console.error('Update event error:', err);
     },
     onSuccess: () => {
-      toast.success('Event updated successfully');
+      toast({ description: 'Event updated successfully' });
     },
     onSettled: () => {
       if (currentDealership) {
@@ -376,11 +377,11 @@ export const useProductivityCalendars = () => {
           context.previousEvents
         );
       }
-      toast.error('Failed to delete event');
+      toast({ variant: 'destructive', description: 'Failed to delete event' });
       console.error('Delete event error:', err);
     },
     onSuccess: () => {
-      toast.success('Event deleted successfully');
+      toast({ description: 'Event deleted successfully' });
     },
     onSettled: () => {
       if (currentDealership) {

@@ -683,12 +683,12 @@ export function useDeleteWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicleId] });
       // ✅ Toast handled by component (ConfirmDialog)
-      // toast.success(t('get_ready.work_items.deleted_successfully'));
+      // toast({ description: t('get_ready.work_items.deleted_successfully') });
     },
     onError: (error) => {
       console.error('Delete work item mutation error:', error);
       // ✅ Toast handled by component (ConfirmDialog)
-      // toast.error(t('get_ready.work_items.error_deleting'));
+      // toast({ variant: 'destructive', description: t('get_ready.work_items.error_deleting') });
     },
   });
 }
@@ -725,12 +725,12 @@ export function usePauseWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
       // ✅ Toast handled by component (VehicleWorkItemsTab)
-      // toast.success(t('get_ready.work_items.paused_successfully'));
+      // toast({ description: t('get_ready.work_items.paused_successfully') });
     },
     onError: (error) => {
       console.error('Pause work item mutation error:', error);
       // ✅ Toast handled by component (VehicleWorkItemsTab)
-      // toast.error(t('get_ready.work_items.error_pausing'));
+      // toast({ variant: 'destructive', description: t('get_ready.work_items.error_pausing') });
     },
   });
 }
@@ -767,12 +767,12 @@ export function useBlockWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
       // ✅ Toast handled by component (VehicleWorkItemsTab)
-      // toast.success(t('get_ready.work_items.blocked_successfully'));
+      // toast({ description: t('get_ready.work_items.blocked_successfully') });
     },
     onError: (error) => {
       console.error('Block work item mutation error:', error);
       // ✅ Toast handled by component (VehicleWorkItemsTab)
-      // toast.error(t('get_ready.work_items.error_blocking'));
+      // toast({ variant: 'destructive', description: t('get_ready.work_items.error_blocking') });
     },
   });
 }
@@ -910,12 +910,12 @@ export function useCancelWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
       // ✅ Toast handled by component (VehicleWorkItemsTab)
-      // toast.success(t('get_ready.work_items.cancelled_successfully'));
+      // toast({ description: t('get_ready.work_items.cancelled_successfully') });
     },
     onError: (error) => {
       console.error('Cancel work item mutation error:', error);
       // ✅ Toast handled by component (VehicleWorkItemsTab)
-      // toast.error(t('get_ready.work_items.error_cancelling'));
+      // toast({ variant: 'destructive', description: t('get_ready.work_items.error_cancelling') });
     },
   });
 }

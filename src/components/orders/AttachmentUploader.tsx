@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
 interface OrderAttachment {
@@ -48,14 +48,14 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (!canUpload || !user) {
-      toast.error(t('attachments.uploadNotAllowed'));
+      toast({ variant: 'destructive', description: t('attachments.uploadNotAllowed') });
       return;
     }
 
     for (const file of acceptedFiles) {
       // Check file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
-        toast.error(t('attachments.fileTooLarge', { fileName: file.name }));
+        toast({ variant: 'destructive', description: t('attachments.fileTooLarge') });
         continue;
       }
 
@@ -70,7 +70,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       ];
 
       if (!allowedTypes.includes(file.type)) {
-        toast.error(t('attachments.unsupportedFileType', { fileName: file.name }));
+        toast({ variant: 'destructive', description: t('attachments.unsupportedFileType') });
         continue;
       }
 
@@ -108,18 +108,18 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
         if (error) {
           console.error('Upload error:', error);
-          toast.error(t('attachments.uploadFailed', { fileName: file.name }));
+          toast({ variant: 'destructive', description: t('attachments.uploadFailed') });
           continue;
         }
 
         if (data?.attachment) {
           onAttachmentUploaded(data.attachment);
-          toast.success(t('attachments.uploadSuccess', { fileName: file.name }));
+          toast({ description: t('attachments.uploadSuccess') });
         }
 
       } catch (error) {
         console.error('Unexpected upload error:', error);
-        toast.error(t('attachments.uploadFailed', { fileName: file.name }));
+        toast({ variant: 'destructive', description: t('attachments.uploadFailed') });
       } finally {
         setUploading(false);
         setUploadProgress(0);
@@ -145,7 +145,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
   const handleDeleteAttachment = async (attachment: OrderAttachment) => {
     if (!canDelete) {
-      toast.error(t('attachments.deleteNotAllowed'));
+      toast({ variant: 'destructive', description: t('attachments.deleteNotAllowed') });
       return;
     }
 
@@ -167,16 +167,16 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
       if (dbError) {
         console.error('Database delete error:', dbError);
-        toast.error(t('attachments.deleteFailed'));
+        toast({ variant: 'destructive', description: t('attachments.deleteFailed') });
         return;
       }
 
       onAttachmentDeleted(attachment.id);
-      toast.success(t('attachments.deleteSuccess'));
+      toast({ description: t('attachments.deleteSuccess') });
 
     } catch (error) {
       console.error('Unexpected delete error:', error);
-      toast.error(t('attachments.deleteFailed'));
+      toast({ variant: 'destructive', description: t('attachments.deleteFailed') });
     }
   };
 
@@ -188,7 +188,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
       if (error) {
         console.error('Download error:', error);
-        toast.error(t('attachments.downloadFailed'));
+        toast({ variant: 'destructive', description: t('attachments.downloadFailed') });
         return;
       }
 
@@ -204,7 +204,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
     } catch (error) {
       console.error('Unexpected download error:', error);
-      toast.error(t('attachments.downloadFailed'));
+      toast({ variant: 'destructive', description: t('attachments.downloadFailed') });
     }
   };
 

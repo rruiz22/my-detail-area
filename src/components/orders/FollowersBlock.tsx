@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface FollowersBlockProps {
   orderId: string;
@@ -44,10 +44,10 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   const handleAddFollower = async (userId: string, notificationLevel: string = 'important') => {
     try {
       await addFollower(userId, 'manual', notificationLevel);
-      toast.success(t('followers.added_successfully', 'Follower added successfully'));
+      toast({ description: t('followers.added_successfully', 'Follower added successfully') });
       setShowAddModal(false);
     } catch (error) {
-      toast.error(t('followers.add_failed', 'Failed to add follower'));
+      toast({ variant: 'destructive', description: t('followers.add_failed', 'Failed to add follower') });
     }
   };
 
@@ -55,9 +55,9 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   const handleRemoveFollower = async (userId: string) => {
     try {
       await removeFollower(userId);
-      toast.success(t('followers.removed_successfully'));
+      toast({ description: t('followers.removed_successfully') });
     } catch (error) {
-      toast.error(t('followers.remove_failed'));
+      toast({ variant: 'destructive', description: t('followers.remove_failed') });
     }
   };
 
@@ -65,9 +65,9 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   const handleNotificationChange = async (userId: string, level: string) => {
     try {
       await updateNotificationLevel(userId, level);
-      toast.success(t('followers.notification_updated'));
+      toast({ description: t('followers.notification_updated') });
     } catch (error) {
-      toast.error(t('followers.notification_update_failed'));
+      toast({ variant: 'destructive', description: t('followers.notification_update_failed') });
     }
   };
 

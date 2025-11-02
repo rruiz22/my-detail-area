@@ -398,6 +398,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         order.customerName?.toLowerCase().includes(searchLower) ||
         order.po?.toLowerCase().includes(searchLower) ||
         order.ro?.toLowerCase().includes(searchLower) ||
+        order.tag?.toLowerCase().includes(searchLower) ||
         `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
       );
     }

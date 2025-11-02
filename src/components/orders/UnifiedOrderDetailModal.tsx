@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { OrderTasksSection } from './OrderTasksSection';
 import { SkeletonLoader } from './SkeletonLoader';
 
@@ -176,6 +176,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   isLoadingData = false
 }: UnifiedOrderDetailModalProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { user } = useAuth();
   const { hasPermission } = usePermissionContext();
   const { previewPrint } = usePrintOrder();
@@ -247,17 +248,17 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     try {
       const shortLink = qrProps.shortLink;
       if (!shortLink) {
-        toast.error(t('orders.no_link_available', { defaultValue: 'No link available to share' }));
+        toast({ variant: 'destructive', description: t('orders.no_link_available', 'No link available to share') });
         return;
       }
 
       await navigator.clipboard.writeText(shortLink);
-      toast.success(t('order_detail.copy_link', { defaultValue: 'Link copied to clipboard' }));
+      toast({ description: t('order_detail.copy_link', 'Link copied to clipboard') });
     } catch (error) {
       logger.error('Failed to copy link to clipboard', error);
-      toast.error(t('order_detail.copy_failed', { defaultValue: 'Failed to copy link' }));
+      toast({ variant: 'destructive', description: t('order_detail.copy_failed', 'Failed to copy link') });
     }
-  }, [qrProps.shortLink, t]);
+  }, [qrProps.shortLink, t, toast]);
 
   // Handle delete button click
   const handleDelete = useCallback(() => {
@@ -338,9 +339,9 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   useEffect(() => {
     if (orderDetailsQuery.error) {
       logger.error('Order polling error', orderDetailsQuery.error, { orderId: order?.id });
-      toast.error(t('orders.polling_error'));
+      toast({ variant: 'destructive', description: t('orders.polling_error', 'Failed to load order details') });
     }
-  }, [orderDetailsQuery.error, t, order?.id]);
+  }, [orderDetailsQuery.error, t, order?.id, toast]);
 
   // Enhanced scroll behavior with better error handling
   useEffect(() => {
@@ -427,13 +428,13 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             : prev
         ));
 
-        toast.success(t('orders.date_updated'));
+        toast({ description: t('orders.date_updated', 'Date updated successfully') });
       } catch (error) {
         logger.error('Failed to update completed date', error, { orderId, newDate });
-        toast.error(t('orders.date_update_failed'));
+        toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });
       }
     },
-    [onUpdate, t]
+    [onUpdate, t, toast]
   );
 
   // Memoize vehicle display name - prioritize vehicle_info from VIN decoder
@@ -460,31 +461,28 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-[90vw] sm:max-w-[85vw] w-full max-h-[92vh] sm:max-h-[88vh] h-full p-0 gap-0 overflow-hidden"
-        data-testid="unified-order-detail-modal"
+        className="max-w-7xl max-h-[90vh] overflow-y-auto p-0"
         hideCloseButton
       >
-        <div className="h-full flex flex-col overflow-hidden">
-          <DialogTitle className="sr-only">
-            {t('orders.order_details_modal_title', {
-              defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,
-              orderNumber: order.orderNumber || order.order_number || 'New',
-              orderType: orderType,
-              customer: order.customerName || order.customer_name || 'Unknown Customer'
-            })}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            {t('orders.order_details_description', {
-              defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,
-              customer: order.customerName || order.customer_name || 'customer',
-              vehicle: vehicleDisplayName,
-              type: orderType
-            })}
-          </DialogDescription>
+        <DialogTitle className="sr-only">
+          {t('orders.order_details_modal_title', {
+            defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,
+            orderNumber: order.orderNumber || order.order_number || 'New',
+            orderType: orderType,
+            customer: order.customerName || order.customer_name || 'Unknown Customer'
+          })}
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          {t('orders.order_details_description', {
+            defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,
+            customer: order.customerName || order.customer_name || 'customer',
+            vehicle: vehicleDisplayName,
+            type: orderType
+          })}
+        </DialogDescription>
 
-          {/* Unified Content Container - Single Scroll */}
-          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scroll-smooth">
-            <div className="p-2 sm:p-2.5 lg:p-3 max-w-full" id="unified-modal-top">
+        {/* Unified Content Container - Single Scroll */}
+        <div className="p-3 sm:p-4 lg:p-6 max-w-full" id="unified-modal-top">
               {/* Unified Header - Card Grid Design */}
               <UnifiedOrderHeaderV2
                 order={orderData}
@@ -496,11 +494,11 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 onEdit={handleEdit}
               />
 
-              <div className="grid grid-cols-1 xl:grid-cols-[2fr,1fr] gap-2 sm:gap-3">
+              <div className="grid grid-cols-1 xl:grid-cols-[2fr,1fr] gap-3 sm:gap-4 lg:gap-6">
                 {/* Main Content Area */}
-                <div className="space-y-2 sm:space-y-3 min-w-0 overflow-hidden">
+                <div className="space-y-3 sm:space-y-4 lg:space-y-6 min-w-0 overflow-hidden">
                   {/* Row 1: Type-specific fields (Left column) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                     {/* Left: Order fields and notes */}
                     <div className="space-y-2">
                       <OrderTypeFields orderType={orderType} order={orderData} />
@@ -516,7 +514,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 </div>
 
                 {/* Right Sidebar - Clean Design */}
-                <div className="space-y-2 min-w-0 overflow-hidden">
+                <div className="space-y-3 sm:space-y-4 lg:space-y-6 min-w-0 overflow-hidden">
                   {/* Enhanced QR Code & Short Link Block */}
                   {isLoadingData ? (
                     <SkeletonLoader variant="qr-code" />
@@ -557,20 +555,19 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 </div>
               </div>
             </div>
-          </div>
 
           {/* Footer with Actions - Modern Design */}
-          <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-2.5 sm:p-3">
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+          <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-2">
               {/* Left: Destructive Actions */}
               <div className="flex gap-2 w-full sm:w-auto">
                 {canDeleteOrder && (
                   <Button
                     variant="ghost"
                     onClick={handleDelete}
-                    className="flex-1 sm:flex-none h-9 px-3 gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 hover:border-red-300 transition-all"
+                    className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 hover:border-red-300 transition-all"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
                     <span className="text-sm font-medium">{t('orders.delete_order')}</span>
                   </Button>
                 )}
@@ -583,10 +580,10 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   <Button
                     variant="outline"
                     onClick={handleEdit}
-                    className="h-9 px-3 gap-2 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all"
+                    className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all"
                   >
-                    <Edit2 className="h-3.5 w-3.5" />
-                    <span className="text-sm font-medium hidden sm:inline">{t('orders.edit')}</span>
+                    <Edit2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                    <span className="text-sm font-medium">{t('orders.edit')}</span>
                   </Button>
                 )}
 
@@ -595,33 +592,34 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   variant="outline"
                   onClick={handleShare}
                   disabled={!qrProps.shortLink}
-                  className="h-9 px-3 gap-2 hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-all disabled:opacity-50"
+                  className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-all disabled:opacity-50"
                 >
-                  <Copy className="h-3.5 w-3.5" />
-                  <span className="text-sm font-medium hidden lg:inline">{t('orders.share_order')}</span>
+                  <Copy className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                  <span className="text-sm font-medium hidden md:inline">{t('orders.share_order')}</span>
+                  <span className="text-sm font-medium md:hidden">{t('common.share', { defaultValue: 'Share' })}</span>
                 </Button>
 
                 {/* Print Button - Secondary action */}
                 <Button
                   variant="outline"
                   onClick={() => previewPrint(mapToPrintOrderData(orderData))}
-                  className="h-9 px-3 gap-2 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 transition-all"
+                  className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 transition-all"
                 >
-                  <Printer className="h-3.5 w-3.5" />
-                  <span className="text-sm font-medium hidden lg:inline">{t('orders.print')}</span>
+                  <Printer className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                  <span className="text-sm font-medium hidden md:inline">{t('orders.print')}</span>
+                  <span className="text-sm font-medium md:hidden">{t('common.print', { defaultValue: 'Print' })}</span>
                 </Button>
 
                 {/* Close Button - Primary action with gradient */}
                 <Button
                   onClick={onClose}
-                  className="h-9 px-6 gap-2 min-w-[100px] sm:min-w-[120px] bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-sm hover:shadow-md transition-all font-semibold"
+                  className="w-full sm:w-auto h-11 sm:h-9 px-6 gap-2 min-w-[100px] sm:min-w-[120px] bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-sm hover:shadow-md transition-all font-semibold"
                 >
                   <span className="text-sm">{t('common.action_buttons.close')}</span>
                 </Button>
               </div>
             </div>
           </footer>
-        </div>
       </DialogContent>
     </Dialog>
   );

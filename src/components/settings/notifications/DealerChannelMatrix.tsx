@@ -127,7 +127,7 @@ export function DealerChannelMatrix() {
       queryClient.invalidateQueries({ queryKey: ['dealer-channel-defaults'] });
       toast({
         title: t('common.success'),
-        description: 'Notification channel configuration saved successfully'
+        description: t('settings.channel_matrix.save_success')
       });
       setHasChanges(false);
     },
@@ -135,7 +135,7 @@ export function DealerChannelMatrix() {
       console.error('Error saving channel config:', error);
       toast({
         title: t('common.error'),
-        description: error.message || 'Failed to save configuration',
+        description: error.message || t('settings.channel_matrix.save_error'),
         variant: 'destructive'
       });
     }
@@ -245,11 +245,10 @@ export function DealerChannelMatrix() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
-            Notification Channel Configuration
+            {t('settings.channel_matrix.title')}
           </CardTitle>
           <CardDescription>
-            Configure which notification channels (In-App, Email, SMS, Push) are enabled for each event type.
-            This affects all users in your dealership by default.
+            {t('settings.channel_matrix.description')}
           </CardDescription>
         </CardHeader>
 
@@ -258,8 +257,7 @@ export function DealerChannelMatrix() {
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription>
-              <strong>How this works:</strong> Configure which channels should be used for each event.
-              Users can override these settings in their personal profile. Priority: User Preferences → Dealership Defaults → System Defaults.
+              <strong>{t('settings.channel_matrix.how_it_works')}:</strong> {t('settings.channel_matrix.priority_info')}
             </AlertDescription>
           </Alert>
 
@@ -271,7 +269,7 @@ export function DealerChannelMatrix() {
               onClick={() => handleBulkChannelAction('in_app', true)}
             >
               <Bell className="h-4 w-4 mr-2" />
-              Enable All In-App
+              {t('settings.channel_matrix.enable_all_in_app')}
             </Button>
             <Button
               variant="outline"
@@ -279,7 +277,7 @@ export function DealerChannelMatrix() {
               onClick={() => handleBulkChannelAction('email', true)}
             >
               <Mail className="h-4 w-4 mr-2" />
-              Enable All Email
+              {t('settings.channel_matrix.enable_all_email')}
             </Button>
             <Button
               variant="outline"
@@ -287,7 +285,7 @@ export function DealerChannelMatrix() {
               onClick={() => handleBulkChannelAction('sms', true)}
             >
               <Smartphone className="h-4 w-4 mr-2" />
-              Enable All SMS
+              {t('settings.channel_matrix.enable_all_sms')}
             </Button>
             <Button
               variant="outline"
@@ -295,7 +293,7 @@ export function DealerChannelMatrix() {
               onClick={() => handleBulkChannelAction('push', true)}
             >
               <MessageSquare className="h-4 w-4 mr-2" />
-              Enable All Push
+              {t('settings.channel_matrix.enable_all_push')}
             </Button>
             <Button
               variant="outline"
@@ -303,18 +301,18 @@ export function DealerChannelMatrix() {
               onClick={handleReset}
             >
               <RotateCcw className="h-4 w-4 mr-2" />
-              Reset to Defaults
+              {t('settings.channel_matrix.reset_defaults')}
             </Button>
           </div>
 
           {/* Module Tabs */}
           <Tabs value={activeModule} onValueChange={(v) => setActiveModule(v as NotificationModule)}>
             <TabsList>
-              <TabsTrigger value="sales_orders">Sales Orders</TabsTrigger>
-              <TabsTrigger value="service_orders">Service Orders</TabsTrigger>
-              <TabsTrigger value="recon_orders">Recon Orders</TabsTrigger>
-              <TabsTrigger value="car_wash">Car Wash</TabsTrigger>
-              <TabsTrigger value="get_ready">Get Ready</TabsTrigger>
+              <TabsTrigger value="sales_orders">{t('settings.channel_matrix.modules.sales_orders')}</TabsTrigger>
+              <TabsTrigger value="service_orders">{t('settings.channel_matrix.modules.service_orders')}</TabsTrigger>
+              <TabsTrigger value="recon_orders">{t('settings.channel_matrix.modules.recon_orders')}</TabsTrigger>
+              <TabsTrigger value="car_wash">{t('settings.channel_matrix.modules.car_wash')}</TabsTrigger>
+              <TabsTrigger value="get_ready">{t('settings.channel_matrix.modules.get_ready')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeModule} className="space-y-4">
@@ -411,7 +409,7 @@ export function DealerChannelMatrix() {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <Info className="h-4 w-4" />
-                    Impact Preview
+                    {t('settings.channel_matrix.impact_preview')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -424,7 +422,7 @@ export function DealerChannelMatrix() {
                       <div className="text-2xl font-bold">
                         {Object.values(channelConfig).filter(c => c.in_app).length}
                       </div>
-                      <div className="text-xs text-muted-foreground">events enabled</div>
+                      <div className="text-xs text-muted-foreground">{t('settings.channel_matrix.events_enabled')}</div>
                     </div>
 
                     <div className="space-y-1">
@@ -435,7 +433,7 @@ export function DealerChannelMatrix() {
                       <div className="text-2xl font-bold">
                         {Object.values(channelConfig).filter(c => c.email).length}
                       </div>
-                      <div className="text-xs text-muted-foreground">events enabled</div>
+                      <div className="text-xs text-muted-foreground">{t('settings.channel_matrix.events_enabled')}</div>
                     </div>
 
                     <div className="space-y-1">
@@ -446,7 +444,7 @@ export function DealerChannelMatrix() {
                       <div className="text-2xl font-bold text-amber-600">
                         {impact.eventsWithSMS}
                       </div>
-                      <div className="text-xs text-muted-foreground">events enabled</div>
+                      <div className="text-xs text-muted-foreground">{t('settings.channel_matrix.events_enabled')}</div>
                     </div>
 
                     <div className="space-y-1">
@@ -457,7 +455,7 @@ export function DealerChannelMatrix() {
                       <div className="text-2xl font-bold">
                         {Object.values(channelConfig).filter(c => c.push).length}
                       </div>
-                      <div className="text-xs text-muted-foreground">events enabled</div>
+                      <div className="text-xs text-muted-foreground">{t('settings.channel_matrix.events_enabled')}</div>
                     </div>
                   </div>
 
@@ -466,10 +464,10 @@ export function DealerChannelMatrix() {
                     <Alert variant={impact.estimatedMonthlyCost > 50 ? 'destructive' : 'default'}>
                       <DollarSign className="h-4 w-4" />
                       <AlertDescription>
-                        <strong>Estimated SMS cost:</strong> ${impact.estimatedMonthlyCost.toFixed(2)}/month
+                        <strong>{t('settings.channel_matrix.estimated_cost')}:</strong> ${impact.estimatedMonthlyCost.toFixed(2)}{t('settings.channel_matrix.per_month')}
                         {impact.highRiskEvents.length > 0 && (
                           <span className="block mt-1 text-xs">
-                            ⚠️ High-frequency events with SMS: {impact.highRiskEvents.join(', ')}
+                            ⚠️ {t('settings.channel_matrix.high_frequency_events')}: {impact.highRiskEvents.join(', ')}
                           </span>
                         )}
                       </AlertDescription>
@@ -495,7 +493,7 @@ export function DealerChannelMatrix() {
               disabled={!hasChanges || saveMutation.isPending}
             >
               <Save className="h-4 w-4 mr-2" />
-              {saveMutation.isPending ? 'Saving...' : 'Save Configuration'}
+              {saveMutation.isPending ? t('common.action_buttons.saving') : t('common.action_buttons.save_changes')}
             </Button>
 
             <Button
@@ -506,20 +504,20 @@ export function DealerChannelMatrix() {
               }}
               disabled={!hasChanges}
             >
-              Cancel
+              {t('common.action_buttons.cancel')}
             </Button>
 
             {hasChanges && (
               <Badge variant="outline" className="ml-auto">
                 <AlertTriangle className="h-3 w-3 mr-1" />
-                Unsaved Changes
+                {t('settings.channel_matrix.unsaved_changes')}
               </Badge>
             )}
 
             {!hasChanges && configData && (
               <Badge variant="outline" className="ml-auto text-emerald-600">
                 <CheckCircle2 className="h-3 w-3 mr-1" />
-                Saved
+                {t('settings.channel_matrix.saved_successfully')}
               </Badge>
             )}
           </div>

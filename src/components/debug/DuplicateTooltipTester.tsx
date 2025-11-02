@@ -26,7 +26,7 @@ import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { duplicateTestDataGenerator } from '@/utils/duplicateTestData';
 import { getDuplicateCount, getDuplicateOrders, Order } from '@/utils/duplicateUtils';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export function DuplicateTooltipTester() {
   const [testOrders, setTestOrders] = useState<Order[]>([]);
@@ -45,7 +45,7 @@ export function DuplicateTooltipTester() {
     const quickData = duplicateTestDataGenerator.createQuickTestData();
     setTestOrders(quickData);
     validateTestResults(quickData);
-    toast.success('Quick test data generated with guaranteed duplicates');
+    toast({ description: 'Quick test data generated with guaranteed duplicates' });
   }, []);
 
   const generateComprehensiveTestData = () => {
@@ -65,7 +65,7 @@ export function DuplicateTooltipTester() {
       setTestResults(testData);
       validateTestResults(testData.orders);
       setIsLoading(false);
-      toast.success(`Generated ${testData.orders.length} orders with ${testData.metadata.expectedDuplicates} duplicate groups`);
+      toast({ description: `Generated ${testData.orders.length} orders with ${testData.metadata.expectedDuplicates} duplicate groups` });
     }, 100);
   };
 
@@ -116,7 +116,7 @@ export function DuplicateTooltipTester() {
 
     setTestOrders(edgeCases);
     validateTestResults(edgeCases);
-    toast.info('Edge case test data generated');
+    toast({ description: 'Edge case test data generated' });
   };
 
   const validateTestResults = (orders: Order[]) => {
@@ -150,13 +150,13 @@ export function DuplicateTooltipTester() {
     };
     
     console.table(diagnosticResults);
-    toast.info('Diagnostic complete - check console for details');
+    toast({ description: 'Diagnostic complete - check console for details' });
   };
 
   const copyTestData = () => {
     const testDataJson = JSON.stringify(testOrders, null, 2);
     navigator.clipboard.writeText(testDataJson);
-    toast.success('Test data copied to clipboard');
+    toast({ description: 'Test data copied to clipboard' });
   };
 
   return (
@@ -305,7 +305,7 @@ export function DuplicateTooltipTester() {
                           value={order.stockNumber || ''}
                           onOrderClick={(order) => {
                             console.log('Order clicked:', order.id);
-                            toast.info(`Clicked order: ${order.id}`);
+                            toast({ description: `Clicked order: ${order.id}` });
                           }}
                           debug={debugMode}
                         >
@@ -329,7 +329,7 @@ export function DuplicateTooltipTester() {
                           value={order.vehicleVin || ''}
                           onOrderClick={(order) => {
                             console.log('Order clicked:', order.id);
-                            toast.info(`Clicked order: ${order.id}`);
+                            toast({ description: `Clicked order: ${order.id}` });
                           }}
                           debug={debugMode}
                         >

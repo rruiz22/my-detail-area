@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 import {
   X,
   Phone,
@@ -17,12 +18,18 @@ import {
   Copy,
   QrCode,
   Download,
-  Edit
+  Edit,
+  Calendar,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Bell,
+  Globe
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeCanvas } from 'qrcode.react';
 import { vCardService } from '@/services/vCardService';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { DealershipContact } from '@/types/database';
 
 interface ContactGroup {
@@ -50,6 +57,8 @@ interface ContactDetailModalProps {
 
 export function ContactDetailModal({ contact, open, onClose, onEdit }: ContactDetailModalProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState<'info' | 'activity'>('info');
 
   if (!contact) return null;
 
@@ -82,27 +91,39 @@ export function ContactDetailModal({ contact, open, onClose, onEdit }: ContactDe
     }
   };
 
+  const handleCopyEmail = () => {
+    if (contact.email) {
+      navigator.clipboard.writeText(contact.email);
+      toast({ description: t('common.copied', 'Copied to clipboard') });
+    }
+  };
+
   const handleCopyPhone = () => {
     const phoneNumber = contact.mobile_phone || contact.phone;
     if (phoneNumber) {
       navigator.clipboard.writeText(phoneNumber);
-    }
-  };
-
-  const handleCopyEmail = () => {
-    if (contact.email) {
-      navigator.clipboard.writeText(contact.email);
+      toast({ description: t('common.copied', 'Copied to clipboard') });
     }
   };
 
   const handleDownloadVCard = () => {
     try {
       vCardService.downloadVCard(contact);
-toast.success(t('contacts.contact_downloaded'));
+      toast({ description: t('contacts.contact_downloaded') });
     } catch (error) {
       console.error('Error downloading vCard:', error);
-toast.error(t('contacts.download_failed'));
+      toast({ variant: 'destructive', description: t('contacts.download_failed') });
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   return (
@@ -120,37 +141,37 @@ toast.error(t('contacts.download_failed'));
                 <p className="text-muted-foreground">{contact.position} • {contact.department}</p>
               </div>
             </div>
-            
+
             {/* Quick Action Buttons in Header */}
             <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleCall} 
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCall}
                 disabled={!contact.mobile_phone && !contact.phone}
               >
                 <PhoneCall className="h-4 w-4 mr-2" />
                 Call Mobile
               </Button>
-              
+
               <Button variant="outline" size="sm" onClick={handleEmail} disabled={!contact.email}>
                 <Mail className="h-4 w-4 mr-2" />
                 Email
               </Button>
-              
+
               {onEdit && (
                 <Button variant="outline" size="sm" onClick={() => onEdit(contact)}>
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
                 </Button>
               )}
-              
+
               <Button variant="ghost" size="icon" onClick={onClose}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
-          
+
           <DialogDescription className="sr-only">
             Contact details for {getDisplayName(contact)}
           </DialogDescription>
@@ -172,45 +193,151 @@ toast.error(t('contacts.download_failed'));
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-3">
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Email</label>
+                        <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                          <Mail className="h-3 w-3" />
+                          Email
+                        </label>
                         <div className="flex items-center gap-2 mt-1">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{contact.email}</span>
-                          <Button variant="ghost" size="sm" onClick={handleCopyEmail}>
+                          <span className="text-sm font-medium">{contact.email}</span>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyEmail}>
                             <Copy className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
-                      
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Mobile Phone</label>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{contact.mobile_phone || contact.phone}</span>
-                          <Button variant="ghost" size="sm" onClick={handleCopyPhone}>
-                            <Copy className="h-3 w-3" />
-                          </Button>
+
+                      {contact.phone && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            Phone
+                          </label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-sm font-medium">{contact.phone}</span>
+                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyPhone}>
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
+                      )}
+
+                      {contact.mobile_phone && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            Mobile Phone
+                          </label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-sm font-medium">{contact.mobile_phone}</span>
+                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyPhone}>
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    
+
                     <div className="space-y-3">
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Position</label>
-                        <p className="text-sm mt-1">{contact.position || 'Not specified'}</p>
+                        <p className="text-sm mt-1 font-medium">{contact.position || 'Not specified'}</p>
                       </div>
-                      
+
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Department</label>
                         <div className="mt-1">
-                          <Badge variant="outline">{contact.department}</Badge>
+                          <Badge variant="outline" className="capitalize">{contact.department}</Badge>
                         </div>
                       </div>
-                      
+
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Language</label>
-                        <p className="text-sm mt-1">{contact.preferred_language?.toUpperCase() || 'EN'}</p>
+                        <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                          <Globe className="h-3 w-3" />
+                          Preferred Language
+                        </label>
+                        <p className="text-sm mt-1 font-medium">{contact.preferred_language?.toUpperCase() || 'EN'}</p>
                       </div>
+                    </div>
+                  </div>
+
+                  {(contact.vehicle || contact.plate) && (
+                    <>
+                      <Separator />
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('contacts.vehicle_info', 'Vehicle Information')}</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                          {contact.vehicle && (
+                            <div>
+                              <label className="text-xs text-muted-foreground">{t('contacts.vehicle')}</label>
+                              <p className="text-sm font-medium mt-1">{contact.vehicle}</p>
+                            </div>
+                          )}
+                          {contact.plate && (
+                            <div>
+                              <label className="text-xs text-muted-foreground">{t('contacts.plate')}</label>
+                              <p className="text-sm font-medium mt-1">{contact.plate}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <Separator />
+
+                  {/* Additional Settings */}
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <div className="flex items-center gap-2">
+                      {contact.can_receive_notifications ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-sm">{t('contacts.can_receive_notifications')}</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="h-4 w-4 text-red-600" />
+                          <span className="text-sm text-muted-foreground">{t('contacts.cannot_receive_notifications', 'Notifications disabled')}</span>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {contact.is_primary ? (
+                        <Badge variant="default" className="gap-1">
+                          <CheckCircle className="h-3 w-3" />
+                          {t('contacts.primary_contact')}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline">{t('contacts.standard_contact', 'Standard Contact')}</Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Metadata Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Clock className="h-4 w-4" />
+                    {t('contacts.metadata', 'Metadata')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <label className="text-muted-foreground flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {t('common.created_at', 'Created')}
+                      </label>
+                      <p className="font-medium mt-1">{formatDate(contact.created_at)}</p>
+                    </div>
+
+                    <div>
+                      <label className="text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {t('common.updated_at', 'Last Updated')}
+                      </label>
+                      <p className="font-medium mt-1">{formatDate(contact.updated_at)}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -252,7 +379,7 @@ toast.error(t('contacts.download_failed'));
                     <label className="text-sm font-medium text-muted-foreground">Dealership</label>
                     <p className="text-sm mt-1 font-medium">{getDealershipName(contact)}</p>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Department</label>
                     <div className="mt-1">
@@ -261,7 +388,7 @@ toast.error(t('contacts.download_failed'));
                       </Badge>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Groups</label>
                     <div className="mt-1 flex flex-wrap gap-1">
@@ -276,13 +403,13 @@ toast.error(t('contacts.download_failed'));
                           {t('contacts.no_groups_assigned')}
                         </Badge>
                       )}
-                      
+
                       {contact.is_primary && (
                         <Badge variant="default" className="text-xs">{t('contacts.primary_contact')}</Badge>
                       )}
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Status</label>
                     <div className="mt-1">
@@ -318,15 +445,15 @@ toast.error(t('contacts.download_failed'));
                       }}
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <p className="text-xs text-muted-foreground">
   {t('contacts.scan_to_add_contact')}
                     </p>
-                    
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="w-full"
                       onClick={handleDownloadVCard}
                     >

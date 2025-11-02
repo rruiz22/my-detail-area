@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Edit2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface CompletedDateInlineProps {
   completedAt?: string | Date | null;
@@ -23,6 +23,7 @@ export function CompletedDateInline({
   onDateChange,
   canEdit
 }: CompletedDateInlineProps) {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
@@ -70,10 +71,10 @@ export function CompletedDateInline({
     setUpdating(true);
     try {
       await onDateChange(orderId, null);
-      toast.success('Completion date has been removed.');
+      toast({ description: 'Completion date has been removed.' });
     } catch (error) {
       console.error('Error clearing completed date:', error);
-      toast.error('Failed to clear completion date.');
+      toast({ variant: 'destructive', description: 'Failed to clear completion date.' });
     } finally {
       setUpdating(false);
     }

@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -261,44 +262,93 @@ export default function ReconOrders() {
     }
   }, [orderToDelete, deleteOrder, t, toast]);
 
-  const handleSaveOrder = useCallback(async (orderData: ReconOrderData) => {
-    logger.dev('[Recon] handleSaveOrder called with:', {
-      hasSelectedOrder: !!selectedOrder,
-      selectedOrderId: selectedOrder?.id,
-      orderData: orderData,
-      completedAt: orderData.completedAt,
-      completedAtType: typeof orderData.completedAt,
-      stockNumber: orderData.stockNumber,
-      services: orderData.services
-    });
+  const handleSaveOrder = useCallback(async (orderData: ReconOrderData | ReconOrderData[]) => {
+    // Check if we received an array of orders (multiple services)
+    if (Array.isArray(orderData)) {
+      logger.dev('[Recon] handleSaveOrder called with multiple orders:', {
+        count: orderData.length
+      });
 
-    try {
-      if (selectedOrder) {
-        logger.dev('[Recon] Calling updateOrder with:', {
-          orderId: selectedOrder.id,
-          orderData: orderData
+      try {
+        const createdOrders: ReconOrder[] = [];
+
+        // Create each order sequentially
+        for (const singleOrderData of orderData) {
+          logger.dev('[Recon] Calling createOrder with:', {
+            orderData: singleOrderData
+          });
+          const newOrder = await createOrder(singleOrderData);
+          if (newOrder) {
+            createdOrders.push(newOrder);
+          }
+        }
+
+        logger.success('[Recon] Multiple orders created successfully:', createdOrders.length);
+
+        // Show success message with order numbers
+        const orderNumbers = createdOrders
+          .map(o => o.order_number || o.orderNumber)
+          .filter(Boolean)
+          .join(', ');
+
+        const message = t('orders.multiple_created_successfully', {
+          count: createdOrders.length,
+          orders: orderNumbers
+        }) || `${createdOrders.length} orders created successfully: ${orderNumbers}`;
+
+        toast({
+          description: message,
+          variant: 'default'
         });
-        await updateOrder(selectedOrder.id, orderData);
-        logger.success('[Recon] updateOrder completed successfully');
-        // Accessibility: Announce update to screen readers
-        setLiveRegionMessage(t('accessibility.recon_orders.order_updated'));
-      } else {
-        logger.dev('[Recon] Calling createOrder with:', {
-          orderData: orderData
-        });
-        await createOrder(orderData);
-        logger.success('[Recon] createOrder completed successfully');
-        // Accessibility: Announce creation to screen readers
-        setLiveRegionMessage(t('accessibility.recon_orders.order_created'));
+        setLiveRegionMessage(message);
+
+        setShowModal(false);
+        refreshData();
+      } catch (error) {
+        logger.error('[Recon] Error creating multiple orders:', error);
+        // Re-throw to let modal handle it
+        throw error;
       }
-      setShowModal(false);
-      refreshData();
-    } catch (error) {
-      logger.error('[Recon] Error in handleSaveOrder:', error);
-      // Re-throw to let modal handle it
-      throw error;
+    } else {
+      // Single order
+      logger.dev('[Recon] handleSaveOrder called with:', {
+        hasSelectedOrder: !!selectedOrder,
+        selectedOrderId: selectedOrder?.id,
+        orderData: orderData,
+        completedAt: orderData.completedAt,
+        completedAtType: typeof orderData.completedAt,
+        stockNumber: orderData.stockNumber,
+        services: orderData.services
+      });
+
+      try {
+        if (selectedOrder) {
+          logger.dev('[Recon] Calling updateOrder with:', {
+            orderId: selectedOrder.id,
+            orderData: orderData
+          });
+          await updateOrder(selectedOrder.id, orderData);
+          logger.success('[Recon] updateOrder completed successfully');
+          // Accessibility: Announce update to screen readers
+          setLiveRegionMessage(t('accessibility.recon_orders.order_updated'));
+        } else {
+          logger.dev('[Recon] Calling createOrder with:', {
+            orderData: orderData
+          });
+          await createOrder(orderData);
+          logger.success('[Recon] createOrder completed successfully');
+          // Accessibility: Announce creation to screen readers
+          setLiveRegionMessage(t('accessibility.recon_orders.order_created'));
+        }
+        setShowModal(false);
+        refreshData();
+      } catch (error) {
+        logger.error('[Recon] Error in handleSaveOrder:', error);
+        // Re-throw to let modal handle it
+        throw error;
+      }
     }
-  }, [selectedOrder, updateOrder, createOrder, refreshData, t]);
+  }, [selectedOrder, updateOrder, createOrder, refreshData, t, toast]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
@@ -465,6 +515,26 @@ export default function ReconOrders() {
 
         {/* Main Content - Direct rendering for maximum speed */}
         <main aria-label={t('accessibility.recon_orders.main_content')} className="space-y-6">
+          <div className="space-y-4">
+            {/* Responsive Table Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+                {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
+              </h2>
+              <Badge variant="secondary" className="text-sm self-center sm:self-auto">
+                {filteredOrders.length}
+              </Badge>
+            </div>
+
+            {/* Search Context */}
+            {searchTerm && (
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground">
+                  Showing results matching "{searchTerm}"
+                </p>
+              </div>
+            )}
+
           {effectiveViewMode === 'kanban' ? (
             <OrderViewErrorBoundary viewType="kanban">
               <OrderKanbanBoard
@@ -500,6 +570,7 @@ export default function ReconOrders() {
               />
             </OrderViewErrorBoundary>
           )}
+          </div>
         </main>
 
         {/* Modals - Direct import for instant open */}

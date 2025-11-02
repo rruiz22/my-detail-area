@@ -36,9 +36,10 @@ import { CreateInvoiceDialog } from '../invoices/CreateInvoiceDialog';
 import { InvoiceDetailsDialog } from '../invoices/InvoiceDetailsDialog';
 import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
 import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
+import { SendInvoiceEmailDialog } from '../invoices/email/SendInvoiceEmailDialog';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { useAuth } from '@/contexts/AuthContext';
-import { useInvoices, useInvoiceSummary } from '@/hooks/useInvoices';
+import { useInvoices, useInvoiceSummary, useDeleteInvoice } from '@/hooks/useInvoices';
 import { supabase } from '@/integrations/supabase/client';
 import type { ReportsFilters } from '@/hooks/useReportsData';
 import type { Invoice, InvoiceFilters, InvoiceStatus } from '@/types/invoices';
@@ -53,6 +54,7 @@ import {
   Clock,
   DollarSign,
   Download,
+  Eye,
   FileText,
   Filter,
   Mail,
@@ -60,11 +62,12 @@ import {
   Printer,
   Receipt,
   Search,
+  Trash2,
   X
 } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface InvoicesReportProps {
   filters: ReportsFilters;
@@ -116,6 +119,7 @@ const getStatusBadge = (status: InvoiceStatus) => {
 export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const dealerId = filters.dealerId;
 
@@ -125,12 +129,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   const [activeTab, setActiveTab] = useState<'invoices' | 'create'>('invoices');
 
-  // Invoice list filters
+  // Invoice list filters - Don't filter by date initially to show all invoices
   const [invoiceFilters, setInvoiceFilters] = useState<InvoiceFilters>({
     status: 'all',
     orderType: filters.orderType,
-    startDate: filters.startDate,
-    endDate: filters.endDate,
+    startDate: undefined, // Don't filter by date - show all invoices
+    endDate: undefined,   // Don't filter by date - show all invoices
     dealerId: dealerId || 'all',
     searchTerm: ''
   });
@@ -230,6 +234,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const [showQuickCreateDialog, setShowQuickCreateDialog] = useState(false);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [invoiceHtml, setInvoiceHtml] = useState('');
 
@@ -259,6 +264,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   // Fetch invoices
   const { data: invoices = [], isLoading: loadingInvoices } = useInvoices(invoiceFilters);
   const { data: summary } = useInvoiceSummary(invoiceFilters);
+  const deleteInvoiceMutation = useDeleteInvoice();
 
   // Fetch available services for filters
   const { data: availableServices = [], isLoading: loadingServices } = useQuery({
@@ -455,17 +461,17 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     e.preventDefault();
 
     if (!dealerId) {
-      toast.error('Please select a dealership');
+      toast({ variant: 'destructive', description: 'Please select a dealership' });
       return;
     }
 
     if (selectedVehicleIds.size === 0) {
-      toast.error('Please select at least one vehicle');
+      toast({ variant: 'destructive', description: 'Please select at least one vehicle' });
       return;
     }
 
     if (dueDate < issueDate) {
-      toast.error('Due date must be after issue date');
+      toast({ variant: 'destructive', description: 'Due date must be after issue date' });
       return;
     }
 
@@ -493,6 +499,14 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           total_amount: totalAmount,
           amount_due: totalAmount,
           status: 'pending',
+          metadata: {
+            filter_date_range: {
+              start: startDate,
+              end: endDate,
+              preset: dateRange
+            },
+            vehicle_count: selectedVehicles.length
+          }
         })
         .select()
         .single();
@@ -526,7 +540,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
       if (itemsError) throw itemsError;
 
-      toast.success(`Invoice ${invoiceNumber} created with ${selectedVehicles.length} vehicles`);
+      toast({ description: `Invoice ${invoiceNumber} created with ${selectedVehicles.length} vehicles` });
 
       // Reset and switch to invoices tab
       setSelectedVehicleIds(new Set());
@@ -534,7 +548,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       setActiveTab('invoices');
     } catch (error: any) {
       console.error('Failed to create invoice:', error);
-      toast.error(`Failed to create invoice: ${error.message}`);
+      toast({ variant: 'destructive', description: `Failed to create invoice: ${error.message}` });
     }
   };
 
@@ -867,6 +881,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                 <label>Invoice Number:</label>
                 <div class="value font-mono">${fullInvoice.invoice_number}</div>
               </div>
+              ${fullInvoice.metadata?.filter_date_range ? `
+              <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+                <label>Service Period:</label>
+                <div class="value">${format(parseISO(fullInvoice.metadata.filter_date_range.start), 'MMM dd, yyyy')} - ${format(parseISO(fullInvoice.metadata.filter_date_range.end), 'MMM dd, yyyy')}</div>
+              </div>
+              ` : ''}
             </div>
           </div>
 
@@ -996,7 +1016,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
     } catch (error) {
       console.error('Error generating invoice:', error);
-      toast.error('Failed to generate invoice');
+      toast({ variant: 'destructive', description: 'Failed to generate invoice' });
     }
   };
 
@@ -1014,6 +1034,19 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           printWindow.print();
         }, 500);
       };
+    }
+  };
+
+  const handleDeleteInvoice = async (invoice: Invoice) => {
+    if (!confirm(`Are you sure you want to delete invoice ${invoice.invoiceNumber}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await deleteInvoiceMutation.mutateAsync(invoice.id);
+    } catch (error) {
+      // Error is handled in the mutation
+      console.error('Error deleting invoice:', error);
     }
   };
 
@@ -1186,39 +1219,45 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Invoice</TableHead>
-                      <TableHead>Date Range</TableHead>
-                      <TableHead>Issue Date</TableHead>
-                      <TableHead>Due Date</TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                      <TableHead className="text-right">Paid</TableHead>
-                      <TableHead className="text-right">Due</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead className="text-center font-bold">Invoice</TableHead>
+                      <TableHead className="text-center font-bold">Date Range</TableHead>
+                      <TableHead className="text-center font-bold">Issue Date</TableHead>
+                      <TableHead className="text-center font-bold">Due Date</TableHead>
+                      <TableHead className="text-center font-bold">Amount</TableHead>
+                      <TableHead className="text-center font-bold">Paid</TableHead>
+                      <TableHead className="text-center font-bold">Due</TableHead>
+                      <TableHead className="text-center font-bold">Status</TableHead>
+                      <TableHead className="text-center font-bold">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => {
-                      // Calculate date range from invoice items
+                      // Get date range from invoice metadata (saved during invoice creation)
                       let dateRangeText = 'N/A';
-                      if (invoice.items && invoice.items.length > 0) {
-                        const dates = invoice.items
-                          .map(item => item.metadata?.completed_at || item.createdAt)
-                          .filter(Boolean)
-                          .map(d => parseISO(d as string));
+                      let vehicleCount = 1; // Default to 1 vehicle per invoice
 
-                        if (dates.length > 0) {
-                          const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
-                          const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+                      const formatShort = (date: Date) => format(date, 'MMM dd');
 
-                          const formatShort = (date: Date) => format(date, 'MMM dd');
-
-                          if (minDate.getTime() === maxDate.getTime()) {
-                            dateRangeText = formatShort(minDate);
+                      // First, try to use date range from metadata (most accurate)
+                      if (invoice.metadata?.filter_date_range) {
+                        const { start, end } = invoice.metadata.filter_date_range;
+                        if (start && end) {
+                          const startDate = parseISO(start);
+                          const endDate = parseISO(end);
+                          if (startDate.getTime() === endDate.getTime()) {
+                            dateRangeText = formatShort(startDate);
                           } else {
-                            dateRangeText = `${formatShort(minDate)} - ${formatShort(maxDate)}`;
+                            dateRangeText = `${formatShort(startDate)} - ${formatShort(endDate)}`;
                           }
                         }
+                      } else if (invoice.issueDate) {
+                        // Fallback: use invoice issue date
+                        dateRangeText = formatShort(parseISO(invoice.issueDate));
+                      }
+
+                      // Get vehicle count from metadata if available
+                      if (invoice.metadata?.vehicle_count) {
+                        vehicleCount = invoice.metadata.vehicle_count;
                       }
 
                       return (
@@ -1230,31 +1269,31 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                             setShowDetailsDialog(true);
                           }}
                         >
-                          <TableCell className="font-mono text-sm font-medium">
+                          <TableCell className="font-mono text-sm font-medium text-center">
                             {invoice.invoiceNumber}
                           </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col">
+                          <TableCell className="text-center">
+                            <div className="flex flex-col items-center">
                               <span className="text-sm font-medium">{dateRangeText}</span>
                               <span className="text-xs text-muted-foreground">
-                                {invoice.items?.length || 0} vehicle{invoice.items?.length !== 1 ? 's' : ''}
+                                {vehicleCount} vehicle{vehicleCount !== 1 ? 's' : ''}
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-sm">{formatDate(invoice.issueDate)}</TableCell>
-                          <TableCell className="text-sm">{formatDate(invoice.dueDate)}</TableCell>
-                          <TableCell className="text-right font-medium">
+                          <TableCell className="text-sm text-center">{formatDate(invoice.issueDate)}</TableCell>
+                          <TableCell className="text-sm text-center">{formatDate(invoice.dueDate)}</TableCell>
+                          <TableCell className="text-center font-medium">
                             {formatCurrency(invoice.totalAmount)}
                           </TableCell>
-                          <TableCell className="text-right text-emerald-600">
+                          <TableCell className="text-center text-emerald-600">
                             {formatCurrency(invoice.amountPaid)}
                           </TableCell>
-                          <TableCell className="text-right font-medium">
+                          <TableCell className="text-center font-medium">
                             {formatCurrency(invoice.amountDue)}
                           </TableCell>
-                          <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex gap-1 justify-end">
+                          <TableCell className="text-center">{getStatusBadge(invoice.status)}</TableCell>
+                          <TableCell className="text-center">
+                            <div className="flex gap-1 justify-center">
                               <Button
                                 size="sm"
                                 variant="ghost"
@@ -1264,6 +1303,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   setShowPaymentDialog(true);
                                 }}
                                 disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}
+                                title="Add Payment"
                               >
                                 <DollarSign className="h-4 w-4" />
                               </Button>
@@ -1272,21 +1312,24 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                 variant="ghost"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // TODO: Send email
+                                  setSelectedInvoice(invoice);
+                                  setShowDetailsDialog(true);
                                 }}
+                                title="View Details"
                               >
-                                <Mail className="h-4 w-4" />
+                                <Eye className="h-4 w-4" />
                               </Button>
                               <Button
                                 size="sm"
                                 variant="ghost"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleDownloadInvoice(invoice);
+                                  handleDeleteInvoice(invoice);
                                 }}
-                                title="Download/Print Invoice"
+                                disabled={invoice.status === 'paid'}
+                                title="Delete Invoice"
                               >
-                                <Download className="h-4 w-4" />
+                                <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
                           </TableCell>
@@ -1774,6 +1817,15 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           open={showPaymentDialog}
           onOpenChange={setShowPaymentDialog}
           invoice={selectedInvoice}
+        />
+      )}
+
+      {selectedInvoice && showEmailDialog && (
+        <SendInvoiceEmailDialog
+          open={showEmailDialog}
+          onOpenChange={setShowEmailDialog}
+          invoiceId={selectedInvoice.id}
+          dealershipId={selectedInvoice.dealerId}
         />
       )}
 

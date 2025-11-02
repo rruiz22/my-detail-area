@@ -23,7 +23,7 @@ import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -330,12 +330,12 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);
       if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);
 
-      toast.success(
-        `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,
-        { duration: 4000 }
-      );
+      toast({
+        description: `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,
+        duration: 4000
+      });
     } else if (result.source === 'vin_api') {
-      toast.success(t('stock.autopop.vinDecoded'), { duration: 3000 });
+      toast({ description: t('stock.autopop.vinDecoded'), duration: 3000 });
     }
   };
 
@@ -354,7 +354,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       vehicleInfo: ''
     }));
 
-    toast.info(t('stock.autopop.cleared', 'Vehicle cleared - you can now enter manually'));
+    toast({ description: t('stock.autopop.cleared', 'Vehicle cleared - you can now enter manually') });
   };
 
   const handleVinChange = async (vin: string) => {
@@ -414,7 +414,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
     if (checked) {
       // ✅ LIMIT: Maximum 2 services per order
       if (selectedServices.length >= 2) {
-        toast.warning(t('orders.max_services_reached', 'Maximum 2 services per order'));
+        toast({ description: t('orders.max_services_reached', 'Maximum 2 services per order') });
         return;
       }
       setSelectedServices(prev => [...prev, serviceId]);
@@ -456,23 +456,23 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   const validateForm = async (): Promise<boolean> => {
     // Validate VIN (always required)
     if (!formData.vehicleVin.trim()) {
-      toast.error(t('validation.vinRequired'));
+      toast({ variant: 'destructive', description: t('validation.vinRequired') });
       return false;
     }
     if (formData.vehicleVin.length !== 17) {
-      toast.error(t('validation.vinInvalidLength'));
+      toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });
       return false;
     }
 
     // Validate dealership selection
     if (!selectedDealership) {
-      toast.error(t('validation.dealershipRequired'));
+      toast({ variant: 'destructive', description: t('validation.dealershipRequired') });
       return false;
     }
 
     // Validate stock number (always required)
     if (!formData.stockNumber.trim()) {
-      toast.error(t('validation.stockNumberRequired'));
+      toast({ variant: 'destructive', description: t('validation.stockNumberRequired') });
       return false;
     }
 
@@ -493,40 +493,66 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
         return;
       }
 
-      // Proceed directly to order creation without confirmation
-      const dbData = transformToDbFormat(formData);
+      // Check if we have multiple services - create separate orders for each
+      if (!order && selectedServices.length > 1) {
+        // Create an array of order data, one per service
+        const ordersData = selectedServices.map(serviceId => {
+          const dbData = transformToDbFormat(formData);
+          return {
+            ...dbData,
+            services: [serviceId] // Only include this specific service
+          };
+        });
 
-      console.log('📤 Modal sending data to hook:', {
-        dealerId: dbData.dealerId,
-        stockNumber: dbData.stockNumber,
-        vehicleInfo: dbData.vehicleInfo,
-        services: dbData.services,
-        servicesLength: dbData.services?.length,
-        servicesContent: JSON.stringify(dbData.services),
-        selectedServicesState: selectedServices,
-        selectedServicesContent: JSON.stringify(selectedServices),
-        selectedServicesLength: selectedServices.length,
-        completedAt: dbData.completedAt,
-        completedAtType: typeof dbData.completedAt,
-        completedAtISO: dbData.completedAt instanceof Date ? dbData.completedAt.toISOString() : dbData.completedAt,
-        totalAmount: dbData.totalAmount,
-        notes: dbData.notes
-      });
+        console.log('📤 Modal sending multiple orders data to hook:', {
+          count: ordersData.length,
+          services: ordersData.map(d => d.services)
+        });
 
-      // Show immediate success feedback
-      toast.success(t('orders.creating_order'));
+        // Show immediate success feedback
+        toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
-      await onSave(dbData);
+        // Pass array of orders to onSave
+        await onSave(ordersData as any);
 
-      // Only close modal on successful save
-      onClose();
+        // Only close modal on successful save
+        onClose();
+      } else {
+        // Single service or editing - proceed as normal
+        const dbData = transformToDbFormat(formData);
+
+        console.log('📤 Modal sending data to hook:', {
+          dealerId: dbData.dealerId,
+          stockNumber: dbData.stockNumber,
+          vehicleInfo: dbData.vehicleInfo,
+          services: dbData.services,
+          servicesLength: dbData.services?.length,
+          servicesContent: JSON.stringify(dbData.services),
+          selectedServicesState: selectedServices,
+          selectedServicesContent: JSON.stringify(selectedServices),
+          selectedServicesLength: selectedServices.length,
+          completedAt: dbData.completedAt,
+          completedAtType: typeof dbData.completedAt,
+          completedAtISO: dbData.completedAt instanceof Date ? dbData.completedAt.toISOString() : dbData.completedAt,
+          totalAmount: dbData.totalAmount,
+          notes: dbData.notes
+        });
+
+        // Show immediate success feedback
+        toast({ description: t('orders.creating_order') });
+
+        await onSave(dbData);
+
+        // Only close modal on successful save
+        onClose();
+      }
 
     } catch (error: any) {
       // Keep modal open and show error
       console.error('Submit error:', error);
       const errorMessage = error?.message || t('orders.creation_failed') || 'Failed to save order';
       setSubmitError(errorMessage);
-      toast.error(errorMessage);
+      toast({ variant: 'destructive', description: errorMessage });
     } finally {
       setSubmitting(false);
     }

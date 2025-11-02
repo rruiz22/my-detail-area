@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { compressImage, shouldCompressImage } from '@/utils/imageCompression';
 
 export interface AttachmentUploadResult {
@@ -12,6 +12,7 @@ export interface AttachmentUploadResult {
 
 export const useAttachments = (orderId: string) => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -126,17 +127,17 @@ export const useAttachments = (orderId: string) => {
       const failed = uploadResults.filter(r => !r.success).length;
 
       if (successful > 0) {
-        toast.success(`${successful} file(s) uploaded successfully`);
+        toast({ description: `${successful} file(s) uploaded successfully` });
       }
       if (failed > 0) {
-        toast.error(`${failed} file(s) failed to upload`);
+        toast({ variant: 'destructive', description: `${failed} file(s) failed to upload` });
       }
 
       return uploadResults;
 
     } catch (error: unknown) {
       console.error('❌ Bulk upload error:', error);
-      toast.error('Failed to upload files');
+      toast({ variant: 'destructive', description: 'Failed to upload files' });
       return [];
     } finally {
       setUploading(false);
@@ -175,7 +176,7 @@ export const useAttachments = (orderId: string) => {
   // Delete attachment from storage and database
   const deleteAttachment = useCallback(async (attachmentId: string, filePath: string): Promise<boolean> => {
     if (!user) {
-      toast.error('User not authenticated');
+      toast({ variant: 'destructive', description: 'User not authenticated' });
       return false;
     }
 
@@ -200,17 +201,17 @@ export const useAttachments = (orderId: string) => {
 
       if (dbError) {
         console.error('❌ DB delete failed:', dbError);
-        toast.error('Failed to delete attachment');
+        toast({ variant: 'destructive', description: 'Failed to delete attachment' });
         return false;
       }
 
       console.log('✅ Attachment deleted successfully');
-      toast.success('Attachment deleted successfully');
+      toast({ description: 'Attachment deleted successfully' });
       return true;
 
     } catch (error: unknown) {
       console.error('❌ Delete error:', error);
-      toast.error('Failed to delete attachment');
+      toast({ variant: 'destructive', description: 'Failed to delete attachment' });
       return false;
     }
   }, [user]);
@@ -251,7 +252,7 @@ export const useAttachments = (orderId: string) => {
 
     // Check total file limit
     if (selectedFiles.length + newFiles.length > MAX_FILES_PER_COMMENT) {
-      toast.error(`Maximum ${MAX_FILES_PER_COMMENT} files per comment`);
+      toast({ variant: 'destructive', description: `Maximum ${MAX_FILES_PER_COMMENT} files per comment` });
       return;
     }
 
@@ -262,7 +263,7 @@ export const useAttachments = (orderId: string) => {
       if (validation.valid) {
         validFiles.push(file);
       } else {
-        toast.error(`${file.name}: ${validation.error}`);
+        toast({ variant: 'destructive', description: `${file.name}: ${validation.error}` });
       }
     }
 

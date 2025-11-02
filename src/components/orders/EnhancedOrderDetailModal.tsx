@@ -34,7 +34,7 @@ import { useOrderModalData } from '@/hooks/useOrderModalData';
 import { supabase } from '@/integrations/supabase/client';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
 
 // Import comprehensive order types for consistency
@@ -125,7 +125,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 
       if (error) throw error;
 
-      toast.success(t('messages.notes_updated_successfully'));
+      toast({ description: t('messages.notes_updated_successfully') });
 
       // 🔔 Dispatch event to trigger RecentActivityBlock refresh
       // This ensures immediate update even if Realtime has a delay
@@ -140,19 +140,19 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
       }
     } catch (error) {
       console.error('Error updating notes:', error);
-      toast.error(t('messages.error_updating_notes'));
+      toast({ variant: 'destructive', description: t('messages.error_updating_notes') });
     }
   }, [order?.id, t]);
 
   // Enhanced attachment handlers with optimistic updates
   const handleAttachmentUploadedOptimistic = useCallback((newAttachment: OrderAttachment) => {
     handleAttachmentUploaded(newAttachment);
-    toast.success(t('attachments.uploadSuccess'));
+    toast({ description: t('attachments.uploadSuccess') });
   }, [handleAttachmentUploaded, t]);
 
   const handleAttachmentDeletedOptimistic = useCallback((attachmentId: string) => {
     handleAttachmentDeleted(attachmentId);
-    toast.success(t('attachments.deleteSuccess'));
+    toast({ description: t('attachments.deleteSuccess') });
   }, [handleAttachmentDeleted, t]);
 
   // Memoize utility functions

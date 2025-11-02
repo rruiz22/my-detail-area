@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { storage } from '@/lib/localStorage';
 import { cloudSync } from '@/lib/cloudSync';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 /**
  * Hook for cloud-synced persisted state with enterprise features
@@ -10,6 +10,7 @@ export function useCloudSyncedState<T>(
   key: string,
   defaultValue: T,
   options: {
+  const { toast } = useToast();
     priority?: 'critical' | 'important' | 'normal' | 'low';
     autoSync?: boolean;
     restoreOnMount?: boolean;
@@ -47,9 +48,7 @@ export function useCloudSyncedState<T>(
           setState(restored);
           
           if (showNotifications && restored !== defaultValue) {
-            toast.success(`Restored ${key} from cloud`, {
-              description: 'Your data has been synced across devices'
-            });
+            toast({ description: `Restored ${key} from cloud` });
           }
         } else {
           // Load from localStorage only
@@ -98,14 +97,12 @@ export function useCloudSyncedState<T>(
           setError(undefined);
           
           if (showNotifications && syncSuccess) {
-            toast.success(`Synced ${key} to cloud`);
+            toast({ description: `Synced ${key} to cloud` });
           }
         }).catch(err => {
           setError(err.message);
           if (showNotifications) {
-            toast.error(`Failed to sync ${key}`, {
-              description: err.message
-            });
+            toast({ variant: 'destructive', description: `Failed to sync ${key}` });
           }
         }).finally(() => {
           setSyncing(false);
@@ -185,11 +182,9 @@ export function useCloudSyncStatus() {
     try {
       await storage.forceSyncAll();
       setSyncStatuses(cloudSync.getAllSyncStatuses());
-      toast.success('All data synced to cloud');
+      toast({ description: 'All data synced to cloud' });
     } catch (error) {
-      toast.error('Failed to sync data', {
-        description: error instanceof Error ? error.message : 'Unknown error'
-      });
+      toast({ variant: 'destructive', description: 'Failed to sync data' });
     }
   }, []);
 
@@ -230,18 +225,14 @@ export function useSessionRecovery() {
       const success = await storage.setupCloudSync();
       
       if (success) {
-        toast.success('Session recovered from cloud', {
-          description: 'Your workspace has been restored'
-        });
+        toast({ description: 'Session recovered from cloud' });
         return true;
       } else {
-        toast.error('Failed to recover session');
+        toast({ variant: 'destructive', description: 'Failed to recover session' });
         return false;
       }
     } catch (error) {
-      toast.error('Session recovery failed', {
-        description: error instanceof Error ? error.message : 'Unknown error'
-      });
+      toast({ variant: 'destructive', description: 'Session recovery failed' });
       return false;
     } finally {
       setIsRecovering(false);

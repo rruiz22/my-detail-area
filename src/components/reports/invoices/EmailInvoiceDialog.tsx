@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Mail, X, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { Invoice } from '@/types/invoices';
 
@@ -61,9 +61,9 @@ export function EmailInvoiceDialog({
       setCcEmails([...ccEmails, email]);
       setCcInput('');
     } else if (ccEmails.includes(email)) {
-      toast.error(t('reports.invoices.email.duplicate_cc'));
+      toast({ variant: 'destructive', description: t('reports.invoices.email.duplicate_cc') });
     } else {
-      toast.error(t('reports.invoices.email.invalid_email'));
+      toast({ variant: 'destructive', description: t('reports.invoices.email.invalid_email') });
     }
   };
 
@@ -80,12 +80,12 @@ export function EmailInvoiceDialog({
     if (!invoice) return;
 
     if (!recipientEmail || !isValidEmail(recipientEmail)) {
-      toast.error(t('reports.invoices.email.invalid_recipient'));
+      toast({ variant: 'destructive', description: t('reports.invoices.email.invalid_recipient') });
       return;
     }
 
     if (ccEmails.length > 5) {
-      toast.error(t('reports.invoices.email.max_cc_exceeded'));
+      toast({ variant: 'destructive', description: t('reports.invoices.email.max_cc_exceeded') });
       return;
     }
 
@@ -104,7 +104,7 @@ export function EmailInvoiceDialog({
 
       if (error) throw error;
 
-      toast.success(t('reports.invoices.email.sent_success', { email: recipientEmail }));
+      toast({ description: t('reports.invoices.email.sent_success') });
       onOpenChange(false);
       onSuccess?.();
 
@@ -116,7 +116,7 @@ export function EmailInvoiceDialog({
     } catch (error) {
       console.error('Error sending invoice email:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      toast.error(t('reports.invoices.email.sent_error', { error: errorMessage }));
+      toast({ variant: 'destructive', description: t('reports.invoices.email.sent_error') });
     } finally {
       setIsLoading(false);
     }

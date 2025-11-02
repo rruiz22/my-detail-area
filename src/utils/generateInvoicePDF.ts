@@ -87,7 +87,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     secondary: '#6b7280',    // Gray-500 (labels)
     muted: '#9ca3af',        // Gray-400 (muted text)
     border: '#e5e7eb',       // Gray-200 (borders)
-    headerBg: '#6b7280',     // Gray-500 (header background - matches Excel)
+    headerBg: '#6366F1',     // Indigo-500 (header background - matches print view)
     headerText: '#ffffff',   // White (header text)
     zebraStripe: '#f9fafb',  // Gray-50 (zebra stripe)
   };
@@ -187,7 +187,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
 
   // Determine header for column 3 based on order type
   const hasServiceOrders = invoice.items?.some(item => item.metadata?.order_type === 'service');
-  const poRoTagHeader = hasServiceOrders ? 'PO/RO/Tag' : 'Stock';
+  const poRoTagHeader = hasServiceOrders ? 'PO | RO | Tag' : 'Stock';
 
   // Prepare table headers
   const tableHeaders = [['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
@@ -204,10 +204,10 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     let poRoTagStock = '';
     if (item.metadata?.order_type === 'service') {
       const parts = [];
-      if (item.metadata.po) parts.push(`PO: ${item.metadata.po}`);
-      if (item.metadata.ro) parts.push(`RO: ${item.metadata.ro}`);
-      if (item.metadata.tag) parts.push(`Tag: ${item.metadata.tag}`);
-      poRoTagStock = parts.join('\n');
+      if (item.metadata.po) parts.push(item.metadata.po);
+      if (item.metadata.ro) parts.push(item.metadata.ro);
+      if (item.metadata.tag) parts.push(item.metadata.tag);
+      poRoTagStock = parts.join(' | ');
     } else {
       poRoTagStock = item.metadata?.stock_number || '';
     }
@@ -250,13 +250,15 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       halign: 'center',
       fontSize: 9,
       cellPadding: 3.5,
+      overflow: 'linebreak',
+      minCellHeight: 8,
     },
     columnStyles: {
-      0: { cellWidth: 16, halign: 'center' },                                      // Date
-      1: { cellWidth: 22, halign: 'center' },                                      // Order
-      2: { cellWidth: 22, halign: 'left' },                                        // PO/RO/Tag or Stock
-      3: { cellWidth: 35, halign: 'left' },                                        // Vehicle
-      4: { cellWidth: 30, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
+      0: { cellWidth: 14, halign: 'center' },                                      // Date
+      1: { cellWidth: 18, halign: 'center' },                                      // Order
+      2: { cellWidth: 32, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock (no wrap - smaller font for inline)
+      3: { cellWidth: 30, halign: 'left' },                                        // Vehicle
+      4: { cellWidth: 28, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
       5: { cellWidth: 32, halign: 'left' },                                        // Services
       6: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },                    // Amount
     },
@@ -265,6 +267,13 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     },
     showHead: 'everyPage',
     margin: { left: 20, right: 20, bottom: 25 },
+    didParseCell: (data) => {
+      // Reduce font size for PO/RO/Tag header (column 2) to prevent wrapping
+      if (data.section === 'head' && data.column.index === 2) {
+        data.cell.styles.fontSize = 7.5;
+        data.cell.styles.overflow = 'linebreak';
+      }
+    },
     didDrawPage: (data) => {
       const pageHeight = doc.internal.pageSize.height;
       const currentPage = doc.getCurrentPageInfo().pageNumber;
@@ -334,6 +343,27 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   }
 
   // Save the PDF
-  const filename = `INV-${invoice.invoiceNumber}.pdf`;
+  // Generate filename with dealer name and date range
+  const dealerName = invoice.dealership?.name || 'Invoice';
+  const sanitizedDealerName = dealerName.replace(/[^a-zA-Z0-9]/g, '_');
+
+  let dateRangePart = '';
+  if (invoice.metadata?.filter_date_range) {
+    const startDate = new Date(invoice.metadata.filter_date_range.start);
+    const endDate = new Date(invoice.metadata.filter_date_range.end);
+
+    // Format dates like "October 27, 2025" to match department revenue report
+    const formatDateLong = (date: Date) => {
+      return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }).format(date);
+    };
+
+    dateRangePart = `_${formatDateLong(startDate)}_to_${formatDateLong(endDate)}`;
+  }
+
+  const filename = `${sanitizedDealerName}_${invoice.invoiceNumber}${dateRangePart}.pdf`;
   doc.save(filename);
 }

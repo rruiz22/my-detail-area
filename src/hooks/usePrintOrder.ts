@@ -7,7 +7,7 @@
 
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 // Import print styles
 import '@/styles/print.css';
@@ -162,6 +162,7 @@ const PRINT_STYLES = `
 `;
 
 export const usePrintOrder = () => {
+  const { toast } = useToast();
 
   // Fetch complete order data for printing
   const fetchCompleteOrderData = useCallback(async (orderId: string) => {
@@ -513,13 +514,13 @@ export const usePrintOrder = () => {
       printWindow.onload = () => {
         setTimeout(() => {
           printWindow.print();
-          toast.success('Print dialog opened');
+          toast({ description: 'Print dialog opened' });
         }, 500);
       };
 
     } catch (error) {
       console.error('Print order error:', error);
-      toast.error(`Failed to print order: ${error}`);
+      toast({ variant: 'destructive', description: `Failed to print order: ${error}` });
     }
   }, [fetchCompleteOrderData, generatePrintHTML]);
 
@@ -608,7 +609,7 @@ export const usePrintOrder = () => {
 
     } catch (error) {
       console.error('Print preview error:', error);
-      toast.error('Failed to open print preview');
+      toast({ variant: 'destructive', description: 'Failed to open print preview' });
     }
   }, [fetchCompleteOrderData, generatePrintHTML]);
 

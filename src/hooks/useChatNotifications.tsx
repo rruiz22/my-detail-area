@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export type NotificationFrequency = 'all' | 'mentions' | 'none' | 'scheduled';
 

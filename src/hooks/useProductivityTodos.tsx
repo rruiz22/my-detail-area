@@ -5,7 +5,7 @@ import type { Database } from '@/integrations/supabase/types';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export type ProductivityTodo = Database['public']['Tables']['productivity_todos']['Row'];
 export type ProductivityTodoInsert = Database['public']['Tables']['productivity_todos']['Insert'];
@@ -33,6 +33,7 @@ export const productivityTodosKeys = {
  */
 export const useProductivityTodos = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -90,10 +91,10 @@ export const useProductivityTodos = () => {
 
           // Show notification for changes made by other users
           if (payload.eventType === 'INSERT' && payload.new.created_by !== user.id) {
-            toast.info('New task created by team member');
+            toast({ description: 'New task created by team member' });
           }
           if (payload.eventType === 'UPDATE' && payload.new.created_by !== user.id) {
-            toast.info('Task updated by team member');
+            toast({ description: 'Task updated by team member' });
           }
         }
       )
@@ -177,11 +178,11 @@ export const useProductivityTodos = () => {
           context.previousTodos
         );
       }
-      toast.error('Failed to create task');
+      toast({ variant: 'destructive', description: 'Failed to create task' });
       console.error('Create todo error:', err);
     },
     onSuccess: () => {
-      toast.success('Task created successfully');
+      toast({ description: 'Task created successfully' });
     },
     onSettled: () => {
       // Always refetch after error or success
@@ -232,11 +233,11 @@ export const useProductivityTodos = () => {
           context.previousTodos
         );
       }
-      toast.error('Failed to update task');
+      toast({ variant: 'destructive', description: 'Failed to update task' });
       console.error('Update todo error:', err);
     },
     onSuccess: () => {
-      toast.success('Task updated successfully');
+      toast({ description: 'Task updated successfully' });
     },
     onSettled: () => {
       if (currentDealership) {
@@ -284,11 +285,11 @@ export const useProductivityTodos = () => {
           context.previousTodos
         );
       }
-      toast.error('Failed to delete task');
+      toast({ variant: 'destructive', description: 'Failed to delete task' });
       console.error('Delete todo error:', err);
     },
     onSuccess: () => {
-      toast.success('Task deleted successfully');
+      toast({ description: 'Task deleted successfully' });
     },
     onSettled: () => {
       if (currentDealership) {

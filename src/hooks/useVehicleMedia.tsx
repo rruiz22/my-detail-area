@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
 // Types based on database schema
@@ -56,6 +56,7 @@ export interface UpdateMediaInput {
  */
 export function useVehicleMedia(vehicleId: string | null) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
 
   return useQuery({
@@ -81,7 +82,7 @@ export function useVehicleMedia(vehicleId: string | null) {
 
       if (error) {
         console.error('Error fetching vehicle media:', error);
-        toast.error(t('get_ready.media.error_loading'));
+        toast({ variant: 'destructive', description: t('get_ready.media.error_loading') });
         throw error;
       }
 
@@ -202,7 +203,7 @@ export function useUploadMedia() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] });
-      toast.success(t('get_ready.media.uploaded_successfully'));
+      toast({ description: t('get_ready.media.uploaded_successfully') });
 
       // Generate thumbnail in background (Hybrid Step 2)
       if (variables.file.type.startsWith('image/')) {
@@ -227,7 +228,7 @@ export function useUploadMedia() {
     },
     onError: (error) => {
       console.error('Upload media mutation error:', error);
-      toast.error(t('get_ready.media.error_uploading'));
+      toast({ variant: 'destructive', description: t('get_ready.media.error_uploading') });
     },
   });
 }
@@ -267,11 +268,11 @@ export function useUpdateMedia() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-media', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
-      toast.success(t('get_ready.media.updated_successfully'));
+      toast({ description: t('get_ready.media.updated_successfully') });
     },
     onError: (error) => {
       console.error('Update media mutation error:', error);
-      toast.error(t('get_ready.media.error_updating'));
+      toast({ variant: 'destructive', description: t('get_ready.media.error_updating') });
     },
   });
 }
@@ -319,11 +320,11 @@ export function useDeleteMedia() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-activity-log'] }); // Auto-refresh activity log
-      toast.success(t('get_ready.media.deleted_successfully'));
+      toast({ description: t('get_ready.media.deleted_successfully') });
     },
     onError: (error) => {
       console.error('Delete media mutation error:', error);
-      toast.error(t('get_ready.media.error_deleting'));
+      toast({ variant: 'destructive', description: t('get_ready.media.error_deleting') });
     },
   });
 }

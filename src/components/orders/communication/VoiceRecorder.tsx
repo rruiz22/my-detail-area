@@ -13,7 +13,7 @@ import {
   Trash2 
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface VoiceRecorderProps {
   onSend: (audioBlob: Blob, duration: number) => void;
@@ -121,7 +121,7 @@ export function VoiceRecorder({
           const newDuration = prev + 1;
           if (newDuration >= maxDuration) {
             stopRecording();
-            toast.warning(t('communication.max_duration_reached'));
+            toast({ description: t('communication.max_duration_reached') });
           }
           return newDuration;
         });
@@ -132,7 +132,7 @@ export function VoiceRecorder({
 
     } catch (error) {
       console.error('Error accessing microphone:', error);
-      toast.error(t('communication.microphone_error'));
+      toast({ variant: 'destructive', description: t('communication.microphone_error') });
     }
   };
 
@@ -182,7 +182,7 @@ export function VoiceRecorder({
           const newDuration = prev + 1;
           if (newDuration >= maxDuration) {
             stopRecording();
-            toast.warning(t('communication.max_duration_reached'));
+            toast({ description: t('communication.max_duration_reached') });
           }
           return newDuration;
         });

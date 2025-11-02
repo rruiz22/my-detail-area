@@ -31,7 +31,7 @@ import { SmartFocusVinScanner } from './enhanced/SmartFocusVinScanner';
 import { BatchVinProcessor } from './enhanced/BatchVinProcessor';
 import { VinScannerSettings } from './enhanced/VinScannerSettings';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface VinScannerHubProps {
   className?: string;
@@ -49,7 +49,8 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
     setScannerOpen(false);
     onVinSelected?.(vin);
     
-    toast.success(t('vin_scanner_hub.vin_detected_success'), {
+    toast({
+      title: t('vin_scanner_hub.vin_detected_success'),
       description: `VIN: ${vin} • ${t('vin_scanner_hub.confidence')}: ${confidence ? (confidence * 100).toFixed(1) : 'N/A'}%`
     });
   };
@@ -302,7 +303,7 @@ export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) 
             onVinsProcessed={(results) => {
               console.log('Batch processing completed:', results);
               const totalVins = results.reduce((sum, r) => sum + r.validVins.length, 0);
-              toast.success(`${totalVins} VINs processed successfully`);
+              toast({ description: `${totalVins} VINs processed successfully` });
             }}
           />
         </TabsContent>

@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Phone, MessageSquare, Mail, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useOrderActions } from '@/hooks/useOrderActions';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface CommunicationActionsProps {
   order: any;
@@ -26,13 +26,13 @@ export function CommunicationActions({ order }: CommunicationActionsProps) {
     if (order.customer_phone) {
       window.location.href = `tel:${order.customer_phone}`;
     } else {
-      toast.error(t('orders.no_phone_number'));
+      toast({ variant: 'destructive', description: t('orders.no_phone_number') });
     }
   };
 
   const handleSendSMS = async () => {
     if (!order.customer_phone || !smsMessage.trim()) {
-      toast.error(t('orders.missing_sms_data'));
+      toast({ variant: 'destructive', description: t('orders.missing_sms_data') });
       return;
     }
 
@@ -50,7 +50,7 @@ export function CommunicationActions({ order }: CommunicationActionsProps) {
 
   const handleSendEmail = async () => {
     if (!order.customer_email || !emailSubject.trim()) {
-      toast.error(t('orders.missing_email_data'));
+      toast({ variant: 'destructive', description: t('orders.missing_email_data') });
       return;
     }
 

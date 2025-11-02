@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { usePermissions } from '@/hooks/usePermissions';
 import { SlackIntegrationCard } from './integrations/SlackIntegrationCard';
+import { DealerChannelMatrix } from './notifications/DealerChannelMatrix';
 import {
   Mail,
   MessageSquare,
@@ -416,7 +417,7 @@ export const IntegrationSettings: React.FC = () => {
   };
 
   // Check if user can manage system settings
-  const canManageSettings = enhancedUser?.role === 'system_admin';
+  const canManageSettings = enhancedUser?.is_system_admin;
 
   if (!canManageSettings) {
     return (
@@ -462,7 +463,13 @@ export const IntegrationSettings: React.FC = () => {
             </TabsList>
 
             <TabsContent value="slack" className="mt-6">
-              <SlackIntegrationCard />
+              {/* Temporarily disabled - dealer_integrations table not created yet */}
+              <Card className="card-enhanced">
+                <CardContent className="py-8 text-center">
+                  <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">Slack integration coming soon</p>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="webhooks" className="mt-6">
@@ -605,91 +612,104 @@ export const IntegrationSettings: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
-            {t('settings.sms_configuration')}
+            SMS Notifications
           </CardTitle>
           <CardDescription>
-            {t('settings.sms_description')}
+            Configure SMS notification settings and channel preferences
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>{t('settings.sms_enabled')}</Label>
-              <p className="text-sm text-muted-foreground">{t('settings.sms_enabled_description')}</p>
-            </div>
-            <Switch
-              checked={smsConfig.enabled}
-              onCheckedChange={(enabled) => setSMSConfig(prev => ({ ...prev, enabled }))}
-            />
-          </div>
+        <CardContent>
+          <Tabs defaultValue="credentials" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="credentials">Twilio Credentials</TabsTrigger>
+              <TabsTrigger value="channel-config">Event Channels</TabsTrigger>
+            </TabsList>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="sms_provider">{t('settings.sms_provider')}</Label>
-              <Select
-                value={smsConfig.provider}
-                onValueChange={(provider: any) => setSMSConfig(prev => ({ ...prev, provider }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="twilio">Twilio</SelectItem>
-                  <SelectItem value="aws_sns">AWS SNS</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <TabsContent value="credentials" className="space-y-4 mt-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>{t('settings.sms_enabled')}</Label>
+                  <p className="text-sm text-muted-foreground">{t('settings.sms_enabled_description')}</p>
+                </div>
+                <Switch
+                  checked={smsConfig.enabled}
+                  onCheckedChange={(enabled) => setSMSConfig(prev => ({ ...prev, enabled }))}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="sms_account_sid">{t('settings.account_sid')}</Label>
-              <Input
-                id="sms_account_sid"
-                type="password"
-                value={smsConfig.account_sid}
-                onChange={(e) => setSMSConfig(prev => ({ ...prev, account_sid: e.target.value }))}
-                placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-              />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sms_provider">{t('settings.sms_provider')}</Label>
+                  <Select
+                    value={smsConfig.provider}
+                    onValueChange={(provider: any) => setSMSConfig(prev => ({ ...prev, provider }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="twilio">Twilio</SelectItem>
+                      <SelectItem value="aws_sns">AWS SNS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="sms_auth_token">{t('settings.auth_token')}</Label>
-              <Input
-                id="sms_auth_token"
-                type="password"
-                value={smsConfig.auth_token}
-                onChange={(e) => setSMSConfig(prev => ({ ...prev, auth_token: e.target.value }))}
-                placeholder={t('settings.enter_auth_token')}
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sms_account_sid">{t('settings.account_sid')}</Label>
+                  <Input
+                    id="sms_account_sid"
+                    type="password"
+                    value={smsConfig.account_sid}
+                    onChange={(e) => setSMSConfig(prev => ({ ...prev, account_sid: e.target.value }))}
+                    placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                  />
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="sms_from_number">{t('settings.from_number')}</Label>
-              <Input
-                id="sms_from_number"
-                value={smsConfig.from_number}
-                onChange={(e) => setSMSConfig(prev => ({ ...prev, from_number: e.target.value }))}
-                placeholder="+1234567890"
-              />
-            </div>
-          </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sms_auth_token">{t('settings.auth_token')}</Label>
+                  <Input
+                    id="sms_auth_token"
+                    type="password"
+                    value={smsConfig.auth_token}
+                    onChange={(e) => setSMSConfig(prev => ({ ...prev, auth_token: e.target.value }))}
+                    placeholder={t('settings.enter_auth_token')}
+                  />
+                </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => saveConfiguration('sms_config', smsConfig, 'sms')}
-              disabled={saving}
-            >
-              <Save className="h-4 w-4 mr-2" />
-              {t('settings.save_sms')}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => testIntegration('sms')}
-              disabled={!smsConfig.enabled || !smsConfig.account_sid || !smsConfig.auth_token || !smsConfig.from_number}
-            >
-              <Play className="h-4 w-4 mr-2" />
-              {t('settings.test_sms')}
-            </Button>
-          </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sms_from_number">{t('settings.from_number')}</Label>
+                  <Input
+                    id="sms_from_number"
+                    value={smsConfig.from_number}
+                    onChange={(e) => setSMSConfig(prev => ({ ...prev, from_number: e.target.value }))}
+                    placeholder="+1234567890"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => saveConfiguration('sms_config', smsConfig, 'sms')}
+                  disabled={saving}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {t('settings.save_sms')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => testIntegration('sms')}
+                  disabled={!smsConfig.enabled || !smsConfig.account_sid || !smsConfig.auth_token || !smsConfig.from_number}
+                >
+                  <Play className="h-4 w-4 mr-2" />
+                  {t('settings.test_sms')}
+                </Button>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="channel-config" className="mt-4">
+              <DealerChannelMatrix />
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
