@@ -46,7 +46,8 @@
       "mcp__supabase__execute_sql",
       "mcp__supabase__apply_migration",
       "Bash(src/types/supabase.ts)",
-      "mcp__supabase__list_migrations"
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__generate_typescript_types"
     ],
     "deny": [],
     "ask": []
