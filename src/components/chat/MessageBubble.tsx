@@ -27,6 +27,7 @@ import {
     Download,
     Edit,
     FileText,
+    MessageCircle,
     MoreHorizontal,
     Play,
     Reply,
@@ -36,6 +37,7 @@ import {
 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -46,6 +48,9 @@ interface MessageBubbleProps {
   onEdit: (messageId: string, newContent: string) => Promise<boolean>;
   onDelete: (messageId: string) => Promise<boolean>;
   getUserName: (userId: string) => string;
+  parentMessage?: ChatMessage;
+  replies?: ChatMessage[];
+  onScrollToMessage?: (messageId: string) => void;
 }
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
@@ -56,7 +61,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   onRemoveReact,
   onEdit,
   onDelete,
-  getUserName
+  getUserName,
+  parentMessage,
+  replies = [],
+  onScrollToMessage
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -171,7 +179,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 handleEditCancel();
               }
             }}
-            className="bg-background"
+            className="bg-background text-foreground border-input"
             autoFocus
           />
           <div className="flex justify-end gap-2">
@@ -179,7 +187,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
               size="sm"
               variant="ghost"
               onClick={handleEditCancel}
-              className="h-7"
+              className={cn(
+                "h-7",
+                isOwnMessage ? "text-foreground hover:bg-muted" : ""
+              )}
             >
               <XIcon className="h-3 w-3 mr-1" />
               {t('common.cancel')}
@@ -187,7 +198,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             <Button
               size="sm"
               onClick={handleEditSave}
-              className="h-7"
+              className={cn(
+                "h-7",
+                isOwnMessage ? "bg-background text-foreground hover:bg-muted" : ""
+              )}
             >
               <Check className="h-3 w-3 mr-1" />
               {t('common.save')}
@@ -200,7 +214,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     switch (message.message_type) {
       case 'text':
         return (
-          <div className="text-sm leading-relaxed">
+          <div className="text-sm leading-normal font-normal">
             {message.content}
           </div>
         );
@@ -307,64 +321,98 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     <div
       id={`message-${message.id}`}
       className={cn(
-        "flex group hover:bg-muted/30 -mx-2 px-2 py-1 rounded-lg transition-colors",
+        "flex group hover:bg-white/40 -mx-2 px-2 py-0.5 rounded-lg transition-colors",
         isOwnMessage ? "justify-end" : "justify-start"
       )}
     >
       <div className={cn(
-        "flex max-w-[70%] space-x-3",
+        "flex max-w-[70%] space-x-2",
         isOwnMessage && "flex-row-reverse space-x-reverse"
       )}>
         {/* Avatar */}
         {showAvatar && !isOwnMessage && (
-          <div className="h-8 w-8 mt-1 rounded-full overflow-hidden flex-shrink-0">
+          <div className="h-7 w-7 mt-0.5 rounded-full overflow-hidden flex-shrink-0">
             <AvatarSystem
               name={message.sender?.name || 'User'}
+              firstName={message.sender?.first_name}
+              lastName={message.sender?.last_name}
               email={message.sender?.email}
+              avatarUrl={message.sender?.avatar_url}
               seed={message.sender?.avatar_seed as any}
-              size={32}
+              size={28}
             />
           </div>
         )}
 
         {/* Message Content */}
         <div className={cn(
-          "flex flex-col space-y-1",
+          "flex flex-col space-y-0.5",
           isOwnMessage ? "items-end" : "items-start"
         )}>
-          {/* Sender Name & Time */}
-          {showAvatar && (
-            <div className={cn(
-              "flex items-center space-x-2 text-xs",
-              isOwnMessage && "flex-row-reverse space-x-reverse"
-            )}>
-              {!isOwnMessage && (
-                <span className="font-medium text-foreground">
-                  {message.sender?.name || t('chat.unknown_user')}
-                </span>
-              )}
-              <span className="text-muted-foreground">
-                {formatTime(message.created_at)}
-              </span>
-              {message.is_edited && (
-                <Badge variant="secondary" className="text-xs h-4 px-1">
-                  {t('chat.edited')}
-                </Badge>
-              )}
-            </div>
+          {/* Sender Name (only if showAvatar) */}
+          {showAvatar && !isOwnMessage && (
+            <span className="font-medium text-foreground text-xs">
+              {message.sender?.name || t('chat.unknown_user')}
+            </span>
           )}
 
           {/* Message Bubble */}
           <div className={cn(
-            "rounded-2xl px-4 py-2 max-w-full break-words",
+            "rounded-2xl px-3 py-1.5 max-w-full break-words shadow-sm",
             isOwnMessage
               ? "bg-primary text-primary-foreground rounded-br-md"
-              : "bg-muted text-foreground rounded-bl-md"
+              : "bg-teal-50 text-gray-900 rounded-bl-md border border-teal-200"
           )}>
-            {/* Reply indicator */}
+            {/* Reply indicator - Click to navigate to parent */}
             {message.parent_message_id && (
-              <div className="border-l-2 border-muted-foreground/30 pl-2 mb-2 text-xs opacity-70">
-                {t('chat.replying_to')}...
+              <div
+                className={cn(
+                  "relative border-l-[3px] rounded-lg pl-3 pr-3 py-2.5 mb-3 text-xs cursor-pointer transition-all shadow-sm",
+                  isOwnMessage
+                    ? "border-blue-300 bg-blue-50/90 hover:bg-blue-100/90 hover:shadow-md"
+                    : "border-emerald-400 bg-emerald-50 hover:bg-emerald-100 hover:shadow-md"
+                )}
+                onClick={() => {
+                  if (message.parent_message_id && onScrollToMessage) {
+                    onScrollToMessage(message.parent_message_id);
+                  }
+                }}
+              >
+                {/* Decorative corner */}
+                <div className={cn(
+                  "absolute -left-[3px] top-0 w-[3px] h-6 rounded-tl-lg",
+                  isOwnMessage ? "bg-blue-400" : "bg-emerald-500"
+                )} />
+
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className={cn(
+                    "flex items-center justify-center w-5 h-5 rounded-full",
+                    isOwnMessage ? "bg-blue-200" : "bg-emerald-200"
+                  )}>
+                    <Reply className={cn(
+                      "h-3 w-3",
+                      isOwnMessage ? "text-blue-700" : "text-emerald-700"
+                    )} />
+                  </div>
+                  <span className={cn(
+                    "font-bold text-[11px] uppercase tracking-wide",
+                    isOwnMessage ? "text-blue-700" : "text-emerald-700"
+                  )}>
+                    {t('chat.replying_to')}
+                  </span>
+                  <span className={cn(
+                    "font-semibold",
+                    isOwnMessage ? "text-blue-900" : "text-emerald-900"
+                  )}>
+                    {parentMessage?.sender?.name || t('chat.unknown_user')}
+                  </span>
+                </div>
+                <div className={cn(
+                  "text-xs line-clamp-2 leading-relaxed pl-7",
+                  isOwnMessage ? "text-blue-800/90" : "text-emerald-800/90"
+                )}>
+                  {parentMessage?.content || t('chat.message_not_available')}
+                </div>
               </div>
             )}
 
@@ -379,23 +427,80 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
             {renderMessageContent()}
 
-            {/* Thread indicator */}
-            {message.thread_count > 0 && (
+            {/* Thread indicator with hover preview */}
+            {replies.length > 0 && (
               <div className="mt-2 pt-2 border-t border-muted-foreground/20">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs"
-                >
-                  {message.thread_count} {t('chat.replies')}
-                </Button>
+                <HoverCard openDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs hover:bg-primary/10 transition-colors"
+                      onClick={() => {
+                        // Navigate to first reply
+                        if (replies[0] && onScrollToMessage) {
+                          onScrollToMessage(replies[0].id);
+                        }
+                      }}
+                    >
+                      <MessageCircle className="h-3 w-3 mr-1" />
+                      {replies.length} {replies.length === 1 ? t('chat.reply') : t('chat.replies')}
+                    </Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent
+                    className="w-80 p-3"
+                    align={isOwnMessage ? "end" : "start"}
+                    side="top"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 pb-2 border-b">
+                        <MessageCircle className="h-4 w-4 text-primary" />
+                        <span className="font-semibold text-sm">
+                          {replies.length} {replies.length === 1 ? t('chat.reply') : t('chat.replies')}
+                        </span>
+                      </div>
+                      <div className="space-y-2 max-h-60 overflow-y-auto">
+                        {replies.slice(0, 3).map((reply) => (
+                          <div
+                            key={reply.id}
+                            className="p-2 rounded-md bg-muted/50 hover:bg-muted cursor-pointer transition-colors"
+                            onClick={() => {
+                              if (onScrollToMessage) {
+                                onScrollToMessage(reply.id);
+                              }
+                            }}
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-medium text-xs text-primary">
+                                {reply.sender?.name || t('chat.unknown_user')}
+                              </span>
+                              <span className="text-[11px] text-foreground/60 font-medium">
+                                {formatTime(reply.created_at)}
+                              </span>
+                            </div>
+                            <p className="text-xs text-foreground line-clamp-2">
+                              {reply.content}
+                            </p>
+                          </div>
+                        ))}
+                        {replies.length > 3 && (
+                          <div className="text-center">
+                            <span className="text-xs text-muted-foreground">
+                              +{replies.length - 3} {t('chat.more_replies')}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             )}
           </div>
 
           {/* Reactions */}
           <TooltipProvider delayDuration={300}>
-            <div className="flex flex-wrap gap-1 mt-1 items-center">
+            <div className="flex flex-wrap gap-0.5 mt-0.5 items-center">
               {/* Existing Reactions */}
               {Object.entries(message.reactions).map(([emoji, userIds]) => {
                 const userReacted = user?.id && userIds.includes(user.id);
@@ -429,7 +534,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 px-2 text-xs bg-muted/50 hover:bg-muted transition-colors"
+                        className="h-5 px-1.5 text-xs bg-muted/50 hover:bg-muted transition-colors"
                         onClick={() => handleReactionClick(emoji)}
                       >
                         {emoji} {userIds.length}
@@ -448,7 +553,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 px-2 text-xs bg-muted/30 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="h-5 px-1.5 text-xs bg-muted/30 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <Smile className="h-3 w-3" />
                 </Button>
@@ -464,15 +569,16 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             </div>
           </TooltipProvider>
 
-          {/* Only show timestamp without avatar for subsequent messages */}
-          {!showAvatar && (
-            <div className={cn(
-              "text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity",
-              isOwnMessage ? "text-right" : "text-left"
-            )}>
-              {formatTime(message.created_at)}
-            </div>
-          )}
+          {/* Timestamp - Always visible below message */}
+          <div className={cn(
+            "text-[11px] text-foreground/60 font-medium mt-0.5 flex items-center gap-1",
+            isOwnMessage ? "justify-end" : "justify-start"
+          )}>
+            <span>{formatTime(message.created_at)}</span>
+            {message.is_edited && (
+              <span className="italic font-semibold">({t('chat.edited')})</span>
+            )}
+          </div>
         </div>
 
         {/* Message Actions */}

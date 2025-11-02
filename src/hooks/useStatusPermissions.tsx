@@ -171,9 +171,37 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
               enhancedUser.id
             );
             console.log('✅ [SMS] SMS notification result:', smsResult);
-          } catch (smsError) {
+
+            // Show toast based on results (with recipient names)
+            if (smsResult.sent > 0 && smsResult.failed === 0) {
+              const recipients = smsResult.recipientNames && smsResult.recipientNames.length > 0
+                ? ` to ${smsResult.recipientNames.join(', ')}`
+                : '';
+              toast({
+                title: '📱 SMS Notification Sent',
+                description: `SMS sent to ${smsResult.sent} user(s)${recipients}`,
+              });
+            } else if (smsResult.sent > 0 && smsResult.failed > 0) {
+              toast({
+                title: '⚠️ SMS Partially Sent',
+                description: `${smsResult.sent} sent, ${smsResult.failed} failed`,
+                variant: 'default'
+              });
+            } else if (smsResult.failed > 0) {
+              toast({
+                title: '❌ SMS Failed',
+                description: `Failed to send ${smsResult.failed} SMS notification(s)`,
+                variant: 'destructive'
+              });
+            }
+          } catch (smsError: any) {
             console.error('❌ [SMS] Error sending notification:', smsError);
             logError('⚠️ SMS notification error (non-critical):', smsError);
+            toast({
+              title: t('common.error'),
+              description: t('notifications.sms_error'),
+              variant: 'destructive'
+            });
           }
         } else {
           console.log(`ℹ️ [SMS] Status changed to '${newStatus}' - SMS only sent for 'completed' status`);

@@ -62,33 +62,35 @@ const Chat: React.FC = () => {
   }
 
   return (
-    <>
-      <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
+    <div className="absolute inset-0 bottom-0 flex flex-col bg-background">
+      {/* Compact Header - Fixed at top */}
+      <div className="flex-shrink-0 px-3 py-2 border-b bg-background">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-semibold text-foreground truncate">
               {t('chat.title')}
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-xs sm:text-sm text-muted-foreground truncate hidden sm:block">
               {t('chat.subtitle', { dealership: currentDealership.name })}
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 text-sm text-muted-foreground" data-testid="dealership-context">
-            <Users className="h-4 w-4" />
-            <span>{currentDealership.name}</span>
+          <div className="flex items-center space-x-2 text-xs text-muted-foreground flex-shrink-0" data-testid="dealership-context">
+            <Users className="h-3 w-3" />
+            <span className="truncate max-w-[120px] sm:max-w-[200px]">{currentDealership.name}</span>
           </div>
         </div>
+      </div>
 
-        {/* Main Chat Interface */}
+      {/* Chat Interface - Takes remaining height */}
+      <div className="flex-1 min-h-0">
         <ChatLayout
           dealerId={currentDealership.id}
-          className="shadow-sm border-0"
+          className="h-full"
           data-testid="chat-layout"
         />
       </div>
-    </>
+    </div>
   );
 };
 

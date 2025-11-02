@@ -43,15 +43,16 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
   const [selectedTab, setSelectedTab] = useState('grouped');
 
   // Filter notifications based on selected filter
+  // Filter notifications for chronological view
   const filteredNotifications = useMemo(() => {
     let filtered = notifications;
 
     switch (selectedFilter) {
       case 'unread':
-        filtered = notifications.filter(n => n.status !== 'read');
+        filtered = notifications.filter(n => !n.is_read);
         break;
       case 'important':
-        filtered = notifications.filter(n => n.priority === 'high' || n.priority === 'urgent');
+        filtered = notifications.filter(n => n.priority === 'high' || n.priority === 'urgent' || n.priority === 'critical');
         break;
       default:
         break;
@@ -59,6 +60,29 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
 
     return filtered;
   }, [notifications, selectedFilter]);
+
+  // Filtered grouped notifications
+  const filteredGroupedNotifications = useMemo(() => {
+    if (selectedFilter === 'all') return groupedNotifications;
+
+    return groupedNotifications
+      .map(group => {
+        const filteredNotifs = group.notifications.filter(n => {
+          if (selectedFilter === 'unread') return !n.is_read;
+          if (selectedFilter === 'important') return n.priority === 'high' || n.priority === 'urgent' || n.priority === 'critical';
+          return true;
+        });
+
+        if (filteredNotifs.length === 0) return null;
+
+        return {
+          ...group,
+          notifications: filteredNotifs,
+          unreadCount: filteredNotifs.filter(n => !n.is_read).length,
+        };
+      })
+      .filter(Boolean) as NotificationGroup[];
+  }, [groupedNotifications, selectedFilter]);
 
 
   if (loading) {
@@ -76,44 +100,50 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
 
   return (
     <Card className={className}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            {t('notifications.title')}
+      <CardHeader className="space-y-3">
+        {/* Title Row */}
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Bell className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+            <span className="truncate">{t('notifications.title')}</span>
             {unreadCount > 0 && (
-              <Badge variant="secondary">{unreadCount}</Badge>
+              <Badge variant="secondary" className="flex-shrink-0">{unreadCount}</Badge>
             )}
           </CardTitle>
-          
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  {selectedFilter === 'all' ? t('notifications.filter.all') : selectedFilter === 'unread' ? t('notifications.filter.unread') : t('notifications.filter.important')}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setSelectedFilter('all')}>
-                  {t('notifications.filter.all_description')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFilter('unread')}>
-                  {t('notifications.filter.unread_description')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFilter('important')}>
-                  {t('notifications.filter.important_description')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+        </div>
 
-            {unreadCount > 0 && (
-              <Button variant="outline" size="sm" onClick={markAllAsRead}>
-                <CheckCheck className="h-4 w-4 mr-2" />
-                {t('notifications.actions.mark_all_read')}
+        {/* Actions Row - Responsive */}
+        <div className="flex flex-wrap items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">
+                  {selectedFilter === 'all' ? t('notifications.filter.all') : selectedFilter === 'unread' ? t('notifications.filter.unread') : t('notifications.filter.important')}
+                </span>
+                <span className="inline sm:hidden capitalize">{selectedFilter}</span>
               </Button>
-            )}
-          </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setSelectedFilter('all')}>
+                {t('notifications.filter.all_description')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedFilter('unread')}>
+                {t('notifications.filter.unread_description')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedFilter('important')}>
+                {t('notifications.filter.important_description')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {unreadCount > 0 && (
+            <Button variant="outline" size="sm" onClick={markAllAsRead} className="text-xs sm:text-sm">
+              <CheckCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">{t('notifications.actions.mark_all_read')}</span>
+              <span className="inline sm:hidden">Mark all</span>
+            </Button>
+          )}
         </div>
       </CardHeader>
 
@@ -126,21 +156,28 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
 
           <TabsContent value="grouped" className="mt-0">
             <ScrollArea className="h-[400px]">
-              {groupedNotifications.length === 0 ? (
+              {filteredGroupedNotifications.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
                   <Bell className="h-8 w-8 mx-auto mb-4 opacity-50" />
-                  <p>{t('notifications.empty.message')}</p>
+                  {notifications.length === 0 ? (
+                    <p>{t('notifications.empty.message')}</p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p className="font-medium">No grouped notifications</p>
+                      <p className="text-sm">Switch to "Recent" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {groupedNotifications.map((group) => (
+                  {filteredGroupedNotifications.map((group) => (
                     <div key={`${group.entity_type}_${group.entity_id}`} className="border-b last:border-b-0">
                       <div className="flex items-center justify-between p-4 bg-muted/30">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Badge variant="outline" className="text-xs">
                             {group.entity_type}
                           </Badge>
-                          <span className="text-sm font-medium">
+                          <span className="text-xs sm:text-sm font-medium">
                             {group.notifications.length} {group.notifications.length === 1 ? t('notifications.count.singular') : t('notifications.count.plural')}
                           </span>
                           {group.unreadCount > 0 && (
@@ -154,12 +191,13 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                             variant="ghost"
                             size="sm"
                             onClick={() => markEntityAsRead(group.entity_type, group.entity_id)}
+                            className="flex-shrink-0"
                           >
                             <Check className="h-4 w-4" />
                           </Button>
                         )}
                       </div>
-                      
+
                       <div className="space-y-0">
                         {group.notifications.slice(0, 3).map((notification) => (
                           <NotificationItem
@@ -171,7 +209,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                         ))}
                         {group.notifications.length > 3 && (
                           <div className="p-4 text-center">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
                               {t('notifications.show_more', { count: group.notifications.length - 3 })}
                             </Button>
                           </div>

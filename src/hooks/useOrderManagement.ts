@@ -15,9 +15,28 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { OrderStatus } from '@/constants/orderStatus';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+import {
+  createOrderNotification,
+  createStatusChangeNotification,
+  createAssignmentNotification
+} from '@/utils/notificationHelper';
 
 // Constants for magic numbers
 const REFRESH_THROTTLE_MS = 1000;
+
+/**
+ * Map order_type to NotificationModule
+ * Ensures notifications work for ALL order types (sales, service, recon, carwash)
+ */
+function getNotificationModule(orderType: string): 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' {
+  const mapping: Record<string, 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash'> = {
+    'sales': 'sales_orders',
+    'service': 'service_orders',
+    'recon': 'recon_orders',
+    'carwash': 'car_wash'
+  };
+  return mapping[orderType] || 'sales_orders';
+}
 
 // Enhanced database types
 type SupabaseOrderRow = Database['public']['Tables']['orders']['Row'];
@@ -740,6 +759,23 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
 
       dev('Order created successfully:', data);
 
+      // 🔔 NOTIFICATION: Order Created (dynamic module based on order_type)
+      void createOrderNotification({
+        userId: data.assigned_group_id || null,
+        dealerId: data.dealer_id,
+        module: getNotificationModule(data.order_type || 'sales'),
+        event: 'order_created',
+        orderId: data.id,
+        orderNumber: data.order_number || data.custom_order_number || data.id,
+        priority: 'normal',
+        metadata: {
+          customerName: data.customer_name,
+          vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim()
+        }
+      }).catch(err =>
+        console.error('[OrderManagement] Failed to create order notification:', err)
+      );
+
       // Enrich the new order with dealer info
       const enrichedNewOrder = await enrichOrderData(data);
 
@@ -864,7 +900,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Get current order before updating (for tracking changes)
       const currentOrders = queryClient.getQueryData<Order[]>(['orders', 'all']) || [];
       const oldOrder = currentOrders.find(o => o.id === orderId);
-      const oldStatus = oldOrder?.order_status;
+      const oldStatus = oldOrder?.status;
 
       const { data, error } = await supabase
         .from('orders')
@@ -880,6 +916,48 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
 
       dev('Order updated successfully:', data);
 
+      // 🔔 NOTIFICATION: Status Changed (dynamic module based on order_type)
+      if (orderData.status !== undefined && oldStatus && oldStatus !== orderData.status) {
+        const notifModule = getNotificationModule(data.order_type || 'sales');
+        void createStatusChangeNotification({
+          userId: data.assigned_group_id || null,
+          dealerId: data.dealer_id,
+          module: notifModule,
+          entityType: notifModule.replace('_orders', '_order').replace('car_wash', 'carwash_order'),
+          entityId: data.id,
+          entityName: data.order_number || data.custom_order_number || data.id,
+          oldStatus: oldStatus,
+          newStatus: orderData.status,
+          priority: 'high'
+        }).catch(err =>
+          console.error('[OrderManagement] Failed to create status change notification:', err)
+        );
+      }
+
+      // 🔔 NOTIFICATION: Assignment Changed (dynamic module based on order_type)
+      if (orderData.assigned_group_id !== undefined &&
+          oldOrder?.assigned_group_id !== orderData.assigned_group_id &&
+          orderData.assigned_group_id !== null) {
+
+        const assignedByName = enhancedUser?.first_name
+          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+          : user?.email || 'Manager';
+
+        const notifModule = getNotificationModule(data.order_type || 'sales');
+        void createAssignmentNotification({
+          userId: orderData.assigned_group_id,
+          dealerId: data.dealer_id,
+          module: notifModule,
+          entityType: notifModule.replace('_orders', '_order').replace('car_wash', 'carwash_order'),
+          entityId: data.id,
+          entityName: data.order_number || data.custom_order_number || data.id,
+          assignedBy: assignedByName,
+          priority: 'high'
+        }).catch(err =>
+          console.error('[OrderManagement] Failed to create assignment notification:', err)
+        );
+      }
+
       // Enrich updated order
       const enrichedUpdatedOrder = await enrichOrderData(data);
 
@@ -891,7 +969,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       );
 
       // Send push notification if status changed (fire-and-forget, non-blocking)
-      if (orderData.order_status !== undefined && data.order_number) {
+      if (orderData.status !== undefined && data.order_number) {
         const userName = enhancedUser?.first_name
           ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
           : user.email || 'Someone';
@@ -901,7 +979,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           .notifyOrderStatusChange(
             parseInt(orderId),
             data.order_number,
-            orderData.order_status,
+            orderData.status,
             userName
           )
           .catch((notifError) => {
@@ -914,13 +992,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           .invoke('send-order-sms-notification', {
             body: {
               orderId: orderId,
-              dealerId: selectedDealerId,
+              dealerId: data.dealer_id,
               module: 'sales_orders',
               eventType: 'status_changed',
               eventData: {
                 orderNumber: data.order_number,
                 customerName: data.customer_name || '',
-                newStatus: orderData.order_status,
+                newStatus: orderData.status,
                 oldStatus: oldStatus,
                 shortLink: `https://app.mydetailarea.com/sales/${orderId}`,
               },
@@ -956,7 +1034,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     } finally {
       setLoading(false);
     }
-  }, [user, queryClient, enrichOrderData]);
+  }, [user, enhancedUser, queryClient, enrichOrderData, toast, t]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;

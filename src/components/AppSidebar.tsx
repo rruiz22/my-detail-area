@@ -1,8 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { LiveClock } from "@/components/ui/live-clock";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { useGlobalChat } from "@/contexts/GlobalChatProvider";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useDealershipModules } from "@/hooks/useDealershipModules";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -19,6 +21,9 @@ export function AppSidebar() {
   const { t } = useTranslation();
   const location = useLocation();
   const { selectedDealerId } = useDealerFilter();
+
+  // Get chat unread count
+  const { totalUnreadCount } = useGlobalChat();
 
   // Get current dealership for logo display
   const { currentDealership } = useAccessibleDealerships();
@@ -349,39 +354,80 @@ export function AppSidebar() {
           <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>{t('navigation.tools_communication')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {toolsNavItems.map(item => (
-                <SidebarMenuItem key={item.title}>
-                  {collapsed && !isMobile ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SidebarMenuButton asChild>
-                           <NavLink
-                            to={item.url}
-                            onClick={handleNavClick}
-                            className={`${getNavClasses(item.url)} sidebar-icon-centered`}
-                          >
-                            <item.icon className="w-4 h-4" />
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </TooltipTrigger>
-                      <TooltipContent side="right">
-                        <p>{item.title}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <SidebarMenuButton asChild>
-                       <NavLink
-                        to={item.url}
-                        onClick={handleNavClick}
-                        className={getNavClasses(item.url)}
-                      >
-                        <item.icon className="w-4 h-4 flex-shrink-0" />
-                        {!collapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  )}
-                </SidebarMenuItem>
-              ))}
+              {toolsNavItems.map(item => {
+                // Check if this is the Team Chat item
+                const isChatItem = item.url === '/chat';
+                const showBadge = isChatItem && totalUnreadCount > 0;
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    {collapsed && !isMobile ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton asChild>
+                            <NavLink
+                              to={item.url}
+                              onClick={handleNavClick}
+                              className={`${getNavClasses(item.url)} sidebar-icon-centered relative`}
+                            >
+                              <item.icon className="w-4 h-4" />
+                              {showBadge && (
+                                <Badge
+                                  variant="destructive"
+                                  className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full text-[9px] flex items-center justify-center"
+                                >
+                                  {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
+                                </Badge>
+                              )}
+                            </NavLink>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          <p>{item.title}</p>
+                          {showBadge && (
+                            <p className="text-xs text-muted-foreground">
+                              {totalUnreadCount} unread
+                            </p>
+                          )}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <SidebarMenuButton asChild>
+                        <NavLink
+                          to={item.url}
+                          onClick={handleNavClick}
+                          className={getNavClasses(item.url)}
+                        >
+                          <div className="relative">
+                            <item.icon className="w-4 h-4 flex-shrink-0" />
+                            {showBadge && (
+                              <Badge
+                                variant="destructive"
+                                className="absolute -top-2 -right-2 h-4 min-w-4 px-1 rounded-full text-[9px] flex items-center justify-center"
+                              >
+                                {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
+                              </Badge>
+                            )}
+                          </div>
+                          {!collapsed && (
+                            <span className="flex items-center gap-2">
+                              {item.title}
+                              {showBadge && (
+                                <Badge
+                                  variant="destructive"
+                                  className="ml-auto h-5 min-w-5 px-1.5 rounded-full text-[10px]"
+                                >
+                                  {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
+                                </Badge>
+                              )}
+                            </span>
+                          )}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    )}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
           </SidebarGroup>

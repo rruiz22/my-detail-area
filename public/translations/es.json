@@ -753,6 +753,7 @@
     "edit_service_order": "Editar Orden de Servicio",
     "clientInfo": "Info del Cliente",
     "polling_error": "Error al actualizar datos de la orden",
+    "order_not_found": "Orden no encontrada. Puede haber sido eliminada o no tienes acceso a ella.",
     "customer_information": "Información del Cliente",
     "customerName": "Nombre del Cliente",
     "priority": "Prioridad",
@@ -1342,6 +1343,7 @@
     "mentioned_you": "Te mencionó",
     "replying_to": "Respondiendo a",
     "replies": "respuestas",
+    "more_replies": "más respuestas",
     "unsupported_message_type": "Tipo de mensaje no soportado",
     "unknown_user": "Usuario Desconocido",
     "you_reacted": "Tú reaccionaste",
@@ -4988,7 +4990,7 @@
       "message": "No hay notificaciones",
       "filtered": "No hay notificaciones que coincidan con tus filtros"
     },
-    "show_more": "Mostrar más",
+    "show_more": "Mostrar {{count}} más",
     "toast": {
       "saved": "Guardado",
       "savedMessage": "Preferencias de notificación guardadas exitosamente",

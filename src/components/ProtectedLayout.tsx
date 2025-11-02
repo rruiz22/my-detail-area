@@ -167,13 +167,13 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
           </header>
 
           {/* Announcement Banner */}
-          <AnnouncementBanner />
+          {!location.pathname.startsWith('/chat') && <AnnouncementBanner />}
 
           {/* Breadcrumbs */}
-          <Breadcrumbs />
+          {!location.pathname.startsWith('/chat') && <Breadcrumbs />}
 
           {/* Main Content */}
-          <main className="flex-1 p-6 mb-24">
+          <main className={`flex-1 ${location.pathname.startsWith('/chat') ? 'relative overflow-hidden' : 'p-6 mb-24'}`}>
            {(() => {
              logger.dev('🎯 [OUTLET DEBUG] Rendering content for:', {
                pathname: location.pathname,

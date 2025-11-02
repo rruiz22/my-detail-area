@@ -391,15 +391,31 @@ export function useGlobalChatPermissions(dealerId?: number): UseGlobalChatPermis
     refetchOnWindowFocus: false
   });
 
+  // FIX: Protect admin permissions - Never return all-false if user is system admin
+  const isSystemAdmin = user?.role === 'system_admin' ||
+                       (user as any)?.is_system_admin === true ||
+                       user?.user_type === 'system_admin';
+
+  const fallbackPermissions = isSystemAdmin ? {
+    // System admins always have full permissions, even if there's an error loading
+    canCreateDirectChats: true,
+    canCreateGroups: true,
+    canCreateChannels: true,
+    canCreateAnnouncements: true,
+    canViewAllConversations: true,
+    canManageChatSettings: true
+  } : {
+    // Non-admins get restricted permissions on error
+    canCreateDirectChats: false,
+    canCreateGroups: false,
+    canCreateChannels: false,
+    canCreateAnnouncements: false,
+    canViewAllConversations: false,
+    canManageChatSettings: false
+  };
+
   return {
-    permissions: permissions || {
-      canCreateDirectChats: false,
-      canCreateGroups: false,
-      canCreateChannels: false,
-      canCreateAnnouncements: false,
-      canViewAllConversations: false,
-      canManageChatSettings: false
-    },
+    permissions: permissions || fallbackPermissions,
     isLoading,
     error: error as Error | null
   };

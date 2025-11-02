@@ -2,6 +2,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
+import { createCommentNotification } from '@/utils/notificationHelper';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -269,12 +270,43 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
         // Get order number for notification (fire-and-forget)
         supabase
           .from('orders')
-          .select('order_number, custom_order_number')
+          .select('order_number, custom_order_number, assigned_group_id, dealer_id, order_type')
           .eq('id', orderId)
           .single()
           .then(async ({ data: orderData }) => {
             if (orderData) {
               const orderNumber = orderData.custom_order_number || orderData.order_number || orderId;
+
+              // Map order_type to notification module
+              const getNotificationModule = (orderType: string): 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' => {
+                const mapping: Record<string, 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash'> = {
+                  'sales': 'sales_orders',
+                  'service': 'service_orders',
+                  'recon': 'recon_orders',
+                  'carwash': 'car_wash'
+                };
+                return mapping[orderType] || 'sales_orders';
+              };
+
+              const notifModule = getNotificationModule(orderData.order_type || 'sales');
+
+              // 🔔 NOTIFICATION: Comment Added (in-app notification, dynamic module)
+              if (orderData.assigned_group_id && orderData.assigned_group_id !== user.id) {
+                void createCommentNotification({
+                  userId: orderData.assigned_group_id,
+                  dealerId: orderData.dealer_id,
+                  module: notifModule,
+                  entityType: notifModule.replace('_orders', '_order').replace('car_wash', 'carwash_order'),
+                  entityId: orderId,
+                  entityName: orderNumber,
+                  commenterName: userName,
+                  commentPreview: text.trim().substring(0, 100),
+                  actionUrl: `/${notifModule.replace('_orders', '').replace('car_wash', 'carwash')}?order=${orderId}#comments`,
+                  priority: 'normal'
+                }).catch(err =>
+                  console.error('[OrderComments] Failed to create comment notification:', err)
+                );
+              }
 
               // Show toast notification
               toast.loading('📲 Sending push notification to followers...', { id: 'push-notif' });

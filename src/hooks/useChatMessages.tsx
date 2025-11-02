@@ -8,43 +8,47 @@ export interface ChatMessage {
   user_id: string;
   message_type: 'text' | 'voice' | 'file' | 'image' | 'system';
   content?: string;
-  
+
   // Files and media
   file_url?: string;
   file_name?: string;
   file_size?: number;
   file_type?: string;
-  
+
   // Voice messages
   voice_duration_ms?: number;
   voice_transcription?: string;
-  
+
   // Threading
   parent_message_id?: string;
   thread_count: number;
-  
+
   // State
   is_edited: boolean;
   is_deleted: boolean;
   is_system_message: boolean;
-  
+
   // Social features
   reactions: Record<string, string[]>; // {emoji: [user_ids]}
   mentions: string[];
-  
+
   // Timestamps
   created_at: string;
   updated_at: string;
   edited_at?: string;
   deleted_at?: string;
-  
+
   metadata: Record<string, any>;
-  
+
   // Computed fields
   sender?: {
     id: string;
     name: string;
+    email?: string;
+    first_name?: string;
+    last_name?: string;
     avatar_url?: string;
+    avatar_seed?: string;
   };
   replies?: ChatMessage[];
   is_own_message?: boolean;
@@ -103,7 +107,14 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
 
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const lastMessageIdRef = useRef<string>();
-  const userProfilesCache = useRef<Record<string, { name: string; avatar_url?: string }>>({});
+  const userProfilesCache = useRef<Record<string, {
+    name: string;
+    email?: string;
+    first_name?: string;
+    last_name?: string;
+    avatar_url?: string;
+    avatar_seed?: string;
+  }>>({});
   const PAGE_SIZE = 50;
 
   // Fetch user profiles and cache them
@@ -115,7 +126,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
     try {
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, first_name, last_name, email')
+        .select('id, first_name, last_name, email, avatar_url, avatar_seed')
         .in('id', uncachedIds);
 
       if (profiles) {
@@ -124,7 +135,11 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
             name: profile.first_name && profile.last_name
               ? `${profile.first_name} ${profile.last_name}`
               : profile.email,
-            avatar_url: undefined
+            email: profile.email,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+            avatar_url: profile.avatar_url,
+            avatar_seed: profile.avatar_seed
           };
         });
       }
@@ -198,7 +213,11 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           acc[userId] = userProfilesCache.current[userId] || {
             id: userId,
             name: 'Unknown User',
-            avatar_url: undefined
+            email: undefined,
+            first_name: undefined,
+            last_name: undefined,
+            avatar_url: undefined,
+            avatar_seed: undefined
           };
           return acc;
         }, {} as Record<string, any>);
@@ -213,7 +232,11 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         sender: senderProfiles[msg.user_id] || {
           id: msg.user_id,
           name: 'Unknown User',
-          avatar_url: undefined
+          email: undefined,
+          first_name: undefined,
+          last_name: undefined,
+          avatar_url: undefined,
+          avatar_seed: undefined
         },
         is_own_message: msg.user_id === user.id,
         is_mentioned: ((msg.mentions as string[]) || []).includes(user.id) || false
@@ -238,7 +261,7 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
   // Load more older messages
   const loadMore = useCallback(() => {
     if (!hasMore || loading) return;
-    
+
     const oldestMessage = messages[0];
     if (oldestMessage) {
       fetchMessages(oldestMessage.created_at);
@@ -262,21 +285,25 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         // Get sender profiles for new messages
         const userIds = [...new Set(data.map(msg => msg.user_id))];
         let senderProfiles: Record<string, any> = {};
-        
+
         if (userIds.length > 0) {
           const { data: profiles } = await supabase
             .from('profiles')
-            .select('id, first_name, last_name, email')
+            .select('id, first_name, last_name, email, avatar_url, avatar_seed')
             .in('id', userIds);
-          
+
           if (profiles) {
             senderProfiles = profiles.reduce((acc, profile) => {
               acc[profile.id] = {
                 id: profile.id,
-                name: profile.first_name && profile.last_name 
+                name: profile.first_name && profile.last_name
                   ? `${profile.first_name} ${profile.last_name}`
                   : profile.email,
-                avatar_url: undefined
+                email: profile.email,
+                first_name: profile.first_name,
+                last_name: profile.last_name,
+                avatar_url: profile.avatar_url,
+                avatar_seed: profile.avatar_seed
               };
               return acc;
             }, {} as Record<string, any>);
@@ -291,7 +318,11 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           sender: senderProfiles[msg.user_id] || {
             id: msg.user_id,
             name: 'Unknown User',
-            avatar_url: undefined
+            email: undefined,
+            first_name: undefined,
+            last_name: undefined,
+            avatar_url: undefined,
+            avatar_seed: undefined
           },
           is_own_message: msg.user_id === user.id,
           is_mentioned: ((msg.mentions as string[]) || []).includes(user.id) || false
@@ -347,7 +378,11 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         sender: {
           id: data.user_id,
           name: getUserName(user.id) || 'You',
-          avatar_url: undefined
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          avatar_url: user.avatar_url,
+          avatar_seed: user.avatar_seed
         },
         is_own_message: true,
         is_mentioned: false
@@ -744,9 +779,13 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
 
     console.log(`📡 [MESSAGES] Setting up real-time subscription for conversation: ${conversationId}`);
 
+    // Track if component is still mounted to avoid memory leaks
+    let isMounted = true;
+    const channelName = `messages:${conversationId}:${Date.now()}`;
+
     // Subscribe to new messages
     const messageChannel = supabase
-      .channel(`messages:${conversationId}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -756,56 +795,79 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           filter: `conversation_id=eq.${conversationId}`
         },
         async (payload) => {
+          if (!isMounted) {
+            console.log('📡 [MESSAGES] Component unmounted, ignoring real-time update');
+            return;
+          }
+
           console.log('📨 [MESSAGES] New message INSERT detected:', payload);
 
-          // Check if message already exists (from optimistic update)
+          // FIX: Check if message is from current user's optimistic update
+          const isOwnMessage = payload.new.user_id === user.id;
+
           setMessages(prev => {
+            // Skip if message already exists (from optimistic update)
             if (prev.some(msg => msg.id === payload.new.id)) {
               console.log('ℹ️ [MESSAGES] Message already in state (optimistic), skipping real-time update');
               return prev;
             }
+
+            // If it's our own message, it should already be there via optimistic update
+            // This is an extra safety check
+            if (isOwnMessage) {
+              console.log('⚠️ [MESSAGES] Own message not in state yet, adding now');
+            }
+
             return prev;
           });
 
-          // Fetch the new message with full details
-          try {
-            const { data: newMessageData } = await supabase
-              .from('chat_messages')
-              .select('*')
-              .eq('id', payload.new.id)
-              .single();
+          // Only fetch details for messages from other users
+          if (!isOwnMessage) {
+            try {
+              const { data: newMessageData } = await supabase
+                .from('chat_messages')
+                .select('*')
+                .eq('id', payload.new.id)
+                .single();
 
-            if (newMessageData) {
+              if (!isMounted || !newMessageData) return;
+
               // Fetch and cache sender profile
               await fetchAndCacheProfiles([newMessageData.user_id]);
+
+              if (!isMounted) return;
 
               const processedMessage: ChatMessage = {
                 ...newMessageData,
                 reactions: (newMessageData.reactions as Record<string, string[]>) || {},
                 mentions: (newMessageData.mentions as string[]) || [],
                 metadata: (newMessageData.metadata as Record<string, any>) || {},
-                sender: {
+                sender: userProfilesCache.current[newMessageData.user_id] || {
                   id: newMessageData.user_id,
                   name: getUserName(newMessageData.user_id),
-                  avatar_url: undefined
+                  email: undefined,
+                  first_name: undefined,
+                  last_name: undefined,
+                  avatar_url: undefined,
+                  avatar_seed: undefined
                 },
-                is_own_message: newMessageData.user_id === user.id,
+                is_own_message: false,
                 is_mentioned: ((newMessageData.mentions as string[]) || []).includes(user.id)
               };
 
               console.log('📨 [MESSAGES] Adding new message to state from real-time:', processedMessage);
 
               setMessages(prev => {
-                // Double-check for duplicates
+                // Final duplicate check
                 if (prev.some(msg => msg.id === processedMessage.id)) {
-                  console.log('ℹ️ [MESSAGES] Duplicate detected, skipping');
+                  console.log('ℹ️ [MESSAGES] Duplicate detected in final check, skipping');
                   return prev;
                 }
                 return [...prev, processedMessage];
               });
+            } catch (error) {
+              console.error('❌ [MESSAGES] Error processing new message:', error);
             }
-          } catch (error) {
-            console.error('❌ [MESSAGES] Error processing new message:', error);
           }
         }
       )
@@ -818,6 +880,8 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
           filter: `conversation_id=eq.${conversationId}`
         },
         (payload) => {
+          if (!isMounted) return;
+
           console.log('✏️ [MESSAGES] Message UPDATE detected:', payload);
           setMessages(prev => prev.map(msg => {
             if (msg.id === payload.new.id) {
@@ -836,6 +900,8 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         }
       )
       .subscribe((status) => {
+        if (!isMounted) return;
+
         console.log(`📡 [MESSAGES] Subscription status:`, status);
         if (status === 'SUBSCRIBED') {
           console.log('✅ [MESSAGES] Successfully subscribed to real-time updates');
@@ -844,15 +910,22 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         }
       });
 
+    // Cleanup function
     return () => {
       console.log(`📡 [MESSAGES] Cleaning up subscription for: ${conversationId}`);
-      supabase.removeChannel(messageChannel);
+      isMounted = false;
+
+      // Properly unsubscribe and remove channel
+      messageChannel.unsubscribe().then(() => {
+        supabase.removeChannel(messageChannel);
+      });
+
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, conversationId]);
+  }, [user?.id, conversationId, getUserName, fetchAndCacheProfiles]);
 
   // Initial load
   useEffect(() => {

@@ -20,6 +20,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
+import { clearPermissionsCache } from '@/utils/permissionSerialization';
+import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, Plus, Shield, User, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +65,7 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
   const { t } = useTranslation();
   const { toast } = useToast();
   const { refreshPermissions } = usePermissions();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [availableRoles, setAvailableRoles] = useState<CustomRole[]>([]);
   const [userRoles, setUserRoles] = useState<UserRoleAssignment[]>([]);
@@ -193,6 +196,18 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
 
       setSelectedRoleId('');
       await fetchUserRolesAndAvailable();
+
+      // Invalidate target user's permission cache so changes reflect immediately
+      await queryClient.invalidateQueries({
+        queryKey: ['user-permissions', user.id]
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['user_profile_permissions', user.id]
+      });
+
+      // Clear localStorage permission cache to avoid stale data
+      clearPermissionsCache();
+
       refreshPermissions();
       onRolesUpdated();
     } catch (error) {
@@ -230,6 +245,18 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
       });
 
       await fetchUserRolesAndAvailable();
+
+      // Invalidate target user's permission cache so changes reflect immediately
+      await queryClient.invalidateQueries({
+        queryKey: ['user-permissions', user.id]
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['user_profile_permissions', user.id]
+      });
+
+      // Clear localStorage permission cache to avoid stale data
+      clearPermissionsCache();
+
       refreshPermissions();
       onRolesUpdated();
     } catch (error) {

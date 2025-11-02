@@ -10,8 +10,6 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import i18next from 'i18next';
 
 export type OrderSMSEventType =
   | 'order_created'
@@ -59,7 +57,9 @@ export interface SMSNotificationResult {
   sent: number;
   failed: number;
   recipients: number;
+  recipientNames?: string[];
   error?: string;
+  message?: string;
 }
 
 class OrderSMSNotificationService {
@@ -85,7 +85,6 @@ class OrderSMSNotificationService {
 
       if (error) {
         console.error('❌ Error invoking SMS notification function:', error);
-        toast.error(i18next.t('notifications.sms_error'));
         return {
           success: false,
           sent: 0,
@@ -108,29 +107,20 @@ class OrderSMSNotificationService {
 
       console.log('✅ SMS notification result:', data);
 
-      // Show appropriate toast based on results
-      if (data.sent > 0 && data.failed === 0) {
-        toast.success(i18next.t('notifications.sms_sent_to_users', { count: data.sent }));
-      } else if (data.sent > 0 && data.failed > 0) {
-        toast.warning(i18next.t('notifications.sms_partial_success', { sent: data.sent, failed: data.failed }));
-      } else if (data.sent === 0 && data.recipients === 0) {
-        // No eligible recipients - this is OK, don't show error
-        console.log('ℹ️ No eligible recipients for SMS notification');
-      } else if (data.failed > 0) {
-        toast.error(i18next.t('notifications.sms_all_failed', { count: data.failed }));
-      }
+      // Note: Toasts are now handled in useStatusPermissions hook for proper i18n support
 
       return {
         success: data.success,
         sent: data.sent,
         failed: data.failed,
         recipients: data.recipients,
-        error: data.error
+        recipientNames: data.recipientNames,
+        error: data.error,
+        message: data.message
       };
 
     } catch (error: any) {
       console.error('❌ Exception in sendNotification:', error);
-      toast.error(i18next.t('notifications.sms_error'));
       return {
         success: false,
         sent: 0,

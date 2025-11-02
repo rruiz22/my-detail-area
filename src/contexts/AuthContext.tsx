@@ -251,7 +251,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // Use local scope to sign out only the current session
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch (error: any) {
+      // 403 errors on logout are common with Supabase and safe to ignore
+      // The session is already cleared locally, so logout is successful
+      if (error?.status === 403 || error?.message?.includes('403') || error?.code === '403') {
+        console.log('ℹ️ Logout 403 error (safe to ignore - session cleared locally)');
+        return; // Silent success - user is logged out locally
+      }
+
+      // Log other errors but don't block logout
+      console.error('⚠️ Logout error (non-critical):', error);
+      // Don't throw - allow logout to complete locally even if server call fails
+    }
   };
 
   const value = {

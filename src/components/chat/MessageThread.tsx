@@ -28,6 +28,13 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Reply state
+  const [replyingTo, setReplyingTo] = React.useState<{
+    id: string;
+    content: string;
+    sender_name: string;
+  } | null>(null);
+
   const {
     messages,
     loading,
@@ -44,8 +51,63 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
     removeReaction,
     editMessage,
     deleteMessage,
-    getUserName
+    getUserName,
+    replyToMessage
   } = messagesHook;
+
+  // Handle reply
+  const handleReply = (message: ChatMessage) => {
+    setReplyingTo({
+      id: message.id,
+      content: message.content || '',
+      sender_name: message.sender?.name || t('chat.unknown_user')
+    });
+  };
+
+  const handleCancelReply = () => {
+    setReplyingTo(null);
+  };
+
+  const handleSendWithReply = async (content: string, mentions?: string[]) => {
+    if (replyingTo) {
+      // Send as reply
+      const result = await replyToMessage(replyingTo.id, content);
+      if (result) {
+        setReplyingTo(null); // Clear reply after sending
+        return {
+          id: result.id,
+          success: true,
+          message: {
+            id: result.id,
+            content: result.content || '',
+            created_at: result.created_at
+          }
+        };
+      }
+      return { id: '', success: false, error: 'Failed to send reply' };
+    } else {
+      // Send regular message
+      return sendMessage(content, mentions);
+    }
+  };
+
+  // Scroll to specific message
+  const scrollToMessage = (messageId: string) => {
+    const element = document.getElementById(`message-${messageId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Highlight the message briefly
+      element.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+      setTimeout(() => {
+        element.classList.remove('ring-2', 'ring-primary', 'ring-offset-2');
+      }, 2000);
+    }
+  };
+
+  // Calculate replies for each message
+  const getRepliesForMessage = (messageId: string): ChatMessage[] => {
+    return messages.filter(m => m.parent_message_id === messageId);
+  };
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
@@ -69,7 +131,7 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
 
   const formatDateSeparator = (date: string) => {
     const messageDate = new Date(date);
-    
+
     if (isToday(messageDate)) {
       return t('chat.today');
     } else if (isYesterday(messageDate)) {
@@ -81,10 +143,10 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
 
   const shouldShowDateSeparator = (currentMessage: ChatMessage, previousMessage: ChatMessage | null) => {
     if (!previousMessage) return true;
-    
+
     const currentDate = new Date(currentMessage.created_at);
     const previousDate = new Date(previousMessage.created_at);
-    
+
     return !isSameDay(currentDate, previousDate);
   };
 
@@ -116,9 +178,21 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full" data-testid="message-thread">
+    <div className="flex-1 flex flex-col h-full min-h-0" data-testid="message-thread">
       {/* Messages Area */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
+      <ScrollArea
+        ref={scrollAreaRef}
+        className="flex-1 min-h-0 px-4"
+        style={{
+          backgroundColor: '#fafbfc',
+          backgroundImage: `
+            radial-gradient(circle, #dcdde0 0.8px, transparent 0.8px),
+            radial-gradient(circle, #dcdde0 0.8px, transparent 0.8px)
+          `,
+          backgroundSize: '40px 40px',
+          backgroundPosition: '0 0, 20px 20px'
+        }}
+      >
         <div className="py-4 space-y-1">
           {/* Load More Button */}
           {hasMore && (
@@ -146,7 +220,7 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
           {messages.map((message, index) => {
             const previousMessage = index > 0 ? messages[index - 1] : null;
             const showDateSeparator = shouldShowDateSeparator(message, previousMessage);
-            const showAvatar = !previousMessage || 
+            const showAvatar = !previousMessage ||
                               previousMessage.user_id !== message.user_id ||
                               showDateSeparator;
 
@@ -155,18 +229,23 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
                 {showDateSeparator && (
                   <DateSeparator date={formatDateSeparator(message.created_at)} />
                 )}
-                
+
                 <MessageBubble
                   message={message}
                   showAvatar={showAvatar}
-                  onReply={(content) => {
-                    // TODO: Implement reply functionality
-                  }}
+                  onReply={() => handleReply(message)}
                   onReact={addReaction}
                   onRemoveReact={removeReaction}
                   onEdit={editMessage}
                   onDelete={deleteMessage}
                   getUserName={getUserName}
+                  parentMessage={
+                    message.parent_message_id
+                      ? messages.find(m => m.id === message.parent_message_id)
+                      : undefined
+                  }
+                  replies={getRepliesForMessage(message.id)}
+                  onScrollToMessage={scrollToMessage}
                 />
               </React.Fragment>
             );
@@ -183,9 +262,9 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
       </ScrollArea>
 
       {/* Message Composer */}
-      <div className="border-t bg-background">
+      <div className="flex-shrink-0 border-t bg-background">
         <MessageComposer
-          onSendMessage={sendMessage}
+          onSendMessage={handleSendWithReply}
           onSendVoiceMessage={sendVoiceMessage}
           onSendFileMessage={sendFileMessage}
           onTyping={setIsTyping}
@@ -195,6 +274,8 @@ export const MessageThread: React.FC<MessageThreadProps> = ({
             name: p.user_name,
             avatar_url: p.user_avatar_url,
           }))}
+          replyingTo={replyingTo}
+          onCancelReply={handleCancelReply}
         />
       </div>
     </div>
