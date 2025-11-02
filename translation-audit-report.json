@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 765,
-  "totalStrings": 7255,
-  "hardcodedStrings": 1739,
-  "translatedStrings": 5516,
+  "scannedFiles": 772,
+  "totalStrings": 7332,
+  "hardcodedStrings": 1765,
+  "translatedStrings": 5567,
   "issues": {
     "critical": [
       {
@@ -4898,6 +4898,126 @@
         "severity": "high"
       },
       {
+        "file": "src\\components\\settings\\notifications\\DealerChannelMatrix.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Notification Channel Configuration",
+            "line": 247,
+            "context": "246: <CardTitle className=\"flex items-center gap-2\">\n247: <Bell className=\"h-5 w-5\" />\n248: Notification Channel Configuration"
+          },
+          {
+            "text": "Enable All Email",
+            "line": 281,
+            "context": "280: >\n281: <Mail className=\"h-4 w-4 mr-2\" />\n282: Enable All Email"
+          },
+          {
+            "text": "Enable All SMS",
+            "line": 289,
+            "context": "288: >\n289: <Smartphone className=\"h-4 w-4 mr-2\" />\n290: Enable All SMS"
+          },
+          {
+            "text": "Enable All Push",
+            "line": 297,
+            "context": "296: >\n297: <MessageSquare className=\"h-4 w-4 mr-2\" />\n298: Enable All Push"
+          },
+          {
+            "text": "Reset to Defaults",
+            "line": 305,
+            "context": "304: >\n305: <RotateCcw className=\"h-4 w-4 mr-2\" />\n306: Reset to Defaults"
+          },
+          {
+            "text": "Sales Orders",
+            "line": 313,
+            "context": "312: <TabsList>\n313: <TabsTrigger value=\"sales_orders\">Sales Orders</TabsTrigger>\n314: <TabsTrigger value=\"service_orders\">Service Orders</TabsTrigger>"
+          },
+          {
+            "text": "Service Orders",
+            "line": 314,
+            "context": "313: <TabsTrigger value=\"sales_orders\">Sales Orders</TabsTrigger>\n314: <TabsTrigger value=\"service_orders\">Service Orders</TabsTrigger>\n315: <TabsTrigger value=\"recon_orders\">Recon Orders</TabsTrigger>"
+          },
+          {
+            "text": "Recon Orders",
+            "line": 315,
+            "context": "314: <TabsTrigger value=\"service_orders\">Service Orders</TabsTrigger>\n315: <TabsTrigger value=\"recon_orders\">Recon Orders</TabsTrigger>\n316: <TabsTrigger value=\"car_wash\">Car Wash</TabsTrigger>"
+          },
+          {
+            "text": "Car Wash",
+            "line": 316,
+            "context": "315: <TabsTrigger value=\"recon_orders\">Recon Orders</TabsTrigger>\n316: <TabsTrigger value=\"car_wash\">Car Wash</TabsTrigger>\n317: <TabsTrigger value=\"get_ready\">Get Ready</TabsTrigger>"
+          },
+          {
+            "text": "Get Ready",
+            "line": 317,
+            "context": "316: <TabsTrigger value=\"car_wash\">Car Wash</TabsTrigger>\n317: <TabsTrigger value=\"get_ready\">Get Ready</TabsTrigger>\n318: </TabsList>"
+          },
+          {
+            "text": "Event",
+            "line": 326,
+            "context": "325: <TableRow className=\"bg-muted/50\">\n326: <TableHead className=\"w-[40%]\">Event</TableHead>\n327: <TableHead className=\"text-center w-[15%]\">"
+          },
+          {
+            "text": "Email",
+            "line": 335,
+            "context": "334: <div className=\"flex items-center justify-center gap-2\">\n335: <Mail className=\"h-4 w-4\" />\n336: Email"
+          },
+          {
+            "text": "Push",
+            "line": 347,
+            "context": "346: <div className=\"flex items-center justify-center gap-2\">\n347: <MessageSquare className=\"h-4 w-4\" />\n348: Push"
+          },
+          {
+            "text": "Impact Preview",
+            "line": 413,
+            "context": "412: <CardTitle className=\"text-base flex items-center gap-2\">\n413: <Info className=\"h-4 w-4\" />\n414: Impact Preview"
+          },
+          {
+            "text": "Email",
+            "line": 432,
+            "context": "431: <div className=\"text-sm font-medium flex items-center gap-2\">\n432: <Mail className=\"h-4 w-4 text-muted-foreground\" />\n433: Email"
+          },
+          {
+            "text": "Push",
+            "line": 454,
+            "context": "453: <div className=\"text-sm font-medium flex items-center gap-2\">\n454: <MessageSquare className=\"h-4 w-4 text-muted-foreground\" />\n455: Push"
+          },
+          {
+            "text": "Cancel",
+            "line": 508,
+            "context": "507: disabled={!hasChanges}\n508: >\n509: Cancel"
+          },
+          {
+            "text": "Unsaved Changes",
+            "line": 514,
+            "context": "513: <Badge variant=\"outline\" className=\"ml-auto\">\n514: <AlertTriangle className=\"h-3 w-3 mr-1\" />\n515: Unsaved Changes"
+          },
+          {
+            "text": "Saved",
+            "line": 521,
+            "context": "520: <Badge variant=\"outline\" className=\"ml-auto text-emerald-600\">\n521: <CheckCircle2 className=\"h-3 w-3 mr-1\" />\n522: Saved"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.success",
+            "line": 129,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 137,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 221,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 14,
+        "severity": "high"
+      },
+      {
         "file": "src\\components\\scanner\\enhanced\\VinStatistics.tsx",
         "hardcodedStrings": [
           {
@@ -8698,43 +8818,43 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 61,
-            "context": "60: // Actions\n61: sendMessage: (content: string, mentions?: string[]) => Promise<ChatMessage | null>;\n62: sendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<ChatMessage | null>;"
-          },
-          {
-            "text": "Promise",
-            "line": 62,
-            "context": "61: sendMessage: (content: string, mentions?: string[]) => Promise<ChatMessage | null>;\n62: sendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<ChatMessage | null>;\n63: sendFileMessage: (file: File, description?: string) => Promise<ChatMessage | null>;"
-          },
-          {
-            "text": "Promise",
-            "line": 63,
-            "context": "62: sendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<ChatMessage | null>;\n63: sendFileMessage: (file: File, description?: string) => Promise<ChatMessage | null>;\n64: replyToMessage: (parentId: string, content: string) => Promise<ChatMessage | null>;"
-          },
-          {
-            "text": "Promise",
-            "line": 64,
-            "context": "63: sendFileMessage: (file: File, description?: string) => Promise<ChatMessage | null>;\n64: replyToMessage: (parentId: string, content: string) => Promise<ChatMessage | null>;\n65: editMessage: (messageId: string, newContent: string) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
             "line": 65,
-            "context": "64: replyToMessage: (parentId: string, content: string) => Promise<ChatMessage | null>;\n65: editMessage: (messageId: string, newContent: string) => Promise<boolean>;\n66: deleteMessage: (messageId: string) => Promise<boolean>;"
+            "context": "64: // Actions\n65: sendMessage: (content: string, mentions?: string[]) => Promise<ChatMessage | null>;\n66: sendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<ChatMessage | null>;"
           },
           {
             "text": "Promise",
             "line": 66,
-            "context": "65: editMessage: (messageId: string, newContent: string) => Promise<boolean>;\n66: deleteMessage: (messageId: string) => Promise<boolean>;\n67: addReaction: (messageId: string, emoji: string) => Promise<boolean>;"
+            "context": "65: sendMessage: (content: string, mentions?: string[]) => Promise<ChatMessage | null>;\n66: sendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<ChatMessage | null>;\n67: sendFileMessage: (file: File, description?: string) => Promise<ChatMessage | null>;"
           },
           {
             "text": "Promise",
             "line": 67,
-            "context": "66: deleteMessage: (messageId: string) => Promise<boolean>;\n67: addReaction: (messageId: string, emoji: string) => Promise<boolean>;\n68: removeReaction: (messageId: string, emoji: string) => Promise<boolean>;"
+            "context": "66: sendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<ChatMessage | null>;\n67: sendFileMessage: (file: File, description?: string) => Promise<ChatMessage | null>;\n68: replyToMessage: (parentId: string, content: string) => Promise<ChatMessage | null>;"
           },
           {
             "text": "Promise",
             "line": 68,
-            "context": "67: addReaction: (messageId: string, emoji: string) => Promise<boolean>;\n68: removeReaction: (messageId: string, emoji: string) => Promise<boolean>;\n69: "
+            "context": "67: sendFileMessage: (file: File, description?: string) => Promise<ChatMessage | null>;\n68: replyToMessage: (parentId: string, content: string) => Promise<ChatMessage | null>;\n69: editMessage: (messageId: string, newContent: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 69,
+            "context": "68: replyToMessage: (parentId: string, content: string) => Promise<ChatMessage | null>;\n69: editMessage: (messageId: string, newContent: string) => Promise<boolean>;\n70: deleteMessage: (messageId: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 70,
+            "context": "69: editMessage: (messageId: string, newContent: string) => Promise<boolean>;\n70: deleteMessage: (messageId: string) => Promise<boolean>;\n71: addReaction: (messageId: string, emoji: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 71,
+            "context": "70: deleteMessage: (messageId: string) => Promise<boolean>;\n71: addReaction: (messageId: string, emoji: string) => Promise<boolean>;\n72: removeReaction: (messageId: string, emoji: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 72,
+            "context": "71: addReaction: (messageId: string, emoji: string) => Promise<boolean>;\n72: removeReaction: (messageId: string, emoji: string) => Promise<boolean>;\n73: "
           }
         ],
         "translationCalls": [],
@@ -9266,59 +9386,59 @@
         "hardcodedStrings": [
           {
             "text": "Configure granular permissions for this role",
-            "line": 389,
-            "context": "388: </h3>\n389: <p className=\"text-sm text-muted-foreground\">\n390: Configure granular permissions for this role"
+            "line": 419,
+            "context": "418: </h3>\n419: <p className=\"text-sm text-muted-foreground\">\n420: Configure granular permissions for this role"
           },
           {
             "text": "Reset",
-            "line": 396,
-            "context": "395: <Button variant=\"outline\" onClick={resetChanges}>\n396: <RotateCcw className=\"h-4 w-4 mr-2\" />\n397: Reset"
+            "line": 426,
+            "context": "425: <Button variant=\"outline\" onClick={resetChanges}>\n426: <RotateCcw className=\"h-4 w-4 mr-2\" />\n427: Reset"
           },
           {
             "text": "Administration Permissions",
-            "line": 425,
-            "context": "424: <CardTitle className=\"flex items-center gap-2\">\n425: <Shield className=\"h-5 w-5\" />\n426: Administration Permissions"
+            "line": 455,
+            "context": "454: <CardTitle className=\"flex items-center gap-2\">\n455: <Shield className=\"h-5 w-5\" />\n456: Administration Permissions"
           },
           {
             "text": "Dangerous",
-            "line": 460,
-            "context": "459: <Badge variant=\"destructive\" className=\"text-xs\">\n460: <Lock className=\"h-3 w-3 mr-1\" />\n461: Dangerous"
+            "line": 490,
+            "context": "489: <Badge variant=\"destructive\" className=\"text-xs\">\n490: <Lock className=\"h-3 w-3 mr-1\" />\n491: Dangerous"
           },
           {
             "text": "Module Permissions",
-            "line": 479,
-            "context": "478: <h4 className=\"text-md font-semibold flex items-center gap-2\">\n479: <Info className=\"h-4 w-4\" />\n480: Module Permissions"
+            "line": 509,
+            "context": "508: <h4 className=\"text-md font-semibold flex items-center gap-2\">\n509: <Info className=\"h-4 w-4\" />\n510: Module Permissions"
           },
           {
             "text": "Module Disabled",
-            "line": 509,
-            "context": "508: {!isModuleEnabled && dealerId && (\n509: <Badge variant=\"secondary\" className=\"text-xs\">\n510: Module Disabled"
+            "line": 539,
+            "context": "538: {!isModuleEnabled && dealerId && (\n539: <Badge variant=\"secondary\" className=\"text-xs\">\n540: Module Disabled"
           }
         ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 109,
+            "line": 112,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 178,
+            "line": 181,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 324,
+            "line": 352,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 333,
+            "line": 363,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 350,
+            "line": 380,
             "exists": true
           }
         ],
@@ -11334,6 +11454,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\utils\\notificationHelper.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", {\r\n      error: error instanceof Error ? error.message : String(error),\r\n      stack: error instanceof Error ? error.stack : undefined,\r\n      params: {\r\n        userId: params.userId,\r\n        dealerId: params.dealerId,\r\n        module: params.module,\r\n        event: params.event,\r\n      },\r\n    });\r\n\r\n    return {\r\n      success: false,\r\n      error: error instanceof Error ? error.message : ",
+            "line": 555,
+            "context": "554: \n555: logger.error('[NotificationHelper] Unexpected error:', {\n556: error: error instanceof Error ? error.message : String(error),"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\utils\\modalDataCache.ts",
         "hardcodedStrings": [
           {
@@ -11495,6 +11629,30 @@
             "text": "Invalid status transition",
             "line": 397,
             "context": "396: return new Response(\n397: JSON.stringify({ error: 'Invalid status transition' }),\n398: { status: 400 }"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\utils\\__examples__\\notificationHelper.example.ts",
+        "hardcodedStrings": [
+          {
+            "text": ", result1.error);\r\n    // Output: ",
+            "line": 551,
+            "context": "550: if (!result1.success) {\n551: console.error('Validation error:', result1.error);\n552: // Output: \"dealerId must be a positive integer greater than 0\""
+          },
+          {
+            "text": ", result2.error);\r\n    // Output: ",
+            "line": 566,
+            "context": "565: if (!result2.success) {\n566: console.error('Validation error:', result2.error);\n567: // Output: \"userId must be a valid UUID format or null\""
+          },
+          {
+            "text": ", result3.error);\r\n    // Output: ",
+            "line": 581,
+            "context": "580: if (!result3.success) {\n581: console.error('Validation error:', result3.error);\n582: // Output: \"module must be one of: sales_orders, service_orders...\""
           }
         ],
         "translationCalls": [],
@@ -11702,39 +11860,13 @@
         "hardcodedStrings": [
           {
             "text": "No response from notification service",
-            "line": 105,
-            "context": "104: recipients: 0,\n105: error: 'No response from notification service'\n106: };"
+            "line": 104,
+            "context": "103: recipients: 0,\n104: error: 'No response from notification service'\n105: };"
           }
         ],
-        "translationCalls": [
-          {
-            "key": "notifications.sms_error",
-            "line": 88,
-            "exists": true
-          },
-          {
-            "key": "notifications.sms_sent_to_users",
-            "line": 113,
-            "exists": true
-          },
-          {
-            "key": "notifications.sms_partial_success",
-            "line": 115,
-            "exists": true
-          },
-          {
-            "key": "notifications.sms_all_failed",
-            "line": 120,
-            "exists": true
-          },
-          {
-            "key": "notifications.sms_error",
-            "line": 133,
-            "exists": true
-          }
-        ],
+        "translationCalls": [],
         "missingKeys": [],
-        "coverage": 83,
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -12253,165 +12385,160 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 103,
-            "exists": false
-          },
-          {
-            "key": "errors.no_permission",
             "line": 115,
+            "exists": true
+          },
+          {
+            "key": "errors.no_permission",
+            "line": 127,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 116,
+            "line": 128,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 131,
+            "line": 143,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 132,
+            "line": 144,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 166,
+            "line": 178,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 172,
+            "line": 184,
             "exists": false
           },
           {
             "key": "orders.updated_successfully",
-            "line": 181,
+            "line": 193,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 189,
+            "line": 201,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 199,
+            "line": 211,
             "exists": true
           },
           {
             "key": "pages.service_orders",
-            "line": 268,
+            "line": 280,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.refresh_button",
-            "line": 281,
+            "line": 293,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 285,
+            "line": 297,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 291,
+            "line": 303,
             "exists": false
           },
           {
             "key": "accessibility.service_orders.create_button",
-            "line": 292,
+            "line": 304,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 295,
+            "line": 307,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.main_content",
-            "line": 327,
+            "line": 339,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 409,
+            "line": 421,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 411,
+            "line": 423,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 415,
+            "line": 427,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 420,
+            "line": 432,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "orders.order_not_found",
-            "line": 103,
-            "context": "102: toast({\n103: description: t('orders.order_not_found'),\n104: variant: 'destructive'"
-          },
-          {
             "key": "errors.no_permission",
-            "line": 115,
-            "context": "114: toast({\n115: title: t('errors.no_permission', 'No Permission'),\n116: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 127,
+            "context": "126: toast({\n127: title: t('errors.no_permission', 'No Permission'),\n128: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 116,
-            "context": "115: title: t('errors.no_permission', 'No Permission'),\n116: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n117: variant: 'destructive'"
+            "line": 128,
+            "context": "127: title: t('errors.no_permission', 'No Permission'),\n128: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n129: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 131,
-            "context": "130: toast({\n131: title: t('errors.no_permission', 'No Permission'),\n132: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 143,
+            "context": "142: toast({\n143: title: t('errors.no_permission', 'No Permission'),\n144: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 132,
-            "context": "131: title: t('errors.no_permission', 'No Permission'),\n132: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n133: variant: 'destructive'"
+            "line": 144,
+            "context": "143: title: t('errors.no_permission', 'No Permission'),\n144: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n145: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 166,
-            "context": "165: toast({\n166: title: t('orders.deleted_success', 'Order deleted successfully')\n167: });"
+            "line": 178,
+            "context": "177: toast({\n178: title: t('orders.deleted_success', 'Order deleted successfully')\n179: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 172,
-            "context": "171: variant: 'destructive',\n172: title: t('orders.delete_error', 'Failed to delete order')\n173: });"
+            "line": 184,
+            "context": "183: variant: 'destructive',\n184: title: t('orders.delete_error', 'Failed to delete order')\n185: });"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 291,
-            "context": "290: disabled={!canCreate}\n291: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n292: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
+            "line": 303,
+            "context": "302: disabled={!canCreate}\n303: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n304: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 409,
-            "context": "408: <AlertDialogHeader>\n409: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n410: <AlertDialogDescription>"
+            "line": 421,
+            "context": "420: <AlertDialogHeader>\n421: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n422: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 411,
-            "context": "410: <AlertDialogDescription>\n411: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n412: </AlertDialogDescription>"
+            "line": 423,
+            "context": "422: <AlertDialogDescription>\n423: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n424: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 420,
-            "context": "419: >\n420: {t('common.delete', 'Delete')}\n421: </AlertDialogAction>"
+            "line": 432,
+            "context": "431: >\n432: {t('common.delete', 'Delete')}\n433: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -12423,205 +12550,200 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 125,
-            "exists": false
+            "line": 136,
+            "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 137,
+            "line": 148,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 138,
+            "line": 149,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 153,
+            "line": 164,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 154,
+            "line": 165,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 198,
+            "line": 209,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 204,
+            "line": 215,
             "exists": false
           },
           {
             "key": "orders.updated_successfully",
-            "line": 213,
+            "line": 224,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 221,
+            "line": 232,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 237,
+            "line": 248,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 260,
+            "line": 271,
             "exists": true
           },
           {
             "key": "orders.status_change_failed",
-            "line": 268,
+            "line": 279,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 307,
+            "line": 318,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 308,
+            "line": 319,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 309,
+            "line": 320,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 310,
+            "line": 321,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 311,
+            "line": 322,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 312,
+            "line": 323,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 313,
+            "line": 324,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.services",
-            "line": 314,
+            "line": 325,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 315,
+            "line": 326,
             "exists": true
           },
           {
             "key": "pages.sales_orders",
-            "line": 353,
+            "line": 364,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 368,
+            "line": 379,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 374,
+            "line": 385,
             "exists": false
           },
           {
             "key": "common.new_order",
-            "line": 377,
+            "line": 388,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 518,
+            "line": 529,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 520,
+            "line": 531,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 524,
+            "line": 535,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 529,
+            "line": 540,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "orders.order_not_found",
-            "line": 125,
-            "context": "124: toast({\n125: description: t('orders.order_not_found'),\n126: variant: 'destructive'"
-          },
-          {
             "key": "errors.no_permission",
-            "line": 137,
-            "context": "136: toast({\n137: title: t('errors.no_permission', 'No Permission'),\n138: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 148,
+            "context": "147: toast({\n148: title: t('errors.no_permission', 'No Permission'),\n149: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 138,
-            "context": "137: title: t('errors.no_permission', 'No Permission'),\n138: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n139: variant: 'destructive'"
+            "line": 149,
+            "context": "148: title: t('errors.no_permission', 'No Permission'),\n149: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n150: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 153,
-            "context": "152: toast({\n153: title: t('errors.no_permission', 'No Permission'),\n154: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 164,
+            "context": "163: toast({\n164: title: t('errors.no_permission', 'No Permission'),\n165: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 154,
-            "context": "153: title: t('errors.no_permission', 'No Permission'),\n154: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n155: variant: 'destructive'"
+            "line": 165,
+            "context": "164: title: t('errors.no_permission', 'No Permission'),\n165: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n166: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 198,
-            "context": "197: toast({\n198: title: t('orders.deleted_success', 'Order deleted successfully')\n199: });"
+            "line": 209,
+            "context": "208: toast({\n209: title: t('orders.deleted_success', 'Order deleted successfully')\n210: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 204,
-            "context": "203: variant: 'destructive',\n204: title: t('orders.delete_error', 'Failed to delete order')\n205: });"
+            "line": 215,
+            "context": "214: variant: 'destructive',\n215: title: t('orders.delete_error', 'Failed to delete order')\n216: });"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 374,
-            "context": "373: disabled={!canCreate}\n374: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n375: >"
+            "line": 385,
+            "context": "384: disabled={!canCreate}\n385: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n386: >"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 518,
-            "context": "517: <AlertDialogHeader>\n518: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n519: <AlertDialogDescription>"
+            "line": 529,
+            "context": "528: <AlertDialogHeader>\n529: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n530: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 520,
-            "context": "519: <AlertDialogDescription>\n520: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n521: </AlertDialogDescription>"
+            "line": 531,
+            "context": "530: <AlertDialogDescription>\n531: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n532: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 529,
-            "context": "528: >\n529: {t('common.delete', 'Delete')}\n530: </AlertDialogAction>"
+            "line": 540,
+            "context": "539: >\n540: {t('common.delete', 'Delete')}\n541: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -12634,7 +12756,7 @@
           {
             "key": "orders.order_not_found",
             "line": 105,
-            "exists": false
+            "exists": true
           },
           {
             "key": "errors.no_permission",
@@ -12773,11 +12895,6 @@
           }
         ],
         "missingKeys": [
-          {
-            "key": "orders.order_not_found",
-            "line": 105,
-            "context": "104: toast({\n105: description: t('orders.order_not_found'),\n106: variant: 'destructive'"
-          },
           {
             "key": "errors.no_permission",
             "line": 200,
@@ -14911,150 +15028,145 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 106,
-            "exists": false
+            "line": 117,
+            "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 201,
+            "line": 212,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 202,
+            "line": 213,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.order_deleted",
-            "line": 235,
+            "line": 246,
             "exists": true
           },
           {
             "key": "orders.deleted_success",
-            "line": 237,
+            "line": 248,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 243,
+            "line": 254,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.order_updated",
-            "line": 265,
+            "line": 276,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_created",
-            "line": 271,
+            "line": 282,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 289,
+            "line": 300,
             "exists": true
           },
           {
             "key": "pages.car_wash",
-            "line": 338,
+            "line": 349,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 351,
-            "exists": true
-          },
-          {
-            "key": "common.refresh",
-            "line": 355,
-            "exists": true
-          },
-          {
-            "key": "errors.no_permission_create_order",
-            "line": 361,
-            "exists": false
-          },
-          {
-            "key": "accessibility.car_wash_orders.create_button",
             "line": 362,
             "exists": true
           },
           {
+            "key": "common.refresh",
+            "line": 366,
+            "exists": true
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 372,
+            "exists": false
+          },
+          {
+            "key": "accessibility.car_wash_orders.create_button",
+            "line": 373,
+            "exists": true
+          },
+          {
             "key": "car_wash_orders.quick_order",
-            "line": 365,
+            "line": 376,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 384,
+            "line": 395,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 434,
+            "line": 445,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 436,
+            "line": 447,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 440,
+            "line": 451,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 445,
+            "line": 456,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "orders.order_not_found",
-            "line": 106,
-            "context": "105: toast({\n106: description: t('orders.order_not_found'),\n107: variant: 'destructive'"
-          },
-          {
             "key": "errors.no_permission",
-            "line": 201,
-            "context": "200: toast({\n201: title: t('errors.no_permission', 'No Permission'),\n202: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 212,
+            "context": "211: toast({\n212: title: t('errors.no_permission', 'No Permission'),\n213: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 202,
-            "context": "201: title: t('errors.no_permission', 'No Permission'),\n202: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n203: variant: 'destructive'"
+            "line": 213,
+            "context": "212: title: t('errors.no_permission', 'No Permission'),\n213: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n214: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 237,
-            "context": "236: toast({\n237: title: t('orders.deleted_success', 'Order deleted successfully')\n238: });"
+            "line": 248,
+            "context": "247: toast({\n248: title: t('orders.deleted_success', 'Order deleted successfully')\n249: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 243,
-            "context": "242: variant: 'destructive',\n243: title: t('orders.delete_error', 'Failed to delete order')\n244: });"
+            "line": 254,
+            "context": "253: variant: 'destructive',\n254: title: t('orders.delete_error', 'Failed to delete order')\n255: });"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 361,
-            "context": "360: disabled={!canCreate}\n361: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n362: aria-label={t('accessibility.car_wash_orders.create_button')}"
+            "line": 372,
+            "context": "371: disabled={!canCreate}\n372: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n373: aria-label={t('accessibility.car_wash_orders.create_button')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 434,
-            "context": "433: <AlertDialogHeader>\n434: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n435: <AlertDialogDescription>"
+            "line": 445,
+            "context": "444: <AlertDialogHeader>\n445: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n446: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 436,
-            "context": "435: <AlertDialogDescription>\n436: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n437: </AlertDialogDescription>"
+            "line": 447,
+            "context": "446: <AlertDialogDescription>\n447: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n448: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 445,
-            "context": "444: >\n445: {t('common.delete', 'Delete')}\n446: </AlertDialogAction>"
+            "line": 456,
+            "context": "455: >\n456: {t('common.delete', 'Delete')}\n457: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -16291,9 +16403,20 @@
             "context": "11: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n12: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;\n13: loading: boolean;"
           }
         ],
-        "translationCalls": [],
+        "translationCalls": [
+          {
+            "key": "common.error",
+            "line": 201,
+            "exists": true
+          },
+          {
+            "key": "notifications.sms_error",
+            "line": 202,
+            "exists": true
+          }
+        ],
         "missingKeys": [],
-        "coverage": 0,
+        "coverage": 50,
         "severity": "low"
       },
       {
@@ -16335,28 +16458,28 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 53,
-            "context": "52: unreadCount: number;\n53: markAsRead: (notificationId: string) => Promise<void>;\n54: markAllAsRead: () => Promise<void>;"
+            "line": 46,
+            "context": "45: unreadCount: number;\n46: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n47: markAllAsRead: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 54,
-            "context": "53: markAsRead: (notificationId: string) => Promise<void>;\n54: markAllAsRead: () => Promise<void>;\n55: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
+            "line": 47,
+            "context": "46: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n47: markAllAsRead: () => Promise<void>;\n48: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 55,
-            "context": "54: markAllAsRead: () => Promise<void>;\n55: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n56: deleteNotification: (notificationId: string) => Promise<void>;"
+            "line": 48,
+            "context": "47: markAllAsRead: () => Promise<void>;\n48: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n49: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 56,
-            "context": "55: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n56: deleteNotification: (notificationId: string) => Promise<void>;\n57: refreshNotifications: () => Promise<void>;"
+            "line": 49,
+            "context": "48: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n49: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n50: refreshNotifications: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 57,
-            "context": "56: deleteNotification: (notificationId: string) => Promise<void>;\n57: refreshNotifications: () => Promise<void>;\n58: }"
+            "line": 50,
+            "context": "49: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n50: refreshNotifications: () => Promise<void>;\n51: }"
           }
         ],
         "translationCalls": [],
@@ -16943,18 +17066,18 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 34,
-            "context": "33: error: string | null;\n34: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n35: deleteComment: (commentId: string) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
             "line": 35,
-            "context": "34: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n35: deleteComment: (commentId: string) => Promise<void>;\n36: refreshComments: () => Promise<void>;"
+            "context": "34: error: string | null;\n35: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n36: deleteComment: (commentId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
             "line": 36,
-            "context": "35: deleteComment: (commentId: string) => Promise<void>;\n36: refreshComments: () => Promise<void>;\n37: commentsCount: number;"
+            "context": "35: addComment: (text: string, type: 'public' | 'internal', parentId?: string) => Promise<string>;\n36: deleteComment: (commentId: string) => Promise<void>;\n37: refreshComments: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 37,
+            "context": "36: deleteComment: (commentId: string) => Promise<void>;\n37: refreshComments: () => Promise<void>;\n38: commentsCount: number;"
           }
         ],
         "translationCalls": [],
@@ -17792,28 +17915,28 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 63,
-            "context": "62: // Actions\n63: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n64: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
-            "line": 64,
-            "context": "63: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n64: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n65: archiveConversation: (id: string) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
-            "line": 65,
-            "context": "64: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n65: archiveConversation: (id: string) => Promise<boolean>;\n66: deleteConversation: (id: string) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
             "line": 66,
-            "context": "65: archiveConversation: (id: string) => Promise<boolean>;\n66: deleteConversation: (id: string) => Promise<boolean>;\n67: "
+            "context": "65: // Actions\n66: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n67: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;"
           },
           {
             "text": "Promise",
-            "line": 79,
-            "context": "78: // NEW: On-demand participant fetching from get_conversation_participants RPC\n79: getConversationParticipants: (conversationId: string) => Promise<ChatConversation['participants']>;\n80: }"
+            "line": 67,
+            "context": "66: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n67: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n68: archiveConversation: (id: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 68,
+            "context": "67: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n68: archiveConversation: (id: string) => Promise<boolean>;\n69: deleteConversation: (id: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 69,
+            "context": "68: archiveConversation: (id: string) => Promise<boolean>;\n69: deleteConversation: (id: string) => Promise<boolean>;\n70: "
+          },
+          {
+            "text": "Promise",
+            "line": 82,
+            "context": "81: // NEW: On-demand participant fetching from get_conversation_participants RPC\n82: getConversationParticipants: (conversationId: string) => Promise<ChatConversation['participants']>;\n83: }"
           }
         ],
         "translationCalls": [],
@@ -37556,6 +37679,111 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\notifications\\SmartNotificationCenter.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Mark all",
+            "line": 144,
+            "context": "143: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n144: <span className=\"inline sm:hidden\">Mark all</span>\n145: </Button>"
+          },
+          {
+            "text": "No grouped notifications",
+            "line": 166,
+            "context": "165: <div className=\"space-y-2\">\n166: <p className=\"font-medium\">No grouped notifications</p>\n167: <p className=\"text-sm\">Switch to \"Recent\" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "notifications.loading",
+            "line": 94,
+            "exists": true
+          },
+          {
+            "key": "notifications.title",
+            "line": 108,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.all",
+            "line": 122,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.unread",
+            "line": 122,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.important",
+            "line": 122,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.all_description",
+            "line": 129,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.unread_description",
+            "line": 132,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.important_description",
+            "line": 135,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.mark_all_read",
+            "line": 143,
+            "exists": true
+          },
+          {
+            "key": "notifications.tabs.grouped",
+            "line": 153,
+            "exists": true
+          },
+          {
+            "key": "notifications.tabs.recent",
+            "line": 154,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.message",
+            "line": 163,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.singular",
+            "line": 181,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.plural",
+            "line": 181,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.unread",
+            "line": 185,
+            "exists": true
+          },
+          {
+            "key": "notifications.show_more",
+            "line": 213,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.filtered",
+            "line": 230,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 89,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\notifications\\PushNotificationSettings.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -38107,7 +38335,7 @@
           {
             "text": "Open notifications",
             "line": 20,
-            "context": "19: <PopoverTrigger asChild>\n20: <Button variant=\"ghost\" size=\"icon\" aria-label=\"Open notifications\">\n21: <div className=\"relative\">"
+            "context": "19: <PopoverTrigger asChild>\n20: <Button variant=\"ghost\" size=\"icon\" className=\"relative\" aria-label=\"Open notifications\">\n21: <Bell className=\"h-5 w-5\" />"
           }
         ],
         "translationCalls": [],
@@ -50610,22 +50838,82 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\chat\\MessageThread.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Failed to send reply",
+            "line": 87,
+            "context": "86: }\n87: return { id: '', success: false, error: 'Failed to send reply' };\n88: } else {"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "chat.unknown_user",
+            "line": 63,
+            "exists": true
+          },
+          {
+            "key": "chat.today",
+            "line": 136,
+            "exists": true
+          },
+          {
+            "key": "chat.yesterday",
+            "line": 138,
+            "exists": true
+          },
+          {
+            "key": "chat.loading_messages",
+            "line": 159,
+            "exists": true
+          },
+          {
+            "key": "chat.error_loading",
+            "line": 172,
+            "exists": true
+          },
+          {
+            "key": "chat.loading",
+            "line": 205,
+            "exists": true
+          },
+          {
+            "key": "chat.load_more_messages",
+            "line": 205,
+            "exists": true
+          },
+          {
+            "key": "chat.no_messages",
+            "line": 214,
+            "exists": true
+          },
+          {
+            "key": "chat.start_conversation",
+            "line": 215,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 90,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\chat\\MessageComposer.tsx",
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 46,
-            "context": "45: interface MessageComposerProps {\n46: onSendMessage: (content: string, mentions?: string[]) => Promise<MessageSendResult>;\n47: onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;"
-          },
-          {
-            "text": "Promise",
             "line": 47,
-            "context": "46: onSendMessage: (content: string, mentions?: string[]) => Promise<MessageSendResult>;\n47: onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;\n48: onSendFileMessage: (file: File, description?: string) => Promise<MessageSendResult>;"
+            "context": "46: interface MessageComposerProps {\n47: onSendMessage: (content: string, mentions?: string[]) => Promise<MessageSendResult>;\n48: onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;"
           },
           {
             "text": "Promise",
             "line": 48,
-            "context": "47: onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;\n48: onSendFileMessage: (file: File, description?: string) => Promise<MessageSendResult>;\n49: onTyping: (typing: boolean) => void;"
+            "context": "47: onSendMessage: (content: string, mentions?: string[]) => Promise<MessageSendResult>;\n48: onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;\n49: onSendFileMessage: (file: File, description?: string) => Promise<MessageSendResult>;"
+          },
+          {
+            "text": "Promise",
+            "line": 49,
+            "context": "48: onSendVoiceMessage: (audioBlob: Blob, transcription?: string) => Promise<MessageSendResult>;\n49: onSendFileMessage: (file: File, description?: string) => Promise<MessageSendResult>;\n50: onTyping: (typing: boolean) => void;"
           },
           {
             "text": "Promise",
@@ -50636,120 +50924,125 @@
         "translationCalls": [
           {
             "key": "chat.file_too_large",
-            "line": 232,
+            "line": 241,
             "exists": true
           },
           {
             "key": "chat.invalid_file_type",
-            "line": 242,
+            "line": 251,
             "exists": true
           },
           {
             "key": "chat.file_too_large",
-            "line": 285,
+            "line": 294,
             "exists": true
           },
           {
             "key": "chat.voice_permission_denied",
-            "line": 304,
+            "line": 313,
             "exists": true
           },
           {
             "key": "common.check_browser_permissions",
-            "line": 305,
+            "line": 314,
             "exists": false
           },
           {
             "key": "chat.voice_recording_error",
-            "line": 310,
+            "line": 319,
+            "exists": true
+          },
+          {
+            "key": "chat.replying_to",
+            "line": 352,
             "exists": true
           },
           {
             "key": "chat.attach_image",
-            "line": 383,
+            "line": 417,
             "exists": true
           },
           {
             "key": "chat.attach_file",
-            "line": 387,
+            "line": 421,
             "exists": true
           },
           {
             "key": "chat.type_message",
-            "line": 399,
+            "line": 433,
             "exists": true
           },
           {
             "key": "chat.type_message",
-            "line": 402,
+            "line": 436,
             "exists": true
           },
           {
             "key": "chat.emoji.pick_reaction",
-            "line": 413,
+            "line": 447,
             "exists": true
           },
           {
             "key": "chat.emoji.search",
-            "line": 429,
+            "line": 463,
             "exists": true
           },
           {
             "key": "chat.emoji.recent",
-            "line": 438,
+            "line": 472,
             "exists": true
           },
           {
             "key": "chat.emoji.smileys",
-            "line": 442,
+            "line": 476,
             "exists": true
           },
           {
             "key": "chat.emoji.animals",
-            "line": 446,
+            "line": 480,
             "exists": true
           },
           {
             "key": "chat.emoji.food",
-            "line": 450,
+            "line": 484,
             "exists": true
           },
           {
             "key": "chat.emoji.travel",
-            "line": 454,
+            "line": 488,
             "exists": true
           },
           {
             "key": "chat.emoji.activities",
-            "line": 458,
+            "line": 492,
             "exists": true
           },
           {
             "key": "chat.emoji.objects",
-            "line": 462,
+            "line": 496,
             "exists": true
           },
           {
             "key": "chat.emoji.symbols",
-            "line": 466,
+            "line": 500,
             "exists": true
           },
           {
             "key": "chat.emoji.flags",
-            "line": 470,
+            "line": 504,
             "exists": true
           },
           {
             "key": "chat.recording_hold_to_stop",
-            "line": 523,
+            "line": 557,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.check_browser_permissions",
-            "line": 305,
-            "context": "304: title: t('chat.voice_permission_denied'),\n305: description: t('common.check_browser_permissions')\n306: });"
+            "line": 314,
+            "context": "313: title: t('chat.voice_permission_denied'),\n314: description: t('common.check_browser_permissions')\n315: });"
           }
         ],
         "coverage": 85,
@@ -50760,169 +51053,210 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 44,
-            "context": "43: onReply: (content: string) => void;\n44: onReact: (messageId: string, emoji: string) => Promise<boolean>;\n45: onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
-            "line": 45,
-            "context": "44: onReact: (messageId: string, emoji: string) => Promise<boolean>;\n45: onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;\n46: onEdit: (messageId: string, newContent: string) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
             "line": 46,
-            "context": "45: onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;\n46: onEdit: (messageId: string, newContent: string) => Promise<boolean>;\n47: onDelete: (messageId: string) => Promise<boolean>;"
+            "context": "45: onReply: (content: string) => void;\n46: onReact: (messageId: string, emoji: string) => Promise<boolean>;\n47: onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;"
           },
           {
             "text": "Promise",
             "line": 47,
-            "context": "46: onEdit: (messageId: string, newContent: string) => Promise<boolean>;\n47: onDelete: (messageId: string) => Promise<boolean>;\n48: getUserName: (userId: string) => string;"
+            "context": "46: onReact: (messageId: string, emoji: string) => Promise<boolean>;\n47: onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;\n48: onEdit: (messageId: string, newContent: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 48,
+            "context": "47: onRemoveReact: (messageId: string, emoji: string) => Promise<boolean>;\n48: onEdit: (messageId: string, newContent: string) => Promise<boolean>;\n49: onDelete: (messageId: string) => Promise<boolean>;"
+          },
+          {
+            "text": "Promise",
+            "line": 49,
+            "context": "48: onEdit: (messageId: string, newContent: string) => Promise<boolean>;\n49: onDelete: (messageId: string) => Promise<boolean>;\n50: getUserName: (userId: string) => string;"
           }
         ],
         "translationCalls": [
           {
             "key": "chat.reaction_error",
-            "line": 87,
+            "line": 95,
             "exists": true
           },
           {
             "key": "chat.message_updated",
-            "line": 116,
+            "line": 124,
             "exists": true
           },
           {
             "key": "chat.edit_error",
-            "line": 121,
+            "line": 129,
             "exists": true
           },
           {
             "key": "chat.message_deleted",
-            "line": 137,
+            "line": 145,
             "exists": true
           },
           {
             "key": "chat.delete_error",
-            "line": 142,
+            "line": 150,
             "exists": true
           },
           {
             "key": "chat.message_copied",
-            "line": 152,
+            "line": 160,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 185,
+            "line": 196,
             "exists": true
           },
           {
             "key": "common.save",
-            "line": 193,
+            "line": 207,
             "exists": true
           },
           {
             "key": "chat.unsupported_message_type",
-            "line": 289,
+            "line": 303,
             "exists": true
           },
           {
             "key": "chat.unknown_user",
-            "line": 343,
-            "exists": true
-          },
-          {
-            "key": "chat.edited",
-            "line": 351,
+            "line": 355,
             "exists": true
           },
           {
             "key": "chat.replying_to",
-            "line": 367,
+            "line": 401,
             "exists": true
+          },
+          {
+            "key": "chat.unknown_user",
+            "line": 407,
+            "exists": true
+          },
+          {
+            "key": "chat.message_not_available",
+            "line": 414,
+            "exists": false
           },
           {
             "key": "chat.mentioned_you",
-            "line": 375,
-            "exists": true
-          },
-          {
-            "key": "chat.replies",
-            "line": 390,
-            "exists": true
-          },
-          {
-            "key": "chat.you_reacted",
-            "line": 409,
-            "exists": true
-          },
-          {
-            "key": "chat.you_and_one_other",
-            "line": 411,
-            "exists": true
-          },
-          {
-            "key": "chat.you_and_others",
-            "line": 413,
-            "exists": true
-          },
-          {
-            "key": "chat.and",
-            "line": 419,
-            "exists": true
-          },
-          {
-            "key": "chat.and",
-            "line": 421,
-            "exists": true
-          },
-          {
-            "key": "chat.others",
-            "line": 421,
+            "line": 423,
             "exists": true
           },
           {
             "key": "chat.reply",
-            "line": 493,
+            "line": 447,
+            "exists": true
+          },
+          {
+            "key": "chat.replies",
+            "line": 447,
+            "exists": true
+          },
+          {
+            "key": "chat.reply",
+            "line": 459,
+            "exists": true
+          },
+          {
+            "key": "chat.replies",
+            "line": 459,
+            "exists": true
+          },
+          {
+            "key": "chat.unknown_user",
+            "line": 475,
+            "exists": true
+          },
+          {
+            "key": "chat.more_replies",
+            "line": 489,
+            "exists": true
+          },
+          {
+            "key": "chat.you_reacted",
+            "line": 514,
+            "exists": true
+          },
+          {
+            "key": "chat.you_and_one_other",
+            "line": 516,
+            "exists": true
+          },
+          {
+            "key": "chat.you_and_others",
+            "line": 518,
+            "exists": true
+          },
+          {
+            "key": "chat.and",
+            "line": 524,
+            "exists": true
+          },
+          {
+            "key": "chat.and",
+            "line": 526,
+            "exists": true
+          },
+          {
+            "key": "chat.others",
+            "line": 526,
+            "exists": true
+          },
+          {
+            "key": "chat.edited",
+            "line": 579,
+            "exists": true
+          },
+          {
+            "key": "chat.reply",
+            "line": 599,
             "exists": true
           },
           {
             "key": "chat.copy",
-            "line": 497,
+            "line": 603,
             "exists": true
           },
           {
             "key": "chat.edit",
-            "line": 503,
+            "line": 609,
             "exists": true
           },
           {
             "key": "chat.delete",
-            "line": 510,
+            "line": 616,
             "exists": true
           },
           {
             "key": "chat.delete_message_confirm_title",
-            "line": 528,
+            "line": 634,
             "exists": true
           },
           {
             "key": "chat.delete_message_confirm",
-            "line": 530,
+            "line": 636,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 534,
+            "line": 640,
             "exists": true
           },
           {
             "key": "chat.delete",
-            "line": 539,
+            "line": 645,
             "exists": true
           }
         ],
-        "missingKeys": [],
-        "coverage": 88,
+        "missingKeys": [
+          {
+            "key": "chat.message_not_available",
+            "line": 414,
+            "context": "413: )}>\n414: {parentMessage?.content || t('chat.message_not_available')}\n415: </div>"
+          }
+        ],
+        "coverage": 90,
         "severity": "low"
       },
       {
@@ -51251,22 +51585,137 @@
           },
           {
             "key": "chat.no_messages_yet",
-            "line": 651,
+            "line": 659,
             "exists": true
           },
           {
             "key": "chat.members",
-            "line": 658,
+            "line": 666,
             "exists": true
           },
           {
             "key": "chat.no_messages_yet",
-            "line": 699,
+            "line": 707,
             "exists": true
           }
         ],
         "missingKeys": [],
         "coverage": 98,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\chat\\ChatLayout.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "chat.auth_required",
+            "line": 72,
+            "exists": true
+          },
+          {
+            "key": "chat.conversations",
+            "line": 91,
+            "exists": true
+          },
+          {
+            "key": "chat.select_conversation",
+            "line": 128,
+            "exists": true
+          },
+          {
+            "key": "chat.select_conversation_desc",
+            "line": 131,
+            "exists": true
+          },
+          {
+            "key": "chat.conversations",
+            "line": 148,
+            "exists": true
+          },
+          {
+            "key": "chat.select_conversation",
+            "line": 198,
+            "exists": true
+          },
+          {
+            "key": "common.back",
+            "line": 206,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.back",
+            "line": 206,
+            "context": "205: <ArrowLeft className=\"h-4 w-4 mr-2\" />\n206: {t('common.back')}\n207: </Button>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\chat\\ChatHeader.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "chat.conversation_not_found",
+            "line": 30,
+            "exists": true
+          },
+          {
+            "key": "chat.unnamed_conversation",
+            "line": 42,
+            "exists": true
+          },
+          {
+            "key": "chat.online",
+            "line": 116,
+            "exists": true
+          },
+          {
+            "key": "chat.offline",
+            "line": 116,
+            "exists": true
+          },
+          {
+            "key": "chat.member",
+            "line": 124,
+            "exists": false
+          },
+          {
+            "key": "chat.members",
+            "line": 124,
+            "exists": true
+          },
+          {
+            "key": "chat.online",
+            "line": 132,
+            "exists": true
+          },
+          {
+            "key": "chat.add_members",
+            "line": 165,
+            "exists": true
+          },
+          {
+            "key": "chat.view_members",
+            "line": 169,
+            "exists": true
+          },
+          {
+            "key": "chat.conversation_settings",
+            "line": 175,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "chat.member",
+            "line": 124,
+            "context": "123: <span>\n124: {memberCount} {memberCount === 1 ? t('chat.member') : t('chat.members')}\n125: </span>"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -52377,7 +52826,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "364 Component components need translation",
+      "description": "371 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -52393,6 +52842,7 @@
         "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
         "src\\components\\users\\password\\PasswordActivityLog.tsx",
+        "src\\components\\settings\\notifications\\DealerChannelMatrix.tsx",
         "src\\components\\detail-hub\\ReportsCenter.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
@@ -52483,6 +52933,7 @@
         "src\\components\\chat\\MessageComposer.tsx",
         "src\\components\\chat\\MessageBubble.tsx",
         "src\\components\\attachments\\AttachmentsList.tsx",
+        "src\\utils\\__examples__\\notificationHelper.example.ts",
         "src\\pages\\NotFound.tsx",
         "src\\lib\\errorHandling.ts",
         "src\\hooks\\useWebNFC.tsx",
@@ -52537,6 +52988,7 @@
         "src\\components\\reports\\sections\\ExportCenter.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
+        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\notifications\\analytics\\FailedDeliveriesTable.tsx",
         "src\\components\\loading\\SplashScreen.tsx",
         "src\\components\\get-ready\\WorkItemsGroupedTable.tsx",
@@ -52550,6 +53002,7 @@
         "src\\workers\\vinOcrWorker.ts",
         "src\\utils\\telemetry.ts",
         "src\\utils\\permissionSerialization.ts",
+        "src\\utils\\notificationHelper.ts",
         "src\\utils\\lazyImports.ts",
         "src\\utils\\imageCompression.ts",
         "src\\utils\\dealerValidation.ts",
@@ -52613,6 +53066,7 @@
         "src\\components\\debug\\SimpleSalesOrders.tsx",
         "src\\components\\dealerships\\LogoUploader.tsx",
         "src\\components\\common\\LazyComponentWrapper.tsx",
+        "src\\components\\chat\\MessageThread.tsx",
         "src\\components\\chat\\EnhancedChatInterface.tsx",
         "src\\components\\chat\\ConversationList.tsx",
         "src\\components\\announcements\\AnnouncementBanner.tsx",
@@ -52739,17 +53193,19 @@
         "src\\components\\dealer\\DealerCategories.tsx",
         "src\\components\\dashboard\\RecentActivity.tsx",
         "src\\components\\chat\\TypingIndicator.tsx",
+        "src\\components\\chat\\ChatLayout.tsx",
+        "src\\components\\chat\\ChatHeader.tsx",
         "src\\components\\attachments\\UploadProgress.tsx",
         "src\\components\\attachments\\DragDropZone.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "182 hours"
+      "estimatedEffort": "186 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2394 translation keys are referenced but missing",
+      "description": "2393 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "120 hours"
     }
