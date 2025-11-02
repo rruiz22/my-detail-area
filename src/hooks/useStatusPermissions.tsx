@@ -99,7 +99,7 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
       // Get current order before updating (to get order_number, old_status, type, and vehicle info)
       const { data: currentOrder } = await supabase
         .from('orders')
-        .select('order_number, status, customer_name, order_type, vehicle_year, vehicle_make, vehicle_model, short_link')
+        .select('order_number, stock_number, tag, status, customer_name, order_type, vehicle_year, vehicle_make, vehicle_model, short_link')
         .eq('id', orderId)
         .single();
 
@@ -146,13 +146,22 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         };
         const module = moduleMap[currentOrder.order_type || 'sales'] || 'sales_orders';
 
+        // Map order type to URL path
+        const urlPathMap: Record<string, string> = {
+          'sales': 'sales',
+          'service': 'service',
+          'recon': 'recon',
+          'carwash': 'carwash'
+        };
+        const urlPath = urlPathMap[currentOrder.order_type || 'sales'] || 'sales';
+
         // Build vehicle info string
         const vehicleInfo = currentOrder.vehicle_year && currentOrder.vehicle_make && currentOrder.vehicle_model
           ? `${currentOrder.vehicle_year} ${currentOrder.vehicle_make} ${currentOrder.vehicle_model}`
           : undefined;
 
-        // Use mda.to short link if available, otherwise fallback
-        const shortLink = currentOrder.short_link || `https://app.mydetailarea.com/sales/${orderId}`;
+        // Use mda.to short link if available, otherwise fallback to correct module URL
+        const shortLink = currentOrder.short_link || `https://app.mydetailarea.com/${urlPath}/${orderId}`;
 
         // Send SMS notifications ONLY when status changes to 'completed' (enterprise requirement)
         if (newStatus === 'completed') {
@@ -168,7 +177,9 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
               oldStatus || '',
               vehicleInfo,
               shortLink,
-              enhancedUser.id
+              enhancedUser.id,
+              currentOrder.stock_number || undefined,
+              currentOrder.tag || undefined
             );
             console.log('✅ [SMS] SMS notification result:', smsResult);
 

@@ -35,6 +35,8 @@ interface SMSNotificationRequest {
   eventType: OrderSMSEvent;
   eventData: {
     orderNumber: string;
+    stockNumber?: string;
+    tag?: string;
     customerName?: string;
     vehicleInfo?: string;
     shortLink?: string;
@@ -90,6 +92,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const request: SMSNotificationRequest = await req.json();
     console.log('📱 SMS Notification Request:', request);
+    console.log(`🔍 [DEBUG] Trigger user ID: ${request.triggeredBy}`);
 
     // 1. Get followers of this order who have SMS permission
     const usersWithPermission = await getUsersWithSMSPermission(
@@ -98,6 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
       request.orderId
     );
     console.log(`✅ Found ${usersWithPermission.length} followers with SMS permission for order ${request.orderId}`);
+    console.log(`🔍 [DEBUG] Users with permission:`, usersWithPermission.map(u => ({ id: u.id, name: u.name, phone: u.phone_number })));
 
     if (usersWithPermission.length === 0) {
       return new Response(
@@ -121,6 +125,11 @@ const handler = async (req: Request): Promise<Response> => {
       request.eventData
     );
     console.log(`📋 After preference filtering: ${eligibleUsers.length} users`);
+    console.log(`🔍 [DEBUG] Eligible users:`, eligibleUsers.map(u => ({ id: u.id, name: u.name })));
+    if (eligibleUsers.length < usersWithPermission.length) {
+      const filtered = usersWithPermission.filter(u => !eligibleUsers.find(e => e.id === u.id));
+      console.log(`❌ [DEBUG] Filtered by preferences:`, filtered.map(u => ({ id: u.id, name: u.name })));
+    }
 
     if (eligibleUsers.length === 0) {
       return new Response(
@@ -136,8 +145,13 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // 3. Check rate limits for each user
-    const usersAfterRateLimit = await checkRateLimits(eligibleUsers, request.dealerId);
+    const usersAfterRateLimit = await checkRateLimits(eligibleUsers, request.dealerId, request.module);
     console.log(`⏱️ After rate limit check: ${usersAfterRateLimit.length} users`);
+    console.log(`🔍 [DEBUG] Users after rate limit:`, usersAfterRateLimit.map(u => ({ id: u.id, name: u.name })));
+    if (usersAfterRateLimit.length < eligibleUsers.length) {
+      const filtered = eligibleUsers.filter(u => !usersAfterRateLimit.find(e => e.id === u.id));
+      console.log(`❌ [DEBUG] Filtered by rate limit:`, filtered.map(u => ({ id: u.id, name: u.name })));
+    }
 
     if (usersAfterRateLimit.length === 0) {
       return new Response(
@@ -155,6 +169,11 @@ const handler = async (req: Request): Promise<Response> => {
     // 4. Remove the user who triggered the event (no self-notification)
     const finalUsers = usersAfterRateLimit.filter(u => u.id !== request.triggeredBy);
     console.log(`👤 After removing trigger user: ${finalUsers.length} users`);
+    console.log(`🔍 [DEBUG] Final users to notify:`, finalUsers.map(u => ({ id: u.id, name: u.name })));
+    if (finalUsers.length < usersAfterRateLimit.length) {
+      const filtered = usersAfterRateLimit.filter(u => !finalUsers.find(e => e.id === u.id));
+      console.log(`❌ [DEBUG] Filtered as trigger user:`, filtered.map(u => ({ id: u.id, name: u.name, triggeredBy: request.triggeredBy })));
+    }
 
     if (finalUsers.length === 0) {
       return new Response(
@@ -250,18 +269,19 @@ async function getUsersWithSMSPermission(
         id,
         first_name,
         last_name,
-        phone_number
-      ),
-      dealer_memberships!inner(
-        is_active,
-        custom_role_id,
-        dealer_custom_roles!inner(
-          id,
-          role_name,
-          role_module_permissions_new!inner(
-            module_permissions!inner(
-              module,
-              permission_key
+        phone_number,
+        dealer_memberships!inner(
+          is_active,
+          custom_role_id,
+          dealer_id,
+          dealer_custom_roles!inner(
+            id,
+            role_name,
+            role_module_permissions_new!inner(
+              module_permissions!inner(
+                module,
+                permission_key
+              )
             )
           )
         )
@@ -272,9 +292,10 @@ async function getUsersWithSMSPermission(
     .eq('is_active', true)
     .neq('notification_level', 'none')
     .eq('dealer_id', dealerId)
-    .eq('dealer_memberships.is_active', true)
-    .eq('dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.module', module)
-    .eq('dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.permission_key', 'receive_sms_notifications')
+    .eq('profiles.dealer_memberships.is_active', true)
+    .eq('profiles.dealer_memberships.dealer_id', dealerId)
+    .eq('profiles.dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.module', module)
+    .eq('profiles.dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.permission_key', 'receive_sms_notifications')
     .not('profiles.phone_number', 'is', null);
 
   if (error) {
@@ -292,7 +313,7 @@ async function getUsersWithSMSPermission(
     id: m.profiles.id,
     name: `${m.profiles.first_name} ${m.profiles.last_name}`.trim(),
     phone_number: m.profiles.phone_number,
-    role_name: m.dealer_memberships?.dealer_custom_roles?.role_name,
+    role_name: m.profiles.dealer_memberships?.dealer_custom_roles?.role_name,
     notification_level: m.notification_level
   }));
 
@@ -386,7 +407,8 @@ async function filterByPreferences(
 
 async function checkRateLimits(
   users: SMSRecipient[],
-  dealerId: number
+  dealerId: number,
+  module: string
 ): Promise<SMSRecipient[]> {
   const now = new Date();
   const hourAgo = new Date(now.getTime() - 60 * 60 * 1000);
@@ -395,12 +417,13 @@ async function checkRateLimits(
   const eligible: SMSRecipient[] = [];
 
   for (const user of users) {
-    // Get user's rate limits from preferences
+    // Get user's rate limits from preferences for THIS MODULE
     const { data: prefs } = await supabase
       .from('user_sms_notification_preferences')
       .select('max_sms_per_hour, max_sms_per_day, quiet_hours_enabled, quiet_hours_start, quiet_hours_end')
       .eq('user_id', user.id)
       .eq('dealer_id', dealerId)
+      .eq('module', module)
       .single();
 
     if (!prefs) {
@@ -467,6 +490,15 @@ async function checkRateLimits(
   return eligible;
 }
 
+// Helper function to format status for display
+function formatStatus(status: string): string {
+  if (!status) return '';
+  return status
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 function generateMessages(
   users: SMSRecipient[],
   eventType: OrderSMSEvent,
@@ -474,29 +506,40 @@ function generateMessages(
 ): Array<{ user: SMSRecipient; message: string }> {
   const shortLink = eventData.shortLink || `https://app.mydetailarea.com/orders/${eventData.orderNumber}`;
 
+  // Build order identifier with stock number (sales/recon) or tag (service)
+  let orderIdentifier = `#${eventData.orderNumber}`;
+  if (eventData.stockNumber) {
+    orderIdentifier = `#${eventData.orderNumber} (Stock: ${eventData.stockNumber})`;
+  } else if (eventData.tag) {
+    orderIdentifier = `#${eventData.orderNumber} (Tag: ${eventData.tag})`;
+  }
+
+  // Format status for better readability
+  const formattedStatus = formatStatus(eventData.newStatus || '');
+
   const templates: Record<OrderSMSEvent, string> = {
-    order_assigned: `🚗 You've been assigned to Order #${eventData.orderNumber}.${eventData.customerName ? ` Customer: ${eventData.customerName}` : ''} View: ${shortLink}`,
+    order_assigned: `🚗 You've been assigned to Order ${orderIdentifier}.${eventData.customerName ? ` Customer: ${eventData.customerName}` : ''} View: ${shortLink}`,
 
-    status_changed: `📋 Order #${eventData.orderNumber} status changed to "${eventData.newStatus}". View: ${shortLink}`,
+    status_changed: `📋 Order ${orderIdentifier} status changed to "${formattedStatus}". View: ${shortLink}`,
 
-    comment_added: `💬 ${eventData.commenterName} commented on Order #${eventData.orderNumber}: "${(eventData.commentText || '').substring(0, 50)}${(eventData.commentText || '').length > 50 ? '...' : ''}" View: ${shortLink}`,
+    comment_added: `💬 ${eventData.commenterName} commented on Order ${orderIdentifier}: "${(eventData.commentText || '').substring(0, 50)}${(eventData.commentText || '').length > 50 ? '...' : ''}" View: ${shortLink}`,
 
-    due_date_approaching: `⏰ REMINDER: Order #${eventData.orderNumber} is due in ${eventData.minutesUntilDue || 30} minutes!${eventData.vehicleInfo ? ` ${eventData.vehicleInfo}` : ''} View: ${shortLink}`,
+    due_date_approaching: `⏰ REMINDER: Order ${orderIdentifier} is due in ${eventData.minutesUntilDue || 30} minutes!${eventData.vehicleInfo ? ` ${eventData.vehicleInfo}` : ''} View: ${shortLink}`,
 
-    overdue: `🚨 Order #${eventData.orderNumber} is OVERDUE! Please update status. View: ${shortLink}`,
+    overdue: `🚨 Order ${orderIdentifier} is OVERDUE! Please update status. View: ${shortLink}`,
 
-    priority_changed: `⚡ Order #${eventData.orderNumber} priority changed to ${eventData.newPriority || 'high'}. Check details: ${shortLink}`,
+    priority_changed: `⚡ Order ${orderIdentifier} priority changed to ${eventData.newPriority || 'high'}. Check details: ${shortLink}`,
 
-    attachment_added: `📎 New attachment added to Order #${eventData.orderNumber}. View: ${shortLink}`,
+    attachment_added: `📎 New attachment added to Order ${orderIdentifier}. View: ${shortLink}`,
 
-    order_created: `✨ New Order #${eventData.orderNumber} created.${eventData.customerName ? ` ${eventData.customerName}` : ''} View: ${shortLink}`,
+    order_created: `✨ New Order ${orderIdentifier} created.${eventData.customerName ? ` ${eventData.customerName}` : ''} View: ${shortLink}`,
 
-    follower_added: `👁️ You're now following Order #${eventData.orderNumber}. View: ${shortLink}`,
+    follower_added: `👁️ You're now following Order ${orderIdentifier}. View: ${shortLink}`,
 
-    field_updated: `✏️ Order #${eventData.orderNumber} - ${eventData.fieldName} updated. View: ${shortLink}`
+    field_updated: `✏️ Order ${orderIdentifier} - ${eventData.fieldName} updated. View: ${shortLink}`
   };
 
-  const message = templates[eventType] || `Order #${eventData.orderNumber} updated. View: ${shortLink}`;
+  const message = templates[eventType] || `Order ${orderIdentifier} updated. View: ${shortLink}`;
 
   return users.map(user => ({ user, message }));
 }

@@ -74,6 +74,8 @@ export interface ServiceOrder {
   ro?: string;
   tag?: string;
   stockNumber?: string; // Mapped from tag for table compatibility
+  short_link?: string; // QR code short link (mda.to/XXXXX)
+  qr_code_url?: string; // Full QR code image URL
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   services: ServiceItem[];
   totalAmount?: number;
@@ -120,6 +122,8 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   ro: supabaseOrder.ro || undefined,
   tag: supabaseOrder.tag || undefined,
   stockNumber: supabaseOrder.tag || undefined, // Map tag to stockNumber for table compatibility
+  short_link: supabaseOrder.short_link || undefined,
+  qr_code_url: supabaseOrder.qr_code_url || undefined,
   status: supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled',
   services: (supabaseOrder.services as ServiceItem[]) || [],
   totalAmount: supabaseOrder.total_amount || undefined,

@@ -977,7 +977,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         // Send push notifications to followers
         pushNotificationHelper
           .notifyOrderStatusChange(
-            parseInt(orderId),
+            orderId,
             data.order_number,
             orderData.status,
             userName
@@ -986,45 +986,10 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             logError('❌ Push notification failed (non-critical):', notifError);
             // Don't fail the order update if notification fails
           });
-
-        // Send SMS notifications to users with SMS permissions
-        supabase.functions
-          .invoke('send-order-sms-notification', {
-            body: {
-              orderId: orderId,
-              dealerId: data.dealer_id,
-              module: 'sales_orders',
-              eventType: 'status_changed',
-              eventData: {
-                orderNumber: data.order_number,
-                customerName: data.customer_name || '',
-                newStatus: orderData.status,
-                oldStatus: oldStatus,
-                shortLink: `https://app.mydetailarea.com/sales/${orderId}`,
-              },
-              triggeredBy: user.id,
-            },
-          })
-          .then(({ data: smsData, error: smsError }) => {
-            if (smsError) {
-              logError('⚠️ SMS notification failed (non-critical):', smsError);
-            } else {
-              const sentCount = smsData?.sent || 0;
-              dev(`✅ SMS notifications sent: ${sentCount} recipients`);
-
-              // Show success toast if SMS were sent
-              if (sentCount > 0) {
-                toast({
-                  title: t('notifications.sms_sent'),
-                  description: t('notifications.sms_sent_description', { count: sentCount }),
-                });
-              }
-            }
-          })
-          .catch((smsError) => {
-            logError('⚠️ SMS notification error (non-critical):', smsError);
-          });
       }
+
+      // Note: SMS notifications are handled in useStatusPermissions.tsx
+      // This avoids duplicate SMS and ensures correct shortlink usage
 
       // Invalidate to ensure data consistency in background
       queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
