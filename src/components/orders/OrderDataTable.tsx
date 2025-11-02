@@ -46,7 +46,7 @@ import {
 } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { ServicesDisplay } from './ServicesDisplay';
 import { SkeletonLoader } from './SkeletonLoader';
 
@@ -89,6 +89,7 @@ interface OrderDataTableProps {
 
 export const OrderDataTable = memo(function OrderDataTable({ orders, loading, onEdit, onDelete, onView, onStatusChange, tabType }: OrderDataTableProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { printOrder, previewPrint } = usePrintOrder();
   const { canEditOrder, canDeleteOrder } = usePermissions();
   const [currentPage, setCurrentPage] = useState(1);
@@ -126,16 +127,19 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
       );
 
       if (!allowed) {
-        toast.error(t('errors.no_permission_status_change', 'You do not have permission to change order status'));
+        toast({
+          variant: 'destructive',
+          description: t('errors.no_permission_status_change', 'You do not have permission to change order status')
+        });
         return;
       }
 
       const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
       if (success) {
         dev(`Status updated for order ${orderId} to ${newStatus}`);
-        toast.success(t('success.status_updated', 'Order status updated successfully'));
 
         // Trigger immediate refresh of order data
+        // Note: Parent component (SalesOrders/ServiceOrders) will show success toast
         if (onStatusChange) {
           onStatusChange(orderId, newStatus);
         }
@@ -154,7 +158,10 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
       }
     } catch (error) {
       logError('Failed to update status:', error);
-      toast.error(t('errors.status_update_failed', 'Failed to update order status'));
+      toast({
+        variant: 'destructive',
+        description: t('errors.status_update_failed', 'Failed to update order status')
+      });
     }
   };
 
@@ -162,10 +169,15 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
   const copyVinToClipboard = async (vin: string) => {
     try {
       await navigator.clipboard.writeText(vin);
-      toast.success('VIN copied to clipboard');
+      toast({
+        description: t('common.vin_copied', 'VIN copied to clipboard')
+      });
     } catch (error) {
       logError('Failed to copy VIN:', error);
-      toast.error('Failed to copy VIN');
+      toast({
+        variant: 'destructive',
+        description: t('errors.copy_vin_failed', 'Failed to copy VIN')
+      });
     }
   };
 

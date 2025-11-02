@@ -93,13 +93,6 @@ export function AppSidebar() {
         module: 'car_wash' as const
       },
       {
-        title: t('navigation.reports'),
-        url: "/reports",
-        icon: FileText,
-        orderType: null, // Reports is accessible based on module permissions
-        module: 'reports' as const
-      },
-      {
         title: t('navigation.get_ready'),
         url: "/get-ready",
         icon: Zap,
@@ -194,6 +187,13 @@ export function AppSidebar() {
         module: 'management' as const,
         permission: 'admin' as const,
         description: t('admin.administration_description')
+      },
+      {
+        title: t('navigation.reports'),
+        url: "/reports",
+        icon: FileText,
+        module: 'reports' as const,
+        permission: 'view' as const
       },
       {
         title: t('navigation.settings'),

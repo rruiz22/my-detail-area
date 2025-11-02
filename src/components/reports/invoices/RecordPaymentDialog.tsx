@@ -28,7 +28,7 @@ import type { Invoice, PaymentFormData, PaymentMethod } from '@/types/invoices';
 import { format, parseISO } from 'date-fns';
 import { Calendar, CreditCard, DollarSign } from 'lucide-react';
 import React, { useState } from 'react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface RecordPaymentDialogProps {
   open: boolean;
@@ -54,12 +54,12 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
     e.preventDefault();
 
     if (amount <= 0) {
-      toast.error('Payment amount must be greater than zero');
+      toast({ variant: 'destructive', description: 'Payment amount must be greater than zero' });
       return;
     }
 
     if (amount > invoice.amountDue) {
-      toast.error('Payment amount cannot exceed the amount due');
+      toast({ variant: 'destructive', description: 'Payment amount cannot exceed the amount due' });
       return;
     }
 

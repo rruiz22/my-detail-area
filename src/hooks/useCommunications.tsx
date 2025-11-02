@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   id: string;
@@ -36,6 +36,7 @@ interface User {
 
 export function useCommunications(orderId: string) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -120,7 +121,7 @@ export function useCommunications(orderId: string) {
       setHasMore(formattedMessages.length === limit);
     } catch (error) {
       console.error('Error loading messages:', error);
-      toast.error(t('communication.error_loading_messages'));
+      toast({ variant: 'destructive', description: t('communication.error_loading_messages') });
     } finally {
       setLoading(false);
     }
@@ -219,10 +220,10 @@ export function useCommunications(orderId: string) {
       // Reload messages
       await loadMessages();
       
-      toast.success(t('communication.message_sent'));
+      toast({ description: t('communication.message_sent') });
     } catch (error) {
       console.error('Error sending message:', error);
-      toast.error(t('communication.error_sending_message'));
+      toast({ variant: 'destructive', description: t('communication.error_sending_message') });
     }
   }, [orderId, loadMessages, t]);
 
@@ -255,10 +256,10 @@ export function useCommunications(orderId: string) {
       if (error) throw error;
 
       await loadMessages();
-      toast.success(t('communication.voice_message_sent'));
+      toast({ description: t('communication.voice_message_sent') });
     } catch (error) {
       console.error('Error sending voice message:', error);
-      toast.error(t('communication.error_sending_voice'));
+      toast({ variant: 'destructive', description: t('communication.error_sending_voice') });
     }
   }, [orderId, loadMessages, t]);
 
@@ -281,10 +282,10 @@ export function useCommunications(orderId: string) {
       if (error) throw error;
 
       await loadMessages();
-      toast.success(t('communication.reply_sent'));
+      toast({ description: t('communication.reply_sent') });
     } catch (error) {
       console.error('Error sending reply:', error);
-      toast.error(t('communication.error_sending_reply'));
+      toast({ variant: 'destructive', description: t('communication.error_sending_reply') });
     }
   }, [orderId, loadMessages, t]);
 
@@ -346,7 +347,7 @@ export function useCommunications(orderId: string) {
 
     } catch (error) {
       console.error('Error adding reaction:', error);
-      toast.error(t('communication.error_adding_reaction'));
+      toast({ variant: 'destructive', description: t('communication.error_adding_reaction') });
     }
   }, [t]);
 

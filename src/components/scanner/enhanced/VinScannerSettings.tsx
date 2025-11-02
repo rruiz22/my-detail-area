@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { useOptimizedVinScanner } from '@/hooks/useOptimizedVinScanner';
 import { vinAutoCorrection } from '@/utils/vinAutoCorrection';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface VinScannerConfig {
   // Camera settings
@@ -104,17 +104,17 @@ export function VinScannerSettings({ className }: VinScannerSettingsProps) {
     try {
       localStorage.setItem('vinScannerConfig', JSON.stringify(newConfig));
       setConfig(newConfig);
-      toast.success(t('settings.config_saved'));
+      toast({ description: t('settings.config_saved') });
     } catch (error) {
       console.error('Failed to save config:', error);
-      toast.error(t('settings.config_save_failed'));
+      toast({ variant: 'destructive', description: t('settings.config_save_failed') });
     }
   };
 
   // Reset to defaults
   const resetToDefaults = () => {
     saveConfig(DEFAULT_CONFIG);
-    toast.info(t('settings.reset_to_defaults'));
+    toast({ description: t('settings.reset_to_defaults') });
   };
 
   // Export configuration
@@ -149,10 +149,10 @@ export function VinScannerSettings({ className }: VinScannerSettingsProps) {
         const imported = JSON.parse(e.target?.result as string);
         if (imported.config) {
           saveConfig({ ...DEFAULT_CONFIG, ...imported.config });
-          toast.success(t('settings.config_imported'));
+          toast({ description: t('settings.config_imported') });
         }
       } catch (error) {
-        toast.error(t('settings.invalid_config_file'));
+        toast({ variant: 'destructive', description: t('settings.invalid_config_file') });
       }
     };
     reader.readAsText(file);
@@ -165,7 +165,7 @@ export function VinScannerSettings({ className }: VinScannerSettingsProps) {
   const handleClearCache = () => {
     clearCache();
     setCacheStats({ size: 0, hitRate: 0 });
-    toast.success(t('settings.cache_cleared'));
+    toast({ description: t('settings.cache_cleared') });
   };
 
   // Update config helper

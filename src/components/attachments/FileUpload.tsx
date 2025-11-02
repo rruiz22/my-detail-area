@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { FilePreview } from './FilePreview';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface UploadedAttachment {
   id: string;
@@ -127,7 +127,7 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
   // Upload individual file
   const uploadFile = async (file: File): Promise<UploadedAttachment | undefined> => {
     if (!user) {
-      toast.error(t('attachments.auth_required', 'Please log in to upload files'));
+      toast({ variant: 'destructive', description: t('attachments.auth_required', 'Please log in to upload files') });
       return;
     }
 
@@ -200,7 +200,7 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
       );
 
       console.log('✅ File uploaded successfully:', data.attachment);
-      toast.success(t('attachments.upload_success', 'File uploaded successfully'));
+      toast({ description: t('attachments.upload_success', 'File uploaded successfully') });
 
       // Notify parent component
       if (onUploadComplete) {
@@ -216,7 +216,7 @@ export const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
 
     } catch (error) {
       console.error('❌ File upload error:', error);
-      toast.error(t('attachments.upload_failed', 'Failed to upload file'));
+      toast({ variant: 'destructive', description: t('attachments.upload_failed', 'Failed to upload file') });
 
       // Remove from uploading list
       setUploadingFiles(prev => prev.filter(f => f.id !== uploadId));

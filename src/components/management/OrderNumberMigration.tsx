@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Database, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import { runOrderNumberMigration } from '@/scripts/migrateOrderNumbers';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export function OrderNumberMigration() {
   const { t } = useTranslation();
@@ -33,11 +33,11 @@ export function OrderNumberMigration() {
     try {
       await runOrderNumberMigration();
       setMigrationStatus('completed');
-      toast.success('Order number migration completed successfully!');
+      toast({ description: 'Order number migration completed successfully!' });
     } catch (error) {
       console.error('Migration failed:', error);
       setMigrationStatus('error');
-      toast.error('Migration failed. Check console for details.');
+      toast({ variant: 'destructive', description: 'Migration failed. Check console for details.' });
     } finally {
       console.log = originalLog;
       setIsRunning(false);

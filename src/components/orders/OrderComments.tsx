@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Lock, MessageSquare, Send } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface Comment {
   id: string;
@@ -65,7 +65,7 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
       setComments(formattedComments);
     } catch (error) {
       console.error('Error loading comments:', error);
-      toast.error(t('messages.error_loading_comments'));
+      toast({ variant: 'destructive', description: t('messages.error_loading_comments') });
     }
   }, [orderId, t]);
 
@@ -90,10 +90,10 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
 
       setNewComment('');
       await loadComments();
-      toast.success(t('messages.comment_added_successfully'));
+      toast({ description: t('messages.comment_added_successfully') });
     } catch (error) {
       console.error('Error adding comment:', error);
-      toast.error(t('messages.error_adding_comment'));
+      toast({ variant: 'destructive', description: t('messages.error_adding_comment') });
     } finally {
       setLoading(false);
     }

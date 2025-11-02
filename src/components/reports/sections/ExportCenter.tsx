@@ -13,7 +13,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import type { ReportsFilters } from '@/hooks/useReportsData';
 import { useOrdersAnalytics, useRevenueAnalytics, usePerformanceTrends } from '@/hooks/useReportsData';
 import { useInvoiceSummary } from '@/hooks/useInvoices';
@@ -134,13 +134,10 @@ export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
           break;
       }
 
-      toast.success(t('reports.export.success_message', {
-        format: exportFormat.toUpperCase(),
-        type: reportType
-      }));
+      toast({ description: t('reports.export.success_message') });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      toast.error(t('reports.export.error_message') + ': ' + errorMessage);
+      toast({ variant: 'destructive', description: `${t('reports.export.error_message')}: ${errorMessage}` });
       console.error('Export error:', error);
     } finally {
       setIsExporting(false);
@@ -152,9 +149,9 @@ export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
     try {
       // Simulate scheduling process
       await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success(t('reports.export.schedule_success'));
+      toast({ description: t('reports.export.schedule_success') });
     } catch (error) {
-      toast.error(t('reports.export.schedule_error'));
+      toast({ variant: 'destructive', description: t('reports.export.schedule_error') });
     } finally {
       setIsExporting(false);
     }

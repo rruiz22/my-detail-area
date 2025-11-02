@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { useOptimizedVinScanner } from '@/hooks/useOptimizedVinScanner';
 import { vinAutoCorrection } from '@/utils/vinAutoCorrection';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface BatchVinResult {
@@ -70,7 +70,7 @@ export function BatchVinProcessor({
     const imageFiles = uploadedFiles.filter(file => file.type.startsWith('image/'));
 
     if (imageFiles.length !== uploadedFiles.length) {
-      toast.warning(t('batch_vin.non_image_files_skipped'));
+      toast({ description: t('batch_vin.non_image_files_skipped') });
     }
 
     // Create initial results
@@ -230,13 +230,14 @@ export function BatchVinProcessor({
       const finalResults = results.filter(r => r.status === 'completed' || r.status === 'failed');
       onVinsProcessed?.(finalResults);
 
-      toast.success(t('batch_vin.processing_completed'), {
+      toast({
+        title: t('batch_vin.processing_completed'),
         description: `${finalResults.filter(r => r.status === 'completed').length} VINs processed successfully`
       });
 
     } catch (error) {
       console.error('Batch processing error:', error);
-      toast.error(t('batch_vin.processing_error'));
+      toast({ variant: 'destructive', description: t('batch_vin.processing_error') });
     } finally {
       setIsProcessing(false);
       setCurrentlyProcessing([]);

@@ -3,7 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useVehicleMedia, useUploadMedia, useUpdateMedia, useDeleteMedia } from '@/hooks/useVehicleMedia';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 // Mock dependencies
 vi.mock('@/integrations/supabase/client', () => ({
@@ -15,11 +15,12 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
-vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
+// Mock useToast
+const mockToast = vi.fn();
+vi.mock('@/hooks/use-toast', () => ({
+  useToast: () => ({
+    toast: mockToast,
+  }),
 }));
 
 vi.mock('@/contexts/AuthContext', () => ({
@@ -180,7 +181,7 @@ describe('useVehicleMedia Hook Tests', () => {
         expect(result.current.isError).toBe(true);
       });
 
-      expect(toast.error).toHaveBeenCalledWith('Error loading media');
+      expect(mockToast).toHaveBeenCalledWith({ variant: 'destructive', description: 'Error loading media' });
       expect(result.current.error).toBe(mockError);
     });
 
@@ -303,7 +304,7 @@ describe('useVehicleMedia Hook Tests', () => {
         })
       );
 
-      expect(toast.success).toHaveBeenCalledWith('Uploaded successfully');
+      expect(mockToast).toHaveBeenCalledWith({ description: 'Uploaded successfully' });
       expect(result.current.data).toEqual(mockMediaItem);
     });
 
@@ -331,7 +332,7 @@ describe('useVehicleMedia Hook Tests', () => {
         expect(result.current.isError).toBe(true);
       });
 
-      expect(toast.error).toHaveBeenCalledWith('Error uploading');
+      expect(mockToast).toHaveBeenCalledWith({ variant: 'destructive', description: 'Error uploading' });
       expect(result.current.error).toBe(mockError);
     });
 
@@ -384,7 +385,7 @@ describe('useVehicleMedia Hook Tests', () => {
       });
 
       expect(mockRemove).toHaveBeenCalledWith(['vehicle-456/test.jpg']);
-      expect(toast.error).toHaveBeenCalledWith('Error uploading');
+      expect(mockToast).toHaveBeenCalledWith({ variant: 'destructive', description: 'Error uploading' });
     });
 
     it('should generate unique file names for uploads', async () => {
@@ -485,7 +486,7 @@ describe('useVehicleMedia Hook Tests', () => {
       });
 
       expect(mockEq).toHaveBeenCalledWith('id', 'media-123');
-      expect(toast.success).toHaveBeenCalledWith('Updated successfully');
+      expect(mockToast).toHaveBeenCalledWith({ description: 'Updated successfully' });
     });
 
     it('should handle update error gracefully', async () => {
@@ -526,7 +527,7 @@ describe('useVehicleMedia Hook Tests', () => {
         expect(result.current.isError).toBe(true);
       });
 
-      expect(toast.error).toHaveBeenCalledWith('Error updating');
+      expect(mockToast).toHaveBeenCalledWith({ variant: 'destructive', description: 'Error updating' });
       expect(result.current.error).toBe(mockError);
     });
   });
@@ -574,7 +575,7 @@ describe('useVehicleMedia Hook Tests', () => {
 
       expect(mockRemove).toHaveBeenCalledWith(['vehicle-456/test.jpg']);
       expect(mockEq).toHaveBeenCalledWith('id', 'media-123');
-      expect(toast.success).toHaveBeenCalledWith('Deleted successfully');
+      expect(mockToast).toHaveBeenCalledWith({ description: 'Deleted successfully' });
     });
 
     it('should continue with database delete even if storage delete fails', async () => {
@@ -620,7 +621,7 @@ describe('useVehicleMedia Hook Tests', () => {
 
       expect(mockRemove).toHaveBeenCalled();
       expect(mockEq).toHaveBeenCalledWith('id', 'media-123');
-      expect(toast.success).toHaveBeenCalledWith('Deleted successfully');
+      expect(mockToast).toHaveBeenCalledWith({ description: 'Deleted successfully' });
     });
 
     it('should handle database delete error', async () => {
@@ -662,7 +663,7 @@ describe('useVehicleMedia Hook Tests', () => {
         expect(result.current.isError).toBe(true);
       });
 
-      expect(toast.error).toHaveBeenCalledWith('Error deleting');
+      expect(mockToast).toHaveBeenCalledWith({ variant: 'destructive', description: 'Error deleting' });
       expect(result.current.error).toBe(mockDbError);
     });
   });

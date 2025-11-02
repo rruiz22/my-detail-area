@@ -23,7 +23,7 @@ import {
 import { useCloudSyncStatus, useSessionRecovery } from '@/hooks/useCloudSync';
 import { storage } from '@/lib/localStorage';
 import { sessionRecovery } from '@/lib/sessionRecovery';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
 interface CloudSyncDashboardProps {
@@ -64,9 +64,11 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
   const handleForceSyncAll = async () => {
     try {
       await forceSyncAll();
-      toast.success(t('cloud_sync.all_data_synced_successfully'));
+      toast({ description: t('cloud_sync.all_data_synced_successfully') });
     } catch (error) {
-      toast.error(t('cloud_sync.sync_failed'), {
+      toast({
+        variant: 'destructive',
+        title: t('cloud_sync.sync_failed'),
         description: error instanceof Error ? error.message : t('common.unknown_error')
       });
     }
@@ -75,10 +77,10 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
   const handleClearCache = () => {
     try {
       storage.cleanup();
-      toast.success(t('cloud_sync.cache_cleared_successfully'));
+      toast({ description: t('cloud_sync.cache_cleared_successfully') });
       updateSyncStats();
     } catch (error) {
-      toast.error(t('cloud_sync.failed_to_clear_cache'));
+      toast({ variant: 'destructive', description: t('cloud_sync.failed_to_clear_cache') });
     }
   };
 
@@ -93,12 +95,12 @@ export function CloudSyncDashboard({ className }: CloudSyncDashboardProps) {
     try {
       const success = await sessionRecovery.createSessionSnapshot();
       if (success) {
-        toast.success(t('cloud_sync.session_snapshot_created'));
+        toast({ description: t('cloud_sync.session_snapshot_created') });
       } else {
-        toast.error(t('cloud_sync.failed_to_create_snapshot'));
+        toast({ variant: 'destructive', description: t('cloud_sync.failed_to_create_snapshot') });
       }
     } catch (error) {
-      toast.error(t('cloud_sync.snapshot_creation_failed'));
+      toast({ variant: 'destructive', description: t('cloud_sync.snapshot_creation_failed') });
     }
   };
 

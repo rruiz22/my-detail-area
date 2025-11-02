@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { QrCode, Copy, Download, Share2, RefreshCw, BarChart3, Eye, MousePointer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { supabase } from '@/integrations/supabase/client';
 import QRCodeReact from 'qrcode.react';
@@ -96,9 +96,9 @@ export function QRCodeDisplay({
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success(t('common.copied_to_clipboard'));
+      toast({ description: t('common.copied_to_clipboard') });
     } catch (error) {
-      toast.error(t('common.error_copying'));
+      toast({ variant: 'destructive', description: t('common.error_copying') });
     }
   };
 

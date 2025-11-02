@@ -217,9 +217,37 @@ export default function SalesOrders() {
     }
   }, [orderToDelete, deleteOrder, t, toast]);
 
-  const handleSaveOrder = useCallback(async (orderData: Partial<Order>) => {
+  const handleSaveOrder = useCallback(async (orderData: Partial<Order> | Partial<Order>[]) => {
     try {
-      if (selectedOrder) {
+      // Check if we received an array of orders (multiple services)
+      if (Array.isArray(orderData)) {
+        const createdOrders: Order[] = [];
+
+        // Create each order sequentially
+        for (const singleOrderData of orderData) {
+          const newOrder = await createOrder(singleOrderData);
+          if (newOrder) {
+            createdOrders.push(newOrder);
+          }
+        }
+
+        // Show success message with order numbers
+        const orderNumbers = createdOrders
+          .map(o => o.order_number || o.orderNumber)
+          .filter(Boolean)
+          .join(', ');
+
+        const message = t('orders.multiple_created_successfully', {
+          count: createdOrders.length,
+          orders: orderNumbers
+        }) || `${createdOrders.length} orders created successfully: ${orderNumbers}`;
+
+        toast({
+          description: message,
+          variant: 'default'
+        });
+        setLiveRegionMessage(message);
+      } else if (selectedOrder) {
         await updateOrder(selectedOrder.id, orderData);
         const message = t('orders.updated_successfully');
         toast({
@@ -240,8 +268,8 @@ export default function SalesOrders() {
       // Close modal immediately for better UX
       setShowModal(false);
 
-      // Refresh data in background (real-time subscription handles most updates)
-      setTimeout(() => refreshData(), 100); // Slight delay to let real-time update first
+      // Invalidate query cache to trigger automatic refetch (like ServiceOrders)
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
 
     } catch (error) {
       logError('Error saving order:', error);
@@ -251,22 +279,26 @@ export default function SalesOrders() {
         variant: 'destructive'
       });
       setLiveRegionMessage(message);
+      // Re-throw to let modal handle it
+      throw error;
     }
-  }, [selectedOrder, updateOrder, createOrder, toast, t, refreshData]);
+  }, [selectedOrder, updateOrder, createOrder, toast, t, queryClient]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
-      // Status change should ONLY update status, nothing else
-      const updateData: Partial<Order> = { status: newStatus as 'pending' | 'in_progress' | 'completed' | 'cancelled' };
-
-      // Update DB - queryClient.refetchQueries inside updateOrder will trigger UI update
-      await updateOrder(orderId, updateData);
+      // Note: OrderDataTable already calls updateOrderStatus which handles:
+      // - DB update
+      // - Permission validation
+      // - SMS notifications
+      // - Push notifications
+      // This callback only emits events for UI consistency
 
       // Dispatch event to notify other components (polling listens to this)
       window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
         detail: { orderId, newStatus, timestamp: Date.now() }
       }));
 
+      // Show success toast
       toast({
         description: t('orders.status_updated_successfully'),
         variant: 'default'
@@ -283,7 +315,7 @@ export default function SalesOrders() {
       // Re-throw error so kanban can handle rollback if needed
       throw error;
     }
-  }, [updateOrder, toast, t]);
+  }, [toast, t]);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<Order>) => {
     try {

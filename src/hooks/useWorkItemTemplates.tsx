@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import type { WorkItemType } from '@/hooks/useVehicleWorkItems';
 
@@ -46,6 +46,7 @@ export interface UpdateTemplateInput extends Partial<CreateTemplateInput> {
  */
 export function useWorkItemTemplates(includeInactive = false) {
   const { currentDealership } = useAccessibleDealerships();
+  const { toast } = useToast();
 
   return useQuery({
     queryKey: ['work-item-templates', currentDealership?.id, includeInactive],
@@ -162,12 +163,12 @@ export function useCreateWorkItemsFromTemplates() {
     onSuccess: (data, vehicleId) => {
       queryClient.invalidateQueries({ queryKey: ['work-items', vehicleId] });
       if (data && data.length > 0) {
-        toast.success(t('get_ready.templates.work_items_created', { count: data.length }));
+        toast({ description: t('get_ready.templates.work_items_created') });
       }
     },
     onError: (error) => {
       console.error('Error creating work items from templates:', error);
-      toast.error(t('get_ready.templates.error_creating_work_items'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_creating_work_items') });
     },
   });
 }
@@ -210,11 +211,11 @@ export function useCreateTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.template_created'));
+      toast({ description: t('get_ready.templates.template_created') });
     },
     onError: (error) => {
       console.error('Error creating template:', error);
-      toast.error(t('get_ready.templates.error_creating'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_creating') });
     },
   });
 }
@@ -261,11 +262,11 @@ export function useUpdateTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.template_updated'));
+      toast({ description: t('get_ready.templates.template_updated') });
     },
     onError: (error) => {
       console.error('Error updating template:', error);
-      toast.error(t('get_ready.templates.error_updating'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_updating') });
     },
   });
 }
@@ -294,11 +295,11 @@ export function useDeleteTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.template_deleted'));
+      toast({ description: t('get_ready.templates.template_deleted') });
     },
     onError: (error) => {
       console.error('Error deleting template:', error);
-      toast.error(t('get_ready.templates.error_deleting'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_deleting') });
     },
   });
 }
@@ -333,11 +334,11 @@ export function useToggleTemplateAutoAssign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.template_updated'));
+      toast({ description: t('get_ready.templates.template_updated') });
     },
     onError: (error) => {
       console.error('Error toggling auto-assign:', error);
-      toast.error(t('get_ready.templates.error_updating'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_updating') });
     },
   });
 }
@@ -372,11 +373,11 @@ export function useToggleTemplateActive() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.template_updated'));
+      toast({ description: t('get_ready.templates.template_updated') });
     },
     onError: (error) => {
       console.error('Error toggling active status:', error);
-      toast.error(t('get_ready.templates.error_updating'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_updating') });
     },
   });
 }
@@ -415,11 +416,11 @@ export function useReorderTemplates() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.templates_reordered'));
+      toast({ description: t('get_ready.templates.templates_reordered') });
     },
     onError: (error) => {
       console.error('Error reordering templates:', error);
-      toast.error(t('get_ready.templates.error_reordering'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_reordering') });
     },
   });
 }
@@ -473,11 +474,11 @@ export function useDuplicateTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['work-item-templates'] });
-      toast.success(t('get_ready.templates.template_duplicated'));
+      toast({ description: t('get_ready.templates.template_duplicated') });
     },
     onError: (error) => {
       console.error('Error duplicating template:', error);
-      toast.error(t('get_ready.templates.error_duplicating'));
+      toast({ variant: 'destructive', description: t('get_ready.templates.error_duplicating') });
     },
   });
 }
@@ -546,12 +547,12 @@ export function useCreateWorkItemsFromSelectedTemplates() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', variables.vehicleId] });
       if (data && data.length > 0) {
-        toast.success(t('get_ready.work_items.templates_added', { count: data.length }));
+        toast({ description: t('get_ready.work_items.templates_added') });
       }
     },
     onError: (error) => {
       console.error('Error creating work items from selected templates:', error);
-      toast.error(t('get_ready.work_items.error_adding_from_templates'));
+      toast({ variant: 'destructive', description: t('get_ready.work_items.error_adding_from_templates') });
     },
   });
 }

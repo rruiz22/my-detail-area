@@ -22,7 +22,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { RefreshCw, Undo2, Trash2, AlertCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es, enUS, ptBR } from 'date-fns/locale';
@@ -108,12 +108,12 @@ export function DeletedVehiclesDialog({ open, onOpenChange }: DeletedVehiclesDia
       queryClient.invalidateQueries({ queryKey: ['deleted-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.deleted_vehicles.restore_success'));
+      toast({ description: t('get_ready.deleted_vehicles.restore_success') });
       setRestoringId(null);
     },
     onError: (error: Error) => {
       console.error('Failed to restore vehicle:', error);
-      toast.error(error.message || t('get_ready.deleted_vehicles.restore_failed'));
+      toast({ variant: 'destructive', description: error.message || t('get_ready.deleted_vehicles.restore_failed') });
       setRestoringId(null);
     },
   });
@@ -124,7 +124,7 @@ export function DeletedVehiclesDialog({ open, onOpenChange }: DeletedVehiclesDia
 
   const handleRefresh = () => {
     refetch();
-    toast.success(t('common.data_refreshed'));
+    toast({ description: t('common.data_refreshed') });
   };
 
   return (

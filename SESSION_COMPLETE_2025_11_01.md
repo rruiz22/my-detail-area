@@ -183,7 +183,7 @@ supabase functions deploy send-order-sms-notification
 
 ## 💡 Lecciones Aprendidas
 
-1. **PostgreSQL Function Overloading:** 
+1. **PostgreSQL Function Overloading:**
    - Múltiples versiones causan "Could not choose best candidate" error
    - Solución: Drop todas las versiones antes de recrear
 

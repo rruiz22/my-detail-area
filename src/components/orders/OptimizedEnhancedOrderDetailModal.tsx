@@ -37,7 +37,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { OrderData } from '@/types/order';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { EnhancedOrderDetailLayout } from './EnhancedOrderDetailLayout';
 import { ErrorBoundaryModal } from './ErrorBoundaryModal';
 
@@ -177,7 +177,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
 
       if (error) throw error;
 
-      toast.success(t('messages.notes_updated_successfully'));
+      toast({ description: t('messages.notes_updated_successfully') });
       recordMetric('notes-update-success', 1);
 
       // 🔔 Dispatch event to trigger RecentActivityBlock refresh
@@ -200,7 +200,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
       }
 
       console.error('Error updating notes:', error);
-      toast.error(t('messages.error_updating_notes'));
+      toast({ variant: 'destructive', description: t('messages.error_updating_notes') });
       recordMetric('notes-update-error', 1);
     } finally {
       endMeasure(measureId);
@@ -212,7 +212,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
     const measureId = startMeasure('attachment-upload');
     try {
       handleAttachmentUploaded(newAttachment);
-      toast.success(t('attachments.uploadSuccess'));
+      toast({ description: t('attachments.uploadSuccess') });
       recordMetric('attachment-upload-success', 1);
     } catch (error) {
       recordMetric('attachment-upload-error', 1);
@@ -226,7 +226,7 @@ export const EnhancedOrderDetailModal = memo(function EnhancedOrderDetailModal({
     const measureId = startMeasure('attachment-delete');
     try {
       handleAttachmentDeleted(attachmentId);
-      toast.success(t('attachments.deleteSuccess'));
+      toast({ description: t('attachments.deleteSuccess') });
       recordMetric('attachment-delete-success', 1);
     } catch (error) {
       recordMetric('attachment-delete-error', 1);

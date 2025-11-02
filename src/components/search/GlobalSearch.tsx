@@ -244,14 +244,21 @@ export const GlobalSearch = () => {
                                       )}
                                     </div>
 
-                                    {/* Subtitle - Customer/Contact name */}
+                                    {/* Subtitle - Customer/Contact name/Vehicle info */}
                                     {result.subtitle && (
                                       <div className="text-sm text-muted-foreground line-clamp-1">
                                         {highlightText(result.subtitle, query)}
                                       </div>
                                     )}
 
-                                    {/* Order Details - Stock, VIN, Due Date, Services */}
+                                    {/* Get Ready Step Name */}
+                                    {result.type === 'get_ready' && result.step_name && (
+                                      <div className="text-sm font-medium text-blue-600">
+                                        Step: {result.step_name}
+                                      </div>
+                                    )}
+
+                                    {/* Order Details - Stock, VIN, Due Date */}
                                     {isOrder && (
                                       <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
                                         {result.stock_number && (

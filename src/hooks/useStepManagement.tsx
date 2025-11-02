@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { GetReadyStep } from '@/types/getReady';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface CreateStepInput {
   name: string;
@@ -22,6 +22,7 @@ interface UpdateStepInput extends Partial<CreateStepInput> {
 
 export function useStepManagement() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -58,11 +59,11 @@ export function useStepManagement() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.setup.step_created'));
+      toast({ description: t('get_ready.setup.step_created') });
     },
     onError: (error: Error) => {
       console.error('Failed to create step:', error);
-      toast.error(t('get_ready.setup.step_create_failed'));
+      toast({ variant: 'destructive', description: t('get_ready.setup.step_create_failed') });
     },
   });
 
@@ -81,11 +82,11 @@ export function useStepManagement() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.setup.step_updated'));
+      toast({ description: t('get_ready.setup.step_updated') });
     },
     onError: (error: Error) => {
       console.error('Failed to update step:', error);
-      toast.error(t('get_ready.setup.step_update_failed'));
+      toast({ variant: 'destructive', description: t('get_ready.setup.step_update_failed') });
     },
   });
 
@@ -115,14 +116,14 @@ export function useStepManagement() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.setup.step_deleted'));
+      toast({ description: t('get_ready.setup.step_deleted') });
     },
     onError: (error: Error) => {
       console.error('Failed to delete step:', error);
       if (error.message === 'Cannot delete step with active vehicles') {
-        toast.error(t('get_ready.setup.step_delete_failed_has_vehicles'));
+        toast({ variant: 'destructive', description: t('get_ready.setup.step_delete_failed_has_vehicles') });
       } else {
-        toast.error(t('get_ready.setup.step_delete_failed'));
+        toast({ variant: 'destructive', description: t('get_ready.setup.step_delete_failed') });
       }
     },
   });
@@ -142,11 +143,11 @@ export function useStepManagement() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.setup.step_archived'));
+      toast({ description: t('get_ready.setup.step_archived') });
     },
     onError: (error: Error) => {
       console.error('Failed to archive step:', error);
-      toast.error(t('get_ready.setup.step_archive_failed'));
+      toast({ variant: 'destructive', description: t('get_ready.setup.step_archive_failed') });
     },
   });
 
@@ -187,11 +188,11 @@ export function useStepManagement() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.setup.steps_reordered'));
+      toast({ description: t('get_ready.setup.steps_reordered') });
     },
     onError: (error: Error) => {
       console.error('Failed to reorder steps:', error);
-      toast.error(t('get_ready.setup.steps_reorder_failed'));
+      toast({ variant: 'destructive', description: t('get_ready.setup.steps_reorder_failed') });
     },
   });
 

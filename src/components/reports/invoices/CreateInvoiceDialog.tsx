@@ -39,7 +39,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { AlertCircle, Calendar, Car, DollarSign, FileText, Filter, Receipt, Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface CreateInvoiceDialogProps {
@@ -277,12 +277,12 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
     e.preventDefault();
 
     if (selectedVehicleIds.size === 0) {
-      toast.error('Please select at least one vehicle');
+      toast({ variant: 'destructive', description: 'Please select at least one vehicle' });
       return;
     }
 
     if (dueDate < issueDate) {
-      toast.error('Due date must be after issue date');
+      toast({ variant: 'destructive', description: 'Due date must be after issue date' });
       return;
     }
 
@@ -347,7 +347,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
       if (itemsError) throw itemsError;
 
-      toast.success(`Invoice created with ${selectedVehicles.length} vehicles`);
+      toast({ description: `Invoice created with ${selectedVehicles.length} vehicles` });
 
       // Reset and close
       setSelectedVehicleIds(new Set());
@@ -356,7 +356,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       onOpenChange(false);
     } catch (error: any) {
       console.error('Failed to create invoice:', error);
-      toast.error(`Failed to create invoice: ${error.message}`);
+      toast({ variant: 'destructive', description: `Failed to create invoice: ${error.message}` });
     }
   };
 

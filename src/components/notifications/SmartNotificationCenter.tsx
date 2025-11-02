@@ -16,7 +16,7 @@ import {
   CheckCheck,
   Filter,
 } from 'lucide-react';
-import { useSmartNotifications } from '@/hooks/useSmartNotifications';
+import { useSmartNotifications, NotificationGroup } from '@/hooks/useSmartNotifications';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { NotificationItem } from './NotificationItem';
@@ -40,7 +40,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
   } = useSmartNotifications(dealerId);
 
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'unread' | 'important'>('all');
-  const [selectedTab, setSelectedTab] = useState('grouped');
+  const [selectedTab, setSelectedTab] = useState('chronological'); // Default to recent notifications first
 
   // Filter notifications based on selected filter
   // Filter notifications for chronological view

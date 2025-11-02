@@ -144,7 +144,7 @@ export function AttachmentPreviewModal({
                 <Button
                   variant="outline"
                   onClick={() => {
-                    toast.info(t('attachments.download_to_view', 'Download file to view'));
+                    toast({ description: t('attachments.download_to_view', 'Download file to view') });
                   }}
                   className="flex items-center gap-2"
                 >

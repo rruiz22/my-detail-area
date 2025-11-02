@@ -28,7 +28,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface CostItem {
   id: string;
@@ -148,7 +148,7 @@ export function ReconCostingSystem({ orderId, vehicleInfo, className }: ReconCos
     });
     setIsAddingItem(false);
     
-    toast.success(t('recon_costing.item_added'));
+    toast({ description: t('recon_costing.item_added') });
   };
 
   const handleUpdateItem = (itemId: string, updates: Partial<CostItem>) => {
@@ -169,7 +169,7 @@ export function ReconCostingSystem({ orderId, vehicleInfo, className }: ReconCos
 
   const handleDeleteItem = (itemId: string) => {
     setCostItems(items => items.filter(item => item.id !== itemId));
-    toast.success(t('recon_costing.item_deleted'));
+    toast({ description: t('recon_costing.item_deleted') });
   };
 
   const getCategoryIcon = (category: string) => {

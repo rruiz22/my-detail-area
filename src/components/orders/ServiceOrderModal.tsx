@@ -28,7 +28,7 @@ import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Check, ChevronsUpDown, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -87,6 +87,7 @@ interface ServiceOrderModalProps {
 
 const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order, open, onClose, onSave }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { user: authUser } = useAuth();
   const { roles } = usePermissionContext();
   const { enhancedUser } = usePermissions();
@@ -453,12 +454,11 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);
       if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);
 
-      toast.success(
-        `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,
-        { duration: 4000 }
-      );
+      toast({
+        description: `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`
+      });
     } else if (result.source === 'vin_api') {
-      toast.success(t('stock.autopop.vinDecoded'), { duration: 3000 });
+      toast({ description: t('stock.autopop.vinDecoded') });
     }
   };
 
@@ -490,7 +490,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     if (checked) {
       // ✅ LIMIT: Maximum 2 services per order
       if (selectedServices.length >= 2) {
-        toast.warning(t('orders.max_services_reached', 'Maximum 2 services per order'));
+        toast({ description: t('orders.max_services_reached', 'Maximum 2 services per order') });
         return;
       }
       setSelectedServices(prev => [...prev, serviceId]);
@@ -503,44 +503,91 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     e.preventDefault();
     setSubmitError(null); // Reset any previous errors
 
-    // Send camelCase data directly - hook will handle transformation
-    const orderData = {
-      customerName: formData.customerName,
-      customerEmail: formData.customerEmail,
-      customerPhone: formData.customerPhone,
-      vehicleVin: formData.vehicleVin || undefined,
-      vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
-      vehicleMake: formData.vehicleMake || undefined,
-      vehicleModel: formData.vehicleModel || undefined,
-      vehicleInfo: formData.vehicleInfo || undefined,
-      po: formData.po || undefined,
-      ro: formData.ro || undefined,
-      tag: formData.tag || undefined,
-      assignedGroupId: selectedAssignedTo || undefined,
-      services: selectedServices,
-      totalAmount: selectedServices.reduce((total, serviceId) => {
+    // Check if we have multiple services - create separate orders for each
+    if (!order && selectedServices.length > 1) {
+      // Create an array of order data, one per service
+      const ordersData = selectedServices.map(serviceId => {
         const service = services.find(s => s.id === serviceId);
-        return total + (service?.price || 0);
-      }, 0),
-      notes: formData.notes || undefined,
-      dueDate: formData.dueDate || undefined,
-      dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined
-    };
-
-    try {
-      await onSave(orderData);
-      // Only close modal on successful save
-      onClose();
-    } catch (error: any) {
-      // Keep modal open and show error
-      logError('Error saving service order:', error);
-      const errorMessage = error?.message || t('orders.save_error') || 'Failed to save order';
-      setSubmitError(errorMessage);
-      toast({
-        title: t('common.error'),
-        description: errorMessage,
-        variant: 'destructive'
+        return {
+          customerName: formData.customerName,
+          customerEmail: formData.customerEmail,
+          customerPhone: formData.customerPhone,
+          vehicleVin: formData.vehicleVin || undefined,
+          vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
+          vehicleMake: formData.vehicleMake || undefined,
+          vehicleModel: formData.vehicleModel || undefined,
+          vehicleInfo: formData.vehicleInfo || undefined,
+          po: formData.po || undefined,
+          ro: formData.ro || undefined,
+          tag: formData.tag || undefined,
+          assignedGroupId: selectedAssignedTo || undefined,
+          services: [serviceId], // Only include this specific service
+          totalAmount: service?.price || 0,
+          notes: formData.notes || undefined,
+          dueDate: formData.dueDate || undefined,
+          dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined
+        };
       });
+
+      try {
+        // Show immediate feedback
+        toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
+
+        // Pass array of orders to onSave
+        await onSave(ordersData as any);
+        // Only close modal on successful save
+        onClose();
+      } catch (error: any) {
+        // Keep modal open and show error
+        logError('Error saving service orders:', error);
+        const errorMessage = error?.message || t('orders.save_error') || 'Failed to save orders';
+        setSubmitError(errorMessage);
+        toast({
+          title: t('common.error'),
+          description: errorMessage,
+          variant: 'destructive'
+        });
+      }
+    } else {
+      // Single service or editing - proceed as normal
+      const orderData = {
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        vehicleVin: formData.vehicleVin || undefined,
+        vehicleYear: formData.vehicleYear ? parseInt(formData.vehicleYear) : undefined,
+        vehicleMake: formData.vehicleMake || undefined,
+        vehicleModel: formData.vehicleModel || undefined,
+        vehicleInfo: formData.vehicleInfo || undefined,
+        po: formData.po || undefined,
+        ro: formData.ro || undefined,
+        tag: formData.tag || undefined,
+        assignedGroupId: selectedAssignedTo || undefined,
+        services: selectedServices,
+        totalAmount: selectedServices.reduce((total, serviceId) => {
+          const service = services.find(s => s.id === serviceId);
+          return total + (service?.price || 0);
+        }, 0),
+        notes: formData.notes || undefined,
+        dueDate: formData.dueDate || undefined,
+        dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined
+      };
+
+      try {
+        await onSave(orderData);
+        // Only close modal on successful save
+        onClose();
+      } catch (error: any) {
+        // Keep modal open and show error
+        logError('Error saving service order:', error);
+        const errorMessage = error?.message || t('orders.save_error') || 'Failed to save order';
+        setSubmitError(errorMessage);
+        toast({
+          title: t('common.error'),
+          description: errorMessage,
+          variant: 'destructive'
+        });
+      }
     }
   };
 

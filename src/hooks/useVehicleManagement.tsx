@@ -287,11 +287,11 @@ export function useVehicleManagement() {
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.vehicle_form.success.deleted'));
+      toast({ description: t('get_ready.vehicle_form.success.deleted') });
     },
     onError: (error: Error) => {
       console.error('Failed to delete vehicle:', error);
-      toast.error(t('get_ready.vehicle_form.errors.delete_failed'));
+      toast({ variant: 'destructive', description: t('get_ready.vehicle_form.errors.delete_failed') });
     },
   });
 
@@ -415,11 +415,11 @@ export function useVehicleManagement() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.approvals.success.approved'));
+      toast({ description: t('get_ready.approvals.success.approved') });
     },
     onError: (error: Error) => {
       console.error('Failed to approve vehicle:', error);
-      toast.error(error.message || t('get_ready.approvals.errors.approve_failed'));
+      toast({ variant: 'destructive', description: error.message || t('get_ready.approvals.errors.approve_failed') });
     },
   });
 
@@ -448,11 +448,11 @@ export function useVehicleManagement() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.approvals.success.rejected'));
+      toast({ description: t('get_ready.approvals.success.rejected') });
     },
     onError: (error: Error) => {
       console.error('Failed to reject vehicle:', error);
-      toast.error(error.message || t('get_ready.approvals.errors.reject_failed'));
+      toast({ variant: 'destructive', description: error.message || t('get_ready.approvals.errors.reject_failed') });
     },
   });
 
@@ -476,11 +476,11 @@ export function useVehicleManagement() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-      toast.success(t('get_ready.approvals.success.requested'));
+      toast({ description: t('get_ready.approvals.success.requested') });
     },
     onError: (error: Error) => {
       console.error('Failed to request approval:', error);
-      toast.error(error.message || t('get_ready.approvals.errors.request_failed'));
+      toast({ variant: 'destructive', description: error.message || t('get_ready.approvals.errors.request_failed') });
     },
   });
 

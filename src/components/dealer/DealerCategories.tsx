@@ -13,7 +13,7 @@ import { canViewPricing } from '@/utils/permissions';
 import { Edit2, Plus, Settings, Tag, Trash2 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface ServiceCategory {
   id: string;
@@ -90,7 +90,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
-      toast.error(t('categories.error_fetching'));
+      toast({ variant: 'destructive', description: t('categories.error_fetching') });
     }
   }, [dealerId, t]);
 
@@ -148,12 +148,12 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
     e.preventDefault();
 
     if (!canManageCategories) {
-      toast.error(t('categories.insufficient_permissions'));
+      toast({ variant: 'destructive', description: t('categories.insufficient_permissions') });
       return;
     }
 
     if (!formData.name.trim()) {
-      toast.error(t('categories.name_required'));
+      toast({ variant: 'destructive', description: t('categories.name_required') });
       return;
     }
 
@@ -161,7 +161,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
       if (editingCategory) {
         // Update existing category (only custom categories can be edited)
         if (editingCategory.is_system_category) {
-          toast.error(t('categories.cannot_edit_system'));
+          toast({ variant: 'destructive', description: t('categories.cannot_edit_system') });
           return;
         }
 
@@ -180,7 +180,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
         // Update module mappings
         await updateCategoryMappings(editingCategory.id, formData.modules);
 
-        toast.success(t('categories.updated_successfully'));
+        toast({ description: t('categories.updated_successfully') });
       } else {
         // Create new category
         const { data: newCategory, error: insertError } = await supabase
@@ -201,7 +201,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
         // Create module mappings
         await updateCategoryMappings(newCategory.id, formData.modules);
 
-        toast.success(t('categories.created_successfully'));
+        toast({ description: t('categories.created_successfully') });
       }
 
       setIsModalOpen(false);
@@ -209,7 +209,7 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
       await loadData();
     } catch (error) {
       console.error('Error saving category:', error);
-      toast.error(t('categories.error_saving'));
+      toast({ variant: 'destructive', description: t('categories.error_saving') });
     }
   };
 
@@ -242,12 +242,12 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
     if (!category) return;
 
     if (category.is_system_category) {
-      toast.error(t('categories.cannot_delete_system'));
+      toast({ variant: 'destructive', description: t('categories.cannot_delete_system') });
       return;
     }
 
     if (!canManageCategories) {
-      toast.error(t('categories.insufficient_permissions'));
+      toast({ variant: 'destructive', description: t('categories.insufficient_permissions') });
       return;
     }
 
@@ -260,11 +260,11 @@ export function DealerCategories({ dealerId }: DealerCategoriesProps) {
 
       if (error) throw error;
 
-      toast.success(t('categories.deleted_successfully'));
+      toast({ description: t('categories.deleted_successfully') });
       await loadData();
     } catch (error) {
       console.error('Error deleting category:', error);
-      toast.error(t('categories.error_deleting'));
+      toast({ variant: 'destructive', description: t('categories.error_deleting') });
     }
   };
 

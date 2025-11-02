@@ -1,13 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import type { Vendor, VendorWithStats, VendorSpecialty } from '@/types/getReady';
 
 // Fetch all vendors for current dealership
 export function useVendors() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
 
   return useQuery({
@@ -156,11 +157,11 @@ export function useCreateVendor() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendors'] });
       queryClient.invalidateQueries({ queryKey: ['vendors-with-stats'] });
-      toast.success(t('get_ready.vendors.vendor_created'));
+      toast({ description: t('get_ready.vendors.vendor_created') });
     },
     onError: (error) => {
       console.error('Error creating vendor:', error);
-      toast.error(t('get_ready.vendors.error_creating_vendor'));
+      toast({ variant: 'destructive', description: t('get_ready.vendors.error_creating_vendor') });
     }
   });
 }
@@ -186,11 +187,11 @@ export function useUpdateVendor() {
       queryClient.invalidateQueries({ queryKey: ['vendors'] });
       queryClient.invalidateQueries({ queryKey: ['vendors-with-stats'] });
       queryClient.invalidateQueries({ queryKey: ['vendor'] });
-      toast.success(t('get_ready.vendors.vendor_updated'));
+      toast({ description: t('get_ready.vendors.vendor_updated') });
     },
     onError: (error) => {
       console.error('Error updating vendor:', error);
-      toast.error(t('get_ready.vendors.error_updating_vendor'));
+      toast({ variant: 'destructive', description: t('get_ready.vendors.error_updating_vendor') });
     }
   });
 }
@@ -226,11 +227,11 @@ export function useDeleteVendor() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendors'] });
       queryClient.invalidateQueries({ queryKey: ['vendors-with-stats'] });
-      toast.success(t('get_ready.vendors.vendor_deleted'));
+      toast({ description: t('get_ready.vendors.vendor_deleted') });
     },
     onError: (error: any) => {
       console.error('Error deleting vendor:', error);
-      toast.error(error.message || t('get_ready.vendors.error_deleting_vendor'));
+      toast({ variant: 'destructive', description: error.message || t('get_ready.vendors.error_deleting_vendor') });
     }
   });
 }
@@ -255,15 +256,15 @@ export function useToggleVendorStatus() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['vendors'] });
       queryClient.invalidateQueries({ queryKey: ['vendors-with-stats'] });
-      toast.success(
-        data.is_active
+      toast({
+        description: data.is_active
           ? t('get_ready.vendors.vendor_activated')
           : t('get_ready.vendors.vendor_deactivated')
-      );
+      });
     },
     onError: (error) => {
       console.error('Error toggling vendor status:', error);
-      toast.error(t('get_ready.vendors.error_updating_vendor'));
+      toast({ variant: 'destructive', description: t('get_ready.vendors.error_updating_vendor') });
     }
   });
 }

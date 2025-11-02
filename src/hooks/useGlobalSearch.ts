@@ -24,6 +24,7 @@ export interface SearchResult {
   // Order-specific fields
   stock_number?: string;
   vehicle_vin?: string;
+  vehicle_info?: string; // Full vehicle info (year make model)
   status?: string;
   due_date?: string;
   completion_date?: string;
@@ -98,6 +99,16 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
     const escapedQuery = escapePattern(query);
     const searchPattern = '*' + escapedQuery + '*';
 
+    // Fetch all user profiles once for mapping assigned users
+    const { data: allProfiles } = await supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email');
+
+    const userMap = new Map(allProfiles?.map(u => [
+      u.id,
+      `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+    ]) || []);
+
     // 🔍 SALES ORDERS - Permission-based search
     if (enhancedUser?.is_system_admin || hasModulePermission('sales_orders', 'view_orders')) {
       try {
@@ -105,7 +116,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
           .from('orders')
           .select('*')
           .eq('order_type', 'sales')
-          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern);
+          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern + ',tag.ilike.' + searchPattern);
 
         if (selectedDealerId !== 'all') {
           salesQuery = salesQuery.eq('dealer_id', selectedDealerId);
@@ -114,15 +125,19 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
         const { data: salesOrders, error } = await salesQuery.limit(5);
 
         if (!error && salesOrders) {
-          salesOrders.forEach(order => {
+          salesOrders.forEach((order: any) => {
+            const vehicleInfo = [order.vehicle_year, order.vehicle_make, order.vehicle_model].filter(Boolean).join(' ').trim() || undefined;
+            const assignedName = order.assigned_group_id ? userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+
             searchResults.push({
               id: order.id,
               type: 'sales_order',
               title: `Sales Order #${order.order_number}`,
-              subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
+              subtitle: `${assignedName} • ${vehicleInfo || order.stock_number || 'N/A'}`,
               url: `/sales?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
+              vehicle_info: vehicleInfo,
               status: order.status || undefined,
               due_date: order.due_date || undefined,
               completion_date: order.completion_date || undefined,
@@ -142,7 +157,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
           .from('orders')
           .select('*')
           .eq('order_type', 'service')
-          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern);
+          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern + ',po.ilike.' + searchPattern + ',ro.ilike.' + searchPattern + ',tag.ilike.' + searchPattern);
 
         if (selectedDealerId !== 'all') {
           serviceQuery = serviceQuery.eq('dealer_id', selectedDealerId);
@@ -151,15 +166,19 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
         const { data: serviceOrders, error } = await serviceQuery.limit(5);
 
         if (!error && serviceOrders) {
-          serviceOrders.forEach(order => {
+          serviceOrders.forEach((order: any) => {
+            const vehicleInfo = [order.vehicle_year, order.vehicle_make, order.vehicle_model].filter(Boolean).join(' ').trim() || undefined;
+            const assignedName = order.assigned_group_id ? userMap.get(order.assigned_group_id) || 'Unknown User' : 'Unassigned';
+
             searchResults.push({
               id: order.id,
               type: 'service_order',
               title: `Service Order #${order.order_number}`,
-              subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
+              subtitle: `${assignedName} • ${vehicleInfo || order.stock_number || 'N/A'}`,
               url: `/service?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
+              vehicle_info: vehicleInfo,
               status: order.status || undefined,
               due_date: order.due_date || undefined,
               completion_date: order.completion_date || undefined,
@@ -179,7 +198,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
           .from('orders')
           .select('*')
           .eq('order_type', 'recon')
-          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern);
+          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern + ',tag.ilike.' + searchPattern);
 
         if (selectedDealerId !== 'all') {
           reconQuery = reconQuery.eq('dealer_id', selectedDealerId);
@@ -188,15 +207,18 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
         const { data: reconOrders, error } = await reconQuery.limit(5);
 
         if (!error && reconOrders) {
-          reconOrders.forEach(order => {
+          reconOrders.forEach((order: any) => {
+            const vehicleInfo = [order.vehicle_year, order.vehicle_make, order.vehicle_model].filter(Boolean).join(' ').trim() || undefined;
+
             searchResults.push({
               id: order.id,
               type: 'recon_order',
               title: `Recon Order #${order.order_number}`,
-              subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
+              subtitle: vehicleInfo || order.stock_number || 'N/A',
               url: `/recon?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
+              vehicle_info: vehicleInfo,
               status: order.status || undefined,
               due_date: order.due_date || undefined,
               completion_date: order.completion_date || undefined,
@@ -216,7 +238,7 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
           .from('orders')
           .select('*')
           .eq('order_type', 'carwash')
-          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern);
+          .or('vehicle_vin.ilike.' + searchPattern + ',customer_name.ilike.' + searchPattern + ',order_number.ilike.' + searchPattern + ',stock_number.ilike.' + searchPattern + ',tag.ilike.' + searchPattern);
 
         if (selectedDealerId !== 'all') {
           carWashQuery = carWashQuery.eq('dealer_id', selectedDealerId);
@@ -225,15 +247,18 @@ export const useGlobalSearch = (): UseGlobalSearchReturn => {
         const { data: carWashOrders, error } = await carWashQuery.limit(5);
 
         if (!error && carWashOrders) {
-          carWashOrders.forEach(order => {
+          carWashOrders.forEach((order: any) => {
+            const vehicleInfo = [order.vehicle_year, order.vehicle_make, order.vehicle_model].filter(Boolean).join(' ').trim() || undefined;
+
             searchResults.push({
               id: order.id,
               type: 'car_wash',
               title: `Car Wash #${order.order_number}`,
-              subtitle: order.customer_name || order.vehicle_vin || order.stock_number || undefined,
+              subtitle: vehicleInfo || order.stock_number || 'N/A',
               url: `/carwash?order=${order.id}`,
               stock_number: order.stock_number || undefined,
               vehicle_vin: order.vehicle_vin || undefined,
+              vehicle_info: vehicleInfo,
               status: order.status || undefined,
               due_date: order.due_date || undefined,
               completion_date: order.completion_date || undefined,

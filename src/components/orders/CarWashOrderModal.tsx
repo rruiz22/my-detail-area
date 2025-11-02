@@ -19,7 +19,7 @@ import { formatVehicleDisplay } from '@/utils/vehicleUtils';
 import { AlertCircle, Clock, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -84,6 +84,7 @@ const normalizeServiceId = (service: any): string => {
 
 const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onClose, onSave }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Form state
@@ -294,7 +295,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     if (checked) {
       // ✅ LIMIT: Maximum 1 service per car wash order
       if (selectedServices.length >= 1) {
-        toast.warning(t('car_wash_orders.max_one_service', 'Car wash orders can only have one service'));
+        toast({ description: t('car_wash_orders.max_one_service', 'Car wash orders can only have one service') });
         return;
       }
       setSelectedServices(prev => [...prev, serviceId]);
@@ -356,7 +357,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
     if (selectedServices.length === 0) {
       setServiceRequiredError(true);
-      toast.error(t('validation.option_required'));
+      toast({ variant: 'destructive', description: t('validation.option_required') });
       return;
     }
 
@@ -384,7 +385,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
       console.error('Submit error:', error);
       const errorMessage = error?.message || 'Failed to save order';
       setSubmitError(errorMessage);
-      toast.error(errorMessage);
+      toast({ variant: 'destructive', description: errorMessage });
       // Modal stays open with data intact
     }
   };

@@ -288,14 +288,6 @@ const App = () => (
     </TooltipProvider>
     {/* Sistema de toast shadcn/ui - Sistema unificado */}
     <Toaster />
-    {/* Sonner comentado - ahora todo usa shadcn/ui toast
-    <Sonner
-      position="top-right"
-      expand={true}
-      closeButton
-      richColors
-    />
-    */}
   </QueryClientProvider>
 );
 

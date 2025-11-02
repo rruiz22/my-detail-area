@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface Reaction {
   type: string;
@@ -109,7 +109,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
 
         if (error) throw error;
 
-        toast.success('Reaction removed');
+        toast({ description: 'Reaction removed' });
       } else {
         // Add reaction
         const { error } = await supabase
@@ -129,7 +129,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
           }));
         }
 
-        toast.success('Reaction added');
+        toast({ description: 'Reaction added' });
       }
 
       // Refresh reactions
@@ -137,7 +137,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
 
     } catch (error) {
       console.error('❌ Error toggling reaction:', error);
-      toast.error('Failed to update reaction');
+      toast({ variant: 'destructive', description: 'Failed to update reaction' });
     } finally {
       setLoading(false);
     }
@@ -209,7 +209,7 @@ export function CommentReactions({ commentId, className }: CommentReactionsProps
         className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
         onClick={() => {
           // TODO: Show reaction picker modal
-          toast.info('More reactions coming soon');
+          toast({ description: 'More reactions coming soon' });
         }}
         disabled={loading}
       >

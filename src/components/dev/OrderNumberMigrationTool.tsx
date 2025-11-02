@@ -12,7 +12,7 @@ import {
   Play
 } from 'lucide-react';
 import { migrateOrderNumbers } from '@/utils/migrateOrders';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 /**
  * Development tool for migrating order numbers
@@ -31,12 +31,12 @@ export function OrderNumberMigrationTool() {
       await migrateOrderNumbers();
       
       setMigrationStatus('success');
-      toast.success('Order numbers migrated successfully!');
+      toast({ description: 'Order numbers migrated successfully!' });
       
     } catch (error) {
       console.error('Migration failed:', error);
       setMigrationStatus('error');
-      toast.error('Migration failed. Check console for details.');
+      toast({ variant: 'destructive', description: 'Migration failed. Check console for details.' });
     } finally {
       setMigrating(false);
     }

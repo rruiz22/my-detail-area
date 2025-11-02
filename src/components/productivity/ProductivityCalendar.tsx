@@ -23,7 +23,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useProductivityCalendars, ProductivityEvent } from "@/hooks/useProductivityCalendars";
 import { format } from "date-fns";
-import { toast } from "sonner";
+import { useToast } from '@/hooks/use-toast';
 
 const localizer = momentLocalizer(moment);
 
@@ -67,7 +67,7 @@ export const ProductivityCalendar = () => {
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEvent.calendar_id) {
-      toast.error('Please select a calendar');
+      toast({ variant: 'destructive', description: 'Please select a calendar' });
       return;
     }
     

@@ -20,7 +20,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { Dealership, DealershipFormData, DealershipStatus, SubscriptionPlan } from '@/types/dealership';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { Building2, Palette } from 'lucide-react';
 import { LogoUploader } from './LogoUploader';
 
@@ -116,7 +116,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
 
     // Basic validation
     if (!formData.name.trim() || !formData.email.trim()) {
-      toast.error(t('messages.required_field'));
+      toast({ variant: 'destructive', description: t('messages.required_field') });
       return;
     }
 
@@ -130,20 +130,20 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
           .eq('id', dealership.id);
 
         if (error) throw error;
-        toast.success(t('messages.saved'));
+        toast({ description: t('messages.saved') });
       } else {
         const { error } = await supabase
           .from('dealerships')
           .insert(formData);
 
         if (error) throw error;
-        toast.success(t('messages.saved'));
+        toast({ description: t('messages.saved') });
       }
 
       onSuccess();
     } catch (error) {
       console.error('Error saving dealership:', error);
-      toast.error(t('messages.error'));
+      toast({ variant: 'destructive', description: t('messages.error') });
     } finally {
       setLoading(false);
     }

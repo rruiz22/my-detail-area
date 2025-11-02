@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface TeamCommunicationBlockProps {
   orderId: string;
@@ -111,18 +111,19 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
       setNewMessage('');
       currentAttachments.clearFiles();
 
-      toast.success(
-        activeTab === 'comments'
+      toast({
+        description: activeTab === 'comments'
           ? t('order_comments.comment_added', 'Comment added successfully')
           : t('order_comments.note_added', 'Internal note added successfully')
-      );
+      });
     } catch (error) {
       console.error('❌ Failed to add message with attachments:', error);
-      toast.error(
-        activeTab === 'comments'
+      toast({
+        variant: 'destructive',
+        description: activeTab === 'comments'
           ? t('order_comments.comment_failed', 'Failed to add comment')
           : t('order_comments.note_failed', 'Failed to add internal note')
-      );
+      });
     } finally {
       setLoading(false);
     }
@@ -141,9 +142,9 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
       );
       setReplyMessage('');
       setReplyingTo(null);
-      toast.success(t('order_comments.reply_added', 'Reply added successfully'));
+      toast({ description: t('order_comments.reply_added', 'Reply added successfully') });
     } catch (error) {
-      toast.error(t('order_comments.reply_failed', 'Failed to add reply'));
+      toast({ variant: 'destructive', description: t('order_comments.reply_failed', 'Failed to add reply') });
     } finally {
       setLoading(false);
     }
@@ -167,14 +168,14 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
 
     try {
       await deleteComment(commentToDelete);
-      toast.success(
-        activeTab === 'comments'
+      toast({
+        description: activeTab === 'comments'
           ? t('order_comments.comment_deleted', 'Comment deleted successfully')
           : t('order_comments.note_deleted', 'Internal note deleted successfully')
-      );
+      });
     } catch (error) {
       console.error('❌ Failed to delete comment:', error);
-      toast.error(t('order_comments.delete_failed', 'Failed to delete comment'));
+      toast({ variant: 'destructive', description: t('order_comments.delete_failed', 'Failed to delete comment') });
     } finally {
       setCommentToDelete(null);
       setDeleteDialogOpen(false);

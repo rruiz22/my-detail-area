@@ -3,10 +3,10 @@ import { initReactI18next } from 'react-i18next';
 
 // Translation cache version - increment this when translations are updated
 // This forces browsers to reload translation files
-const TRANSLATION_VERSION = `1.5.3-${Date.now()}`; // v1.5.3: Invoice delete translations cache refresh (all keys already exist)
+const TRANSLATION_VERSION = `1.6.2-${Date.now()}`; // v1.6.2: Fixed notifications conflict - moved channel_matrix to settings root
 
 // ✅ PHASE 1.3: SessionStorage cache key for translations
-const TRANSLATION_CACHE_KEY = 'i18n_translations_cache_v3'; // v2: Force reload for settings tabs fix
+const TRANSLATION_CACHE_KEY = 'i18n_translations_cache_v6'; // v6: Fixed settings.notifications object conflict
 
 // Language resources will be loaded dynamically
 const resources = {};

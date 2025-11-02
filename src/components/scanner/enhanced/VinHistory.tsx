@@ -16,7 +16,7 @@ import {
   Eye
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface VinHistoryEntry {
   id: string;
@@ -82,19 +82,19 @@ export function VinHistory({ className, onVinSelect }: VinHistoryProps) {
   const clearHistory = () => {
     localStorage.removeItem('vinScannerHistory');
     setHistory([]);
-    toast.success('VIN history cleared');
+    toast({ description: 'VIN history cleared' });
   };
 
   const copyVin = (vin: string) => {
     navigator.clipboard.writeText(vin);
-    toast.success('VIN copied to clipboard');
+    toast({ description: 'VIN copied to clipboard' });
   };
 
   const deleteEntry = (id: string) => {
     const newHistory = history.filter(entry => entry.id !== id);
     localStorage.setItem('vinScannerHistory', JSON.stringify(newHistory));
     setHistory(newHistory);
-    toast.success('Entry removed from history');
+    toast({ description: 'Entry removed from history' });
   };
 
   const exportHistory = () => {
@@ -108,7 +108,7 @@ export function VinHistory({ className, onVinSelect }: VinHistoryProps) {
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
     
-    toast.success('VIN history exported');
+    toast({ description: 'VIN history exported' });
   };
 
   const getSourceIcon = (source: string) => {

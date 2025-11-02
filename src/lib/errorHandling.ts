@@ -2,8 +2,6 @@
  * Enterprise Error Handling and Fallback Mechanisms for Cloud Sync
  */
 
-import { toast } from 'sonner';
-
 export interface ErrorContext {
   operation: string;
   key?: string;
@@ -200,9 +198,7 @@ class ErrorHandlingService {
           state = 'open';
           console.warn(`🔴 Circuit breaker opened for ${operation}`);
           
-          toast.warning(`${operation} temporarily unavailable`, {
-            description: 'Service will retry automatically'
-          });
+          console.warn(`${operation} temporarily unavailable`);
         }
 
         throw error;
@@ -337,10 +333,7 @@ class ErrorHandlingService {
       console.log(`💾 Falling back to localStorage for ${context.operation}`);
       
       // Show user that we're in offline mode
-      toast.info('Working offline', {
-        description: 'Changes will sync when connection is restored',
-        duration: 3000
-      });
+      console.info('Working offline');
       
       return true;
     } catch (error) {
@@ -359,10 +352,7 @@ class ErrorHandlingService {
       'Cross-device sync'
     ];
 
-    toast.warning('Limited functionality', {
-      description: `Some features temporarily disabled: ${degradedFeatures.join(', ')}`,
-      duration: 5000
-    });
+    console.warn(`Limited functionality - Some features temporarily disabled: ${degradedFeatures.join(', ')}`);
   }
 
   private showErrorToast(error: Error, context: ErrorContext, strategy: FallbackStrategy): void {
@@ -370,22 +360,11 @@ class ErrorHandlingService {
                           error.message.toLowerCase().includes('fetch');
 
     if (isNetworkError) {
-      toast.error('Connection issue', {
-        description: 'Working offline. Changes will sync when connection is restored.',
-        duration: 4000
-      });
+      console.error('Connection issue');
     } else if (error.message.toLowerCase().includes('quota')) {
-      toast.error('Storage limit reached', {
-        description: 'Please clear some data to continue.',
-        duration: 6000
-      });
+      console.error('Storage limit reached');
     } else {
-      toast.error(`Error in ${context.operation}`, {
-        description: strategy.gracefulDegradation 
-          ? 'Switching to offline mode'
-          : error.message,
-        duration: 3000
-      });
+      console.error(`Error in ${context.operation}`);
     }
   }
 

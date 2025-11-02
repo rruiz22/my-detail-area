@@ -380,3 +380,54 @@ export interface PaymentRow {
   updated_at: string | null;
   refunded_at: string | null;
 }
+
+// =====================================================
+// EMAIL HISTORY
+// =====================================================
+export interface InvoiceEmailHistory {
+  id: string;
+  invoice_id: string;
+  dealership_id: number;
+  sent_to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  message?: string;
+  attachments?: {
+    filename: string;
+    size: number;
+  }[];
+  sent_at: string;
+  sent_by: string | null;
+  status: 'pending' | 'sent' | 'failed' | 'bounced';
+  error_message?: string;
+  provider_response?: any;
+  metadata?: any;
+  sent_by_user?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}
+
+// =====================================================
+// COMMENTS
+// =====================================================
+export interface InvoiceComment {
+  id: string;
+  invoice_id: string;
+  dealership_id: number;
+  user_id: string;
+  comment: string;
+  is_internal: boolean;
+  is_edited: boolean;
+  created_at: string;
+  updated_at: string;
+  user?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}

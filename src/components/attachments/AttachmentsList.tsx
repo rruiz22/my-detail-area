@@ -14,7 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { ImagePreviewModal } from './ImagePreviewModal';
 import { useAttachments } from '@/hooks/useAttachments';
 
@@ -161,7 +161,7 @@ export function AttachmentsList({
 
       if (error) {
         console.error('❌ Download error:', error);
-        toast.error(t('attachments.download_failed', 'Failed to download file'));
+        toast({ variant: 'destructive', description: t('attachments.download_failed', 'Failed to download file') });
         return;
       }
 
@@ -175,11 +175,11 @@ export function AttachmentsList({
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      toast.success(t('attachments.download_success', 'File downloaded'));
+      toast({ description: t('attachments.download_success', 'File downloaded') });
 
     } catch (error) {
       console.error('❌ Download error:', error);
-      toast.error(t('attachments.download_failed', 'Failed to download file'));
+      toast({ variant: 'destructive', description: t('attachments.download_failed', 'Failed to download file') });
     }
   };
 
@@ -195,13 +195,13 @@ export function AttachmentsList({
 
       if (error) {
         console.error('❌ Preview error:', error);
-        toast.error('Failed to load image');
+        toast({ variant: 'destructive', description: 'Failed to load image' });
         return;
       }
 
       if (!data.signedUrl) {
         console.error('❌ No signed URL returned');
-        toast.error('Failed to generate image URL');
+        toast({ variant: 'destructive', description: 'Failed to generate image URL' });
         return;
       }
 
@@ -210,7 +210,7 @@ export function AttachmentsList({
 
     } catch (error) {
       console.error('❌ Preview error:', error);
-      toast.error('Failed to load image');
+      toast({ variant: 'destructive', description: 'Failed to load image' });
     }
   };
 

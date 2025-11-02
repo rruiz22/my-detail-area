@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { useAccessibleDealerships } from './useAccessibleDealerships';
 
 export interface ReportsFilters {
@@ -99,7 +99,7 @@ export const useOrdersAnalytics = (filters: ReportsFilters) => {
       });
 
       if (error) throw error;
-      
+
       const result = data[0];
       return result ? {
         ...result,
@@ -159,6 +159,57 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
     },
     enabled: !!dealerId,
     staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+export const useDepartmentRevenue = (filters: ReportsFilters) => {
+  const dealerId = filters.dealerId;
+
+  return useQuery({
+    queryKey: ['department-revenue', dealerId, filters],
+    queryFn: async () => {
+      if (!dealerId) throw new Error('Dealer ID is required');
+
+      const { data: orders, error } = await supabase
+        .from('orders')
+        .select('order_type, total_amount, status')
+        .eq('dealer_id', dealerId)
+        .gte('created_at', filters.startDate.toISOString())
+        .lte('created_at', filters.endDate.toISOString());
+
+      if (error) throw error;
+
+      // Group by department
+      const departments: Record<string, { revenue: number; orders: number; completed: number }> = {
+        sales: { revenue: 0, orders: 0, completed: 0 },
+        service: { revenue: 0, orders: 0, completed: 0 },
+        recon: { revenue: 0, orders: 0, completed: 0 },
+        carwash: { revenue: 0, orders: 0, completed: 0 },
+      };
+
+      orders?.forEach(order => {
+        const dept = order.order_type || 'sales';
+        if (departments[dept]) {
+          departments[dept].revenue += order.total_amount || 0;
+          departments[dept].orders += 1;
+          if (order.status === 'completed') {
+            departments[dept].completed += 1;
+          }
+        }
+      });
+
+      // Convert to array format for charts
+      return Object.entries(departments).map(([name, data]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        revenue: data.revenue,
+        orders: data.orders,
+        completed: data.completed,
+        avgOrderValue: data.orders > 0 ? data.revenue / data.orders : 0,
+        completionRate: data.orders > 0 ? (data.completed / data.orders) * 100 : 0,
+      }));
+    },
+    enabled: !!dealerId,
+    staleTime: 5 * 60 * 1000,
   });
 };
 

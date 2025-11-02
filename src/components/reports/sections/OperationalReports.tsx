@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -16,22 +16,193 @@ import {
   Activity,
   Package,
   DollarSign,
-  PieChart
+  PieChart,
+  Car,
+  FileText
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { OrderVolumeChart } from '../charts/OrderVolumeChart';
 import { StatusDistributionChart } from '../charts/StatusDistributionChart';
 import { MetricCard } from '../ReportsLayout';
 import { useOrdersAnalytics, usePerformanceTrends, type ReportsFilters } from '@/hooks/useReportsData';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { format, parseISO } from 'date-fns';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import type { UnifiedOrderData } from '@/types/unifiedOrder';
+import { RecalculateOrderTotals } from '../RecalculateOrderTotals';
 
 interface OperationalReportsProps {
   filters: ReportsFilters;
 }
 
+interface VehicleForList {
+  id: string;
+  order_number: string;
+  custom_order_number: string | null;
+  order_type: string;
+  customer_name: string;
+  stock_number: string | null;
+  po: string | null;
+  ro: string | null;
+  tag: string | null;
+  vehicle_make: string | null;
+  vehicle_model: string | null;
+  vehicle_year: number | null;
+  vehicle_vin: string | null;
+  total_amount: number;
+  services: any[] | null;
+  status: string;
+  created_at: string;
+  completed_at: string | null;
+  assigned_group_id: string | null;
+  assigned_to_name: string | null;
+  invoice_number: string | null;
+}
+
 export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters }) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { data: orderAnalytics, isLoading: analyticsLoading } = useOrdersAnalytics(filters);
   const { data: performanceTrends, isLoading: trendsLoading } = usePerformanceTrends(filters);
+
+  // Order detail modal state
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [selectedOrderType, setSelectedOrderType] = useState<'sales' | 'service' | 'recon' | 'carwash'>('sales');
+  const [showOrderModal, setShowOrderModal] = useState(false);
+
+  // Handler for when totals are recalculated
+  const handleRecalculated = () => {
+    // Invalidate queries to refresh the data
+    queryClient.invalidateQueries({ queryKey: ['operational-vehicles-list'] });
+    queryClient.invalidateQueries({ queryKey: ['orders-analytics'] });
+  };
+
+  // Fetch order details when selected
+  const { data: selectedOrderData, isLoading: loadingOrderData } = useQuery({
+    queryKey: ['order-details', selectedOrderId],
+    queryFn: async (): Promise<UnifiedOrderData | null> => {
+      if (!selectedOrderId) return null;
+
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', selectedOrderId)
+        .single();
+
+      if (error) throw error;
+      return data as UnifiedOrderData;
+    },
+    enabled: !!selectedOrderId && showOrderModal,
+  });
+
+  // Fetch vehicles for Orders tab
+  const { data: vehiclesList = [], isLoading: vehiclesLoading } = useQuery({
+    queryKey: ['operational-vehicles-list', filters.dealerId, filters.orderType, filters.startDate, filters.endDate, filters.status],
+    queryFn: async (): Promise<VehicleForList[]> => {
+      if (!filters.dealerId) return [];
+
+      const startDateTime = filters.startDate.toISOString();
+      const endDateTime = (() => {
+        const dt = new Date(filters.endDate);
+        dt.setHours(23, 59, 59, 999);
+        return dt.toISOString();
+      })();
+
+      // Build query with proper filters - explicitly select fields we need
+      let ordersQuery = supabase
+        .from('orders')
+        .select(`
+          id,
+          order_number,
+          custom_order_number,
+          order_type,
+          customer_name,
+          stock_number,
+          po,
+          ro,
+          tag,
+          vehicle_make,
+          vehicle_model,
+          vehicle_year,
+          vehicle_vin,
+          total_amount,
+          services,
+          status,
+          created_at,
+          completed_at,
+          assigned_group_id
+        `)
+        .eq('dealer_id', filters.dealerId)
+        .gte('created_at', startDateTime)
+        .lte('created_at', endDateTime)
+        .order('created_at', { ascending: false })
+        .limit(1000);
+
+      // Apply order type filter
+      if (filters.orderType !== 'all') {
+        ordersQuery = ordersQuery.eq('order_type', filters.orderType);
+      }
+
+      // Apply status filter
+      if (filters.status !== 'all') {
+        ordersQuery = ordersQuery.eq('status', filters.status);
+      }
+
+      const { data: orders, error: ordersError } = await ordersQuery;
+
+      if (ordersError) throw ordersError;
+
+      // Fetch user profiles to get assigned names (assigned_group_id actually contains user IDs)
+      const { data: userProfiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email');
+
+      if (profilesError) {
+        console.error('Error fetching user profiles:', profilesError);
+      }
+
+      // Fetch invoice information for all orders
+      const orderIds = (orders || []).map(o => o.id);
+      const { data: invoiceItems, error: invoiceItemsError } = await supabase
+        .from('invoice_items')
+        .select(`
+          service_reference,
+          invoice:invoices(invoice_number)
+        `)
+        .in('service_reference', orderIds);
+
+      if (invoiceItemsError) {
+        console.error('Error fetching invoice items:', invoiceItemsError);
+      }
+
+      // Create lookup map for user names
+      const userMap = new Map(userProfiles?.map(u => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
+
+      // Create lookup map for invoice numbers (order_id -> invoice_number)
+      const invoiceMap = new Map(
+        invoiceItems?.map(item => [
+          item.service_reference,
+          (item.invoice as any)?.invoice_number || null
+        ]) || []
+      );
+
+      // Enrich orders with user names and invoice numbers
+      const enrichedOrders = (orders || []).map(order => ({
+        ...order,
+        assigned_to_name: order.assigned_group_id ? userMap.get(order.assigned_group_id) || null : null,
+        invoice_number: invoiceMap.get(order.id) || null
+      }));
+
+      return enrichedOrders as VehicleForList[];
+    },
+    enabled: !!filters.dealerId,
+    staleTime: 30 * 1000,
+  });
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -135,55 +306,10 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
         </CardContent>
       </Card>
 
-      {/* Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardDescription className="text-xs">Total Revenue</CardDescription>
-            <CardTitle className="text-3xl font-bold">{formatCurrency(orderAnalytics?.total_revenue || 0)}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2 text-sm">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-              <span className="text-muted-foreground">Period total</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-3">
-            <CardDescription className="text-xs">Avg Order Value</CardDescription>
-            <CardTitle className="text-3xl font-bold">{formatCurrency(orderAnalytics?.avg_order_value || 0)}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2 text-sm">
-              <BarChart3 className="h-4 w-4 text-blue-600" />
-              <span className="text-muted-foreground">Per transaction</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-3">
-            <CardDescription className="text-xs">Revenue per Hour</CardDescription>
-            <CardTitle className="text-3xl font-bold">
-              {formatCurrency(
-                orderAnalytics?.avg_processing_time_hours
-                  ? (orderAnalytics.avg_order_value / orderAnalytics.avg_processing_time_hours)
-                  : 0
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2 text-sm">
-              <Zap className="h-4 w-4 text-amber-600" />
-              <span className="text-muted-foreground">Efficiency metric</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Charts Section */}
-      <Tabs defaultValue="volume" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs defaultValue="orders" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="volume">Order Volume</TabsTrigger>
           <TabsTrigger value="status">Status Analysis</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
@@ -735,7 +861,248 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="orders" className="space-y-4">
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-muted-foreground">Total Orders</span>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="text-3xl font-bold mb-1">{vehiclesList.length}</div>
+                <p className="text-xs text-muted-foreground">In selected period</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="text-3xl font-bold mb-1 text-green-600">
+                  {formatCurrency(vehiclesList.reduce((sum, v) => sum + (v.total_amount || 0), 0))}
+                </div>
+                <p className="text-xs text-muted-foreground">From all orders</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-muted-foreground">Avg Order Value</span>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="text-3xl font-bold mb-1 text-blue-600">
+                  {vehiclesList.length > 0
+                    ? formatCurrency(vehiclesList.reduce((sum, v) => sum + (v.total_amount || 0), 0) / vehiclesList.length)
+                    : formatCurrency(0)}
+                </div>
+                <p className="text-xs text-muted-foreground">Per order</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-muted-foreground">Completed</span>
+                  <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="text-3xl font-bold mb-1 text-green-600">
+                  {vehiclesList.filter(v => v.status === 'completed').length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {vehiclesList.length > 0
+                    ? `${Math.round((vehiclesList.filter(v => v.status === 'completed').length / vehiclesList.length) * 100)}%`
+                    : '0%'} completion rate
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Orders List */}
+          <Card>
+            <CardHeader className="bg-slate-50 border-b">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <FileText className="h-5 w-5" />
+                    Orders Report
+                  </CardTitle>
+                  <CardDescription className="mt-1">
+                    Detailed vehicle orders matching your filters
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  {filters.dealerId && (
+                    <RecalculateOrderTotals
+                      dealerId={filters.dealerId}
+                      onRecalculated={handleRecalculated}
+                    />
+                  )}
+                  <Badge variant="secondary" className="h-fit font-semibold">
+                    {vehiclesList.length} orders
+                  </Badge>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              {vehiclesLoading ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="text-muted-foreground">{t('common.loading')}</div>
+                </div>
+              ) : vehiclesList.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-64">
+                  <Car className="h-12 w-12 text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground mb-1">No orders found</p>
+                  <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
+                </div>
+              ) : (
+                <div className="overflow-auto">
+                  <Table>
+                    <TableHeader className="bg-slate-100 sticky top-0 z-10">
+                      <TableRow className="border-b-2 border-slate-300">
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Order #</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">
+                          {filters.orderType === 'service' ? 'PO / RO / Tag' : filters.orderType === 'carwash' ? 'Stock / Tag' : 'Stock'}
+                        </TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Vehicle</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">VIN</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Assigned</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Dept</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Status</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Invoice</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Amount</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {vehiclesList.map((vehicle, index) => {
+                        let stockDisplay = 'N/A';
+                        if (vehicle.order_type === 'service') {
+                          const parts = [];
+                          if (vehicle.ro) parts.push(`RO: ${vehicle.ro}`);
+                          if (vehicle.po) parts.push(`PO: ${vehicle.po}`);
+                          if (vehicle.tag) parts.push(`Tag: ${vehicle.tag}`);
+                          stockDisplay = parts.length > 0 ? parts.join(', ') : 'N/A';
+                        } else if (vehicle.order_type === 'carwash') {
+                          const parts = [];
+                          if (vehicle.stock_number) parts.push(vehicle.stock_number);
+                          if (vehicle.tag) parts.push(vehicle.tag);
+                          stockDisplay = parts.length > 0 ? parts.join(' / ') : 'N/A';
+                        } else {
+                          stockDisplay = vehicle.stock_number || 'N/A';
+                        }
+
+                        const vehicleDescription = `${vehicle.vehicle_year || ''} ${vehicle.vehicle_make || ''} ${vehicle.vehicle_model || ''}`.trim() || 'N/A';
+
+                        return (
+                          <TableRow
+                            key={vehicle.id}
+                            className={`cursor-pointer border-b transition-colors ${
+                              index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-100/50'
+                            }`}
+                            onClick={() => {
+                              setSelectedOrderId(vehicle.id);
+                              setSelectedOrderType(vehicle.order_type as 'sales' | 'service' | 'recon' | 'carwash');
+                              setShowOrderModal(true);
+                            }}
+                          >
+                            <TableCell className="text-center">
+                              <div className="flex flex-col gap-0.5">
+                                <button
+                                  className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline text-sm"
+                                >
+                                  {vehicle.order_number}
+                                </button>
+                                <span className="text-xs text-muted-foreground">
+                                  {format(parseISO(vehicle.completed_at || vehicle.created_at), 'MM/dd/yyyy')}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="font-medium text-sm text-center">
+                              {vehicle.order_type === 'service' ? (
+                                <div className="flex flex-col gap-0.5">
+                                  {vehicle.po && <span className="text-xs text-muted-foreground">PO: {vehicle.po}</span>}
+                                  {vehicle.ro && <span className="text-xs text-muted-foreground">RO: {vehicle.ro}</span>}
+                                  {vehicle.tag && <span className="text-xs font-medium">Tag: {vehicle.tag}</span>}
+                                  {!vehicle.po && !vehicle.ro && !vehicle.tag && 'N/A'}
+                                </div>
+                              ) : vehicle.order_type === 'carwash' ? (
+                                <div className="flex flex-col gap-0.5">
+                                  {vehicle.stock_number && <span className="text-xs font-medium">Stock: {vehicle.stock_number}</span>}
+                                  {vehicle.tag && <span className="text-xs font-medium">Tag: {vehicle.tag}</span>}
+                                  {!vehicle.stock_number && !vehicle.tag && 'N/A'}
+                                </div>
+                              ) : (
+                                vehicle.stock_number || 'N/A'
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm text-center">
+                              {vehicleDescription}
+                            </TableCell>
+                            <TableCell className="font-mono text-sm font-semibold text-center">
+                              {vehicle.vehicle_vin || 'N/A'}
+                            </TableCell>
+                            <TableCell className="text-sm text-center">
+                              {vehicle.assigned_to_name ? (
+                                <Badge variant="secondary" className="text-xs">
+                                  {vehicle.assigned_to_name}
+                                </Badge>
+                              ) : (
+                                <span className="text-muted-foreground text-xs">Unassigned</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge variant="outline" className="text-xs capitalize">
+                                {vehicle.order_type}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge variant={
+                                vehicle.status === 'completed' ? 'default' :
+                                vehicle.status === 'in_progress' ? 'secondary' :
+                                vehicle.status === 'pending' ? 'outline' :
+                                'destructive'
+                              } className="text-xs capitalize">
+                                {vehicle.status.replace('_', ' ')}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {vehicle.invoice_number ? (
+                                <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
+                                  {vehicle.invoice_number}
+                                </Badge>
+                              ) : (
+                                <span className="text-xs text-muted-foreground italic">No invoice yet</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-center font-medium">
+                              {formatCurrency(vehicle.total_amount || 0)}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
+
+      {/* Order Detail Modal */}
+      {showOrderModal && selectedOrderData && (
+        <UnifiedOrderDetailModal
+          orderType={selectedOrderType}
+          order={selectedOrderData}
+          open={showOrderModal}
+          onClose={() => {
+            setShowOrderModal(false);
+            setSelectedOrderId(null);
+          }}
+          isLoadingData={loadingOrderData}
+        />
+      )}
     </div>
   );
 };

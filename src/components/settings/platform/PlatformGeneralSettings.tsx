@@ -20,7 +20,7 @@ import {
 import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { Settings, AlertCircle, Loader2, Globe, DollarSign, Calendar } from 'lucide-react';
 
 /**
@@ -179,11 +179,11 @@ export function PlatformGeneralSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['system-settings', 'platform_general_config'] });
-      toast.success(t('settings.platform.general.save_success'));
+      toast({ description: t('settings.platform.general.save_success') });
     },
     onError: (error: Error) => {
       console.error('[Platform General Settings] Update failed:', error);
-      toast.error(t('settings.platform.general.save_error'));
+      toast({ variant: 'destructive', description: t('settings.platform.general.save_error') });
     },
   });
 
@@ -217,7 +217,7 @@ export function PlatformGeneralSettings() {
   // Save handler
   const handleSave = () => {
     if (!validate()) {
-      toast.error(t('settings.platform.general.validation_failed'));
+      toast({ variant: 'destructive', description: t('settings.platform.general.validation_failed') });
       return;
     }
 

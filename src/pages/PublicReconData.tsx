@@ -8,7 +8,7 @@ import { googleSheetsService, type GoogleSheetsRow } from '@/services/googleShee
 import { OrderNumberService } from '@/services/orderNumberService';
 import { AlertCircle, Car, CheckSquare, Download, Plus, RefreshCw, Search, Square } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 const PublicReconData: React.FC = () => {
   const [data, setData] = useState<GoogleSheetsRow[]>([]);
@@ -55,22 +55,19 @@ const PublicReconData: React.FC = () => {
         setLastUpdated(response.lastUpdated || new Date().toISOString());
 
         if (response.data.length > 0) {
-          toast.success(`✅ Datos cargados`, {
+          toast({
+            title: `✅ Datos cargados`,
             description: `Se cargaron ${response.data.length} registros desde Google Sheets`,
           });
         }
       } else {
         setError(response.error || 'Error desconocido');
-        toast.error("❌ Error", {
-          description: response.error || "No se pudieron cargar los datos",
-        });
+        toast({ variant: 'destructive', description: "❌ Error" });
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       setError(errorMessage);
-      toast.error("🔌 Error de conexión", {
-        description: errorMessage,
-      });
+      toast({ variant: 'destructive', description: "🔌 Error de conexión" });
     } finally {
       setLoading(false);
     }
@@ -78,9 +75,7 @@ const PublicReconData: React.FC = () => {
 
   const convertSelectedToReconOrders = async () => {
     if (selectedRows.size === 0) {
-      toast.error("⚠️ Sin selección", {
-        description: "Por favor selecciona al menos un registro para convertir",
-      });
+      toast({ variant: 'destructive', description: "⚠️ Sin selección" });
       return;
     }
 
@@ -119,7 +114,8 @@ const PublicReconData: React.FC = () => {
         }
       }
 
-      toast.success("🎉 Conversión completada", {
+      toast({
+        title: "🎉 Conversión completada",
         description: `${successCount} órdenes creadas exitosamente${errorCount > 0 ? `, ${errorCount} errores` : ''}`,
       });
 
@@ -127,9 +123,7 @@ const PublicReconData: React.FC = () => {
       setSelectedRows(new Set());
 
     } catch (error) {
-      toast.error("❌ Error en la conversión", {
-        description: "Ocurrió un error al convertir las órdenes de recon",
-      });
+      toast({ variant: 'destructive', description: "❌ Error en la conversión" });
     } finally {
       setLoading(false);
     }

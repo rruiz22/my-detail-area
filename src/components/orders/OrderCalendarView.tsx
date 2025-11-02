@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { format, parseISO } from "date-fns";
-import { toast } from "sonner";
+import { useToast } from '@/hooks/use-toast';
 
 const localizer = momentLocalizer(moment);
 
@@ -123,7 +123,7 @@ export const OrderCalendarView = ({
     if (onCreateOrder) {
       onCreateOrder(start);
     } else {
-      toast.info(t('calendar.clickToCreateOrder'));
+      toast({ description: t('calendar.clickToCreateOrder') });
     }
   };
 

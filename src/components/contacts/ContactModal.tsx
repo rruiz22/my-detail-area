@@ -21,8 +21,9 @@ import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { ContactFormData, ContactDepartment, DealershipStatus, LanguageCode } from '@/types/dealership';
-import { toast } from 'sonner';
-import { User, Building2, XCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
+import { User, Building2, XCircle, AlertCircle } from 'lucide-react';
 
 // Security utility functions
 const sanitizeInput = (input: string) => {
@@ -55,6 +56,8 @@ interface Contact {
   notes?: string;
   avatar_url?: string;
   status: DealershipStatus;
+  vehicle?: string;
+  plate?: string;
 }
 
 interface ContactModalProps {
@@ -62,17 +65,19 @@ interface ContactModalProps {
   onClose: () => void;
   onSuccess: () => void;
   contact?: Contact | null;
-  dealerships: { id: number; name: string }[];
+  currentDealershipName?: string;
 }
 
-export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships }: ContactModalProps) {
+export function ContactModal({ isOpen, onClose, onSuccess, contact, currentDealershipName }: ContactModalProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
   const [loading, setLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const isEditing = !!contact;
 
   const [formData, setFormData] = useState<ContactFormData>({
-    dealership_id: dealerships.length > 0 ? dealerships[0]?.id || 0 : 0,
+    dealership_id: typeof selectedDealerId === 'number' ? selectedDealerId : 0,
     first_name: '',
     last_name: '',
     email: '',
@@ -86,6 +91,8 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
     notes: '',
     avatar_url: '',
     status: 'active',
+    vehicle: '',
+    plate: '',
   });
 
   useEffect(() => {
@@ -105,10 +112,12 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
         notes: contact.notes || '',
         avatar_url: contact.avatar_url || '',
         status: contact.status,
+        vehicle: contact.vehicle || '',
+        plate: contact.plate || '',
       });
     } else {
       setFormData({
-        dealership_id: dealerships.length > 0 ? dealerships[0]?.id || 0 : 0,
+        dealership_id: typeof selectedDealerId === 'number' ? selectedDealerId : 0,
         first_name: '',
         last_name: '',
         email: '',
@@ -122,10 +131,12 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
         notes: '',
         avatar_url: '',
         status: 'active',
+        vehicle: '',
+        plate: '',
       });
     }
     setValidationErrors([]);
-  }, [contact, dealerships]);
+  }, [contact, selectedDealerId]);
 
   const handleInputChange = <K extends keyof ContactFormData>(
     field: K,
@@ -135,7 +146,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
     let sanitizedValue: ContactFormData[K] = value;
 
     if (typeof value === 'string' &&
-        ['first_name', 'last_name', 'email', 'phone', 'mobile_phone', 'position', 'notes'].includes(field as string)) {
+        ['first_name', 'last_name', 'email', 'phone', 'mobile_phone', 'position', 'notes', 'vehicle', 'plate'].includes(field as string)) {
       sanitizedValue = sanitizeInput(value) as ContactFormData[K];
     }
 
@@ -149,29 +160,29 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
 
   const validateForm = () => {
     const errors: string[] = [];
-    
+
     if (!formData.first_name.trim()) {
       errors.push('First name is required');
     }
-    
+
     if (!formData.last_name.trim()) {
       errors.push('Last name is required');
     }
-    
+
     if (!formData.email.trim()) {
       errors.push('Email is required');
     } else if (!validateEmail(formData.email)) {
       errors.push('Please enter a valid email address');
     }
-    
+
     if (formData.phone && !validatePhone(formData.phone)) {
       errors.push('Please enter a valid phone number');
     }
-    
+
     if (formData.mobile_phone && !validatePhone(formData.mobile_phone)) {
       errors.push('Please enter a valid mobile phone number');
     }
-    
+
     return errors;
   };
 
@@ -182,7 +193,7 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
     const errors = validateForm();
     if (errors.length > 0) {
       setValidationErrors(errors);
-      toast.error(t('messages.error.fix_validation_errors'));
+      toast({ variant: 'destructive', description: t('messages.error.fix_validation_errors') });
       return;
     }
 
@@ -205,6 +216,8 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
         notes: formData.notes ? sanitizeInput(formData.notes) : null,
         avatar_url: formData.avatar_url ? sanitizeInput(formData.avatar_url) : null,
         status: formData.status,
+        vehicle: formData.vehicle ? sanitizeInput(formData.vehicle) : null,
+        plate: formData.plate ? sanitizeInput(formData.plate) : null,
       };
 
       if (isEditing && contact) {
@@ -214,20 +227,20 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
           .eq('id', contact.id);
 
         if (error) throw error;
-        toast.success(t('contacts.contact_updated'));
+        toast({ description: t('contacts.contact_updated') });
       } else {
         const { error } = await supabase
           .from('dealership_contacts')
           .insert(sanitizedData);
 
         if (error) throw error;
-        toast.success(t('contacts.contact_created'));
+        toast({ description: t('contacts.contact_created') });
       }
 
       onSuccess();
     } catch (error) {
       console.error('Error saving contact:', error);
-      toast.error(t('messages.error'));
+      toast({ variant: 'destructive', description: t('messages.error') });
     } finally {
       setLoading(false);
     }
@@ -258,32 +271,20 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
           </Alert>
         )}
 
+        {/* Info alert showing current dealership */}
+        {currentDealershipName && (
+          <Alert>
+            <Building2 className="h-4 w-4" />
+            <AlertDescription>
+              {t('contacts.adding_to_dealer', 'Adding contact to')}: <strong>{currentDealershipName}</strong>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <form onSubmit={onSubmit} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column - Basic Info */}
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="dealership_id" className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  {t('dealerships.title')} *
-                </Label>
-                <Select 
-                  value={formData.dealership_id.toString()} 
-                  onValueChange={(value) => handleInputChange('dealership_id', parseInt(value))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {dealerships.map((dealership) => (
-                      <SelectItem key={dealership.id} value={dealership.id.toString()}>
-                        {dealership.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="first_name">{t('contacts.first_name')} *</Label>
@@ -355,14 +356,37 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
                   maxLength={100}
                 />
               </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="vehicle">{t('contacts.vehicle')}</Label>
+                  <Input
+                    id="vehicle"
+                    value={formData.vehicle}
+                    onChange={(e) => handleInputChange('vehicle', e.target.value)}
+                    placeholder="2024 BMW X5"
+                    maxLength={100}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="plate">{t('contacts.plate')}</Label>
+                  <Input
+                    id="plate"
+                    value={formData.plate}
+                    onChange={(e) => handleInputChange('plate', e.target.value)}
+                    placeholder="ABC-1234"
+                    maxLength={20}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Right Column - Settings */}
             <div className="space-y-4">
               <div>
                 <Label htmlFor="department">{t('contacts.department')}</Label>
-                <Select 
-                  value={formData.department} 
+                <Select
+                  value={formData.department}
                   onValueChange={(value: ContactDepartment) => handleInputChange('department', value)}
                 >
                   <SelectTrigger>
@@ -380,8 +404,8 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
 
               <div>
                 <Label htmlFor="preferred_language">{t('contacts.preferred_language')}</Label>
-                <Select 
-                  value={formData.preferred_language} 
+                <Select
+                  value={formData.preferred_language}
                   onValueChange={(value: LanguageCode) => handleInputChange('preferred_language', value)}
                 >
                   <SelectTrigger>
@@ -397,8 +421,8 @@ export function ContactModal({ isOpen, onClose, onSuccess, contact, dealerships 
 
               <div>
                 <Label htmlFor="status">{t('contacts.status')}</Label>
-                <Select 
-                  value={formData.status} 
+                <Select
+                  value={formData.status}
                   onValueChange={(value: DealershipStatus) => handleInputChange('status', value)}
                 >
                   <SelectTrigger>

@@ -1,4 +1,5 @@
 import { OrderFilters } from '@/components/orders/OrderFilters';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -87,6 +88,11 @@ export default function ServiceOrders() {
   // Check if user can create service orders
   const canCreate = hasModulePermission('service_orders', 'create_orders');
 
+  // Sync searchTerm with useServiceOrderManagement filters
+  useEffect(() => {
+    updateFilters({ search: searchTerm });
+  }, [searchTerm, updateFilters]);
+
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
@@ -112,7 +118,7 @@ export default function ServiceOrders() {
       } else {
         warn('⚠️ [Service] Order not found in orders list:', orderIdFromUrl);
         toast({
-          description: t('orders.order_not_found'),
+          description: t('orders.order_not_found', 'Order not found'),
           variant: 'destructive'
         });
         setHasProcessedUrlOrder(true); // Prevent retrying
@@ -186,11 +192,39 @@ export default function ServiceOrders() {
     }
   }, [orderToDelete, deleteOrder, t, toast]);
 
-  const handleSaveOrder = useCallback(async (orderData: ServiceOrderData) => {
+  const handleSaveOrder = useCallback(async (orderData: ServiceOrderData | ServiceOrderData[]) => {
     try {
-      if (selectedOrder) {
+      // Check if we received an array of orders (multiple services)
+      if (Array.isArray(orderData)) {
+        const createdOrders: ServiceOrder[] = [];
+
+        // Create each order sequentially
+        for (const singleOrderData of orderData) {
+          const newOrder = await createOrder(singleOrderData);
+          if (newOrder) {
+            createdOrders.push(newOrder);
+          }
+        }
+
+        // Show success message with order numbers
+        const orderNumbers = createdOrders
+          .map(o => o.order_number || o.orderNumber)
+          .filter(Boolean)
+          .join(', ');
+
+        const message = t('orders.multiple_created_successfully', {
+          count: createdOrders.length,
+          orders: orderNumbers
+        }) || `${createdOrders.length} orders created successfully: ${orderNumbers}`;
+
+        toast({
+          description: message,
+          variant: 'default'
+        });
+        setLiveRegionMessage(message);
+      } else if (selectedOrder) {
         await updateOrder(selectedOrder.id, orderData);
-        const message = t('orders.updated_successfully');
+        const message = t('orders.updated_successfully', 'Order updated successfully');
         toast({
           description: message,
           variant: 'default'
@@ -198,7 +232,7 @@ export default function ServiceOrders() {
         setLiveRegionMessage(message);
       } else {
         await createOrder(orderData);
-        const message = t('orders.created_successfully');
+        const message = t('orders.created_successfully', 'Order created successfully');
         toast({
           description: message,
           variant: 'default'
@@ -208,7 +242,7 @@ export default function ServiceOrders() {
       setShowModal(false);
     } catch (error) {
       console.error('Error saving order:', error);
-      const message = t('orders.save_failed');
+      const message = t('orders.save_failed', 'Failed to save order');
       toast({
         description: message,
         variant: 'destructive'
@@ -231,11 +265,24 @@ export default function ServiceOrders() {
       // Emit typed events using EventBus
       orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'service' });
       orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
+
+      // Show success toast
+      const statusLabel = t(`common.status.${newStatus}`, newStatus);
+      toast({
+        description: t('orders.status_updated_successfully', {
+          defaultValue: `Status updated to ${statusLabel}`,
+          status: statusLabel
+        })
+      });
     } catch (error) {
       console.error('Status change event emission failed:', error);
+      toast({
+        variant: 'destructive',
+        description: t('orders.status_update_failed', 'Failed to update status')
+      });
       throw error;
     }
-  }, []);
+  }, [t, toast]);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<ServiceOrder>) => {
     try {
@@ -247,11 +294,20 @@ export default function ServiceOrders() {
 
       // Emit typed event using EventBus
       orderEvents.emit('orderUpdated', { orderId, updates, timestamp: Date.now() });
+
+      // Show success toast
+      toast({
+        description: t('orders.field_updated_successfully', 'Order updated successfully')
+      });
     } catch (error) {
       console.error('Order update failed:', error);
+      toast({
+        variant: 'destructive',
+        description: t('orders.update_failed', 'Failed to update order')
+      });
       throw error;
     }
-  }, [updateOrder, queryClient]);
+  }, [updateOrder, queryClient, t, toast]);
 
 
   const handleCardClick = useCallback((filter: string) => {
@@ -350,7 +406,26 @@ export default function ServiceOrders() {
                 onCardClick={handleCardClick}
               />
             ) : (
-              <>
+              <div className="space-y-4">
+                {/* Responsive Table Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+                    {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'tomorrow' ? t('sales_orders.tabs.tomorrow') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
+                  </h2>
+                  <Badge variant="secondary" className="text-sm self-center sm:self-auto">
+                    {orders.length}
+                  </Badge>
+                </div>
+
+                {/* Search Context */}
+                {filters.search && (
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">
+                      Showing results matching "{filters.search}"
+                    </p>
+                  </div>
+                )}
+
                 {/* Table/Kanban/Calendar Content - Mobile forces table */}
                 {effectiveViewMode === 'kanban' ? (
                   <OrderKanbanBoard
@@ -380,7 +455,7 @@ export default function ServiceOrders() {
                     tabType="service"
                   />
                 )}
-              </>
+              </div>
             )}
           </OrderViewErrorBoundary>
         </main>
