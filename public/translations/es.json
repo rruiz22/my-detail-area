@@ -5099,5 +5099,10 @@
       "save_later": "Guardar para después",
       "archive": "Archivar"
     }
+  },
+  "system_update": {
+    "title": "Nueva Versión Disponible",
+    "message": "Versión {{version}} lista",
+    "button": "Actualizar Ahora"
   }
 }
