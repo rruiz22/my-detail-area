@@ -9,6 +9,8 @@ import { dev, warn, error as logError } from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { enrichOrdersArray, createUserDisplayName, type EnrichmentLookups } from '@/services/orderEnrichment';
+import { createOrderNotification } from '@/utils/notificationHelper';
+import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -494,6 +496,46 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       }
 
       dev('Service order created successfully:', data);
+
+      // 🔔 NOTIFICATION: Order Created
+      void createOrderNotification({
+        userId: data.assigned_group_id || null,
+        dealerId: data.dealer_id,
+        module: 'service_orders',
+        event: 'order_created',
+        orderId: data.id,
+        orderNumber: data.order_number || data.id,
+        priority: 'normal',
+        metadata: {
+          customerName: data.customer_name,
+          vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim()
+        }
+      }).catch(err =>
+        console.error('[ServiceOrderManagement] Failed to create order notification:', err)
+      );
+
+      // 📱 SMS NOTIFICATION: Send SMS to users with notification rules
+      if (user?.id) {
+        // Format services for SMS
+        const servicesText = Array.isArray(data.services) && data.services.length > 0
+          ? data.services.map((s: any) => s.name || s.type).filter(Boolean).join(', ')
+          : '';
+
+        void sendOrderCreatedSMS({
+          orderId: data.id,
+          dealerId: data.dealer_id,
+          module: 'service_orders',
+          triggeredBy: user.id,
+          eventData: {
+            orderNumber: data.order_number || data.id,
+            tag: data.tag,
+            vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
+            services: servicesText,
+            dueDateTime: data.due_date,
+            shortLink: data.short_link || undefined
+          }
+        });
+      }
 
       // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
       generateQR(data.id, data.order_number, data.dealer_id)

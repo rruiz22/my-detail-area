@@ -56,6 +56,7 @@ interface VehicleForList {
   status: string;
   created_at: string;
   completed_at: string | null;
+  due_date: string | null;
   assigned_group_id: string | null;
   assigned_to_name: string | null;
   invoice_number: string | null;
@@ -99,7 +100,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
 
   // Fetch vehicles for Orders tab
   const { data: vehiclesList = [], isLoading: vehiclesLoading } = useQuery({
-    queryKey: ['operational-vehicles-list', filters.dealerId, filters.orderType, filters.startDate, filters.endDate, filters.status],
+    queryKey: ['operational-vehicles-list', filters.dealerId, filters.orderType, filters.startDate, filters.endDate, filters.status, filters.serviceIds],
     queryFn: async (): Promise<VehicleForList[]> => {
       if (!filters.dealerId) return [];
 
@@ -111,6 +112,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
       })();
 
       // Build query with proper filters - explicitly select fields we need
+      // Note: We're using RPC function for the main analytics, but for the list we need to handle dates in JS
+      // Fetch all orders and filter client-side for proper date handling
       let ordersQuery = supabase
         .from('orders')
         .select(`
@@ -132,13 +135,12 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
           status,
           created_at,
           completed_at,
+          due_date,
           assigned_group_id
         `)
         .eq('dealer_id', filters.dealerId)
-        .gte('created_at', startDateTime)
-        .lte('created_at', endDateTime)
         .order('created_at', { ascending: false })
-        .limit(1000);
+        .limit(2000); // Fetch more to filter client-side
 
       // Apply order type filter
       if (filters.orderType !== 'all') {
@@ -154,6 +156,46 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
 
       if (ordersError) throw ordersError;
 
+      // Filter orders by the appropriate date based on order_type AND service filter
+      const filteredOrders = (orders || []).filter(order => {
+        // 1. Date filter
+        let reportDate: Date;
+
+        // Sales and Service use due_date
+        if (order.order_type === 'sales' || order.order_type === 'service') {
+          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
+        }
+        // Recon and CarWash use completed_at
+        else if (order.order_type === 'recon' || order.order_type === 'carwash') {
+          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
+        }
+        // Fallback to created_at for other types
+        else {
+          reportDate = new Date(order.created_at);
+        }
+
+        const start = new Date(startDateTime);
+        const end = new Date(endDateTime);
+        const dateMatch = reportDate >= start && reportDate <= end;
+
+        // 2. Service filter (if services are selected)
+        if (filters.serviceIds && filters.serviceIds.length > 0) {
+          const orderServices = order.services || [];
+
+          // Services can be stored as either array of IDs or array of objects with {id, name, price, type}
+          // The RPC function checks both 'id' and 'type' fields
+          const hasMatchingService = orderServices.some((service: any) => {
+            const serviceId = typeof service === 'string' ? service : service?.id;
+            const serviceType = typeof service === 'object' ? service?.type : null;
+            return filters.serviceIds?.includes(serviceId) ||
+                   (serviceType && filters.serviceIds?.includes(serviceType));
+          });
+          return dateMatch && hasMatchingService;
+        }
+
+        return dateMatch;
+      });
+
       // Fetch user profiles to get assigned names (assigned_group_id actually contains user IDs)
       const { data: userProfiles, error: profilesError } = await supabase
         .from('profiles')
@@ -163,8 +205,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
         console.error('Error fetching user profiles:', profilesError);
       }
 
-      // Fetch invoice information for all orders
-      const orderIds = (orders || []).map(o => o.id);
+      // Fetch invoice information for filtered orders
+      const orderIds = filteredOrders.map(o => o.id);
       const { data: invoiceItems, error: invoiceItemsError } = await supabase
         .from('invoice_items')
         .select(`
@@ -191,8 +233,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
         ]) || []
       );
 
-      // Enrich orders with user names and invoice numbers
-      const enrichedOrders = (orders || []).map(order => ({
+      // Enrich filtered orders with user names and invoice numbers
+      const enrichedOrders = filteredOrders.map(order => ({
         ...order,
         assigned_to_name: order.assigned_group_id ? userMap.get(order.assigned_group_id) || null : null,
         invoice_number: invoiceMap.get(order.id) || null
@@ -275,8 +317,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 <span className="text-sm font-medium text-muted-foreground">Total Volume</span>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </div>
-              <div className="text-2xl font-bold">{orderAnalytics?.total_orders || 0}</div>
-              <div className="text-xs text-muted-foreground">orders processed</div>
+              <div className="text-2xl font-bold">{orderAnalytics?.total_volume || 0}</div>
+              <div className="text-xs text-muted-foreground">services processed</div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
@@ -296,11 +338,17 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">SLA Compliance</span>
-                <Target className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
               </div>
-              <div className="text-2xl font-bold">{formatPercentage(orderAnalytics?.sla_compliance_rate || 0)}</div>
-              <Progress value={orderAnalytics?.sla_compliance_rate || 0} className="h-1.5" />
+              <div className="text-2xl font-bold">
+                {formatCurrency(
+                  vehiclesList
+                    .filter(v => v.status === 'completed')
+                    .reduce((sum, v) => sum + (v.total_amount || 0), 0)
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground">from completed orders</div>
             </div>
           </div>
         </CardContent>
@@ -864,7 +912,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
 
         <TabsContent value="orders" className="space-y-4">
           {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
@@ -878,34 +926,40 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground">Pending</span>
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
                 </div>
-                <div className="text-3xl font-bold mb-1 text-green-600">
-                  {formatCurrency(vehiclesList.reduce((sum, v) => sum + (v.total_amount || 0), 0))}
+                <div className="text-3xl font-bold mb-1 text-amber-600">
+                  {vehiclesList.filter(v => v.status === 'pending').length}
                 </div>
-                <p className="text-xs text-muted-foreground">From all orders</p>
+                <p className="text-xs text-muted-foreground">
+                  {vehiclesList.length > 0
+                    ? `${Math.round((vehiclesList.filter(v => v.status === 'pending').length / vehiclesList.length) * 100)}%`
+                    : '0%'} of total
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Avg Order Value</span>
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground">In Progress</span>
+                  <Activity className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-blue-600">
-                  {vehiclesList.length > 0
-                    ? formatCurrency(vehiclesList.reduce((sum, v) => sum + (v.total_amount || 0), 0) / vehiclesList.length)
-                    : formatCurrency(0)}
+                  {vehiclesList.filter(v => v.status === 'in_progress').length}
                 </div>
-                <p className="text-xs text-muted-foreground">Per order</p>
+                <p className="text-xs text-muted-foreground">
+                  {vehiclesList.length > 0
+                    ? `${Math.round((vehiclesList.filter(v => v.status === 'in_progress').length / vehiclesList.length) * 100)}%`
+                    : '0%'} of total
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-muted-foreground">Completed</span>
-                  <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                  <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-green-600">
                   {vehiclesList.filter(v => v.status === 'completed').length}
@@ -914,6 +968,22 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   {vehiclesList.length > 0
                     ? `${Math.round((vehiclesList.filter(v => v.status === 'completed').length / vehiclesList.length) * 100)}%`
                     : '0%'} completion rate
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-muted-foreground">Cancelled</span>
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                </div>
+                <div className="text-3xl font-bold mb-1 text-red-600">
+                  {vehiclesList.filter(v => v.status === 'cancelled').length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {vehiclesList.length > 0
+                    ? `${Math.round((vehiclesList.filter(v => v.status === 'cancelled').length / vehiclesList.length) * 100)}%`
+                    : '0%'} of total
                 </p>
               </CardContent>
             </Card>

@@ -461,7 +461,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-7xl max-h-[90vh] overflow-y-auto p-0"
+        className="max-w-7xl max-h-[90vh] p-0 flex flex-col"
         hideCloseButton
       >
         <DialogTitle className="sr-only">
@@ -481,8 +481,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           })}
         </DialogDescription>
 
-        {/* Unified Content Container - Single Scroll */}
-        <div className="p-3 sm:p-4 lg:p-6 max-w-full" id="unified-modal-top">
+        {/* Unified Content Container - Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 max-w-full" id="unified-modal-top">
               {/* Unified Header - Card Grid Design */}
               <UnifiedOrderHeaderV2
                 order={orderData}
@@ -554,10 +554,10 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   )}
                 </div>
               </div>
-            </div>
+        </div>
 
-          {/* Footer with Actions - Modern Design */}
-          <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-3 sm:p-4">
+        {/* Footer with Actions - Sticky at bottom of modal */}
+        <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-3 sm:p-4 z-10">
             <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-2">
               {/* Left: Destructive Actions */}
               <div className="flex gap-2 w-full sm:w-auto">

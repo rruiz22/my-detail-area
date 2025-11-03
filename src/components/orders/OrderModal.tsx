@@ -149,6 +149,7 @@ interface OrderModalProps {
 
 export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, onSave, preSelectedDate }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { user: authUser } = useAuth();
   const { roles } = usePermissionContext();
   const { enhancedUser } = usePermissions();
@@ -834,9 +835,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // Create an array of order data, one per service
         const ordersData = selectedServices.map(serviceId => {
           const dbData = transformToDbFormat(formData);
+          // Calculate total amount for THIS service only
+          const service = services.find((s: { id: string; price?: number }) => s.id === serviceId);
+          const individualAmount = canViewPrices ? (service?.price || 0) : 0;
+
           return {
             ...dbData,
-            services: [serviceId] // Only include this specific service
+            services: [serviceId], // Only include this specific service
+            totalAmount: individualAmount // Use individual service price
           };
         });
 
@@ -847,12 +853,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         onSave(ordersData as any);
       } else {
         // Single service or editing - proceed as normal
-        const dbData = transformToDbFormat(formData);
+      const dbData = transformToDbFormat(formData);
 
-        // Show immediate success feedback
-        toast({ description: t('orders.creating_order') });
+      // Show immediate success feedback
+      toast({ description: t('orders.creating_order') });
 
-        onSave(dbData);
+      onSave(dbData);
       }
 
     } catch (error) {
@@ -872,7 +878,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
+        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 flex flex-col sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
         aria-describedby="order-modal-description"
       >
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-3 sm:px-6 py-2 sm:py-3 border-b border-border">
@@ -932,7 +938,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           </div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-3 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+        <ScrollArea className="flex-1 px-3 sm:px-6 max-h-[calc(100vh-200px)] sm:max-h-[calc(98vh-180px)]">
           <form onSubmit={handleSubmit} className="py-2 sm:py-3 space-y-2 sm:space-y-3">
             {/* Single Responsive Container */}
             <Card className="border-border">
@@ -1445,42 +1451,43 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               />
             </div>
 
-            {/* Action Buttons - Sticky on mobile for better accessibility */}
-            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-3 px-3 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto min-h-[44px]"
-              >
-                {t('common.action_buttons.cancel')}
-              </Button>
-              <Button
-                type="submit"
-                disabled={
-                  submitting ||
-                  !selectedDealership ||
-                  !formData.customerName ||
-                  !formData.vehicleVin ||
-                  !formData.stockNumber ||
-                  !selectedAssignedTo ||
-                  (requiresDueDate && !formData.dueDate) ||
-                  selectedServices.length === 0
-                }
-                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {order ? t('orders.updating') : t('orders.creating')}
-                  </>
-                ) : (
-                  order ? t('common.action_buttons.update') : t('common.action_buttons.create')
-                )}
-              </Button>
-            </div>
           </form>
         </ScrollArea>
+
+        {/* Footer - Fixed at bottom of modal */}
+        <div className="flex-shrink-0 bg-background border-t border-border px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 z-10">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
+          >
+            {t('common.action_buttons.cancel')}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={
+              submitting ||
+              !selectedDealership ||
+              !formData.customerName ||
+              !formData.vehicleVin ||
+              !formData.stockNumber ||
+              !selectedAssignedTo ||
+              (requiresDueDate && !formData.dueDate) ||
+              selectedServices.length === 0
+            }
+            className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {order ? t('orders.updating') : t('orders.creating')}
+              </>
+            ) : (
+              order ? t('common.action_buttons.update') : t('common.action_buttons.create')
+            )}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

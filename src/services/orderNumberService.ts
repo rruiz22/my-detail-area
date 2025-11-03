@@ -16,7 +16,7 @@ export interface OrderNumberFormat {
 export class OrderNumberService {
   private readonly prefixes: Record<OrderType, string> = {
     sales: 'SA',
-    service: 'SE', 
+    service: 'SE',
     carwash: 'CW',
     recon: 'RC'
   };
@@ -27,18 +27,18 @@ export class OrderNumberService {
   async generateOrderNumber(orderType: OrderType, dealerId?: number): Promise<string> {
     try {
       const prefix = this.prefixes[orderType];
-      
+
       // Get last order number for this type (global counter, no year)
       const lastSequence = await this.getLastSequenceNumber(orderType);
       const nextSequence = lastSequence + 1;
-      
+
       // Format: SA-21, SE-22, CW-23, RC-24 (simple format without padding)
       const formattedNumber = `${prefix}-${nextSequence}`;
-      
+
       console.log(`🔢 Generated order number: ${formattedNumber} (type: ${orderType}, sequence: ${nextSequence})`);
-      
+
       return formattedNumber;
-      
+
     } catch (error) {
       console.error('❌ Error generating order number:', error);
       // Fallback to simple format if generation fails
@@ -55,32 +55,40 @@ export class OrderNumberService {
     try {
       const prefix = this.prefixes[orderType];
       const prefixPattern = `${prefix}-%`;
-      
-      // Query highest order number for this type in unified orders table
+
+      // Query ALL order numbers for this type to find the highest sequence number
       const { data, error } = await supabase
         .from('orders')
         .select('order_number')
-        .ilike('order_number', prefixPattern)
-        .order('order_number', { ascending: false })
-        .limit(1);
+        .ilike('order_number', prefixPattern);
 
       if (error) {
         console.warn('Error querying last sequence:', error);
         return 20; // Start from 21 (20 + 1 = 21)
       }
 
-      if (data && data.length > 0 && data[0].order_number) {
-        // Extract sequence from order number: SA-000123 -> 123
-        const lastNumber = data[0].order_number;
-        const parts = lastNumber.split('-');
-        if (parts.length === 2) {
-          const sequencePart = parts[1];
-          return parseInt(sequencePart) || 0;
+      if (data && data.length > 0) {
+        // Extract all sequence numbers and find the maximum
+        let maxSequence = 0;
+
+        for (const row of data) {
+          if (row.order_number) {
+            const parts = row.order_number.split('-');
+            if (parts.length === 2) {
+              const sequenceNum = parseInt(parts[1]) || 0;
+              if (sequenceNum > maxSequence) {
+                maxSequence = sequenceNum;
+              }
+            }
+          }
         }
+
+        console.log(`🔍 Found max sequence for ${orderType}: ${maxSequence} (from ${data.length} orders)`);
+        return maxSequence;
       }
 
       return 20; // Start from 21 (20 + 1 = 21)
-      
+
     } catch (error) {
       console.error('Error getting last sequence:', error);
       return 20; // Start from 21 (20 + 1 = 21)
@@ -103,15 +111,15 @@ export class OrderNumberService {
     try {
       const parts = orderNumber.split('-');
       if (parts.length !== 2) return null;
-      
+
       const [prefix, sequence] = parts;
-      
+
       return {
         prefix,
         fullNumber: orderNumber,
         sequence: parseInt(sequence)
       };
-      
+
     } catch (error) {
       return null;
     }
@@ -134,7 +142,7 @@ export class OrderNumberService {
    */
   async migrateExistingOrders(): Promise<void> {
     console.log('🔄 Starting order number migration...');
-    
+
     try {
       // Get all orders that need migration (orders without proper format)
       const { data: orders, error } = await supabase
@@ -170,10 +178,10 @@ export class OrderNumberService {
         if (typeOrders.length === 0) continue;
 
         console.log(`📋 Migrating ${typeOrders.length} ${orderType} orders...`);
-        
+
         const prefix = this.prefixes[orderType as OrderType];
         let sequenceCounter = 21; // Start from 21
-        
+
         for (const order of typeOrders) {
           // Skip if already has correct format
           if (order.order_number && this.validateOrderNumber(order.order_number, orderType as OrderType)) {
@@ -186,10 +194,10 @@ export class OrderNumberService {
           }
 
           const newOrderNumber = `${prefix}-${sequenceCounter}`;
-          
+
           const { error: updateError } = await supabase
             .from('orders')
-            .update({ 
+            .update({
               order_number: newOrderNumber,
               updated_at: new Date().toISOString()
             })
@@ -203,14 +211,14 @@ export class OrderNumberService {
 
           sequenceCounter++;
         }
-        
+
         console.log(`✅ Completed ${orderType} migration (${sequenceCounter - 1} orders processed)`);
       }
-      
+
     } catch (error) {
       console.error(`❌ Error migrating orders:`, error);
     }
-    
+
     console.log('🎉 Order number migration completed!');
   }
 

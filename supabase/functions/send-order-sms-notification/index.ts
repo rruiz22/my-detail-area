@@ -1,6 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders } from "../_shared/cors.ts";
+
+// CORS headers for cross-origin requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -94,7 +100,48 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('📱 SMS Notification Request:', request);
     console.log(`🔍 [DEBUG] Trigger user ID: ${request.triggeredBy}`);
 
-    // 1. Get followers of this order who have SMS permission
+    // =========================================================================
+    // SPECIAL CASE: status_changed event - ONLY send SMS when status = "completed"
+    // =========================================================================
+    if (request.eventType === 'status_changed') {
+      if (request.eventData?.newStatus !== 'completed') {
+        console.log(`⚠️ [SMS Filter] Status changed to "${request.eventData?.newStatus}" - SMS only sent for "completed" status`);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            sent: 0,
+            failed: 0,
+            recipients: 0,
+            message: `SMS notifications for status_changed only sent when status is "completed" (current: "${request.eventData?.newStatus}")`
+          }),
+          { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+        );
+      }
+      console.log(`✅ [SMS Filter] Status changed to "completed" - proceeding with SMS notifications`);
+    }
+
+    // 1. Check if this event is enabled in dealer_notification_rules (NEW SYSTEM)
+    const isEventEnabled = await checkNotificationRules(
+      request.dealerId,
+      request.module,
+      request.eventType
+    );
+
+    if (!isEventEnabled) {
+      console.log(`⚠️ [SMS Filter] Event "${request.eventType}" not enabled in dealer_notification_rules for module "${request.module}"`);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: 0,
+          message: `Event "${request.eventType}" not configured for SMS in notification rules`
+        }),
+        { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      );
+    }
+
+    // 2. Get followers of this order who have SMS permission
     const usersWithPermission = await getUsersWithSMSPermission(
       request.dealerId,
       request.module,
@@ -247,6 +294,36 @@ const handler = async (req: Request): Promise<Response> => {
 // =====================================================
 // Helper Functions
 // =====================================================
+
+/**
+ * Check if the event is enabled for SMS notifications in dealer_notification_rules
+ * Returns true if at least one rule exists for this dealer/module/event with SMS channel enabled
+ */
+async function checkNotificationRules(
+  dealerId: number,
+  module: string,
+  eventType: string
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('dealer_notification_rules')
+    .select('id')
+    .eq('dealer_id', dealerId)
+    .eq('module', module)
+    .eq('event', eventType)
+    .eq('enabled', true)
+    .contains('channels', ['sms']);
+
+  if (error) {
+    console.error('[checkNotificationRules] Error querying dealer_notification_rules:', error);
+    // Fail open: if we can't check the rules, allow the notification
+    return true;
+  }
+
+  const isEnabled = (data && data.length > 0);
+  console.log(`[checkNotificationRules] Event "${eventType}" for module "${module}": ${isEnabled ? 'ENABLED' : 'DISABLED'} (${data?.length || 0} rules found)`);
+
+  return isEnabled;
+}
 
 async function getUsersWithSMSPermission(
   dealerId: number,
@@ -517,8 +594,33 @@ function generateMessages(
   // Format status for better readability
   const formattedStatus = formatStatus(eventData.newStatus || '');
 
+  // Build additional details for order_created message
+  let createdDetails = '';
+  if (eventType === 'order_created') {
+    // Add vehicle info if available
+    if (eventData.vehicleInfo && eventData.vehicleInfo.trim()) {
+      createdDetails += ` ${eventData.vehicleInfo}`;
+    }
+    // Add services if available
+    if (eventData.services && eventData.services.trim()) {
+      createdDetails += ` - ${eventData.services}`;
+    }
+    // Add due date for service orders
+    if (eventData.dueDateTime) {
+      const dueDate = new Date(eventData.dueDateTime);
+      const dueStr = dueDate.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      createdDetails += ` | Due: ${dueStr}`;
+    }
+  }
+
   const templates: Record<OrderSMSEvent, string> = {
-    order_assigned: `🚗 You've been assigned to Order ${orderIdentifier}.${eventData.customerName ? ` Customer: ${eventData.customerName}` : ''} View: ${shortLink}`,
+    order_assigned: `🚗 You've been assigned to Order ${orderIdentifier}.${eventData.vehicleInfo ? ` ${eventData.vehicleInfo}` : ''} View: ${shortLink}`,
 
     status_changed: `📋 Order ${orderIdentifier} status changed to "${formattedStatus}". View: ${shortLink}`,
 
@@ -532,7 +634,9 @@ function generateMessages(
 
     attachment_added: `📎 New attachment added to Order ${orderIdentifier}. View: ${shortLink}`,
 
-    order_created: `✨ New Order ${orderIdentifier} created.${eventData.customerName ? ` ${eventData.customerName}` : ''} View: ${shortLink}`,
+    order_created: createdDetails
+      ? `✨ New Order ${orderIdentifier} -${createdDetails} ${shortLink}`
+      : `✨ New Order ${orderIdentifier} created ${shortLink}`,
 
     follower_added: `👁️ You're now following Order ${orderIdentifier}. View: ${shortLink}`,
 

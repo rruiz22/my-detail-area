@@ -119,6 +119,7 @@ interface ReconOrderModalProps {
 
 export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, onClose, onSave, mode = 'create' }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { roles } = usePermissionContext();
   const { enhancedUser } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
@@ -412,9 +413,9 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
   const handleServiceToggle = (serviceId: string, checked: boolean) => {
     if (checked) {
-      // ✅ LIMIT: Maximum 2 services per order
-      if (selectedServices.length >= 2) {
-        toast({ description: t('orders.max_services_reached', 'Maximum 2 services per order') });
+      // ✅ LIMIT: Maximum 3 services per order
+      if (selectedServices.length >= 3) {
+        toast({ description: t('orders.max_services_reached', 'Maximum 3 services per order') });
         return;
       }
       setSelectedServices(prev => [...prev, serviceId]);
@@ -498,9 +499,14 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
         // Create an array of order data, one per service
         const ordersData = selectedServices.map(serviceId => {
           const dbData = transformToDbFormat(formData);
+          // Calculate total amount for THIS service only
+          const service = services.find((s: DealerService) => s.id === serviceId);
+          const individualAmount = canViewPrices ? (service?.price || 0) : 0;
+
           return {
             ...dbData,
-            services: [serviceId] // Only include this specific service
+            services: [serviceId], // Only include this specific service
+            totalAmount: individualAmount // Use individual service price
           };
         });
 
@@ -519,32 +525,32 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
         onClose();
       } else {
         // Single service or editing - proceed as normal
-        const dbData = transformToDbFormat(formData);
+      const dbData = transformToDbFormat(formData);
 
-        console.log('📤 Modal sending data to hook:', {
-          dealerId: dbData.dealerId,
-          stockNumber: dbData.stockNumber,
-          vehicleInfo: dbData.vehicleInfo,
-          services: dbData.services,
-          servicesLength: dbData.services?.length,
-          servicesContent: JSON.stringify(dbData.services),
-          selectedServicesState: selectedServices,
-          selectedServicesContent: JSON.stringify(selectedServices),
-          selectedServicesLength: selectedServices.length,
-          completedAt: dbData.completedAt,
-          completedAtType: typeof dbData.completedAt,
-          completedAtISO: dbData.completedAt instanceof Date ? dbData.completedAt.toISOString() : dbData.completedAt,
-          totalAmount: dbData.totalAmount,
-          notes: dbData.notes
-        });
+      console.log('📤 Modal sending data to hook:', {
+        dealerId: dbData.dealerId,
+        stockNumber: dbData.stockNumber,
+        vehicleInfo: dbData.vehicleInfo,
+        services: dbData.services,
+        servicesLength: dbData.services?.length,
+        servicesContent: JSON.stringify(dbData.services),
+        selectedServicesState: selectedServices,
+        selectedServicesContent: JSON.stringify(selectedServices),
+        selectedServicesLength: selectedServices.length,
+        completedAt: dbData.completedAt,
+        completedAtType: typeof dbData.completedAt,
+        completedAtISO: dbData.completedAt instanceof Date ? dbData.completedAt.toISOString() : dbData.completedAt,
+        totalAmount: dbData.totalAmount,
+        notes: dbData.notes
+      });
 
-        // Show immediate success feedback
-        toast({ description: t('orders.creating_order') });
+      // Show immediate success feedback
+      toast({ description: t('orders.creating_order') });
 
-        await onSave(dbData);
+      await onSave(dbData);
 
-        // Only close modal on successful save
-        onClose();
+      // Only close modal on successful save
+      onClose();
       }
 
     } catch (error: any) {
@@ -741,15 +747,15 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                           </span>
                         )}
                       </Label>
-                      <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs">
-                        {selectedServices.length}/2 {t('orders.selected')}
+                      <Badge variant={selectedServices.length >= 3 ? "default" : "secondary"} className="text-xs">
+                        {selectedServices.length}/3 {t('orders.selected')}
                       </Badge>
                     </div>
 
                     {/* Service limit info message */}
-                    {selectedServices.length >= 2 && (
+                    {selectedServices.length >= 3 && (
                       <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 mb-2">
-                        {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}
+                        {t('orders.max_services_info', 'Maximum 3 services reached. Uncheck a service to select another.')}
                       </div>
                     )}
 
@@ -772,7 +778,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                           ) : (
                             services.map((service: DealerService) => {
                               const isSelected = selectedServices.includes(service.id);
-                              const isDisabled = !isSelected && selectedServices.length >= 2;
+                              const isDisabled = !isSelected && selectedServices.length >= 3;
 
                               return (
                                 <div key={service.id} className={`flex items-start justify-between p-3 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>

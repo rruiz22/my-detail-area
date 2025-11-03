@@ -3,10 +3,11 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ReportsFilters } from '@/hooks/useReportsData';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon, Filter, X } from 'lucide-react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ReportFiltersProps {
@@ -21,6 +22,83 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   onFiltersChange
 }) => {
   const { t } = useTranslation();
+  const [services, setServices] = useState<any[]>([]);
+  const [servicesLoading, setServicesLoading] = useState(false);
+
+  // Fetch services based on selected dealer and order type
+  useEffect(() => {
+    const fetchServices = async () => {
+      if (!filters.dealerId) return;
+
+      setServicesLoading(true);
+      try {
+        // If 'all' departments, fetch ALL services from dealer_services table
+        if (filters.orderType === 'all') {
+          const { data, error } = await supabase
+            .from('dealer_services')
+            .select(`
+              id,
+              name,
+              description,
+              price,
+              duration,
+              category_id,
+              color,
+              service_categories (
+                name,
+                color
+              )
+            `)
+            .eq('dealer_id', filters.dealerId)
+            .eq('is_active', true)
+            .order('name');
+
+          if (error) throw error;
+
+          // Transform to match expected format
+          const transformedServices = (data || []).map((service: any) => ({
+            id: service.id,
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            duration: service.duration,
+            category_id: service.category_id,
+            category_name: service.service_categories?.name,
+            category_color: service.service_categories?.color,
+            color: service.color,
+          }));
+
+          setServices(transformedServices);
+        } else {
+          // Fetch services for specific department
+          const departmentMap: Record<string, string> = {
+            'sales': 'Sales Dept',
+            'service': 'Service Dept',
+            'recon': 'Recon Dept',
+            'carwash': 'CarWash Dept'  // Note: No space in "CarWash" to match DB
+          };
+
+          const departmentName = departmentMap[filters.orderType];
+
+          const { data, error } = await supabase.rpc('get_dealer_services_by_department', {
+            p_dealer_id: filters.dealerId,
+            p_department_name: departmentName
+          });
+
+          if (error) throw error;
+
+          setServices(data || []);
+        }
+      } catch (err) {
+        console.error('Error fetching services:', err);
+        setServices([]);
+      } finally {
+        setServicesLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, [filters.dealerId, filters.orderType]);
 
   // Helper function to get week dates (Monday to Sunday)
   const getWeekDates = (date: Date) => {
@@ -169,7 +247,8 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
       startDate: monday,
       endDate: sunday,
       orderType: 'all',
-      status: 'all'
+      status: 'all',
+      serviceIds: []
       // dealerId is now controlled by global filter, don't reset it
     });
   };
@@ -311,13 +390,142 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
             <SelectItem value="cancelled">{t('reports.filters.cancelled')}</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Service Filter - Multi-select */}
+        <div className="relative w-48">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-between"
+                disabled={servicesLoading}
+              >
+                {filters.serviceIds && filters.serviceIds.length > 0 ? (
+                  <span className="truncate">
+                    {filters.serviceIds.length} {t('reports.filters.service', 'service')}
+                    {filters.serviceIds.length > 1 ? 's' : ''} {t('common.selected', 'selected')}
+                  </span>
+                ) : (
+                  <span>{t('reports.filters.all_services', 'All Services')}</span>
+                )}
+                <Filter className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[300px] p-0" align="start">
+              <div className="p-2 border-b">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{t('reports.filters.select_service', 'Select Services')}</span>
+                  <div className="flex gap-1">
+                    {services.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          const allServiceIds = services.map((s: any) => s.id);
+                          onFiltersChange({ ...filters, serviceIds: allServiceIds });
+                        }}
+                        className="h-6 text-xs"
+                      >
+                        {t('common.select_all', 'Select All')}
+                      </Button>
+                    )}
+                  {filters.serviceIds && filters.serviceIds.length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onFiltersChange({ ...filters, serviceIds: [] })}
+                      className="h-6 text-xs"
+                    >
+                      {t('common.clear_all', 'Clear All')}
+                    </Button>
+                  )}
+                  </div>
+                </div>
+              </div>
+              <div className="max-h-[300px] overflow-y-auto p-2">
+                {servicesLoading ? (
+                  <div className="text-center py-4 text-sm text-muted-foreground">
+                    {t('common.loading', 'Loading...')}
+                  </div>
+                ) : services.length === 0 ? (
+                  <div className="text-center py-4 text-sm text-muted-foreground">
+                    {t('reports.filters.no_services', 'No services available')}
+                  </div>
+                ) : (
+                  services.map((service: any) => {
+                    const isSelected = filters.serviceIds?.includes(service.id);
+                    return (
+                      <div
+                        key={service.id}
+                        className={cn(
+                          "flex items-center space-x-3 rounded-lg px-3 py-2.5 cursor-pointer transition-all duration-200 border",
+                          isSelected
+                            ? "bg-primary/10 border-primary/30 hover:bg-primary/15"
+                            : "bg-background border-transparent hover:bg-accent hover:border-border"
+                        )}
+                        onClick={() => {
+                          const currentIds = filters.serviceIds || [];
+                          const newIds = isSelected
+                            ? currentIds.filter(id => id !== service.id)
+                            : [...currentIds, service.id];
+                          onFiltersChange({ ...filters, serviceIds: newIds });
+                        }}
+                      >
+                        <div className={cn(
+                          "flex items-center justify-center h-5 w-5 rounded border-2 transition-all",
+                          isSelected
+                            ? "bg-primary border-primary"
+                            : "border-input bg-background"
+                        )}>
+                          {isSelected && (
+                            <svg
+                              className="h-3.5 w-3.5 text-primary-foreground"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={3}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                        <div className="flex-1 cursor-pointer">
+                          <div className={cn(
+                            "text-sm font-medium transition-colors",
+                            isSelected ? "text-primary" : "text-foreground"
+                          )}>
+                          {service.name}
+                          </div>
+                          {service.category_name && (
+                            <div className="text-xs text-muted-foreground mt-0.5">
+                              {service.category_name}
+                            </div>
+                          )}
+                        </div>
+                        {service.price && (
+                          <span className="text-xs text-muted-foreground font-mono">
+                            ${service.price.toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       {/* Active Filters Indicator */}
-      {(filters.orderType !== 'all' || filters.status !== 'all') && (
+      {(filters.orderType !== 'all' || filters.status !== 'all' || services.length > 0) && (
         <div className="flex items-center gap-2 text-xs text-muted-foreground px-4">
           <span className="font-medium">{t('reports.filters.active_filters')}:</span>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {filters.orderType !== 'all' && (
               <span className="px-2 py-1 bg-primary/10 text-primary rounded-md font-medium">
                 {t(`reports.filters.${filters.orderType === 'carwash' ? 'car_wash' : filters.orderType}`)}
@@ -328,9 +536,27 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                 {t(`reports.filters.${filters.status}`)}
               </span>
             )}
+            {services.map((service: any) => {
+              const isSelected = filters.serviceIds?.includes(service.id);
+              return (
+                <span
+                  key={service.id}
+                  className={cn(
+                    "px-2 py-1 rounded-md font-medium",
+                    isSelected
+                      ? "bg-blue-500/10 text-blue-600"
+                      : "bg-red-500/10 text-red-600"
+                  )}
+                >
+                  {service.name}
+                </span>
+              );
+            })}
           </div>
         </div>
       )}
     </div>
   );
 };
+
+export default ReportFilters;
