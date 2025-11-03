@@ -36,6 +36,7 @@ export default function ResetPassword() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verifyingSession, setVerifyingSession] = useState(true);
+  const [tokenVerified, setTokenVerified] = useState(false); // Track if token already verified
   const { updatePassword, session } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -43,8 +44,15 @@ export default function ResetPassword() {
   const [searchParams] = useSearchParams();
 
   // Check if user has a valid recovery session
-  // Verify the OTP token from the URL
+  // Verify the OTP token from the URL (ONLY ONCE)
   useEffect(() => {
+    // Skip if already verified or if we already have a session
+    if (tokenVerified || session) {
+      console.log('⏭️ Skipping token verification:', { tokenVerified, hasSession: !!session });
+      setVerifyingSession(false);
+      return;
+    }
+
     const verifyRecoverySession = async () => {
       console.log('🔐 Verifying recovery session...');
       console.log('🔍 URL params:', {
@@ -65,12 +73,15 @@ export default function ResetPassword() {
       // Use whichever parameter is present
       const recoveryToken = tokenHash || token || code;
       
-      if (recoveryToken) {
+      if (recoveryToken && !tokenVerified) {
         console.log('📧 Recovery token found in URL:', {
           paramName: tokenHash ? 'token_hash' : token ? 'token' : 'code',
           tokenPreview: recoveryToken.substring(0, 10) + '...',
           type: type
         });
+        
+        // Mark as verified immediately to prevent multiple calls
+        setTokenVerified(true);
         
         try {
           // Try to verify the OTP token with Supabase
@@ -88,6 +99,7 @@ export default function ResetPassword() {
               name: error.name
             });
             setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
+            setTokenVerified(false); // Allow retry if verification fails
           } else if (data.session) {
             console.log('✅ Recovery session established successfully');
             console.log('Session details:', {
@@ -99,17 +111,19 @@ export default function ResetPassword() {
             console.error('❌ No session returned from token verification');
             console.log('Response data:', data);
             setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
+            setTokenVerified(false); // Allow retry if no session
           }
         } catch (err) {
           console.error('❌ Unexpected error during token verification:', err);
           setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
+          setTokenVerified(false); // Allow retry on unexpected error
         }
-      } else if (!session) {
+      } else if (!session && !recoveryToken) {
         // No token in URL and no existing session
         console.error('❌ No recovery token or session found');
         console.log('Available URL params:', Array.from(searchParams.entries()));
         setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
-      } else {
+      } else if (session) {
         console.log('✅ Existing session found, no token needed');
       }
       
@@ -117,7 +131,7 @@ export default function ResetPassword() {
     };
     
     verifyRecoverySession();
-  }, [searchParams, session, t]);
+  }, [searchParams, session, tokenVerified, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
