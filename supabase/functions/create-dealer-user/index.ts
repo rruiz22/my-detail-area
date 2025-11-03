@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
     console.log('Request method:', req.method)
     console.log('Request URL:', req.url)
     console.log('Request headers:', Object.fromEntries(req.headers.entries()))
-    
+
     // Validate request method
     if (req.method !== 'POST') {
       console.error('Invalid request method:', req.method)
@@ -42,12 +42,12 @@ Deno.serve(async (req) => {
     // Check environment variables first
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-    
+
     console.log('Environment check:')
     console.log('- SUPABASE_URL exists:', !!supabaseUrl)
     console.log('- SUPABASE_SERVICE_ROLE_KEY exists:', !!supabaseServiceKey)
     console.log('- SUPABASE_URL value:', supabaseUrl)
-    
+
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing environment variables')
       return new Response(
@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
 
     // Get the JWT token from the authorization header
     const token = authHeader.replace('Bearer ', '')
-    
+
     // Verify the user has admin role
     const { data: userData, error: userError } = await tempSupabase.auth.getUser(token)
     if (userError || !userData.user) {
@@ -112,9 +112,9 @@ Deno.serve(async (req) => {
       .eq('id', userData.user.id)
       .single()
 
-    if (profileError || !profile || profile.role !== 'admin') {
-      console.error('User does not have admin privileges:', profileError || 'Missing admin role')
-      
+    if (profileError || !profile || !['system_admin', 'supermanager'].includes(profile.role)) {
+      console.error('User does not have required privileges:', profileError || 'Missing system_admin or supermanager role')
+
       // Log security event
       await tempSupabase
         .from('security_audit_log')
@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Forbidden: Admin privileges required'
+          error: 'Forbidden: system_admin or supermanager role required'
         }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     }
 
     console.log('✅ Admin authentication verified for user:', userData.user.id)
-    
+
     // Parse and validate request body
     let requestBody: any
     try {
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
     // Validate required fields
     const requiredFields = ['email', 'firstName', 'lastName', 'dealershipId', 'role', 'userType']
     const missingFields = requiredFields.filter(field => !requestBody[field])
-    
+
     if (missingFields.length > 0) {
       console.error('Missing required fields:', missingFields)
       return new Response(
@@ -236,15 +236,15 @@ Deno.serve(async (req) => {
       )
     }
 
-    console.log('Validated input data:', { 
-      email, 
-      firstName, 
-      lastName, 
-      dealershipId, 
-      role, 
+    console.log('Validated input data:', {
+      email,
+      firstName,
+      lastName,
+      dealershipId,
+      role,
       userType,
       sendWelcomeEmail,
-      dealershipName 
+      dealershipName
     })
 
     // Create Supabase client with service role key for admin operations
@@ -283,7 +283,7 @@ Deno.serve(async (req) => {
     console.log('✅ Dealership validated:', dealership.name)
 
     console.log('Creating user with data:', { email, firstName, lastName, dealershipId, role, userType })
-    
+
     // Validate required dealership_id
     if (!dealershipId) {
       throw new Error('dealershipId is required')
@@ -365,7 +365,7 @@ Deno.serve(async (req) => {
       first_name: firstName,
       last_name: lastName,
       user_type: userType,
-      role: role,
+      role: 'user', // All dealer users = 'user' (custom role defines permissions)
       dealership_id: dealershipId,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -388,7 +388,7 @@ Deno.serve(async (req) => {
     } else {
       console.log('✅ Profile created/updated successfully:', profileData)
     }
-    
+
     console.log('Profile created successfully:', profileData?.[0]?.id)
 
     // Step 3: Create dealer membership
@@ -414,7 +414,7 @@ Deno.serve(async (req) => {
       console.error('Membership error message:', membershipError.message)
       console.error('Membership error code:', membershipError.code)
       console.error('Membership error hint:', membershipError.hint)
-      
+
       // Try to clean up the auth user if membership fails
       try {
         console.log('Attempting to clean up auth user due to membership failure')
@@ -423,7 +423,7 @@ Deno.serve(async (req) => {
       } catch (cleanupError) {
         console.error('Auth user cleanup failed:', cleanupError)
       }
-      
+
       return new Response(
         JSON.stringify({
           success: false,
@@ -461,7 +461,7 @@ Deno.serve(async (req) => {
     } catch (auditError) {
       console.warn('⚠️ Failed to log security audit:', auditError)
     }
-    
+
     // Step 3.1: Handle role assignment through dealer groups (optional for now)
     console.log('=== STEP 3.1: Role Assignment (Future Enhancement) ===')
     console.log(`Note: Role "${role}" will need to be assigned through dealer groups system`)
@@ -478,11 +478,11 @@ Deno.serve(async (req) => {
           dealershipName: dealershipName || 'Premium Auto'
         }
         console.log('Email payload:', JSON.stringify(emailPayload, null, 2))
-        
+
         const { data: emailData, error: emailError } = await supabase.functions.invoke('send-welcome-email', {
           body: emailPayload
         })
-        
+
         if (emailError) {
           console.warn('⚠️ Welcome email failed:', JSON.stringify(emailError, null, 2))
           // Don't fail the whole process
@@ -527,7 +527,7 @@ Deno.serve(async (req) => {
     console.error('Error message:', error?.message)
     console.error('Error stack:', error?.stack)
     console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2))
-    
+
     return new Response(
       JSON.stringify({
         success: false,
