@@ -29,7 +29,7 @@ export function NotificationBell({ dealerId }: NotificationBellProps) {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="p-0 w-[380px] sm:w-[420px]">
+      <PopoverContent align="end" className="p-0 w-[calc(100vw-2rem)] max-w-[420px] sm:w-[420px]">
         <SmartNotificationCenter dealerId={dealerId} className="w-full border-0 shadow-none" />
       </PopoverContent>
     </Popover>
