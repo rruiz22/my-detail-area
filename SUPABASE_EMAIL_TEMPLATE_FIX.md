@@ -212,7 +212,6 @@ Antes de probar, asegúrate de:
 
 ---
 
-**Última actualización:** 2025-11-03  
-**Versión:** 1.2.3  
+**Última actualización:** 2025-11-03
+**Versión:** 1.2.3
 **Estado:** Código frontend actualizado - Requiere configuración de Supabase
-

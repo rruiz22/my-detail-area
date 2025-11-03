@@ -1,6 +1,7 @@
 import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ClearCacheButton } from '@/components/ui/ClearCacheButton';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -163,6 +164,13 @@ export function UserDropdown() {
           <Settings className="mr-2 h-4 w-4" />
           <span>{t('navigation.settings')}</span>
         </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        {/* Clear Cache Button (for when role changes don't reflect) */}
+        <div className="px-2 py-1.5">
+          <ClearCacheButton />
+        </div>
 
         <DropdownMenuSeparator />
 

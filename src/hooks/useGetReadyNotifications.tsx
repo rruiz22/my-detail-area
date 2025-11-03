@@ -1,17 +1,17 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import type {
-  GetReadyNotification,
-  NotificationWithVehicle,
-  NotificationSummary,
-  NotificationFilters,
-  UserNotificationPreferences,
+    GetReadyNotification,
+    NotificationFilters,
+    NotificationSummary,
+    NotificationWithVehicle,
+    UserNotificationPreferences,
 } from '@/types/getReady';
 import { validateDealerId } from '@/utils/dealerValidation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Hook for managing Get Ready notifications with real-time updates
@@ -338,7 +338,6 @@ export function useGetReadyNotifications(
 
       const { data, error } = await supabase.rpc('dismiss_notification', {
         p_notification_id: notificationId,
-        p_user_id: user.id,
       });
 
       if (error) throw error;

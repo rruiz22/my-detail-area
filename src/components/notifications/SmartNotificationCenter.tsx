@@ -2,19 +2,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NotificationGroup, useSmartNotifications } from '@/hooks/useSmartNotifications';
 import {
-    Bell,
-    Check,
-    CheckCheck,
-    Filter,
+  Bell,
+  Check,
+  CheckCheck,
+  Filter,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -149,8 +149,8 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
       <CardContent className="p-0">
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="grouped">{t('notifications.tabs.grouped')}</TabsTrigger>
             <TabsTrigger value="chronological">{t('notifications.tabs.recent')}</TabsTrigger>
+            <TabsTrigger value="grouped">{t('notifications.tabs.grouped')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="grouped" className="mt-0">

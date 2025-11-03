@@ -120,7 +120,6 @@ Específicamente estos logs:
 
 ---
 
-**Tiempo estimado:** 3 minutos  
-**Prioridad:** URGENTE  
+**Tiempo estimado:** 3 minutos
+**Prioridad:** URGENTE
 **Requiere código:** NO, solo configuración en Supabase
-

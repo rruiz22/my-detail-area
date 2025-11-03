@@ -134,3 +134,4 @@ If you encounter any issues:
 2. Check browser console for errors
 3. Verify the SQL functions were created correctly
 4. Check if React Query is using cached data
+

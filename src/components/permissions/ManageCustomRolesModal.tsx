@@ -20,7 +20,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
-import { clearPermissionsCache } from '@/utils/permissionSerialization';
+import { clearPermissionsCache, forceInvalidateAllPermissionCache } from '@/utils/permissionSerialization';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, Plus, Shield, User, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -172,41 +172,73 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
       if (assignmentError) throw assignmentError;
 
       // Also update dealer_memberships for backward compatibility (if membership exists)
-      const { data: membership } = await supabase
+      const { data: membership, error: membershipQueryError } = await supabase
         .from('dealer_memberships')
         .select('id')
         .eq('user_id', user.id)
         .eq('dealer_id', user.dealership_id)
         .single();
 
+      if (membershipQueryError && membershipQueryError.code !== 'PGRST116') {
+        console.warn('Error querying dealer_memberships:', membershipQueryError);
+      }
+
       if (membership) {
-        await supabase
+        const { error: membershipUpdateError } = await supabase
           .from('dealer_memberships')
           .update({
             custom_role_id: selectedRoleId,
             updated_at: new Date().toISOString()
           })
           .eq('id', membership.id);
+
+        if (membershipUpdateError) {
+          console.error('Error updating dealer_memberships:', membershipUpdateError);
+          // Don't throw - this is backward compatibility, not critical
+        }
       }
+
+      // Wait 200ms for DB to confirm transaction
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       toast({
         title: t('common.success'),
-        description: t('user_management.role_assigned')
+        description: t('user_management.role_assigned'),
+        duration: 8000, // Mostrar más tiempo
+      });
+
+      // Notificar que el usuario debe recargar
+      toast({
+        title: '⚠️ ' + t('user_management.user_must_reload_title', { defaultValue: 'User Must Reload' }),
+        description: t('user_management.user_must_reload_desc', {
+          defaultValue: '{{name}} must reload their browser (Ctrl+Shift+R) to see the new permissions.',
+          name: user.first_name || user.email
+        }),
+        variant: 'default',
+        duration: 10000, // 10 segundos
       });
 
       setSelectedRoleId('');
       await fetchUserRolesAndAvailable();
 
-      // Invalidate target user's permission cache so changes reflect immediately
-      await queryClient.invalidateQueries({
+      // AGGRESSIVE: Reset queries instead of just invalidating
+      // This forces immediate refetch regardless of staleTime
+      await queryClient.resetQueries({
         queryKey: ['user-permissions', user.id]
       });
-      await queryClient.invalidateQueries({
+      await queryClient.resetQueries({
         queryKey: ['user_profile_permissions', user.id]
       });
+      // Also invalidate dealer users cache
+      await queryClient.invalidateQueries({
+        queryKey: ['dealer_users_with_roles']
+      });
 
-      // Clear localStorage permission cache to avoid stale data
-      clearPermissionsCache();
+      // FORCE clear ALL cache to ensure user sees changes
+      forceInvalidateAllPermissionCache();
+
+      // Also clear the user profile cache
+      localStorage.removeItem('user_profile_cache');
 
       refreshPermissions();
       onRolesUpdated();
@@ -241,21 +273,41 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
 
       toast({
         title: t('common.success'),
-        description: t('user_management.role_removed')
+        description: t('user_management.role_removed'),
+        duration: 8000,
+      });
+
+      // Notificar que el usuario debe recargar
+      toast({
+        title: '⚠️ ' + t('user_management.user_must_reload_title', { defaultValue: 'User Must Reload' }),
+        description: t('user_management.user_must_reload_desc', {
+          defaultValue: '{{name}} must reload their browser (Ctrl+Shift+R) to see the updated permissions.',
+          name: user.first_name || user.email
+        }),
+        variant: 'default',
+        duration: 10000,
       });
 
       await fetchUserRolesAndAvailable();
 
-      // Invalidate target user's permission cache so changes reflect immediately
-      await queryClient.invalidateQueries({
+      // AGGRESSIVE: Reset queries instead of just invalidating
+      // This forces immediate refetch regardless of staleTime
+      await queryClient.resetQueries({
         queryKey: ['user-permissions', user.id]
       });
-      await queryClient.invalidateQueries({
+      await queryClient.resetQueries({
         queryKey: ['user_profile_permissions', user.id]
       });
+      // Also invalidate dealer users cache
+      await queryClient.invalidateQueries({
+        queryKey: ['dealer_users_with_roles']
+      });
 
-      // Clear localStorage permission cache to avoid stale data
-      clearPermissionsCache();
+      // FORCE clear ALL cache to ensure user sees changes
+      forceInvalidateAllPermissionCache();
+
+      // Also clear the user profile cache
+      localStorage.removeItem('user_profile_cache');
 
       refreshPermissions();
       onRolesUpdated();

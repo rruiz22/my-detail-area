@@ -123,11 +123,11 @@ export default function Auth() {
     const tokenHash = searchParams.get('token_hash');
     const code = searchParams.get('code');
     const type = searchParams.get('type');
-    
+
     // If there's any token parameter, it's likely a password reset link from Supabase email
     // Redirect to the reset password page with the full query string
     const hasResetToken = token || tokenHash || code;
-    
+
     if (hasResetToken && (type === 'recovery' || !type)) {
       console.log('🔐 Detected password reset token, redirecting to /reset-password');
       console.log('Token params:', { token, tokenHash, code, type });
