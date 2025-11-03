@@ -30,6 +30,7 @@ import Contacts from "./pages/Contacts";
 import Dashboard from "./pages/Dashboard";
 import DealerView from "./pages/DealerView";
 import DetailHub from "./pages/DetailHub";
+import ForgotPassword from "./pages/ForgotPassword";
 import GetReady from "./pages/GetReady";
 import Index from "./pages/Index";
 // Invoices moved to Reports tab - no longer a separate page
@@ -43,6 +44,7 @@ import PublicReconData from "./pages/PublicReconData";
 import QRRedirect from "./pages/QRRedirect";
 import ReconOrders from "./pages/ReconOrders";
 import Reports from "./pages/Reports";
+import ResetPassword from "./pages/ResetPassword";
 import SalesOrders from "./pages/SalesOrders";
 import ServiceOrders from "./pages/ServiceOrders";
 import Settings from "./pages/Settings";
@@ -100,6 +102,8 @@ const AppRoutes = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/auth" element={<Auth />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/s/:slug" element={<QRRedirect />} />
         <Route path="/invitation/:token" element={<InvitationAccept />} />
         <Route path="/landing" element={<ProtectedRoute><Index /></ProtectedRoute>} />

@@ -525,9 +525,20 @@ export default function Auth() {
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-semibold text-foreground dark:text-foreground">
-                    {t('auth.password_label', 'Password')}
-                  </Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password" className="text-sm font-semibold text-foreground dark:text-foreground">
+                      {t('auth.password_label', 'Password')}
+                    </Label>
+                    {!isSignupMode && (
+                      <button
+                        type="button"
+                        onClick={() => navigate('/forgot-password')}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {t('auth.forgot_password_link', 'Forgot password?')}
+                      </button>
+                    )}
+                  </div>
                   <Input
                     id="password"
                     type="password"
