@@ -117,6 +117,21 @@ export default function Auth() {
   const [invitationLoading, setInvitationLoading] = useState(false);
   const [invitationError, setInvitationError] = useState<string | null>(null);
 
+  // Check for password reset token and redirect to reset password page
+  useEffect(() => {
+    const code = searchParams.get('code');
+    const type = searchParams.get('type');
+    
+    // If there's a code parameter, it's likely a password reset link from Supabase email
+    // Redirect to the reset password page with the full query string
+    if (code && (type === 'recovery' || !type)) {
+      console.log('🔐 Detected password reset token, redirecting to /reset-password');
+      const fullParams = window.location.search; // Preserve all query parameters
+      navigate(`/reset-password${fullParams}`, { replace: true });
+      return;
+    }
+  }, [searchParams, navigate]);
+
   // Check for invitation parameters and validate token
   useEffect(() => {
     const mode = searchParams.get('mode');
