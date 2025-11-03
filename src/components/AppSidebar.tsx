@@ -51,8 +51,18 @@ export function AppSidebar() {
         : enhancedUser.role === 'system_admin')
     : false;
 
+  // Check if user is supermanager
+  const isSupermanager = enhancedUser
+    ? ('is_supermanager' in enhancedUser
+        ? enhancedUser.is_supermanager
+        : enhancedUser.role === 'supermanager')
+    : false;
+
   // Load dealership modules for the currently selected dealer
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId);
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId, {
+    isSystemAdmin: isAdmin,
+    isSupermanager: isSupermanager
+  });
 
   // Core Operations - Filtered by user's allowed order types
   const coreNavItems = React.useMemo(() => {
