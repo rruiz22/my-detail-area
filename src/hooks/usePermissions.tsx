@@ -246,9 +246,9 @@ export const usePermissions = () => {
     // ✅ FIX #15: Track permission fetch performance
     return measureAsync(async () => {
       try {
-        // Log system admins and managers (they have full access, but we still fetch their custom roles for UI display)
-        if (profileData.role === 'system_admin' || profileData.role === 'manager') {
-          logger.secure.admin(`User is ${profileData.role} - full access granted`, {
+        // Log system admins and supermanagers (they have elevated access, but we still fetch their custom roles for UI display)
+        if (profileData.role === 'system_admin' || profileData.role === 'supermanager') {
+          logger.secure.admin(`User is ${profileData.role} - elevated access granted`, {
             userId: profileData.id,
             email: profileData.email,
             role: profileData.role
@@ -358,7 +358,7 @@ export const usePermissions = () => {
           email: profileData.email,
           dealership_id: profileData.dealership_id,
           is_system_admin: profileData.role === 'system_admin',
-          is_manager: profileData.role === 'manager',
+          is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
           custom_roles: [],
           system_permissions: new Set(),
           module_permissions: new Map()
@@ -395,7 +395,7 @@ export const usePermissions = () => {
           email: profileData.email,
           dealership_id: profileData.dealership_id,
           is_system_admin: profileData.role === 'system_admin',
-          is_manager: profileData.role === 'manager',
+          is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
           custom_roles: [],
           system_permissions: new Set(),
           module_permissions: new Map()
@@ -531,7 +531,7 @@ export const usePermissions = () => {
         email: profileData.email,
         dealership_id: profileData.dealership_id,
         is_system_admin: profileData.role === 'system_admin',
-        is_manager: profileData.role === 'manager',
+        is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
         custom_roles: Array.from(rolesMap.values()),
         system_permissions: aggregatedSystemPerms,
         module_permissions: aggregatedModulePerms
@@ -612,10 +612,23 @@ export const usePermissions = () => {
   const hasSystemPermission = useCallback((permission: SystemPermissionKey): boolean => {
     if (!enhancedUser) return false;
 
-    // System admins have all permissions
+    // System admins have ALL system permissions
     if (enhancedUser.is_system_admin) return true;
 
-    // Check if user has this system permission
+    // Supermanagers have MOST system permissions except platform-level settings
+    if (enhancedUser.is_supermanager) {
+      // Supermanagers CANNOT manage platform-wide settings (reserved for system_admin only)
+      const restrictedPermissions: SystemPermissionKey[] = ['manage_all_settings'];
+
+      if (restrictedPermissions.includes(permission)) {
+        return false;  // Denied: Platform settings restricted to system_admin only
+      }
+
+      // All other system permissions granted to supermanager
+      return true;
+    }
+
+    // Regular users: Check if they have this system permission via custom role
     return enhancedUser.system_permissions.has(permission);
   }, [enhancedUser]);
 
@@ -635,14 +648,36 @@ export const usePermissions = () => {
       return false;
     }
 
-    // System admins have all permissions
+    // System admins have ALL module permissions
     if (enhancedUser.is_system_admin) {
       telemetry.trackPermissionCheck(module, permission, true, performance.now() - startTime);
       return true;
     }
 
+    // Supermanagers have MOST module permissions (elevated access)
+    // They can access all modules except platform-level administration
+    if (enhancedUser.is_supermanager) {
+      // Supermanagers have full access to dealership operations
+      // They CANNOT access platform-level management settings
+      // For those, they need explicit custom role permissions
+      const allowedModules: AppModule[] = [
+        'dashboard', 'sales_orders', 'service_orders', 'recon_orders', 'car_wash',
+        'stock', 'contacts', 'reports', 'users', 'productivity', 'chat',
+        'dealerships', 'get_ready', 'settings' // Dealership settings OK
+      ];
+
+      if (allowedModules.includes(module)) {
+        telemetry.trackPermissionCheck(module, permission, true, performance.now() - startTime);
+        return true;  // Supermanager granted
+      }
+
+      // For management/platform modules, check custom role
+      // (Falls through to custom role check below)
+    }
+
     // Users without custom roles have no access
     if (enhancedUser.custom_roles.length === 0) {
+      telemetry.trackPermissionCheck(module, permission, false, performance.now() - startTime);
       return false;
     }
 

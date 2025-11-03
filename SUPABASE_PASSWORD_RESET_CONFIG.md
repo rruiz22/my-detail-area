@@ -37,14 +37,14 @@ useEffect(() => {
 const verifyRecoverySession = async () => {
   const tokenHash = searchParams.get('token_hash') || searchParams.get('code');
   const type = searchParams.get('type');
-  
+
   if (tokenHash) {
     // Verificar el token OTP con Supabase
     const { data, error } = await supabase.auth.verifyOtp({
       token_hash: tokenHash,
       type: (type === 'recovery' ? 'recovery' : 'email') as any,
     });
-    
+
     if (error) {
       console.error('❌ Token verification failed:', error.message);
       setError('Invalid or expired reset link');

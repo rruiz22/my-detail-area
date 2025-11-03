@@ -119,13 +119,18 @@ export default function Auth() {
 
   // Check for password reset token and redirect to reset password page
   useEffect(() => {
+    const token = searchParams.get('token');
+    const tokenHash = searchParams.get('token_hash');
     const code = searchParams.get('code');
     const type = searchParams.get('type');
     
-    // If there's a code parameter, it's likely a password reset link from Supabase email
+    // If there's any token parameter, it's likely a password reset link from Supabase email
     // Redirect to the reset password page with the full query string
-    if (code && (type === 'recovery' || !type)) {
+    const hasResetToken = token || tokenHash || code;
+    
+    if (hasResetToken && (type === 'recovery' || !type)) {
       console.log('🔐 Detected password reset token, redirecting to /reset-password');
+      console.log('Token params:', { token, tokenHash, code, type });
       const fullParams = window.location.search; // Preserve all query parameters
       navigate(`/reset-password${fullParams}`, { replace: true });
       return;

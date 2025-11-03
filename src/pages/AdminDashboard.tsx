@@ -1,10 +1,11 @@
 import { DealershipManagement } from '@/components/admin/DealershipManagement';
+import { SystemUsersManagement } from '@/components/admin/SystemUsersManagement';
 import { UserManagementSection } from '@/components/management/UserManagementSection';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
-import { Building2, Shield, Users } from 'lucide-react';
+import { Building2, Shield, Users, UserCog } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const AdminDashboard = () => {
@@ -37,14 +38,18 @@ const AdminDashboard = () => {
 
         {/* Admin Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="dealerships" className="flex items-center gap-2">
               <Building2 className="h-4 w-4" />
               <span className="hidden sm:inline">{t('admin.dealerships')}</span>
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('admin.users')}</span>
+              <span className="hidden sm:inline">{t('admin.dealer_users')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="system_users" className="flex items-center gap-2">
+              <UserCog className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('admin.system_users')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -53,11 +58,16 @@ const AdminDashboard = () => {
             <DealershipManagement />
           </TabsContent>
 
-          {/* Users Tab - Global user management */}
+          {/* Dealer Users Tab - Renamed from "Users" for clarity */}
           <TabsContent value="users" className="space-y-6">
             <PermissionGuard module="users" permission="read">
               <UserManagementSection />
             </PermissionGuard>
+          </TabsContent>
+
+          {/* System Users Tab - NEW: Manage system-level users (system_admin, supermanager) */}
+          <TabsContent value="system_users" className="space-y-6">
+            <SystemUsersManagement />
           </TabsContent>
         </Tabs>
       </div>
