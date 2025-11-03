@@ -59,7 +59,9 @@
       "Bash(python add-toast-destructure.py:*)",
       "Bash(perl -i -pe:*)",
       "Bash(python:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(npx serve:*)"
     ],
     "deny": [],
     "ask": []
