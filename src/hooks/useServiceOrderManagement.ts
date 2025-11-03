@@ -510,9 +510,20 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           customerName: data.customer_name,
           vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim()
         }
-      }).catch(err =>
+      }      ).catch(err =>
         console.error('[ServiceOrderManagement] Failed to create order notification:', err)
       );
+
+      // 🔗 GENERATE SHORT LINK: Must happen BEFORE SMS to include it in the message
+      let shortLink: string | undefined = undefined;
+      try {
+        const qrData = await generateQR(data.id, data.order_number, data.dealer_id);
+        shortLink = qrData?.shortLink;
+        dev('✅ QR code and shortlink generated for service order:', data.order_number, shortLink);
+      } catch (qrError) {
+        logError('❌ Failed to generate QR code:', qrError);
+        // Continue with SMS even if QR generation fails
+      }
 
       // 📱 SMS NOTIFICATION: Send SMS to users with notification rules
       if (user?.id) {
@@ -520,6 +531,15 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         const servicesText = Array.isArray(data.services) && data.services.length > 0
           ? data.services.map((s: any) => s.name || s.type).filter(Boolean).join(', ')
           : '';
+
+        // Debug logging to verify data
+        console.log('🔍 Service SMS Data Debug:', {
+          services: data.services,
+          servicesText,
+          tag: data.tag,
+          dueDate: data.due_date,
+          shortLink
+        });
 
         void sendOrderCreatedSMS({
           orderId: data.id,
@@ -532,20 +552,10 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
             services: servicesText,
             dueDateTime: data.due_date,
-            shortLink: data.short_link || undefined
+            shortLink: shortLink || undefined
           }
         });
       }
-
-      // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
-      generateQR(data.id, data.order_number, data.dealer_id)
-        .then(() => {
-          dev('✅ QR code and shortlink generated for service order:', data.order_number);
-        })
-        .catch((qrError) => {
-          logError('❌ Failed to generate QR code:', qrError);
-          // QR generation failure doesn't affect order creation
-        });
 
       // Invalidate queries to trigger immediate table refresh
       await queryClient.invalidateQueries({ queryKey: ['orders', 'service'] });

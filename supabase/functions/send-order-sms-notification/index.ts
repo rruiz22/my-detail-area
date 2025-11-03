@@ -635,8 +635,8 @@ function generateMessages(
     attachment_added: `📎 New attachment added to Order ${orderIdentifier}. View: ${shortLink}`,
 
     order_created: createdDetails
-      ? `✨ New Order ${orderIdentifier} -${createdDetails} ${shortLink}`
-      : `✨ New Order ${orderIdentifier} created ${shortLink}`,
+      ? `✨ New Order ${orderIdentifier} -${createdDetails} View: ${shortLink}`
+      : `✨ New Order ${orderIdentifier} created. View: ${shortLink}`,
 
     follower_added: `👁️ You're now following Order ${orderIdentifier}. View: ${shortLink}`,
 
