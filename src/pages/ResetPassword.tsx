@@ -11,6 +11,7 @@ import { Check, X, CheckCircle2 } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
+import { getFormattedVersion } from '@/config/version';
 
 // Password validation
 const validatePassword = (password: string) => {
@@ -199,7 +200,7 @@ export default function ResetPassword() {
                     placeholder={t('auth.reset_password.new_password_placeholder', 'Enter your new password')}
                     autoFocus
                   />
-                  
+
                   {/* Password strength indicator */}
                   {password && (
                     <div className="space-y-1" aria-live="polite" aria-atomic="true">
@@ -275,10 +276,9 @@ export default function ResetPassword() {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-sm text-muted-foreground">
-          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')}</p>
+          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')} {getFormattedVersion()}</p>
         </footer>
       </main>
     </div>
   );
 }
-

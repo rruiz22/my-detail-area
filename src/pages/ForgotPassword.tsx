@@ -12,6 +12,7 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
+import { getFormattedVersion } from '@/config/version';
 
 // Security utility functions
 const sanitizeInput = (input: string): string => {
@@ -58,7 +59,7 @@ export default function ForgotPassword() {
 
       if (error) {
         console.error('[FORGOT PASSWORD] Error:', error.message);
-        
+
         // Don't reveal if email exists (security best practice)
         // Always show success message
         setEmailSent(true);
@@ -198,10 +199,9 @@ export default function ForgotPassword() {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-sm text-muted-foreground">
-          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')}</p>
+          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')} {getFormattedVersion()}</p>
         </footer>
       </main>
     </div>
   );
 }
-
