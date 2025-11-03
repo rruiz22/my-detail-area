@@ -4,11 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit, Plus, Shield, Trash2, Users } from 'lucide-react';
+import { Bell, Edit, Plus, Shield, Trash2, Users } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CreateRoleModal } from './CreateRoleModal';
 import { EditRoleModal } from './EditRoleModal';
+import { RoleNotificationsModal } from './RoleNotificationsModal';
 
 interface DealerRolesProps {
   dealerId: string;
@@ -37,6 +38,7 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<CustomRole | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [roleToDelete, setRoleToDelete] = useState<CustomRole | null>(null);
@@ -200,6 +202,17 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                     size="sm"
                     onClick={() => {
                       setSelectedRole(role);
+                      setShowNotificationsModal(true);
+                    }}
+                    title="Configure SMS/Email Notifications"
+                  >
+                    <Bell className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedRole(role);
                       setShowEditModal(true);
                     }}
                   >
@@ -293,6 +306,17 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
         role={selectedRole}
         dealerId={dealerId}
         onRoleUpdated={fetchRoles}
+      />
+
+      {/* Notifications Modal */}
+      <RoleNotificationsModal
+        open={showNotificationsModal}
+        onClose={() => {
+          setShowNotificationsModal(false);
+          setSelectedRole(null);
+        }}
+        role={selectedRole}
+        dealerId={dealerId}
       />
 
       {/* Delete Confirmation Dialog - Team Chat Style */}

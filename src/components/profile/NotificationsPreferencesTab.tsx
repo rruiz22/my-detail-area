@@ -25,12 +25,13 @@ import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useProfileMutations } from '@/hooks/useProfileMutations';
 import { NotificationEventsTable, NotificationChannel } from '@/components/profile/NotificationEventsTable';
 import { getEventsForModule, getAllCategories } from '@/constants/notificationEvents';
+import { supabase } from '@/integrations/supabase/client';
 
 export function NotificationsPreferencesTab() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { preferences, isLoading: preferencesLoading } = useUserPreferences();
-  const { loading, updatePreferences } = useProfileMutations();
+  const { loading, updatePreferences, updateSMSPreferences } = useProfileMutations();
 
   const [formData, setFormData] = useState({
     notification_email: true,
@@ -45,6 +46,11 @@ export function NotificationsPreferencesTab() {
     date_format: 'MM/dd/yyyy',
     time_format: '12h',
   });
+
+  // Granular event preferences state
+  const [activeModule, setActiveModule] = useState('sales_orders');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [eventPreferences, setEventPreferences] = useState<Record<string, Record<NotificationChannel, boolean>>>({});
 
   // Load preferences from database
   useEffect(() => {
@@ -65,10 +71,57 @@ export function NotificationsPreferencesTab() {
     }
   }, [preferences]);
 
-  // Granular event preferences state
-  const [activeModule, setActiveModule] = useState('sales_orders');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [eventPreferences, setEventPreferences] = useState<Record<string, Record<NotificationChannel, boolean>>>({});
+  // Load SMS event preferences for current module
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const loadSMSPreferences = async () => {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('dealership_id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile?.dealership_id) return;
+
+      const { data: smsPrefs } = await supabase
+        .from('user_sms_notification_preferences')
+        .select('event_preferences, sms_enabled')
+        .eq('user_id', user.id)
+        .eq('dealer_id', profile.dealership_id)
+        .eq('module', activeModule)
+        .single();
+
+      if (smsPrefs && smsPrefs.event_preferences) {
+        // Convert DB format to UI format
+        const uiPreferences: Record<string, Record<NotificationChannel, boolean>> = {};
+
+        Object.entries(smsPrefs.event_preferences).forEach(([eventId, value]) => {
+          let smsEnabled = false;
+
+          if (typeof value === 'boolean') {
+            smsEnabled = value;
+          } else if (typeof value === 'object' && value !== null && 'enabled' in value) {
+            smsEnabled = (value as any).enabled;
+          }
+
+          if (smsEnabled) {
+            uiPreferences[eventId] = {
+              ...(eventPreferences[eventId] || {}),
+              sms: true
+            };
+          }
+        });
+
+        setEventPreferences(prev => ({
+          ...prev,
+          ...uiPreferences
+        }));
+      }
+    };
+
+    loadSMSPreferences();
+  }, [user?.id, activeModule]);
 
   const handleSwitchChange = (field: string, value: boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -104,7 +157,20 @@ export function NotificationsPreferencesTab() {
 
     await updatePreferences(sanitizedData);
 
-    // TODO Phase 2: Save eventPreferences to user_notification_preferences_universal per module/event
+    // ✅ NEW: Save SMS event preferences per module
+    if (formData.notification_sms && Object.keys(eventPreferences).length > 0) {
+      // Extract SMS preferences for the active module
+      const smsPreferencesForModule: Record<string, boolean> = {};
+
+      Object.entries(eventPreferences).forEach(([eventId, channels]) => {
+        if (channels.sms) {
+          smsPreferencesForModule[eventId] = true;
+        }
+      });
+
+      // Save SMS preferences for the active module
+      await updateSMSPreferences(activeModule, smsPreferencesForModule, formData.notification_sms);
+    }
   };
 
   const filteredEvents = getEventsForModule(activeModule).filter(

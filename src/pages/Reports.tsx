@@ -12,11 +12,16 @@ import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Reports() {
   const { t } = useTranslation();
   const { dealerships, defaultDealerId } = useReportsData();
   const { selectedDealerId } = useDealerFilter();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Use global dealer filter if available, otherwise use default
   const effectiveDealerId = selectedDealerId !== 'all' && selectedDealerId !== null
@@ -37,13 +42,50 @@ export default function Reports() {
 
   const { monday: defaultStartDate, sunday: defaultEndDate } = getWeekDates(new Date());
 
-  const [filters, setFilters] = useState<ReportsFilters>({
-    startDate: defaultStartDate,
-    endDate: defaultEndDate,
-    orderType: 'all',
-    status: 'all',
-    dealerId: effectiveDealerId
-  });
+  // Load filters from localStorage on mount
+  const loadFiltersFromStorage = (): ReportsFilters => {
+    try {
+      const savedFilters = localStorage.getItem('reports_filters');
+      if (savedFilters) {
+        const parsed = JSON.parse(savedFilters);
+        return {
+          ...parsed,
+          startDate: new Date(parsed.startDate),
+          endDate: new Date(parsed.endDate),
+          dealerId: effectiveDealerId // Always use current dealer
+        };
+      }
+    } catch (error) {
+      console.error('Error loading filters from localStorage:', error);
+    }
+
+    return {
+      startDate: defaultStartDate,
+      endDate: defaultEndDate,
+      orderType: 'all',
+      status: 'all',
+      serviceIds: [],
+      dealerId: effectiveDealerId
+    };
+  };
+
+  const [filters, setFilters] = useState<ReportsFilters>(loadFiltersFromStorage);
+
+  // Save filters to localStorage whenever they change (except dealerId)
+  useEffect(() => {
+    try {
+      const filtersToSave = {
+        startDate: filters.startDate.toISOString(),
+        endDate: filters.endDate.toISOString(),
+        orderType: filters.orderType,
+        status: filters.status,
+        serviceIds: filters.serviceIds || []
+      };
+      localStorage.setItem('reports_filters', JSON.stringify(filtersToSave));
+    } catch (error) {
+      console.error('Error saving filters to localStorage:', error);
+    }
+  }, [filters.startDate, filters.endDate, filters.orderType, filters.status, filters.serviceIds]);
 
   // Update filters when global dealer filter changes
   useEffect(() => {
@@ -52,9 +94,33 @@ export default function Reports() {
 
   const [activeTab, setActiveTab] = useTabPersistence('reports');
 
-  const handleRefresh = () => {
-    // Force refresh by updating a timestamp in the filters
-    setFilters(prev => ({ ...prev, dealerId: prev.dealerId }));
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      // Invalidate all reports-related queries to force a refresh
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['orders-analytics'] }),
+        queryClient.invalidateQueries({ queryKey: ['revenue-analytics'] }),
+        queryClient.invalidateQueries({ queryKey: ['department-revenue'] }),
+        queryClient.invalidateQueries({ queryKey: ['performance-trends'] }),
+        queryClient.invalidateQueries({ queryKey: ['operational-vehicles-list'] }),
+        queryClient.invalidateQueries({ queryKey: ['invoices'] }),
+        queryClient.invalidateQueries({ queryKey: ['invoice-summary'] }),
+      ]);
+
+      toast({
+        description: t('common.data_refreshed') || 'Data refreshed successfully',
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Error refreshing reports:', error);
+      toast({
+        description: t('common.refresh_failed') || 'Failed to refresh data',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   return (
@@ -64,9 +130,14 @@ export default function Reports() {
         description={t('reports.overview')}
         actions={
           <>
-            <Button onClick={handleRefresh} variant="outline" size="sm">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              {t('common.refresh')}
+            <Button
+              onClick={handleRefresh}
+              variant="outline"
+              size="sm"
+              disabled={isRefreshing}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? t('common.refreshing') || 'Refreshing...' : t('common.refresh')}
             </Button>
           </>
         }

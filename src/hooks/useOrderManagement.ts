@@ -20,6 +20,7 @@ import {
   createStatusChangeNotification,
   createAssignmentNotification
 } from '@/utils/notificationHelper';
+import { sendOrderCreatedSMS, sendOrderAssignedSMS, sendStatusChangedSMS } from '@/services/smsNotificationHelper';
 
 // Constants for magic numbers
 const REFRESH_THROTTLE_MS = 1000;
@@ -775,6 +776,26 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       }).catch(err =>
         console.error('[OrderManagement] Failed to create order notification:', err)
       );
+
+      // 📱 SMS NOTIFICATION: Send SMS to users with notification rules
+      // Format services for SMS
+      const servicesText = Array.isArray(data.services) && data.services.length > 0
+        ? data.services.map((s: any) => s.name || s.type).filter(Boolean).join(', ')
+        : '';
+
+      void sendOrderCreatedSMS({
+        orderId: data.id,
+        dealerId: data.dealer_id,
+        module: getNotificationModule(data.order_type || 'sales'),
+        triggeredBy: user.id,
+        eventData: {
+          orderNumber: data.order_number || data.custom_order_number || data.id,
+          stockNumber: data.stock_number,
+          vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
+          services: servicesText,
+          shortLink: data.short_link || undefined
+        }
+      });
 
       // Enrich the new order with dealer info
       const enrichedNewOrder = await enrichOrderData(data);

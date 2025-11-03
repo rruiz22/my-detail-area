@@ -372,11 +372,103 @@ export function useProfileMutations() {
     }
   };
 
+  /**
+   * Update SMS notification preferences per module
+   * Saves granular event preferences to user_sms_notification_preferences
+   */
+  const updateSMSPreferences = async (
+    module: string,
+    eventPreferences: Record<string, boolean>,
+    enabled: boolean = true
+  ): Promise<boolean> => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+
+    try {
+      setLoading(true);
+
+      // Get user's dealership_id from profiles
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('dealership_id, phone_number')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile || !profile.dealership_id) {
+        throw new Error('User dealership not found');
+      }
+
+      // Convert event preferences to the format expected by the database
+      const dbEventPreferences = {
+        order_created: eventPreferences.order_created || false,
+        order_assigned: eventPreferences.order_assigned || false,
+        status_changed: {
+          enabled: eventPreferences.status_changed || false,
+          statuses: ['completed']
+        },
+        field_updated: {
+          enabled: eventPreferences.field_updated || false,
+          fields: []
+        },
+        comment_added: eventPreferences.comment_added || false,
+        attachment_added: eventPreferences.attachment_added || false,
+        follower_added: eventPreferences.follower_added || false,
+        due_date_approaching: {
+          enabled: eventPreferences.due_date_approaching || false,
+          minutes_before: 30
+        },
+        overdue: eventPreferences.overdue || false,
+        priority_changed: eventPreferences.priority_changed || false
+      };
+
+      // Upsert SMS preferences
+      const { error } = await supabase
+        .from('user_sms_notification_preferences')
+        .upsert(
+          {
+            user_id: user.id,
+            dealer_id: profile.dealership_id,
+            module: module,
+            sms_enabled: enabled,
+            phone_number: profile.phone_number,
+            event_preferences: dbEventPreferences,
+            max_sms_per_hour: 10,
+            max_sms_per_day: 50,
+            quiet_hours_enabled: false,
+            quiet_hours_start: '22:00',
+            quiet_hours_end: '08:00',
+            updated_at: new Date().toISOString()
+          },
+          { onConflict: 'user_id,dealer_id,module' }
+        );
+
+      if (error) throw error;
+
+      toast({
+        title: t('common.success'),
+        description: t('profile.sms_preferences_updated', 'SMS preferences updated successfully')
+      });
+
+      return true;
+    } catch (error: any) {
+      console.error('Error updating SMS preferences:', error);
+      toast({
+        variant: 'destructive',
+        title: t('common.error'),
+        description: error.message || t('profile.update_error')
+      });
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     updateProfile,
     updatePreferences,
     changePassword,
-    updateProfileAndPreferences
+    updateProfileAndPreferences,
+    updateSMSPreferences
   };
 }

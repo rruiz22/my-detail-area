@@ -7,11 +7,13 @@ export interface ReportsFilters {
   endDate: Date;
   orderType: string;
   status: string;
+  serviceIds?: string[]; // Changed from serviceId to serviceIds (array)
   dealerId?: number;
 }
 
 export interface OrderAnalytics {
   total_orders: number;
+  total_volume: number;
   pending_orders: number;
   in_progress_orders: number;
   completed_orders: number;
@@ -90,12 +92,17 @@ export const useOrdersAnalytics = (filters: ReportsFilters) => {
     queryFn: async (): Promise<OrderAnalytics> => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
+      // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
+      const endOfDay = new Date(filters.endDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
       const { data, error } = await supabase.rpc('get_orders_analytics', {
         p_dealer_id: dealerId,
         p_start_date: filters.startDate.toISOString(),
-        p_end_date: filters.endDate.toISOString(),
+        p_end_date: endOfDay.toISOString(),
         p_order_type: filters.orderType,
-        p_status: filters.status
+        p_status: filters.status,
+        p_service_ids: filters.serviceIds && filters.serviceIds.length > 0 ? filters.serviceIds : null
       });
 
       if (error) throw error;
@@ -108,6 +115,7 @@ export const useOrdersAnalytics = (filters: ReportsFilters) => {
         type_distribution: Array.isArray(result.type_distribution) ? result.type_distribution as Array<{ name: string; value: number }> : []
       } : {
         total_orders: 0,
+        total_volume: 0,
         pending_orders: 0,
         in_progress_orders: 0,
         completed_orders: 0,
@@ -135,11 +143,16 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
     queryFn: async (): Promise<RevenueAnalytics> => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
+      // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
+      const endOfDay = new Date(filters.endDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
       const { data, error } = await supabase.rpc('get_revenue_analytics', {
         p_dealer_id: dealerId,
         p_start_date: filters.startDate.toISOString(),
-        p_end_date: filters.endDate.toISOString(),
-        p_grouping: grouping
+        p_end_date: endOfDay.toISOString(),
+        p_grouping: grouping,
+        p_service_ids: filters.serviceIds && filters.serviceIds.length > 0 ? filters.serviceIds : null
       });
 
       if (error) throw error;
@@ -221,10 +234,15 @@ export const usePerformanceTrends = (filters: ReportsFilters) => {
     queryFn: async (): Promise<PerformanceTrends> => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
+      // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
+      const endOfDay = new Date(filters.endDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
       const { data, error } = await supabase.rpc('get_performance_trends', {
         p_dealer_id: dealerId,
         p_start_date: filters.startDate.toISOString(),
-        p_end_date: filters.endDate.toISOString()
+        p_end_date: endOfDay.toISOString(),
+        p_service_ids: filters.serviceIds && filters.serviceIds.length > 0 ? filters.serviceIds : null
       });
 
       if (error) throw error;

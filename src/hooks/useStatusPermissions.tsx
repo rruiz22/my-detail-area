@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useCallback } from 'react';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { orderSMSNotificationService, OrderModule } from '@/services/orderSMSNotificationService';
+import { sendStatusChangedSMS } from '@/services/smsNotificationHelper';
 import { dev, error as logError } from '@/utils/logger';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
@@ -163,10 +164,25 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         // Use mda.to short link if available, otherwise fallback to correct module URL
         const shortLink = currentOrder.short_link || `https://app.mydetailarea.com/${urlPath}/${orderId}`;
 
-        // Send SMS notifications ONLY when status changes to 'completed' (enterprise requirement)
-        if (newStatus === 'completed') {
-          console.log('📱 [SMS] Status changed to completed - sending SMS notification');
+        // 📱 SMS NOTIFICATION: Send SMS to users based on their notification rules
+        // This respects user preferences and roles configured in the notification settings
+        console.log('📱 [SMS] Status changed - sending SMS notification based on user rules');
 
+        void sendStatusChangedSMS({
+          orderId: orderId,
+          dealerId: parseInt(dealerId),
+          module: module as any,
+          triggeredBy: enhancedUser.id,
+          eventData: {
+            orderNumber: currentOrder.order_number,
+            newStatus: newStatus,
+            oldStatus: oldStatus,
+            vehicleInfo: vehicleInfo
+          }
+        });
+
+        // Legacy SMS for completed orders (backwards compatibility)
+        if (newStatus === 'completed') {
           try {
             const smsResult = await orderSMSNotificationService.notifyStatusChange(
               orderId,
@@ -181,7 +197,7 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
               currentOrder.stock_number || undefined,
               currentOrder.tag || undefined
             );
-            console.log('✅ [SMS] SMS notification result:', smsResult);
+            console.log('✅ [SMS Legacy] SMS notification result:', smsResult);
 
             // Show toast based on results (with recipient names)
             if (smsResult.sent > 0 && smsResult.failed === 0) {
@@ -206,7 +222,7 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
               });
             }
           } catch (smsError: any) {
-            console.error('❌ [SMS] Error sending notification:', smsError);
+            console.error('❌ [SMS Legacy] Error sending notification:', smsError);
             logError('⚠️ SMS notification error (non-critical):', smsError);
             toast({
               title: t('common.error'),

@@ -4304,15 +4304,18 @@
       "end_date": "End Date",
       "select_department": "Select Department",
       "all_departments": "All Departments",
-      "sales": "Sales",
+      "select_service": "Select Service",
+      "all_services": "All Services",
       "service": "Service",
+      "sales": "Sales",
       "recon": "Recon",
       "car_wash": "Car Wash",
       "pending": "Pending",
       "in_progress": "In Progress",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "active_filters": "Active Filters"
+      "active_filters": "Active Filters",
+      "no_services": "No services available"
     },
     "metrics": {
       "total_orders": "Total Orders",

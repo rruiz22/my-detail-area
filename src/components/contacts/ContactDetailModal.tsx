@@ -109,10 +109,10 @@ export function ContactDetailModal({ contact, open, onClose, onEdit }: ContactDe
   const handleDownloadVCard = () => {
     try {
       vCardService.downloadVCard(contact);
-      toast({ description: t('contacts.contact_downloaded') });
+toast({ description: t('contacts.contact_downloaded') });
     } catch (error) {
       console.error('Error downloading vCard:', error);
-      toast({ variant: 'destructive', description: t('contacts.download_failed') });
+toast({ variant: 'destructive', description: t('contacts.download_failed') });
     }
   };
 
@@ -206,18 +206,18 @@ export function ContactDetailModal({ contact, open, onClose, onEdit }: ContactDe
                       </div>
 
                       {contact.phone && (
-                        <div>
+                      <div>
                           <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                             <Phone className="h-3 w-3" />
                             Phone
                           </label>
-                          <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-2 mt-1">
                             <span className="text-sm font-medium">{contact.phone}</span>
                             <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyPhone}>
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
+                            <Copy className="h-3 w-3" />
+                          </Button>
                         </div>
+                      </div>
                       )}
 
                       {contact.mobile_phone && (
