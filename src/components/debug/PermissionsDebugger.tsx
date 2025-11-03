@@ -39,8 +39,9 @@ export const PermissionsDebugger: React.FC = () => {
 
   const dealershipId = (enhancedUser as any)?.dealership_id || 0;
   const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
+  const isSupermanager = (enhancedUser as any)?.is_supermanager || false;
 
-  const { modules: dealerModules, loading: dealerModulesLoading, hasModuleAccess } = useDealershipModules(dealershipId);
+  const { modules: dealerModules, loading: dealerModulesLoading, hasModuleAccess } = useDealershipModules(dealershipId, isSystemAdmin, isSupermanager);
 
   const [roleId, setRoleId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);

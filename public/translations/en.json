@@ -5292,5 +5292,10 @@
       "save_later": "Save for later",
       "archive": "Archive"
     }
+  },
+  "system_update": {
+    "title": "New Version Available",
+    "message": "Version {{version}} is ready",
+    "button": "Update Now"
   }
 }
