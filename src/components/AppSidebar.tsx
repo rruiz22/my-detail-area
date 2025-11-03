@@ -59,10 +59,12 @@ export function AppSidebar() {
     : false;
 
   // Load dealership modules for the currently selected dealer
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId, {
-    isSystemAdmin: isAdmin,
-    isSupermanager: isSupermanager
-  });
+  // FIX: Pass primitives directly instead of object to prevent infinite loop
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(
+    activeDealerId,
+    isAdmin,
+    isSupermanager
+  );
 
   // Core Operations - Filtered by user's allowed order types
   const coreNavItems = React.useMemo(() => {

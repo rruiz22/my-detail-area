@@ -96,10 +96,10 @@ BEGIN
     RAISE EXCEPTION '❌ VALIDATION FAILED: Managers without custom roles detected. Assign custom roles before proceeding with migration.';
   END IF;
 
-  -- Check for users with invalid roles
+  -- Check for users with invalid roles (include supermanager as valid - may already exist)
   IF EXISTS (
     SELECT 1 FROM profiles p
-    WHERE p.role NOT IN ('system_admin', 'manager', 'technician', 'viewer', 'admin')
+    WHERE p.role NOT IN ('system_admin', 'manager', 'technician', 'viewer', 'admin', 'supermanager', 'user')
   ) THEN
     RAISE EXCEPTION '❌ VALIDATION FAILED: Found users with invalid roles!';
   END IF;

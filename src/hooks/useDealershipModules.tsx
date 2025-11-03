@@ -19,7 +19,11 @@ interface UseDealershipModulesReturn {
   hasModuleAccess: (module: AppModule) => boolean;
 }
 
-export const useDealershipModules = (dealerId: number, options?: { isSystemAdmin?: boolean; isSupermanager?: boolean }): UseDealershipModulesReturn => {
+export const useDealershipModules = (
+  dealerId: number,
+  isSystemAdmin?: boolean,  // FIX: Primitive params instead of options object
+  isSupermanager?: boolean  // FIX: Prevents infinite loop from object reference changes
+): UseDealershipModulesReturn => {
   const [modules, setModules] = useState<DealershipModule[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +31,7 @@ export const useDealershipModules = (dealerId: number, options?: { isSystemAdmin
   const refreshModules = useCallback(async () => {
     // ✅ SUPERMANAGER/SYSTEM_ADMIN FIX: If user is supermanager or system_admin,
     // they have access to ALL modules regardless of dealerId
-    if (!dealerId && (options?.isSystemAdmin || options?.isSupermanager)) {
+    if (!dealerId && (isSystemAdmin || isSupermanager)) {
       logger.dev('🔓 [useDealershipModules] Supermanager/System Admin - enabling ALL modules by default');
 
       // Return all modules as enabled for supermanagers/system_admins
@@ -95,7 +99,7 @@ export const useDealershipModules = (dealerId: number, options?: { isSystemAdmin
     } finally {
       setLoading(false);
     }
-  }, [dealerId, enhancedUser, options]);
+  }, [dealerId, isSystemAdmin, isSupermanager]);  // FIX: Primitive dependencies prevent infinite loop
 
   const updateModule = useCallback(async (module: AppModule, isEnabled: boolean): Promise<boolean> => {
     // ✅ FIX #10: Validate dealerId before update

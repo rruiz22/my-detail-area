@@ -27,7 +27,10 @@ export const ModuleProtectedRoute = ({
 }: ModuleProtectedRouteProps) => {
   const { user, loading: authLoading } = useAuth();
   const { enhancedUser, loading: permissionsLoading } = usePermissions();
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules();
+  const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
+  const isSupermanager = (enhancedUser as any)?.is_supermanager || false;
+  const dealershipId = (enhancedUser as any)?.dealership_id || 0;
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(dealershipId, isSystemAdmin, isSupermanager);
   const location = useLocation();
 
   // Wait for all data to load

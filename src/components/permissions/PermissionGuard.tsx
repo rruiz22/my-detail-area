@@ -54,7 +54,8 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
   // This allows system admins and multi-dealer users to check modules for the currently selected dealer
   const activeDealerId = typeof selectedDealerId === 'number' ? selectedDealerId : (enhancedUser as any)?.dealership_id || 0;
   const isSystemAdmin = (enhancedUser as any)?.is_system_admin || false;
-  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId);
+  const isSupermanager = (enhancedUser as any)?.is_supermanager || false;
+  const { hasModuleAccess, loading: modulesLoading } = useDealershipModules(activeDealerId, isSystemAdmin, isSupermanager);
 
   // Debug logging (only in dev)
   if (import.meta.env.DEV) {

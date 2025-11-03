@@ -18,6 +18,7 @@ let cachedVersion: VersionInfo | null = null;
  */
 export function useAppVersion() {
   const [currentVersion, setCurrentVersion] = useState<VersionInfo | null>(cachedVersion);
+  const [latestVersion, setLatestVersion] = useState<VersionInfo | null>(null);
   const [newVersionAvailable, setNewVersionAvailable] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
 
@@ -66,10 +67,11 @@ export function useAppVersion() {
 
     setIsChecking(true);
     try {
-      const latestVersion = await fetchVersion();
+      const newVersion = await fetchVersion();
 
-      if (latestVersion && latestVersion.buildNumber !== currentVersion.buildNumber) {
-        console.log('🆕 New version available:', latestVersion);
+      if (newVersion && newVersion.buildNumber !== currentVersion.buildNumber) {
+        console.log('🆕 New version available:', newVersion);
+        setLatestVersion(newVersion);
         setNewVersionAvailable(true);
       }
     } catch (error) {
@@ -91,6 +93,7 @@ export function useAppVersion() {
 
   return {
     currentVersion,
+    latestVersion,
     newVersionAvailable,
     isChecking,
     checkForUpdate,
