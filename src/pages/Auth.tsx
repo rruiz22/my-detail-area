@@ -14,6 +14,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { supabase } from '@/integrations/supabase/client';
 import { formatRoleName } from '@/utils/roleUtils';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
+import { getFormattedVersion } from '@/config/version';
 
 // TypeScript interfaces
 interface InvitationData {
@@ -641,7 +642,7 @@ export default function Auth() {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-sm text-muted-foreground">
-          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')}</p>
+          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')} {getFormattedVersion()}</p>
         </footer>
       </main>
     </div>
