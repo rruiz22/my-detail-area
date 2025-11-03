@@ -155,7 +155,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
           </TabsList>
 
           <TabsContent value="grouped" className="mt-0">
-            <ScrollArea className="h-[300px] sm:h-[400px]">
+            <ScrollArea className="h-[calc(100vh-280px)] min-h-[300px] sm:h-[400px]">
               {filteredGroupedNotifications.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
                   <Bell className="h-8 w-8 mx-auto mb-4 opacity-50" />
@@ -223,7 +223,7 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
           </TabsContent>
 
           <TabsContent value="chronological" className="mt-0">
-            <ScrollArea className="h-[300px] sm:h-[400px]">
+            <ScrollArea className="h-[calc(100vh-280px)] min-h-[300px] sm:h-[400px]">
               {filteredNotifications.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
                   <Bell className="h-8 w-8 mx-auto mb-4 opacity-50" />

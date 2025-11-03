@@ -22,7 +22,7 @@ interface UseDeliveryTrackingReturn {
 
 /**
  * Track delivery status for a single notification
- * Subscribes to real-time updates from notification_delivery_log table
+ * Subscribes to real-time updates from notification_log table
  */
 export function useDeliveryTracking(
   notificationId: string | undefined
@@ -43,8 +43,8 @@ export function useDeliveryTracking(
       setLoading(true);
       setError(null);
 
-      const { data, error: fetchError } = await supabase
-        .from('notification_delivery_log')
+      const { data, error: fetchError} = await supabase
+        .from('notification_log')
         .select('*')
         .eq('notification_id', notificationId)
         .single();
@@ -97,7 +97,7 @@ export function useDeliveryTracking(
         {
           event: '*',
           schema: 'public',
-          table: 'notification_delivery_log',
+          table: 'notification_log',
           filter: `notification_id=eq.${notificationId}`,
         },
         (payload) => {

@@ -215,7 +215,7 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
           // Update get_ready_notifications table via RPC
           if (!user?.id) throw new Error('User not authenticated');
 
-          const { error } = await supabase.rpc('mark_notification_read', {
+          const { error } = await supabase.rpc('mark_notification_as_read', {
             p_notification_id: notificationId,
             p_user_id: user.id,
           });
