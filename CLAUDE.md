@@ -43,7 +43,7 @@ node scripts/audit-translations.cjs  # Comprehensive translation coverage analys
 
 **Core Modules:**
 - **Sales Orders** - Vehicle sales with VIN decoding + QR generation
-- **Service Orders** - Service department workflow management  
+- **Service Orders** - Service department workflow management
 - **Recon Orders** - Vehicle reconditioning process tracking
 - **Car Wash** - Quick service order management
 - **Contacts** - Customer/dealer contact management with vCard QR
@@ -74,7 +74,7 @@ return <h1>{t('page.title')}</h1>; // NEVER hardcode text
 
 // Namespace organization by feature
 'contacts.add_new'
-'orders.vehicle_information' 
+'orders.vehicle_information'
 'reports.export.configuration'
 ```
 
@@ -89,7 +89,7 @@ src/
 ├── components/
 │   ├── ui/              # shadcn/ui base components
 │   ├── orders/          # Order management (Sales, Service, Recon, CarWash)
-│   ├── users/           # User management + Direct creation  
+│   ├── users/           # User management + Direct creation
 │   ├── contacts/        # Contact management + vCard QR
 │   ├── dealer/          # Dealership-specific components
 │   ├── reports/         # Business intelligence + export
@@ -113,7 +113,7 @@ src/
 ```sql
 profiles (users) → dealer_memberships → dealerships
 dealership_contacts → dealerships (contact management)
-orders (sales/service/recon/carwash) → dealerships (order management)  
+orders (sales/service/recon/carwash) → dealerships (order management)
 dealer_groups → dealer_memberships (permission groups)
 ```
 
@@ -192,7 +192,7 @@ import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 
 export function ComponentName() {
   const { t } = useTranslation();
-  
+
   return (
     <PermissionGuard module="feature" permission="read">
       <Card className="card-enhanced"> {/* Enhanced shadows */}
@@ -264,7 +264,7 @@ try {
 
 ### Mobile & Responsive Design
 
-#### **Breakpoint Strategy** 
+#### **Breakpoint Strategy**
 - **Mobile-first design** - Base styles for mobile
 - **Breakpoints**: sm(640px), md(768px), lg(1024px), xl(1280px)
 - **Grid patterns**: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
@@ -435,3 +435,100 @@ All agents understand and follow:
 ```
 
 Use these 17 specialized agents to maintain high development velocity while ensuring enterprise-grade quality, security, maintainability, and strict design system compliance throughout the My Detail Area dealership management system.
+
+## ⚡ Claude Code Performance Optimization
+
+### **CRITICAL: Maximum Velocity Guidelines**
+
+**Problem Identified**: Claude Code can work slowly without proper optimization strategies.
+
+**Root Causes**:
+1. ❌ **Sequential tool execution** - Running tools one at a time instead of in parallel
+2. ❌ **No agent delegation** - Not using specialized agents proactively
+3. ❌ **Excessive verbosity** - Too much explanation before action
+4. ❌ **Manual searches** - Not using Task tool with "Explore" agent for codebase exploration
+
+### **Mandatory Speed Optimizations**
+
+#### 1. **Parallel Tool Execution (ALWAYS)**
+Execute multiple independent tools in a single response block:
+
+```typescript
+// ❌ WRONG - Sequential (slow)
+1. Read file A
+2. Wait for response
+3. Read file B
+4. Wait for response
+5. Search pattern C
+6. Wait for response
+
+// ✅ CORRECT - Parallel (fast)
+// Single response with multiple tool calls:
+Read(file A) + Read(file B) + Grep(pattern C)
+```
+
+#### 2. **Proactive Agent Delegation**
+Launch specialized agents immediately without asking:
+
+```typescript
+// ✅ CORRECT - Immediate agent launch
+User: "Optimize the dashboard performance"
+Assistant: *Launches performance-optimizer agent immediately*
+
+// ✅ CORRECT - Multiple agents in parallel
+User: "Build analytics dashboard"
+Task("Design analytics schema", "database-expert")
+Task("Create dashboard UI", "react-architect")
+Task("Implement visualizations", "analytics-implementer")
+```
+
+#### 3. **Action First, Explanation After**
+Execute first, report results concisely:
+
+```typescript
+// ❌ WRONG - Verbose
+"I'm going to read the button component to understand its structure.
+This will help me see how it's implemented and then I can analyze..."
+*Finally executes Read tool*
+
+// ✅ CORRECT - Immediate action
+*Executes Read tool immediately*
+"Button component uses Radix UI primitives. Here's the optimization..."
+```
+
+#### 4. **Use Explore Agent for Codebase Searches**
+Never do manual Grep/Glob for exploratory questions:
+
+```typescript
+// ❌ WRONG - Manual search
+User: "Where are errors handled?"
+Assistant: *Uses Grep manually for 'error', then 'catch', then 'throw'...*
+
+// ✅ CORRECT - Delegate to Explore agent
+User: "Where are errors handled?"
+Assistant: Task("Find error handling patterns", "Explore", thoroughness: "medium")
+```
+
+### **Performance Checklist**
+
+Before every response, verify:
+- [ ] **Can I run tools in parallel?** → Launch all independent tools together
+- [ ] **Should I delegate this?** → Use specialized agent if applicable
+- [ ] **Am I over-explaining?** → Execute first, explain after
+- [ ] **Is this exploratory?** → Use Explore agent instead of manual search
+
+### **Speed Metrics**
+
+**Target velocities:**
+- **Simple tasks** (read 1-3 files): < 10 seconds
+- **Medium tasks** (multi-file changes): < 30 seconds
+- **Complex features** (agent coordination): < 2 minutes
+- **Codebase exploration**: Use Explore agent, not manual searches
+
+**Velocity multipliers:**
+- Parallel tool execution: **3-5x faster**
+- Agent delegation: **2-4x faster**
+- Action-first approach: **2x faster**
+- Explore agent: **5-10x faster** for search tasks
+
+Apply these optimizations ruthlessly to every interaction.

@@ -1,17 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Clock, 
-  CheckCircle, 
-  AlertTriangle, 
-  DollarSign,
-  Car,
-  Users,
-  Timer,
-  Target
+import {
+  TrendingUp,
+  TrendingDown,
+  Clock,
+  CheckCircle,
+  Car
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -95,37 +89,22 @@ const MetricCard = ({
 };
 
 export function DashboardMetrics() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { data: dashboardData, isLoading } = useDashboardData();
-
-  const formatCurrency = (amount: number) => {
-    const currencyMap = {
-      'en': 'USD',
-      'es': 'USD', // Assuming US Spanish
-      'pt-BR': 'BRL'
-    };
-    const currency = currencyMap[i18n.language as keyof typeof currencyMap] || 'USD';
-
-    return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-  };
 
   // Use real data from database (respects RLS policies automatically)
   const metrics = dashboardData?.overall || {
     totalOrders: 0,
     pendingOrders: 0,
     completedToday: 0,
-    revenue: 0,
     activeVehicles: 0
   };
 
   // Show loading state
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[1, 2, 3, 4].map(i => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3].map(i => (
           <Card key={i} className="animate-pulse">
             <CardHeader className="pb-2">
               <div className="h-4 bg-muted rounded w-24"></div>
@@ -140,7 +119,7 @@ export function DashboardMetrics() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <MetricCard
         title={t('dashboard.metrics.total_orders')}
         value={metrics.totalOrders}
@@ -163,14 +142,6 @@ export function DashboardMetrics() {
         icon={<CheckCircle className="w-4 h-4" />}
         color="success"
         subtitle={t('dashboard.metrics.finished_today')}
-      />
-
-      <MetricCard
-        title={t('dashboard.metrics.revenue')}
-        value={formatCurrency(metrics.revenue)}
-        icon={<DollarSign className="w-4 h-4" />}
-        color="success"
-        subtitle={t('dashboard.metrics.total_revenue')}
       />
     </div>
   );
