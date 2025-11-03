@@ -15,7 +15,7 @@ Hemos agregado lógica en `Auth.tsx` que detecta automáticamente cuando llega u
 useEffect(() => {
   const code = searchParams.get('code');
   const type = searchParams.get('type');
-  
+
   // Si hay un código, probablemente es un link de reset password
   if (code && (type === 'recovery' || !type)) {
     console.log('🔐 Detected password reset token, redirecting to /reset-password');
@@ -28,30 +28,29 @@ useEffect(() => {
 
 **Esto significa que el flujo funciona AHORA, incluso si Supabase redirige a `/auth`**
 
-### **Parte 2: Verificación de Sesión Mejorada (IMPLEMENTADO)**
+### **Parte 2: Verificación de Token con verifyOtp() (IMPLEMENTADO)**
 
-`ResetPassword.tsx` ahora espera hasta 3 segundos para que Supabase procese el token de recuperación:
+`ResetPassword.tsx` ahora verifica explícitamente el token usando `supabase.auth.verifyOtp()`:
 
 ```typescript
-// En ResetPassword.tsx - Líneas 47-85
+// En ResetPassword.tsx - Líneas 47-89
 const verifyRecoverySession = async () => {
-  const code = searchParams.get('code');
+  const tokenHash = searchParams.get('token_hash') || searchParams.get('code');
+  const type = searchParams.get('type');
   
-  if (code) {
-    // Dar tiempo a Supabase para procesar el token (hasta 3 segundos)
-    let attempts = 0;
-    const maxAttempts = 6;
+  if (tokenHash) {
+    // Verificar el token OTP con Supabase
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: (type === 'recovery' ? 'recovery' : 'email') as any,
+    });
     
-    while (attempts < maxAttempts) {
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      
-      if (currentSession) {
-        setVerifyingSession(false);
-        return;
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      attempts++;
+    if (error) {
+      console.error('❌ Token verification failed:', error.message);
+      setError('Invalid or expired reset link');
+    } else if (data.session) {
+      console.log('✅ Recovery session established successfully');
+      // Session is now established, user can proceed
     }
   }
 };
@@ -151,9 +150,9 @@ En el navegador, abre la consola y verás:
 ```
 🔐 Detected password reset token, redirecting to /reset-password   (en Auth.tsx)
 🔐 Verifying recovery session...                                   (en ResetPassword.tsx)
-📧 Recovery code found in URL, waiting for Supabase to process...  (si hay código)
-✅ Recovery session established                                     (si funciona)
-❌ Recovery session not established after waiting                   (si falla)
+📧 Recovery token found in URL, verifying with Supabase...         (si hay token)
+✅ Recovery session established successfully                        (si funciona)
+❌ Token verification failed: [error message]                       (si falla)
 ```
 
 ### **Si el Link No Funciona:**
@@ -221,6 +220,5 @@ Cuando edites el email template, puedes usar:
 
 ---
 
-**Última actualización:** 2025-11-03  
+**Última actualización:** 2025-11-03
 **Versión:** 1.2.3
-
