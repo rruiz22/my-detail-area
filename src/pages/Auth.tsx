@@ -525,20 +525,9 @@ export default function Auth() {
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password" className="text-sm font-semibold text-foreground dark:text-foreground">
-                      {t('auth.password_label', 'Password')}
-                    </Label>
-                    {!isSignupMode && (
-                      <button
-                        type="button"
-                        onClick={() => navigate('/forgot-password')}
-                        className="text-xs text-primary hover:underline"
-                      >
-                        {t('auth.forgot_password_link', 'Forgot password?')}
-                      </button>
-                    )}
-                  </div>
+                  <Label htmlFor="password" className="text-sm font-semibold text-foreground dark:text-foreground">
+                    {t('auth.password_label', 'Password')}
+                  </Label>
                   <Input
                     id="password"
                     type="password"
@@ -550,6 +539,18 @@ export default function Auth() {
                     className="h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors"
                     placeholder={isSignupMode ? t('auth.signup.password_placeholder', 'Create a strong password') : t('auth.password_placeholder', 'Enter your password')}
                   />
+                  {/* Forgot password link - only in sign-in mode */}
+                  {!isSignupMode && (
+                    <div className="text-right">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/forgot-password')}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {t('auth.forgot_password_link', 'Forgot password?')}
+                      </button>
+                    </div>
+                  )}
                   {/* Password strength indicator for signup */}
                   {isSignupMode && password && (
                     <div className="space-y-1" aria-live="polite" aria-atomic="true">
@@ -629,7 +630,7 @@ export default function Auth() {
                 </Button>
               </div>
             )}
-            
+
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 {t('auth.no_access_text', "Don't have access? Contact your dealer administrator.")}
