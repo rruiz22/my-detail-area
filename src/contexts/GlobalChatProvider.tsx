@@ -232,6 +232,11 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     return () => document.removeEventListener('keydown', handleKeyboard);
   }, []);
 
+  // Calculate total unread count from CHAT conversations (not system notifications)
+  const totalChatUnreadCount = conversations.reduce((total, conv) => {
+    return total + (conv.unread_count || 0);
+  }, 0);
+
   const value: GlobalChatContextType = {
     // Chat state
     isFloatingChatOpen,
@@ -243,8 +248,8 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     openDirectMessage,
     sendQuickSMS,
 
-    // Notifications
-    totalUnreadCount: unreadCount,
+    // Notifications - Use CHAT unread count, not system notifications
+    totalUnreadCount: totalChatUnreadCount,
     notificationGroups: groupedNotifications,
 
     // Presence
