@@ -28,7 +28,7 @@ interface SerializedPermissions {
   version: number;
 }
 
-const CACHE_VERSION = 2;  // INCREMENTED: Invalidates old caches after role migration
+const CACHE_VERSION = 3;  // INCREMENTED: Force cache invalidation for supermanager fix
 const CACHE_KEY = 'permissions_cache_v1';
 const CACHE_TTL = 15 * 60 * 1000; // 15 minutes (increased from 5 to reduce re-fetches)
 

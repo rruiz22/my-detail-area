@@ -19,12 +19,35 @@ interface UseDealershipModulesReturn {
   hasModuleAccess: (module: AppModule) => boolean;
 }
 
-export const useDealershipModules = (dealerId: number): UseDealershipModulesReturn => {
+export const useDealershipModules = (dealerId: number, options?: { isSystemAdmin?: boolean; isSupermanager?: boolean }): UseDealershipModulesReturn => {
   const [modules, setModules] = useState<DealershipModule[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const refreshModules = useCallback(async () => {
+    // ✅ SUPERMANAGER/SYSTEM_ADMIN FIX: If user is supermanager or system_admin,
+    // they have access to ALL modules regardless of dealerId
+    if (!dealerId && (options?.isSystemAdmin || options?.isSupermanager)) {
+      logger.dev('🔓 [useDealershipModules] Supermanager/System Admin - enabling ALL modules by default');
+
+      // Return all modules as enabled for supermanagers/system_admins
+      const allModules: DealershipModule[] = [
+        'dashboard', 'sales_orders', 'service_orders', 'recon_orders', 'car_wash',
+        'stock', 'contacts', 'reports', 'users', 'productivity', 'chat',
+        'dealerships', 'get_ready', 'settings', 'management'
+      ].map(module => ({
+        module: module as AppModule,
+        is_enabled: true,
+        enabled_at: new Date().toISOString(),
+        enabled_by: 'system'
+      }));
+
+      setModules(allModules);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     if (!dealerId) {
       // If no dealerId provided, immediately set loading to false with empty modules
       setLoading(false);
@@ -72,7 +95,7 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
     } finally {
       setLoading(false);
     }
-  }, [dealerId]);
+  }, [dealerId, enhancedUser, options]);
 
   const updateModule = useCallback(async (module: AppModule, isEnabled: boolean): Promise<boolean> => {
     // ✅ FIX #10: Validate dealerId before update
@@ -131,7 +154,7 @@ export const useDealershipModules = (dealerId: number): UseDealershipModulesRetu
       setError(err instanceof Error ? err.message : 'Failed to update module');
       return false;
     }
-  }, [dealerId]);
+  }, [dealerId, modules]);
 
   const hasModuleAccess = useCallback((module: AppModule): boolean => {
     // ✅ FIX: Implement fail-closed security policy (deny by default)

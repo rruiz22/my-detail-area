@@ -809,6 +809,11 @@ export const usePermissions = () => {
       return ['sales', 'service', 'recon', 'carwash'];
     }
 
+    // Supermanagers have access to all dealership order types
+    if (enhancedUser.is_supermanager) {
+      return ['sales', 'service', 'recon', 'carwash'];
+    }
+
     // Users without custom roles have no order access
     if (enhancedUser.custom_roles.length === 0) {
       console.warn('⚠️ User has no custom roles assigned - no order access');
