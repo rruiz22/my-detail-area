@@ -17,8 +17,8 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Copy serve.json configuration for HTTP headers
-COPY serve.json ./
+# Copy serve.json to dist directory (serve -c looks for config relative to served directory)
+COPY serve.json ./dist/
 
 # Install a simple static file server
 RUN npm install -g serve
