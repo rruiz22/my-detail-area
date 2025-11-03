@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
 import { getFormattedVersion } from '@/config/version';
+import { supabase } from '@/integrations/supabase/client';
 
 // Password validation
 const validatePassword = (password: string) => {
@@ -34,17 +35,54 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [verifyingSession, setVerifyingSession] = useState(true);
   const { updatePassword, session } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { branding } = useAuthBranding();
+  const [searchParams] = useSearchParams();
 
   // Check if user has a valid recovery session
+  // Give Supabase time to process the recovery token from URL
   useEffect(() => {
-    if (!session) {
-      setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
-    }
-  }, [session, t]);
+    const verifyRecoverySession = async () => {
+      console.log('🔐 Verifying recovery session...');
+      
+      // Check if there's a code in the URL (from email link)
+      const code = searchParams.get('code');
+      
+      if (code) {
+        console.log('📧 Recovery code found in URL, waiting for Supabase to process...');
+        // Give Supabase up to 3 seconds to process the token
+        let attempts = 0;
+        const maxAttempts = 6; // 3 seconds total (500ms * 6)
+        
+        while (attempts < maxAttempts) {
+          const { data: { session: currentSession } } = await supabase.auth.getSession();
+          
+          if (currentSession) {
+            console.log('✅ Recovery session established');
+            setVerifyingSession(false);
+            return;
+          }
+          
+          await new Promise(resolve => setTimeout(resolve, 500));
+          attempts++;
+        }
+        
+        console.error('❌ Recovery session not established after waiting');
+        setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
+      } else if (!session) {
+        // No code in URL and no session
+        console.error('❌ No recovery code or session found');
+        setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
+      }
+      
+      setVerifyingSession(false);
+    };
+    
+    verifyRecoverySession();
+  }, [session, searchParams, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,7 +189,15 @@ export default function ResetPassword() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            {error ? (
+            {verifyingSession ? (
+              // Verifying Session State
+              <div className="flex items-center justify-center py-8" role="status" aria-live="polite">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" aria-hidden="true" />
+                  <span className="text-muted-foreground">{t('auth.reset_password.verifying', 'Verifying reset link...')}</span>
+                </div>
+              </div>
+            ) : error ? (
               // Error State - Invalid/Expired Link
               <div className="text-center py-6 space-y-4">
                 <div className="p-4 bg-red-500/10 rounded-lg border border-red-500/30">
