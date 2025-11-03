@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 800,
-  "totalStrings": 7706,
-  "hardcodedStrings": 1908,
-  "translatedStrings": 5798,
+  "scannedFiles": 802,
+  "totalStrings": 7747,
+  "hardcodedStrings": 1917,
+  "translatedStrings": 5830,
   "issues": {
     "critical": [
       {
@@ -11991,6 +11991,60 @@
         "severity": "medium"
       },
       {
+        "file": "src\\components\\debug\\CacheDebugger.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Cache Debugger",
+            "line": 99,
+            "context": "98: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n99: <Bug className=\"h-4 w-4\" />\n100: Cache Debugger"
+          },
+          {
+            "text": "User",
+            "line": 114,
+            "context": "113: <div className=\"space-y-1\">\n114: <div className=\"text-xs font-semibold text-muted-foreground\">User</div>\n115: <div className=\"text-sm font-mono\">{user.email}</div>"
+          },
+          {
+            "text": "Permissions State",
+            "line": 123,
+            "context": "122: <div className=\"space-y-1\">\n123: <div className=\"text-xs font-semibold text-muted-foreground\">\n124: Permissions State"
+          },
+          {
+            "text": "Cache Stats",
+            "line": 142,
+            "context": "141: <div className=\"space-y-1\">\n142: <div className=\"text-xs font-semibold text-muted-foreground\">\n143: Cache Stats"
+          },
+          {
+            "text": "Clean",
+            "line": 190,
+            "context": "189: {localStorageKeys.length === 0 ? (\n190: <Badge variant=\"outline\" className=\"text-xs\">\n191: Clean"
+          },
+          {
+            "text": "Clean",
+            "line": 213,
+            "context": "212: {sessionStorageKeys.length === 0 ? (\n213: <Badge variant=\"outline\" className=\"text-xs\">\n214: Clean"
+          },
+          {
+            "text": "Refresh",
+            "line": 243,
+            "context": "242: >\n243: <RefreshCw className=\"h-3 w-3 mr-1\" />\n244: Refresh"
+          },
+          {
+            "text": "Clear Cache",
+            "line": 252,
+            "context": "251: >\n252: <Trash2 className=\"h-3 w-3 mr-1\" />\n253: Clear Cache"
+          },
+          {
+            "text": "Open Cache Debugger",
+            "line": 88,
+            "context": "87: variant=\"secondary\"\n88: title=\"Open Cache Debugger\"\n89: >"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "medium"
+      },
+      {
         "file": "src\\components\\dealer\\EditRoleModal.tsx",
         "hardcodedStrings": [
           {
@@ -22806,69 +22860,63 @@
         "hardcodedStrings": [
           {
             "text": "System Admin",
-            "line": 128,
-            "context": "127: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n128: <Shield className=\"w-3 h-3 mr-1\" />\n129: System Admin"
+            "line": 129,
+            "context": "128: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n129: <Shield className=\"w-3 h-3 mr-1\" />\n130: System Admin"
           },
           {
             "text": ", error);\n      setIsSigningOut(false);\n    }\n  };\n\n  const handleProfileClick = () => {\n    navigate(",
-            "line": 34,
-            "context": "33: } catch (error) {\n34: console.error('Sign out error:', error);\n35: setIsSigningOut(false);"
+            "line": 35,
+            "context": "34: } catch (error) {\n35: console.error('Sign out error:', error);\n36: setIsSigningOut(false);"
           }
         ],
         "translationCalls": [
           {
             "key": "roles.system_admin",
-            "line": 67,
-            "exists": true
-          },
-          {
-            "key": "roles.dealer_admin",
             "line": 68,
             "exists": true
           },
           {
-            "key": "roles.dealer_manager",
+            "key": "roles.dealer_admin",
             "line": 69,
             "exists": true
           },
           {
-            "key": "roles.user",
+            "key": "roles.dealer_manager",
             "line": 70,
             "exists": true
           },
           {
+            "key": "roles.user",
+            "line": 71,
+            "exists": true
+          },
+          {
             "key": "navigation.profile",
-            "line": 151,
+            "line": 152,
             "exists": true
           },
           {
             "key": "navigation.management",
-            "line": 158,
+            "line": 159,
             "exists": true
           },
           {
             "key": "navigation.settings",
-            "line": 164,
+            "line": 165,
             "exists": true
           },
           {
             "key": "navigation.signing_out",
-            "line": 176,
-            "exists": false
+            "line": 184,
+            "exists": true
           },
           {
             "key": "navigation.sign_out",
-            "line": 176,
+            "line": 184,
             "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "navigation.signing_out",
-            "line": 176,
-            "context": "175: <LogOut className=\"mr-2 h-4 w-4\" />\n176: <span>{isSigningOut ? t('navigation.signing_out') : t('navigation.sign_out')}</span>\n177: </DropdownMenuItem>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 82,
         "severity": "low"
       },
@@ -35284,6 +35332,171 @@
             "key": "errors.contact_admin",
             "line": 54,
             "context": "53: <li>{t('errors.clear_cache') || 'Clear your browser cache'}</li>\n54: <li>{t('errors.contact_admin') || 'Contact your system administrator if the problem persists'}</li>\n55: </ul>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\permissions\\ManageCustomRolesModal.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.error",
+            "line": 116,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 148,
+            "exists": true
+          },
+          {
+            "key": "user_management.no_role_selected",
+            "line": 149,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 205,
+            "exists": true
+          },
+          {
+            "key": "user_management.role_assigned",
+            "line": 206,
+            "exists": true
+          },
+          {
+            "key": "user_management.user_must_reload_title",
+            "line": 212,
+            "exists": false
+          },
+          {
+            "key": "user_management.user_must_reload_desc",
+            "line": 213,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 248,
+            "exists": true
+          },
+          {
+            "key": "user_management.error_assigning_role",
+            "line": 249,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 275,
+            "exists": true
+          },
+          {
+            "key": "user_management.role_removed",
+            "line": 276,
+            "exists": true
+          },
+          {
+            "key": "user_management.user_must_reload_title",
+            "line": 282,
+            "exists": false
+          },
+          {
+            "key": "user_management.user_must_reload_desc",
+            "line": 283,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 317,
+            "exists": true
+          },
+          {
+            "key": "user_management.error_removing_role",
+            "line": 318,
+            "exists": true
+          },
+          {
+            "key": "user_management.manage_custom_roles",
+            "line": 334,
+            "exists": true
+          },
+          {
+            "key": "user_management.manage_custom_roles_desc",
+            "line": 337,
+            "exists": true
+          },
+          {
+            "key": "common.user",
+            "line": 349,
+            "exists": true
+          },
+          {
+            "key": "common.email",
+            "line": 353,
+            "exists": true
+          },
+          {
+            "key": "user_management.current_custom_roles",
+            "line": 364,
+            "exists": true
+          },
+          {
+            "key": "user_management.no_custom_roles",
+            "line": 375,
+            "exists": true
+          },
+          {
+            "key": "user_management.assign_custom_role",
+            "line": 414,
+            "exists": true
+          },
+          {
+            "key": "user_management.select_role",
+            "line": 424,
+            "exists": true
+          },
+          {
+            "key": "user_management.all_roles_assigned",
+            "line": 429,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 453,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.add",
+            "line": 458,
+            "exists": true
+          },
+          {
+            "key": "common.close",
+            "line": 468,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "user_management.user_must_reload_title",
+            "line": 212,
+            "context": "211: toast({\n212: title: '⚠️ ' + t('user_management.user_must_reload_title', { defaultValue: 'User Must Reload' }),\n213: description: t('user_management.user_must_reload_desc', {"
+          },
+          {
+            "key": "user_management.user_must_reload_desc",
+            "line": 213,
+            "context": "212: title: '⚠️ ' + t('user_management.user_must_reload_title', { defaultValue: 'User Must Reload' }),\n213: description: t('user_management.user_must_reload_desc', {\n214: defaultValue: '{{name}} must reload their browser (Ctrl+Shift+R) to see the new permissions.',"
+          },
+          {
+            "key": "user_management.user_must_reload_title",
+            "line": 282,
+            "context": "281: toast({\n282: title: '⚠️ ' + t('user_management.user_must_reload_title', { defaultValue: 'User Must Reload' }),\n283: description: t('user_management.user_must_reload_desc', {"
+          },
+          {
+            "key": "user_management.user_must_reload_desc",
+            "line": 283,
+            "context": "282: title: '⚠️ ' + t('user_management.user_must_reload_title', { defaultValue: 'User Must Reload' }),\n283: description: t('user_management.user_must_reload_desc', {\n284: defaultValue: '{{name}} must reload their browser (Ctrl+Shift+R) to see the updated permissions.',"
           }
         ],
         "coverage": 100,
@@ -50586,155 +50799,190 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 161,
+            "line": 174,
             "exists": true
           },
           {
             "key": "dealer.users.error_loading_users",
-            "line": 162,
+            "line": 175,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 187,
+            "line": 222,
             "exists": true
           },
           {
             "key": "dealer.users.user_deactivated",
-            "line": 189,
+            "line": 224,
             "exists": true
           },
           {
             "key": "dealer.users.user_activated",
-            "line": 190,
+            "line": 225,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 197,
+            "line": 234,
             "exists": true
           },
           {
             "key": "dealer.users.error_updating_status",
-            "line": 198,
+            "line": 235,
             "exists": true
           },
           {
             "key": "common.unnamed",
-            "line": 217,
+            "line": 256,
             "exists": false
           },
           {
             "key": "common.unnamed",
-            "line": 223,
+            "line": 262,
             "exists": false
           },
           {
             "key": "dealer.users.title",
-            "line": 259,
+            "line": 338,
             "exists": true
           },
           {
             "key": "dealer.users.description",
-            "line": 260,
+            "line": 339,
             "exists": true
           },
           {
             "key": "dealer.users.invite_user",
-            "line": 264,
+            "line": 343,
             "exists": true
           },
           {
             "key": "dealer.users.table.user",
-            "line": 274,
+            "line": 353,
             "exists": true
           },
           {
             "key": "dealer.users.table.email",
-            "line": 275,
+            "line": 354,
             "exists": true
           },
           {
             "key": "dealer.users.table.role",
-            "line": 276,
+            "line": 355,
             "exists": false
           },
           {
             "key": "dealer.users.table.status",
-            "line": 277,
+            "line": 356,
             "exists": true
           },
           {
             "key": "dealer.users.table.joined",
-            "line": 278,
+            "line": 357,
             "exists": true
           },
           {
             "key": "dealer.users.no_users",
-            "line": 288,
+            "line": 367,
             "exists": true
           },
           {
             "key": "common.no_email",
-            "line": 309,
+            "line": 388,
             "exists": false
           },
           {
             "key": "dealer.users.no_role",
-            "line": 322,
+            "line": 406,
             "exists": true
           },
           {
             "key": "common.active",
-            "line": 329,
+            "line": 420,
             "exists": true
           },
           {
             "key": "common.inactive",
-            "line": 329,
+            "line": 420,
             "exists": false
           },
           {
             "key": "dealer.users.edit_role",
-            "line": 349,
+            "line": 440,
             "exists": true
           },
           {
             "key": "dealer.users.deactivate",
-            "line": 355,
+            "line": 449,
             "exists": true
           },
           {
             "key": "dealer.users.activate",
-            "line": 360,
+            "line": 454,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.deactivate_user_title",
+            "line": 504,
+            "exists": false
+          },
+          {
+            "key": "dealer.users.deactivate_user_description",
+            "line": 507,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 515,
+            "exists": true
+          },
+          {
+            "key": "common.loading",
+            "line": 525,
+            "exists": true
+          },
+          {
+            "key": "dealer.users.deactivate",
+            "line": 528,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.unnamed",
-            "line": 217,
-            "context": "216: if (!user.profiles) {\n217: return t('common.unnamed');\n218: }"
+            "line": 256,
+            "context": "255: if (!user.profiles) {\n256: return t('common.unnamed');\n257: }"
           },
           {
             "key": "common.unnamed",
-            "line": 223,
-            "context": "222: }\n223: return first_name || last_name || t('common.unnamed');\n224: };"
+            "line": 262,
+            "context": "261: }\n262: return first_name || last_name || t('common.unnamed');\n263: };"
           },
           {
             "key": "dealer.users.table.role",
-            "line": 276,
-            "context": "275: <TableHead>{t('dealer.users.table.email')}</TableHead>\n276: <TableHead>{t('dealer.users.table.role')}</TableHead>\n277: <TableHead>{t('dealer.users.table.status')}</TableHead>"
+            "line": 355,
+            "context": "354: <TableHead>{t('dealer.users.table.email')}</TableHead>\n355: <TableHead>{t('dealer.users.table.role')}</TableHead>\n356: <TableHead>{t('dealer.users.table.status')}</TableHead>"
           },
           {
             "key": "common.no_email",
-            "line": 309,
-            "context": "308: {/* Email */}\n309: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n310: "
+            "line": 388,
+            "context": "387: {/* Email */}\n388: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n389: "
           },
           {
             "key": "common.inactive",
-            "line": 329,
-            "context": "328: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n329: {user.is_active ? t('common.active') : t('common.inactive')}\n330: </Badge>"
+            "line": 420,
+            "context": "419: >\n420: {user.is_active ? t('common.active') : t('common.inactive')}\n421: </Badge>"
+          },
+          {
+            "key": "dealer.users.deactivate_user_title",
+            "line": 504,
+            "context": "503: <AlertDialogTitle>\n504: {t('dealer.users.deactivate_user_title', { defaultValue: 'Deactivate User' })}\n505: </AlertDialogTitle>"
+          },
+          {
+            "key": "dealer.users.deactivate_user_description",
+            "line": 507,
+            "context": "506: <AlertDialogDescription>\n507: {t('dealer.users.deactivate_user_description', {\n508: defaultValue: 'Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.',"
           }
         ],
         "coverage": 100,
@@ -54796,7 +55044,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "32 Modal components need translation",
+      "description": "33 Modal components need translation",
       "files": [
         "src\\components\\stock\\VehicleDetailsModal.tsx",
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
@@ -54825,13 +55073,14 @@
         "src\\components\\followers\\AddFollowerModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx",
         "src\\components\\attachments\\ImagePreviewModal.tsx",
+        "src\\components\\permissions\\ManageCustomRolesModal.tsx",
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "src\\components\\get-ready\\QuickAddWorkItemModal.tsx",
         "src\\components\\get-ready\\AddFromTemplatesModal.tsx",
         "src\\components\\get-ready\\vendors\\VendorFormModal.tsx"
       ],
-      "estimatedEffort": "16 hours"
+      "estimatedEffort": "17 hours"
     },
     {
       "priority": "MEDIUM",
@@ -54864,7 +55113,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "387 Component components need translation",
+      "description": "388 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -54916,6 +55165,7 @@
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
         "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\dev\\OrderNumberMigrationTool.tsx",
+        "src\\components\\debug\\CacheDebugger.tsx",
         "src\\test\\components\\Button.test.tsx",
         "src\\hooks\\useChatPermissions.tsx",
         "src\\hooks\\useChatMessages.tsx",
@@ -55259,7 +55509,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2391 translation keys are referenced but missing",
+      "description": "2396 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "120 hours"
     }
