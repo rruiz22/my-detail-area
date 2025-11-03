@@ -1,7 +1,7 @@
 {
-  "scannedFiles": 795,
-  "totalStrings": 7612,
-  "hardcodedStrings": 1903,
+  "scannedFiles": 797,
+  "totalStrings": 7613,
+  "hardcodedStrings": 1904,
   "translatedStrings": 5709,
   "issues": {
     "critical": [
@@ -39583,9 +39583,14 @@
         "file": "src\\components\\notifications\\NotificationBell.tsx",
         "hardcodedStrings": [
           {
+            "text": "Notifications",
+            "line": 50,
+            "context": "49: <SheetHeader className=\"sr-only\">\n50: <SheetTitle>Notifications</SheetTitle>\n51: </SheetHeader>"
+          },
+          {
             "text": "Open notifications",
-            "line": 20,
-            "context": "19: <PopoverTrigger asChild>\n20: <Button variant=\"ghost\" size=\"icon\" className=\"relative\" aria-label=\"Open notifications\">\n21: <Bell className=\"h-5 w-5\" />"
+            "line": 28,
+            "context": "27: const bellButton = (\n28: <Button variant=\"ghost\" size=\"icon\" className=\"relative\" aria-label=\"Open notifications\">\n29: <Bell className=\"h-5 w-5\" />"
           }
         ],
         "translationCalls": [],
@@ -54366,6 +54371,7 @@
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
         "src\\components\\notifications\\SmartNotificationCenter.tsx",
+        "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\notifications\\analytics\\FailedDeliveriesTable.tsx",
         "src\\components\\loading\\SplashScreen.tsx",
         "src\\components\\get-ready\\WorkItemsGroupedTable.tsx",
@@ -54435,7 +54441,6 @@
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
         "src\\components\\orders\\QRCodeDisplay.tsx",
-        "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\nfc\\NFCPhysicalWriter.tsx",
         "src\\components\\navigation\\Breadcrumbs.tsx",
         "src\\components\\management\\DealershipPerformanceTable.tsx",

@@ -44,7 +44,15 @@ export function useAppVersion() {
   const fetchVersion = async (): Promise<VersionInfo | null> => {
     try {
       // Agregar timestamp para evitar caché del navegador
-      const response = await fetch(`/version.json?t=${Date.now()}`);
+      // + headers explícitos para bypass total de cache
+      const response = await fetch(`/version.json?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch version');
       return await response.json();
     } catch (error) {

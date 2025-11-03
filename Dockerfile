@@ -17,6 +17,9 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Copy serve.json configuration for HTTP headers
+COPY serve.json ./
+
 # Install a simple static file server
 RUN npm install -g serve
 
@@ -26,5 +29,5 @@ ENV PORT=3000
 # Expose port
 EXPOSE $PORT
 
-# Start the application
-CMD ["sh", "-c", "serve -s dist -l $PORT"]
+# Start the application with serve.json configuration
+CMD ["sh", "-c", "serve -s dist -l $PORT -c serve.json"]

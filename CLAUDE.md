@@ -532,3 +532,238 @@ Before every response, verify:
 - Explore agent: **5-10x faster** for search tasks
 
 Apply these optimizations ruthlessly to every interaction.
+
+## 💾 Cache Configuration & Best Practices
+
+### **Global QueryClient Configuration**
+
+**Location**: `src/App.tsx:71-88`
+
+MyDetailArea uses TanStack Query v5 with optimized global defaults:
+
+```typescript
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: CACHE_TIMES.MEDIUM,      // 5 minutes
+      gcTime: GC_TIMES.MEDIUM,            // 10 minutes
+      refetchOnWindowFocus: false,        // Reduce unnecessary refetches
+      refetchOnMount: 'stale',            // Only refetch if data is stale
+      retry: 2,                           // Retry failed requests twice
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    },
+    mutations: {
+      retry: 1
+    }
+  }
+});
+```
+
+### **Cache Time Constants**
+
+**Location**: `src/constants/cacheConfig.ts`
+
+Use standardized cache times for consistency:
+
+```typescript
+import { CACHE_TIMES, GC_TIMES, CACHE_RECOMMENDATIONS } from '@/constants/cacheConfig';
+
+// Available cache times
+CACHE_TIMES.INSTANT     // 0ms - always fetch fresh
+CACHE_TIMES.SHORT       // 1 minute - dashboards, analytics
+CACHE_TIMES.MEDIUM      // 5 minutes - standard application data
+CACHE_TIMES.LONG        // 15 minutes - memberships, dealerships
+CACHE_TIMES.VERY_LONG   // 30 minutes - platform config
+
+// Garbage collection times (2x staleTime recommended)
+GC_TIMES.SHORT          // 5 minutes
+GC_TIMES.MEDIUM         // 10 minutes
+GC_TIMES.LONG           // 30 minutes
+GC_TIMES.VERY_LONG      // 60 minutes
+```
+
+### **When to Use Each Cache Time**
+
+#### 🔴 **INSTANT (0ms)** - Real-time Data
+```typescript
+useQuery({
+  queryKey: ['deleted-vehicles'],
+  queryFn: fetchDeletedVehicles,
+  staleTime: CACHE_TIMES.INSTANT,
+  gcTime: GC_TIMES.SHORT
+});
+```
+**Use for**: Live feeds, deleted items requiring immediate refresh, real-time status
+
+#### 🟡 **SHORT (1 min)** - Dashboard Data
+```typescript
+useQuery({
+  queryKey: ['dashboard-metrics'],
+  queryFn: fetchDashboardMetrics,
+  staleTime: CACHE_TIMES.SHORT,
+  gcTime: GC_TIMES.MEDIUM
+});
+```
+**Use for**: Dashboard metrics, analytics, frequently changing operational data
+
+#### 🟢 **MEDIUM (5 min)** - Standard Data (DEFAULT)
+```typescript
+useQuery({
+  queryKey: ['orders', { dealerId }],
+  queryFn: fetchOrders,
+  // Uses global defaults - no need to specify
+});
+```
+**Use for**: Orders, contacts, users, vehicles, most application data
+
+#### 🔵 **LONG (15 min)** - Semi-Static Data
+```typescript
+useQuery({
+  queryKey: ['dealer-memberships'],
+  queryFn: fetchMemberships,
+  staleTime: CACHE_TIMES.LONG,
+  gcTime: GC_TIMES.LONG
+});
+```
+**Use for**: Memberships, dealerships, organizational structure, permissions
+
+#### 🟣 **VERY_LONG (30 min)** - System Configuration
+```typescript
+useQuery({
+  queryKey: ['platform-config'],
+  queryFn: fetchPlatformConfig,
+  staleTime: CACHE_TIMES.VERY_LONG,
+  gcTime: GC_TIMES.VERY_LONG
+});
+```
+**Use for**: Platform settings, system configuration, rarely changing static data
+
+### **Cache Invalidation Patterns**
+
+#### After Mutations
+```typescript
+const { mutate } = useMutation({
+  mutationFn: createOrder,
+  onSuccess: () => {
+    // Invalidate related queries
+    queryClient.invalidateQueries({ queryKey: ['orders'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard-metrics'] });
+  }
+});
+```
+
+#### Optimistic Updates
+```typescript
+const { mutate } = useMutation({
+  mutationFn: updateOrder,
+  onMutate: async (newOrder) => {
+    // Cancel outgoing refetches
+    await queryClient.cancelQueries({ queryKey: ['orders', newOrder.id] });
+
+    // Snapshot previous value
+    const previousOrder = queryClient.getQueryData(['orders', newOrder.id]);
+
+    // Optimistically update
+    queryClient.setQueryData(['orders', newOrder.id], newOrder);
+
+    return { previousOrder };
+  },
+  onError: (err, newOrder, context) => {
+    // Rollback on error
+    queryClient.setQueryData(['orders', newOrder.id], context.previousOrder);
+  }
+});
+```
+
+### **Development Tools**
+
+**React Query Devtools** available in development mode:
+
+- **Location**: Bottom-right corner of screen (development only)
+- **Features**:
+  - View all active queries and their cache status
+  - Inspect query data and state
+  - Monitor refetch behavior
+  - Debug cache hits/misses
+  - Force refetch queries
+  - Clear cache manually
+
+**To toggle**: Click the TanStack Query icon in the bottom-right corner
+
+### **localStorage Persistence**
+
+**Enterprise-grade localStorage service** with namespacing, versioning, and TTL:
+
+```typescript
+import { usePersistedState } from '@/hooks/usePersistedState';
+
+const [value, setValue, { isLoading, error, clear }] = usePersistedState(
+  'my-key',
+  defaultValue,
+  {
+    debounceMs: 100,           // Debounce writes
+    expiration: 60 * 60 * 1000, // 1 hour TTL
+    cloudSync: false           // Optional cloud sync
+  }
+);
+```
+
+**Tab/View Persistence**:
+```typescript
+import { useTabPersistence } from '@/hooks/useTabPersistence';
+
+const [activeTab, setActiveTab] = useTabPersistence('sales_orders');
+// Automatically persists and restores tab state across page refreshes
+```
+
+### **Performance Best Practices**
+
+1. **Always use constants** from `cacheConfig.ts` instead of hardcoded values
+2. **Match gcTime to staleTime**: `gcTime` should be ~2x `staleTime`
+3. **Disable refetchOnWindowFocus globally** (already configured)
+4. **Use refetchOnMount: 'stale'** to avoid unnecessary refetches
+5. **Invalidate queries after mutations** to keep data fresh
+6. **Use optimistic updates** for better UX in slow networks
+7. **Monitor cache behavior** with React Query Devtools in development
+
+### **Common Mistakes to Avoid**
+
+❌ **Don't hardcode cache times**:
+```typescript
+// Bad
+staleTime: 300000  // What is this magic number?
+
+// Good
+staleTime: CACHE_TIMES.MEDIUM  // Clear and consistent
+```
+
+❌ **Don't set staleTime without gcTime**:
+```typescript
+// Bad - data might be GC'd before going stale
+staleTime: CACHE_TIMES.LONG  // 15 min
+
+// Good
+staleTime: CACHE_TIMES.LONG,
+gcTime: GC_TIMES.LONG  // 30 min
+```
+
+❌ **Don't use INSTANT everywhere**:
+```typescript
+// Bad - unnecessary network requests
+staleTime: CACHE_TIMES.INSTANT  // For static user list?
+
+// Good
+staleTime: CACHE_TIMES.MEDIUM  // Standard data
+```
+
+❌ **Don't forget to invalidate after mutations**:
+```typescript
+// Bad
+useMutation({ mutationFn: updateUser });
+
+// Good
+useMutation({
+  mutationFn: updateUser,
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] })
+});
+```
