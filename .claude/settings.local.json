@@ -58,7 +58,8 @@
       "Bash(python verify-toast-usage.py:*)",
       "Bash(python add-toast-destructure.py:*)",
       "Bash(perl -i -pe:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

@@ -46,7 +46,7 @@ export function useDeliveryTracking(
       const { data, error: fetchError} = await supabase
         .from('notification_log')
         .select('*')
-        .eq('notification_id', notificationId)
+        .eq('id', notificationId)
         .single();
 
       if (fetchError) {
@@ -98,7 +98,7 @@ export function useDeliveryTracking(
           event: '*',
           schema: 'public',
           table: 'notification_log',
-          filter: `notification_id=eq.${notificationId}`,
+          filter: `id=eq.${notificationId}`,
         },
         (payload) => {
           console.log('[useDeliveryTracking] Real-time update:', payload);

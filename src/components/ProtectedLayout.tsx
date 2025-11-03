@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { VersionDisplay } from "@/components/version/VersionDisplay";
+import { UpdateBanner } from "@/components/version/UpdateBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { Menu, Search } from "lucide-react";
@@ -165,6 +166,9 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
               </Sheet>
             </div>
           </header>
+
+          {/* Update Banner - Notifica cuando hay nueva versión disponible */}
+          <UpdateBanner />
 
           {/* Announcement Banner */}
           {!location.pathname.startsWith('/chat') && <AnnouncementBanner />}

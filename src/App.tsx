@@ -14,11 +14,13 @@ import { DealershipProvider } from "@/contexts/DealershipContext";
 import { PermissionProvider } from "@/contexts/PermissionContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
 // ✅ PHASE 3.3: Import AppLoadingBoundary for global loading state
 import { AppLoadingBoundary } from "@/components/loading/AppLoadingBoundary";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 import { TooltipTester } from "./components/debug/TooltipTester";
+import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
 import AdminDashboard from "./pages/AdminDashboard";
 import Announcements from "./pages/Announcements";
 import Auth from "./pages/Auth";
@@ -52,7 +54,38 @@ import VinScanner from "./pages/VinScanner";
     console.log('📱 Current URL:', window.location.href);
     console.log('🔄 Router should handle navigation correctly');
 
-const queryClient = new QueryClient();
+/**
+ * Global QueryClient Configuration
+ *
+ * Default cache configuration for all queries in the application.
+ * Individual queries can override these defaults as needed.
+ *
+ * Configuration:
+ * - staleTime: 5 minutes (data fresh for 5 min before refetch)
+ * - gcTime: 10 minutes (unused data kept in cache for 10 min)
+ * - refetchOnWindowFocus: false (don't refetch when user switches tabs)
+ * - refetchOnMount: 'stale' (only refetch if data is stale)
+ * - retry: 2 (retry failed requests twice)
+ * - retryDelay: exponential backoff (1s, 2s, 4s...)
+ */
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: CACHE_TIMES.MEDIUM,           // 5 minutes
+      gcTime: GC_TIMES.MEDIUM,                 // 10 minutes
+      refetchOnWindowFocus: false,             // Reduce unnecessary refetches
+      refetchOnMount: 'stale',                 // Only refetch if data is stale
+      retry: 2,                                // Retry failed requests twice
+      retryDelay: (attemptIndex) => {
+        // Exponential backoff: 1s, 2s, 4s, max 30s
+        return Math.min(1000 * 2 ** attemptIndex, 30000);
+      },
+    },
+    mutations: {
+      retry: 1,                                // Retry mutations once
+    },
+  },
+});
 
 // Helper component to redirect /dealers/:id to /admin/:id
 const DealerRedirect = () => {
@@ -254,6 +287,14 @@ const AppRoutes = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    {/* React Query Devtools - Only in development */}
+    {import.meta.env.DEV && (
+      <ReactQueryDevtools
+        initialIsOpen={false}
+        position="bottom-right"
+        buttonPosition="bottom-right"
+      />
+    )}
     <TooltipProvider>
       <AuthProvider>
         {/* ✅ DealershipProvider MUST come after AuthProvider (needs user.id) */}
