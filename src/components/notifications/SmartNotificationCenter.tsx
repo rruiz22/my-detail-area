@@ -1,23 +1,22 @@
-import React, { useState, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { NotificationGroup, useSmartNotifications } from '@/hooks/useSmartNotifications';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Bell,
-  Check,
-  CheckCheck,
-  Filter,
+    Bell,
+    Check,
+    CheckCheck,
+    Filter,
 } from 'lucide-react';
-import { useSmartNotifications, NotificationGroup } from '@/hooks/useSmartNotifications';
-import { cn } from '@/lib/utils';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NotificationItem } from './NotificationItem';
 

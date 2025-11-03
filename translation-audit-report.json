@@ -19168,60 +19168,60 @@
         "translationCalls": [
           {
             "key": "search.global_placeholder",
-            "line": 113,
+            "line": 114,
             "exists": true
           },
           {
             "key": "layout.mobile_menu",
-            "line": 127,
+            "line": 128,
             "exists": true
           },
           {
             "key": "layout.tools",
-            "line": 132,
+            "line": 133,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 138,
+            "line": 139,
             "exists": true
           },
           {
             "key": "layout.preferences",
-            "line": 146,
+            "line": 147,
             "exists": true
           },
           {
             "key": "common.notifications",
-            "line": 158,
+            "line": 159,
             "exists": false
           },
           {
             "key": "layout.footer.copyright",
-            "line": 192,
+            "line": 196,
             "exists": true
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 204,
+            "line": 208,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 212,
+            "line": 216,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 220,
+            "line": 224,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.notifications",
-            "line": 158,
-            "context": "157: <label className=\"text-sm font-medium text-muted-foreground\">\n158: {t('common.notifications')}\n159: </label>"
+            "line": 159,
+            "context": "158: <label className=\"text-sm font-medium text-muted-foreground\">\n159: {t('common.notifications')}\n160: </label>"
           }
         ],
         "coverage": 100,
@@ -38933,99 +38933,99 @@
         "hardcodedStrings": [
           {
             "text": "Mark all",
-            "line": 144,
-            "context": "143: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n144: <span className=\"inline sm:hidden\">Mark all</span>\n145: </Button>"
+            "line": 143,
+            "context": "142: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n143: <span className=\"inline sm:hidden\">Mark all</span>\n144: </Button>"
           },
           {
             "text": "No grouped notifications",
-            "line": 166,
-            "context": "165: <div className=\"space-y-2\">\n166: <p className=\"font-medium\">No grouped notifications</p>\n167: <p className=\"text-sm\">Switch to \"Recent\" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>"
+            "line": 165,
+            "context": "164: <div className=\"space-y-2\">\n165: <p className=\"font-medium\">No grouped notifications</p>\n166: <p className=\"text-sm\">Switch to \"Recent\" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>"
           }
         ],
         "translationCalls": [
           {
             "key": "notifications.loading",
-            "line": 94,
+            "line": 93,
             "exists": true
           },
           {
             "key": "notifications.title",
-            "line": 108,
+            "line": 107,
             "exists": true
           },
           {
             "key": "notifications.filter.all",
-            "line": 122,
+            "line": 121,
             "exists": true
           },
           {
             "key": "notifications.filter.unread",
-            "line": 122,
+            "line": 121,
             "exists": true
           },
           {
             "key": "notifications.filter.important",
-            "line": 122,
+            "line": 121,
             "exists": true
           },
           {
             "key": "notifications.filter.all_description",
-            "line": 129,
+            "line": 128,
             "exists": true
           },
           {
             "key": "notifications.filter.unread_description",
-            "line": 132,
+            "line": 131,
             "exists": true
           },
           {
             "key": "notifications.filter.important_description",
-            "line": 135,
+            "line": 134,
             "exists": true
           },
           {
             "key": "notifications.actions.mark_all_read",
-            "line": 143,
+            "line": 142,
             "exists": true
           },
           {
             "key": "notifications.tabs.grouped",
-            "line": 153,
+            "line": 152,
             "exists": true
           },
           {
             "key": "notifications.tabs.recent",
-            "line": 154,
+            "line": 153,
             "exists": true
           },
           {
             "key": "notifications.empty.message",
-            "line": 163,
+            "line": 162,
             "exists": true
           },
           {
             "key": "notifications.count.singular",
-            "line": 181,
+            "line": 180,
             "exists": true
           },
           {
             "key": "notifications.count.plural",
-            "line": 181,
+            "line": 180,
             "exists": true
           },
           {
             "key": "notifications.count.unread",
-            "line": 185,
+            "line": 184,
             "exists": true
           },
           {
             "key": "notifications.show_more",
-            "line": 213,
+            "line": 212,
             "exists": true
           },
           {
             "key": "notifications.empty.filtered",
-            "line": 230,
+            "line": 229,
             "exists": true
           }
         ],

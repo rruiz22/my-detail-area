@@ -1,6 +1,5 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Sheet,
@@ -9,10 +8,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Bell } from 'lucide-react';
-import { SmartNotificationCenter } from './SmartNotificationCenter';
-import { useSmartNotifications } from '@/hooks/useSmartNotifications';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useSmartNotifications } from '@/hooks/useSmartNotifications';
+import { Bell } from 'lucide-react';
+import React from 'react';
+import { SmartNotificationCenter } from './SmartNotificationCenter';
 
 interface NotificationBellProps {
   dealerId?: number;
