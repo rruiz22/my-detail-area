@@ -1,5 +1,7 @@
 import { shouldUseRealtime } from '@/config/realtimeFeatures';
+import type { OrderStatus } from '@/constants/orderStatus';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
@@ -7,20 +9,18 @@ import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
+import { pushNotificationHelper } from '@/services/pushNotificationHelper';
+import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
-import { pushNotificationHelper } from '@/services/pushNotificationHelper';
+import {
+  createAssignmentNotification,
+  createOrderNotification,
+  createStatusChangeNotification
+} from '@/utils/notificationHelper';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { OrderStatus } from '@/constants/orderStatus';
-import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
-import {
-  createOrderNotification,
-  createStatusChangeNotification,
-  createAssignmentNotification
-} from '@/utils/notificationHelper';
-import { sendOrderCreatedSMS, sendOrderAssignedSMS, sendStatusChangedSMS } from '@/services/smsNotificationHelper';
 
 // Constants for magic numbers
 const REFRESH_THROTTLE_MS = 1000;
@@ -773,15 +773,35 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           customerName: data.customer_name,
           vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim()
         }
-      }).catch(err =>
+      }      ).catch(err =>
         console.error('[OrderManagement] Failed to create order notification:', err)
       );
+
+      // 🔗 GENERATE SHORT LINK: Must happen BEFORE SMS to include it in the message
+      let shortLink: string | undefined = undefined;
+      try {
+        const qrData = await generateQR(data.id, data.order_number, data.dealer_id);
+        shortLink = qrData?.shortLink;
+        dev('✅ QR code and shortlink generated for order:', data.order_number, shortLink);
+      } catch (qrError) {
+        logError('❌ Failed to generate QR code:', qrError);
+        // Continue with SMS even if QR generation fails
+      }
 
       // 📱 SMS NOTIFICATION: Send SMS to users with notification rules
       // Format services for SMS
       const servicesText = Array.isArray(data.services) && data.services.length > 0
         ? data.services.map((s: any) => s.name || s.type).filter(Boolean).join(', ')
         : '';
+
+      // Debug logging to verify data
+      console.log('🔍 SMS Data Debug:', {
+        services: data.services,
+        servicesText,
+        stockNumber: data.stock_number,
+        dueDate: data.due_date,
+        shortLink
+      });
 
       void sendOrderCreatedSMS({
         orderId: data.id,
@@ -793,7 +813,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           stockNumber: data.stock_number,
           vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
           services: servicesText,
-          shortLink: data.short_link || undefined
+          dueDateTime: data.due_date,
+          shortLink: shortLink || undefined
         }
       });
 
@@ -804,16 +825,6 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
         oldData ? [enrichedNewOrder, ...oldData] : [enrichedNewOrder]
       );
-
-      // Auto-generate QR code and shortlink in background (non-blocking)
-      generateQR(data.id, data.order_number, data.dealer_id)
-        .then(() => {
-          dev('QR code and shortlink generated for order:', data.order_number);
-        })
-        .catch((qrError) => {
-          logError('Failed to generate QR code:', qrError);
-          // QR generation failure doesn't affect order creation
-        });
 
       // Invalidate to ensure data consistency in background
       queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
