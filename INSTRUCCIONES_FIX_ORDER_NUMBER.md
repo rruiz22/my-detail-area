@@ -121,3 +121,4 @@ Por favor copia y pega aquí los resultados de las queries en `DIAGNOSE_ORDER_NU
 3. ¿Hay duplicados en la tabla orders?
 
 Con esa información podré crear el fix exacto para tu caso.
+

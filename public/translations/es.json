@@ -288,7 +288,16 @@
     "faq": "Preguntas Frecuentes",
     "terms": "Términos",
     "privacy": "Privacidad",
-    "legal": "Legal"
+    "legal": "Legal",
+    "signing_out": "Cerrando sesión..."
+  },
+  "cache": {
+    "clear_button": "Limpiar Caché",
+    "clearing": "Limpiando...",
+    "cleared_title": "Caché Limpiado",
+    "cleared_desc": "Todos los cachés limpiados. Recargando página...",
+    "error_clearing": "Error al limpiar el caché. Por favor intenta de nuevo.",
+    "info": "Limpia el caché si los cambios de roles no se reflejan inmediatamente"
   },
   "ui": {
     "headers": {
@@ -494,6 +503,8 @@
       "role_removed": "Rol removido exitosamente",
       "error_assigning_role": "Error al asignar rol",
       "error_removing_role": "Error al remover rol",
+      "user_must_reload_title": "El Usuario Debe Recargar la Página",
+      "user_must_reload_desc": "{{name}} debe recargar su navegador (Ctrl+Shift+R) para ver los nuevos permisos.",
       "select_role": "Selecciona un rol...",
       "all_roles_assigned": "Todos los roles ya están asignados"
     }
@@ -2639,7 +2650,26 @@
       },
       "users": {
         "title": "Usuarios del Concesionario",
-        "description": "Gestiona las membresías y accesos de usuarios para este concesionario"
+        "description": "Gestiona las membresías y accesos de usuarios para este concesionario",
+        "invite_user": "Invitar Usuario",
+        "no_users": "No se encontraron usuarios",
+        "no_role": "Sin Rol",
+        "edit_role": "Gestionar Roles",
+        "deactivate": "Desactivar",
+        "activate": "Activar",
+        "user_deactivated": "El usuario ha sido desactivado exitosamente",
+        "user_activated": "El usuario ha sido activado exitosamente",
+        "error_loading_users": "Error al cargar usuarios",
+        "error_updating_status": "Error al actualizar el estado del usuario",
+        "deactivate_user_title": "Desactivar Usuario",
+        "deactivate_user_description": "¿Estás seguro de que deseas desactivar a {{name}}? Ya no podrá acceder al sistema.",
+        "table": {
+          "user": "Usuario",
+          "email": "Correo",
+          "role": "Rol",
+          "status": "Estado",
+          "joined": "Ingresó"
+        }
       }
     },
     "tabs": {

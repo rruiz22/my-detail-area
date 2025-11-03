@@ -62,27 +62,27 @@ export default function ResetPassword() {
         type: searchParams.get('type'),
         all: window.location.search
       });
-      
+
       // Supabase can send different parameter names depending on configuration
       // Check for: token_hash (PKCE flow), token (magic link), or code (legacy)
       const tokenHash = searchParams.get('token_hash');
       const token = searchParams.get('token');
       const code = searchParams.get('code');
       const type = searchParams.get('type');
-      
+
       // Use whichever parameter is present
       const recoveryToken = tokenHash || token || code;
-      
+
       if (recoveryToken && !tokenVerified) {
         console.log('📧 Recovery token found in URL:', {
           paramName: tokenHash ? 'token_hash' : token ? 'token' : 'code',
           tokenPreview: recoveryToken.substring(0, 10) + '...',
           type: type
         });
-        
+
         // Mark as verified immediately to prevent multiple calls
         setTokenVerified(true);
-        
+
         try {
           // Try to verify the OTP token with Supabase
           // For password recovery, we use verifyOtp with token_hash parameter
@@ -90,7 +90,7 @@ export default function ResetPassword() {
             token_hash: recoveryToken,
             type: 'recovery',
           });
-          
+
           if (error) {
             console.error('❌ Token verification failed:', error);
             console.error('Error details:', {
@@ -126,10 +126,10 @@ export default function ResetPassword() {
       } else if (session) {
         console.log('✅ Existing session found, no token needed');
       }
-      
+
       setVerifyingSession(false);
     };
-    
+
     verifyRecoverySession();
   }, [searchParams, session, tokenVerified, t]);
 

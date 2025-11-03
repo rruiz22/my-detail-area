@@ -1,5 +1,15 @@
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { ManageCustomRolesModal } from '@/components/permissions/ManageCustomRolesModal';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -74,6 +84,9 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showEditRoleModal, setShowEditRoleModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<DealerMembership | null>(null);
+  const [showDeactivateDialog, setShowDeactivateDialog] = useState(false);
+  const [userToToggle, setUserToToggle] = useState<DealerMembership | null>(null);
+  const [isToggling, setIsToggling] = useState(false);
 
   // TanStack Query for users with cache and automatic refetch
   const {
@@ -166,19 +179,41 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   }, [usersError, t, toast]);
 
   /**
+   * Open confirmation dialog for toggling user status
+   */
+  const handleToggleUserStatusClick = (user: DealerMembership) => {
+    setUserToToggle(user);
+    // Only show dialog for deactivation
+    if (user.is_active) {
+      setShowDeactivateDialog(true);
+    } else {
+      // Activate immediately without confirmation
+      confirmToggleUserStatus(user);
+    }
+  };
+
+  /**
    * Toggle user active/inactive status
    */
-  const handleToggleUserStatus = async (user: DealerMembership) => {
+  const confirmToggleUserStatus = async (user: DealerMembership) => {
     console.log('🔵 [DealerUsers] Toggling user status:', user.profiles?.email);
 
     try {
+      setIsToggling(true);
+
       const { error } = await supabase
         .from('dealer_memberships')
-        .update({ is_active: !user.is_active })
+        .update({
+          is_active: !user.is_active,
+          updated_at: new Date().toISOString()
+        })
         .eq('user_id', user.user_id)
         .eq('dealer_id', parseInt(dealerId));
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error details:', error);
+        throw error;
+      }
 
       // Invalidate cache to trigger refetch
       await queryClient.invalidateQueries({ queryKey: ['dealer_users_with_roles', dealerId] });
@@ -191,13 +226,17 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       });
 
       console.log('✅ [DealerUsers] User status updated successfully');
-    } catch (error) {
+      setShowDeactivateDialog(false);
+      setUserToToggle(null);
+    } catch (error: any) {
       console.error('💥 [DealerUsers] Error updating user status:', error);
       toast({
         title: t('common.error'),
-        description: t('dealer.users.error_updating_status'),
+        description: error?.message || t('dealer.users.error_updating_status'),
         variant: 'destructive'
       });
+    } finally {
+      setIsToggling(false);
     }
   };
 
@@ -233,6 +272,46 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
     const { first_name, last_name, email } = user.profiles;
     const initials = `${first_name?.[0] || ''}${last_name?.[0] || ''}`.toUpperCase();
     return initials || email[0].toUpperCase();
+  };
+
+  /**
+   * Get badge color for role based on role name
+   */
+  const getRoleBadgeClasses = (roleName: string): string => {
+    const lowerRoleName = roleName.toLowerCase();
+
+    // Admin roles - Red
+    if (lowerRoleName.includes('admin')) {
+      return 'bg-rose-500 hover:bg-rose-600 text-white border-rose-600';
+    }
+
+    // Manager roles - Purple
+    if (lowerRoleName.includes('manager')) {
+      return 'bg-purple-500 hover:bg-purple-600 text-white border-purple-600';
+    }
+
+    // Service roles - Blue
+    if (lowerRoleName.includes('service') || lowerRoleName.includes('advisor')) {
+      return 'bg-blue-500 hover:bg-blue-600 text-white border-blue-600';
+    }
+
+    // Sales roles - Emerald
+    if (lowerRoleName.includes('sales') || lowerRoleName.includes('salesperson')) {
+      return 'bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-600';
+    }
+
+    // Technician roles - Orange
+    if (lowerRoleName.includes('technician') || lowerRoleName.includes('tech')) {
+      return 'bg-orange-500 hover:bg-orange-600 text-white border-orange-600';
+    }
+
+    // Viewer/Basic roles - Gray
+    if (lowerRoleName.includes('viewer') || lowerRoleName.includes('basic')) {
+      return 'bg-gray-500 hover:bg-gray-600 text-white border-gray-600';
+    }
+
+    // Default - Indigo
+    return 'bg-indigo-500 hover:bg-indigo-600 text-white border-indigo-600';
   };
 
   // Loading state
@@ -313,19 +392,31 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                       {user.custom_roles && user.custom_roles.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                           {user.custom_roles.map(role => (
-                            <Badge key={role.id} variant="default" className="text-xs">
+                            <Badge
+                              key={role.id}
+                              variant="outline"
+                              className={`text-xs ${getRoleBadgeClasses(role.role_name)}`}
+                            >
                               {role.display_name}
                             </Badge>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-xs text-muted-foreground">{t('dealer.users.no_role')}</span>
+                        <Badge variant="outline" className="text-xs bg-amber-500 hover:bg-amber-600 text-white border-amber-600">
+                          {t('dealer.users.no_role')}
+                        </Badge>
                       )}
                     </TableCell>
 
                     {/* Status */}
                     <TableCell>
-                      <Badge variant={user.is_active ? "default" : "secondary"}>
+                      <Badge
+                        variant="outline"
+                        className={user.is_active
+                          ? "bg-green-500 hover:bg-green-600 text-white border-green-600"
+                          : "bg-gray-400 hover:bg-gray-500 text-white border-gray-500"
+                        }
+                      >
                         {user.is_active ? t('common.active') : t('common.inactive')}
                       </Badge>
                     </TableCell>
@@ -348,7 +439,10 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                             <Edit className="h-4 w-4 mr-2" />
                             {t('dealer.users.edit_role')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleToggleUserStatus(user)}>
+                          <DropdownMenuItem
+                            onClick={() => handleToggleUserStatusClick(user)}
+                            disabled={isToggling}
+                          >
                             {user.is_active ? (
                               <>
                                 <UserX className="h-4 w-4 mr-2" />
@@ -401,6 +495,42 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
           console.log('✅ [DealerUsers] Cache invalidation complete');
         }}
       />
+
+      {/* Deactivate User Confirmation Dialog */}
+      <AlertDialog open={showDeactivateDialog} onOpenChange={setShowDeactivateDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('dealer.users.deactivate_user_title', { defaultValue: 'Deactivate User' })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('dealer.users.deactivate_user_description', {
+                defaultValue: 'Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.',
+                name: userToToggle ? getFullName(userToToggle) : ''
+              })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isToggling}>
+              {t('common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => userToToggle && confirmToggleUserStatus(userToToggle)}
+              disabled={isToggling}
+              className="bg-rose-600 hover:bg-rose-700"
+            >
+              {isToggling ? (
+                <>
+                  <span className="mr-2">⏳</span>
+                  {t('common.loading')}
+                </>
+              ) : (
+                t('dealer.users.deactivate')
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

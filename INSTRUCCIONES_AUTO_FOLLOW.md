@@ -270,3 +270,4 @@ El sistema de auto-follow está configurado y funcionando. Los followers recibir
 - ✅ Status "completed" para cambios de status
 
 Si tienes problemas, revisa la sección de Troubleshooting o consulta los logs en Supabase Dashboard.
+

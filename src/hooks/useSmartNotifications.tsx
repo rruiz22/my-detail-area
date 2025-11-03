@@ -1,29 +1,27 @@
-import { useCallback, useMemo, useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { toast } from '@/hooks/use-toast';
-import {
-  playNotificationSound,
-  showBrowserNotification,
-  areBrowserNotificationsEnabled,
-} from '@/utils/notificationUtils';
-import * as logger from '@/utils/logger';
-import { validateDealerId } from '@/utils/dealerValidation';
+import { supabase } from '@/integrations/supabase/client';
 import type {
-  UnifiedNotification,
-  NotificationSource,
-  SmartNotification,
-  GetReadyNotification,
-  transformSmartNotificationToUnified,
-  transformGetReadyToUnified,
+    GetReadyNotification,
+    NotificationSource,
+    SmartNotification,
+    UnifiedNotification
 } from '@/types/notifications';
+import { validateDealerId } from '@/utils/dealerValidation';
+import * as logger from '@/utils/logger';
+import {
+    areBrowserNotificationsEnabled,
+    playNotificationSound,
+    showBrowserNotification,
+} from '@/utils/notificationUtils';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo } from 'react';
 
 // Import transformation functions
 import {
-  transformSmartNotificationToUnified as transformSmart,
-  transformGetReadyToUnified as transformGetReady,
+    transformGetReadyToUnified as transformGetReady,
+    transformSmartNotificationToUnified as transformSmart,
 } from '@/types/notifications';
 
 // Legacy export for backward compatibility
@@ -217,7 +215,6 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
 
           const { error } = await supabase.rpc('mark_notification_as_read', {
             p_notification_id: notificationId,
-            p_user_id: user.id,
           });
 
           if (error) throw error;
@@ -354,7 +351,6 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
 
           const { error } = await supabase.rpc('dismiss_notification', {
             p_notification_id: notificationId,
-            p_user_id: user.id,
           });
 
           if (error) throw error;

@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 799,
-  "totalStrings": 7667,
+  "scannedFiles": 800,
+  "totalStrings": 7706,
   "hardcodedStrings": 1908,
-  "translatedStrings": 5759,
+  "translatedStrings": 5798,
   "issues": {
     "critical": [
       {
@@ -8032,73 +8032,73 @@
         "hardcodedStrings": [
           {
             "text": "Permissions Debugger",
-            "line": 158,
-            "context": "157: <Button variant=\"outline\" className=\"shadow-lg\">\n158: <Shield className=\"h-4 w-4 mr-2\" />\n159: Permissions Debugger"
+            "line": 159,
+            "context": "158: <Button variant=\"outline\" className=\"shadow-lg\">\n159: <Shield className=\"h-4 w-4 mr-2\" />\n160: Permissions Debugger"
           },
           {
             "text": "Permissions Debugger",
-            "line": 170,
-            "context": "169: <CardTitle className=\"flex items-center gap-2\">\n170: <Shield className=\"h-5 w-5\" />\n171: Permissions Debugger"
+            "line": 171,
+            "context": "170: <CardTitle className=\"flex items-center gap-2\">\n171: <Shield className=\"h-5 w-5\" />\n172: Permissions Debugger"
           },
           {
             "text": "Overview",
-            "line": 199,
-            "context": "198: <TabsList className=\"grid w-full grid-cols-4\">\n199: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n200: <TabsTrigger value=\"modules\">Modules</TabsTrigger>"
+            "line": 200,
+            "context": "199: <TabsList className=\"grid w-full grid-cols-4\">\n200: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n201: <TabsTrigger value=\"modules\">Modules</TabsTrigger>"
           },
           {
             "text": "Modules",
-            "line": 200,
-            "context": "199: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n200: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n201: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>"
+            "line": 201,
+            "context": "200: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n201: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n202: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>"
           },
           {
             "text": "Permissions",
-            "line": 201,
-            "context": "200: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n201: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>\n202: <TabsTrigger value=\"raw\">Raw</TabsTrigger>"
+            "line": 202,
+            "context": "201: <TabsTrigger value=\"modules\">Modules</TabsTrigger>\n202: <TabsTrigger value=\"perms\">Permissions</TabsTrigger>\n203: <TabsTrigger value=\"raw\">Raw</TabsTrigger>"
           },
           {
             "text": "Ready",
-            "line": 233,
-            "context": "232: ) : (\n233: <Badge variant=\"default\">Ready</Badge>\n234: )}"
+            "line": 234,
+            "context": "233: ) : (\n234: <Badge variant=\"default\">Ready</Badge>\n235: )}"
           },
           {
             "text": "Quick Stats",
-            "line": 239,
-            "context": "238: <div className=\"border-t pt-3\">\n239: <h4 className=\"text-sm font-semibold mb-2\">Quick Stats</h4>\n240: <div className=\"grid grid-cols-2 gap-2 text-sm\">"
+            "line": 240,
+            "context": "239: <div className=\"border-t pt-3\">\n240: <h4 className=\"text-sm font-semibold mb-2\">Quick Stats</h4>\n241: <div className=\"grid grid-cols-2 gap-2 text-sm\">"
           },
           {
             "text": "System Permissions",
-            "line": 311,
-            "context": "310: <div>\n311: <h4 className=\"text-sm font-semibold mb-2\">System Permissions</h4>\n312: <div className=\"space-y-1\">"
+            "line": 312,
+            "context": "311: <div>\n312: <h4 className=\"text-sm font-semibold mb-2\">System Permissions</h4>\n313: <div className=\"space-y-1\">"
           },
           {
             "text": "No system permissions",
-            "line": 315,
-            "context": "314: const sysPerms = enhancedUser?.system_permissions;\n315: if (!sysPerms) return <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n316: "
+            "line": 316,
+            "context": "315: const sysPerms = enhancedUser?.system_permissions;\n316: if (!sysPerms) return <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n317: "
           },
           {
             "text": "No system permissions",
-            "line": 325,
-            "context": "324: </div>\n325: )) : <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n326: })()}"
+            "line": 326,
+            "context": "325: </div>\n326: )) : <div className=\"text-xs text-muted-foreground\">No system permissions</div>;\n327: })()}"
           },
           {
             "text": "Module Permissions",
-            "line": 332,
-            "context": "331: <div>\n332: <h4 className=\"text-sm font-semibold mb-2\">Module Permissions</h4>\n333: {(() => {"
+            "line": 333,
+            "context": "332: <div>\n333: <h4 className=\"text-sm font-semibold mb-2\">Module Permissions</h4>\n334: {(() => {"
           },
           {
             "text": "No module permissions",
-            "line": 335,
-            "context": "334: const modPerms = enhancedUser?.module_permissions;\n335: if (!modPerms) return <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n336: "
+            "line": 336,
+            "context": "335: const modPerms = enhancedUser?.module_permissions;\n336: if (!modPerms) return <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n337: "
           },
           {
             "text": "No module permissions",
-            "line": 361,
-            "context": "360: );\n361: }) : <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n362: })()}"
+            "line": 362,
+            "context": "361: );\n362: }) : <div className=\"text-xs text-muted-foreground\">No module permissions</div>;\n363: })()}"
           },
           {
             "text": "Debug info copied to clipboard!",
-            "line": 121,
-            "context": "120: navigator.clipboard.writeText(JSON.stringify(debugInfo, null, 2));\n121: alert('Debug info copied to clipboard!');\n122: };"
+            "line": 122,
+            "context": "121: navigator.clipboard.writeText(JSON.stringify(debugInfo, null, 2));\n122: alert('Debug info copied to clipboard!');\n123: };"
           }
         ],
         "translationCalls": [],
@@ -13428,287 +13428,287 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      toast({\n        title: t(",
-            "line": 141,
-            "context": "140: } catch (error) {\n141: console.error('[RESET PASSWORD] Unexpected error:', error);\n142: toast({"
+            "line": 186,
+            "context": "185: } catch (error) {\n186: console.error('[RESET PASSWORD] Unexpected error:', error);\n187: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 67,
+            "line": 101,
             "exists": false
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 73,
+            "line": 113,
             "exists": false
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 77,
+            "line": 118,
             "exists": false
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 82,
+            "line": 125,
             "exists": false
           },
           {
             "key": "auth.signup.password_weak_title",
-            "line": 98,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.password_requirements",
-            "line": 99,
-            "exists": true
-          },
-          {
-            "key": "auth.reset_password.passwords_dont_match_title",
-            "line": 108,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 109,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.error_title",
-            "line": 123,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.success_title",
-            "line": 130,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.success_description",
-            "line": 131,
-            "exists": false
-          },
-          {
-            "key": "auth.error_title",
             "line": 143,
             "exists": true
           },
           {
-            "key": "auth.unexpected_error",
+            "key": "auth.signup.password_requirements",
             "line": 144,
             "exists": true
           },
           {
-            "key": "auth.app_title",
-            "line": 178,
-            "exists": true
-          },
-          {
-            "key": "auth.app_subtitle",
-            "line": 182,
-            "exists": true
-          },
-          {
-            "key": "auth.reset_password.title",
-            "line": 189,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.subtitle",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.verifying",
-            "line": 201,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.request_new_link",
-            "line": 215,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.success_title",
-            "line": 226,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.redirecting",
-            "line": 229,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.new_password_label",
-            "line": 239,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.new_password_placeholder",
-            "line": 250,
-            "exists": false
-          },
-          {
-            "key": "auth.signup.password_length",
-            "line": 263,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.password_uppercase",
-            "line": 267,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.password_lowercase",
-            "line": 271,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.password_number",
-            "line": 275,
-            "exists": true
-          },
-          {
-            "key": "auth.reset_password.confirm_password_label",
-            "line": 287,
-            "exists": false
-          },
-          {
-            "key": "auth.reset_password.confirm_password_placeholder",
-            "line": 298,
+            "key": "auth.reset_password.passwords_dont_match_title",
+            "line": 153,
             "exists": false
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 302,
+            "line": 154,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.error_title",
+            "line": 168,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.success_title",
+            "line": 175,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.success_description",
+            "line": 176,
+            "exists": false
+          },
+          {
+            "key": "auth.error_title",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "auth.unexpected_error",
+            "line": 189,
+            "exists": true
+          },
+          {
+            "key": "auth.app_title",
+            "line": 223,
+            "exists": true
+          },
+          {
+            "key": "auth.app_subtitle",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "auth.reset_password.title",
+            "line": 234,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.subtitle",
+            "line": 237,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.verifying",
+            "line": 246,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.request_new_link",
+            "line": 260,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.success_title",
+            "line": 271,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.redirecting",
+            "line": 274,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.new_password_label",
+            "line": 284,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.new_password_placeholder",
+            "line": 295,
+            "exists": false
+          },
+          {
+            "key": "auth.signup.password_length",
+            "line": 308,
+            "exists": true
+          },
+          {
+            "key": "auth.signup.password_uppercase",
+            "line": 312,
+            "exists": true
+          },
+          {
+            "key": "auth.signup.password_lowercase",
+            "line": 316,
+            "exists": true
+          },
+          {
+            "key": "auth.signup.password_number",
+            "line": 320,
+            "exists": true
+          },
+          {
+            "key": "auth.reset_password.confirm_password_label",
+            "line": 332,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.confirm_password_placeholder",
+            "line": 343,
+            "exists": false
+          },
+          {
+            "key": "auth.reset_password.passwords_dont_match_description",
+            "line": 347,
             "exists": false
           },
           {
             "key": "auth.reset_password.updating",
-            "line": 316,
+            "line": 361,
             "exists": false
           },
           {
             "key": "auth.reset_password.update_password_button",
-            "line": 319,
+            "line": 364,
             "exists": false
           },
           {
             "key": "auth.footer_text",
-            "line": 329,
+            "line": 374,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 67,
-            "context": "66: console.error('❌ Token verification failed:', error.message);\n67: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n68: } else if (data.session) {"
+            "line": 101,
+            "context": "100: });\n101: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n102: setTokenVerified(false); // Allow retry if verification fails"
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 73,
-            "context": "72: console.error('❌ No session returned from token verification');\n73: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n74: }"
+            "line": 113,
+            "context": "112: console.log('Response data:', data);\n113: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n114: setTokenVerified(false); // Allow retry if no session"
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 77,
-            "context": "76: console.error('❌ Unexpected error during token verification:', err);\n77: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n78: }"
+            "line": 118,
+            "context": "117: console.error('❌ Unexpected error during token verification:', err);\n118: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n119: setTokenVerified(false); // Allow retry on unexpected error"
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 82,
-            "context": "81: console.error('❌ No recovery token or session found');\n82: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n83: }"
+            "line": 125,
+            "context": "124: console.log('Available URL params:', Array.from(searchParams.entries()));\n125: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n126: } else if (session) {"
           },
           {
             "key": "auth.reset_password.passwords_dont_match_title",
-            "line": 108,
-            "context": "107: toast({\n108: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n109: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),"
+            "line": 153,
+            "context": "152: toast({\n153: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n154: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),"
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 109,
-            "context": "108: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n109: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),\n110: variant: \"destructive\","
+            "line": 154,
+            "context": "153: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n154: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),\n155: variant: \"destructive\","
           },
           {
             "key": "auth.reset_password.error_title",
-            "line": 123,
-            "context": "122: toast({\n123: title: t('auth.reset_password.error_title', 'Reset Failed'),\n124: description: updateError.message,"
+            "line": 168,
+            "context": "167: toast({\n168: title: t('auth.reset_password.error_title', 'Reset Failed'),\n169: description: updateError.message,"
           },
           {
             "key": "auth.reset_password.success_title",
-            "line": 130,
-            "context": "129: toast({\n130: title: t('auth.reset_password.success_title', 'Password Updated'),\n131: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),"
+            "line": 175,
+            "context": "174: toast({\n175: title: t('auth.reset_password.success_title', 'Password Updated'),\n176: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),"
           },
           {
             "key": "auth.reset_password.success_description",
-            "line": 131,
-            "context": "130: title: t('auth.reset_password.success_title', 'Password Updated'),\n131: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),\n132: variant: \"default\","
+            "line": 176,
+            "context": "175: title: t('auth.reset_password.success_title', 'Password Updated'),\n176: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),\n177: variant: \"default\","
           },
           {
             "key": "auth.reset_password.title",
-            "line": 189,
-            "context": "188: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n189: {t('auth.reset_password.title', 'Create New Password')}\n190: </CardTitle>"
+            "line": 234,
+            "context": "233: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n234: {t('auth.reset_password.title', 'Create New Password')}\n235: </CardTitle>"
           },
           {
             "key": "auth.reset_password.subtitle",
-            "line": 192,
-            "context": "191: <CardDescription className=\"text-base text-muted-foreground\">\n192: {t('auth.reset_password.subtitle', 'Enter your new password below')}\n193: </CardDescription>"
+            "line": 237,
+            "context": "236: <CardDescription className=\"text-base text-muted-foreground\">\n237: {t('auth.reset_password.subtitle', 'Enter your new password below')}\n238: </CardDescription>"
           },
           {
             "key": "auth.reset_password.verifying",
-            "line": 201,
-            "context": "200: <div className=\"w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin\" aria-hidden=\"true\" />\n201: <span className=\"text-muted-foreground\">{t('auth.reset_password.verifying', 'Verifying reset link...')}</span>\n202: </div>"
+            "line": 246,
+            "context": "245: <div className=\"w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin\" aria-hidden=\"true\" />\n246: <span className=\"text-muted-foreground\">{t('auth.reset_password.verifying', 'Verifying reset link...')}</span>\n247: </div>"
           },
           {
             "key": "auth.reset_password.request_new_link",
-            "line": 215,
-            "context": "214: >\n215: {t('auth.reset_password.request_new_link', 'Request New Reset Link')}\n216: </Button>"
+            "line": 260,
+            "context": "259: >\n260: {t('auth.reset_password.request_new_link', 'Request New Reset Link')}\n261: </Button>"
           },
           {
             "key": "auth.reset_password.success_title",
-            "line": 226,
-            "context": "225: <h3 className=\"text-lg font-semibold text-foreground\">\n226: {t('auth.reset_password.success_title', 'Password Updated!')}\n227: </h3>"
+            "line": 271,
+            "context": "270: <h3 className=\"text-lg font-semibold text-foreground\">\n271: {t('auth.reset_password.success_title', 'Password Updated!')}\n272: </h3>"
           },
           {
             "key": "auth.reset_password.redirecting",
-            "line": 229,
-            "context": "228: <p className=\"text-sm text-muted-foreground\">\n229: {t('auth.reset_password.redirecting', 'Redirecting to login...')}\n230: </p>"
+            "line": 274,
+            "context": "273: <p className=\"text-sm text-muted-foreground\">\n274: {t('auth.reset_password.redirecting', 'Redirecting to login...')}\n275: </p>"
           },
           {
             "key": "auth.reset_password.new_password_label",
-            "line": 239,
-            "context": "238: <Label htmlFor=\"password\" className=\"text-sm font-semibold text-foreground\">\n239: {t('auth.reset_password.new_password_label', 'New Password')}\n240: </Label>"
+            "line": 284,
+            "context": "283: <Label htmlFor=\"password\" className=\"text-sm font-semibold text-foreground\">\n284: {t('auth.reset_password.new_password_label', 'New Password')}\n285: </Label>"
           },
           {
             "key": "auth.reset_password.new_password_placeholder",
-            "line": 250,
-            "context": "249: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n250: placeholder={t('auth.reset_password.new_password_placeholder', 'Enter your new password')}\n251: autoFocus"
+            "line": 295,
+            "context": "294: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n295: placeholder={t('auth.reset_password.new_password_placeholder', 'Enter your new password')}\n296: autoFocus"
           },
           {
             "key": "auth.reset_password.confirm_password_label",
-            "line": 287,
-            "context": "286: <Label htmlFor=\"confirmPassword\" className=\"text-sm font-semibold text-foreground\">\n287: {t('auth.reset_password.confirm_password_label', 'Confirm Password')}\n288: </Label>"
+            "line": 332,
+            "context": "331: <Label htmlFor=\"confirmPassword\" className=\"text-sm font-semibold text-foreground\">\n332: {t('auth.reset_password.confirm_password_label', 'Confirm Password')}\n333: </Label>"
           },
           {
             "key": "auth.reset_password.confirm_password_placeholder",
-            "line": 298,
-            "context": "297: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n298: placeholder={t('auth.reset_password.confirm_password_placeholder', 'Confirm your new password')}\n299: />"
+            "line": 343,
+            "context": "342: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n343: placeholder={t('auth.reset_password.confirm_password_placeholder', 'Confirm your new password')}\n344: />"
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 302,
-            "context": "301: <p className=\"text-xs text-red-500\">\n302: {t('auth.reset_password.passwords_dont_match_description', 'Passwords do not match')}\n303: </p>"
+            "line": 347,
+            "context": "346: <p className=\"text-xs text-red-500\">\n347: {t('auth.reset_password.passwords_dont_match_description', 'Passwords do not match')}\n348: </p>"
           },
           {
             "key": "auth.reset_password.updating",
-            "line": 316,
-            "context": "315: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n316: {t('auth.reset_password.updating', 'Updating...')}\n317: </div>"
+            "line": 361,
+            "context": "360: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n361: {t('auth.reset_password.updating', 'Updating...')}\n362: </div>"
           },
           {
             "key": "auth.reset_password.update_password_button",
-            "line": 319,
-            "context": "318: ) : (\n319: t('auth.reset_password.update_password_button', 'Update Password')\n320: )}"
+            "line": 364,
+            "context": "363: ) : (\n364: t('auth.reset_password.update_password_button', 'Update Password')\n365: )}"
           }
         ],
         "coverage": 97,
@@ -16370,335 +16370,335 @@
         "translationCalls": [
           {
             "key": "auth.signup.invalid_token_error",
-            "line": 169,
+            "line": 174,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 176,
+            "line": 181,
             "exists": true
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 200,
+            "line": 205,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 201,
+            "line": 206,
             "exists": true
           },
           {
             "key": "auth.too_many_attempts_title",
-            "line": 210,
+            "line": 215,
             "exists": true
           },
           {
             "key": "auth.too_many_attempts_description",
-            "line": 211,
+            "line": 216,
             "exists": true
           },
           {
             "key": "auth.sign_in_error_title",
-            "line": 228,
+            "line": 233,
             "exists": true
           },
           {
             "key": "auth.invalid_credentials_generic",
-            "line": 229,
+            "line": 234,
             "exists": true
           },
           {
             "key": "auth.error_title",
-            "line": 238,
+            "line": 243,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 239,
+            "line": 244,
             "exists": true
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 257,
+            "line": 262,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 258,
+            "line": 263,
             "exists": true
           },
           {
             "key": "auth.signup.password_weak_title",
-            "line": 268,
+            "line": 273,
             "exists": true
           },
           {
             "key": "auth.signup.password_requirements",
-            "line": 269,
+            "line": 274,
             "exists": true
           },
           {
             "key": "auth.signup.required_fields_title",
-            "line": 278,
+            "line": 283,
             "exists": true
           },
           {
             "key": "auth.signup.required_fields_description",
-            "line": 279,
+            "line": 284,
             "exists": true
           },
           {
             "key": "auth.signup.email_mismatch_title",
-            "line": 288,
+            "line": 293,
             "exists": true
           },
           {
             "key": "auth.signup.email_mismatch_description",
-            "line": 289,
+            "line": 294,
             "exists": true
           },
           {
             "key": "auth.signup.error_title",
-            "line": 302,
+            "line": 307,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 312,
+            "line": 317,
             "exists": true
           },
           {
             "key": "auth.signup.check_email",
-            "line": 313,
+            "line": 318,
             "exists": true
           },
           {
             "key": "auth.error_title",
-            "line": 320,
+            "line": 325,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 321,
+            "line": 326,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_accept_error",
-            "line": 351,
+            "line": 356,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 357,
+            "line": 362,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_accepted",
-            "line": 358,
+            "line": 363,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 373,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.email_confirmation_pending_with_invitation",
-            "line": 374,
-            "exists": true
-          },
-          {
-            "key": "auth.unexpected_error",
             "line": 378,
             "exists": true
           },
           {
+            "key": "auth.signup.email_confirmation_pending_with_invitation",
+            "line": 379,
+            "exists": true
+          },
+          {
+            "key": "auth.unexpected_error",
+            "line": 383,
+            "exists": true
+          },
+          {
             "key": "auth.signup.invitation_accept_error",
-            "line": 380,
+            "line": 385,
             "exists": true
           },
           {
             "key": "auth.skip_to_form",
-            "line": 394,
+            "line": 399,
             "exists": true
           },
           {
             "key": "auth.app_title",
-            "line": 424,
-            "exists": true
-          },
-          {
-            "key": "auth.app_subtitle",
             "line": 429,
             "exists": true
           },
           {
+            "key": "auth.app_subtitle",
+            "line": 434,
+            "exists": true
+          },
+          {
             "key": "auth.signup.welcome_title",
-            "line": 436,
+            "line": 441,
             "exists": true
           },
           {
             "key": "auth.welcome_title",
-            "line": 436,
+            "line": 441,
             "exists": true
           },
           {
             "key": "auth.signup.welcome_subtitle",
-            "line": 439,
+            "line": 444,
             "exists": true
           },
           {
             "key": "auth.welcome_subtitle",
-            "line": 439,
+            "line": 444,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_info",
-            "line": 446,
+            "line": 451,
             "exists": true
           },
           {
             "key": "auth.signup.as_role",
-            "line": 446,
+            "line": 451,
             "exists": true
           },
           {
             "key": "auth.signup.verifying_invitation",
-            "line": 466,
+            "line": 471,
             "exists": true
           },
           {
             "key": "auth.signup.first_name",
-            "line": 479,
+            "line": 484,
             "exists": true
           },
           {
             "key": "auth.signup.first_name_placeholder",
-            "line": 491,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.last_name",
             "line": 496,
             "exists": true
           },
           {
+            "key": "auth.signup.last_name",
+            "line": 501,
+            "exists": true
+          },
+          {
             "key": "auth.signup.last_name_placeholder",
-            "line": 508,
+            "line": 513,
             "exists": true
           },
           {
             "key": "auth.email_label",
-            "line": 517,
+            "line": 522,
             "exists": true
           },
           {
             "key": "auth.email_placeholder",
-            "line": 530,
+            "line": 535,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 536,
+            "line": 541,
             "exists": true
           },
           {
             "key": "auth.password_label",
-            "line": 545,
+            "line": 550,
             "exists": true
           },
           {
             "key": "auth.signup.password_placeholder",
-            "line": 556,
+            "line": 561,
             "exists": true
           },
           {
             "key": "auth.password_placeholder",
-            "line": 556,
+            "line": 561,
             "exists": true
           },
           {
             "key": "auth.forgot_password_link",
-            "line": 566,
+            "line": 571,
             "exists": false
           },
           {
             "key": "auth.signup.password_length",
-            "line": 579,
+            "line": 584,
             "exists": true
           },
           {
             "key": "auth.signup.password_uppercase",
-            "line": 583,
+            "line": 588,
             "exists": true
           },
           {
             "key": "auth.signup.password_lowercase",
-            "line": 587,
+            "line": 592,
             "exists": true
           },
           {
             "key": "auth.signup.password_number",
-            "line": 591,
+            "line": 596,
             "exists": true
           },
           {
             "key": "auth.signup.creating_account",
-            "line": 610,
+            "line": 615,
             "exists": true
           },
           {
             "key": "auth.signing_in",
-            "line": 610,
+            "line": 615,
             "exists": true
           },
           {
             "key": "auth.signup.create_account_button",
-            "line": 613,
+            "line": 618,
             "exists": true
           },
           {
             "key": "auth.sign_in_button",
-            "line": 613,
+            "line": 618,
             "exists": true
           },
           {
             "key": "auth.signup.already_have_account",
-            "line": 621,
+            "line": 626,
             "exists": true
           },
           {
             "key": "auth.signup.sign_in_instead",
-            "line": 627,
+            "line": 632,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_invalid",
-            "line": 639,
+            "line": 644,
             "exists": true
           },
           {
             "key": "auth.signup.go_to_signin",
-            "line": 645,
+            "line": 650,
             "exists": true
           },
           {
             "key": "auth.no_access_text",
-            "line": 652,
+            "line": 657,
             "exists": true
           },
           {
             "key": "auth.footer_text",
-            "line": 660,
+            "line": 665,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "auth.forgot_password_link",
-            "line": 566,
-            "context": "565: >\n566: {t('auth.forgot_password_link', 'Forgot password?')}\n567: </button>"
+            "line": 571,
+            "context": "570: >\n571: {t('auth.forgot_password_link', 'Forgot password?')}\n572: </button>"
           }
         ],
         "coverage": 98,
@@ -17655,28 +17655,28 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
+            "line": 44,
+            "context": "43: unreadCount: number;\n44: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n45: markAllAsRead: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 45,
+            "context": "44: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n45: markAllAsRead: () => Promise<void>;\n46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
             "line": 46,
-            "context": "45: unreadCount: number;\n46: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n47: markAllAsRead: () => Promise<void>;"
+            "context": "45: markAllAsRead: () => Promise<void>;\n46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;"
           },
           {
             "text": "Promise",
             "line": 47,
-            "context": "46: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n47: markAllAsRead: () => Promise<void>;\n48: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
+            "context": "46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n48: refreshNotifications: () => Promise<void>;"
           },
           {
             "text": "Promise",
             "line": 48,
-            "context": "47: markAllAsRead: () => Promise<void>;\n48: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n49: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 49,
-            "context": "48: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n49: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n50: refreshNotifications: () => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 50,
-            "context": "49: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n50: refreshNotifications: () => Promise<void>;\n51: }"
+            "context": "47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n48: refreshNotifications: () => Promise<void>;\n49: }"
           }
         ],
         "translationCalls": [],
@@ -20435,14 +20435,30 @@
         "file": "src\\components\\version\\UpdateBanner.tsx",
         "hardcodedStrings": [
           {
-            "text": "Actualizar",
-            "line": 28,
-            "context": "27: >\n28: <RefreshCw className=\"h-4 w-4\" />\n29: Actualizar"
+            "text": "Dismiss",
+            "line": 41,
+            "context": "40: className=\"text-gray-400 hover:text-gray-200 transition-colors p-1\"\n41: aria-label=\"Dismiss\"\n42: >"
           }
         ],
-        "translationCalls": [],
+        "translationCalls": [
+          {
+            "key": "system_update.title",
+            "line": 24,
+            "exists": true
+          },
+          {
+            "key": "system_update.message",
+            "line": 26,
+            "exists": true
+          },
+          {
+            "key": "system_update.button",
+            "line": 36,
+            "exists": true
+          }
+        ],
         "missingKeys": [],
-        "coverage": 0,
+        "coverage": 75,
         "severity": "low"
       },
       {
@@ -39442,12 +39458,12 @@
             "exists": true
           },
           {
-            "key": "notifications.tabs.grouped",
+            "key": "notifications.tabs.recent",
             "line": 152,
             "exists": true
           },
           {
-            "key": "notifications.tabs.recent",
+            "key": "notifications.tabs.grouped",
             "line": 153,
             "exists": true
           },
@@ -54336,6 +54352,201 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\admin\\SystemUsersManagement.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.access_denied",
+            "line": 76,
+            "exists": true
+          },
+          {
+            "key": "admin.system_users_restricted",
+            "line": 79,
+            "exists": true
+          },
+          {
+            "key": "admin.system_users_system_admin_only",
+            "line": 84,
+            "exists": true
+          },
+          {
+            "key": "admin.system_users",
+            "line": 99,
+            "exists": true
+          },
+          {
+            "key": "admin.system_users_description",
+            "line": 102,
+            "exists": true
+          },
+          {
+            "key": "admin.add_system_user",
+            "line": 107,
+            "exists": true
+          },
+          {
+            "key": "common.error_loading_data",
+            "line": 131,
+            "exists": false
+          },
+          {
+            "key": "admin.no_system_users",
+            "line": 137,
+            "exists": true
+          },
+          {
+            "key": "admin.create_first_system_user",
+            "line": 139,
+            "exists": true
+          },
+          {
+            "key": "admin.add_system_user",
+            "line": 143,
+            "exists": true
+          },
+          {
+            "key": "admin.primary_dealership",
+            "line": 164,
+            "exists": true
+          },
+          {
+            "key": "roles.system_admin",
+            "line": 177,
+            "exists": true
+          },
+          {
+            "key": "roles.supermanager",
+            "line": 178,
+            "exists": true
+          },
+          {
+            "key": "admin.system_roles_info",
+            "line": 234,
+            "exists": true
+          },
+          {
+            "key": "roles.system_admin",
+            "line": 243,
+            "exists": true
+          },
+          {
+            "key": "admin.system_admin_description",
+            "line": 245,
+            "exists": true
+          },
+          {
+            "key": "admin.can_manage_platform_settings",
+            "line": 248,
+            "exists": true
+          },
+          {
+            "key": "admin.can_create_system_admins",
+            "line": 249,
+            "exists": true
+          },
+          {
+            "key": "admin.full_access_all_dealerships",
+            "line": 250,
+            "exists": true
+          },
+          {
+            "key": "admin.can_view_global_audit_logs",
+            "line": 251,
+            "exists": true
+          },
+          {
+            "key": "roles.supermanager",
+            "line": 260,
+            "exists": true
+          },
+          {
+            "key": "admin.supermanager_description",
+            "line": 262,
+            "exists": true
+          },
+          {
+            "key": "admin.can_manage_dealerships",
+            "line": 265,
+            "exists": true
+          },
+          {
+            "key": "admin.can_manage_users",
+            "line": 266,
+            "exists": true
+          },
+          {
+            "key": "admin.can_view_audit_logs",
+            "line": 267,
+            "exists": true
+          },
+          {
+            "key": "admin.cannot_manage_platform_settings",
+            "line": 269,
+            "exists": true
+          },
+          {
+            "key": "admin.cannot_create_system_admins",
+            "line": 272,
+            "exists": true
+          },
+          {
+            "key": "roles.user",
+            "line": 282,
+            "exists": true
+          },
+          {
+            "key": "admin.user_description",
+            "line": 284,
+            "exists": true
+          },
+          {
+            "key": "admin.permissions_via_custom_role",
+            "line": 287,
+            "exists": true
+          },
+          {
+            "key": "admin.tied_to_specific_dealership",
+            "line": 288,
+            "exists": true
+          },
+          {
+            "key": "admin.created_via_invitation",
+            "line": 289,
+            "exists": true
+          },
+          {
+            "key": "admin.create_system_user",
+            "line": 302,
+            "exists": true
+          },
+          {
+            "key": "admin.create_system_user_placeholder",
+            "line": 304,
+            "exists": true
+          },
+          {
+            "key": "admin.feature_coming_soon",
+            "line": 309,
+            "exists": true
+          },
+          {
+            "key": "common.close",
+            "line": 312,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.error_loading_data",
+            "line": 131,
+            "context": "130: <p className=\"text-sm text-muted-foreground\">\n131: {t('common.error_loading_data')}\n132: </p>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\admin\\DealershipManagement.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -54653,7 +54864,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "386 Component components need translation",
+      "description": "387 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -55040,14 +55251,15 @@
         "src\\components\\attachments\\UploadProgress.tsx",
         "src\\components\\attachments\\DragDropZone.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
+        "src\\components\\admin\\SystemUsersManagement.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "193 hours"
+      "estimatedEffort": "194 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2390 translation keys are referenced but missing",
+      "description": "2391 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "120 hours"
     }

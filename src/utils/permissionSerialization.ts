@@ -158,9 +158,44 @@ export function getCachedPermissions(userId: string): EnhancedUserGranular | nul
 export function clearPermissionsCache(): void {
   try {
     localStorage.removeItem(CACHE_KEY);
-    console.log('🗑️ Permission cache cleared');
+    // Also clear any legacy cache keys
+    localStorage.removeItem('permissions_cache_v2');
+    localStorage.removeItem('permissions_cache_v3');
+    // Clear user profile cache too
+    localStorage.removeItem('user_profile_cache');
+    console.log('🗑️ Permission cache cleared completely');
   } catch (error) {
     console.warn('⚠️ Failed to clear permission cache:', error);
+  }
+}
+
+/**
+ * Force clear ALL permission-related cache
+ * Use this when you need to ensure complete cache invalidation
+ */
+export function forceInvalidateAllPermissionCache(): void {
+  try {
+    // Clear all permission cache keys
+    const keysToRemove = [
+      CACHE_KEY,
+      'permissions_cache_v1',
+      'permissions_cache_v2',
+      'permissions_cache_v3',
+      'user_profile_cache',
+      'dealership_cache',
+      'accessible_dealerships_cache'
+    ];
+
+    keysToRemove.forEach(key => {
+      localStorage.removeItem(key);
+    });
+
+    // Clear all sessionStorage too
+    sessionStorage.clear();
+
+    console.log('🧹 FORCE: All permission cache cleared');
+  } catch (error) {
+    console.warn('⚠️ Failed to force clear cache:', error);
   }
 }
 

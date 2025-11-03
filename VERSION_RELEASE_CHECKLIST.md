@@ -212,6 +212,5 @@ Esto asegura que:
 
 ---
 
-**Última actualización:** 2025-11-03  
+**Última actualización:** 2025-11-03
 **Versión actual:** v1.2.4
-

@@ -299,7 +299,16 @@
     "faq": "FAQ",
     "terms": "Terms",
     "privacy": "Privacy",
-    "legal": "Legal"
+    "legal": "Legal",
+    "signing_out": "Signing out..."
+  },
+  "cache": {
+    "clear_button": "Clear Cache",
+    "clearing": "Clearing...",
+    "cleared_title": "Cache Cleared",
+    "cleared_desc": "All caches cleared. Reloading page...",
+    "error_clearing": "Failed to clear cache. Please try again.",
+    "info": "Clear cache if role changes don't reflect immediately"
   },
   "ui": {
     "headers": {
@@ -505,6 +514,8 @@
       "role_removed": "Role removed successfully",
       "error_assigning_role": "Error assigning role",
       "error_removing_role": "Error removing role",
+      "user_must_reload_title": "User Must Reload Page",
+      "user_must_reload_desc": "{{name}} must reload their browser (Ctrl+Shift+R) to see the new permissions.",
       "select_role": "Select a role...",
       "all_roles_assigned": "All roles already assigned"
     }
@@ -2949,7 +2960,26 @@
       },
       "users": {
         "title": "Dealership Users",
-        "description": "Manage user memberships and access for this dealership"
+        "description": "Manage user memberships and access for this dealership",
+        "invite_user": "Invite User",
+        "no_users": "No users found",
+        "no_role": "No Role",
+        "edit_role": "Manage Roles",
+        "deactivate": "Deactivate",
+        "activate": "Activate",
+        "user_deactivated": "User has been deactivated successfully",
+        "user_activated": "User has been activated successfully",
+        "error_loading_users": "Failed to load users",
+        "error_updating_status": "Failed to update user status",
+        "deactivate_user_title": "Deactivate User",
+        "deactivate_user_description": "Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.",
+        "table": {
+          "user": "User",
+          "email": "Email",
+          "role": "Role",
+          "status": "Status",
+          "joined": "Joined"
+        }
       }
     },
     "tabs": {
